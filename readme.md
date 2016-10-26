@@ -38,7 +38,7 @@ GIT工作流
 
  - [Gitflow Workflow](http://nvie.com/posts/a-successful-git-branching-model/) [中文版参考](http://www.jianshu.com/p/104fa8b15d1e)
  
- ![enter image description here](http://static.oschina.net/uploads/img/201412/17085726_dyBh.png)
+ ![enter image description here](http://nvie.com/img/git-model@2x.png)
 
 
 ----------
