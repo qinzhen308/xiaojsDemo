@@ -141,19 +141,6 @@ APP端收集Crash并上报，使用第三方SDK：[Bugly](https://bugly.qq.com/v
 ----------
 
 
-包目录说明
--------
-包目录暂定如下：
-
-    ├──data
-    │   ├──api
-    ├──ui
-    │   ├──base
-    │   ├──widget
-    ├──util
-    ├── 
-
-----------
 
 
 
