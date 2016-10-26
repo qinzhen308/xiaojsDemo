@@ -1,0 +1,35 @@
+#Android studio auto create
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+
+# IDEA/Android Studio project files, because
+# the project can be imported from settings.gradle
+.idea
+
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# Eclipse project files
+.classpath
+.project
+
+# Sandbox stuff
+_sandbox
+
+
+
