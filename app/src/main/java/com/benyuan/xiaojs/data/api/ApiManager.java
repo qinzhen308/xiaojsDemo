@@ -15,21 +15,21 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
  * Created by maxiaobao on 2016/10/25.
  */
 
-public class APIManager {
+public class ApiManager {
 
-    private volatile static APIManager apiManager;
+    private volatile static ApiManager apiManager;
     private XiaojsService xiaojsService;
     private Context appContext;
 
 
-    public static APIManager getAPIManager(Context appContext) {
+    public static ApiManager getAPIManager(Context appContext) {
 
         if (apiManager == null) {
 
-            synchronized (APIManager.class) {
+            synchronized (ApiManager.class) {
 
                 if (apiManager == null) {
-                    apiManager = new APIManager(appContext);
+                    apiManager = new ApiManager(appContext);
                 }
             }
         }
@@ -37,7 +37,7 @@ public class APIManager {
         return apiManager;
     }
 
-    private APIManager(Context appContext) {
+    private ApiManager(Context appContext) {
         this.appContext = appContext.getApplicationContext();
     }
 
