@@ -27,7 +27,7 @@
 版本控制
 -------------
 
- - GIT
+ - GIT [中文教程](https://git-scm.com/book/zh/)
  - GITLAB
 
 
