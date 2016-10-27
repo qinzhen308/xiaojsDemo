@@ -1,6 +1,5 @@
 package com.benyuan.xiaojs.ui;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.benyuan.xiaojs.R;
@@ -48,5 +47,5 @@ public class MainActivity extends BaseTabActivity {
                 fs);
         new OkHttpClient();
     }
-    
+
 }
