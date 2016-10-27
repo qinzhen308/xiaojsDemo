@@ -31,5 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         Logger.d(isTablet);
 
+
+
     }
 }

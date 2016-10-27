@@ -19,9 +19,9 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 	public final static int TYPE_MONTH = 1 << 2;
 	public final static int TYPE_DAY = 1 << 3;
 
-	private static String mYearStr = "年";
-	private static String mMontyStr = "月";
-	private static String mDayStr = "日";
+	private String mYearStr;
+	private String mMontyStr;
+	private String mDayStr;
 
 	/** 生日模式，时间上限为当前时间 */
 	public final static int MODE_BIRTHDAY = 1;
@@ -69,6 +69,10 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 	private void init() {
 		setGravity(Gravity.CENTER);
 		setOrientation(HORIZONTAL);
+
+		mYearStr = getResources().getString(R.string.year);
+		mMontyStr = getResources().getString(R.string.month);
+		mDayStr = getResources().getString(R.string.day);
 
 		LayoutParams llParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		llParams.weight = 1;

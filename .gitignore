@@ -31,7 +31,11 @@
 # Sandbox stuff
 _sandbox
 
+#the third module
+/pullrefresh/build
+
 # 3DWheelpicker
 /3d_wheelpicker/build
+
 
 
