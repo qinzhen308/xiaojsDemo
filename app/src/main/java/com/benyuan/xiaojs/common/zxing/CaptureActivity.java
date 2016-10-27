@@ -50,7 +50,7 @@ public class CaptureActivity extends BaseActivity implements Callback,
 	@Override
 	protected void addViewContent() {
 		addView(R.layout.activity_camera_scan);
-		setTitle("二维码");
+		setMiddleTitle(R.string.qr_code);
 		init();
 	}
 
