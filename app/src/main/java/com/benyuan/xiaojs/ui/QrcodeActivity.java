@@ -16,7 +16,7 @@ package com.benyuan.xiaojs.ui;
 
 import android.widget.Toast;
 
-import com.benyuan.xiaojs.util.zxing.CaptureActivity;
+import com.benyuan.xiaojs.common.zxing.CaptureActivity;
 
 
 public class QrcodeActivity extends CaptureActivity {
