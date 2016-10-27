@@ -1,4 +1,4 @@
-package com.benyuan.xiaojs.data.api.model;
+package com.benyuan.xiaojs.model;
 
 /**
  * Created by maxiaobao on 2016/10/25.
