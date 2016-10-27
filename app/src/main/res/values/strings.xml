@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">小教室</string>
+    <string name="home_tab_index">首页</string>
+    <string name="home_tab_live">直播</string>
+    <string name="home_tab_learn">学习圈</string>
+    <string name="home_tab_mine">我的</string>
 </resources>

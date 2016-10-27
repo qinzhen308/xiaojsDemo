@@ -35,8 +35,6 @@ import android.content.Context;
 public class UIUtils {
 
     /**
-     * this is base
-     * base2
      * 判断当前设备是否是平板
      * @param context
      * @return

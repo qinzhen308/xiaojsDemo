@@ -1,6 +1,8 @@
 package com.benyuan.xiaojs;
 
 import android.app.Application;
+
+import com.benyuan.xiaojs.util.ResourcesUtil;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.Settings;
@@ -25,7 +27,7 @@ public class XiaojsApplication extends Application {
         if (XiaojsConfig.RELEASE) {
             logSetting.logLevel(LogLevel.NONE);
         }
-
+        ResourcesUtil.init(getResources());
     }
 
 }
