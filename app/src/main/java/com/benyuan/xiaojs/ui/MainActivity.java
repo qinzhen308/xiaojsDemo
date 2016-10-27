@@ -48,10 +48,5 @@ public class MainActivity extends BaseTabActivity {
                 fs);
         new OkHttpClient();
     }
-
-    @Override
-    protected void onCenterButtonClick() {
-        Intent intent = new Intent(this,QrcodeActivity.class);
-        startActivity(intent);
-    }
+    
 }
