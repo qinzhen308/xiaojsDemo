@@ -38,15 +38,14 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     //Logger
     compile 'com.orhanobut:logger:1.15'
-
     //pull refresh
     compile project(':pullrefresh')
-
-
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile files('libs/zxing.jar')
+    //3d wheel picker
+    compile project(':3d_wheelpicker')
 }
