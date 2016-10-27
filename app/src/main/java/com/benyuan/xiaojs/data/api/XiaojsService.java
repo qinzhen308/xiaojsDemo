@@ -1,6 +1,6 @@
 package com.benyuan.xiaojs.data.api;
 
-import com.benyuan.xiaojs.data.api.model.RegisterInfo;
+import com.benyuan.xiaojs.model.RegisterInfo;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
