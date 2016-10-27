@@ -23,8 +23,6 @@
 
 package com.benyuan.xiaojs.api;
 
-import com.benyuan.xiaojs.data.api.interceptor.CommonHeaderInterceptor;
-
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -73,7 +71,6 @@ public class InterceptorTest {
 //
 //            @Override
 //            public void onFailure(Call<HubMsg> call, Throwable t) {
-//
 //                System.out.println("onFailure--------------------");
 //            }
 //        });

@@ -3,4 +3,19 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="header_color">#3F51B5</color>
+    <color name="white">#ffffff</color>
+    <color name="red">#dc2314</color>
+    <color name="def">#000000</color>
+
+    <!-- 二维码 -->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_frame">#ff000000</color>
+    <color name="viewfinder_laser">#ff86f60e</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="viewfinder_laser_trs">#7f86f60e</color>
+    <color name="top_cornor_bg">#f7f7f7</color>
+    <color name="totally_red_font">#ff0000</color>
 </resources>
