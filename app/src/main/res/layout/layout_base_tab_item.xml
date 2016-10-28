@@ -4,7 +4,7 @@
              android:layout_weight="1"
              android:layout_height="wrap_content">
 
-    <TextView
+    <com.benyuan.xiaojs.ui.widget.RedTipTextView
             android:id="@+id/base_tab_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

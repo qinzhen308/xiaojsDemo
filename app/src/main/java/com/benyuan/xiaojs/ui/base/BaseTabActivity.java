@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.widget.LazyViewPager;
+import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public abstract class BaseTabActivity extends BaseActivity{
     FragmentPagerAdapter mAdapter;
     private int[] mTitles;
     private int[] mDrawables;
-    private List<TextView> mTabs;
+    private List<RedTipTextView> mTabs;
     private Button mCenter;
     private int mCurrentIndex;
 
@@ -89,7 +90,7 @@ public abstract class BaseTabActivity extends BaseActivity{
         mTabs = new ArrayList<>();
         for (int i = 0 ;i < mTitles.length ;i++){
             FrameLayout fl = (FrameLayout) inflater.inflate(R.layout.layout_base_tab_item,null);
-            TextView text = (TextView) fl.findViewById(R.id.base_tab_text);
+            RedTipTextView text = (RedTipTextView) fl.findViewById(R.id.base_tab_text);
             if (mButtonType == BUTTON_TYPE_CENTER){
                 text.setPadding(0,(int) getResources().getDimension(R.dimen.px30),0,0);
             }
@@ -139,6 +140,17 @@ public abstract class BaseTabActivity extends BaseActivity{
 
     protected void onTabClick(int position){
 
+    }
+
+    protected void setTips(boolean... tips){
+        int index = 0;
+        for (int i = 0;i<tips.length;i++){
+            mTabs.get(i).setTipEnable(tips[i]);
+            index += 1;
+        }
+        for (;index < mTabs.size();index ++){
+            mTabs.get(index).setTipEnable(tips[index]);
+        }
     }
 
     public Fragment getCurrentFragment(){
