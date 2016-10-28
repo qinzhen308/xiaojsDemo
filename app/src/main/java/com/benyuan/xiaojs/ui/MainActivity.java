@@ -11,28 +11,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 
 public class MainActivity extends BaseTabActivity {
-
-//    private ImageView imageView;
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        imageView = (ImageView) findViewById(R.id.img);
-//
-//    }
-//
-//    public void btnClicked(View view) {
-//
-//        Glide.with(this).load("https://github.com/bumptech/glide/raw/master/static/glide_logo.png").into(imageView);
-//
-//        boolean isTablet = UIUtils.isTablet(this);
-//
-//        Logger.d(isTablet);
-//
-//    }
-
+    
     @Override
     protected void initView() {
         setMiddleTitle(R.string.app_name);

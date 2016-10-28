@@ -26,8 +26,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import com.benyuan.xiaojs.util.ResourcesUtil;
-
 import java.io.IOException;
 
 /**
@@ -256,7 +254,7 @@ public final class CameraManager {
 			// } else if (height > MAX_FRAME_HEIGHT) {
 			// height = MAX_FRAME_HEIGHT;
 			// }
-			int width = ResourcesUtil.dip2px(MIN_FRAME_WIDTH);
+			int width = (int) (context.getResources().getDisplayMetrics().density * MIN_FRAME_WIDTH + 0.5f);//dip2px
 			int leftOffset = (screenResolution.x - width) / 2;
 			int topOffset = (screenResolution.y - width) / 2;
 			framingRect = new Rect(leftOffset, topOffset - 120, leftOffset
