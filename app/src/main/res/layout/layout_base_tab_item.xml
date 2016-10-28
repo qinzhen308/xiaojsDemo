@@ -10,5 +10,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:drawablePadding="@dimen/px5"
+            android:textSize="10sp"
             android:textColor="@drawable/home_tab_text_selector"/>
 </FrameLayout>

@@ -48,7 +48,7 @@ public class RedTipTextView extends TextView {
             paint.setAntiAlias(true);
             paint.setDither(true);
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            canvas.drawCircle(width * 3 / 4,height / 2 + getPaddingTop()/2,realHeight / 10,paint);
+            canvas.drawCircle(width * 3 / 4,getPaddingTop(),realHeight / 10,paint);
         }
     }
 

@@ -142,14 +142,9 @@ public abstract class BaseTabActivity extends BaseActivity{
 
     }
 
-    protected void setTips(boolean... tips){
-        int index = 0;
-        for (int i = 0;i<tips.length;i++){
-            mTabs.get(i).setTipEnable(tips[i]);
-            index += 1;
-        }
-        for (;index < mTabs.size();index ++){
-            mTabs.get(index).setTipEnable(tips[index]);
+    protected final void setTip(int position ,boolean enable){
+        if (position < mTabs.size()){
+            mTabs.get(position).setTipEnable(enable);
         }
     }
 
