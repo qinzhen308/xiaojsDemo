@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- rounded image -->
+    <declare-styleable name="RoundedImageView">
+        <attr name="corner_radius" format="dimension" />
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="mask_color" format="color" />
+        <attr name="mutate_background" format="boolean" />
+        <attr name="oval" format="boolean" />
+        <attr name="android:scaleType" />
+        <attr name="label_src" format="reference" />
+        <attr name="label_offsetleft" format="dimension" />
+        <attr name="label_offsettop" format="dimension" />
+        <attr name="label_offsetright" format="dimension" />
+        <attr name="label_offsetbottom" format="dimension" />
+        <attr name="label_visible" format="boolean"></attr>
+        <attr name="label_gravity" />
+    </declare-styleable>
+
+    <!-- rounded image label-->
+    <attr name="label_gravity">
+        <flag name="left" value="2" />
+        <flag name="top" value="4" />
+        <flag name="right" value="8" />
+        <flag name="bottom" value="16" />
+        <flag name="center" value="96" />
+        <flag name="center_horizontal" value="32" />
+        <flag name="center_vertical" value="64" />
+    </attr>
+</resources>
