@@ -4,9 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.Gravity;
-import android.view.KeyboardShortcutGroup;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-
-import java.util.List;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -35,16 +30,15 @@ import java.util.List;
  * ======================================================================================== */
 
 public class BottomSheet extends Dialog implements DialogInterface.OnCancelListener,
-        DialogInterface.OnDismissListener {
+        DialogInterface.OnDismissListener, View.OnClickListener {
 
     private View mContentView;// dialog content view
     private String mTitleText;
-    private Button mBtnPositive;
-    private Button mBtnNegative;
-    private View.OnClickListener positiveListener;
-    private View.OnClickListener negativeListener;
+    private Button mLeftBtn;
+    private Button mRightBtn;
+    private View.OnClickListener mLeftBtnClickListener;
+    private View.OnClickListener mRightBtnClickListener;
 
-    private boolean mAutoDismiss = true;
     private OnDismissListener mOnDismissListener;
 
     private LinearLayout mTitleLayout;
@@ -79,29 +73,11 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(Gravity.BOTTOM);
 
-        mBtnNegative = (Button) dialogWindow.findViewById(R.id.cancel_dialog);
-        mBtnPositive = (Button) dialogWindow.findViewById(R.id.ok_dialog);
+        mRightBtn = (Button) dialogWindow.findViewById(R.id.left_btn);
+        mLeftBtn = (Button) dialogWindow.findViewById(R.id.right_btn);
 
-        mBtnPositive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mAutoDismiss) {
-                    dismiss();
-                }
-                if (positiveListener != null) {
-                    positiveListener.onClick(v);
-                }
-            }
-        });
-        mBtnNegative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-                if (negativeListener != null) {
-                    negativeListener.onClick(v);
-                }
-            }
-        });
+        mLeftBtn.setOnClickListener(this);
+        mRightBtn.setOnClickListener(this);
 
         setOnCancelListener(this);
         setOnDismissListener(this);
@@ -126,6 +102,32 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
         ((TextView) getWindow().findViewById(R.id.title_dialog)).setText(text);
     }
 
+    public void setLeftBtnText(String text) {
+        ((Button) getWindow().findViewById(R.id.left_btn)).setText(text);
+    }
+
+    public void setRightBtnText(String text) {
+        ((Button) getWindow().findViewById(R.id.right_btn)).setText(text);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.left_btn:
+                dismiss();
+                if (mLeftBtnClickListener != null) {
+                    mLeftBtnClickListener.onClick(v);
+                }
+                break;
+            case R.id.right_btn:
+                dismiss();
+                if (mRightBtnClickListener != null) {
+                    mRightBtnClickListener.onClick(v);
+                }
+                break;
+        }
+    }
+
     @Override
     public void onCancel(DialogInterface dialog) {
         if (mOnDismissListener != null) {
@@ -140,12 +142,12 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
         }
     }
 
-    public void setOkOnClickListener(View.OnClickListener listener) {
-        positiveListener = listener;
+    public void setLeftBtnClickListener(View.OnClickListener listener) {
+        mLeftBtnClickListener = listener;
     }
 
-    public void setCancelOnClickListener(View.OnClickListener listener) {
-        negativeListener = listener;
+    public void setRightBtnClickListener(View.OnClickListener listener) {
+        mRightBtnClickListener = listener;
     }
 
     public void setOnDismissListener(OnDismissListener listener) {

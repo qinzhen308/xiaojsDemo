@@ -13,7 +13,7 @@
             android:gravity="center">
 
         <Button
-                android:id="@+id/cancel_dialog"
+                android:id="@+id/left_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/px90"
                 android:background="@android:color/transparent"
@@ -31,7 +31,7 @@
                 android:singleLine="true"/>
 
         <Button
-                android:id="@+id/ok_dialog"
+                android:id="@+id/right_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/px90"
                 android:background="@android:color/transparent"
