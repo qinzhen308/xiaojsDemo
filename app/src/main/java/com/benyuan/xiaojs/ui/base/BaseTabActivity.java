@@ -32,9 +32,13 @@ import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 public abstract class BaseTabActivity extends BaseActivity{
 
+    @BindView(R.id.tab_fragment_content)
     LazyViewPager mViewPager;
+    @BindView(R.id.tab_menu)
     LinearLayout mMenu;
     FragmentPagerAdapter mAdapter;
     private int[] mTitles;
@@ -48,9 +52,7 @@ public abstract class BaseTabActivity extends BaseActivity{
 
     @Override
     protected void addViewContent() {
-        View v = addView(R.layout.activity_base_tab);
-        mViewPager = (LazyViewPager) v.findViewById(R.id.tab_fragment_content);
-        mMenu = (LinearLayout) v.findViewById(R.id.tab_menu);
+        addView(R.layout.activity_base_tab);
         initView();
     }
 
