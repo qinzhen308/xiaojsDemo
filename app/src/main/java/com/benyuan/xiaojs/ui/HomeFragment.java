@@ -16,19 +16,26 @@ package com.benyuan.xiaojs.ui;
  * ======================================================================================== */
 
 import android.view.View;
-import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
+import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
+import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
+import com.benyuan.xiaojs.ui.widget.banner.PointIndicateView;
+import com.benyuan.xiaojs.ui.widget.banner.ScrollerViewPager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class HomeFragment extends BaseFragment {
-    @BindView(R.id.mark)
-    TextView t;
-    private int i;
 
+    @BindView(R.id.home_banner)
+    ScrollerViewPager mBanner;
+    @BindView(R.id.home_banner_point)
+    PointIndicateView mPoint;
     @Override
     protected View getContentView() {
         View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
@@ -37,41 +44,39 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void init() {
+        BannerBean b1 = new BannerBean();
+        BannerBean b2 = new BannerBean();
+        BannerBean b3 = new BannerBean();
+        BannerBean b4 = new BannerBean();
+        b1.resId = R.mipmap.t_one;
+        b2.resId = R.mipmap.t_two;
+        b3.resId = R.mipmap.t_three;
+        b4.resId = R.mipmap.t_four;
+
+        List<BannerBean> beanList = new ArrayList<>();
+        beanList.add(b1);
+        beanList.add(b2);
+        beanList.add(b3);
+        beanList.add(b4);
+        BannerAdapter adapter = new BannerAdapter(mContext,beanList);
+        mBanner.setAdapter(adapter);
+        mPoint.setViewPager(mBanner,beanList.size(),0,true,null);
+    }
+
+    @OnClick({})
+    public void onClick(View v) {
 
     }
 
-    @OnClick({R.id.click, R.id.look})
-    public void onClick(View v) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        mBanner.startAutoScroll();
+    }
 
-//        HttpClient.get().url("http://192.168.100.86/ci/index.php/msg/get").build().execute(new StringCallback() {
-//            @Override
-//            public void onError(Call call, Exception e, int id) {
-//
-//            }
-//
-//            @Override
-//            public void onResponse(String response, int id) {
-//                t.setText(response + i++);
-//            }
-//        });
-//
-//        new FileCallBack("","") {
-//            @Override
-//            public void onError(Call call, Exception e, int id) {
-//
-//            }
-//
-//            @Override
-//            public void onResponse(File response, int id) {
-//
-//            }
-//
-//
-//        };
-
-        switch (v.getId()) {
-
-        }
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        mBanner.stopAutoScroll();
     }
 }

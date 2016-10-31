@@ -16,16 +16,11 @@ package com.benyuan.xiaojs.ui;
  * ======================================================================================== */
 
 import android.view.View;
-import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 
-import butterknife.BindView;
-
 public class MineFragment extends BaseFragment {
-    @BindView(R.id.mark)
-    TextView t;
 
     @Override
     protected View getContentView() {
@@ -35,6 +30,5 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        t.setText("this is mine page");
     }
 }

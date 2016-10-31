@@ -1,5 +1,4 @@
 package com.benyuan.xiaojs.ui;
-
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -10,24 +9,24 @@ package com.benyuan.xiaojs.ui;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/10/11
+ * Date:2016/10/31
  * Desc:
  *
  * ======================================================================================== */
 
-import android.view.View;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.base.BaseFragment;
+import com.benyuan.xiaojs.ui.base.BaseActivity;
 
-public class LearnFragment extends BaseFragment {
-    @Override
-    protected View getContentView() {
-        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
-        return v;
-    }
+import butterknife.BindView;
 
+public class TeActivity extends BaseActivity {
+    @BindView(R.id.te)
+    TextView mTe;
     @Override
-    protected void init() {
+    protected void addViewContent() {
+        addView(R.layout.te_activity);
+        mTe.setText("te");
     }
 }

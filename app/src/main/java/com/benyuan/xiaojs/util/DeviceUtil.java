@@ -27,4 +27,8 @@ public class DeviceUtil {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return metrics.heightPixels;
     }
+
+    public static int dip2px(Context context,float dip){
+        return (int) (context.getResources().getDisplayMetrics().density * dip + 0.5f);
+    }
 }

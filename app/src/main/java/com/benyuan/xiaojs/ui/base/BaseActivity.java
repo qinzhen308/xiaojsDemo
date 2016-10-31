@@ -47,7 +47,8 @@ public abstract class BaseActivity extends FragmentActivity {
         mRightText = (TextView) findViewById(R.id.right_view);
         mMiddleText = (TextView) findViewById(R.id.middle_view);
         addViewContent();
-        mBinder = ButterKnife.bind(this);
+
+
     }
 
     protected void needHeader(boolean need){
@@ -64,6 +65,7 @@ public abstract class BaseActivity extends FragmentActivity {
         if (layoutId > 0){
             mContent.removeAllViews();
             View view = getLayoutInflater().inflate(layoutId, mContent);
+            mBinder = ButterKnife.bind(this);
             return view;
         }else {
             try {
@@ -79,6 +81,7 @@ public abstract class BaseActivity extends FragmentActivity {
         if (view != null){
             mContent.removeAllViews();
             mContent.addView(view);
+            mBinder = ButterKnife.bind(this);
             return view;
         }else {
             try {

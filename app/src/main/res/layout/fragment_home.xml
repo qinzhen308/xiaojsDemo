@@ -4,21 +4,69 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/mark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="this is home page"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@color/header_color"
+                  android:orientation="horizontal"
+                  android:paddingBottom="@dimen/px20"
+                  android:paddingTop="@dimen/px20">
 
-    <Button
-        android:id="@+id/click"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="click"/>
+        <ImageView
+                android:id="@+id/left_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:src="@mipmap/mine_normal"
+                android:visibility="invisible"
+                android:layout_gravity="center_vertical"/>
 
-    <Button
-        android:id="@+id/look"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="query"/>
+        <RelativeLayout
+                android:id="@+id/home_search"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+            <TextView
+                    android:text="@string/home_search_hint"
+                    android:layout_marginLeft="@dimen/px10"
+                    android:paddingBottom="@dimen/px20"
+                    android:paddingTop="@dimen/px20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <ImageView
+                android:id="@+id/right_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/mine_normal"
+                android:visibility="invisible"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"/>
+    </LinearLayout>
+    <FrameLayout
+            android:id="@+id/home_banner_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+        <com.benyuan.xiaojs.ui.widget.banner.ScrollerViewPager
+                android:id="@+id/home_banner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px435"
+                android:background="@mipmap/icon_user_banner_new"/>
+
+        <com.benyuan.xiaojs.ui.widget.banner.PointIndicateView
+                android:id="@+id/home_banner_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="@dimen/px20">
+        </com.benyuan.xiaojs.ui.widget.banner.PointIndicateView>
+    </FrameLayout>
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.benyuan.xiaojs.ui;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.benyuan.xiaojs.R;
@@ -14,7 +15,8 @@ public class MainActivity extends BaseTabActivity {
     
     @Override
     protected void initView() {
-        setMiddleTitle(R.string.app_name);
+        //setMiddleTitle(R.string.app_name);
+        needHeader(false);
         List<Fragment> fs = new ArrayList<>();
         fs.add(new HomeFragment());
         fs.add(new LiveFragment());
@@ -27,4 +29,8 @@ public class MainActivity extends BaseTabActivity {
         new OkHttpClient();
     }
 
+    @Override
+    protected void onCenterButtonClick() {
+        startActivity(new Intent(this,TeActivity.class));
+    }
 }
