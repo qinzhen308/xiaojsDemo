@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/header_color"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/px20"
-    android:paddingTop="@dimen/px20">
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@color/header_color"
+             android:orientation="horizontal"
+             android:paddingBottom="@dimen/px20"
+             android:paddingTop="@dimen/px20">
 
     <TextView
-        android:id="@+id/left_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|center_vertical"
-        android:textColor="@color/white" />
+            android:id="@+id/left_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:textColor="@color/white"/>
+
+    <ImageView
+            android:id="@+id/left_image"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@+id/middle_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@color/white" />
+            android:id="@+id/middle_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"/>
 
     <TextView
-        android:id="@+id/right_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical"
+            android:id="@+id/right_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:textColor="@color/white"/>
 
-        android:textColor="@color/white" />
+    <ImageView
+            android:id="@+id/right_image"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 </FrameLayout>

@@ -1,5 +1,4 @@
-package com.benyuan.xiaojs.ui;
-
+package com.benyuan.xiaojs.ui.course;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -10,24 +9,18 @@ package com.benyuan.xiaojs.ui;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/10/11
+ * Date:2016/11/1
  * Desc:
  *
  * ======================================================================================== */
 
-import android.view.View;
-
-import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.base.BaseFragment;
-
-public class LearnFragment extends BaseFragment {
-    @Override
-    protected View getContentView() {
-        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
-        return v;
-    }
-
-    @Override
-    protected void init() {
-    }
+public class CourseBean {
+    public String name;
+    public String speaker;
+    public String time;
+    public double price;
+    public String stuNum;
+    public String share;
+    public String focus;
+    public int courseState;
 }

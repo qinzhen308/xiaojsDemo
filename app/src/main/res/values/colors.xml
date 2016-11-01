@@ -22,7 +22,6 @@
     <color name="ver_divide_line">#cccccc</color>
     <color name="link_hover">#1d9de2</color>
 
-
     <!-- 二维码 -->
     <color name="viewfinder_mask">#60000000</color>
     <color name="result_view">#b0000000</color>
@@ -32,6 +31,5 @@
     <color name="viewfinder_laser_trs">#7f86f60e</color>
     <color name="top_cornor_bg">#f7f7f7</color>
     <color name="totally_red_font">#ff0000</color>
-
-
+    <color name="clicked_grey_light">#d7d7db</color> <!-- 用于浅灰按钮hover -->
 </resources>

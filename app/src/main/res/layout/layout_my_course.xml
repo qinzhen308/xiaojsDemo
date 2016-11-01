@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/px30">
+
+            <FrameLayout
+                    android:id="@+id/image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:id="@+id/course_item_image"
+                        android:layout_width="@dimen/px120"
+                        android:layout_height="@dimen/px120"
+                        android:src="@mipmap/t_four"
+                        android:scaleType="fitXY"/>
+
+                <ImageView
+                        android:id="@+id/course_xbs_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </FrameLayout>
+
+            <RelativeLayout
+                    android:id="@+id/time_wrapper"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true">
+
+                <ImageView
+                        android:id="@+id/course_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/time_mark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_toRightOf="@id/image"
+                    android:layout_toLeftOf="@id/time_wrapper">
+
+                <TextView
+                        android:id="@+id/course_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/course_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+            android:id="@+id/teach_fun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/px20"
+            android:layout_marginTop="@dimen/px20">
+
+        <TextView
+                android:id="@+id/course_focus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"/>
+
+        <TextView
+                android:id="@+id/course_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/course_focus"
+                android:layout_marginRight="@dimen/px30"/>
+
+        <TextView
+                android:id="@+id/course_stu_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/course_share"
+                android:layout_marginRight="@dimen/px30"/>
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px1"
+            android:background="@color/clicked_grey_light"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <TextView
+                android:id="@+id/course_opera_1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="@dimen/px15"
+                android:paddingBottom="@dimen/px15"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/course_opera_2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="@dimen/px15"
+                android:paddingBottom="@dimen/px15"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/course_opera_3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="@dimen/px15"
+                android:paddingBottom="@dimen/px15"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/course_opera_4"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="@dimen/px15"
+                android:paddingBottom="@dimen/px15"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -104,80 +104,58 @@ public class Errors {
 
 
     public static String getInternalErrorMessage(String errorCode){
-        String errorMessage = "未知错误";
+        String errorMessage = "请求失败";
 
         if (TextUtils.isEmpty(errorCode)){
             return errorMessage;
+        }else if (errorCode.equals(Errors.NO_ERROR)) {
+            errorMessage = "请求失败";
+        }else if (errorCode.equals(Errors.ILLEGAL_CALL)) {
+            errorMessage = "非法请求或调用";
+        }else if (errorCode.equals(Errors.NOT_IMPLEMENTED)) {
+            errorMessage = "功能没有实现";
+        }else if (errorCode.equals(Errors.SERVER_ERROR)) {
+            errorMessage = "服务器内部错误";
+        }else if (errorCode.equals(Errors.INVALID_CSRF)) {
+            errorMessage = "无效的CSRF令牌";
+        }else if (errorCode.equals(Errors.INVALID_OPERATION)) {
+            errorMessage = "无效的操作";
+        }else if (errorCode.equals(Errors.TYPE_NOT_FOUND)) {
+            errorMessage = "类型没被找到";
+        }else if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
+            errorMessage = "文档没被找到";
+        }else if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+            errorMessage = "文档已存在";
+        }else if (errorCode.equals(Errors.OPERATION_TIMEOUT)) {
+            errorMessage = "操作超时";
+        }else if (errorCode.equals(Errors.NOT_SUPPORTED)) {
+            errorMessage = "不支持该客户端";
+        }else if (errorCode.equals(Errors.BAD_PARAMETER)) {
+            errorMessage = "参数不正确";
+        }else if (errorCode.equals(Errors.INVALID_CODE)) {
+            errorMessage = "验证码不匹配";
+        }else if (errorCode.equals(Errors.BAD_CODE)) {
+            errorMessage = "验证码已过期";
+        }else if (errorCode.equals(Errors.BAD_REQUEST)) {
+            errorMessage = "错误请求";
+        }else if (errorCode.equals(Errors.LOGIN_FROZEN)) {
+            errorMessage = "登录被冻结";
+        }else if (errorCode.equals(Errors.INVALID_CREDENTIAL)) {
+            errorMessage = "无效的凭证";
+        }else if (errorCode.equals(Errors.ROLE_NOT_FOUND)) {
+            errorMessage = "未被认证的角色";
+        }else if (errorCode.equals(Errors.BENEFIT_NOT_FOUND)) {
+            errorMessage = "没有找到利益详情";
+        }else if (errorCode.equals(Errors.UNAUTHORIZED)) {
+            errorMessage = "未经授权的访问";
+        }else if (errorCode.equals(Errors.DENIED_UGC_OWNER)) {
+            errorMessage = "未经授权的访问(UGC)";
+        }else {
+            errorMessage = "请求失败";
         }
 
-        switch (errorCode){
-            case Errors.NO_ERROR:
-                errorMessage = "未指定错误";
-                break;
-            case Errors.ILLEGAL_CALL:
-                errorMessage = "非法请求或调用";
-                break;
-            case Errors.NOT_IMPLEMENTED:
-                errorMessage = "功能没有实现";
-                break;
-            case Errors.SERVER_ERROR:
-                errorMessage = "服务器内部错误";
-                break;
-            case Errors.INVALID_CSRF:
-                errorMessage = "无效的CSRF令牌";
-                break;
-            case Errors.INVALID_OPERATION:
-                errorMessage = "无效的操作";
-                break;
-            case Errors.TYPE_NOT_FOUND:
-                errorMessage = "类型没被找到";
-                break;
-            case Errors.DOC_NOT_FOUND:
-                errorMessage = "文档没被找到";
-                break;
-            case Errors.DOC_ALREADY_EXISTS:
-                errorMessage = "文档已存在";
-                break;
-            case Errors.OPERATION_TIMEOUT:
-                errorMessage = "操作超时";
-                break;
-            case Errors.NOT_SUPPORTED:
-                errorMessage = "不支持该客户端";
-                break;
-            case Errors.BAD_PARAMETER:
-                errorMessage = "参数不正确";
-                break;
-            case Errors.INVALID_CODE:
-                errorMessage = "验证码不匹配";
-                break;
-            case Errors.BAD_CODE:
-                errorMessage = "验证码已过期";
-                break;
-            case Errors.BAD_REQUEST:
-                errorMessage = "错误请求";
-                break;
-            case Errors.LOGIN_FROZEN:
-                errorMessage = "登录被冻结";
-                break;
-            case Errors.INVALID_CREDENTIAL:
-                errorMessage = "无效的凭证";
-                break;
-            case Errors.ROLE_NOT_FOUND:
-                errorMessage = "未被认证的角色";
-                break;
-            case Errors.BENEFIT_NOT_FOUND:
-                errorMessage = "没有找到利益详情";
-                break;
-            case Errors.UNAUTHORIZED:
-                errorMessage = "未经授权的访问";
-                break;
-            case Errors.DENIED_UGC_OWNER:
-                errorMessage = "未经授权的访问(UGC)";
-                break;
-            default:
-                break;
-        }
-        return errorCode;
+
+        return errorMessage;
     }
 
 

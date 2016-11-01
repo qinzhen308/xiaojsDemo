@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/top_wrapper"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:id="@+id/my_course_tab"
+                android:orientation="horizontal"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/course_learn"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/px30"
+                    android:paddingBottom="@dimen/px30"
+                    android:text="@string/course_of_teach"
+                    android:layout_height="wrap_content"/>
+
+            <View
+                    android:background="@color/clicked_grey_light"
+                    android:layout_marginTop="@dimen/px10"
+                    android:layout_marginBottom="@dimen/px10"
+                    android:layout_width="@dimen/px1"
+                    android:layout_height="match_parent"/>
+
+            <TextView
+                    android:id="@+id/course_teach"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/px30"
+                    android:paddingBottom="@dimen/px30"
+                    android:text="@string/course_of_learn"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <View
+                    android:id="@+id/course_learn_line"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:visibility="invisible"
+                    android:background="@color/red"
+                    android:layout_height="@dimen/px5"/>
+
+            <View
+                    android:id="@+id/course_teach_line"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:background="@color/red"
+                    android:visibility="invisible"
+                    android:layout_height="@dimen/px5"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:layout_height="wrap_content">
+
+            <EditText
+                    android:id="@+id/my_course_search"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:drawableLeft="@mipmap/mine_normal"
+                    android:hint="123"
+                    android:background="@drawable/common_edittext_bg"
+                    android:paddingBottom="@dimen/px15"
+                    android:paddingTop="@dimen/px15"
+                    android:layout_marginTop="@dimen/px30"
+                    android:layout_marginBottom="@dimen/px30"
+                    android:layout_marginLeft="@dimen/px50"
+                    android:layout_marginRight="@dimen/px50"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.benyuan.xiaojs.ui.widget.LazyViewPager
+            android:id="@+id/my_course_pager"
+            android:layout_below="@id/top_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+</RelativeLayout>

@@ -19,6 +19,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
@@ -34,6 +35,8 @@ public abstract class BaseActivity extends FragmentActivity {
     private TextView mLeftText;
     private TextView mRightText;
     private TextView mMiddleText;
+    private ImageView mLeftImage;
+    private ImageView mRightImage;
 
     private Unbinder mBinder;
 
@@ -46,6 +49,7 @@ public abstract class BaseActivity extends FragmentActivity {
         mLeftText = (TextView) findViewById(R.id.left_view);
         mRightText = (TextView) findViewById(R.id.right_view);
         mMiddleText = (TextView) findViewById(R.id.middle_view);
+        mLeftImage = (ImageView) findViewById(R.id.left_image);
         addViewContent();
     }
 
@@ -115,6 +119,24 @@ public abstract class BaseActivity extends FragmentActivity {
             mRightText.setText(resId);
         }else {
             mRightText.setVisibility(View.GONE);
+        }
+    }
+
+    protected final void setLeftImage(int resId){
+        if (resId > 0){
+            mLeftImage.setVisibility(View.VISIBLE);
+            mLeftImage.setImageResource(resId);
+        }else {
+            mLeftImage.setVisibility(View.GONE);
+        }
+    }
+
+    protected final void setRightImage(int resId){
+        if (resId > 0){
+            mRightImage.setVisibility(View.VISIBLE);
+            mRightImage.setImageResource(resId);
+        }else {
+            mRightImage.setVisibility(View.GONE);
         }
     }
 

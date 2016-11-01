@@ -14,7 +14,8 @@ public class MainActivity extends BaseTabActivity {
     
     @Override
     protected void initView() {
-        setMiddleTitle(R.string.app_name);
+        //setMiddleTitle(R.string.app_name);
+        needHeader(false);
         List<Fragment> fs = new ArrayList<>();
         fs.add(new HomeFragment());
         fs.add(new LiveFragment());

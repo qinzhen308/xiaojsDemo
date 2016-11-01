@@ -17,13 +17,11 @@ package com.benyuan.xiaojs.ui;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.mine.SettingsActivity;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MineFragment extends BaseFragment {

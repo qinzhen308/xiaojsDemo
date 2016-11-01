@@ -1,4 +1,4 @@
-package com.benyuan.xiaojs.ui;
+package com.benyuan.xiaojs.ui.widget.banner;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,20 +9,11 @@ package com.benyuan.xiaojs.ui;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/10/26
+ * Date:2016/10/29
  * Desc:
  *
  * ======================================================================================== */
 
-import android.widget.Toast;
-
-import com.benyuan.xiaojs.common.zxing.CaptureActivity;
-
-
-public class QrcodeActivity extends CaptureActivity {
-
-    @Override
-    protected void onResult(String result) {
-        Toast.makeText(this,result, Toast.LENGTH_SHORT).show();
-    }
+public class BannerBean {
+    public int resId;
 }
