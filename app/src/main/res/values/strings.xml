@@ -6,6 +6,8 @@
     <string name="finish">完成</string>
     <string name="save">保存</string>
     <string name="rotate">旋转</string>
+    <string name="phone_num">手机号</string>
+    <string name="pwd">密码</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_live">直播</string>
@@ -14,22 +16,25 @@
     <string name="qr_code">二维码</string>
 
     <!--account-->
+    <!--register-->
+    <string name="register">注册</string>
     <string name="name_hint">您的真实姓名</string>
-    <string name="phone_hint">手机号</string>
     <string name="verify_code_hint">验证码</string>
     <string name="verify_code_send_hint">发送验证码</string>
     <string name="verity_code_countdown">%1$sS后可重发</string>
     <string name="verity_code_re_send">重发验证码</string>
     <string name="pwd_hint">请输入6&#8211;16位密码</string>
-    <string name="register">注册</string>
     <string name="register_protocol">《小教室用户注册协议》</string>
     <string name="register_protocol_agree">点击注册默认您同意</string>
     <string name="name_empty">请输用户名</string>
     <string name="phone_empty">请输入手机号</string>
     <string name="phone_error">请输入正确的手机号</string>
     <string name="verify_empty">请输入验证码</string>
-    <string name="verify_error">请输入正确验证码</string>
     <string name="pwd_empty">请输入密码</string>
     <string name="pwd_error">密码少于6位</string>
-    <string name="register_failure">注册失败</string>
+    <!--login-->
+    <string name="login">登录</string>
+    <string name="register_guide">还没有账号，立即注册</string>
+
+
 </resources>

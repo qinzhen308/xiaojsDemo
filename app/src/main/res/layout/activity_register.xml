@@ -47,7 +47,7 @@
                 android:imeOptions="actionNext"
                 android:inputType="phone"
                 android:maxLength="11"
-                android:hint="@string/phone_hint"/>
+                android:hint="@string/phone_num"/>
 
         <View
                 style="@style/DividerHorizontal"/>

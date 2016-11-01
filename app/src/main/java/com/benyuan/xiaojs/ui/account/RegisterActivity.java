@@ -15,10 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.VerifyCode;
@@ -127,7 +130,7 @@ public class RegisterActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode) {
-
+                Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -161,20 +164,26 @@ public class RegisterActivity extends BaseActivity {
                         @Override
                         public void onSuccess(Object object) {
                             //login immediately after successful registration
-                            LoginParams loginParams = new LoginParams();
+                            final LoginParams loginParams = new LoginParams();
                             loginParams.setMobile(regInfo.getMobile());
                             loginParams.setPassword(regInfo.getPassword());
-                            LoginDataManager.requestLoginByAPI(mContext, loginParams, new APIServiceCallback() {
+                            LoginDataManager.requestLoginByAPI(mContext, loginParams, new APIServiceCallback<LoginInfo>() {
 
                                 @Override
-                                public void onSuccess(Object object) {
-                                    //enter main page after successful login
-                                    startActivity(new Intent(mContext, MainActivity.class));
+                                public void onSuccess(LoginInfo loginInfo) {
+                                    if (loginInfo != null) {
+                                        XiaojsConfig.mLoginUser = loginInfo.getUser();
+                                        XjsUtils.getSharedPreferences().edit().putLong(XiaojsConfig.KEY_LOGIN_USERNAME,
+                                                loginParams.getMobile()).commit();
+                                        //enter main page after successful login
+                                        startActivity(new Intent(mContext, MainActivity.class));
+                                    }
                                 }
 
                                 @Override
                                 public void onFailure(String errorCode) {
                                     //login failure
+                                    Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -182,7 +191,7 @@ public class RegisterActivity extends BaseActivity {
                         @Override
                         public void onFailure(String errorCode) {
                             //register error
-                            Toast.makeText(mContext, getString(R.string.register_failure), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -190,7 +199,8 @@ public class RegisterActivity extends BaseActivity {
                 @Override
                 public void onFailure(String errorCode) {
                     //verify code error
-                    Toast.makeText(mContext, getString(R.string.verify_error), Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
