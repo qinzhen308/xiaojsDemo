@@ -22,7 +22,7 @@ import com.orhanobut.logger.Logger;
 public class TestAPIActivity extends Activity {
 
     private int vcode;
-    private long mob = 18701686973l;
+    private long mob = 18701686978l;
     private String sessionid = "";
 
     @Override
@@ -41,8 +41,8 @@ public class TestAPIActivity extends Activity {
             }
             case R.id.btn_svm:{
                 //testValidateCode(this);
-                //testRegister(this);
-                testLogin(this);
+                testRegister(this);
+                //testLogin(this);
                 break;
             }
             case R.id.btn_q:{
