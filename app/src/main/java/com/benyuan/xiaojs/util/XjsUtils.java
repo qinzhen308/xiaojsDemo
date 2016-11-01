@@ -15,7 +15,10 @@ package com.benyuan.xiaojs.util;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.os.IBinder;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public class XjsUtils {
 
@@ -41,5 +44,30 @@ public class XjsUtils {
     public static int sp2px(Context context, float spValue) {
         final float fontScale = getDisplayMetrics(context).scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    /**
+     * 根据view显示输入法
+     *
+     * @param ctx
+     * @param view
+     */
+    public static void showIMM(Context ctx, View view) {
+        InputMethodManager imm = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    /**
+     * 隐藏输入法
+     *
+     * @param ctx
+     * @param token
+     */
+    public static void hideIMM(Context ctx, IBinder token) {
+        InputMethodManager imm = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(token,
+                InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 }

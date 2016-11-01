@@ -4,10 +4,24 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!--common-->
     <color name="header_color">#3F51B5</color>
     <color name="white">#ffffff</color>
     <color name="red">#dc2314</color>
     <color name="def">#000000</color>
+    <!--app base color-->
+    <color name="main_orange">#FF9833</color>
+    <color name="main_blue">#0076FF</color>
+    <color name="main_orange_pressed">#FFab22</color>
+    <color name="main_blue_pressed">#0088FF</color>
+    <!--disable color, eg btn-->
+    <color name="disable_btn">#999999</color>
+    <!--horizontal divide line-->
+    <color name="hor_divide_line">#cccccc</color>
+    <!--vertical divide line-->
+    <color name="ver_divide_line">#cccccc</color>
+
+
 
     <!-- 二维码 -->
     <color name="viewfinder_mask">#60000000</color>
@@ -18,4 +32,6 @@
     <color name="viewfinder_laser_trs">#7f86f60e</color>
     <color name="top_cornor_bg">#f7f7f7</color>
     <color name="totally_red_font">#ff0000</color>
+
+
 </resources>
