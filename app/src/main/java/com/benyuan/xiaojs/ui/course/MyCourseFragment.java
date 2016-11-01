@@ -42,7 +42,7 @@ public class MyCourseFragment extends BaseFragment {
         if (b != null){
             isTeacher = b.getBoolean("key");
         }
-        adapter = new MyCourseAdapter(mContext,mListView,isTeacher);  
+        adapter = new MyCourseAdapter(mContext,mListView,isTeacher);
         mListView.setAdapter(adapter);
     }
 }
