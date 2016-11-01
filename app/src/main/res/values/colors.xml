@@ -20,7 +20,7 @@
     <color name="hor_divide_line">#cccccc</color>
     <!--vertical divide line-->
     <color name="ver_divide_line">#cccccc</color>
-
+    <color name="link_hover">#1d9de2</color>
 
 
     <!-- 二维码 -->

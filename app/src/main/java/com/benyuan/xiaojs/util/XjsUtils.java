@@ -15,12 +15,21 @@ package com.benyuan.xiaojs.util;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.benyuan.xiaojs.XiaojsConfig;
+
 public class XjsUtils {
+    private static Context mAppContext;
+
+    public static void init(Context appContext){
+        mAppContext = appContext;
+    }
 
     public static DisplayMetrics getDisplayMetrics(Context context) {
         return context.getResources().getDisplayMetrics();
@@ -69,5 +78,9 @@ public class XjsUtils {
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(token,
                 InputMethodManager.RESULT_UNCHANGED_SHOWN);
+    }
+
+    public static SharedPreferences getSharedPreferences() {
+        return mAppContext.getSharedPreferences(XiaojsConfig.XIAOJS_PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 }
