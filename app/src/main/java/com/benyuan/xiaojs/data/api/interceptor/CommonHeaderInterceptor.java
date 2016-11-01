@@ -36,11 +36,12 @@ import okhttp3.Response;
 
 public class CommonHeaderInterceptor implements Interceptor{
 
+    private int appType;
     private String appVersion;
 
-
-    public CommonHeaderInterceptor(String appVersion){
+    public CommonHeaderInterceptor(int appType, String appVersion){
         this.appVersion = appVersion;
+        this.appType = appType;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class CommonHeaderInterceptor implements Interceptor{
 
         // Request customization: add request headers
         Request.Builder requestBuilder = original.newBuilder()
-                .addHeader("XA", "xa-value1")
+                .addHeader("XA", Integer.toString(appType))
                 .addHeader("XAV", appVersion);
 
         Request request = requestBuilder.build();

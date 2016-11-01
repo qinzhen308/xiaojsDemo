@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ImageView
+            android:layout_marginTop="@dimen/px80"
+            android:layout_width="@dimen/px100"
+            android:layout_height="@dimen/px100"/>
+
+    <View
+            android:layout_marginTop="@dimen/px80"
+            style="@style/DividerHorizontal"/>
+
+    <LinearLayout
+
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:layout_height="wrap_content">
+
+        <EditText
+                android:id="@+id/login_name"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px25"
+                android:paddingBottom="@dimen/px25"
+                android:hint="@string/phone_num"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:maxLength="11"/>
+
+        <View
+                style="@style/DividerHorizontal"/>
+    </LinearLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/px25">
+
+        <EditText
+                android:id="@+id/login_pwd"
+                android:background="@null"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/pwd"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:maxLength="16"/>
+
+        <ImageView
+                android:id="@+id/hide_show_pwd"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_width="@dimen/px30"
+                android:layout_height="@dimen/px30"
+                android:background="#f00"/>
+    </RelativeLayout>
+
+    <View
+            style="@style/DividerHorizontal"/>
+
+    <Button
+            android:id="@+id/login_btn"
+            android:layout_marginTop="@dimen/px80"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/BigSubmitBtn"
+            android:layout_marginLeft="@dimen/px80"
+            android:layout_marginRight="@dimen/px80"
+            android:text="@string/login"/>
+
+    <TextView
+            android:id="@+id/reg_guide"
+            android:paddingLeft="@dimen/px80"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_guide"/>
+
+</LinearLayout>

@@ -1,15 +1,18 @@
 package com.benyuan.xiaojs.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by maxiaobao on 2016/10/25.
  */
 
-public class RegisterInfo {
+public class RegisterInfo{
 
     private long mobile;
     private String password;
     private String username;
     private int code;
+    private int ct;
 
     /**
      *
@@ -81,6 +84,24 @@ public class RegisterInfo {
      */
     public void setCode(int code) {
         this.code = code;
+    }
+
+    /**
+     *
+     * @return
+     * The ct
+     */
+    public int getCt() {
+        return ct;
+    }
+
+    /**
+     *
+     * @param ct
+     * The ct
+     */
+    public void setCt(int ct) {
+        this.ct = ct;
     }
 
 

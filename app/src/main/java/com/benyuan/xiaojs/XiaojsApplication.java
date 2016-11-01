@@ -2,6 +2,7 @@ package com.benyuan.xiaojs;
 
 import android.app.Application;
 
+import com.benyuan.xiaojs.util.XjsUtils;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.Settings;
@@ -23,9 +24,12 @@ public class XiaojsApplication extends Application {
                 .methodOffset(0);
 
         //发布Release版本时，需要将loglevel设为NONE。
-        if (XiaojsConfig.RELEASE) {
+        if (!XiaojsConfig.DEBUG) {
             logSetting.logLevel(LogLevel.NONE);
         }
+
+        //init xiaojs utils
+        XjsUtils.init(this);
     }
 
 }

@@ -15,6 +15,7 @@ package com.benyuan.xiaojs.ui.base;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
 import com.benyuan.xiaojs.ui.widget.LazyViewPager;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 
