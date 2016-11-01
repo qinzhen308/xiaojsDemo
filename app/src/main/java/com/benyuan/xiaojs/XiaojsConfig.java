@@ -6,8 +6,8 @@ package com.benyuan.xiaojs;
 
 public class XiaojsConfig {
 
-    //是否为release版本
-    public static final boolean RELEASE= false;
+    //是否为debug版本
+    public static final boolean DEBUG= true;
 
     //日志tag
     public static final String LOG_TAG = "XiaoJS-Log";

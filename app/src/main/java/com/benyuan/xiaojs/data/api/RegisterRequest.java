@@ -58,7 +58,7 @@ public class RegisterRequest {
             @Override
             public void onFailure(Call<APIEntity> call, Throwable t) {
 
-                if (!XiaojsConfig.RELEASE) {
+                if (XiaojsConfig.DEBUG) {
                     Logger.d("the register request has occur exception");
                 }
 
@@ -121,7 +121,7 @@ public class RegisterRequest {
             @Override
             public void onFailure(Call<APIEntity> call, Throwable t) {
 
-                if (!XiaojsConfig.RELEASE) {
+                if (XiaojsConfig.DEBUG) {
                     Logger.d("the validate code request has occur exception");
                 }
 
@@ -164,7 +164,7 @@ public class RegisterRequest {
             @Override
             public void onFailure(Call<VerifyCode> call, Throwable t) {
 
-                if(!XiaojsConfig.RELEASE){
+                if(XiaojsConfig.DEBUG){
                     Logger.d("the send code has occur exception");
                 }
 

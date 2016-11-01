@@ -57,7 +57,7 @@ public class LoginRequest {
             @Override
             public void onFailure(Call<LoginInfo> call, Throwable t) {
 
-                if(!XiaojsConfig.RELEASE){
+                if(XiaojsConfig.DEBUG){
                     Logger.d("the login has occur exception");
                 }
 
@@ -100,7 +100,7 @@ public class LoginRequest {
             @Override
             public void onFailure(Call<APIEntity> call, Throwable t) {
 
-                if(!XiaojsConfig.RELEASE){
+                if(XiaojsConfig.DEBUG){
                     Logger.d("the logout has occur exception");
                 }
 

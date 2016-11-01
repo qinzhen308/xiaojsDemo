@@ -61,10 +61,11 @@ public class ApiManager {
     private XiaojsService createXiaojsService() {
 
         HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
-        if (XiaojsConfig.RELEASE) {
-            logInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
-        } else {
+        if (XiaojsConfig.DEBUG) {
             logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+
+            logInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
 
 
