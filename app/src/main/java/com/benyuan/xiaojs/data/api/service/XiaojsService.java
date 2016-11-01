@@ -1,6 +1,7 @@
 package com.benyuan.xiaojs.data.api.service;
 
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.benyuan.xiaojs.model.RegisterInfo;
@@ -15,6 +16,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
+
 /**
  * Created by maxiaobao on 2016/10/25.
  */
@@ -28,7 +30,7 @@ public interface XiaojsService {
     //注册
     @Headers("Content-Type: application/json")
     @POST("/v1/accounts")
-    Call<Object> accountRegister(@Body RegisterInfo registerInfo);
+    Call<Empty> accountRegister(@Body RegisterInfo registerInfo);
 
     //登陆
     @Headers("Content-Type: application/json")
@@ -39,7 +41,7 @@ public interface XiaojsService {
     //退出登陆
     @Headers("Content-Type: application/json")
     @DELETE("/v1/security/logout")
-    Call<APIEntity> logout(@Header("SessionID") String sessionID);
+    Call<Empty> logout(@Header("SessionID") String sessionID);
 
 
     //验证验证码
