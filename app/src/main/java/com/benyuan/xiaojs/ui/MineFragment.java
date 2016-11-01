@@ -15,26 +15,37 @@ package com.benyuan.xiaojs.ui;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
+import com.benyuan.xiaojs.ui.mine.SettingsActivity;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MineFragment extends BaseFragment {
-    @BindView(R.id.mark)
-    TextView t;
 
     @Override
     protected View getContentView() {
-        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
-        return v;
+        return mContext.getLayoutInflater().inflate(R.layout.fragment_mine, null);
     }
 
     @Override
     protected void init() {
-        t.setText("this is mine page");
+
+    }
+
+    @OnClick({R.id.recommend_to_friends})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.recommend_to_friends:
+                startActivity(new Intent(mContext, SettingsActivity.class));
+                break;
+            default:
+                break;
+        }
     }
 }

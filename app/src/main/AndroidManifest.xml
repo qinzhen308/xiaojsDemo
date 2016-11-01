@@ -24,12 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.MainActivity"/>
         <activity android:name=".ui.QrcodeActivity"/>
         <activity android:name=".common.crop.CropImageActivity"/>
         <activity android:name=".common.crop.CropImageMainActivity"/>
         <activity android:name=".ui.TestAPIActivity"/>
         <activity android:name=".ui.account.RegisterActivity"/>
+        <activity android:name=".ui.mine.SettingsActivity"/>
     </application>
 
 </manifest>

@@ -36,5 +36,20 @@
     <string name="login">登录</string>
     <string name="register_guide">还没有账号，立即注册</string>
 
+    <!--mine-->
+    <string name="fans">粉丝</string>
+    <string name="follows">关注</string>
+    <string name="collections">收藏</string>
+    <string name="my_account">我的账户</string>
+    <string name="my_page">我的主页</string>
+    <string name="eval_management">评价管理</string>
+    <string name="teach_ability">教学能力</string>
+    <string name="system_notify">系统通知</string>
+    <string name="name_verify">实名认证</string>
+    <string name="get_more_right">可享更多权益</string>
+    <string name="settings">设置</string>
+    <string name="recommend_to_friends">推荐给好友</string>
+    <!--mine sub page-->
+    <string name="exit_login">退出当前账号</string>
 
 </resources>
