@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.LoginInfo;
@@ -156,7 +157,7 @@ public class LoginActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(String errorCode) {
-
+                    Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
