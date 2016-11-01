@@ -32,9 +32,9 @@ public class RegisterRequest {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
 
-        xiaojsService.accountRegister(registerInfo).enqueue(new Callback<APIEntity>() {
+        xiaojsService.accountRegister(registerInfo).enqueue(new Callback<Object>() {
             @Override
-            public void onResponse(Call<APIEntity> call, Response<APIEntity> response) {
+            public void onResponse(Call<Object> call, Response<Object> response) {
 
                 int responseCode = response.code();
                 if (responseCode == 200) {
@@ -42,7 +42,6 @@ public class RegisterRequest {
                     callback.onSuccess(null);
 
                 } else {
-
 
                     String errorBody = null;
                     try {
@@ -66,7 +65,7 @@ public class RegisterRequest {
             }
 
             @Override
-            public void onFailure(Call<APIEntity> call, Throwable t) {
+            public void onFailure(Call<Object> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("the register request has occur exception");
@@ -84,7 +83,7 @@ public class RegisterRequest {
                              int method,
                              long mobile,
                              int verifycode,
-                             @NonNull final APIServiceCallback<APIEntity> callback) {
+                             @NonNull final APIServiceCallback callback) {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
         xiaojsService.validateCode(method, mobile, verifycode).enqueue(new Callback<APIEntity>() {
@@ -104,11 +103,8 @@ public class RegisterRequest {
                             callback.onFailure(Errors.NO_ERROR);
                         }
 
-
                     } else {
-
                         callback.onFailure(Errors.NO_ERROR);
-
                     }
 
 

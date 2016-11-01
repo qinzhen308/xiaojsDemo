@@ -19,5 +19,17 @@
             android:layout_height="wrap_content"
             android:text="send verify code"
             android:onClick="btnClicked"/>
+    <Button
+            android:id="@+id/btn_svm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="verify mobile"
+            android:onClick="btnClicked"/>
+    <Button
+            android:id="@+id/btn_q"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="quite"
+            android:onClick="btnClicked"/>
 
 </LinearLayout>
