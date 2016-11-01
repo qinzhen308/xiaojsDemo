@@ -130,7 +130,7 @@ public class RegisterActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode) {
-
+                Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
             }
         });
 
