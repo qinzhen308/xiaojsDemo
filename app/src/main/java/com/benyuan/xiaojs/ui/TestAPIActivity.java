@@ -22,8 +22,8 @@ import com.orhanobut.logger.Logger;
 public class TestAPIActivity extends Activity {
 
     private int vcode;
-    private long mob = 18701686978l;
-    private String sessionid = "";
+    private long mob = 13812345687l;
+    private String sessionid = "LfnjhBefFNc_yX5OLAXKLLzXQzxuy3jA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +41,8 @@ public class TestAPIActivity extends Activity {
             }
             case R.id.btn_svm:{
                 //testValidateCode(this);
-                testRegister(this);
-                //testLogin(this);
+                //testRegister(this);
+                testLogin(this);
                 break;
             }
             case R.id.btn_q:{
