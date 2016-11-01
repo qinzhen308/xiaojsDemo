@@ -1,4 +1,4 @@
-package com.benyuan.xiaojs.ui;
+package com.benyuan.xiaojs.common.pulltorefresh;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,24 +9,17 @@ package com.benyuan.xiaojs.ui;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/10/31
+ * Date:2016/11/1
  * Desc:
  *
  * ======================================================================================== */
 
-import android.widget.TextView;
+import android.view.View;
 
-import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.base.BaseActivity;
+import butterknife.ButterKnife;
 
-import butterknife.BindView;
-
-public class TeActivity extends BaseActivity {
-    @BindView(R.id.te)
-    TextView mTe;
-    @Override
-    protected void addViewContent() {
-        addView(R.layout.te_activity);
-        mTe.setText("te");
+public class BaseHolder {
+    public BaseHolder(View view){
+        ButterKnife.bind(this,view);
     }
 }

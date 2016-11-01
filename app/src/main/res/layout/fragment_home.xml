@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:background="@color/header_color"
-                  android:orientation="horizontal"
-                  android:paddingBottom="@dimen/px20"
-                  android:paddingTop="@dimen/px20">
+    <LinearLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/header_color"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/px20"
+            android:paddingTop="@dimen/px20">
 
         <ImageView
                 android:id="@+id/left_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginRight="@dimen/px30"
                 android:src="@mipmap/mine_normal"
                 android:visibility="invisible"
                 android:layout_gravity="center_vertical"/>
@@ -45,28 +43,30 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@mipmap/mine_normal"
-                android:visibility="invisible"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_marginLeft="@dimen/px30"/>
+                android:visibility="invisible"/>
     </LinearLayout>
-    <FrameLayout
-            android:id="@+id/home_banner_wrapper"
+
+    <ScrollView
+            android:layout_below="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:layout_height="match_parent">
 
-        <com.benyuan.xiaojs.ui.widget.banner.ScrollerViewPager
-                android:id="@+id/home_banner"
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/px435"
-                android:background="@mipmap/icon_user_banner_new"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <com.benyuan.xiaojs.ui.widget.banner.PointIndicateView
-                android:id="@+id/home_banner_point"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="@dimen/px20">
-        </com.benyuan.xiaojs.ui.widget.banner.PointIndicateView>
-    </FrameLayout>
-</LinearLayout>
+            <com.benyuan.xiaojs.ui.widget.banner.BannerView
+                    android:id="@+id/home_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px350"/>
+
+            <com.benyuan.xiaojs.ui.widget.function.FunctionArea
+                    android:id="@+id/home_function_area"
+                    android:layout_marginTop="@dimen/px30"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

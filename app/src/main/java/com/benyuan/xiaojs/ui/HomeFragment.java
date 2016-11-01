@@ -21,8 +21,9 @@ import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
-import com.benyuan.xiaojs.ui.widget.banner.PointIndicateView;
-import com.benyuan.xiaojs.ui.widget.banner.ScrollerViewPager;
+import com.benyuan.xiaojs.ui.widget.banner.BannerView;
+import com.benyuan.xiaojs.ui.widget.function.FunctionArea;
+import com.benyuan.xiaojs.ui.widget.function.FunctionItemBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,10 @@ import butterknife.OnClick;
 public class HomeFragment extends BaseFragment {
 
     @BindView(R.id.home_banner)
-    ScrollerViewPager mBanner;
-    @BindView(R.id.home_banner_point)
-    PointIndicateView mPoint;
+    BannerView mBanner;
+    @BindView(R.id.home_function_area)
+    FunctionArea mFunction;
+
     @Override
     protected View getContentView() {
         View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
@@ -60,7 +62,20 @@ public class HomeFragment extends BaseFragment {
         beanList.add(b4);
         BannerAdapter adapter = new BannerAdapter(mContext,beanList);
         mBanner.setAdapter(adapter);
-        mPoint.setViewPager(mBanner,beanList.size(),0,true,null);
+
+        FunctionItemBean fb1 = new FunctionItemBean();
+        fb1.text = "我的课";
+        fb1.param = "com.benyuan.xiaojs.ui.course.MyCourseActivity";
+        FunctionItemBean fb2 = new FunctionItemBean();
+        fb2.text = "我要开课";
+        FunctionItemBean fb3 = new FunctionItemBean();
+        fb3.text = "我的报名";
+        List<FunctionItemBean> beans = new ArrayList<>();
+        beans.add(fb1);
+        beans.add(fb2);
+        beans.add(fb3);
+        mFunction.setItems(beans);
+        //gridView.setAdapter(new FunctionItemAdapter(mContext,beans));
     }
 
     @OnClick({})
@@ -71,12 +86,12 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mBanner.startAutoScroll();
+        mBanner.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mBanner.stopAutoScroll();
+        mBanner.stop();
     }
 }

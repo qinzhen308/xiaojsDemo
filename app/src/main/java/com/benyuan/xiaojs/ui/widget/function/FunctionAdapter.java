@@ -1,4 +1,4 @@
-package com.benyuan.xiaojs.ui.widget.banner;
+package com.benyuan.xiaojs.ui.widget.function;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,32 +9,27 @@ package com.benyuan.xiaojs.ui.widget.banner;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/10/29
+ * Date:2016/10/31
  * Desc:
  *
  * ======================================================================================== */
 
-import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.util.List;
 
-public class BannerAdapter extends PagerAdapter {
+public class FunctionAdapter extends PagerAdapter {
+    private List<View> views;
 
-    private List<BannerBean> beans;
-    private Context mContext;
-
-    public BannerAdapter(Context context,List<BannerBean> beans){
-        this.beans = beans;
-        mContext = context;
+    public FunctionAdapter(List<View> views){
+        this.views = views;
     }
 
     @Override
     public int getCount() {
-        return beans == null?0:beans.size();
+        return views == null ? 0 : views.size();
     }
 
     @Override
@@ -49,13 +44,9 @@ public class BannerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-
-        ImageView image = new ImageView(mContext);
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        image.setLayoutParams(lp);
-        image.setImageResource(beans.get(position).resId);
-        image.setScaleType(ImageView.ScaleType.FIT_XY);
-        container.addView(image);
-        return image;
+        container.addView(views.get(position));
+        return views.get(position);
     }
+
+
 }
