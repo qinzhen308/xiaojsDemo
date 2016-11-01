@@ -23,7 +23,7 @@ public class XiaojsApplication extends Application {
                 .methodOffset(0);
 
         //发布Release版本时，需要将loglevel设为NONE。
-        if (XiaojsConfig.RELEASE) {
+        if (!XiaojsConfig.DEBUG) {
             logSetting.logLevel(LogLevel.NONE);
         }
     }
