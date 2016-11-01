@@ -9,6 +9,7 @@ import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.VerifyCode;
 import com.orhanobut.logger.Logger;
@@ -32,9 +33,9 @@ public class RegisterRequest {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
 
-        xiaojsService.accountRegister(registerInfo).enqueue(new Callback<Object>() {
+        xiaojsService.accountRegister(registerInfo).enqueue(new Callback<Empty>() {
             @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
+            public void onResponse(Call<Empty> call, Response<Empty> response) {
 
                 int responseCode = response.code();
                 if (responseCode == 200) {
@@ -65,13 +66,19 @@ public class RegisterRequest {
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
+            public void onFailure(Call<Empty> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("the register request has occur exception");
                 }
 
-                callback.onFailure(Errors.NO_ERROR);
+                String errorMsg = t.getMessage();
+                // FIXME: 2016/11/1
+                if(errorMsg.contains("No content to map due to end-of-input")){
+                    callback.onSuccess(null);
+                }else{
+                    callback.onFailure(Errors.NO_ERROR);
+                }
 
             }
         });
