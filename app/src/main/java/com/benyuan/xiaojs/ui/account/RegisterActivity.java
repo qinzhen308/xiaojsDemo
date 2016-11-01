@@ -1,5 +1,7 @@
 package com.benyuan.xiaojs.ui.account;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
@@ -9,9 +11,18 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.data.LoginDataManager;
+import com.benyuan.xiaojs.data.RegisterDataManager;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.LoginParams;
+import com.benyuan.xiaojs.model.RegisterInfo;
+import com.benyuan.xiaojs.model.VerifyCode;
+import com.benyuan.xiaojs.ui.MainActivity;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.util.VerifyUtils;
 import com.benyuan.xiaojs.util.XjsUtils;
@@ -36,6 +47,8 @@ import butterknife.OnClick;
 
 public class RegisterActivity extends BaseActivity {
     private final static int MSG_RE_SEND = 0;
+    private final int SMS_GETTING_TIME_OUT = 60;
+
     @BindView(R.id.reg_name)
     EditText mRegNameEdit;
     @BindView(R.id.reg_phone)
@@ -43,16 +56,17 @@ public class RegisterActivity extends BaseActivity {
     @BindView(R.id.verify_code)
     EditText mRegVerifyEdit;
     @BindView(R.id.get_verify_code)
-    EditText mGetRegVerifyEdit;
+    TextView mGetRegVerifyEdit;
     @BindView(R.id.reg_pwd)
     EditText mRegPwdEdit;
 
+    private Context mContext;
     private int mCurrVerifyTime = 0;
     private boolean mPwdHidden = true;
 
     @Override
     protected void addViewContent() {
-
+        mContext = this;
         addView(R.layout.activity_register);
         setMiddleTitle(R.string.register);
     }
@@ -74,6 +88,7 @@ public class RegisterActivity extends BaseActivity {
                 hideOrShowPwd((ImageView) v);
                 break;
             case R.id.register_protocol:
+                showRegisterProtocol();
                 break;
             default:
                 break;
@@ -100,44 +115,115 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void getVerifyCode() {
+        long phone = Long.parseLong(mRegPhoneEdit.getEditableText().toString());
+        RegisterDataManager.requestSendVerifyCode(this, phone, new APIServiceCallback<VerifyCode>() {
+
+            @Override
+            public void onSuccess(VerifyCode object) {
+                mCurrVerifyTime = SMS_GETTING_TIME_OUT;
+                mRegVerifyEdit.setText(String.valueOf(object.getCode()));
+                mHandler.sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onFailure(String errorCode) {
+
+            }
+        });
 
         XjsUtils.hideIMM(this, getCurrentFocus().getWindowToken());
     }
 
     private void submitReg() {
-        final String phoneNum = mRegPhoneEdit.getText().toString().trim();
-        final String password = mRegPwdEdit.getText().toString().trim();
-        final String verifyCode = mRegVerifyEdit.getText().toString().trim();
-
         if (!checkSubmitInfo()) {
             return;
+        }
+
+        try {
+            String userName = mRegNameEdit.getEditableText().toString();
+            long phone = Long.parseLong(mRegPhoneEdit.getEditableText().toString());
+            String password = mRegPwdEdit.getText().toString().trim();
+            int verifyCode = Integer.parseInt(mRegVerifyEdit.getText().toString().trim());
+
+            final RegisterInfo regInfo = new RegisterInfo();
+            regInfo.setMobile(phone);
+            regInfo.setCode(verifyCode);
+            regInfo.setPassword(password);
+            regInfo.setUsername(userName);
+
+            RegisterDataManager.requestValidateCode(this, phone, verifyCode, new APIServiceCallback<APIEntity>() {
+
+                @Override
+                public void onSuccess(APIEntity object) {
+                    //verify code right
+                    RegisterDataManager.requestRegisterByAPI(mContext, regInfo, new APIServiceCallback() {
+
+                        @Override
+                        public void onSuccess(Object object) {
+                            //login immediately after successful registration
+                            LoginParams loginParams = new LoginParams();
+                            loginParams.setMobile(regInfo.getMobile());
+                            loginParams.setPassword(regInfo.getPassword());
+                            LoginDataManager.requestLoginByAPI(mContext, loginParams, new APIServiceCallback() {
+
+                                @Override
+                                public void onSuccess(Object object) {
+                                    //enter main page after successful login
+                                    startActivity(new Intent(mContext, MainActivity.class));
+                                }
+
+                                @Override
+                                public void onFailure(String errorCode) {
+                                    //login failure
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(String errorCode) {
+                            //register error
+                            Toast.makeText(mContext, getString(R.string.register_failure), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(String errorCode) {
+                    //verify code error
+                    Toast.makeText(mContext, getString(R.string.verify_error), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+
         }
     }
 
     /**
      * 提交注册时，检测输入信息
      *
-     * @return
      */
     private boolean checkSubmitInfo() {
-        final String phoneNum = mRegPhoneEdit.getText().toString().trim();
-        final String password = mRegPwdEdit.getText().toString().trim();
-        final String verifyCode = mRegVerifyEdit.getText().toString().trim();
-
-        if (TextUtils.isEmpty(phoneNum)) { // 电话号码是否为空
-            Toast.makeText(this, R.string.phone_input_empty, Toast.LENGTH_SHORT).show();
+        String userName = mRegNameEdit.getText().toString().trim();
+        String phoneNum = mRegPhoneEdit.getText().toString().trim();
+        String password = mRegPwdEdit.getText().toString().trim();
+        String verifyCode = mRegVerifyEdit.getText().toString().trim();
+        if (TextUtils.isEmpty(userName)) {
+            Toast.makeText(this, R.string.name_empty, Toast.LENGTH_SHORT).show();
             return false;
-        } else if (!VerifyUtils.checkPhoneNum(phoneNum)) { // 电话号码非法
-            Toast.makeText(this, R.string.phone_input_error, Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(phoneNum)) {
+            Toast.makeText(this, R.string.phone_empty, Toast.LENGTH_SHORT).show();
             return false;
-        } else if (TextUtils.isEmpty(verifyCode)) { // 验证码为空
-            Toast.makeText(this, R.string.phone_verify_empty, Toast.LENGTH_SHORT).show();
+        } else if (!VerifyUtils.checkPhoneNum(phoneNum)) {
+            Toast.makeText(this, R.string.phone_error, Toast.LENGTH_SHORT).show();
             return false;
-        } else if (TextUtils.isEmpty(password)) { // 密码是否为空
-            Toast.makeText(this,R.string.phone_pwd_empty, Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(verifyCode)) {
+            Toast.makeText(this, R.string.verify_empty, Toast.LENGTH_SHORT).show();
             return false;
-        } else if (password.length() < 6 || password.length() > 16) { // 密码是否符合6-16位字符的要求
-            Toast.makeText(this, R.string.phone_pwd_error, Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this,R.string.pwd_empty, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (password.length() < 6 || password.length() > 16) { //pwd length >6 & < 16
+            Toast.makeText(this, R.string.pwd_error, Toast.LENGTH_SHORT).show();
             return false;
         }
 
