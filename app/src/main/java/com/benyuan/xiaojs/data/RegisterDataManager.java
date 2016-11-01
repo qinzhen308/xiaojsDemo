@@ -40,7 +40,7 @@ public class RegisterDataManager {
     public static void requestValidateCode(@NonNull Context appContext,
                                          long mobile,
                                          int verifycode,
-                                         @NonNull final APIServiceCallback<APIEntity> callback) {
+                                         @NonNull final APIServiceCallback callback) {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.validateCode(appContext,
                 Security.VerifyMethod.SMS_4_REGISTRATION,

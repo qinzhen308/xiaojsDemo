@@ -28,7 +28,7 @@ public interface XiaojsService {
     //注册
     @Headers("Content-Type: application/json")
     @POST("/v1/accounts")
-    Call<APIEntity> accountRegister(@Body RegisterInfo registerInfo);
+    Call<Object> accountRegister(@Body RegisterInfo registerInfo);
 
     //登陆
     @Headers("Content-Type: application/json")
