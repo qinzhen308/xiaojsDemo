@@ -4,12 +4,52 @@
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
     <string name="finish">完成</string>
+    <string name="save">保存</string>
+    <string name="rotate">旋转</string>
+    <string name="phone_num">手机号</string>
+    <string name="pwd">密码</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_live">直播</string>
     <string name="home_tab_learn">学习圈</string>
     <string name="home_tab_mine">我的</string>
     <string name="qr_code">二维码</string>
+
+    <!--account-->
+    <!--register-->
+    <string name="register">注册</string>
+    <string name="name_hint">您的真实姓名</string>
+    <string name="verify_code_hint">验证码</string>
+    <string name="verify_code_send_hint">发送验证码</string>
+    <string name="verity_code_countdown">%1$sS后可重发</string>
+    <string name="verity_code_re_send">重发验证码</string>
+    <string name="pwd_hint">请输入6&#8211;16位密码</string>
+    <string name="register_protocol">《小教室用户注册协议》</string>
+    <string name="register_protocol_agree">点击注册默认您同意</string>
+    <string name="name_empty">请输用户名</string>
+    <string name="phone_empty">请输入手机号</string>
+    <string name="phone_error">请输入正确的手机号</string>
+    <string name="verify_empty">请输入验证码</string>
+    <string name="pwd_empty">请输入密码</string>
+    <string name="pwd_error">密码少于6位</string>
+    <!--login-->
+    <string name="login">登录</string>
+    <string name="register_guide">还没有账号，立即注册</string>
+
+    <!--我的-->
+    <string name="fans">粉丝</string>
+    <string name="follows">关注</string>
+    <string name="collections">收藏</string>
+    <string name="my_account">我的账户</string>
+    <string name="my_page">我的主页</string>
+    <string name="eval_management">评价管理</string>
+    <string name="teach_ability">教学能力</string>
+    <string name="system_notify">系统通知</string>
+    <string name="name_verify">实名认证</string>
+    <string name="get_more_right">可享更多权益</string>
+    <string name="settings">设置</string>
+    <string name="recommend_to_friends">推荐给好友</string>
+
     <string name="home_search_hint">搜索直播课或机构或人</string>
 
     <string name="course_of_learn">我学的课</string>
