@@ -8,8 +8,12 @@ import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Platform;
 import com.benyuan.xiaojs.data.api.interceptor.CommonHeaderInterceptor;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
+import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.util.APPUtils;
 import com.benyuan.xiaojs.util.UIUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -77,6 +81,7 @@ public class ApiManager {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(logInterceptor)
+                .addNetworkInterceptor(logInterceptor)
                 .addInterceptor(headerInterceptor)
                 .build();
 
@@ -98,6 +103,29 @@ public class ApiManager {
         }
 
         return Platform.AppType.MOBILE_ANDROID;
+    }
+
+
+    /**
+     * 解析error body json
+     * @param errorBody
+     * @return
+     */
+    public static String parseErrorBody(String errorBody){
+
+        String errorCode = Errors.NO_ERROR;
+
+        try {
+            JSONObject jobject = new JSONObject(errorBody);
+
+            errorCode = jobject.getString("ec");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return errorCode;
+
     }
 
     /**

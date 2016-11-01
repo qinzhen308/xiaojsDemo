@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.benyuan.xiaojs.data.api.LoginRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 
@@ -33,7 +34,7 @@ public class LoginDataManager {
      */
     public static void requestLogoutByAPI(@NonNull Context appContext,
                                           String sessionID,
-                                          @NonNull APIServiceCallback<LoginInfo> callback) {
+                                          @NonNull APIServiceCallback callback) {
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.logout(appContext, sessionID, callback);

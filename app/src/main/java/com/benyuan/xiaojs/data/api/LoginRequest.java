@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.data.api;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
@@ -11,6 +12,8 @@ import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.orhanobut.logger.Logger;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,12 +45,21 @@ public class LoginRequest {
 
                 } else {
 
-                    LoginInfo loginInfo = response.body();
-                    if (loginInfo != null) {
-                        String errorCode = loginInfo.getEc();
-                        callback.onFailure(errorCode);
-                    } else {
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (TextUtils.isEmpty(errorBody)) {
                         callback.onFailure(Errors.NO_ERROR);
+
+
+                    } else {
+
+                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+
                     }
 
                 }
@@ -68,7 +80,7 @@ public class LoginRequest {
     }
 
 
-    public void logout(Context appContext,String sessionID,final APIServiceCallback callback) {
+    public void logout(Context appContext,String sessionID,@NonNull final APIServiceCallback callback) {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
         xiaojsService.logout(sessionID).enqueue(new Callback<APIEntity>() {
@@ -83,14 +95,21 @@ public class LoginRequest {
                 } else {
 
 
-                    APIEntity apiEntity = response.body();
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                    if (apiEntity != null) {
-                        String errorCode = apiEntity.getEc();
-                        callback.onFailure(errorCode);
+                    if (TextUtils.isEmpty(errorBody)) {
+                        callback.onFailure(Errors.NO_ERROR);
+
 
                     } else {
-                        callback.onFailure(Errors.NO_ERROR);
+
+                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+
                     }
 
                 }

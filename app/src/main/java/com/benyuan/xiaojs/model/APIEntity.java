@@ -1,10 +1,13 @@
 package com.benyuan.xiaojs.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by maxiaobao on 2016/10/29.
  *
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class APIEntity {
 
 

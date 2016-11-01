@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.data.api;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
@@ -11,6 +12,8 @@ import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.VerifyCode;
 import com.orhanobut.logger.Logger;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,14 +44,21 @@ public class RegisterRequest {
                 } else {
 
 
-                    APIEntity apiEntity = response.body();
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                    if (apiEntity != null) {
-                        String errorCode = apiEntity.getEc();
-                        callback.onFailure(errorCode);
+                    if (TextUtils.isEmpty(errorBody)) {
+                        callback.onFailure(Errors.NO_ERROR);
+
 
                     } else {
-                        callback.onFailure(Errors.NO_ERROR);
+
+                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+
                     }
 
                 }
@@ -104,15 +114,21 @@ public class RegisterRequest {
 
                 } else {
 
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                    APIEntity apiEntity = response.body();
+                    if (TextUtils.isEmpty(errorBody)) {
+                        callback.onFailure(Errors.NO_ERROR);
 
-                    if (apiEntity != null) {
-                        String errorCode = apiEntity.getEc();
-                        callback.onFailure(errorCode);
 
                     } else {
-                        callback.onFailure(Errors.NO_ERROR);
+
+                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+
                     }
 
                 }
@@ -150,12 +166,21 @@ public class RegisterRequest {
 
                 } else {
 
-                    VerifyCode verifyCode = response.body();
-                    if (verifyCode != null) {
-                        String errorCode = verifyCode.getEc();
-                        callback.onFailure(errorCode);
-                    } else {
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (TextUtils.isEmpty(errorBody)) {
                         callback.onFailure(Errors.NO_ERROR);
+
+
+                    } else {
+
+                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+
                     }
 
                 }

@@ -22,7 +22,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.4:3001/";
+    String BASE_URL = "http://192.168.100.4:3000/";
 
 
     //注册
