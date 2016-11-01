@@ -41,7 +41,7 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
 
     private OnDismissListener mOnDismissListener;
 
-    private LinearLayout mTitleLayout;
+    private View mTitleLayout;
 
 
     public BottomSheet(Context context) {
@@ -73,6 +73,7 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(Gravity.BOTTOM);
 
+        mTitleLayout = dialogWindow.findViewById(R.id.title);
         mRightBtn = (Button) dialogWindow.findViewById(R.id.left_btn);
         mLeftBtn = (Button) dialogWindow.findViewById(R.id.right_btn);
 
@@ -95,11 +96,11 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
 
     public void setContent(int contentId) {
         View content = getLayoutInflater().inflate(contentId, null);
-        ((FrameLayout) getWindow().findViewById(R.id.content_dialog)).addView(content);
+        ((FrameLayout) getWindow().findViewById(R.id.middle_txt)).addView(content);
     }
 
     public void setMiddleText(String text) {
-        ((TextView) getWindow().findViewById(R.id.title_dialog)).setText(text);
+        ((TextView) getWindow().findViewById(R.id.middle_txt)).setText(text);
     }
 
     public void setLeftBtnText(String text) {

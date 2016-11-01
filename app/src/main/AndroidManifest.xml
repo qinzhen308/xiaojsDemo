@@ -25,6 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.QrcodeActivity"/>
+        <activity android:name="com.benyuan.xiaojs.common.crop.CropImageActivity"/>
+        <activity android:name="com.benyuan.xiaojs.common.crop.CropImageMainActivity"/>
     </application>
 
 </manifest>
