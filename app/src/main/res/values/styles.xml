@@ -34,6 +34,7 @@
     <style name="DividerVertical">
         <item name="android:background">@color/ver_divide_line</item>
         <item name="android:layout_width">@dimen/px1</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
     <style name="BigSubmitBtn">
         <item name="android:background">@drawable/big_submit_btn_selector</item>

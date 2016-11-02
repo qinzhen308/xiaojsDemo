@@ -1,5 +1,6 @@
 package com.benyuan.xiaojs.ui.account;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -63,7 +64,7 @@ public class RegisterActivity extends BaseActivity {
     @BindView(R.id.reg_pwd)
     EditText mRegPwdEdit;
 
-    private Context mContext;
+    private Activity mContext;
     private int mCurrVerifyTime = 0;
     private boolean mPwdHidden = true;
 
@@ -167,25 +168,7 @@ public class RegisterActivity extends BaseActivity {
                             final LoginParams loginParams = new LoginParams();
                             loginParams.setMobile(regInfo.getMobile());
                             loginParams.setPassword(regInfo.getPassword());
-                            LoginDataManager.requestLoginByAPI(mContext, loginParams, new APIServiceCallback<LoginInfo>() {
-
-                                @Override
-                                public void onSuccess(LoginInfo loginInfo) {
-                                    if (loginInfo != null) {
-                                        XiaojsConfig.mLoginUser = loginInfo.getUser();
-                                        XjsUtils.getSharedPreferences().edit().putLong(XiaojsConfig.KEY_LOGIN_USERNAME,
-                                                loginParams.getMobile()).commit();
-                                        //enter main page after successful login
-                                        startActivity(new Intent(mContext, MainActivity.class));
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(String errorCode) {
-                                    //login failure
-                                    Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            AccountBusiness.login(mContext, loginParams);
                         }
 
                         @Override
