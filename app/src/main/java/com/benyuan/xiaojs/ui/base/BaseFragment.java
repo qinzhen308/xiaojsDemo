@@ -30,7 +30,7 @@ import butterknife.Unbinder;
 
 public abstract class BaseFragment extends Fragment {
     protected Activity mContext;
-    private ViewGroup mContent;
+    protected ViewGroup mContent;
     private Unbinder mBinder;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public abstract class BaseFragment extends Fragment {
         mContent = (ViewGroup)inflater.inflate(R.layout.fragment_base, null);
         View content = getContentView();
         addContainerView(content);
-        mBinder = ButterKnife.bind(this,content);
+        mBinder = ButterKnife.bind(this, content);
         init();
         return mContent;
     }
