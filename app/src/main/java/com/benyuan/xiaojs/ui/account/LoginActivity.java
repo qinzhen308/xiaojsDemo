@@ -66,6 +66,7 @@ public class LoginActivity extends BaseActivity {
         setMiddleTitle(R.string.login);
 
         initRegGuideStyle();
+        initLoginInfo();
     }
 
     @OnClick({R.id.left_view, R.id.login_btn, R.id.hide_show_pwd})
@@ -109,6 +110,16 @@ public class LoginActivity extends BaseActivity {
         mRegGuide.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
+    private void initLoginInfo() {
+        long phoneNum = XjsUtils.getSharedPreferences().getLong(XiaojsConfig.KEY_LOGIN_USERNAME, 0);
+        String pwd = XjsUtils.getSharedPreferences().getString(XiaojsConfig.KEY_LOGIN_PASSWORD, "");
+
+        if (!TextUtils.isEmpty(pwd) && phoneNum != 0) {
+            mLoginNamedEdit.setText(String.valueOf(phoneNum));
+            mLoginPwdEdit.setText(pwd);
+        }
+    }
+
     /**
      * 隐藏或显示密码
      */
@@ -140,26 +151,7 @@ public class LoginActivity extends BaseActivity {
             final LoginParams loginParams = new LoginParams();
             loginParams.setMobile(Long.parseLong(userName));
             loginParams.setPassword(password);
-            LoginDataManager.requestLoginByAPI(this, loginParams, new APIServiceCallback<LoginInfo>() {
-
-                @Override
-                public void onSuccess(LoginInfo loginInfo) {
-                    if (loginInfo != null) {
-                        XiaojsConfig.mLoginUser = loginInfo.getUser();
-                        XjsUtils.getSharedPreferences().edit().putLong(XiaojsConfig.KEY_LOGIN_USERNAME,
-                                loginParams.getMobile()).commit();
-
-                        //enter main page
-                        startActivity(new Intent(mContext, MainActivity.class));
-                    }
-
-                }
-
-                @Override
-                public void onFailure(String errorCode) {
-                    Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
-                }
-            });
+            AccountBusiness.login(this, loginParams);
         } catch (Exception e) {
             //do nothing
         }
