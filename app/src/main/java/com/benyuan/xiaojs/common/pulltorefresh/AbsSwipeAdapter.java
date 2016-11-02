@@ -18,13 +18,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.myhandmark.pulltorefresh.library.AutoPullToRefreshListView;
-import com.myhandmark.pulltorefresh.library.AutoRefreshListner;
-import com.myhandmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.AutoPullToRefreshListView;
+import com.handmark.pulltorefresh.PullToRefreshBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,33 +53,21 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
             return;
         }
         mListView = listView;
-        mListView.setMode(PullToRefreshBase.Mode.BOTH);
-        mListView.setAutoRefresh(true);
-        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 mCurrentPage = 1;
-                mBeanList.clear();
-                notifyDataSetChanged();
-                doRequest(mCurrentPage);
-                mListView.onRefreshComplete();
                 isDown = true;
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                doRequest(mCurrentPage);
             }
         });
 
-        mListView.setAutoRefreshListner(new AutoRefreshListner() {
+        mListView.setOnLoadMoreListener(new AutoPullToRefreshListView.OnLoadMoreListener() {
             @Override
-            public void onRefresh(AbsListView view) {
-                //上滑自动加载回调
+            public void onLoadMore() {
                 mCurrentPage++;
-                mListView.showFoooter();
-                doRequest(mCurrentPage);
                 isDown = false;
+                doRequest(mCurrentPage);
             }
         });
         doRequest(mCurrentPage);
@@ -151,23 +137,20 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
     protected abstract void doRequest(int pageNo);
 
     protected final void onSuccess(List<B> data){
-        if (isDown){
-            mListView.onRefreshComplete();
-        }else {
-            mListView.hiddenFoooter();
-        }
+        //mListView.onRefreshComplete();
+        mBeanList.clear();
         if (data == null || data.size() == 0){
             mCurrentPage--;
             if (mBeanList.isEmpty()){//接口数据为空，本地数据也为空，则显示空视图
                 addEmptyView();
             }
-            mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
             return;
         }
         if (!data.isEmpty()){
             mBeanList.addAll(data);
             notifyDataSetChanged();
         }
+        mListView.onRefreshOrLoadComplete();
     }
 
     protected final void onFailure(String errorCode){

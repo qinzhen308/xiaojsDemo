@@ -26,7 +26,7 @@ import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.util.NumberUtil;
-import com.myhandmark.pulltorefresh.library.AutoPullToRefreshListView;
+import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import butterknife.BindView;
 public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter.Holder> {
     private boolean mIsTeacher;
 
-    public MyCourseAdapter(Context context, AutoPullToRefreshListView listView,boolean isTeacher) {
+    public MyCourseAdapter(Context context, AutoPullToRefreshListView listView, boolean isTeacher) {
         super(context, listView);
         mIsTeacher = isTeacher;
     }
@@ -147,7 +147,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
             public void run() {
                 List<CourseBean> beans = new ArrayList<>();
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
