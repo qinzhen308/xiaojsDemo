@@ -22,7 +22,7 @@ import java.util.List;
  *
  * ======================================================================================== */
 
-public class LineCourseCreationActivity extends BaseTopTabActivity {
+public class LiveCourseCreationActivity extends BaseTopTabActivity {
     @Override
     protected void initView() {
         List<Fragment> fs = new ArrayList<>();
