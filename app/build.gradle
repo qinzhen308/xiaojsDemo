@@ -39,7 +39,7 @@ dependencies {
     //Logger
     compile 'com.orhanobut:logger:1.15'
     //pull refresh
-    compile project(':pullrefresh')
+    compile project(':pulltorefresh')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

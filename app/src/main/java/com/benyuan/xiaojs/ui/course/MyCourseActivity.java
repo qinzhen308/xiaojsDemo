@@ -17,6 +17,7 @@ package com.benyuan.xiaojs.ui.course;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.base.TabFragmentPagerAdapter;
+import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
 import com.benyuan.xiaojs.ui.widget.LazyViewPager;
 
 import java.util.ArrayList;
@@ -48,22 +50,39 @@ public class MyCourseActivity extends BaseActivity {
     EditText mSearch;
     @BindView(R.id.my_course_pager)
     LazyViewPager mPager;
+    @BindView(R.id.hover)
+    View mHover;
+    @BindView(R.id.top_wrapper)
+    LinearLayout mTop;
 
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_my_course);
         setMiddleTitle(R.string.my_course);
+        setRightText(R.string.settings);
         setLeftImage(R.drawable.back_arrow);
         mPager.setScrollState(false);
         initTabContent();
         changeTab(0);
     }
 
-    @OnClick({R.id.left_image,R.id.course_teach,R.id.course_learn})
+    @OnClick({R.id.left_image,R.id.right_view,R.id.course_teach,R.id.course_learn})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.left_image:
                 finish();
+                break;
+            case R.id.right_view://右上角menu
+                CommonPopupMenu menu = new CommonPopupMenu(this);
+                String[] items = getResources().getStringArray(R.array.my_course_list);
+                menu.addTextItems(items);
+                menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        handleRightClick(i);
+                    }
+                });
+                menu.showAsDropDown(mRightText);
                 break;
             case R.id.course_teach://我学的课
                 changeTab(1);
@@ -106,5 +125,24 @@ public class MyCourseActivity extends BaseActivity {
             mLearnLine.setVisibility(View.VISIBLE);
         }
         mPager.setCurrentItem(position);
+    }
+
+    private void handleRightClick(int position){
+        switch (position){
+            case 0://我要开课
+                break;
+            case 1://加入私密课
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void hideTop(){
+        mHover.setVisibility(View.GONE);
+    }
+
+    public void showTop(){
+        mHover.setVisibility(View.VISIBLE);
     }
 }

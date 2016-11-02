@@ -20,7 +20,7 @@ import android.view.View;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
-import com.myhandmark.pulltorefresh.library.AutoPullToRefreshListView;
+import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import butterknife.BindView;
 
@@ -29,6 +29,7 @@ public class MyCourseFragment extends BaseFragment {
     AutoPullToRefreshListView mListView;
 
     MyCourseAdapter adapter;
+
     @Override
     protected View getContentView() {
         View v = LayoutInflater.from(mContext).inflate(R.layout.fragment_my_course,null);
@@ -44,5 +45,26 @@ public class MyCourseFragment extends BaseFragment {
         }
         adapter = new MyCourseAdapter(mContext,mListView,isTeacher);
         mListView.setAdapter(adapter);
+        View header = LayoutInflater.from(mContext).inflate(R.layout.layout_my_course_search,null);
+        mListView.getRefreshableView().addHeaderView(header);
+//        mListView.setOnPullListener(new AutoPullToRefreshListView.OnPullListener() {
+//            @Override
+//            public void pullUp(int firstItemPosition) {
+//                //Toast.makeText(mContext,"up",Toast.LENGTH_SHORT).show();
+//                ((MyCourseActivity)mContext).hideTop();
+//            }
+//
+//            @Override
+//            public void pullDown(int firstItemPosition) {
+//                //Toast.makeText(mContext,"down",Toast.LENGTH_SHORT).show();
+//                if (firstItemPosition > 0){
+//                    ((MyCourseActivity)mContext).showTop();
+//                }else {
+//                    ((MyCourseActivity)mContext).hideTop();
+//                }
+//            }
+//        });
     }
+
+
 }

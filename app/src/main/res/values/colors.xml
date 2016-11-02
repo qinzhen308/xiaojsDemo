@@ -32,4 +32,8 @@
     <color name="top_cornor_bg">#f7f7f7</color>
     <color name="totally_red_font">#ff0000</color>
     <color name="clicked_grey_light">#d7d7db</color> <!-- 用于浅灰按钮hover -->
+
+    <color name="common_list_line">#33ffffff</color>
+    <color name="common_btn_white_text">#ffffffff</color>
+    <color name="common_btn_white_text_press">#88ffffff</color>
 </resources>

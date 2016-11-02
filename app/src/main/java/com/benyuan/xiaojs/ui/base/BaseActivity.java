@@ -33,7 +33,7 @@ public abstract class BaseActivity extends FragmentActivity {
     private View mHeader;
     private FrameLayout mContent;
     private TextView mLeftText;
-    private TextView mRightText;
+    protected TextView mRightText;
     private TextView mMiddleText;
     private ImageView mLeftImage;
     private ImageView mRightImage;
