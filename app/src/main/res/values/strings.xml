@@ -8,6 +8,11 @@
     <string name="rotate">旋转</string>
     <string name="phone_num">手机号</string>
     <string name="pwd">密码</string>
+    <string name="person">人</string>
+    <string name="day">天</string>
+    <string name="hour">小时</string>
+    <string name="minute">分钟</string>
+    <string name="charge">收费</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_live">直播</string>
@@ -65,4 +70,31 @@
     <string name="lesson_again">再次开课</string>
     <string name="look_detail">查看详情</string>
     <string name="invite">邀请</string>
+
+    <!--course creation-->
+    <string name="course_creation">我要开课</string>
+    <string name="live_course">直播课</string>
+    <string name="private_course">私密课</string>
+    <string name="live_course_name">直播课名称</string>
+    <string name="subject_category">学科类目</string>
+    <string name="teach_form">教学形式</string>
+    <string name="teach_form_open">公开课</string>
+    <string name="teach_form_one2one">一对一</string>
+    <string name="teach_form_more2one">多人小班</string>
+    <string name="enroll_way">报名方式</string>
+    <string name="enroll_online">线上报名</string>
+    <string name="enroll_offline">线下报名</string>
+    <string name="enroll_people_limit">报名限制人数</string>
+    <string name="course_start_time">上课时间</string>
+    <string name="course_duration">上课时长</string>
+    <string name="optional_info">选填信息</string>
+    <string name="on_shelves">立即上架</string>
+    <string name="live_course_name_hint">请输入4-25字</string>
+    <string name="subject_category_hint">请选择学科类目</string>
+    <string name="teach_form_hint">请选择教学模式</string>
+    <string name="enroll_way_hint">请选择报名模式</string>
+    <string name="course_start_time_hint">请选择上课时间</string>
+    <string name="optional_info_hint">请选择上课时间</string>
+    <string name="on_shelves_tips">上架后该课的详情将公开在您的个人主页中</string>
+
 </resources>

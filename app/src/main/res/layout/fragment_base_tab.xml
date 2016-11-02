@@ -16,6 +16,9 @@
                 android:id="@+id/tab_scroller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+        <View
+                style="@style/DividerHorizontal"/>
     </LinearLayout>
 
     <com.benyuan.xiaojs.ui.widget.LazyViewPager
