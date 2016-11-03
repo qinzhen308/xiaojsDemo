@@ -12,6 +12,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,8 @@ public class LoginActivity extends BaseActivity {
     EditTextDel mLoginNamedEdit;
     @BindView(R.id.login_pwd)
     EditTextDel mLoginPwdEdit;
+    @BindView(R.id.login_btn)
+    Button mLoginBtn;
 
     private Context mContext;
     private boolean mPwdHidden = true;

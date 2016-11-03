@@ -7,7 +7,7 @@
             <corners android:radius="@dimen/px2" />
         </shape></item>
     <item android:state_enabled="false"><shape>
-            <solid android:color="@color/disable_btn" />
+            <solid android:color="@color/main_orange_disabled" />
 
             <corners android:radius="@dimen/px2" />
         </shape></item>
