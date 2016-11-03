@@ -19,7 +19,7 @@
             style="@style/DividerHorizontal"/>
 
     <LinearLayout
-
+            android:background="@color/white"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:paddingLeft="@dimen/px43"
@@ -46,6 +46,7 @@
     </LinearLayout>
 
     <RelativeLayout
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/px43"
