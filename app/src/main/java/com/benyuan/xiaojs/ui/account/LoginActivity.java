@@ -12,19 +12,13 @@ import android.text.method.PasswordTransformationMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.XiaojsConfig;
-import com.benyuan.xiaojs.common.xf_foundation.Errors;
-import com.benyuan.xiaojs.data.LoginDataManager;
-import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
-import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
-import com.benyuan.xiaojs.ui.MainActivity;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.widget.EditTextDel;
 import com.benyuan.xiaojs.util.VerifyUtils;
@@ -89,8 +83,8 @@ public class LoginActivity extends BaseActivity {
 
     private void initRegGuideStyle() {
         SpannableString spanString = new SpannableString(getString(R.string.register_guide));
-        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.hint_color));
-        spanString.setSpan(span, 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.main_gray));
+        spanString.setSpan(span, 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         spanString.setSpan(new ClickableSpan() {
 

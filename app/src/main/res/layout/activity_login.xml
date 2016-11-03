@@ -36,13 +36,13 @@
                 android:hint="@string/phone_num"
                 android:imeOptions="actionNext"
                 android:inputType="phone"
-                android:textColorHint="@color/hint_color"
+                android:textColorHint="@color/main_gray"
+                android:textColor="@color/black"
                 android:textSize="@dimen/font_28px"
                 android:maxLength="11"/>
 
         <View
-                style="@style/DividerHorizontal"
-                android:layout_height="@dimen/px2"/>
+                style="@style/DividerHorizontal"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -64,7 +64,8 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:layout_toLeftOf="@+id/hide_show_pwd"
-                android:textColorHint="@color/hint_color"
+                android:textColorHint="@color/main_gray"
+                android:textColor="@color/black"
                 android:textSize="@dimen/font_28px"
                 android:layout_marginRight="@dimen/px22"
                 android:maxLength="16"/>

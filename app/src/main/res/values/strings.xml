@@ -26,8 +26,8 @@
     <string name="name_hint">您的真实姓名</string>
     <string name="verify_code_hint">验证码</string>
     <string name="verify_code_send_hint">发送验证码</string>
-    <string name="verity_code_countdown">%1$sS后可重发</string>
-    <string name="verity_code_re_send">重发验证码</string>
+    <string name="verity_code_countdown">%1$sS</string>
+    <string name="verity_code_re_send">重发</string>
     <string name="pwd_hint">请输入6&#8211;16位密码</string>
     <string name="register_protocol">《小教室用户注册协议》</string>
     <string name="register_protocol_agree">点击注册默认您同意</string>
@@ -89,7 +89,7 @@
     <string name="course_duration">上课时长</string>
     <string name="optional_info">选填信息</string>
     <string name="on_shelves">立即上架</string>
-    <string name="live_course_name_hint">请输入4-25字</string>
+    <string name="live_course_name_hint">请输入4&#8211;25字</string>
     <string name="subject_category_hint">请选择学科类目</string>
     <string name="teach_form_hint">请选择教学模式</string>
     <string name="enroll_way_hint">请选择报名模式</string>
