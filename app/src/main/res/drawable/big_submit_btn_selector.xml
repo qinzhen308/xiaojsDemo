@@ -4,17 +4,17 @@
     <item android:state_pressed="true"><shape>
             <solid android:color="@color/main_orange_pressed" />
 
-            <corners android:radius="@dimen/px10" />
+            <corners android:radius="@dimen/px2" />
         </shape></item>
     <item android:state_enabled="false"><shape>
             <solid android:color="@color/disable_btn" />
 
-            <corners android:radius="@dimen/px10" />
+            <corners android:radius="@dimen/px2" />
         </shape></item>
     <item><shape>
             <solid android:color="@color/main_orange" />
 
-            <corners android:radius="@dimen/px10" />
+            <corners android:radius="@dimen/px2" />
         </shape></item>
 
 </selector>

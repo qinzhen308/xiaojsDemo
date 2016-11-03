@@ -105,11 +105,11 @@ public class RegisterActivity extends BaseActivity {
     private void hideOrShowPwd(ImageView v) {
         String str = mRegPwdEdit.getText().toString().trim();
         if (mPwdHidden) {
-            //v.setImageDrawable(getResources().getDrawable(R.drawable.show_pw_selector));
+            v.setImageDrawable(getResources().getDrawable(R.drawable.show_pwd));
             mRegPwdEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             mPwdHidden = false;
         } else {
-            //v.setImageDrawable(getResources().getDrawable(R.drawable.hide_pw_selector));
+            v.setImageDrawable(getResources().getDrawable(R.drawable.hide_pwd));
             mRegPwdEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
             mPwdHidden = true;
         }

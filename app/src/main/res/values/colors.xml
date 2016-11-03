@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <!--common-->
+    <color name="main_bg">#fafafa</color>
     <color name="header_color">#3F51B5</color>
     <color name="white">#ffffff</color>
     <color name="red">#dc2314</color>
@@ -17,10 +18,11 @@
     <!--disable color, eg btn-->
     <color name="disable_btn">#999999</color>
     <!--horizontal divide line-->
-    <color name="hor_divide_line">#cccccc</color>
+    <color name="hor_divide_line">#d1d5db</color>
     <!--vertical divide line-->
-    <color name="ver_divide_line">#cccccc</color>
-    <color name="link_hover">#1d9de2</color>
+    <color name="ver_divide_line">#d1d5db</color>
+    <color name="link_hover">#0076ff</color>
+    <color name="hint_color">#8a8a8a</color>
 
     <!-- 二维码 -->
     <color name="viewfinder_mask">#60000000</color>

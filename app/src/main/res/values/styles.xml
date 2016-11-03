@@ -39,10 +39,9 @@
     <style name="BigSubmitBtn">
         <item name="android:background">@drawable/big_submit_btn_selector</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/px80</item>
-        <item name="android:paddingTop">@dimen/px10</item>
-        <item name="android:paddingBottom">@dimen/px10</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">@dimen/px22</item>
+        <item name="android:paddingBottom">@dimen/px22</item>
+        <item name="android:textSize">@dimen/font_28px</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>
     </style>
