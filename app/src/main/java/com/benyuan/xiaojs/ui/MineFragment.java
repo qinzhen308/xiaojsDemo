@@ -9,8 +9,8 @@ package com.benyuan.xiaojs.ui;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:zhanghui
- * Date:2016/10/11
+ * Author:hy
+ * Date:2016/11/13
  * Desc:
  *
  * ======================================================================================== */
@@ -33,13 +33,31 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void init() {
-
     }
 
-    @OnClick({R.id.recommend_to_friends})
+    @OnClick({R.id.settings})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.recommend_to_friends:
+            case R.id.edit_profile:
+                break;
+            case R.id.my_page:
+                break;
+            case R.id.my_course:
+                break;
+            case R.id.my_course_schedule:
+                break;
+
+            case R.id.my_ask_questions:
+                break;
+            case R.id.teach_ability_layout:
+                break;
+            case R.id.my_collections:
+                break;
+            case R.id.eval_management:
+                break;
+            case R.id.feedback_help:
+                break;
+            case R.id.settings:
                 startActivity(new Intent(mContext, SettingsActivity.class));
                 break;
             default:

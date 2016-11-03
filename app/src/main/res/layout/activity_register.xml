@@ -26,8 +26,8 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/px30"
                 android:paddingBottom="@dimen/px30"
-                android:textColorHint="@color/main_gray"
-                android:textColor="@color/black"
+                android:textColorHint="@color/font_gray"
+                android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
                 android:hint="@string/name_hint"/>
 
@@ -51,8 +51,8 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/px30"
                 android:paddingBottom="@dimen/px30"
-                android:textColorHint="@color/main_gray"
-                android:textColor="@color/black"
+                android:textColorHint="@color/font_gray"
+                android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
                 android:imeOptions="actionNext"
                 android:inputType="phone"
@@ -85,8 +85,8 @@
                     android:imeOptions="actionNext"
                     android:paddingTop="@dimen/px30"
                     android:paddingBottom="@dimen/px30"
-                    android:textColorHint="@color/main_gray"
-                    android:textColor="@color/black"
+                    android:textColorHint="@color/font_gray"
+                    android:textColor="@color/font_black"
                     android:textSize="@dimen/font_28px"
                     android:inputType="number"
                     android:layout_toLeftOf="@+id/get_verify_code"
@@ -101,7 +101,7 @@
                     android:paddingTop="@dimen/px10"
                     android:paddingBottom="@dimen/px10"
                     android:textSize="@dimen/font_28px"
-                    android:textColor="@color/main_gray"
+                    android:textColor="@color/font_gray"
                     android:text="@string/verify_code_send_hint"
                     android:layout_centerInParent="true"/>
         </RelativeLayout>
@@ -127,8 +127,8 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/px30"
                 android:paddingBottom="@dimen/px30"
-                android:textColorHint="@color/main_gray"
-                android:textColor="@color/black"
+                android:textColorHint="@color/font_gray"
+                android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
                 android:hint="@string/pwd_hint"
                 android:imeOptions="actionDone"
@@ -172,7 +172,7 @@
                 android:id="@+id/register_protocol_agree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/main_gray"
+                android:textColor="@color/font_gray"
                 android:text="@string/register_protocol_agree"/>
 
         <TextView

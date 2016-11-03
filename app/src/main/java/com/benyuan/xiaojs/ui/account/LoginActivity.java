@@ -86,7 +86,7 @@ public class LoginActivity extends BaseActivity {
 
     private void initRegGuideStyle() {
         SpannableString spanString = new SpannableString(getString(R.string.register_guide));
-        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.main_gray));
+        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.font_gray));
         spanString.setSpan(span, 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         spanString.setSpan(new ClickableSpan() {
