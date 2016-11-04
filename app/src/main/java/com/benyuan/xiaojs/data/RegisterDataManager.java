@@ -3,12 +3,14 @@ package com.benyuan.xiaojs.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Security;
 import com.benyuan.xiaojs.data.api.RegisterRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.VerifyCode;
+import com.orhanobut.logger.Logger;
 
 /**
  * Created by maxiaobao on 2016/10/31.
@@ -26,6 +28,13 @@ public class RegisterDataManager {
                                             @NonNull RegisterInfo info,
                                             @NonNull APIServiceCallback callback){
 
+        if (callback == null){
+            if(XiaojsConfig.DEBUG){
+                Logger.d("the api service callback is null,so cancel the register request");
+            }
+            return;
+        }
+
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.register(appContext,info,callback);
 
@@ -41,6 +50,14 @@ public class RegisterDataManager {
                                          long mobile,
                                          int verifycode,
                                          @NonNull final APIServiceCallback callback) {
+
+        if (callback == null){
+            if(XiaojsConfig.DEBUG){
+                Logger.d("the api service callback is null,so cancel the validate Code request");
+            }
+            return;
+        }
+
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.validateCode(appContext,
                 Security.VerifyMethod.SMS_4_REGISTRATION,
@@ -58,6 +75,15 @@ public class RegisterDataManager {
     public static void requestSendVerifyCode(@NonNull Context appContext,
                                            long mobile,
                                            @NonNull final APIServiceCallback<VerifyCode> callback) {
+
+        if (callback == null){
+            if(XiaojsConfig.DEBUG){
+                Logger.d("the api service callback is null,so cancel the send verify code request");
+            }
+            return;
+        }
+
+
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.sendVerifyCode(appContext,
                 Security.VerifyMethod.SMS_4_REGISTRATION,

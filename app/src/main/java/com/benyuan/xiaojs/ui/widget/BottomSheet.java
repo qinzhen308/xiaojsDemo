@@ -95,7 +95,7 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
 
     public void setContent(int contentId) {
         View content = getLayoutInflater().inflate(contentId, null);
-        ((FrameLayout) getWindow().findViewById(R.id.middle_txt)).addView(content);
+        ((FrameLayout) getWindow().findViewById(R.id.content_dialog)).addView(content);
     }
 
     public void setMiddleText(String text) {
