@@ -8,6 +8,11 @@
     <string name="rotate">旋转</string>
     <string name="phone_num">手机号</string>
     <string name="pwd">密码</string>
+    <string name="person">人</string>
+    <string name="day">天</string>
+    <string name="hour">小时</string>
+    <string name="minute">分钟</string>
+    <string name="charge">收费</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_live">直播</string>
@@ -21,8 +26,8 @@
     <string name="name_hint">您的真实姓名</string>
     <string name="verify_code_hint">验证码</string>
     <string name="verify_code_send_hint">发送验证码</string>
-    <string name="verity_code_countdown">%1$sS后可重发</string>
-    <string name="verity_code_re_send">重发验证码</string>
+    <string name="verity_code_countdown">%1$sS</string>
+    <string name="verity_code_re_send">重发</string>
     <string name="pwd_hint">请输入6&#8211;16位密码</string>
     <string name="register_protocol">《小教室用户注册协议》</string>
     <string name="register_protocol_agree">点击注册默认您同意</string>
@@ -40,10 +45,19 @@
     <string name="fans">粉丝</string>
     <string name="follows">关注</string>
     <string name="collections">收藏</string>
+    <string name="my_course_duration">课时</string>
+    <string name="course_credit">学分</string>
     <string name="my_account">我的账户</string>
+    <string name="recharge">充值</string>
+    <string name="withdrawals">提现</string>
     <string name="my_page">我的主页</string>
+    <string name="my_course_mine_page">我的课</string>
+    <string name="my_course_schedule">我的课程</string>
+    <string name="my_ask_questions">我的提问</string>
+    <string name="my_collections">我的收藏</string>
     <string name="eval_management">评价管理</string>
     <string name="teach_ability">教学能力</string>
+    <string name="feedback_help">反馈与帮助</string>
     <string name="system_notify">系统通知</string>
     <string name="name_verify">实名认证</string>
     <string name="get_more_right">可享更多权益</string>
@@ -65,6 +79,33 @@
     <string name="lesson_again">再次开课</string>
     <string name="look_detail">查看详情</string>
     <string name="invite">邀请</string>
+
+    <!--course creation-->
+    <string name="course_creation">我要开课</string>
+    <string name="live_course">直播课</string>
+    <string name="private_course">私密课</string>
+    <string name="live_course_name">直播课名称</string>
+    <string name="subject_category">学科类目</string>
+    <string name="teach_form">教学形式</string>
+    <string name="teach_form_open">公开课</string>
+    <string name="teach_form_one2one">一对一</string>
+    <string name="teach_form_more2one">多人小班</string>
+    <string name="enroll_way">报名方式</string>
+    <string name="enroll_online">线上报名</string>
+    <string name="enroll_offline">线下报名</string>
+    <string name="enroll_people_limit">报名限制人数</string>
+    <string name="course_start_time">上课时间</string>
+    <string name="course_duration">上课时长</string>
+    <string name="optional_info">选填信息</string>
+    <string name="on_shelves">立即上架</string>
+    <string name="live_course_name_hint">请输入4&#8211;25字</string>
+    <string name="subject_category_hint">请选择学科类目</string>
+    <string name="teach_form_hint">请选择教学模式</string>
+    <string name="enroll_way_hint">请选择报名模式</string>
+    <string name="course_start_time_hint">请选择上课时间</string>
+    <string name="optional_info_hint">请选择上课时间</string>
+    <string name="on_shelves_tips">上架后该课的详情将公开在您的个人主页中</string>
+
     <string name="filter">筛选</string>
     <string name="time">时间</string>
     <string name="course_state">开课状态</string>

@@ -87,7 +87,7 @@ public abstract class BaseTabFragment extends BaseFragment implements View.OnCli
         createTabs(tabTitles);
 
         if (fixedView != null) {
-            mTabFixedView.addView(fixedView, 1);
+            mTabFixedView.addView(fixedView, mTabFixedView.getChildCount());
         }
 
         mAdapter = new TabFragmentPagerAdapter(getFragmentManager(), fragments);

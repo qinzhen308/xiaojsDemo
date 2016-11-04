@@ -9,22 +9,34 @@ package com.benyuan.xiaojs.ui;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:zhanghui
- * Date:2016/10/11
+ * Author:hy
+ * Date:2016/11/13
  * Desc:
  *
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.mine.SettingsActivity;
+import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+import com.benyuan.xiaojs.util.FastBlur;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MineFragment extends BaseFragment {
+    @BindView(R.id.portrait)
+    RoundedImageView mPortraitView;
+    @BindView(R.id.blur_portrait)
+    ImageView mBlurPortraitView;
+    @BindView(R.id.profile_cover)
+    ImageView mProfileBgView;
 
     @Override
     protected View getContentView() {
@@ -33,17 +45,51 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void init() {
-
+        setPortrait();
     }
 
-    @OnClick({R.id.recommend_to_friends})
+    @OnClick({R.id.settings})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.recommend_to_friends:
+            case R.id.edit_profile:
+                break;
+            case R.id.my_page:
+                break;
+            case R.id.my_course:
+                break;
+            case R.id.my_course_schedule:
+                break;
+
+            case R.id.my_ask_questions:
+                break;
+            case R.id.teach_ability_layout:
+                break;
+            case R.id.my_collections:
+                break;
+            case R.id.eval_management:
+                break;
+            case R.id.feedback_help:
+                break;
+            case R.id.settings:
                 startActivity(new Intent(mContext, SettingsActivity.class));
                 break;
             default:
                 break;
         }
+    }
+
+    private void setPortrait() {
+        Bitmap portrait = BitmapFactory.decodeResource(getResources(), R.drawable.default_portrait);
+        mPortraitView.setImageBitmap(portrait);
+        setupBlurPortraitView(portrait);
+    }
+
+    private void setupBlurPortraitView(Bitmap portrait) {
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(portrait,
+                portrait.getWidth() / 3,
+                portrait.getHeight() / 3,
+                false);
+        Bitmap blurBitmap = FastBlur.doBlur(scaledBitmap, 10, true);
+        mBlurPortraitView.setImageBitmap(blurBitmap);
     }
 }

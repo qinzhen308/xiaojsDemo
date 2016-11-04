@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+        <View
+                android:layout_marginTop="@dimen/px40"
+                style="@style/DividerHorizontal"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/live_course_name"/>
+
+            <com.benyuan.xiaojs.ui.widget.EditTextDel
+                    android:layout_marginLeft="@dimen/px10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/live_course_name_hint"/>
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <View
+                android:layout_marginTop="@dimen/px40"
+                style="@style/DividerHorizontal"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subject_category"/>
+
+            <TextView
+                    android:id="@+id/subject_category"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subject_category_hint"/>
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px30"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/teach_form"/>
+
+            <TextView
+                    android:id="@+id/teach_form"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/teach_form_hint"/>
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px30"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enroll_way"/>
+
+            <TextView
+                    android:id="@+id/enroll_way"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enroll_way_hint"/>
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px30"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enroll_people_limit"/>
+
+            <com.benyuan.xiaojs.ui.widget.EditTextDel
+                    android:id="@+id/enroll_people_limit"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="@null"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/person"/>
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px30"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/charge"/>
+
+            <ToggleButton
+                    android:id="@+id/charge_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:textOff=""
+                    android:textOn=""/>
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px30"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/course_start_time"/>
+
+            <TextView
+                    android:id="@+id/course_start_time"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/course_start_time_hint"/>
+
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px30"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/course_duration"/>
+
+            <com.benyuan.xiaojs.ui.widget.EditTextDel
+                    android:id="@+id/course_duration"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="@null"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minute"/>
+
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px30"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/optional_info"/>
+
+            <TextView
+                    android:id="@+id/optional_info"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/optional_info_hint"/>
+
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px30"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/on_shelves"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/on_shelves_tips"/>
+
+            </LinearLayout>
+
+
+            <ToggleButton
+                    android:id="@+id/on_shelves"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:textOff=""
+                    android:textOn=""/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

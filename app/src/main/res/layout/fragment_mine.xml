@@ -1,185 +1,403 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:roundimg="http://schemas.android.com/apk/res/com.benyuan.xiaojs"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
     <LinearLayout
-            android:background="#cccccc"
+            android:background="@color/main_bg"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <LinearLayout
-                android:background="#ffffff"
+        <!--个人资料-->
+        <FrameLayout
                 android:id="@+id/personal_info"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <RelativeLayout
-                    android:orientation="horizontal"
+            <ImageView
+                    android:id="@+id/blur_portrait"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"/>
 
-                <ImageView
-                        android:id="@+id/qr_code_scanner"
-                        android:layout_alignParentLeft="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                <ImageView
-                        android:id="@+id/edit_info"
-                        android:layout_alignParentRight="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
+            <ImageView
+                    android:id="@+id/profile_cover"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:background="@drawable/profile_bg"/>
 
-                <ImageView
-                        android:id="@+id/portrait"
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px116">
+
+                <RelativeLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <LinearLayout
+                            android:id="@+id/base_info"
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true">
+
+                        <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                                android:id="@+id/portrait"
+                                roundimg:oval="true"
+                                android:layout_width="@dimen/px160"
+                                android:layout_height="@dimen/px160"/>
+
+                        <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/px20">
+
+                            <TextView
+                                    android:id="@+id/user_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="范爷"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/font_28px"/>
+
+                            <ImageView
+                                    android:id="@+id/authenticate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:id="@+id/authentication_info"
+                            android:layout_toRightOf="@+id/base_info"
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
+
+                        <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <TextView
+                        android:layout_marginTop="@dimen/px40"
+                        android:id="@+id/user_profile"
                         android:layout_width="wrap_content"
+                        android:paddingLeft="@dimen/px60"
+                        android:paddingRight="@dimen/px88"
+                        android:text="每一个人都可以站在大地，分享这个世界，并触摸天空"
+                        android:layout_marginBottom="@dimen/px32"
+                        android:textSize="@dimen/font_22px"
+                        android:textColor="@color/font_gray"
                         android:layout_height="wrap_content"/>
-            </RelativeLayout>
+            </LinearLayout>
 
-            <TextView
-                    android:id="@+id/user_name"
+
+            <ImageView
+                    android:id="@+id/edit_profile"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="@dimen/px30"
+                    android:paddingBottom="@dimen/px20"
+                    android:paddingTop="@dimen/px20"
+                    android:src="@drawable/edit_profiles_selector"
+                    android:clickable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+        </FrameLayout>
 
-            <TextView
-                    android:id="@+id/user_profile"
-                    android:layout_width="wrap_content"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
-                    android:text="每一个人都可以站在大地，分享这个世界，并触摸天空"
-                    android:layout_marginBottom="@dimen/px20"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
 
         <View
                 style="@style/DividerHorizontal"/>
 
+        <!--粉丝，关注，课时，学分-->
         <LinearLayout
-                android:background="#ffffff"
+                android:background="@color/white"
+                android:paddingTop="@dimen/px24"
+                android:paddingBottom="@dimen/px24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                    android:id="@+id/fans"
-                    android:gravity="center"
-                    android:layout_weight="1"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20"
+            <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/fans"/>
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20">
+
+                <TextView
+                        android:id="@+id/fans"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_26px"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fans"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_marginTop="@dimen/px24"/>
+            </LinearLayout>
 
             <View
                     style="@style/DividerVertical"/>
 
-            <TextView
-                    android:id="@+id/follows"
-                    android:gravity="center"
+            <LinearLayout
+                    android:orientation="vertical"
                     android:layout_weight="1"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20"
+                    android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/follows"/>
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20">
+
+                <TextView
+                        android:id="@+id/follows"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_26px"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/follows"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_marginTop="@dimen/px24"/>
+            </LinearLayout>
 
             <View
                     style="@style/DividerVertical"/>
 
-            <TextView
-                    android:id="@+id/collections"
-                    android:gravity="center"
+            <!--课时-->
+            <LinearLayout
+                    android:orientation="vertical"
                     android:layout_weight="1"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20"
+                    android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/collections"/>
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20">
+
+                <TextView
+                        android:id="@+id/my_course_duration"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_26px"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/my_course_duration"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_marginTop="@dimen/px24"/>
+
+            </LinearLayout>
+
+            <View
+                    style="@style/DividerVertical"/>
+
+            <!--学分-->
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20">
+
+                <TextView
+                        android:id="@+id/course_credit"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_26px"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/course_credit"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_marginTop="@dimen/px24"/>
+            </LinearLayout>
+
 
         </LinearLayout>
 
         <View
                 style="@style/DividerHorizontal"/>
 
+        <!--我的账户-->
         <RelativeLayout
-                android:background="#ffffff"
-                android:paddingTop="@dimen/px20"
-                android:paddingBottom="@dimen/px20"
-                android:paddingLeft="@dimen/px20"
-                android:paddingRight="@dimen/px20"
-                android:layout_marginTop="@dimen/px15"
+                android:background="@drawable/item_pressed"
+                android:paddingTop="@dimen/px25"
+                android:paddingBottom="@dimen/px25"
+                android:paddingLeft="@dimen/px60"
+                android:paddingRight="@dimen/px50"
+                android:layout_marginTop="@dimen/px20"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/px15">
+                android:clickable="true"
+                android:layout_height="wrap_content">
 
-            <TextView
-                    android:layout_alignParentLeft="true"
+            <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/my_account"/>
+                    android:layout_height="wrap_content">
 
-            <TextView
-                    android:id="@+id/my_account"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/enter_account"
-                    android:text="5000.0"
-                    android:layout_marginRight="@dimen/px30"/>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_alignParentLeft="true"
+                            android:layout_width="@dimen/px150"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_black"
+                            android:textSize="@dimen/font_26px"
+                            android:text="@string/my_account"/>
+
+                    <TextView
+                            android:id="@+id/my_account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/enter_account"
+                            android:text="5000.0"
+                            android:textSize="@dimen/font_38px"
+                            android:textColor="@color/font_orange"
+                            android:textStyle="bold"
+                            android:layout_marginRight="@dimen/px30"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/px36"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:id="@+id/recharge"
+                            android:layout_alignParentLeft="true"
+                            android:layout_width="@dimen/px150"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_blue"
+                            android:textSize="@dimen/font_26px"
+                            android:text="@string/recharge"
+                            android:textStyle="bold"/>
+
+                    <TextView
+                            android:id="@+id/withdrawals"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/enter_account"
+                            android:text="@string/withdrawals"
+                            android:textColor="@color/font_blue"
+                            android:textSize="@dimen/font_26px"
+                            android:layout_marginRight="@dimen/px30"
+                            android:textStyle="bold"/>
+                </LinearLayout>
+            </LinearLayout>
+
 
             <ImageView
                     android:id="@+id/enter_account"
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
+                    android:src="@drawable/ic_entrance"
+                    android:layout_centerInParent="true"
                     android:layout_height="wrap_content"/>
         </RelativeLayout>
 
-        <View
-                style="@style/DividerHorizontal"/>
-
+        <!--我的主页-->
         <TextView
                 android:id="@+id/my_page"
-                android:background="#ffffff"
+                android:layout_marginTop="@dimen/px20"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/my_page"
-                android:padding="@dimen/px20"/>
+                style="@style/MinePageItem"/>
 
         <View
                 style="@style/DividerHorizontal"/>
 
+        <!--我的课-->
         <TextView
-                android:id="@+id/eval_management"
-                android:background="#ffffff"
+                android:id="@+id/my_course"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/eval_management"
-                android:padding="@dimen/px20"/>
+                android:text="@string/my_course_mine_page"
+                style="@style/MinePageItem"/>
 
         <View
                 style="@style/DividerHorizontal"/>
 
-        <RelativeLayout
-                android:background="#ffffff"
-                android:paddingTop="@dimen/px20"
-                android:paddingBottom="@dimen/px20"
-                android:paddingLeft="@dimen/px20"
-                android:paddingRight="@dimen/px20"
+        <!--我的课程-->
+        <TextView
+                android:id="@+id/my_course_schedule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/px15">
+                android:text="@string/my_course_schedule"
+                style="@style/MinePageItem"/>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <!--我的提问-->
+        <TextView
+                android:id="@+id/my_ask_questions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/my_ask_questions"
+                style="@style/MinePageItem"/>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <!--教学能力-->
+        <RelativeLayout
+                android:id="@+id/teach_ability_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/MinePageItem">
 
             <TextView
                     android:layout_alignParentLeft="true"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:textStyle="bold"
                     android:text="@string/teach_ability"/>
 
             <TextView
@@ -187,80 +405,61 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/enter_teach_ability"
-                    android:text="人力资源培训"
-                    android:layout_marginRight="@dimen/px30"/>
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:layout_marginRight="@dimen/px20"/>
 
             <ImageView
                     android:id="@+id/enter_teach_ability"
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
         </RelativeLayout>
 
         <View
                 style="@style/DividerHorizontal"/>
 
-
+        <!--我的收藏-->
         <TextView
-                android:id="@+id/system_notify"
-                android:background="#ffffff"
+                android:id="@+id/my_collections"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/system_notify"
-                android:padding="@dimen/px20"/>
+                android:text="@string/my_collections"
+                style="@style/MinePageItem"/>
+
         <View
                 style="@style/DividerHorizontal"/>
 
-        <RelativeLayout
-                android:background="#ffffff"
-                android:paddingTop="@dimen/px20"
-                android:paddingBottom="@dimen/px20"
-                android:paddingLeft="@dimen/px20"
-                android:paddingRight="@dimen/px20"
+        <!--评价管理-->
+        <TextView
+                android:id="@+id/eval_management"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/px15">
+                android:text="@string/eval_management"
+                style="@style/MinePageItem"/>
 
-            <TextView
-                    android:layout_alignParentLeft="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/name_verify"/>
 
-            <TextView
-                    android:id="@+id/name_verify"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/enter_name_verify"
-                    android:text="@string/get_more_right"
-                    android:layout_marginRight="@dimen/px30"/>
+        <!--反馈帮助-->
+        <TextView
+                android:id="@+id/feedback_help"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/feedback_help"
+                style="@style/MinePageItem"/>
 
-            <ImageView
-                    android:id="@+id/enter_name_verify"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </RelativeLayout>
+        <View
+                style="@style/DividerHorizontal"/>
 
+        <!--设置-->
         <TextView
                 android:id="@+id/settings"
-                android:background="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/settings"
-                android:padding="@dimen/px20"/>
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <TextView
-                android:id="@+id/recommend_to_friends"
-                android:background="#ffffff"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/recommend_to_friends"
-                android:padding="@dimen/px20"/>
-        <View
-                style="@style/DividerHorizontal"/>
+                style="@style/MinePageItem"
+                android:layout_marginBottom="@dimen/px185"/>
 
 
     </LinearLayout>

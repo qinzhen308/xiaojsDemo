@@ -17,6 +17,7 @@ package com.benyuan.xiaojs.ui.account;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.XiaojsConfig;
@@ -31,11 +32,23 @@ import com.benyuan.xiaojs.util.XjsUtils;
 public class AccountBusiness {
 
     public static void login(final Activity activity, final LoginParams loginParams) {
+        login(activity, loginParams, null);
+    }
+
+    public static void login(final Activity activity, final LoginParams loginParams, final View submitBtn) {
+        if (submitBtn != null) {
+            submitBtn.setEnabled(false);
+        }
+
         try {
             LoginDataManager.requestLoginByAPI(activity, loginParams, new APIServiceCallback<LoginInfo>() {
 
                 @Override
                 public void onSuccess(LoginInfo loginInfo) {
+                    if (submitBtn != null) {
+                        submitBtn.setEnabled(true);
+                    }
+
                     if (loginInfo != null) {
                         XiaojsConfig.mLoginUser = loginInfo.getUser();
                         XjsUtils.getSharedPreferences().edit().putLong(XiaojsConfig.KEY_LOGIN_USERNAME,
@@ -51,11 +64,18 @@ public class AccountBusiness {
 
                 @Override
                 public void onFailure(String errorCode) {
+                    if (submitBtn != null) {
+                        submitBtn.setEnabled(true);
+                    }
+
                     Toast.makeText(activity, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
             //do nothing
+            if (submitBtn != null) {
+                submitBtn.setEnabled(true);
+            }
         }
     }
 }

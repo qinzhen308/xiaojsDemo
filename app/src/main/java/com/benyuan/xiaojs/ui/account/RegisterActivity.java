@@ -30,6 +30,9 @@ import com.benyuan.xiaojs.ui.MainActivity;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.util.VerifyUtils;
 import com.benyuan.xiaojs.util.XjsUtils;
+import com.orhanobut.logger.Logger;
+
+import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,6 +53,7 @@ import butterknife.OnClick;
  * ======================================================================================== */
 
 public class RegisterActivity extends BaseActivity {
+    private final static String TAG = "RegisterActivity";
     private final static int MSG_RE_SEND = 0;
     private final int SMS_GETTING_TIME_OUT = 60;
 
@@ -105,11 +109,11 @@ public class RegisterActivity extends BaseActivity {
     private void hideOrShowPwd(ImageView v) {
         String str = mRegPwdEdit.getText().toString().trim();
         if (mPwdHidden) {
-            //v.setImageDrawable(getResources().getDrawable(R.drawable.show_pw_selector));
+            v.setImageDrawable(getResources().getDrawable(R.drawable.show_pwd));
             mRegPwdEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             mPwdHidden = false;
         } else {
-            //v.setImageDrawable(getResources().getDrawable(R.drawable.hide_pw_selector));
+            v.setImageDrawable(getResources().getDrawable(R.drawable.hide_pwd));
             mRegPwdEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
             mPwdHidden = true;
         }
@@ -119,21 +123,36 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void getVerifyCode() {
-        long phone = Long.parseLong(mRegPhoneEdit.getEditableText().toString());
-        RegisterDataManager.requestSendVerifyCode(this, phone, new APIServiceCallback<VerifyCode>() {
+        String phoneTxt = mRegPhoneEdit.getEditableText().toString().trim();
+        if (TextUtils.isEmpty(phoneTxt)) {
+            Toast.makeText(this, R.string.phone_empty, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            @Override
-            public void onSuccess(VerifyCode object) {
-                mCurrVerifyTime = SMS_GETTING_TIME_OUT;
-                mRegVerifyEdit.setText(String.valueOf(object.getCode()));
-                mHandler.sendEmptyMessage(0);
-            }
+        if (!VerifyUtils.checkPhoneNum(phoneTxt)) {
+            Toast.makeText(this, R.string.phone_error, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            @Override
-            public void onFailure(String errorCode) {
-                Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            long phone = Long.parseLong(mRegPhoneEdit.getEditableText().toString());
+            RegisterDataManager.requestSendVerifyCode(this, phone, new APIServiceCallback<VerifyCode>() {
+
+                @Override
+                public void onSuccess(VerifyCode object) {
+                    mCurrVerifyTime = SMS_GETTING_TIME_OUT;
+                    mRegVerifyEdit.setText(String.valueOf(object.getCode()));
+                    mHandler.sendEmptyMessage(0);
+                }
+
+                @Override
+                public void onFailure(String errorCode) {
+                    Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (NumberFormatException e) {
+            Logger.i(TAG, "phone num error");
+        }
 
         XjsUtils.hideIMM(this, getCurrentFocus().getWindowToken());
     }

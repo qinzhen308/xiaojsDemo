@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.ui.course;
 
 import android.support.v4.app.Fragment;
 
+import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseTopTabActivity;
 
 import java.util.ArrayList;
@@ -22,10 +23,19 @@ import java.util.List;
  *
  * ======================================================================================== */
 
-public class LiveCourseCreationActivity extends BaseTopTabActivity {
+public class CourseCreationActivity extends BaseTopTabActivity {
     @Override
     protected void initView() {
-        List<Fragment> fs = new ArrayList<>();
+        setTitle(R.string.course_creation);
+
+        List<Fragment> fragments = new ArrayList<>();
         List<String> mTabs = new ArrayList<String>();
+
+        Fragment liveCourse = new LiveCourseCreationFragment();
+        Fragment privateCourse = new PrivateCourseCreationFragment();
+        fragments.add(liveCourse);
+        fragments.add(privateCourse);
+
+        addViews(new int[] {R.string.live_course, R.string.private_course}, fragments);
     }
 }

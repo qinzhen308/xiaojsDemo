@@ -2,35 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:background="@color/main_bg">
 
     <ImageView
-            android:layout_marginTop="@dimen/px80"
-            android:layout_width="@dimen/px100"
-            android:layout_height="@dimen/px100"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/px83"
+            android:layout_marginBottom="@dimen/px83"
+            android:layout_width="wrap_content"
+            android:src="@drawable/login_logo"
+            android:layout_height="wrap_content"/>
 
     <View
-            android:layout_marginTop="@dimen/px80"
             style="@style/DividerHorizontal"/>
 
     <LinearLayout
-
+            android:background="@color/white"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:paddingLeft="@dimen/px30"
-            android:paddingRight="@dimen/px30"
+            android:paddingLeft="@dimen/px43"
+            android:paddingRight="@dimen/px43"
             android:layout_height="wrap_content">
 
-        <EditText
+        <com.benyuan.xiaojs.ui.widget.EditTextDel
                 android:id="@+id/login_name"
                 android:background="@null"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/px25"
-                android:paddingBottom="@dimen/px25"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
                 android:hint="@string/phone_num"
                 android:imeOptions="actionNext"
                 android:inputType="phone"
+                android:textColorHint="@color/font_gray"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
                 android:maxLength="11"/>
 
         <View
@@ -38,29 +46,38 @@
     </LinearLayout>
 
     <RelativeLayout
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/px25">
+            android:paddingLeft="@dimen/px43"
+            android:paddingRight="@dimen/px43">
 
-        <EditText
+        <com.benyuan.xiaojs.ui.widget.EditTextDel
                 android:id="@+id/login_pwd"
                 android:background="@null"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
                 android:hint="@string/pwd"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
+                android:layout_toLeftOf="@+id/hide_show_pwd"
+                android:textColorHint="@color/font_gray"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:layout_marginRight="@dimen/px22"
                 android:maxLength="16"/>
 
         <ImageView
                 android:id="@+id/hide_show_pwd"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
-                android:layout_width="@dimen/px30"
-                android:layout_height="@dimen/px30"
-                android:background="#f00"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/hide_pwd"/>
     </RelativeLayout>
 
     <View
@@ -68,18 +85,18 @@
 
     <Button
             android:id="@+id/login_btn"
-            android:layout_marginTop="@dimen/px80"
+            android:layout_marginTop="@dimen/px90"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/BigSubmitBtn"
-            android:layout_marginLeft="@dimen/px80"
-            android:layout_marginRight="@dimen/px80"
-            android:text="@string/login"/>
+            android:layout_marginLeft="@dimen/px40"
+            android:layout_marginRight="@dimen/px40"
+            android:text="@string/login"
+            style="@style/BigSubmitBtn"/>
 
     <TextView
             android:id="@+id/reg_guide"
-            android:paddingLeft="@dimen/px80"
-            android:layout_marginTop="@dimen/px30"
+            android:paddingLeft="@dimen/px43"
+            android:layout_marginTop="@dimen/px42"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register_guide"/>

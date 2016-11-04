@@ -12,20 +12,16 @@ import android.text.method.PasswordTransformationMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.XiaojsConfig;
-import com.benyuan.xiaojs.common.xf_foundation.Errors;
-import com.benyuan.xiaojs.data.LoginDataManager;
-import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
-import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
-import com.benyuan.xiaojs.ui.MainActivity;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+import com.benyuan.xiaojs.ui.widget.EditTextDel;
 import com.benyuan.xiaojs.util.VerifyUtils;
 import com.benyuan.xiaojs.util.XjsUtils;
 
@@ -51,9 +47,11 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.reg_guide)
     TextView mRegGuide;
     @BindView(R.id.login_name)
-    EditText mLoginNamedEdit;
+    EditTextDel mLoginNamedEdit;
     @BindView(R.id.login_pwd)
-    EditText mLoginPwdEdit;
+    EditTextDel mLoginPwdEdit;
+    @BindView(R.id.login_btn)
+    Button mLoginBtn;
 
     private Context mContext;
     private boolean mPwdHidden = true;
@@ -88,8 +86,8 @@ public class LoginActivity extends BaseActivity {
 
     private void initRegGuideStyle() {
         SpannableString spanString = new SpannableString(getString(R.string.register_guide));
-        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.disable_btn));
-        spanString.setSpan(span, 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.font_gray));
+        spanString.setSpan(span, 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         spanString.setSpan(new ClickableSpan() {
 
@@ -126,11 +124,11 @@ public class LoginActivity extends BaseActivity {
     private void hideOrShowPwd(ImageView v) {
         String str = mLoginPwdEdit.getText().toString().trim();
         if (mPwdHidden) {
-            //v.setImageDrawable(getResources().getDrawable(R.drawable.show_pw_selector));
+            v.setImageDrawable(getResources().getDrawable(R.drawable.show_pwd));
             mLoginPwdEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             mPwdHidden = false;
         } else {
-            //v.setImageDrawable(getResources().getDrawable(R.drawable.hide_pw_selector));
+            v.setImageDrawable(getResources().getDrawable(R.drawable.hide_pwd));
             mLoginPwdEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
             mPwdHidden = true;
         }

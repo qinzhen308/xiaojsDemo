@@ -90,6 +90,17 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
         mScrollable = scrollable;
     }
 
+    protected void addViews(int[] resIds, List<? extends Fragment> fragments) {
+        if (resIds == null || fragments == null) {
+            return;
+        }
+        List<String> tabTitles = new ArrayList<String>();
+        for (int i = 0; i < resIds.length; i++) {
+            tabTitles.add(getString(resIds[i]));
+        }
+        addViews(tabTitles, null, fragments);
+    }
+
     protected void addViews(List<String> tabTitles, List<? extends Fragment> fragments) {
         addViews(tabTitles, null, fragments);
     }
@@ -110,7 +121,7 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
         createTabs(tabTitles);
 
         if (fixedView != null) {
-            mTabFixedView.addView(fixedView, 1);
+            mTabFixedView.addView(fixedView, mTabFixedView.getChildCount());
         }
 
         mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragments);

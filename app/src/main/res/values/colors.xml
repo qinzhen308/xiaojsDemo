@@ -5,22 +5,29 @@
     <color name="colorAccent">#FF4081</color>
 
     <!--common-->
+    <color name="main_bg">#fafafa</color>
     <color name="header_color">#3F51B5</color>
     <color name="white">#ffffff</color>
     <color name="red">#dc2314</color>
     <color name="def">#000000</color>
     <!--app base color-->
-    <color name="main_orange">#FF9833</color>
-    <color name="main_blue">#0076FF</color>
-    <color name="main_orange_pressed">#FFab22</color>
+    <color name="main_orange">#ff9833</color>
+    <color name="main_blue">#0076ff</color>
+    <color name="main_orange_pressed">#ffad5d</color>
+    <color name="main_orange_disabled">#ffcc9b</color>
     <color name="main_blue_pressed">#0088FF</color>
     <!--disable color, eg btn-->
     <color name="disable_btn">#999999</color>
     <!--horizontal divide line-->
-    <color name="hor_divide_line">#cccccc</color>
+    <color name="hor_divide_line">#d1d5db</color>
     <!--vertical divide line-->
-    <color name="ver_divide_line">#cccccc</color>
-    <color name="link_hover">#1d9de2</color>
+    <color name="ver_divide_line">#d1d5db</color>
+    <color name="link_hover">#0076ff</color>
+    <color name="font_gray">#999999</color>
+    <color name="font_black">#333333</color>
+    <color name="font_blue">#0076ff</color>
+    <color name="font_orange">#ff9833</color>
+    <color name="item_pressed">#f6f6f6</color>
 
     <!-- 二维码 -->
     <color name="viewfinder_mask">#60000000</color>
