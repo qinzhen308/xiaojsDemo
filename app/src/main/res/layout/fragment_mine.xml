@@ -55,6 +55,7 @@
                         <LinearLayout
                                 android:orientation="horizontal"
                                 android:layout_gravity="center_horizontal"
+                                android:gravity="center"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/px20">
@@ -68,9 +69,11 @@
                                     android:textSize="@dimen/font_28px"/>
 
                             <ImageView
+                                    android:layout_marginLeft="@dimen/px10"
                                     android:id="@+id/authenticate"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_name_authed"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -96,8 +99,8 @@
                 </RelativeLayout>
 
                 <TextView
-                        android:layout_marginTop="@dimen/px40"
                         android:id="@+id/user_profile"
+                        android:layout_marginTop="@dimen/px40"
                         android:layout_width="wrap_content"
                         android:paddingLeft="@dimen/px60"
                         android:paddingRight="@dimen/px88"
@@ -112,7 +115,8 @@
             <ImageView
                     android:id="@+id/edit_profile"
                     android:layout_gravity="right"
-                    android:layout_marginRight="@dimen/px30"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
                     android:paddingBottom="@dimen/px20"
                     android:paddingTop="@dimen/px20"
                     android:src="@drawable/edit_profiles_selector"

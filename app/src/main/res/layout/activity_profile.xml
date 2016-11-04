@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:roundimg="http://schemas.android.com/apk/res/com.benyuan.xiaojs"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/main_bg"
+              android:focusable="true"
+              android:focusableInTouchMode="true">
+
+    <View
+            android:layout_marginTop="@dimen/px32"
+            style="@style/DividerHorizontal"/>
+
+    <RelativeLayout
+            android:id="@+id/edit_portrait"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px32"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px16"
+            android:paddingBottom="@dimen/px16"
+            android:clickable="true"
+            android:background="@drawable/item_pressed">
+
+        <TextView
+                android:id="@+id/edit_portrait_title"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/font_gray"
+                android:text="@string/edit_portrait"
+                android:layout_centerInParent="true"/>
+
+        <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                android:id="@+id/portrait"
+                android:layout_toRightOf="@+id/edit_portrait_title"
+                android:layout_marginLeft="@dimen/px46"
+                android:layout_width="@dimen/px90"
+                android:layout_height="@dimen/px90"
+                android:layout_centerInParent="true"
+                roundimg:oval="true"/>
+
+        <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_entrance"/>
+    </RelativeLayout>
+
+    <View
+            style="@style/DividerHorizontal"/>
+
+    <View
+            android:layout_marginTop="@dimen/px32"
+            style="@style/DividerHorizontal"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/px28"
+            android:paddingBottom="@dimen/px28">
+
+        <TextView
+                android:layout_width="@dimen/px170"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_gray"
+                android:textSize="@dimen/font_28px"
+                android:paddingLeft="@dimen/px32"
+                android:text="@string/name"/>
+
+        <com.benyuan.xiaojs.ui.widget.EditTextDel
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px"
+                android:background="@null"
+                android:paddingRight="@dimen/px32"
+                android:text="王晓晓"/>
+    </LinearLayout>
+
+    <View
+            android:paddingLeft="@dimen/px32"
+            style="@style/DividerHorizontal"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/px28"
+            android:paddingBottom="@dimen/px28">
+
+        <TextView
+                android:layout_width="@dimen/px170"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_gray"
+                android:textSize="@dimen/font_28px"
+                android:paddingLeft="@dimen/px32"
+                android:text="@string/sex"/>
+
+        <TextView
+                android:id="@+id/sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px"
+                android:paddingRight="@dimen/px32"
+                android:background="@null"
+                android:text="男"/>
+    </LinearLayout>
+
+    <View
+            android:paddingLeft="@dimen/px32"
+            style="@style/DividerHorizontal"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/px28"
+            android:paddingBottom="@dimen/px28">
+
+        <TextView
+                android:layout_width="@dimen/px170"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_gray"
+                android:textSize="@dimen/font_28px"
+                android:paddingLeft="@dimen/px32"
+                android:text="@string/birthday"/>
+
+        <TextView
+                android:id="@+id/birthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:background="@null"
+                android:paddingRight="@dimen/px32"
+                android:text="2008-02-06"/>
+    </LinearLayout>
+
+    <View
+            android:paddingLeft="@dimen/px32"
+            style="@style/DividerHorizontal"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/px28"
+            android:paddingBottom="@dimen/px28">
+
+        <TextView
+                android:layout_width="@dimen/px170"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_gray"
+                android:textSize="@dimen/font_28px"
+                android:paddingLeft="@dimen/px32"
+                android:text="@string/personalized_sign"/>
+
+        <com.benyuan.xiaojs.ui.widget.EditTextDel
+                android:id="@+id/personalized_sign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:paddingRight="@dimen/px32"
+                android:background="@null"
+                android:text="岁月静好，墨彩生香！岁月沉淀，人生知味。"/>
+    </LinearLayout>
+
+    <View
+            android:paddingLeft="@dimen/px32"
+            style="@style/DividerHorizontal"/>
+
+
+</LinearLayout>

@@ -6,9 +6,9 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
 
     <application
             android:name=".XiaojsApplication"
@@ -25,13 +25,21 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.MainActivity"/>
-        <activity android:name=".common.crop.CropImageActivity"/>
-        <activity android:name=".common.crop.CropImageMainActivity"/>
+        <activity
+                android:name=".common.crop.CropImageActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".common.crop.CropImageMainActivity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity android:name=".ui.TestAPIActivity"/>
         <activity android:name=".ui.account.RegisterActivity"/>
         <activity android:name=".ui.mine.SettingsActivity"/>
-        <activity android:name=".ui.course.MyCourseActivity" android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.course.MyCourseActivity"
+                android:screenOrientation="portrait"/>
         <activity android:name=".ui.course.CourseCreationActivity"/>
+        <activity android:name=".ui.mine.ProfileActivity"/>
     </application>
 
 </manifest>

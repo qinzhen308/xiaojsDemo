@@ -28,7 +28,10 @@
                 android:paddingBottom="@dimen/px14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/white"
                 android:text="@string/cancel"
+                android:background="@null"
                 android:layout_alignParentLeft="true"/>
 
         <Button
@@ -36,7 +39,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/rotate"/>
+                android:text="@string/rotate"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/white"
+                android:visibility="gone"/>
 
         <Button
                 android:id="@+id/save"
@@ -46,7 +52,10 @@
                 android:paddingBottom="@dimen/px14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/white"
                 android:text="@string/save"
+                android:background="@null"
                 android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </FrameLayout>

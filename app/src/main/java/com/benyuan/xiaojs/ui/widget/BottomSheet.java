@@ -9,7 +9,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
@@ -39,7 +38,7 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
     private View.OnClickListener mLeftBtnClickListener;
     private View.OnClickListener mRightBtnClickListener;
 
-    private OnDismissListener mOnDismissListener;
+    private OnDialogCloseListener mOnDismissListener;
 
     private View mTitleLayout;
 
@@ -132,14 +131,14 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
     @Override
     public void onCancel(DialogInterface dialog) {
         if (mOnDismissListener != null) {
-            mOnDismissListener.onClose();
+            mOnDismissListener.onCancel();
         }
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
         if (mOnDismissListener != null) {
-            mOnDismissListener.onClose();
+            mOnDismissListener.onDismiss();
         }
     }
 
@@ -151,11 +150,12 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
         mRightBtnClickListener = listener;
     }
 
-    public void setOnDismissListener(OnDismissListener listener) {
+    public void setOnDismissListener(OnDialogCloseListener listener) {
         mOnDismissListener = listener;
     }
 
-    public interface OnDismissListener{
-        public void onClose();
+    public interface OnDialogCloseListener {
+        public void onCancel();
+        public void onDismiss();
     }
 }
