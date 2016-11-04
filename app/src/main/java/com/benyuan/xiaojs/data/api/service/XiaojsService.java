@@ -55,5 +55,8 @@ public interface XiaojsService {
     Call<VerifyCode> sendVerifyCode(@Path("method") int method, @Path("mobile") long mobile);
 
 
+    //Get Home Data
+    @GET("/v1/accounts/home")
+    Call<Empty> getHomeData(@Header("SessionID") String sessionID);
 
 }
