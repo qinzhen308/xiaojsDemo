@@ -29,16 +29,16 @@ public class LessionDataManager {
                                                 CreateLession lession,
                                                 APIServiceCallback callback) {
 
-        if (callback == null){
-            if(XiaojsConfig.DEBUG){
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
                 Logger.d("the api service callback is null,so cancel the create live lession request");
             }
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)){
+        if (TextUtils.isEmpty(sessionID)) {
 
-            if(XiaojsConfig.DEBUG){
+            if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the create live lession request return failure");
             }
 
@@ -47,7 +47,7 @@ public class LessionDataManager {
         }
 
         LessionRequest lessionRequest = new LessionRequest();
-        lessionRequest.createLiveLession(context,sessionID,lession,callback);
+        lessionRequest.createLiveLession(context, sessionID, lession, callback);
 
     }
 }
