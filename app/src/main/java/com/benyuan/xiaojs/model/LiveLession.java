@@ -14,11 +14,29 @@ public class LiveLession {
     private int mode;
     private Fee fee;
     private Schedule schedule;
+    private String cover;
     private Promotion promotion;
     private Overview overview;
     private TeachersIntro teachersIntro;
     private Audit audit;
     private String[] tags;
+    private boolean autoOnShelves;
+
+    public boolean isAutoOnShelves() {
+        return autoOnShelves;
+    }
+
+    public void setAutoOnShelves(boolean autoOnShelves) {
+        this.autoOnShelves = autoOnShelves;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
     public String getTitle() {
         return title;
@@ -134,7 +152,7 @@ public class LiveLession {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Fee {
-        private String free;
+        private boolean free;
         private int type;
         private int charge;
 
@@ -154,25 +172,25 @@ public class LiveLession {
             this.charge = charge;
         }
 
-        public String getFree() {
+        public boolean isFree() {
             return free;
         }
 
-        public void setFree(String free) {
+        public void setFree(boolean free) {
             this.free = free;
         }
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Schedule{
-        private String start;
+        private long start;
         private int duration;
 
-        public String getStart() {
+        public long getStart() {
             return start;
         }
 
-        public void setStart(String start) {
+        public void setStart(long start) {
             this.start = start;
         }
 
@@ -187,34 +205,131 @@ public class LiveLession {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Promotion {
-        private String enabled;
+        private boolean enabled;
+        private Rule[] rules;
 
-        public String getEnabled() {
+        public boolean isEnabled() {
             return enabled;
         }
 
-        public void setEnabled(String enabled) {
+        public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+        }
+
+        public Rule[] getRules() {
+            return rules;
+        }
+
+        public void setRules(Rule[] rules) {
+            this.rules = rules;
         }
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Overview{
         private String text;
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TeachersIntro{
-        private String biography;
+        private boolean biography;
         private String text;
+
+        public boolean isBiography() {
+            return biography;
+        }
+
+        public void setBiography(boolean biography) {
+            this.biography = biography;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Audit{
-        private String enabled;
+        private boolean enabled;
+        private String[] grantedTo;
+        private boolean visibleToStudents;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String[] getGrantedTo() {
+            return grantedTo;
+        }
+
+        public void setGrantedTo(String[] grantedTo) {
+            this.grantedTo = grantedTo;
+        }
+
+        public boolean isVisibleToStudents() {
+            return visibleToStudents;
+        }
+
+        public void setVisibleToStudents(boolean visibleToStudents) {
+            this.visibleToStudents = visibleToStudents;
+        }
     }
 
 
+    public static class Rule {
+        private int before;
+        private boolean enabled;
+        private int discount;
+        private int quota;
+
+        public int getBefore() {
+            return before;
+        }
+
+        public void setBefore(int before) {
+            this.before = before;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public int getDiscount() {
+            return discount;
+        }
+
+        public void setDiscount(int discount) {
+            this.discount = discount;
+        }
+
+        public int getQuota() {
+            return quota;
+        }
+
+        public void setQuota(int quota) {
+            this.quota = quota;
+        }
+    }
 
 
 }

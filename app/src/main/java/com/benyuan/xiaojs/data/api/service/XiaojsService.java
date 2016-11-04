@@ -3,6 +3,7 @@ package com.benyuan.xiaojs.data.api.service;
 import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.model.CreateLession;
 import com.benyuan.xiaojs.model.Empty;
+import com.benyuan.xiaojs.model.HomeData;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.benyuan.xiaojs.model.RegisterInfo;
@@ -25,7 +26,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.4:3000/";
+    String BASE_URL = "http://192.168.1.150:3000/";
 
 
     //注册
@@ -58,7 +59,7 @@ public interface XiaojsService {
 
     //Get Home Data
     @GET("/v1/accounts/home")
-    Call<Empty> getHomeData(@Header("SessionID") String sessionID);
+    Call<HomeData> getHomeData(@Header("SessionID") String sessionID);
 
     //创建直播课
     @Headers("Content-Type: application/json")
