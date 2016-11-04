@@ -15,19 +15,18 @@ package com.benyuan.xiaojs.ui.base;
  *
  * ======================================================================================== */
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
+import com.benyuan.xiaojs.ui.widget.GooeyMenu;
 import com.benyuan.xiaojs.ui.widget.LazyViewPager;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 
@@ -36,17 +35,21 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public abstract class BaseTabActivity extends BaseActivity{
+public abstract class BaseTabActivity extends BaseActivity {
 
     @BindView(R.id.tab_fragment_content)
     LazyViewPager mViewPager;
     @BindView(R.id.tab_menu)
     LinearLayout mMenu;
+    @BindView(R.id.gooey_menu)
+    GooeyMenu mGooeyMenu;
+    @BindView(R.id.tab_cover)
+    RelativeLayout mCover;
+
     FragmentPagerAdapter mAdapter;
     private int[] mTitles;
     private int[] mDrawables;
     private List<RedTipTextView> mTabs;
-    private Button mCenter;
     private int mCurrentIndex;
 
     private int mButtonType;
@@ -60,11 +63,11 @@ public abstract class BaseTabActivity extends BaseActivity{
 
     protected abstract void initView();
 
-    protected void addViews(int[] tabTxt, int[] drawables, List<? extends Fragment> fragments){
+    protected void addViews(int[] tabTxt, int[] drawables, List<? extends Fragment> fragments) {
         mTitles = tabTxt;
         mDrawables = drawables;
         createTabs();
-        mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(),fragments);
+        mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setScrollState(false);
         mViewPager.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
@@ -85,55 +88,68 @@ public abstract class BaseTabActivity extends BaseActivity{
         });
     }
 
-    protected void setButtonType(int type){
+    protected void setButtonType(int type) {
         this.mButtonType = type;
     }
 
-    private void createTabs(){
+    private void createTabs() {
         LayoutInflater inflater = getLayoutInflater();
         mTabs = new ArrayList<>();
-        for (int i = 0 ;i < mTitles.length ;i++){
-            FrameLayout fl = (FrameLayout) inflater.inflate(R.layout.layout_base_tab_item,null);
+        for (int i = 0; i < mTitles.length; i++) {
+            FrameLayout fl = (FrameLayout) inflater.inflate(R.layout.layout_base_tab_item, null);
             RedTipTextView text = (RedTipTextView) fl.findViewById(R.id.base_tab_text);
-            if (mButtonType == BUTTON_TYPE_CENTER){
-                text.setPadding(0,(int) getResources().getDimension(R.dimen.px30),0,0);
-            }
             text.setText(mTitles[i]);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,1);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
             if (mDrawables != null && mDrawables.length > i) {
                 text.setCompoundDrawablesWithIntrinsicBounds(0,
                         mDrawables[i], 0, 0);
             }
             text.setOnClickListener(new OnTabClick(i));
             mTabs.add(text);
-            mMenu.addView(fl,lp);
+            mMenu.addView(fl, lp);
         }
-        if (mButtonType == BUTTON_TYPE_CENTER){
-            addCenterButton();
+        if (mButtonType == BUTTON_TYPE_CENTER) {
+            showCenterView();
         }
         setTabSelected(0);
     }
 
-    private void addCenterButton(){
-        FrameLayout fl = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_base_center_button,null);
-        mCenter = (Button) fl.findViewById(R.id.center_button);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,1);
+    private void showCenterView() {
+        FrameLayout fl = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_base_tab_item, null);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
         fl.setLayoutParams(lp);
-        mMenu.addView(fl,mTitles.length/2);
-        mCenter.setOnClickListener(new View.OnClickListener() {
+        mMenu.addView(fl, mTitles.length / 2);
+        mGooeyMenu.setVisibility(View.VISIBLE);
+        mGooeyMenu.setOnMenuListener(new GooeyMenu.GooeyMenuInterface() {
             @Override
-            public void onClick(View v) {
-                onCenterButtonClick();
+            public void menuOpen() {
+                mCover.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void menuClose() {
+                mCover.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void menuItemClicked(int menuNumber) {
+                onGooeyMenuClick(menuNumber);
+            }
+        });
+        mCover.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
             }
         });
     }
 
-    protected void onCenterButtonClick(){
-        Toast.makeText(this,"OnCenterButtonClick", Toast.LENGTH_SHORT).show();
+    protected void onGooeyMenuClick(int position){
+
     }
 
-    protected void setTabSelected(int position){
-        for (TextView t : mTabs){
+    protected void setTabSelected(int position) {
+        for (TextView t : mTabs) {
             t.setSelected(false);
         }
         mTabs.get(position).setSelected(true);
@@ -142,30 +158,32 @@ public abstract class BaseTabActivity extends BaseActivity{
         onTabClick(position);
     }
 
-    protected void onTabClick(int position){
+    protected void onTabClick(int position) {
 
     }
 
-    protected final void setTip(int position ,boolean enable){
-        if (position < mTabs.size()){
+    protected final void setTip(int position, boolean enable) {
+        if (position < mTabs.size()) {
             mTabs.get(position).setTipEnable(enable);
         }
     }
 
-    public Fragment getCurrentFragment(){
+    public Fragment getCurrentFragment() {
         return mAdapter.getItem(mCurrentIndex);
     }
 
-    public Fragment getFragmentByPosition(int position){
+    public Fragment getFragmentByPosition(int position) {
         return mAdapter.getItem(position);
     }
 
-    private class OnTabClick implements View.OnClickListener{
+    private class OnTabClick implements View.OnClickListener {
 
         private int index;
-        public OnTabClick(int index){
+
+        public OnTabClick(int index) {
             this.index = index;
         }
+
         @Override
         public void onClick(View v) {
             setTabSelected(index);

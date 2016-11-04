@@ -30,4 +30,19 @@
         <item>我要开课</item>
         <item>加入私密课</item>
     </string-array>
+    <string-array name="course_time_filter">
+        <item>全部</item>
+        <item>今天</item>
+        <item>近1周</item>
+        <item>近1月</item>
+        <item>近3月</item>
+        <item>近1年</item>
+    </string-array>
+    <string-array name="course_state_filter">
+        <item>全部</item>
+        <item>待课中</item>
+        <item>开课中</item>
+        <item>已完课</item>
+        <item>已取消</item>
+    </string-array>
 </resources>

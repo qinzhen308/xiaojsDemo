@@ -18,6 +18,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 import com.benyuan.xiaojs.util.NumberUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
@@ -55,7 +57,13 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
         holder.name.setText(bean.name);
         holder.desc.setText(mContext.getString(R.string.speaker) + bean.speaker);
         holder.time.setText(bean.time);
-        holder.opera4.setVisibility(View.GONE);
+        holder.operaF4.setVisibility(View.GONE);
+        holder.opera1.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
+        holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
+        holder.opera3.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
+        holder.opera1.setTipEnable(true);
+        holder.opera2.setTipEnable(true);
+        holder.opera3.setTipEnable(true);
         switch (bean.courseState){
             case CourseConstant.STU_ON_COURSING:
             case CourseConstant.STU_CANCEL_COURSE:
@@ -82,17 +90,32 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
         holder.stuNum.setText(bean.stuNum);
         holder.share.setText(bean.share);
         holder.focus.setText(bean.focus);
+        holder.opera1.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
+        holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
+        holder.opera3.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
+        holder.opera4.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
+        holder.opera1.setTipEnable(true);
+        holder.opera2.setTipEnable(true);
+        holder.opera3.setTipEnable(true);
+        holder.opera4.setTipEnable(true);
+        bean.courseState = (int) (System.currentTimeMillis() % 10) + 10;
         switch (bean.courseState){
             case CourseConstant.TEACHER_WAIT_GROUND:
             case CourseConstant.TEACHER_EXAMINING:
             case CourseConstant.TEACHER_GROUND_WAIT_COURSE:
             case CourseConstant.TEACHER_GROUND_COURSING:
+                holder.opera1.setVisibility(View.VISIBLE);
+                holder.opera2.setVisibility(View.VISIBLE);
+                holder.opera3.setVisibility(View.VISIBLE);
                 holder.opera1.setText(R.string.cls_moment);
                 holder.opera2.setText(R.string.prepare_lesson);
                 holder.opera3.setText(R.string.into_cls);
                 holder.opera4.setText(R.string.more);
                 break;
             case CourseConstant.TEACHER_GROUND_END_COURSE:
+                holder.opera1.setVisibility(View.VISIBLE);
+                holder.opera2.setVisibility(View.VISIBLE);
+                holder.opera3.setVisibility(View.VISIBLE);
                 holder.opera1.setText(R.string.cls_moment);
                 holder.opera2.setText(R.string.prepare_lesson);
                 holder.opera3.setText(R.string.lesson_again);
@@ -112,11 +135,16 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
                 break;
             case CourseConstant.TEACHER_GROUND_CANCEL_COURSE:
                 holder.opera1.setVisibility(View.INVISIBLE);
+                holder.opera2.setVisibility(View.VISIBLE);
+                holder.opera3.setVisibility(View.VISIBLE);
                 holder.opera2.setText(R.string.cls_moment);
                 holder.opera3.setText(R.string.into_cls);
                 holder.opera4.setText(R.string.look_detail);
                 break;
             case CourseConstant.TEACHER_PRIVATE_WAIT_COURSE:
+                holder.opera1.setVisibility(View.VISIBLE);
+                holder.opera2.setVisibility(View.VISIBLE);
+                holder.opera3.setVisibility(View.VISIBLE);
                 holder.opera1.setText(R.string.cls_moment);
                 holder.opera2.setText(R.string.prepare_lesson);
                 holder.opera3.setText(R.string.into_cls);
@@ -141,7 +169,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
 
     @Override
     protected void doRequest(int pageNo) {
-
+        mCurrentPage = pageNo;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -187,7 +215,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
         @BindView(R.id.course_desc)
         TextView desc;
         @BindView(R.id.course_state)
-        ImageView courseState;
+        TextView courseState;
         @BindView(R.id.time_mark)
         TextView time;
 
@@ -201,13 +229,23 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
         TextView focus;
 
         @BindView(R.id.course_opera_1)
-        TextView opera1;
+        RedTipTextView opera1;
         @BindView(R.id.course_opera_2)
-        TextView opera2;
+        RedTipTextView opera2;
         @BindView(R.id.course_opera_3)
-        TextView opera3;
+        RedTipTextView opera3;
         @BindView(R.id.course_opera_4)
-        TextView opera4;
+        RedTipTextView opera4;
+
+        @BindView(R.id.course_opera_f1)
+        FrameLayout operaF1;
+        @BindView(R.id.course_opera_f2)
+        FrameLayout operaF2;
+        @BindView(R.id.course_opera_f3)
+        FrameLayout operaF3;
+        @BindView(R.id.course_opera_f4)
+        FrameLayout operaF4;
+
 
         public Holder(View view) {
             super(view);

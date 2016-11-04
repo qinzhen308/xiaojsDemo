@@ -36,4 +36,5 @@
     <color name="common_list_line">#33ffffff</color>
     <color name="common_btn_white_text">#ffffffff</color>
     <color name="common_btn_white_text_press">#88ffffff</color>
+    <color name="translucent_50">#7d000000</color>
 </resources>
