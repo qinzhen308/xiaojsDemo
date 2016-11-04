@@ -16,15 +16,27 @@ package com.benyuan.xiaojs.ui;
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.mine.SettingsActivity;
+import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+import com.benyuan.xiaojs.util.FastBlur;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MineFragment extends BaseFragment {
+    @BindView(R.id.portrait)
+    RoundedImageView mPortraitView;
+    @BindView(R.id.blur_portrait)
+    ImageView mBlurPortraitView;
+    @BindView(R.id.profile_cover)
+    ImageView mProfileBgView;
 
     @Override
     protected View getContentView() {
@@ -33,6 +45,7 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void init() {
+        setPortrait();
     }
 
     @OnClick({R.id.settings})
@@ -63,5 +76,20 @@ public class MineFragment extends BaseFragment {
             default:
                 break;
         }
+    }
+
+    private void setPortrait() {
+        Bitmap portrait = BitmapFactory.decodeResource(getResources(), R.drawable.default_portrait);
+        mPortraitView.setImageBitmap(portrait);
+        setupBlurPortraitView(portrait);
+    }
+
+    private void setupBlurPortraitView(Bitmap portrait) {
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(portrait,
+                portrait.getWidth() / 3,
+                portrait.getHeight() / 3,
+                false);
+        Bitmap blurBitmap = FastBlur.doBlur(scaledBitmap, 10, true);
+        mBlurPortraitView.setImageBitmap(blurBitmap);
     }
 }
