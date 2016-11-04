@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.model.Empty;
@@ -24,7 +25,7 @@ import retrofit2.Response;
  * Created by maxiaobao on 2016/10/31.
  */
 
-public class LoginRequest {
+public class LoginRequest extends ServiceRequest{
 
 
     public void login(Context appContext,
