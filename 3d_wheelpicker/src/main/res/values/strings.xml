@@ -1,5 +1,5 @@
 <resources>
-    <string name="year">年</string>
-    <string name="month">月</string>
-    <string name="day">日</string>
+    <string name="_year">年</string>
+    <string name="_month">月</string>
+    <string name="_day">日</string>
 </resources>

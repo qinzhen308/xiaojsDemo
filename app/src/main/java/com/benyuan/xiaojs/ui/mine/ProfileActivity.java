@@ -3,13 +3,23 @@ package com.benyuan.xiaojs.ui.mine;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
 import com.benyuan.xiaojs.common.crop.CropImagePath;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+import com.benyuan.xiaojs.util.DataPicker;
+import com.wheelpicker.DateWheelPicker;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,6 +44,10 @@ public class ProfileActivity extends BaseActivity {
 
     @BindView(R.id.portrait)
     RoundedImageView mPortraitView;
+    @BindView(R.id.birthday)
+    TextView mBirthdayView;
+    @BindView(R.id.sex)
+    TextView mSexView;
 
     @Override
     protected void addViewContent() {
@@ -54,6 +68,14 @@ public class ProfileActivity extends BaseActivity {
 
             case R.id.edit_portrait:
                 editPortrait();
+                break;
+
+            case R.id.birthday:
+                pickBirthday();
+                break;
+
+            case R.id.sex:
+                pickSex();
                 break;
 
             default:
@@ -78,6 +100,29 @@ public class ProfileActivity extends BaseActivity {
         startActivityForResult(i, CROP_PORTRAIT);
     }
 
+    private void pickBirthday() {
+        DataPicker.pickBirthday(this, new DataPicker.OnBirthdayPickListener() {
+            @Override
+            public void onBirthPicked(int year, int month, int day) {
+                mBirthdayView.setText("" + year+"-" + month + "-" + day);
+            }
+        });
+    }
+
+    private void pickSex() {
+        List<String> sexList = new ArrayList<String>();
+        sexList.add(getString(R.string.male));
+        sexList.add(getString(R.string.female));
+        DataPicker.pickData(this, sexList, new DataPicker.OnDataPickListener() {
+            @Override
+            public void onDataPicked(Object data) {
+                if (data instanceof String) {
+                    mSexView.setText((String)data);
+                }
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
@@ -92,4 +137,5 @@ public class ProfileActivity extends BaseActivity {
                 break;
         }
     }
+
 }

@@ -247,11 +247,16 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 	
 	public void setItemSpace(int space) {
 		mItemSpace = space;
+		if (mAdapter != null && !mAdapter.isEmpty()) {
+			requestComputeLayout();
+		}
 	}
 
 	public void setVisibleItemCount(int count) {
 		mVisibleItemCount = count;
-		requestComputeLayout();
+		if (mAdapter != null && !mAdapter.isEmpty()) {
+			requestComputeLayout();
+		}
 	}
 	
 	public void setShadowGravity(int gravity) {

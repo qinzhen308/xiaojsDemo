@@ -1,6 +1,7 @@
 package com.wheelpicker;
 
 import android.content.Context;
+import android.icu.lang.UProperty;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.LinearLayout;
@@ -51,6 +52,8 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 	private TextWheelPickerAdapter mMonthPickerAdapter;
 	private TextWheelPickerAdapter mDayPickerAdapter;
 
+	private OnDatePickListener mOnDatePickListener;
+
 	public DateWheelPicker(Context context) {
 		super(context);
 		init();
@@ -70,9 +73,9 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 		setGravity(Gravity.CENTER);
 		setOrientation(HORIZONTAL);
 
-		mYearStr = getResources().getString(R.string.year);
-		mMontyStr = getResources().getString(R.string.month);
-		mDayStr = getResources().getString(R.string.day);
+		mYearStr = getResources().getString(R.string._year);
+		mMontyStr = getResources().getString(R.string._month);
+		mDayStr = getResources().getString(R.string._day);
 
 		LayoutParams llParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		llParams.weight = 1;
@@ -135,6 +138,10 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 		}
 	}
 
+	public void setOnDatePickListener (OnDatePickListener listener) {
+		mOnDatePickListener = listener;
+	}
+
 	public void setDateRange(int from, int to) {
 		if (from >= to) {
 			throw new IllegalArgumentException("the from year less than to year!");
@@ -166,28 +173,40 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 
 		setItemIndex(yearIndex, monthIndex, dayIndex);
 
-		if (mSelectedMonth == 2) {
-            if (isLeapYear(mSelectedYear)) {
-                updateDays(29);
-            } else {
-                updateDays(28);
-            }
-        } else {
-            switch (mSelectedMonth) {
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                case 8:
-                case 10:
-                case 12:
-                    updateDays(31);
-                    break;
-                default:
-                    updateDays(30);
-                    break;
-            }
-        }
+		if (mMode == MODE_BIRTHDAY) {
+			updateMonths(mCurrMonth);
+		} else {
+			updateMonths(12);
+		}
+
+		if (mMode == MODE_BIRTHDAY) {
+			updateDays(mCurrDay);
+		} else {
+			if (mSelectedMonth == 2) {
+				if (isLeapYear(mSelectedYear)) {
+					updateDays(29);
+				} else {
+					updateDays(28);
+				}
+			} else {
+				switch (mSelectedMonth) {
+					case 1:
+					case 3:
+					case 5:
+					case 7:
+					case 8:
+					case 10:
+					case 12:
+						updateDays(31);
+						break;
+					default:
+						updateDays(30);
+						break;
+				}
+			}
+		}
+
+
     }
 
 	private void setItemIndex(int yearIndex, int monthIndex, int dayIndex) {
@@ -196,14 +215,14 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 		mDayWheelPicker.setCurrentItem(dayIndex);
 	}
 
-	public void setTextSize(int textSzie) {
-		if (textSzie < 0) {
+	public void setTextSize(int textSize) {
+		if (textSize < 0) {
 			return;
 		}
 
-		mYearWheelPicker.setTextSize(textSzie);
-		mMonthWheelPicker.setTextSize(textSzie);
-		mDayWheelPicker.setTextSize(textSzie);
+		mYearWheelPicker.setTextSize(textSize);
+		mMonthWheelPicker.setTextSize(textSize);
+		mDayWheelPicker.setTextSize(textSize);
 	}
 
 	public void setTextColor(int textColor) {
@@ -255,7 +274,6 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
             if (year > 0) {
                 mSelectedYear = year;
             }
-
 
             boolean changed = false;
 			if (index == mYears.size() - 1 && mSelectedYear == mCurrYear) {
@@ -314,6 +332,10 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 		default:
 			break;
 		}
+
+		if (mOnDatePickListener != null) {
+			mOnDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay);
+		}
 	}
 
 
@@ -358,5 +380,9 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 	    }
 
 	    return false;
+	}
+
+	public interface OnDatePickListener {
+		public void onDatePicked(int year, int month, int day);
 	}
 }

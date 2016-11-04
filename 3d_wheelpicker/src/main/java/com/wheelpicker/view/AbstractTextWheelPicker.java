@@ -139,6 +139,9 @@ public abstract class AbstractTextWheelPicker extends ScrollWheelPicker<TextBase
 
 	public void setTextSize(float textSize) {
 		mPaint.setTextSize(textSize);
+		if (mAdapter != null && !mAdapter.isEmpty()) {
+			requestComputeLayout();
+		}
 	}
 	
 	public void setLineColor(int lineColor) {
