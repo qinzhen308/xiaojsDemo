@@ -29,41 +29,44 @@
 
                 <ImageView
                         android:id="@+id/course_xbs_state"
+                        android:layout_gravity="bottom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
             </FrameLayout>
 
-            <RelativeLayout
-                    android:id="@+id/time_wrapper"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerInParent="true">
-
-                <ImageView
-                        android:id="@+id/course_state"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                <TextView
-                        android:id="@+id/time_mark"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-            </RelativeLayout>
-
             <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_toRightOf="@id/image"
                     android:layout_marginLeft="@dimen/px30"
                     android:layout_marginRight="@dimen/px30"
-                    android:layout_toRightOf="@id/image"
-                    android:layout_toLeftOf="@id/time_wrapper">
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 <TextView
                         android:id="@+id/course_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+
+                <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:id="@+id/time_mark"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:id="@+id/course_state"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
+                            android:layout_toRightOf="@id/time_mark"
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </RelativeLayout>
 
                 <TextView
                         android:id="@+id/course_desc"
@@ -111,41 +114,70 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-        <TextView
-                android:id="@+id/course_opera_1"
+        <FrameLayout
+                android:id="@+id/course_opera_f1"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:paddingTop="@dimen/px15"
-                android:paddingBottom="@dimen/px15"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
 
-        <TextView
-                android:id="@+id/course_opera_2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:paddingTop="@dimen/px15"
-                android:paddingBottom="@dimen/px15"
-                android:layout_height="wrap_content"/>
+            <com.benyuan.xiaojs.ui.widget.RedTipTextView
+                    android:id="@+id/course_opera_1"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/px15"
+                    android:paddingBottom="@dimen/px15"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
 
-        <TextView
-                android:id="@+id/course_opera_3"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:paddingTop="@dimen/px15"
-                android:paddingBottom="@dimen/px15"
-                android:layout_height="wrap_content"/>
 
-        <TextView
-                android:id="@+id/course_opera_4"
+        <FrameLayout
+                android:id="@+id/course_opera_f2"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:paddingTop="@dimen/px15"
-                android:paddingBottom="@dimen/px15"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+
+            <com.benyuan.xiaojs.ui.widget.RedTipTextView
+                    android:id="@+id/course_opera_2"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/px15"
+                    android:paddingBottom="@dimen/px15"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <FrameLayout
+                android:id="@+id/course_opera_f3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+            <com.benyuan.xiaojs.ui.widget.RedTipTextView
+                    android:id="@+id/course_opera_3"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/px15"
+                    android:paddingBottom="@dimen/px15"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <FrameLayout
+                android:id="@+id/course_opera_f4"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+            <com.benyuan.xiaojs.ui.widget.RedTipTextView
+                    android:id="@+id/course_opera_4"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/px15"
+                    android:paddingBottom="@dimen/px15"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
 
     </LinearLayout>
 </LinearLayout>

@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:background="@color/header_color"
+             android:background="@color/main_orange"
              android:orientation="horizontal"
              android:paddingBottom="@dimen/px20"
              android:paddingTop="@dimen/px20">

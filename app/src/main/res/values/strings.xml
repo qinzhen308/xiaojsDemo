@@ -115,4 +115,7 @@
     <string name="optional_info_hint">请选择上课时间</string>
     <string name="on_shelves_tips">上架后该课的详情将公开在您的个人主页中</string>
 
+    <string name="filter">筛选</string>
+    <string name="time">时间</string>
+    <string name="course_state">开课状态</string>
 </resources>

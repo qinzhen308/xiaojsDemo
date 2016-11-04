@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+            android:text="@string/time"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <com.benyuan.xiaojs.ui.widget.AdapterGirdView
+            android:id="@+id/course_filter_time_grid"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:horizontalSpacing="@dimen/px5"
+            android:verticalSpacing="@dimen/px5"
+            android:layout_marginTop="@dimen/px30"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:text="@string/course_state"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <com.benyuan.xiaojs.ui.widget.AdapterGirdView
+            android:id="@+id/course_filter_state_grid"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:numColumns="4"
+            android:horizontalSpacing="@dimen/px5"
+            android:verticalSpacing="@dimen/px5"
+            android:listSelector="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/course_filter_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/big_submit_btn_selector"
+            android:paddingBottom="@dimen/px30"
+            android:paddingTop="@dimen/px30"
+            android:text="@string/ok"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px50"
+            android:layout_marginBottom="@dimen/px50"/>
+</LinearLayout>

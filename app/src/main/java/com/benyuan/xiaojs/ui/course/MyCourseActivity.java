@@ -14,12 +14,13 @@ package com.benyuan.xiaojs.ui.course;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
@@ -47,13 +48,17 @@ public class MyCourseActivity extends BaseActivity {
     @BindView(R.id.course_learn_line)
     View mTeachLine;
     @BindView(R.id.my_course_search)
-    EditText mSearch;
+    TextView mSearch;
     @BindView(R.id.my_course_pager)
     LazyViewPager mPager;
     @BindView(R.id.hover)
     View mHover;
     @BindView(R.id.top_wrapper)
     LinearLayout mTop;
+    @BindView(R.id.course_filter)
+    TextView mFilter;
+
+    private PopupWindow mDialog;
 
     @Override
     protected void addViewContent() {
@@ -66,7 +71,7 @@ public class MyCourseActivity extends BaseActivity {
         changeTab(0);
     }
 
-    @OnClick({R.id.left_image,R.id.right_view,R.id.course_teach,R.id.course_learn})
+    @OnClick({R.id.left_image,R.id.right_view,R.id.course_teach,R.id.course_learn,R.id.course_filter,R.id.my_course_search})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.left_image:
@@ -90,6 +95,27 @@ public class MyCourseActivity extends BaseActivity {
             case R.id.course_learn://我教的课
                 changeTab(0);
                 break;
+            case R.id.course_filter://筛选按钮
+                if (mDialog == null){
+                    mDialog = new CourseFilterDialog(this);
+                    mDialog.showAsDropDown(mHover);
+                    mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            mDialog = null;
+                        }
+                    });
+                }else {
+                    mDialog.dismiss();
+                    mDialog = null;
+                }
+                break;
+            case R.id.my_course_search:
+                Intent intent = new Intent(MyCourseActivity.this,MyCourseSearchActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
         }
     }
 
@@ -111,16 +137,16 @@ public class MyCourseActivity extends BaseActivity {
     }
 
     private void changeTab(int position){
-        int red = getResources().getColor(R.color.red);
+        int orange = getResources().getColor(R.color.main_orange);
         int common = getResources().getColor(R.color.def);
         if (position == 0){
-            mTeach.setTextColor(red);
+            mTeach.setTextColor(orange);
             mLearn.setTextColor(common);
             mTeachLine.setVisibility(View.VISIBLE);
             mLearnLine.setVisibility(View.INVISIBLE);
         }else {
             mTeach.setTextColor(common);
-            mLearn.setTextColor(red);
+            mLearn.setTextColor(orange);
             mTeachLine.setVisibility(View.INVISIBLE);
             mLearnLine.setVisibility(View.VISIBLE);
         }
