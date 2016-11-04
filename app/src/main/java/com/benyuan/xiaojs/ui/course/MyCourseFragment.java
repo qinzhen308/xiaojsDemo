@@ -14,9 +14,13 @@ package com.benyuan.xiaojs.ui.course;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
@@ -27,9 +31,13 @@ import butterknife.BindView;
 public class MyCourseFragment extends BaseFragment {
     @BindView(R.id.listview)
     AutoPullToRefreshListView mListView;
+    TextView mSearch;
+    TextView mFilter;
 
     MyCourseAdapter adapter;
-
+    private int lastItemPosition;
+    private View mHeader;
+    private PopupWindow mDialog;
     @Override
     protected View getContentView() {
         View v = LayoutInflater.from(mContext).inflate(R.layout.fragment_my_course,null);
@@ -45,26 +53,63 @@ public class MyCourseFragment extends BaseFragment {
         }
         adapter = new MyCourseAdapter(mContext,mListView,isTeacher);
         mListView.setAdapter(adapter);
-        View header = LayoutInflater.from(mContext).inflate(R.layout.layout_my_course_search,null);
-        mListView.getRefreshableView().addHeaderView(header);
-//        mListView.setOnPullListener(new AutoPullToRefreshListView.OnPullListener() {
-//            @Override
-//            public void pullUp(int firstItemPosition) {
-//                //Toast.makeText(mContext,"up",Toast.LENGTH_SHORT).show();
-//                ((MyCourseActivity)mContext).hideTop();
-//            }
-//
-//            @Override
-//            public void pullDown(int firstItemPosition) {
-//                //Toast.makeText(mContext,"down",Toast.LENGTH_SHORT).show();
-//                if (firstItemPosition > 0){
-//                    ((MyCourseActivity)mContext).showTop();
-//                }else {
-//                    ((MyCourseActivity)mContext).hideTop();
-//                }
-//            }
-//        });
+        mHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_my_course_search,null);
+        mSearch = (TextView) mHeader.findViewById(R.id.my_course_search);
+        mFilter = (TextView) mHeader.findViewById(R.id.course_filter);
+        mFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFilter();
+            }
+        });
+        mListView.getRefreshableView().addHeaderView(mHeader);
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
+                if (firstVisibleItem > lastItemPosition){
+                    //上拉
+                    ((MyCourseActivity)mContext).hideTop();
+                }else if (firstVisibleItem < lastItemPosition){
+                    //下拉
+                    if (firstVisibleItem > 0){
+                    ((MyCourseActivity)mContext).showTop();
+                }else {
+                    ((MyCourseActivity)mContext).hideTop();
+                }
+                }else if (firstVisibleItem == lastItemPosition){
+                    return;
+                }
+                lastItemPosition = firstVisibleItem;
+            }
+        });
+        mSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext,MyCourseSearchActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
+    private void onFilter(){
+        if (mDialog == null){
+            mDialog = new CourseFilterDialog(mContext);
+            mDialog.showAsDropDown(mHeader);
+            mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    mDialog = null;
+                }
+            });
+        }else {
+            mDialog.dismiss();
+            mDialog = null;
+        }
+    }
 
 }

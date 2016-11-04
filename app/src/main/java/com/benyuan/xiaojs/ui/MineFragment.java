@@ -23,6 +23,7 @@ import android.widget.ImageView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
+import com.benyuan.xiaojs.ui.mine.ProfileActivity;
 import com.benyuan.xiaojs.ui.mine.SettingsActivity;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.util.FastBlur;
@@ -37,6 +38,8 @@ public class MineFragment extends BaseFragment {
     ImageView mBlurPortraitView;
     @BindView(R.id.profile_cover)
     ImageView mProfileBgView;
+    @BindView(R.id.authenticate)
+    ImageView mNameAuthView;
 
     @Override
     protected View getContentView() {
@@ -46,12 +49,14 @@ public class MineFragment extends BaseFragment {
     @Override
     protected void init() {
         setPortrait();
+        setNameAuth();
     }
 
-    @OnClick({R.id.settings})
+    @OnClick({R.id.settings, R.id.edit_profile})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.edit_profile:
+                editProfile();
                 break;
             case R.id.my_page:
                 break;
@@ -92,4 +97,13 @@ public class MineFragment extends BaseFragment {
         Bitmap blurBitmap = FastBlur.doBlur(scaledBitmap, 10, true);
         mBlurPortraitView.setImageBitmap(blurBitmap);
     }
+
+    private void setNameAuth() {
+        mNameAuthView.setImageResource(R.drawable.ic_name_authed);
+    }
+
+    private void editProfile() {
+        startActivity(new Intent(mContext, ProfileActivity.class));
+    }
+
 }

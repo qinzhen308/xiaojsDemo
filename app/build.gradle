@@ -62,4 +62,5 @@ dependencies {
     compile files('libs/zxing.jar')
     //3d wheel picker
     compile project(':3d_wheelpicker')
+    compile files('libs/android-support-v7-recyclerview.jar')
 }

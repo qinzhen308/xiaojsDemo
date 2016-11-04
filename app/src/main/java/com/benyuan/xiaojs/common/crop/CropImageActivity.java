@@ -38,7 +38,7 @@ public class CropImageActivity extends BaseActivity {
     private CropImageView mCropImage;
     private boolean isNotCrop = false;
     private boolean isUploadCompress = false;
-    private RelativeLayout mButtomContent;
+    private RelativeLayout mBottomContent;
     private int mScreenWidth;
     private int mScreenHeight;
 
@@ -57,8 +57,8 @@ public class CropImageActivity extends BaseActivity {
         addView(R.layout.crop_image_layout);
 
         needHeader(false);
-        mButtomContent = (RelativeLayout)findViewById(R.id.crop_bottom_content);
-        mButtomContent.getBackground().setAlpha(242);
+        mBottomContent = (RelativeLayout)findViewById(R.id.crop_bottom_content);
+        mBottomContent.getBackground().setAlpha(242);
 
 
         DisplayMetrics dm = getResources().getDisplayMetrics();

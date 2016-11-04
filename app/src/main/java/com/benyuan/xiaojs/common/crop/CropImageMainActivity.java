@@ -42,14 +42,13 @@ import java.net.URI;
  * Desc:
  *
  * ======================================================================================== */
-public class CropImageMainActivity extends BaseActivity {
+public class CropImageMainActivity extends BaseActivity implements BottomSheet.OnDialogCloseListener {
     private static final String LOG_TAG = "CropImageMainActivity";
     public static final String NEED_DELETE = "need_delete";// 需要删除按钮
     public static final String NEED_LOOK = "need_look";// 需要预览
     public static final String NEED_COVER = "need_cover"; //需要设置封面
     private int mWidth = 300;
     private int mHeight = 300;
-    private boolean mCanceled = false;
     private boolean isNotCrop = false;
     private boolean isNeedDelete = false;
     private boolean isNeedLook = false;
@@ -62,12 +61,9 @@ public class CropImageMainActivity extends BaseActivity {
     @Override
     public void addViewContent() {
         if (getIntent() != null) {
-            mWidth = getIntent().getIntExtra(CropImagePath.CROP_IMAGE_WIDTH,
-                    300);
-            mHeight = getIntent().getIntExtra(CropImagePath.CROP_IMAGE_HEIGHT,
-                    300);
-            isNotCrop = getIntent().getBooleanExtra(CropImagePath.CROP_NEVER,
-                    false);
+            mWidth = getIntent().getIntExtra(CropImagePath.CROP_IMAGE_WIDTH, 300);
+            mHeight = getIntent().getIntExtra(CropImagePath.CROP_IMAGE_HEIGHT, 300);
+            isNotCrop = getIntent().getBooleanExtra(CropImagePath.CROP_NEVER, false);
             isNeedDelete = getIntent().getBooleanExtra(NEED_DELETE, false);
             isNeedLook = getIntent().getBooleanExtra(NEED_LOOK, false);
             isUploadCompress = getIntent().getBooleanExtra(CropImagePath.UPLOAD_COMPRESS, false);
@@ -97,6 +93,7 @@ public class CropImageMainActivity extends BaseActivity {
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
         bottomSheet.setContent(lv);
+        bottomSheet.setOnDismissListener(this);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -107,15 +104,12 @@ public class CropImageMainActivity extends BaseActivity {
                         finish();
                         break;
                     case 1:
-                        mCanceled = true;
                         pickerPhoto();
                         break;
                     case 2:
-                        mCanceled = true;
                         takePhoto();
                         break;
                     case 3:
-                        mCanceled = true;
                         setFailure();
                         break;
                 }
@@ -134,6 +128,7 @@ public class CropImageMainActivity extends BaseActivity {
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
         bottomSheet.setContent(lv);
+        bottomSheet.setOnDismissListener(this);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -144,11 +139,9 @@ public class CropImageMainActivity extends BaseActivity {
                         finish();
                         break;
                     case 1:
-                        mCanceled = true;
                         pickerPhoto();
                         break;
                     case 2:
-                        mCanceled = true;
                         takePhoto();
                         break;
                     case 3:
@@ -156,7 +149,6 @@ public class CropImageMainActivity extends BaseActivity {
                         finish();
                         break;
                     case 4:
-                        mCanceled = true;
                         setFailure();
                         break;
                 }
@@ -175,6 +167,7 @@ public class CropImageMainActivity extends BaseActivity {
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
         bottomSheet.setContent(lv);
+        bottomSheet.setOnDismissListener(this);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -189,11 +182,9 @@ public class CropImageMainActivity extends BaseActivity {
                         finish();
                         break;
                     case 2:
-                        mCanceled = true;
                         pickerPhoto();
                         break;
                     case 3:
-                        mCanceled = true;
                         takePhoto();
                         break;
                     case 4:
@@ -201,7 +192,6 @@ public class CropImageMainActivity extends BaseActivity {
                         finish();
                         break;
                     case 5:
-                        mCanceled = true;
                         setFailure();
                         break;
                 }
@@ -220,21 +210,19 @@ public class CropImageMainActivity extends BaseActivity {
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
         bottomSheet.setContent(lv);
+        bottomSheet.setOnDismissListener(this);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        mCanceled = true;
                         pickerPhoto();
                         break;
                     case 1:
-                        mCanceled = true;
                         takePhoto();
                         break;
                     case 2:
-                        mCanceled = true;
                         setFailure();
                         break;
                 }
@@ -505,6 +493,16 @@ public class CropImageMainActivity extends BaseActivity {
         } catch (Exception e) {
 
         }
+    }
+
+    @Override
+    public void onCancel() {
+        setFailure();
+    }
+
+    @Override
+    public void onDismiss() {
+
     }
 
     private class ActionAdapter extends BaseAdapter {
