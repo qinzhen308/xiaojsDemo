@@ -55,7 +55,7 @@
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_marginRight="@dimen/px30"
                 android:visibility="invisible"
-                android:background="@color/red"
+                android:background="@color/main_orange"
                 android:layout_height="@dimen/px5"/>
 
         <View
@@ -64,7 +64,7 @@
                 android:layout_weight="1"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_marginRight="@dimen/px30"
-                android:background="@color/red"
+                android:background="@color/main_orange"
                 android:visibility="invisible"
                 android:layout_height="@dimen/px5"/>
     </LinearLayout>
@@ -96,12 +96,13 @@
                     android:background="@color/white"
                     android:layout_height="wrap_content">
 
-                <EditText
+                <TextView
                         android:id="@+id/my_course_search"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:drawableLeft="@mipmap/mine_normal"
                         android:hint="123"
+                        android:gravity="center_vertical"
                         android:background="@drawable/common_edittext_bg"
                         android:paddingBottom="@dimen/px15"
                         android:paddingTop="@dimen/px15"
@@ -110,7 +111,16 @@
                         android:layout_marginLeft="@dimen/px50"
                         android:layout_marginRight="@dimen/px50"
                         android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/course_filter"
+                        android:text="@string/filter"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/px50"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
             </LinearLayout>
+
         </LinearLayout>
 
 

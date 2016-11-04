@@ -9,4 +9,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class CreateLession {
 
     private LiveLession data;
+
+    public LiveLession getData() {
+        return data;
+    }
+
+    public void setData(LiveLession data) {
+        this.data = data;
+    }
 }

@@ -137,8 +137,10 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
     protected abstract void doRequest(int pageNo);
 
     protected final void onSuccess(List<B> data){
-        //mListView.onRefreshComplete();
-        mBeanList.clear();
+        mListView.onRefreshOrLoadComplete();
+        if (isDown){//下拉刷新清空列表
+            mBeanList.clear();
+        }
         if (data == null || data.size() == 0){
             mCurrentPage--;
             if (mBeanList.isEmpty()){//接口数据为空，本地数据也为空，则显示空视图
@@ -150,7 +152,6 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
             mBeanList.addAll(data);
             notifyDataSetChanged();
         }
-        mListView.onRefreshOrLoadComplete();
     }
 
     protected final void onFailure(String errorCode){

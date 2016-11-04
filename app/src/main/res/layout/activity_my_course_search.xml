@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/main_orange"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/px20"
+            android:paddingTop="@dimen/px20">
+
+        <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back_arrow"
+                android:layout_marginLeft="@dimen/px30"
+                android:visibility="visible"
+                android:layout_gravity="center_vertical"/>
+
+        <FrameLayout
+                android:background="@color/white"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_height="wrap_content">
+
+            <EditText
+                    android:id="@+id/my_course_search"
+                    android:layout_width="match_parent"
+                    android:drawableLeft="@mipmap/mine_normal"
+                    android:hint="123"
+                    android:background="@drawable/common_edittext_bg"
+                    android:paddingBottom="@dimen/px15"
+                    android:paddingTop="@dimen/px15"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <TextView
+                android:id="@+id/my_course_search_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
+                android:text="@string/ok"/>
+
+    </LinearLayout>
+
+    <com.handmark.pulltorefresh.AutoPullToRefreshListView
+            android:id="@+id/my_course_search_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:divider="@color/clicked_grey_light"
+            android:dividerHeight="@dimen/px10"
+            android:orientation="vertical"
+            android:layout_below="@id/title"/>
+</RelativeLayout>

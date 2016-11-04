@@ -18,10 +18,11 @@ android {
     }
     signingConfigs {
         release_config {
-            keyAlias ksPro['keyAlias']
-            keyPassword ksPro['keyPassword']
-            storeFile file(ksPro['storeFile'])
-            storePassword ksPro['storePassword']
+            //storeFile file(ksPro['storeFile'])
+            //storePassword  System.console().readLine("\nKeystore password: ")
+            //keyAlias ksPro['keyAlias']
+            //keyPassword  System.console().readLine("\nKeystore password: ")
+
         }
     }
     buildTypes {
@@ -61,4 +62,5 @@ dependencies {
     compile files('libs/zxing.jar')
     //3d wheel picker
     compile project(':3d_wheelpicker')
+    compile files('libs/android-support-v7-recyclerview.jar')
 }
