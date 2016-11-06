@@ -20,6 +20,8 @@
                 android:paddingLeft="@dimen/px26"
                 android:paddingRight="@dimen/px26"
                 android:singleLine="true"
+                android:textColor="@color/font_blue"
+                android:textSize="@dimen/font_26px"
                 android:text="@string/cancel"/>
 
         <TextView
@@ -37,6 +39,8 @@
                 android:background="@android:color/transparent"
                 android:paddingLeft="@dimen/px26"
                 android:paddingRight="@dimen/px26"
+                android:textColor="@color/font_blue"
+                android:textSize="@dimen/font_26px"
                 android:singleLine="true"
                 android:text="@string/finish"/>
     </LinearLayout>

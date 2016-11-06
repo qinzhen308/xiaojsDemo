@@ -18,10 +18,11 @@ android {
     }
     signingConfigs {
         release_config {
-            keyAlias ksPro['keyAlias']
-            keyPassword ksPro['keyPassword']
-            storeFile file(ksPro['storeFile'])
-            storePassword ksPro['storePassword']
+            //storeFile file(ksPro['storeFile'])
+            //storePassword  System.console().readLine("\nKeystore password: ")
+            //keyAlias ksPro['keyAlias']
+            //keyPassword  System.console().readLine("\nKeystore password: ")
+
         }
     }
     buildTypes {
