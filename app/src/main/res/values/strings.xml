@@ -18,6 +18,10 @@
     <string name="birthday">生日</string>
     <string name="male">男</string>
     <string name="female">女</string>
+    <string name="please_select">请选择</string>
+    <string name="please_set">请设置</string>
+    <string name="unit_price">元</string>
+    <string name="unit_price_by_hour">元/小时</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_live">直播</string>
@@ -102,6 +106,8 @@
     <string name="enroll_way">报名方式</string>
     <string name="enroll_online">线上报名</string>
     <string name="enroll_offline">线下报名</string>
+    <string name="by_live_total_price">按直播总价</string>
+    <string name="by_live_duration">按课时</string>
     <string name="enroll_people_limit">报名限制人数</string>
     <string name="course_start_time">上课时间</string>
     <string name="course_duration">上课时长</string>
@@ -110,7 +116,7 @@
     <string name="live_course_name_hint">请输入4&#8211;25字</string>
     <string name="subject_category_hint">请选择学科类目</string>
     <string name="teach_form_hint">请选择教学模式</string>
-    <string name="enroll_way_hint">请选择报名模式</string>
+    <string name="enroll_way_hint">设置你的课程是否需要报名才能参加(可多选)</string>
     <string name="course_start_time_hint">请选择上课时间</string>
     <string name="optional_info_hint">请选择上课时间</string>
     <string name="on_shelves_tips">上架后该课的详情将公开在您的个人主页中</string>

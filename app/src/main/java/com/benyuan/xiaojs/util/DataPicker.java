@@ -18,8 +18,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.widget.BottomSheet;
