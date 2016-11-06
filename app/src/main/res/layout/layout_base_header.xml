@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:background="@color/main_orange"
+             android:background="@color/white"
              android:orientation="horizontal"
              android:paddingBottom="@dimen/px20"
              android:paddingTop="@dimen/px20">
@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/px30"
-            android:textColor="@color/white"/>
+            android:textColor="@color/font_black"/>
 
     <ImageView
             android:id="@+id/left_image"
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="@color/white"/>
+            android:textColor="@color/font_black"/>
 
     <TextView
             android:id="@+id/right_view"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="@dimen/px30"
-            android:textColor="@color/white"/>
+            android:textColor="@color/font_black"/>
 
     <ImageView
             android:id="@+id/right_image"

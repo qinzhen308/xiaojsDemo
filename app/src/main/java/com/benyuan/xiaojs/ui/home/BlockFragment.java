@@ -1,5 +1,4 @@
-package com.benyuan.xiaojs.ui;
-
+package com.benyuan.xiaojs.ui.home;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -10,25 +9,18 @@ package com.benyuan.xiaojs.ui;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/10/11
+ * Date:2016/11/4
  * Desc:
  *
  * ======================================================================================== */
 
-import android.view.View;
-
-import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 
-public class LiveFragment extends BaseFragment {
+public abstract class BlockFragment extends BaseFragment {
 
-    @Override
-    protected View getContentView() {
-        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_live, null);
-        return v;
-    }
-
-    @Override
-    protected void init() {
-    }
+    /**
+     * 子类需要计算当前fragment的高度给parent的ViewPager使用
+     * @return
+     */
+    public abstract int getFragmentHeight();
 }

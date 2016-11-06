@@ -27,9 +27,10 @@ public class CommonPopupMenuList extends ListView {
 
 	public int meathureWidthByChilds() {
 	    int maxWidth = 0;
-	    View view = null;
 	    for (int i = 0; i < getAdapter().getCount(); i++) {
-	        view = getAdapter().getView(i, view, this);
+			View view = getAdapter().getView(i,null,this);
+			if(view == null)
+				continue;
 	        view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 	        if (view.getMeasuredWidth() > maxWidth){
 	            maxWidth = view.getMeasuredWidth();

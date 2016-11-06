@@ -18,12 +18,18 @@ package com.benyuan.xiaojs.ui;
 import android.view.View;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
+import com.benyuan.xiaojs.ui.course.MyCourseAdapter;
+import com.benyuan.xiaojs.ui.home.BlockFragment;
+import com.benyuan.xiaojs.ui.home.HomeCourseFragment;
+import com.benyuan.xiaojs.ui.widget.BlockTabView;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
 import com.benyuan.xiaojs.ui.widget.function.FunctionArea;
 import com.benyuan.xiaojs.ui.widget.function.FunctionItemBean;
+import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,15 +43,25 @@ public class HomeFragment extends BaseFragment {
     BannerView mBanner;
     @BindView(R.id.home_function_area)
     FunctionArea mFunction;
+    @BindView(R.id.home_my_cls)
+    BlockTabView mClass;
+
+    AutoPullToRefreshListView mList;
 
     @Override
     protected View getContentView() {
         View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
+        mList = (AutoPullToRefreshListView) v.findViewById(R.id.home_list);
+        View header = mContext.getLayoutInflater().inflate(R.layout.layout_home_list_header,null);
+        mList.getRefreshableView().addHeaderView(header);
         return v;
     }
 
     @Override
     protected void init() {
+        AbsSwipeAdapter ada = new MyCourseAdapter(mContext,mList,false);
+        mList.setAdapter(ada);
+
         BannerBean b1 = new BannerBean();
         BannerBean b2 = new BannerBean();
         BannerBean b3 = new BannerBean();
@@ -76,6 +92,10 @@ public class HomeFragment extends BaseFragment {
         beans.add(fb3);
         mFunction.setItems(beans);
         //gridView.setAdapter(new FunctionItemAdapter(mContext,beans));
+        List<BlockFragment> fs = new ArrayList<>();
+        fs.add(new HomeCourseFragment());
+        fs.add(new HomeCourseFragment());
+        mClass.show(null,null,fs,getChildFragmentManager(),null);
     }
 
     @OnClick({})

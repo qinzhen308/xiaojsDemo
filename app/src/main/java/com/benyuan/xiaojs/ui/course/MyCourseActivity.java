@@ -64,20 +64,20 @@ public class MyCourseActivity extends BaseActivity {
     protected void addViewContent() {
         addView(R.layout.activity_my_course);
         setMiddleTitle(R.string.my_course);
-        setRightText(R.string.settings);
+        setRightImage(R.drawable.add_selector);
         setLeftImage(R.drawable.back_arrow);
         mPager.setScrollState(false);
         initTabContent();
         changeTab(0);
     }
 
-    @OnClick({R.id.left_image,R.id.right_view,R.id.course_teach,R.id.course_learn,R.id.course_filter,R.id.my_course_search})
+    @OnClick({R.id.left_image,R.id.right_image,R.id.course_teach,R.id.course_learn,R.id.course_filter,R.id.my_course_search})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.left_image:
                 finish();
                 break;
-            case R.id.right_view://右上角menu
+            case R.id.right_image://右上角menu
                 CommonPopupMenu menu = new CommonPopupMenu(this);
                 String[] items = getResources().getStringArray(R.array.my_course_list);
                 menu.addTextItems(items);

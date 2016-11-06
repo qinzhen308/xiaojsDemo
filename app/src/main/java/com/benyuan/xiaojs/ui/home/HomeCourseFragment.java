@@ -1,5 +1,4 @@
-package com.benyuan.xiaojs.ui;
-
+package com.benyuan.xiaojs.ui.home;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -10,25 +9,37 @@ package com.benyuan.xiaojs.ui;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/10/11
+ * Date:2016/11/4
  * Desc:
  *
  * ======================================================================================== */
 
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.base.BaseFragment;
+import com.benyuan.xiaojs.ui.widget.HorizontalListView;
 
-public class LiveFragment extends BaseFragment {
+import butterknife.BindView;
+
+public class HomeCourseFragment extends BlockFragment {
+
+    @BindView(R.id.home_course_list)
+    HorizontalListView mList;
 
     @Override
     protected View getContentView() {
-        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_live, null);
-        return v;
+        return LayoutInflater.from(mContext).inflate(R.layout.fragment_home_course,null);
     }
 
     @Override
     protected void init() {
+        MyAdapter ma = new MyAdapter(mContext,mList);
+        mList.setAdapter(ma);
+    }
+
+    @Override
+    public int getFragmentHeight() {
+        return 200;
     }
 }
