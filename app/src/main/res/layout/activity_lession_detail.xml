@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/activity_lession_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <LinearLayout
+            android:id="@+id/lession_opera_bar_lay"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true">
+
+        <Button
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:text="@string/consulting"
+                />
+
+        <Button
+                android:id="@+id/apply_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:text="@string/lession_apply"/>
+
+    </LinearLayout>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/lession_opera_bar_lay">
+
+        <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/ability_detail_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:flexDirection="row"
+                app:flexWrap="wrap"
+                >
+
+            <ImageView
+                    android:id="@+id/lession_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:background="@android:color/holo_green_light"/>
+
+            <TextView
+                    android:id="@+id/lession_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="气质形象提升修炼魅力女性"
+                    android:background="@color/white"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="5dp"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:textSize="20sp"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="开课时间：2016／09／23   50分钟"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:textColor="@color/font_gray"/>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:background="@color/font_black"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="8dp"
+                    android:textSize="18sp"
+                    android:text="$90.00"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥120"
+                app:layout_alignSelf="baseline"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="3dp"
+                    android:text="已报名40"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:gravity="end"
+                    app:layout_flexGrow="1"
+                    />
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:paddingTop="5dp"
+                    android:text="报名前三人，开课前五天，可享90.0"/>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:background="@color/font_black"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    />
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:background="@color/font_black"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    />
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:background="@color/white">
+                <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:id="@+id/teach_ic"/>
+                <ImageView
+                        android:id="@+id/nav_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_entrance"
+                        />
+                <TextView
+                        android:id="@+id/teach_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/teach_ic"
+                        android:text="李早早"
+                        android:textSize="16sp"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/nav_right"
+                        android:layout_below="@id/teach_title"
+                        android:text="知识专家，新媒体专家，作家"
+                        android:layout_marginTop="8dp"
+                        android:layout_alignLeft="@id/teach_title"/>
+            </RelativeLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:background="@color/font_black"
+                    />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:background="@color/font_black"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    />
+            <android.support.design.widget.TabLayout
+                    android:id="@+id/lession_tab_detail"
+                    android:layout_height="40dp"
+                    android:layout_width="match_parent"
+                    app:tabGravity="center"
+                    >
+
+                <android.support.design.widget.TabItem
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+
+                        android:text="简介"/>
+
+                <android.support.design.widget.TabItem
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+
+                        android:text="评价"/>
+
+            </android.support.design.widget.TabLayout>
+            <TextView
+                    android:id="@+id/tab_detail_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="2dp"
+                    android:lineSpacingMultiplier="1.5"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+
+                    />
+        </com.google.android.flexbox.FlexboxLayout>
+
+
+    </ScrollView>
+
+</RelativeLayout>

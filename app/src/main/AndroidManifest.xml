@@ -43,6 +43,10 @@
         <activity android:name=".ui.mine.TeachingAbilityActivity">
         </activity>
         <activity android:name=".ui.mine.EditTeachingAbilityActivity">
+
+        </activity>
+        <activity android:name=".ui.course.LessionDetailActivity">
+
         </activity>
     </application>
 
