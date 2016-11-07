@@ -18,10 +18,11 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
@@ -53,14 +54,10 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
     }
 
     private void showStu(Holder holder, CourseBean bean, int position) {
-        holder.teachFun.setVisibility(View.GONE);
         holder.name.setText(bean.name);
         holder.desc.setText(mContext.getString(R.string.speaker) + bean.speaker);
         holder.time.setText(bean.time);
         holder.operaF4.setVisibility(View.GONE);
-        holder.opera1.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
-        holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
-        holder.opera3.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
         holder.opera1.setTipEnable(true);
         holder.opera2.setTipEnable(true);
         holder.opera3.setTipEnable(true);
@@ -68,15 +65,15 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
             case CourseConstant.STU_ON_COURSING:
             case CourseConstant.STU_CANCEL_COURSE:
             case CourseConstant.STU_PRIVATE_WAIT_COURSE:
-                holder.opera1.setText(R.string.cls_moment);
-                holder.opera2.setText(R.string.into_cls);
-                holder.opera3.setText(R.string.data_bank);
+                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+                enterClass(holder.opera2,1);
+                setShow(holder.opera3,R.drawable.data_bank_selector,R.string.data_bank);
                 break;
             case CourseConstant.STU_END_COURSE:
             case CourseConstant.STU_WAIT_COURSE:
-                holder.opera1.setText(R.string.cls_moment);
-                holder.opera2.setText(R.string.into_cls);
-                holder.opera3.setText(R.string.more);
+                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+                enterClass(holder.opera2,0);
+                setShow(holder.opera3,R.drawable.more_selector,R.string.more);
                 break;
             default:
                 break;
@@ -87,18 +84,11 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
         holder.name.setText(bean.name);
         holder.desc.setText(NumberUtil.getPrice(bean.price));
         holder.time.setText(bean.time);
-        holder.stuNum.setText(bean.stuNum);
-        holder.share.setText(bean.share);
-        holder.focus.setText(bean.focus);
-        holder.opera1.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
-        holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
-        holder.opera3.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
-        holder.opera4.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.mine_normal,0,0);
         holder.opera1.setTipEnable(true);
         holder.opera2.setTipEnable(true);
         holder.opera3.setTipEnable(true);
         holder.opera4.setTipEnable(true);
-        bean.courseState = (int) (System.currentTimeMillis() % 10) + 10;
+
         switch (bean.courseState){
             case CourseConstant.TEACHER_WAIT_GROUND:
             case CourseConstant.TEACHER_EXAMINING:
@@ -107,52 +97,69 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
                 holder.opera1.setVisibility(View.VISIBLE);
                 holder.opera2.setVisibility(View.VISIBLE);
                 holder.opera3.setVisibility(View.VISIBLE);
-                holder.opera1.setText(R.string.cls_moment);
-                holder.opera2.setText(R.string.prepare_lesson);
-                holder.opera3.setText(R.string.into_cls);
-                holder.opera4.setText(R.string.more);
+                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+                setShow(holder.opera2,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
+                enterClass(holder.opera3,1);
+                setShow(holder.opera4,R.drawable.more_selector,R.string.more);
                 break;
             case CourseConstant.TEACHER_GROUND_END_COURSE:
                 holder.opera1.setVisibility(View.VISIBLE);
                 holder.opera2.setVisibility(View.VISIBLE);
                 holder.opera3.setVisibility(View.VISIBLE);
-                holder.opera1.setText(R.string.cls_moment);
-                holder.opera2.setText(R.string.prepare_lesson);
-                holder.opera3.setText(R.string.lesson_again);
-                holder.opera4.setText(R.string.more);
+                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+                setShow(holder.opera2,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
+                setShow(holder.opera3,R.drawable.ic_add_private_course_pressed,R.string.lesson_again);
+                //holder.opera3.setText(R.string.lesson_again);
+                setShow(holder.opera4,R.drawable.more_selector,R.string.more);
                 break;
             case CourseConstant.TEACHER_FAILURE:
                 holder.opera1.setVisibility(View.INVISIBLE);
                 holder.opera2.setVisibility(View.INVISIBLE);
                 holder.opera3.setVisibility(View.INVISIBLE);
-                holder.opera4.setText(R.string.more);
+                setShow(holder.opera4,R.drawable.more_selector,R.string.more);
                 break;
             case CourseConstant.TEACHER_FORCE_CLOSE:
                 holder.opera1.setVisibility(View.INVISIBLE);
                 holder.opera2.setVisibility(View.INVISIBLE);
                 holder.opera3.setVisibility(View.INVISIBLE);
-                holder.opera4.setText(R.string.look_detail);
+                setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
+                //holder.opera4.setText(R.string.look_detail);
                 break;
             case CourseConstant.TEACHER_GROUND_CANCEL_COURSE:
                 holder.opera1.setVisibility(View.INVISIBLE);
                 holder.opera2.setVisibility(View.VISIBLE);
                 holder.opera3.setVisibility(View.VISIBLE);
-                holder.opera2.setText(R.string.cls_moment);
-                holder.opera3.setText(R.string.into_cls);
-                holder.opera4.setText(R.string.look_detail);
+                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+                enterClass(holder.opera3,1);
+                setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
+                //holder.opera4.setText(R.string.look_detail);
                 break;
             case CourseConstant.TEACHER_PRIVATE_WAIT_COURSE:
                 holder.opera1.setVisibility(View.VISIBLE);
                 holder.opera2.setVisibility(View.VISIBLE);
                 holder.opera3.setVisibility(View.VISIBLE);
-                holder.opera1.setText(R.string.cls_moment);
-                holder.opera2.setText(R.string.prepare_lesson);
-                holder.opera3.setText(R.string.into_cls);
+                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+                setShow(holder.opera2,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
+                enterClass(holder.opera3,0);
                 holder.opera4.setText(R.string.invite);
                 break;
 
             default:
                 break;
+        }
+    }
+
+    private void setShow(TextView tv,int drawable,int text){
+        tv.setText(text);
+        tv.setCompoundDrawablesWithIntrinsicBounds(0,drawable,0,0);
+    }
+
+    private void enterClass(TextView tv,int num){
+        tv.setText(R.string.into_cls);
+        if (num > 0){
+            tv.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_enter_cls_have,0,0);
+        }else {
+            tv.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_enter_cls_no,0,0);
         }
     }
 
@@ -165,6 +172,11 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
     @Override
     protected Holder initHolder(View view) {
         return new Holder(view);
+    }
+
+    @Override
+    protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        Toast.makeText(mContext,"position = " + position,Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -185,7 +197,11 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
                     bean.name = t / 7 + "课";
                     bean.speaker = t / 8 + "s";
                     bean.time = t/222225564143l + "分";
-                    bean.courseState = (int) (t % 5);
+                    if (!mIsTeacher){
+                        bean.courseState = (int) (t % 5);
+                    }else {
+                        bean.courseState = (int) (System.currentTimeMillis() % 10) + 10;
+                    }
                     beans.add(bean);
                 }
                 Message s = Message.obtain();
@@ -209,24 +225,17 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
         @BindView(R.id.course_item_image)
         ImageView image;
         @BindView(R.id.course_xbs_state)
-        ImageView xbsState;
+        TextView xbsState;
         @BindView(R.id.course_name)
         TextView name;
         @BindView(R.id.course_desc)
-        TextView desc;
+        TextView desc;//用户小头像为40x40
         @BindView(R.id.course_state)
         TextView courseState;
         @BindView(R.id.time_mark)
         TextView time;
-
-        @BindView(R.id.teach_fun)
-        RelativeLayout teachFun;
-        @BindView(R.id.course_stu_num)
-        TextView stuNum;
-        @BindView(R.id.course_share)
-        TextView share;
-        @BindView(R.id.course_focus)
-        TextView focus;
+        @BindView(R.id.course_price)
+        TextView price;
 
         @BindView(R.id.course_opera_1)
         RedTipTextView opera1;
