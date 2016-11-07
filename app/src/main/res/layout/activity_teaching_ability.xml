@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/activity_teaching_ability"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <RelativeLayout
+            android:id="@+id/edit_ability_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            style="@style/MinePageItem">
+
+        <TextView
+                android:layout_alignParentLeft="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/px26"
+                android:textStyle="bold"
+                android:text="@string/teach_ability"/>
+
+        <TextView
+                android:id="@+id/teach_ability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/enter_teach_ability"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/px26"
+                android:layout_marginRight="@dimen/px20"/>
+
+        <ImageView
+                android:id="@+id/enter_teach_ability"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_entrance"/>
+    </RelativeLayout>
+
+</merge>
