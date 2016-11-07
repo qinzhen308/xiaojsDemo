@@ -88,7 +88,7 @@ public class DataPicker {
 
         picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         picker.setTextColor(context.getResources().getColor(R.color.font_black));
-        picker.setVisibleItemCount(5);
+        picker.setVisibleItemCount(7);
         picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
         picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
 

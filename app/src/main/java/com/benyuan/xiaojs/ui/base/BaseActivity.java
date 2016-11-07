@@ -50,6 +50,7 @@ public abstract class BaseActivity extends FragmentActivity {
         mRightText = (TextView) findViewById(R.id.right_view);
         mMiddleText = (TextView) findViewById(R.id.middle_view);
         mLeftImage = (ImageView) findViewById(R.id.left_image);
+        mRightImage = (ImageView) findViewById(R.id.right_image);
         addViewContent();
     }
 

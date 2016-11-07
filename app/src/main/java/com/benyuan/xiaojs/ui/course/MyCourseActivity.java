@@ -19,107 +19,32 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.base.BaseActivity;
-import com.benyuan.xiaojs.ui.base.TabFragmentPagerAdapter;
+import com.benyuan.xiaojs.ui.base.BaseTopTabActivity;
 import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
-import com.benyuan.xiaojs.ui.widget.LazyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MyCourseActivity extends BaseActivity {
+public class MyCourseActivity extends BaseTopTabActivity {
 
-    @BindView(R.id.my_course_tab)
-    LinearLayout mTab;
-    @BindView(R.id.course_teach)
-    TextView mLearn;
-    @BindView(R.id.course_learn)
-    TextView mTeach;
-    @BindView(R.id.course_teach_line)
-    View mLearnLine;
-    @BindView(R.id.course_learn_line)
-    View mTeachLine;
-    @BindView(R.id.my_course_search)
-    TextView mSearch;
-    @BindView(R.id.my_course_pager)
-    LazyViewPager mPager;
-    @BindView(R.id.hover)
-    View mHover;
-    @BindView(R.id.top_wrapper)
-    LinearLayout mTop;
-    @BindView(R.id.course_filter)
-    TextView mFilter;
+      View mHover;
+      TextView mFilter;
+      TextView mInput;
 
     private PopupWindow mDialog;
 
     @Override
-    protected void addViewContent() {
-        addView(R.layout.activity_my_course);
+    protected void initView() {
         setMiddleTitle(R.string.my_course);
-        setRightText(R.string.settings);
+        setRightImage(R.drawable.add_selector);
         setLeftImage(R.drawable.back_arrow);
-        mPager.setScrollState(false);
-        initTabContent();
-        changeTab(0);
-    }
 
-    @OnClick({R.id.left_image,R.id.right_view,R.id.course_teach,R.id.course_learn,R.id.course_filter,R.id.my_course_search})
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.left_image:
-                finish();
-                break;
-            case R.id.right_view://右上角menu
-                CommonPopupMenu menu = new CommonPopupMenu(this);
-                String[] items = getResources().getStringArray(R.array.my_course_list);
-                menu.addTextItems(items);
-                menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        handleRightClick(i);
-                    }
-                });
-                menu.showAsDropDown(mRightText);
-                break;
-            case R.id.course_teach://我学的课
-                changeTab(1);
-                break;
-            case R.id.course_learn://我教的课
-                changeTab(0);
-                break;
-            case R.id.course_filter://筛选按钮
-                if (mDialog == null){
-                    mDialog = new CourseFilterDialog(this);
-                    mDialog.showAsDropDown(mHover);
-                    mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            mDialog = null;
-                        }
-                    });
-                }else {
-                    mDialog.dismiss();
-                    mDialog = null;
-                }
-                break;
-            case R.id.my_course_search:
-                Intent intent = new Intent(MyCourseActivity.this,MyCourseSearchActivity.class);
-                startActivity(intent);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void initTabContent(){
         List<Fragment> fs = new ArrayList<>();
         Bundle b1 = new Bundle();
         b1.putBoolean("key",false);
@@ -131,26 +56,66 @@ public class MyCourseActivity extends BaseActivity {
         Fragment f2 = new MyCourseFragment();
         f2.setArguments(b2);
         fs.add(f2);
-        TabFragmentPagerAdapter adapter = new TabFragmentPagerAdapter(getSupportFragmentManager(),fs);
-        mPager.setAdapter(adapter);
-        mPager.setCurrentItem(0);
+        List<String> ss = new ArrayList<>();
+        ss.add("我学的课");
+        ss.add("我授的课");
+        mHover = getLayoutInflater().inflate(R.layout.layout_my_course_search,null);
+        mFilter = (TextView) mHover.findViewById(R.id.course_filter);
+        mInput = (TextView) mHover.findViewById(R.id.my_course_search);
+        mFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                filter();
+            }
+        });
+        mInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MyCourseActivity.this,MyCourseSearchActivity.class);
+                startActivity(intent);
+            }
+        });
+        addHover(ss,mHover,fs);
     }
 
-    private void changeTab(int position){
-        int orange = getResources().getColor(R.color.main_orange);
-        int common = getResources().getColor(R.color.def);
-        if (position == 0){
-            mTeach.setTextColor(orange);
-            mLearn.setTextColor(common);
-            mTeachLine.setVisibility(View.VISIBLE);
-            mLearnLine.setVisibility(View.INVISIBLE);
-        }else {
-            mTeach.setTextColor(common);
-            mLearn.setTextColor(orange);
-            mTeachLine.setVisibility(View.INVISIBLE);
-            mLearnLine.setVisibility(View.VISIBLE);
+    @OnClick({R.id.left_image,R.id.right_image})
+    public void onLocalClick(View view){
+        switch (view.getId()){
+            case R.id.left_image:
+                finish();
+                break;
+            case R.id.right_image://右上角menu
+                CommonPopupMenu menu = new CommonPopupMenu(this);
+                String[] items = getResources().getStringArray(R.array.my_course_list);
+                menu.addTextItems(items);
+                menu.addImgItems(new Integer[]{R.drawable.open_course_selector,R.drawable.add_private_course_selector});
+                menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        handleRightClick(i);
+                    }
+                });
+                menu.showAsDropDown(mRightText);
+                break;
+            default:
+                break;
         }
-        mPager.setCurrentItem(position);
+    }
+
+    private void filter(){
+        if (mDialog == null){
+            mDialog = new CourseFilterDialog(this);
+            mDialog.showAsDropDown(mHover);
+            mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    mDialog = null;
+                }
+            });
+        }else {
+            mDialog.dismiss();
+            mDialog = null;
+        }
     }
 
     private void handleRightClick(int position){

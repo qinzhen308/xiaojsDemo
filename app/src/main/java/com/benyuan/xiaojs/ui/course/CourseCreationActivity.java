@@ -26,7 +26,7 @@ import java.util.List;
 public class CourseCreationActivity extends BaseTopTabActivity {
     @Override
     protected void initView() {
-        setTitle(R.string.course_creation);
+        setMiddleTitle(R.string.course_creation);
 
         List<Fragment> fragments = new ArrayList<>();
         List<String> mTabs = new ArrayList<String>();

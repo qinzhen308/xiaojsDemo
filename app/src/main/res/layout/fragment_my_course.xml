@@ -3,9 +3,9 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/listview"
         android:orientation="vertical"
+        android:dividerHeight = "0dp"
+        android:divider="@android:color/transparent"
         android:scrollbars="none"
-        android:divider="@color/clicked_grey_light"
-        android:dividerHeight = "@dimen/px10"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

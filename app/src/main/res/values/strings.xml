@@ -4,6 +4,7 @@
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
     <string name="finish">完成</string>
+    <string name="search">搜索</string>
     <string name="save">保存</string>
     <string name="rotate">旋转</string>
     <string name="phone_num">手机号</string>
@@ -90,7 +91,7 @@
     <string name="speaker">主讲：</string>
     <string name="prepare_lesson">备课</string>
     <string name="lesson_again">再次开课</string>
-    <string name="look_detail">查看详情</string>
+    <string name="look_detail">查看</string>
     <string name="invite">邀请</string>
 
     <!--course creation-->
@@ -129,4 +130,7 @@
     <string name="lession_apply">立即报名</string>
     <string name="consulting">咨询</string>
     <string name="pay_now">下单并付款</string>
+
+    <string name="my_xiaojs">我的小教室</string>
+    <string name="name_of_course">课程名称</string>
 </resources>

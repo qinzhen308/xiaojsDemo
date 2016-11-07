@@ -24,7 +24,7 @@ public class LiveFragment extends BaseFragment {
 
     @Override
     protected View getContentView() {
-        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
+        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_live, null);
         return v;
     }
 

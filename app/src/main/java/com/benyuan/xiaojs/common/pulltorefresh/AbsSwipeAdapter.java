@@ -18,6 +18,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -53,6 +54,13 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
             return;
         }
         mListView = listView;
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                onDataItemClick(adapterView,view,i,l);
+            }
+        });
+
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -71,6 +79,10 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
             }
         });
         doRequest(mCurrentPage);
+    }
+
+    protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l){
+
     }
 
     @Override
