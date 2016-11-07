@@ -1,10 +1,10 @@
 package com.wheelpicker;
 
 import android.content.Context;
-import android.icu.lang.UProperty;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.LinearLayout;
+
 import com.wheelpicker.core.AbstractWheelPicker;
 import com.wheelpicker.core.OnWheelPickedListener;
 import com.wheelpicker.widget.TextWheelPicker;
@@ -15,374 +15,409 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class DateWheelPicker extends LinearLayout implements OnWheelPickedListener{
-	public final static int TYPE_YEAR = 1 << 1;
-	public final static int TYPE_MONTH = 1 << 2;
-	public final static int TYPE_DAY = 1 << 3;
+public class DateWheelPicker extends LinearLayout implements OnWheelPickedListener {
+    public final static int TYPE_YEAR = 1 << 1;
+    public final static int TYPE_MONTH = 1 << 2;
+    public final static int TYPE_DAY = 1 << 3;
 
-	private String mYearStr;
-	private String mMontyStr;
-	private String mDayStr;
+    private String mYearStr;
+    private String mMontyStr;
+    private String mDayStr;
 
-	/** 生日模式，时间上限为当前时间 */
-	public final static int MODE_BIRTHDAY = 1;
-	/** 正常模式 */
-	public final static int MODE_RANGE = 2;
+    /**
+     * 生日模式，时间上限为当前时间
+     */
+    public final static int MODE_BIRTHDAY = 1;
+    /**
+     * 正常模式
+     */
+    public final static int MODE_RANGE = 2;
 
-	public final static int BIRTHDAY_RANGE = 100;
+    public final static int BIRTHDAY_RANGE = 100;
 
-	private TextWheelPicker mYearWheelPicker;
-	private TextWheelPicker mMonthWheelPicker;
-	private TextWheelPicker mDayWheelPicker;
+    private TextWheelPicker mYearWheelPicker;
+    private TextWheelPicker mMonthWheelPicker;
+    private TextWheelPicker mDayWheelPicker;
 
-	private int mCurrYear;
-	private int mCurrMonth;
-	private int mCurrDay;
-	private int mMode = MODE_BIRTHDAY;
+    private int mCurrYear;
+    private int mCurrMonth;
+    private int mCurrDay;
+    private int mMode = MODE_BIRTHDAY;
 
-	private int mSelectedYear;
-	private int mSelectedMonth;
-	private int mSelectedDay;
+    private int mSelectedYear;
+    private int mSelectedMonth;
+    private int mSelectedDay;
 
-	private List<String> mYears;
-	private List<String> mMonths;
-	private List<String> mDays;
+    private List<String> mYears;
+    private List<String> mMonths;
+    private List<String> mDays;
 
-	private TextWheelPickerAdapter mYearPickerAdapter;
-	private TextWheelPickerAdapter mMonthPickerAdapter;
-	private TextWheelPickerAdapter mDayPickerAdapter;
+    private TextWheelPickerAdapter mYearPickerAdapter;
+    private TextWheelPickerAdapter mMonthPickerAdapter;
+    private TextWheelPickerAdapter mDayPickerAdapter;
 
-	private OnDatePickListener mOnDatePickListener;
+    private OnDatePickListener mOnDatePickListener;
 
-	public DateWheelPicker(Context context) {
-		super(context);
-		init();
-	}
+    public DateWheelPicker(Context context) {
+        super(context);
+        init();
+    }
 
-	public DateWheelPicker(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
+    public DateWheelPicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
 
-	public DateWheelPicker(Context context, AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
-		init();
-	}
+    public DateWheelPicker(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
 
-	private void init() {
-		setGravity(Gravity.CENTER);
-		setOrientation(HORIZONTAL);
+    private void init() {
+        setGravity(Gravity.CENTER);
+        setOrientation(HORIZONTAL);
 
-		mYearStr = getResources().getString(R.string._year);
-		mMontyStr = getResources().getString(R.string._month);
-		mDayStr = getResources().getString(R.string._day);
+        mYearStr = getResources().getString(R.string._year);
+        mMontyStr = getResources().getString(R.string._month);
+        mDayStr = getResources().getString(R.string._day);
 
-		LayoutParams llParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		llParams.weight = 1;
+        LayoutParams llParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        llParams.weight = 1;
 
-		mYearWheelPicker = new TextWheelPicker(getContext(), TYPE_YEAR);
-		mMonthWheelPicker = new TextWheelPicker(getContext(), TYPE_MONTH);
-		mDayWheelPicker = new TextWheelPicker(getContext(), TYPE_DAY);
+        mYearWheelPicker = new TextWheelPicker(getContext(), TYPE_YEAR);
+        mMonthWheelPicker = new TextWheelPicker(getContext(), TYPE_MONTH);
+        mDayWheelPicker = new TextWheelPicker(getContext(), TYPE_DAY);
 
-		mYearWheelPicker.setOnWheelPickedListener(this);
-		mMonthWheelPicker.setOnWheelPickedListener(this);
-		mDayWheelPicker.setOnWheelPickedListener(this);
+        mYearWheelPicker.setOnWheelPickedListener(this);
+        mMonthWheelPicker.setOnWheelPickedListener(this);
+        mDayWheelPicker.setOnWheelPickedListener(this);
 
-		addView(mYearWheelPicker, llParams);
-		addView(mMonthWheelPicker, llParams);
-		addView(mDayWheelPicker, llParams);
+        addView(mYearWheelPicker, llParams);
+        addView(mMonthWheelPicker, llParams);
+        addView(mDayWheelPicker, llParams);
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
 
-		mCurrYear = calendar.get(Calendar.YEAR);
-		mCurrMonth = calendar.get(Calendar.MONTH) + 1;
-		mCurrDay = calendar.get(Calendar.DATE);
+        mCurrYear = calendar.get(Calendar.YEAR);
+        mCurrMonth = calendar.get(Calendar.MONTH) + 1;
+        mCurrDay = calendar.get(Calendar.DATE);
 
-		initData();
-	}
+        initData();
+    }
 
-	private void initData() {
-		mYearPickerAdapter = new TextWheelPickerAdapter();
-		mMonthPickerAdapter = new TextWheelPickerAdapter();
-		mDayPickerAdapter = new TextWheelPickerAdapter();
+    private void initData() {
+        mYearPickerAdapter = new TextWheelPickerAdapter();
+        mMonthPickerAdapter = new TextWheelPickerAdapter();
+        mDayPickerAdapter = new TextWheelPickerAdapter();
 
-		mYears = new ArrayList<String>();
-		mMonths = new ArrayList<String>();
-		mDays = new ArrayList<String>();
+        mYears = new ArrayList<String>();
+        mMonths = new ArrayList<String>();
+        mDays = new ArrayList<String>();
 
-		updateYears(mCurrYear - BIRTHDAY_RANGE + 1, mCurrYear);
-		updateMonths(12);
-		updateDays(31);
+        updateYears(mCurrYear - BIRTHDAY_RANGE + 1, mCurrYear);
+        updateMonths(12);
+        updateDays(31);
 
-		mYearPickerAdapter.setData(mYears);
-		mMonthPickerAdapter.setData(mMonths);
-		mDayPickerAdapter.setData(mDays);
+        mYearPickerAdapter.setData(mYears);
+        mMonthPickerAdapter.setData(mMonths);
+        mDayPickerAdapter.setData(mDays);
 
-		mYearWheelPicker.setAdapter(mYearPickerAdapter);
-		mMonthWheelPicker.setAdapter(mMonthPickerAdapter);
-		mDayWheelPicker.setAdapter(mDayPickerAdapter);
-	}
+        mYearWheelPicker.setAdapter(mYearPickerAdapter);
+        mMonthWheelPicker.setAdapter(mMonthPickerAdapter);
+        mDayWheelPicker.setAdapter(mDayPickerAdapter);
+    }
 
-	public void setWheelPickerVisibility(int wheelType, int visibility) {
-		if ((wheelType & TYPE_YEAR) != 0) {
-			mYearWheelPicker.setVisibility(visibility);
-		}
+    public void setWheelPickerVisibility(int wheelType, int visibility) {
+        if ((wheelType & TYPE_YEAR) != 0) {
+            mYearWheelPicker.setVisibility(visibility);
+        }
 
-		if ((wheelType & TYPE_MONTH) != 0) {
-			mMonthWheelPicker.setVisibility(visibility);
-		}
+        if ((wheelType & TYPE_MONTH) != 0) {
+            mMonthWheelPicker.setVisibility(visibility);
+        }
 
-		if ((wheelType & TYPE_DAY) != 0) {
-			mDayWheelPicker.setVisibility(visibility);
-		}
-	}
+        if ((wheelType & TYPE_DAY) != 0) {
+            mDayWheelPicker.setVisibility(visibility);
+        }
+    }
 
-	public void setOnDatePickListener (OnDatePickListener listener) {
-		mOnDatePickListener = listener;
-	}
+    public void setOnDatePickListener(OnDatePickListener listener) {
+        mOnDatePickListener = listener;
+    }
 
-	public void setDateRange(int from, int to) {
-		if (from >= to) {
-			throw new IllegalArgumentException("the from year less than to year!");
-		}
+    public void setDateRange(int from, int to) {
+        if (from >= to) {
+            throw new IllegalArgumentException("the from year less than to year!");
+        }
 
-		if (from < 0 || to < 0) {
-			throw new IllegalArgumentException("the passed year must be > 0");
-		}
+        if (from < 0 || to < 0) {
+            throw new IllegalArgumentException("the passed year must be > 0");
+        }
 
-		mMode = to == mCurrYear ? MODE_BIRTHDAY : MODE_RANGE;
+        mMode = to == mCurrYear ? MODE_BIRTHDAY : MODE_RANGE;
 
-		updateYears(from, to);
-		setCurrentDate(mSelectedYear, mSelectedMonth, mSelectedDay);
-		mYearPickerAdapter.setData(mYears);
-	}
+        updateYears(from, to);
+        setCurrentDate(mSelectedYear, mSelectedMonth, mSelectedDay);
+        mYearPickerAdapter.setData(mYears);
+    }
 
-	public void setCurrentDate(int year, int month, int day) {
-		if (mYears.isEmpty() || mMonths.isEmpty() || mDays.isEmpty()) {
-			return;
-		}
+    public void setCurrentDate(int year, int month, int day) {
+        if (mYears.isEmpty() || mMonths.isEmpty() || mDays.isEmpty()) {
+            return;
+        }
 
-		mSelectedYear = year;
-		mSelectedMonth = month;
-		mSelectedDay = day;
+        mSelectedYear = year;
+        mSelectedMonth = month;
+        mSelectedDay = day;
 
-		int yearIndex = Math.max(0, mYears.indexOf(year+"年"));
-		int monthIndex = Math.max(0, mMonths.indexOf(month+"月"));
-		int dayIndex = Math.max(0, mDays.indexOf(day+"日"));
+        int yearIndex = Math.max(0, mYears.indexOf(year + "年"));
+        int monthIndex = Math.max(0, mMonths.indexOf(month + "月"));
+        int dayIndex = Math.max(0, mDays.indexOf(day + "日"));
 
-		setItemIndex(yearIndex, monthIndex, dayIndex);
+        setItemIndex(yearIndex, monthIndex, dayIndex);
 
-		if (mMode == MODE_BIRTHDAY) {
-			updateMonths(mCurrMonth);
-		} else {
-			updateMonths(12);
-		}
+        if (mMode == MODE_BIRTHDAY) {
+            updateMonths(mCurrMonth);
+        } else {
+            updateMonths(12);
+        }
 
-		if (mMode == MODE_BIRTHDAY) {
-			updateDays(mCurrDay);
-		} else {
-			if (mSelectedMonth == 2) {
-				if (isLeapYear(mSelectedYear)) {
-					updateDays(29);
-				} else {
-					updateDays(28);
-				}
-			} else {
-				switch (mSelectedMonth) {
-					case 1:
-					case 3:
-					case 5:
-					case 7:
-					case 8:
-					case 10:
-					case 12:
-						updateDays(31);
-						break;
-					default:
-						updateDays(30);
-						break;
-				}
-			}
-		}
+        if (mMode == MODE_BIRTHDAY) {
+            updateDays(mCurrDay);
+        } else {
+            if (mSelectedMonth == 2) {
+                if (isLeapYear(mSelectedYear)) {
+                    updateDays(29);
+                } else {
+                    updateDays(28);
+                }
+            } else {
+                switch (mSelectedMonth) {
+                    case 1:
+                    case 3:
+                    case 5:
+                    case 7:
+                    case 8:
+                    case 10:
+                    case 12:
+                        updateDays(31);
+                        break;
+                    default:
+                        updateDays(30);
+                        break;
+                }
+            }
+        }
 
 
     }
 
-	private void setItemIndex(int yearIndex, int monthIndex, int dayIndex) {
-		mYearWheelPicker.setCurrentItem(yearIndex);
-		mMonthWheelPicker.setCurrentItem(monthIndex);
-		mDayWheelPicker.setCurrentItem(dayIndex);
-	}
+    private void setItemIndex(int yearIndex, int monthIndex, int dayIndex) {
+        mYearWheelPicker.setCurrentItem(yearIndex);
+        mMonthWheelPicker.setCurrentItem(monthIndex);
+        mDayWheelPicker.setCurrentItem(dayIndex);
+    }
 
-	public void setTextSize(int textSize) {
-		if (textSize < 0) {
-			return;
-		}
+    public void setTextSize(int textSize) {
+        if (textSize < 0) {
+            return;
+        }
 
-		mYearWheelPicker.setTextSize(textSize);
-		mMonthWheelPicker.setTextSize(textSize);
-		mDayWheelPicker.setTextSize(textSize);
-	}
+        mYearWheelPicker.setTextSize(textSize);
+        mMonthWheelPicker.setTextSize(textSize);
+        mDayWheelPicker.setTextSize(textSize);
+    }
 
-	public void setTextColor(int textColor) {
-		mYearWheelPicker.setTextColor(textColor);
-		mMonthWheelPicker.setTextColor(textColor);
-		mDayWheelPicker.setTextColor(textColor);
-	}
+    public void setTextColor(int textColor) {
+        mYearWheelPicker.setTextColor(textColor);
+        mMonthWheelPicker.setTextColor(textColor);
+        mDayWheelPicker.setTextColor(textColor);
+    }
 
-	public void setLineColor(int lineColor) {
-		mYearWheelPicker.setLineColor(lineColor);
-		mMonthWheelPicker.setLineColor(lineColor);
-		mDayWheelPicker.setLineColor(lineColor);
-	}
+    public void setLineColor(int lineColor) {
+        mYearWheelPicker.setLineColor(lineColor);
+        mMonthWheelPicker.setLineColor(lineColor);
+        mDayWheelPicker.setLineColor(lineColor);
+    }
 
-	public void setLineWidth(int width) {
-		mYearWheelPicker.setLineStorkeWidth(width);
-		mMonthWheelPicker.setLineStorkeWidth(width);
-		mDayWheelPicker.setLineStorkeWidth(width);
-	}
+    public void setLineWidth(int width) {
+        mYearWheelPicker.setLineStorkeWidth(width);
+        mMonthWheelPicker.setLineStorkeWidth(width);
+        mDayWheelPicker.setLineStorkeWidth(width);
+    }
 
-	public void setItemSpace(int space) {
-		mYearWheelPicker.setItemSpace(space);
-		mMonthWheelPicker.setItemSpace(space);
-		mDayWheelPicker.setItemSpace(space);
-	}
+    public void setItemSpace(int space) {
+        mYearWheelPicker.setItemSpace(space);
+        mMonthWheelPicker.setItemSpace(space);
+        mDayWheelPicker.setItemSpace(space);
+    }
 
-	public void setVisibleItemCount(int itemCount) {
-		mYearWheelPicker.setVisibleItemCount(itemCount);
-		mMonthWheelPicker.setVisibleItemCount(itemCount);
-		mDayWheelPicker.setVisibleItemCount(itemCount);
-	}
+    public void setVisibleItemCount(int itemCount) {
+        mYearWheelPicker.setVisibleItemCount(itemCount);
+        mMonthWheelPicker.setVisibleItemCount(itemCount);
+        mDayWheelPicker.setVisibleItemCount(itemCount);
+    }
 
-	public void setItemSize(int itemWidth, int itemHeight) {
-		mYearWheelPicker.setItemSize(itemWidth, itemHeight);
-		mMonthWheelPicker.setItemSize(itemWidth, itemHeight);
-		mDayWheelPicker.setItemSize(itemWidth, itemHeight);
-	}
+    public void setItemSize(int itemWidth, int itemHeight) {
+        mYearWheelPicker.setItemSize(itemWidth, itemHeight);
+        mMonthWheelPicker.setItemSize(itemWidth, itemHeight);
+        mDayWheelPicker.setItemSize(itemWidth, itemHeight);
+    }
 
-	public int getDateMode() {
-		return mMode;
-	}
+    public int getDateMode() {
+        return mMode;
+    }
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, Object data) {
-		switch (wheelPicker.getId()) {
-		case TYPE_YEAR:
-		    int year = getCurrentDate(data, mYearStr);
-            if (year > 0) {
-                mSelectedYear = year;
-            }
+    @SuppressWarnings("rawtypes")
+    @Override
+    public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, Object data) {
+        switch (wheelPicker.getId()) {
+            case TYPE_YEAR:
+                int year = getCurrentDate(data, mYearStr);
+                if (year > 0) {
+                    mSelectedYear = year;
+                }
 
-            boolean changed = false;
-			if (index == mYears.size() - 1 && mSelectedYear == mCurrYear) {
-				//current year
-				updateMonths(mCurrMonth);
-				changed = true;
-			} else {
-				changed = mMonths.size() != 12;
-				if (changed) {
-					updateMonths(12);
-				}
-			}
-
-			if (changed) {
-				mMonthPickerAdapter.setData(mMonths);
-			}
-
-			break;
-		case TYPE_MONTH:
-		    int month = getCurrentDate(data, mMontyStr);
-            if (month > 0) {
-                mSelectedMonth = month;
-            }
-			if (index == mMonths.size() - 1 && mSelectedYear == mCurrYear) {
-				//current month
-				updateDays(mCurrDay);
-			} else {
-				if (month == 2) {
-                    if (isLeapYear(mSelectedYear)) {
-                        updateDays(29);
-                    } else {
-                        updateDays(28);
-                    }
+                boolean changed = false;
+                if (index == mYears.size() - 1 && mSelectedYear == mCurrYear) {
+                    //current year
+                    updateMonths(mCurrMonth);
+                    changed = true;
                 } else {
-                    switch (month) {
-                        case 1:
-                        case 3:
-                        case 5:
-                        case 7:
-                        case 8:
-                        case 10:
-                        case 12:
-                            updateDays(31);
-                            break;
-                        default:
-                            updateDays(30);
-                            break;
+                    changed = mMonths.size() != 12;
+                    if (changed) {
+                        updateMonths(12);
                     }
                 }
-			}
-			mDayPickerAdapter.setData(mDays);
-			break;
-		case TYPE_DAY:
 
-			break;
-		default:
-			break;
-		}
+                if (changed) {
+                    //update month
+                    mMonthPickerAdapter.setData(mMonths);
 
-		if (mOnDatePickListener != null) {
-			mOnDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay);
-		}
-	}
+                    //update day
+                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth) {
+                        //current month
+                        updateDays(mCurrDay);
+                    } else {
+                        if (mSelectedYear == 2) {
+                            if (isLeapYear(mSelectedYear)) {
+                                updateDays(29);
+                            } else {
+                                updateDays(28);
+                            }
+                        } else {
+                            switch (mSelectedYear) {
+                                case 1:
+                                case 3:
+                                case 5:
+                                case 7:
+                                case 8:
+                                case 10:
+                                case 12:
+                                    updateDays(31);
+                                    break;
+                                default:
+                                    updateDays(30);
+                                    break;
+                            }
+                        }
+                    }
+                    mDayPickerAdapter.setData(mDays);
+                }
+
+                break;
+            case TYPE_MONTH:
+                int month = getCurrentDate(data, mMontyStr);
+                if (month > 0) {
+                    mSelectedMonth = month;
+                }
+                if (index == mMonths.size() - 1 && mSelectedYear == mCurrYear) {
+                    //current month
+                    updateDays(mCurrDay);
+                } else {
+                    if (month == 2) {
+                        if (isLeapYear(mSelectedYear)) {
+                            updateDays(29);
+                        } else {
+                            updateDays(28);
+                        }
+                    } else {
+                        switch (month) {
+                            case 1:
+                            case 3:
+                            case 5:
+                            case 7:
+                            case 8:
+                            case 10:
+                            case 12:
+                                updateDays(31);
+                                break;
+                            default:
+                                updateDays(30);
+                                break;
+                        }
+                    }
+                }
+                mDayPickerAdapter.setData(mDays);
+                break;
+            case TYPE_DAY:
+
+                break;
+            default:
+                break;
+        }
+
+        if (mOnDatePickListener != null) {
+            mOnDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay);
+        }
+    }
 
 
-	private void updateYears(int from, int to) {
-		mYears.clear();
+    private void updateYears(int from, int to) {
+        mYears.clear();
 
-		int size = to - from;
-		for (int i = from; i <= from + size; i++) {
-			mYears.add(i + mYearStr);
-		}
-	}
+        int size = to - from;
+        for (int i = from; i <= from + size; i++) {
+            mYears.add(i + mYearStr);
+        }
+    }
 
-	private void updateMonths(int maxMonth) {
-		mMonths.clear();
+    private void updateMonths(int maxMonth) {
+        mMonths.clear();
 
-		for (int i = 1; i <= maxMonth; i++) {
-			mMonths.add(i + mMontyStr);
-		}
-	}
+        for (int i = 1; i <= maxMonth; i++) {
+            mMonths.add(i + mMontyStr);
+        }
+    }
 
-	private void updateDays(int maxDay) {
-		mDays.clear();
+    private void updateDays(int maxDay) {
+        mDays.clear();
 
-		for (int i = 1; i <= maxDay; i++) {
-			mDays.add(i + mDayStr);
-		}
-	}
+        for (int i = 1; i <= maxDay; i++) {
+            mDays.add(i + mDayStr);
+        }
+    }
 
-	private int getCurrentDate(Object data, String suffix) {
-	    if (data instanceof String) {
-	    	int suffixLeg = suffix == null ? 0 : suffix.length();
-	        String temp = (String)data;
-	        return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg));
-	    }
+    private int getCurrentDate(Object data, String suffix) {
+        if (data instanceof String) {
+            int suffixLeg = suffix == null ? 0 : suffix.length();
+            String temp = (String) data;
+            return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg));
+        }
 
-	    return -1;
-	}
+        return -1;
+    }
 
-	private boolean isLeapYear(int year) {
-	    if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
-	       return true;
-	    }
+    private boolean isLeapYear(int year) {
+        if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
+            return true;
+        }
 
-	    return false;
-	}
+        return false;
+    }
 
-	public interface OnDatePickListener {
-		public void onDatePicked(int year, int month, int day);
-	}
+    public interface OnDatePickListener {
+        public void onDatePicked(int year, int month, int day);
+    }
 }

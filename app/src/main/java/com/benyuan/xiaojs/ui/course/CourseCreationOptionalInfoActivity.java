@@ -1,12 +1,7 @@
 package com.benyuan.xiaojs.ui.course;
 
-import android.support.v4.app.Fragment;
-
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.base.BaseTopTabActivity;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.benyuan.xiaojs.ui.base.BaseActivity;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -18,24 +13,14 @@ import java.util.List;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:Administrator
- * Date:2016/11/2
+ * Date:2016/11/7
  * Desc:
  *
  * ======================================================================================== */
 
-public class CourseCreationActivity extends BaseTopTabActivity {
+public class CourseCreationOptionalInfoActivity extends BaseActivity {
     @Override
-    protected void initView() {
-        setMiddleTitle(R.string.course_creation);
-
-        List<Fragment> fragments = new ArrayList<>();
-        List<String> mTabs = new ArrayList<String>();
-
-        Fragment liveCourse = new LiveCourseCreationFragment();
-        Fragment privateCourse = new PrivateCourseCreationFragment();
-        fragments.add(liveCourse);
-        fragments.add(privateCourse);
-
-        addViews(new int[] {R.string.live_course, R.string.private_course}, fragments);
+    protected void addViewContent() {
+        setMiddleTitle(R.string.optional_info);
     }
 }
