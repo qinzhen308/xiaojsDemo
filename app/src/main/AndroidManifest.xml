@@ -41,6 +41,10 @@
         <activity android:name=".ui.course.CourseCreationActivity"/>
         <activity android:name=".ui.mine.ProfileActivity"/>
         <activity android:name=".ui.course.CourseCreationOptionalInfoActivity"/>
+        <activity android:name=".ui.mine.TeachingAbilityActivity">
+        </activity>
+        <activity android:name=".ui.mine.EditTeachingAbilityActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -27,6 +27,7 @@ import com.benyuan.xiaojs.ui.course.CourseCreationActivity;
 import com.benyuan.xiaojs.ui.course.MyCourseActivity;
 import com.benyuan.xiaojs.ui.mine.ProfileActivity;
 import com.benyuan.xiaojs.ui.mine.SettingsActivity;
+import com.benyuan.xiaojs.ui.mine.TeachingAbilityActivity;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.util.FastBlur;
 
@@ -54,7 +55,7 @@ public class MineFragment extends BaseFragment {
         setNameAuth();
     }
 
-    @OnClick({R.id.settings, R.id.edit_profile, R.id.my_course, R.id.my_course_schedule})
+    @OnClick({R.id.settings, R.id.edit_profile, R.id.my_course, R.id.my_course_schedule, R.id.teach_ability_layout})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.edit_profile:
@@ -72,6 +73,7 @@ public class MineFragment extends BaseFragment {
             case R.id.my_ask_questions:
                 break;
             case R.id.teach_ability_layout:
+                startActivity(new Intent(mContext, TeachingAbilityActivity.class));
                 break;
             case R.id.my_collections:
                 break;
