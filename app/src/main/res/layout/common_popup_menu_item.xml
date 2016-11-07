@@ -11,4 +11,4 @@
     android:paddingTop="@dimen/px17"
     android:singleLine="true"
     android:textColor="@drawable/common_btn_white_text_selector"
-    android:textSize="@dimen/font_34px" />
+    android:textSize="@dimen/font_26px" />

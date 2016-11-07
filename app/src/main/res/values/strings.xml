@@ -125,4 +125,5 @@
     <string name="time">时间</string>
     <string name="course_state">开课状态</string>
     <string name="my_xiaojs">我的小教室</string>
+    <string name="name_of_course">课程名称</string>
 </resources>

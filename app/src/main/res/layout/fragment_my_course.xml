@@ -4,8 +4,6 @@
         android:id="@+id/listview"
         android:orientation="vertical"
         android:scrollbars="none"
-        android:divider="@color/clicked_grey_light"
-        android:dividerHeight = "@dimen/px10"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
