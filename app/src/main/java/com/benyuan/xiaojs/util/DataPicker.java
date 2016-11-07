@@ -21,6 +21,7 @@ import android.view.View;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.widget.BottomSheet;
+import com.benyuan.xiaojs.ui.widget.FutureTimePicker;
 import com.wheelpicker.DateWheelPicker;
 import com.wheelpicker.core.AbstractWheelPicker;
 import com.wheelpicker.core.OnWheelPickedListener;
@@ -35,11 +36,15 @@ public class DataPicker {
     private static int mMonth;
     private static int mDay;
 
+    private static int mHour;
+    private static int mMinute;
+    private static int mSecond;
+
     private static Object mPickedData;
 
     public static void pickBirthday(Context context, final OnBirthdayPickListener pickListener) {
         BottomSheet bottomSheet = new BottomSheet(context);
-        DateWheelPicker picker = new DateWheelPicker(context);
+        final DateWheelPicker picker = new DateWheelPicker(context);
 
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         calendar.setTime(new Date());
@@ -68,7 +73,9 @@ public class DataPicker {
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickListener.onBirthPicked(mYear, mMonth, mDay);
+                if (pickListener != null) {
+                    pickListener.onBirthPicked(mYear, mMonth, mDay);
+                }
             }
         });
 
@@ -109,14 +116,62 @@ public class DataPicker {
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickedListener.onDataPicked(mPickedData);
+                if (pickedListener != null) {
+                    pickedListener.onDataPicked(mPickedData);
+                }
             }
         });
 
     }
 
+    public static void pickFutureDate(Context context, final OnDatePickListener pickListener) {
+        BottomSheet bottomSheet = new BottomSheet(context);
+        FutureTimePicker picker = new FutureTimePicker(context);
+
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.setTime(new Date());
+
+        picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        picker.setTextColor(context.getResources().getColor(R.color.font_black));
+        picker.setVisibleItemCount(7);
+        picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
+        picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
+        picker.setFutureDuration(365);
+
+        picker.setOnFutureDatePickListener(new FutureTimePicker.OnFutureDatePickListener() {
+            @Override
+            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
+                mYear = year;
+                mMonth = month;
+                mDay = day;
+                mHour = hour;
+                mMinute = minute;
+                mSecond = second;
+            }
+        });
+
+        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pickListener != null) {
+                    pickListener.onDatePicked(mYear, mMonth, mDay, mHour, mMinute, mSecond);
+                }
+            }
+        });
+
+        int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
+        picker.setPadding(0, padding, 0, padding);
+
+        bottomSheet.setContent(picker);
+        bottomSheet.show();
+    }
+
     public interface OnBirthdayPickListener {
         public void onBirthPicked(int year, int month, int day);
+    }
+
+    public interface OnDatePickListener {
+        public void onDatePicked(int year, int month, int day, int hour, int minute, int second);
     }
 
     public interface OnDataPickListener {
@@ -124,3 +179,4 @@ public class DataPicker {
     }
 
 }
+

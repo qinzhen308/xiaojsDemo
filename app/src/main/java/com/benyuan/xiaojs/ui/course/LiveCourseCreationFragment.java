@@ -15,6 +15,7 @@ package com.benyuan.xiaojs.ui.course;
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -157,16 +158,10 @@ public class LiveCourseCreationFragment extends BaseFragment {
     }
 
     private void selectCourseStartTime() {
-        List<String> sexList = new ArrayList<String>();
-        sexList.add(getString(R.string.teach_form_open));
-        sexList.add(getString(R.string.teach_form_one2one));
-        sexList.add(getString(R.string.teach_form_more2one));
-        DataPicker.pickData(mContext, sexList, new DataPicker.OnDataPickListener() {
+        DataPicker.pickFutureDate(mContext, new DataPicker.OnDatePickListener() {
             @Override
-            public void onDataPicked(Object data) {
-                if (data instanceof String) {
-                    mTeachFormTv.setText((String) data);
-                }
+            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
+                Log.i("aaa", "year = "+year +" month"+month+"  day="+day+"  hour="+hour+"  minute="+minute+ " second="+second);
             }
         });
     }
