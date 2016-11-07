@@ -62,4 +62,8 @@ dependencies {
     compile files('libs/zxing.jar')
     //3d wheel picker
     compile project(':3d_wheelpicker')
+    compile files('libs/android-support-v7-recyclerview.jar')
+
+    //flex layout
+    compile 'com.google.android:flexbox:0.2.3'
 }

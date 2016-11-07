@@ -9,6 +9,7 @@ import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
+import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.HomeData;
 import com.orhanobut.logger.Logger;
 
@@ -68,6 +69,62 @@ public class AccountRequest extends ServiceRequest{
 
             @Override
             public void onFailure(Call<HomeData> call, Throwable t) {
+
+                if(XiaojsConfig.DEBUG){
+                    Logger.d("the login has occur exception");
+                }
+
+                callback.onFailure(Errors.NO_ERROR);
+            }
+        });
+
+    }
+
+
+    public void claimCompetency(Context context,
+                                String sessionID,
+                                String subject,
+                                @NonNull final APIServiceCallback<ClaimCompetency> callback) {
+
+        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        xiaojsService.claimCompetency(sessionID,subject).enqueue(new Callback<ClaimCompetency>() {
+            @Override
+            public void onResponse(Call<ClaimCompetency> call, Response<ClaimCompetency> response) {
+                int responseCode = response.code();
+
+                if (responseCode == 200) {
+
+                    ClaimCompetency claimCompetency = response.body();
+                    callback.onSuccess(claimCompetency);
+
+                } else {
+
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (TextUtils.isEmpty(errorBody)) {
+
+                        if(XiaojsConfig.DEBUG){
+                            Logger.d("the claim competency response code=%s,but has not error code");
+                        }
+
+                        callback.onFailure(Errors.NO_ERROR);
+
+                    } else {
+
+                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ClaimCompetency> call, Throwable t) {
 
                 if(XiaojsConfig.DEBUG){
                     Logger.d("the login has occur exception");

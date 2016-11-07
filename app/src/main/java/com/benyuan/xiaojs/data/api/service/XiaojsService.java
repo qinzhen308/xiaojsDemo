@@ -1,6 +1,7 @@
 package com.benyuan.xiaojs.data.api.service;
 
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CreateLession;
 import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.HomeData;
@@ -67,4 +68,9 @@ public interface XiaojsService {
     Call<Empty> createLiveLession(@Header("SessionID") String sessionID,
                                   @Body CreateLession lession);
 
+    //声明教学能力
+    @Headers("Content-Type: application/json")
+    @POST("/v1/ctl/lessons")
+    Call<ClaimCompetency> claimCompetency(@Header("SessionID") String sessionID,
+                                          @Body String subject);
 }
