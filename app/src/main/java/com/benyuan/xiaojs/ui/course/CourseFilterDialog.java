@@ -96,6 +96,7 @@ public class CourseFilterDialog extends BaseFullWindow {
             t.setText(items[i]);
             if (i == mSelection){
                 t.setTextColor(mContext.getResources().getColor(R.color.main_orange));
+                t.setBackgroundResource(R.drawable.common_light_stroke);
             }
             return t;
         }
@@ -137,9 +138,11 @@ public class CourseFilterDialog extends BaseFullWindow {
         for (int i = 0 ;i < adapterView.getChildCount();i++){
             if (i == position){
                 ((TextView)adapterView.getChildAt(i)).setTextColor(mContext.getResources().getColor(R.color.main_orange));
+                adapterView.getChildAt(i).setBackgroundResource(R.drawable.common_light_stroke);
                 continue;
             }
-            ((TextView)adapterView.getChildAt(i)).setTextColor(mContext.getResources().getColor(R.color.clicked_grey_light));
+            ((TextView)adapterView.getChildAt(i)).setTextColor(mContext.getResources().getColor(R.color.common_text));
+            adapterView.getChildAt(i).setBackgroundResource(R.drawable.common_grey_stroke);
         }
     }
 

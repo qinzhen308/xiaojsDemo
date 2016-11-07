@@ -21,10 +21,17 @@
                 style="@style/DividerHorizontal"/>
     </LinearLayout>
 
-    <com.benyuan.xiaojs.ui.widget.LazyViewPager
-            android:id="@+id/view_pager"
-            android:layout_below="@+id/tab_fixed_view"
+    <RelativeLayout
+            android:id="@+id/hover_container"
+            android:layout_below="@id/tab_fixed_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+        <com.benyuan.xiaojs.ui.widget.LazyViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </RelativeLayout>
+
 
 </RelativeLayout>

@@ -118,12 +118,13 @@ public class EditTeachingAbilityActivity extends BaseActivity {
         textView.setTextSize(16);
         textView.setText(text);
         textView.setGravity(Gravity.CENTER_VERTICAL);
+
         return textView;
     }
 
     private TagView createAbilityItem(String text) {
         TagView tagBtn = new TagView(this);
-        tagBtn.setBackgroundColor(Color.WHITE);
+        tagBtn.setBackgroundResource(R.drawable.tag_bg_selector);
         tagBtn.setText(text);
         tagBtn.setTextColor(Color.GRAY);
         //tagBtn.setGravity(Gravity.CENTER);

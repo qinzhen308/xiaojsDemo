@@ -64,6 +64,8 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
     TabIndicatorView mTabIndicator;
     @BindView(R.id.view_pager)
     protected LazyViewPager mViewPager;
+    @BindView(R.id.hover_container)
+    RelativeLayout mHoverContainer;
 
     private int mIndicatorStyle = TAB_INDICATOR_DIVIDE_EQUAL;
     private List<String> mTabTitles;
@@ -122,6 +124,50 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
 
         if (fixedView != null) {
             mTabFixedView.addView(fixedView, mTabFixedView.getChildCount());
+        }
+
+        mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragments);
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.setScrollState(mScrollable);
+        mViewPager.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (mTabIndicator != null && mTabIndicator.getTabScroller() != null) {
+                    mTabIndicator.getTabScroller().onTabScrolled(position, positionOffset);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mPosition = position;
+                updateTabTextColor(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    protected void addHover(List<String> tabTitles, View hover, List<? extends Fragment> fragments){
+        if (tabTitles == null || tabTitles == null) {
+            Logger.w(TAG, "Not arguments passed!");
+            return;
+        }
+
+        if (tabTitles != null && fragments != null && tabTitles.size() != fragments.size()) {
+            throw new IllegalArgumentException("Base tab fragment, illegal arguments passed!");
+        }
+
+        mTabTitles = tabTitles;
+        mFragments = fragments;
+
+        createTabs(tabTitles);
+
+        if (hover != null) {
+            //mHoverContainer.addView(hover);
+            mHoverContainer.addView(hover,new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         }
 
         mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragments);
