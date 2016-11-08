@@ -5,10 +5,12 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.AccountRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.ClaimCompetency;
+import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.HomeData;
 import com.orhanobut.logger.Logger;
 
@@ -41,7 +43,8 @@ public class AccountDataManager {
                 Logger.d("the sessionID is empty,so the get home data request return failure");
             }
 
-            callback.onFailure(Errors.UNAUTHORIZED);
+            String errorMessage = ErrorPrompts.getHomeDataPrompt(Errors.UNAUTHORIZED);
+            callback.onFailure(Errors.UNAUTHORIZED,errorMessage);
             return;
         }
 
@@ -53,12 +56,12 @@ public class AccountDataManager {
      * 声明教学能力API
      * @param context
      * @param sessionID
-     * @param subject
+     * @param competencyParams
      * @param callback
      */
     public static void requestClaimCompetency(Context context,
                                               @NonNull String sessionID,
-                                              @NonNull String subject,
+                                              @NonNull CompetencyParams competencyParams,
                                               @NonNull APIServiceCallback<ClaimCompetency> callback) {
 
         if (callback == null) {
@@ -74,22 +77,24 @@ public class AccountDataManager {
                 Logger.d("the sessionID is empty,so the claim competency request return failure");
             }
 
-            callback.onFailure(Errors.UNAUTHORIZED);
+            String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.UNAUTHORIZED);
+            callback.onFailure(Errors.UNAUTHORIZED,errorMessage);
             return;
         }
 
-        if (TextUtils.isEmpty(subject)) {
+        if (competencyParams == null) {
 
             if (XiaojsConfig.DEBUG) {
-                Logger.d("the subject is empty,so the claim competency request return failure");
+                Logger.d("the params is null,so the claim competency request return failure");
             }
 
-            callback.onFailure(Errors.NO_ERROR);
+            String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.NO_ERROR);
+            callback.onFailure(Errors.NO_ERROR,errorMessage);
             return;
         }
 
 
         AccountRequest accountRequest = new AccountRequest();
-        accountRequest.claimCompetency(context,sessionID,subject,callback);
+        accountRequest.claimCompetency(context,sessionID,competencyParams,callback);
     }
 }

@@ -75,6 +75,15 @@ public class Errors {
     // Bad request.
     public static final String BAD_REQUEST = "0x01000004";
 
+    // Bad session.
+    public static final String BAD_SESSION = "0x01000005";
+
+    // The specific API is not served by a gateway.
+    public static final String BAD_GATEWAY = "0x01000006";
+
+    //endregion
+
+
 
     //endregion
 
@@ -97,6 +106,16 @@ public class Errors {
 
     // Unauthorized access (UGC).
     public static final String DENIED_UGC_OWNER = "0x11000002";
+
+    // Unauthorized access.
+    public static final String ACCESS_VIOLATION = "0x11000003";
+
+
+
+    //
+    // MSP not ready.
+    public static final String MSP_NOT_READY = "0xA000000A";
+
 
     //endregion
 
