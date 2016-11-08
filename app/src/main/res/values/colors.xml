@@ -21,6 +21,7 @@
     <!--horizontal divide line-->
     <color name="hor_divide_line">#d1d5db</color>
     <color name="hor_divide_line2">#d1d5db</color>
+    <color name="hor_divide_line3">#d1d5db</color>
     <color name="stroke_common">#e9e9e9</color>
     <!--vertical divide line-->
     <color name="ver_divide_line">#d1d5db</color>
@@ -49,9 +50,11 @@
     <color name="common_btn_white_text">#ffffffff</color>
     <color name="common_btn_white_text_press">#88ffffff</color>
     <color name="translucent_50">#7d000000</color>
+    <color name="translucent_30">#6f000000</color>
     <color name="search_gray">#bfbfbf</color>
     <color name="common_text">#8a8a8a</color>
     <color name="course_state_on">#698700</color>
     <color name="course_state_cancel">#e2e1e1</color>
     <color name="course_state_end">#cacaca</color>
+    <color name="course_item_stroke_line">#eff2f6</color>
 </resources>

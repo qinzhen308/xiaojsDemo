@@ -11,11 +11,15 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+
+import com.benyuan.xiaojs.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -540,4 +544,63 @@ public class BitmapUtils {
 			return bitmap;
 		return BitmapFactory.decodeByteArray(buffer, 0, buffer.length);
 	}
+
+	public static Drawable getDrawableWithText(Context context, int icon, String text) {
+		Bitmap iconBitmap = BitmapFactory.decodeResource(
+				context.getResources(), icon).copy(Bitmap.Config.ARGB_8888,true);
+		return getDrawableWithText(context,iconBitmap,text);
+	}
+
+	public static Drawable getDrawableWithText(Context context, Bitmap icon, String text) {
+		// 初始化画布
+		Canvas canvas = new Canvas(icon);
+		// 拷贝图片
+		Paint iconPaint = new Paint();
+		iconPaint.setDither(true);// 防抖动
+		iconPaint.setFilterBitmap(true);// 用来对Bitmap进行滤波处理
+		Rect src = new Rect(0, 0, icon.getWidth(), icon.getHeight());
+		Rect dst = new Rect(0, 0, icon.getWidth(), icon.getHeight());
+		canvas.drawBitmap(icon, src, dst, iconPaint);
+
+		Paint textPaint = new Paint();
+		textPaint.setColor(context.getResources().getColor(R.color.main_orange));
+		textPaint.setTextSize(context.getResources().getDimension(R.dimen.font_22px));
+		int len = (int) textPaint.measureText(text);
+		Paint.FontMetricsInt fontMetrics = textPaint.getFontMetricsInt();
+		int baseline = (dst.height() - fontMetrics.bottom - fontMetrics.top) / 2;
+		canvas.drawText(text, icon.getWidth() / 2 - len / 2, baseline, textPaint);
+		return new BitmapDrawable(context.getResources(),icon);
+	}
+
+	public static Drawable getTabDrawable(Context context, Bitmap background,Bitmap mark,String text) {
+		// 初始化画布
+		Canvas canvas = new Canvas(background);
+		// 拷贝图片
+		Paint iconPaint = new Paint();
+		iconPaint.setDither(true);// 防抖动
+		iconPaint.setFilterBitmap(true);// 用来对Bitmap进行滤波处理
+		Paint textPaint = new Paint();
+		textPaint.setColor(context.getResources().getColor(R.color.white));
+		textPaint.setTextSize(context.getResources().getDimension(R.dimen.font_18px));
+		int len = (int) textPaint.measureText(text);
+		Paint.FontMetricsInt fontMetrics = textPaint.getFontMetricsInt();
+
+		Rect src = new Rect(0, 0, background.getWidth(), background.getHeight());
+		Rect dst = new Rect(0, 0, background.getWidth(), background.getHeight());
+
+		int textHeight = fontMetrics.descent - fontMetrics.ascent;
+		int blankHeight = (dst.height() - textHeight - mark.getHeight()) / 3;
+		int baseline = 2 * blankHeight + mark.getHeight() + textHeight / 2;
+		int leftWidth = background.getWidth() /2 - mark.getWidth() / 2;
+
+		Rect srcMark = new Rect(0, 0, mark.getWidth(), mark.getHeight());
+		Rect dstMark = new Rect(leftWidth, blankHeight, mark.getWidth() + leftWidth, mark.getHeight() + blankHeight);
+
+		canvas.drawBitmap(background, src, dst, iconPaint);
+		canvas.drawBitmap(mark,srcMark,dstMark,iconPaint);
+
+		canvas.drawText(text, background.getWidth() / 2 - len / 2, baseline, textPaint);
+		return new BitmapDrawable(context.getResources(),background);
+	}
+
 }
