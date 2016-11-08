@@ -76,6 +76,7 @@ public class TestAPIActivity extends Activity {
     }
 
 
+    //获取已开的课
     private void testGetLessons(Context context) {
 
         Duration duration = new Duration();
@@ -107,6 +108,7 @@ public class TestAPIActivity extends Activity {
     }
 
 
+    //创建直播课
     private void testCreateLession(Context context) {
 
         Enroll enroll = new Enroll();
@@ -150,6 +152,7 @@ public class TestAPIActivity extends Activity {
 
     }
 
+    //声明教学能力
     private void testClaimCompetency(Context context) {
 
 
@@ -173,6 +176,7 @@ public class TestAPIActivity extends Activity {
     }
 
 
+    //退出
     private void testLogout(Context context) {
 
 
@@ -191,6 +195,7 @@ public class TestAPIActivity extends Activity {
 
     }
 
+    //登陆
     private void testLogin(final Context context) {
 
         LoginParams params = new LoginParams();
@@ -219,6 +224,7 @@ public class TestAPIActivity extends Activity {
     }
 
 
+    //注册
     private void testRegister(final Context context) {
 
         RegisterInfo registerInfo = new RegisterInfo();
@@ -262,6 +268,7 @@ public class TestAPIActivity extends Activity {
 
     }
 
+    //发送验证码
     private void testSendCode(final Context context) {
 
         RegisterDataManager.requestSendVerifyCode(context, mob, new APIServiceCallback<VerifyCode>() {
