@@ -49,7 +49,7 @@ public class BannerView extends FrameLayout {
         mPoint = new PointIndicateView(getContext());
         LayoutParams pointLp = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
         pointLp.gravity = Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
-        pointLp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.px20);
+        pointLp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.px18);
         mPoint.setLayoutParams(pointLp);
         addView(mPoint);
     }

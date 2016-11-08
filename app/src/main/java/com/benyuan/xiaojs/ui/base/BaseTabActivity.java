@@ -20,7 +20,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,12 +48,16 @@ public abstract class BaseTabActivity extends BaseActivity {
     GooeyMenu mGooeyMenu;
     @BindView(R.id.tab_cover)
     RelativeLayout mCover;
+    @BindView(R.id.home_center_image)
+    ImageView mCenter;
 
     FragmentPagerAdapter mAdapter;
     private int[] mTitles;
     private int[] mDrawables;
     private List<RedTipTextView> mTabs;
     private int mCurrentIndex;
+    Animation mRotateRight;
+    Animation mRotateLeft;
 
     private int mButtonType;
     protected static final int BUTTON_TYPE_CENTER = 1;
@@ -120,15 +127,24 @@ public abstract class BaseTabActivity extends BaseActivity {
         fl.setLayoutParams(lp);
         mMenu.addView(fl, mTitles.length / 2);
         mGooeyMenu.setVisibility(View.VISIBLE);
+        mCenter.setVisibility(View.VISIBLE);
+        mRotateRight = AnimationUtils.loadAnimation(BaseTabActivity.this,R.anim.center_rotate_right);
+        mRotateLeft = AnimationUtils.loadAnimation(BaseTabActivity.this,R.anim.center_rotate_left);
+        mRotateRight.setFillAfter(true);
+        mRotateLeft.setFillAfter(true);
         mGooeyMenu.setOnMenuListener(new GooeyMenu.GooeyMenuInterface() {
             @Override
             public void menuOpen() {
                 mCover.setVisibility(View.VISIBLE);
+                mCenter.clearAnimation();
+                mCenter.startAnimation(mRotateRight);
             }
 
             @Override
             public void menuClose() {
                 mCover.setVisibility(View.GONE);
+                mCenter.clearAnimation();
+                mCenter.startAnimation(mRotateLeft);
             }
 
             @Override
@@ -190,4 +206,16 @@ public abstract class BaseTabActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mRotateRight != null){
+            mRotateRight.cancel();
+            mRotateRight = null;
+        }
+        if (mRotateLeft != null){
+            mRotateLeft.cancel();
+            mRotateLeft = null;
+        }
+    }
 }

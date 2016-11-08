@@ -25,8 +25,8 @@
     <string name="unit_price_by_hour">元/小时</string>
 
     <string name="home_tab_index">首页</string>
-    <string name="home_tab_live">直播</string>
-    <string name="home_tab_learn">学习圈</string>
+    <string name="home_tab_circle">圈子</string>
+    <string name="home_tab_query">学习圈</string>
     <string name="home_tab_mine">我的</string>
     <string name="qr_code">二维码</string>
 
@@ -80,7 +80,7 @@
     <string name="edit_portrait">编辑头像</string>
     <string name="personalized_sign">个性签名</string>
 
-    <string name="home_search_hint">搜索直播课或机构或人</string>
+    <string name="home_search_hint">直播课/老师/机构</string>
     <string name="course_of_learn">我学的课</string>
     <string name="course_of_teach">我授的课</string>
     <string name="my_course">我的课</string>
@@ -127,4 +127,10 @@
     <string name="course_state">开课状态</string>
     <string name="my_xiaojs">我的小教室</string>
     <string name="name_of_course">课程名称</string>
+
+    <string name="course_state_playing">开课中</string>
+    <string name="course_state_wait">待开课</string>
+    <string name="course_state_end">已完课</string>
+    <string name="course_state_cancel">已取消</string>
+
 </resources>

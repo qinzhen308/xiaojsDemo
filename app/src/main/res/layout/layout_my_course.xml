@@ -5,6 +5,16 @@
               android:layout_height="wrap_content"
               android:background="@color/white">
 
+    <View
+            android:background="@color/main_bg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px25"/>
+
+    <View
+            android:background="@color/course_item_stroke_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px1"/>
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,6 +69,7 @@
                         android:textSize="@dimen/font_34px"
                         android:textColor="@color/font_black"
                         android:maxLines="1"
+                        android:ellipsize="end"
                         android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -69,22 +80,26 @@
                         android:layout_height="wrap_content">
 
                     <TextView
-                            android:id="@+id/time_mark"
-                            android:layout_alignParentLeft="true"
+                            android:id="@+id/course_state"
+                            android:layout_alignParentRight="true"
                             android:layout_centerInParent="true"
+                            android:layout_marginLeft="@dimen/px30"
                             android:textSize="@dimen/font_26px"
-                            android:maxLines="1"
-                            android:textColor="@color/common_text"
+                            android:paddingLeft="@dimen/px5"
+                            android:paddingRight="@dimen/px5"
+                            android:textColor="@color/white"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
                     <TextView
-                            android:id="@+id/course_state"
-                            android:layout_alignParentRight="true"
+                            android:id="@+id/time_mark"
+                            android:layout_alignParentLeft="true"
                             android:layout_centerInParent="true"
-                            android:layout_toRightOf="@id/time_mark"
-                            android:layout_marginLeft="@dimen/px30"
                             android:textSize="@dimen/font_26px"
+                            android:layout_toLeftOf="@id/course_state"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textColor="@color/common_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                 </RelativeLayout>
@@ -95,26 +110,27 @@
                         android:layout_height="wrap_content">
 
                     <TextView
-                            android:id="@+id/course_desc"
-                            android:drawablePadding="@dimen/px14"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerInParent="true"
-                            android:textSize="@dimen/font_26px"
-                            android:maxLines="1"
-                            android:textColor="@color/common_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                    <TextView
                             android:id="@+id/course_price"
                             android:layout_alignParentRight="true"
                             android:layout_centerInParent="true"
-                            android:layout_toRightOf="@id/course_desc"
                             android:layout_marginLeft="@dimen/px30"
                             android:textSize="@dimen/font_26px"
                             android:textColor="@color/red"
                             android:textStyle="bold"
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:id="@+id/course_desc"
+                            android:drawablePadding="@dimen/px14"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerInParent="true"
+                            android:textSize="@dimen/font_26px"
+                            android:layout_toLeftOf="@id/course_price"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textColor="@color/common_text"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                 </RelativeLayout>
             </LinearLayout>
@@ -122,9 +138,9 @@
     </LinearLayout>
 
     <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px1"
-            android:background="@color/clicked_grey_light"/>
+            style="@style/DividerHorizontal2"
+            android:layout_marginLeft="@dimen/px24"
+            android:layout_marginRight="@dimen/px24"/>
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -143,6 +159,9 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/px20"
                     android:paddingTop="@dimen/px20"
+                    android:clickable="true"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/common_text"
                     android:layout_gravity="center"
                     android:layout_height="wrap_content"/>
         </FrameLayout>
@@ -160,6 +179,9 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/px20"
                     android:paddingTop="@dimen/px20"
+                    android:clickable="true"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/common_text"
                     android:layout_gravity="center"
                     android:layout_height="wrap_content"/>
         </FrameLayout>
@@ -176,6 +198,9 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/px20"
                     android:paddingTop="@dimen/px20"
+                    android:clickable="true"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/common_text"
                     android:layout_gravity="center"
                     android:layout_height="wrap_content"/>
         </FrameLayout>
@@ -190,11 +215,19 @@
                     android:id="@+id/course_opera_4"
                     android:layout_width="match_parent"
                     android:gravity="center"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/common_text"
                     android:layout_gravity="center"
+                    android:clickable="true"
                     android:paddingBottom="@dimen/px20"
                     android:paddingTop="@dimen/px20"
                     android:layout_height="wrap_content"/>
         </FrameLayout>
 
     </LinearLayout>
+
+    <View
+            android:background="@color/course_item_stroke_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px1"/>
 </LinearLayout>

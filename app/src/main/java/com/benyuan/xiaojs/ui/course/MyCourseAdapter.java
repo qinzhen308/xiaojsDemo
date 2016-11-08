@@ -15,6 +15,8 @@ package com.benyuan.xiaojs.ui.course;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
+import com.benyuan.xiaojs.util.BitmapUtils;
 import com.benyuan.xiaojs.util.NumberUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
@@ -38,6 +41,8 @@ import butterknife.BindView;
 
 public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter.Holder> {
     private boolean mIsTeacher;
+    private Bitmap mEnterClass1;//人数小于99的图
+    private Bitmap mEnterClass2;//人数大于99的图
 
     public MyCourseAdapter(Context context, AutoPullToRefreshListView listView, boolean isTeacher) {
         super(context, listView);
@@ -78,6 +83,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
             default:
                 break;
         }
+        showState(holder,bean);
     }
 
     private void showTeacher(Holder holder, CourseBean bean, int position) {
@@ -98,8 +104,8 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
                 holder.opera2.setVisibility(View.VISIBLE);
                 holder.opera3.setVisibility(View.VISIBLE);
                 setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-                setShow(holder.opera2,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
-                enterClass(holder.opera3,1);
+                enterClass(holder.opera2,1);
+                setShow(holder.opera3,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
                 setShow(holder.opera4,R.drawable.more_selector,R.string.more);
                 break;
             case CourseConstant.TEACHER_GROUND_END_COURSE:
@@ -123,28 +129,59 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
                 holder.opera2.setVisibility(View.INVISIBLE);
                 holder.opera3.setVisibility(View.INVISIBLE);
                 setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
-                //holder.opera4.setText(R.string.look_detail);
                 break;
             case CourseConstant.TEACHER_GROUND_CANCEL_COURSE:
                 holder.opera1.setVisibility(View.INVISIBLE);
                 holder.opera2.setVisibility(View.VISIBLE);
                 holder.opera3.setVisibility(View.VISIBLE);
-                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+                setShow(holder.opera2,R.drawable.learn_circle_selector,R.string.cls_moment);
                 enterClass(holder.opera3,1);
                 setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
-                //holder.opera4.setText(R.string.look_detail);
                 break;
             case CourseConstant.TEACHER_PRIVATE_WAIT_COURSE:
                 holder.opera1.setVisibility(View.VISIBLE);
                 holder.opera2.setVisibility(View.VISIBLE);
                 holder.opera3.setVisibility(View.VISIBLE);
                 setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-                setShow(holder.opera2,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
-                enterClass(holder.opera3,0);
+                enterClass(holder.opera2,0);
+                setShow(holder.opera3,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
                 holder.opera4.setText(R.string.invite);
                 break;
 
             default:
+                break;
+        }
+        showState(holder,bean);
+    }
+
+    private void showState(Holder holder, CourseBean bean){
+        switch (bean.courseState){
+            case CourseConstant.STU_ON_COURSING:
+            case CourseConstant.TEACHER_GROUND_COURSING:
+                holder.courseState.setVisibility(View.VISIBLE);
+                holder.courseState.setText(R.string.course_state_playing);
+                holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
+                break;
+            case CourseConstant.STU_PRIVATE_WAIT_COURSE:
+            case CourseConstant.TEACHER_GROUND_WAIT_COURSE:
+                holder.courseState.setVisibility(View.VISIBLE);
+                holder.courseState.setText(R.string.course_state_wait);
+                holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
+                break;
+            case CourseConstant.STU_CANCEL_COURSE:
+            case CourseConstant.TEACHER_GROUND_CANCEL_COURSE:
+                holder.courseState.setVisibility(View.VISIBLE);
+                holder.courseState.setText(R.string.course_state_cancel);
+                holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
+                break;
+            case CourseConstant.STU_END_COURSE:
+            case CourseConstant.TEACHER_GROUND_END_COURSE:
+                holder.courseState.setVisibility(View.VISIBLE);
+                holder.courseState.setText(R.string.course_state_end);
+                holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
+                break;
+            default:
+                holder.courseState.setVisibility(View.GONE);
                 break;
         }
     }
@@ -157,9 +194,23 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
     private void enterClass(TextView tv,int num){
         tv.setText(R.string.into_cls);
         if (num > 0){
-            tv.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_enter_cls_have,0,0);
+            tv.setCompoundDrawablesWithIntrinsicBounds(null, BitmapUtils.getDrawableWithText(mContext,getEnterClassBg(num),String.valueOf(num)),null,null);
         }else {
             tv.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_enter_cls_no,0,0);
+        }
+    }
+
+    private Bitmap getEnterClassBg(int num){
+        if (num > 99){
+            if (mEnterClass2 == null){
+                mEnterClass2 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_enter_cls_have);
+            }
+            return mEnterClass2.copy(Bitmap.Config.ARGB_8888,true);
+        }else {
+            if (mEnterClass1 == null){
+                mEnterClass1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_enter_cls_have);
+            }
+            return mEnterClass1.copy(Bitmap.Config.ARGB_8888,true);
         }
     }
 

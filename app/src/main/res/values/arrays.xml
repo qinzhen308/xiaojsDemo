@@ -45,4 +45,11 @@
         <item>已完课</item>
         <item>已取消</item>
     </string-array>
+    <string-array name="center_tab_items">
+        <item>发动态</item>
+        <item>开课</item>
+        <item>聊天</item>
+        <item>找课</item>
+        <item>提问</item>
+    </string-array>
 </resources>

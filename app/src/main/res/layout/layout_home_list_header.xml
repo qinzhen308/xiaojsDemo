@@ -8,7 +8,7 @@
     <com.benyuan.xiaojs.ui.widget.banner.BannerView
             android:id="@+id/home_banner"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px350"/>
+            android:layout_height="@dimen/px360"/>
 
     <com.benyuan.xiaojs.ui.widget.function.FunctionArea
             android:id="@+id/home_function_area"
