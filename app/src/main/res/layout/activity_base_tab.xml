@@ -1,29 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-    <LinearLayout
-            android:id="@+id/tab_menu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/px10"
-            android:paddingTop="@dimen/px10"/>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <com.benyuan.xiaojs.ui.widget.LazyViewPager
             android:id="@+id/tab_fragment_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/tab_menu"/>
+            android:layout_height="match_parent"/>
 
     <RelativeLayout
             android:id="@+id/tab_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/tab_menu"
             android:visibility="gone"
             android:background="@color/translucent_50">
 
@@ -34,7 +22,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/px30"/>
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/px15"/>
 
-</RelativeLayout>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <View style="@style/DividerHorizontal3"/>
+
+        <LinearLayout
+                android:id="@+id/tab_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal"/>
+    </LinearLayout>
+
+
+    <ImageView
+            android:id="@+id/home_center_image"
+            android:src="@drawable/ic_center"
+            android:visibility="gone"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="@dimen/px15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+</FrameLayout>
