@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
@@ -43,6 +44,10 @@ public class MineFragment extends BaseFragment {
     ImageView mProfileBgView;
     @BindView(R.id.authenticate)
     ImageView mNameAuthView;
+    @BindView(R.id.base_info)
+    LinearLayout mBaseInfo;
+    @BindView(R.id.authentication_info)
+    LinearLayout mAuthenticationInfo;
 
     @Override
     protected View getContentView() {
@@ -55,7 +60,9 @@ public class MineFragment extends BaseFragment {
         setNameAuth();
     }
 
-    @OnClick({R.id.settings, R.id.edit_profile, R.id.my_course, R.id.my_course_schedule, R.id.teach_ability_layout})
+    @OnClick({R.id.settings, R.id.edit_profile, R.id.my_course, R.id.my_course_schedule, R.id.my_ask_questions,
+            R.id.recharge, R.id.withdrawals, R.id.teach_ability_layout, R.id.my_collections, R.id.eval_management,
+            R.id.feedback_help})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.edit_profile:
@@ -69,8 +76,11 @@ public class MineFragment extends BaseFragment {
             case R.id.my_course_schedule:
                 startActivity(new Intent(mContext, CourseCreationActivity.class));
                 break;
-
             case R.id.my_ask_questions:
+                break;
+            case R.id.recharge:
+                break;
+            case R.id.withdrawals:
                 break;
             case R.id.teach_ability_layout:
                 startActivity(new Intent(mContext, TeachingAbilityActivity.class));

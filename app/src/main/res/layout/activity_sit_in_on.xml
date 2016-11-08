@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/main_bg">
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_marginTop="@dimen/px20"/>
+
+    <RelativeLayout
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sit_in_on_allowed"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/font_gray"
+                android:paddingLeft="@dimen/px32"
+                android:paddingTop="@dimen/px28"
+                android:paddingBottom="@dimen/px28"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"/>
+
+        <ToggleButton
+                android:id="@+id/sit_in_on_switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:textOff=""
+                android:textOn=""/>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/px32"
+            android:background="@color/white">
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/multi_check_selector"
+                android:paddingTop="@dimen/px28"
+                android:paddingBottom="@dimen/px28"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:drawablePadding="@dimen/px28"
+                android:text="@string/sit_in_on_visible_to_stu"/>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/px32"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px65"
+                    android:paddingTop="@dimen/px28"
+                    android:paddingBottom="@dimen/px28"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/sit_in_on_person"/>
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/px22"
+                    android:text="@string/please_select"
+                    android:textColor="@color/font_light_gray"
+                    android:textSize="@dimen/font_28px"
+                    android:drawableRight="@drawable/ic_entrance"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+            style="@style/DividerHorizontal"/>
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px90"
+            style="@style/BigSubmitBtn"
+            android:layout_marginLeft="@dimen/px40"
+            android:layout_marginRight="@dimen/px40"
+            android:text="@string/finish"/>
+
+
+</LinearLayout>

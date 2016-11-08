@@ -21,6 +21,7 @@
     <string name="female">女</string>
     <string name="please_select">请选择</string>
     <string name="please_set">请设置</string>
+    <string name="please_input">请填写</string>
     <string name="unit_price">元</string>
     <string name="unit_price_by_hour">元/小时</string>
 
@@ -79,6 +80,22 @@
     <string name="my_profile">我的资料</string>
     <string name="edit_portrait">编辑头像</string>
     <string name="personalized_sign">个性签名</string>
+    <!--optional info-->
+    <string name="add_cover">添加封面</string>
+    <string name="add_cover_tips">一张好的直播课封面可以提供报名封面哦~</string>
+    <string name="live_course_introduce">一张好的直播课封面可以提供报名封面哦~</string>
+    <string name="live_course_brief">直播课简介</string>
+    <string name="live_course_brief_hint">请填写直播课简介</string>
+    <string name="teacher_introduction">教师介绍</string>
+    <string name="teacher_introduction_title">师资介绍</string>
+    <string name="teacher_introduction_hint">请填写师资介绍</string>
+    <string name="sit_in_on">旁听</string>
+    <string name="sit_in_on_title">旁听设置</string>
+    <string name="sit_in_on_allowed">允许旁听</string>
+    <string name="sit_in_on_visible_to_stu">旁听对学生可见</string>
+    <string name="sit_in_on_person">旁听人</string>
+    <string name="sale_promotion">促销</string>
+    <string name="input_tips">%1$d/%2$d字</string>
 
     <string name="home_search_hint">搜索直播课或机构或人</string>
     <string name="course_of_learn">我学的课</string>
