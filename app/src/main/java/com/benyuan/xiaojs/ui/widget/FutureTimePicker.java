@@ -138,7 +138,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
 
     }
 
-    private void initDate () {
+    private void initDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
@@ -186,10 +186,20 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                     int month = calendar.get(Calendar.MONTH) + 1;
                     int day = calendar.get(Calendar.DATE);
 
+                    String m = String.valueOf(month);
+                    if (month < 9) {
+                        m = "0" + m;
+                    }
+
+                    String d = String.valueOf(day);
+                    if (day < 9) {
+                        d = "0" + d;
+                    }
+
                     if (year == mCurrYear) {
-                        str = month + mMonthStr + day + mDayStr;
+                        str = m + mMonthStr + d + mDayStr;
                     } else {
-                        str = mNextYear + month + mMonthStr + day + mDayStr;
+                        str = mNextYear + m + mMonthStr + d + mDayStr;
                     }
                     mDayMap.put(str, today + i * oneDay);
                     break;
@@ -306,7 +316,6 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
 
         return -1;
     }
-
 
 
     public interface OnFutureDatePickListener {

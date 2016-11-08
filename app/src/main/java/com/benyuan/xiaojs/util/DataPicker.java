@@ -49,9 +49,9 @@ public class DataPicker {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         calendar.setTime(new Date());
 
-        int currYear = calendar.get(java.util.Calendar.YEAR);
-        int currMonth = calendar.get(java.util.Calendar.MONTH) + 1;
-        int currDay = calendar.get(java.util.Calendar.DATE);
+        mYear = calendar.get(java.util.Calendar.YEAR);
+        mMonth = calendar.get(java.util.Calendar.MONTH) + 1;
+        mDay = calendar.get(java.util.Calendar.DATE);
 
         picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         picker.setTextColor(context.getResources().getColor(R.color.font_black));
@@ -59,8 +59,7 @@ public class DataPicker {
         picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
         picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
 
-        picker.setDateRange(currYear - 100, currYear);
-        picker.setCurrentDate(currYear, currMonth, currDay);
+        picker.setDateRange(mYear - 100, mYear);
         picker.setOnDatePickListener(new DateWheelPicker.OnDatePickListener() {
             @Override
             public void onDatePicked(int year, int month, int day) {
@@ -69,6 +68,14 @@ public class DataPicker {
                 mDay = day;
             }
         });
+        //after set onDatePickerLister
+        picker.setCurrentDate(mYear, mMonth, mDay);
+
+        int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
+        picker.setPadding(0, padding, 0, padding);
+
+        bottomSheet.setContent(picker);
+        bottomSheet.show();
 
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
@@ -78,15 +85,13 @@ public class DataPicker {
                 }
             }
         });
-
-        int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
-        picker.setPadding(0, padding, 0, padding);
-
-        bottomSheet.setContent(picker);
-        bottomSheet.show();
     }
 
     public static void pickData(Context context, List<String> data, final OnDataPickListener pickedListener) {
+        if (data == null || data.isEmpty()) {
+            return;
+        }
+
         BottomSheet bottomSheet = new BottomSheet(context);
 
         TextWheelPicker picker = new TextWheelPicker(context);
@@ -100,6 +105,7 @@ public class DataPicker {
         picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
 
         picker.setCurrentItem(0);
+        mPickedData = data.get(0);
 
         int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
         picker.setPadding(0, padding, 0, padding);

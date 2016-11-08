@@ -261,6 +261,10 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         } else {
             correctDays();
         }
+
+        if (mOnDatePickListener != null) {
+            mOnDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay);
+        }
     }
 
     public void setCurrentTime(int hour, int minute, int second) {
