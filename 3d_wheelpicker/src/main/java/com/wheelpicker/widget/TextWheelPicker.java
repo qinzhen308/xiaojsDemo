@@ -83,7 +83,7 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
 
 	@Override
 	protected void drawBackground(Canvas canvas) {
-		if (mAdapter != null ||mAdapter.isEmpty()) {
+		if (mAdapter != null && !mAdapter.isEmpty()) {
 			canvas.drawLine(0, mWheelCenterY - mLineOffset , mViewWidth, 
 					mWheelCenterY - mLineOffset, mLinePaint);
 			canvas.drawLine(0, mWheelCenterY + mLineOffset, mViewWidth, 

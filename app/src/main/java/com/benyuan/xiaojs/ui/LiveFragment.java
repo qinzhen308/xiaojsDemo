@@ -15,13 +15,21 @@ package com.benyuan.xiaojs.ui;
  *
  * ======================================================================================== */
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
+import com.benyuan.xiaojs.util.BitmapUtils;
+
+import butterknife.BindView;
 
 public class LiveFragment extends BaseFragment {
 
+    @BindView(R.id.tt)
+    TextView tt;
     @Override
     protected View getContentView() {
         View v = mContext.getLayoutInflater().inflate(R.layout.fragment_live, null);
@@ -30,5 +38,13 @@ public class LiveFragment extends BaseFragment {
 
     @Override
     protected void init() {
+        Bitmap iconBitmap = BitmapFactory.decodeResource(
+                mContext.getResources(), R.drawable.ic_center_tab_bg).copy(Bitmap.Config.ARGB_8888,true);
+        Bitmap chat = BitmapFactory.decodeResource(
+                mContext.getResources(), R.drawable.ic_tab_chat).copy(Bitmap.Config.ARGB_8888,true);
+        tt.setCompoundDrawablesWithIntrinsicBounds(null, BitmapUtils.getTabDrawable(mContext,iconBitmap,chat,"聊天"),null,null);
+        //tt.setCompoundDrawables();
     }
+
+
 }
