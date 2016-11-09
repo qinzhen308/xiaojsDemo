@@ -63,12 +63,12 @@ public class AccountBusiness {
                 }
 
                 @Override
-                public void onFailure(String errorCode) {
+                public void onFailure(String errorCode, String errorMessage) {
                     if (submitBtn != null) {
                         submitBtn.setEnabled(true);
                     }
 
-                    Toast.makeText(activity, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {

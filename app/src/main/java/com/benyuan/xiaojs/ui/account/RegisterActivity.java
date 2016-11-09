@@ -146,8 +146,8 @@ public class RegisterActivity extends BaseActivity {
                 }
 
                 @Override
-                public void onFailure(String errorCode) {
-                    Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
+                public void onFailure(String errorCode, String errorMessage) {
+                    Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (NumberFormatException e) {
@@ -191,18 +191,18 @@ public class RegisterActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void onFailure(String errorCode) {
+                        public void onFailure(String errorCode, String errorMessage) {
                             //register error
-                            Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
 
                 @Override
-                public void onFailure(String errorCode) {
+                public void onFailure(String errorCode, String errorMessage) {
                     //verify code error
 
-                    Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
