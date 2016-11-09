@@ -155,5 +155,14 @@
     <string name="course_state_wait">待开课</string>
     <string name="course_state_end">已完课</string>
     <string name="course_state_cancel">已取消</string>
-
+    <string name="enter_cls_stu_hint">刚进教室的同学</string>
+    <string name="schedule">课表</string>
+    <string name="living_time">直播进行时</string>
+    <string name="live_today">今日直播</string>
+    <string name="teacher_recommend">名师精英推荐</string>
+    <string name="become_teacher">成为老师</string>
+    <string name="perhaps_interest">你可能感兴趣的人</string>
+    <string name="recommend_self">推荐自己</string>
+    <string name="competitive_course_recommend">精品课推荐</string>
+    <string name="make_interest">定制兴趣</string>
 </resources>

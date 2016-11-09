@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="match_parent">
 
     <com.benyuan.xiaojs.ui.widget.HorizontalListView
-            android:id="@+id/home_course_list"
+            android:id="@+id/live_block_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 </LinearLayout>

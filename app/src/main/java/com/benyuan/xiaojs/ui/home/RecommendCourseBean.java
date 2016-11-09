@@ -9,18 +9,10 @@ package com.benyuan.xiaojs.ui.home;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/11/4
+ * Date:2016/11/9
  * Desc:
  *
  * ======================================================================================== */
 
-import com.benyuan.xiaojs.ui.base.BaseFragment;
-
-public abstract class BlockFragment extends BaseFragment {
-
-    /**
-     * 子类需要计算当前fragment的高度给parent的ViewPager使用
-     * @return
-     */
-    public abstract int getFragmentHeight();
+public class RecommendCourseBean {
 }
