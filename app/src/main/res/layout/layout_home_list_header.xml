@@ -10,14 +10,20 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/px360"/>
 
-    <com.benyuan.xiaojs.ui.widget.function.FunctionArea
-            android:id="@+id/home_function_area"
-            android:layout_marginTop="@dimen/px30"
+    <!--  <com.benyuan.xiaojs.ui.widget.function.FunctionArea
+              android:id="@+id/home_function_area"
+              android:layout_marginTop="@dimen/px30"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>-->
+
+    <com.benyuan.xiaojs.ui.widget.BlockTabView
+            android:id="@+id/home_my_cls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
     <com.benyuan.xiaojs.ui.widget.BlockTabView
-            android:id="@+id/home_my_cls"
+            android:id="@+id/home_my_live"
+            android:layout_marginTop="@dimen/px30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 </LinearLayout>

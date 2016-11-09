@@ -138,5 +138,6 @@
     <string name="course_state_wait">待开课</string>
     <string name="course_state_end">已完课</string>
     <string name="course_state_cancel">已取消</string>
-
+    <string name="enter_cls_stu_hint">刚进教室的同学</string>
+    <string name="schedule">课表</string>
 </resources>

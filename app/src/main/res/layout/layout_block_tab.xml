@@ -12,8 +12,11 @@
         <TextView
                 android:id="@+id/block_title"
                 android:layout_marginLeft="@dimen/px30"
-                android:paddingTop="@dimen/px20"
-                android:paddingBottom="@dimen/px20"
+                android:paddingTop="@dimen/px35"
+                android:paddingBottom="@dimen/px35"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:textStyle="bold"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
                 android:text="123"
@@ -25,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_blue"
+                android:textSize="@dimen/font_26px"
                 android:text="123"
                 android:layout_marginRight="@dimen/px30"
                 android:layout_alignParentRight="true"
@@ -43,12 +47,14 @@
     </RelativeLayout>
 
     <View
-            android:background="@color/common_list_line"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px1"/>
+            style="@style/DividerHorizontal"/>
 
-    <com.benyuan.xiaojs.ui.widget.LazyViewPager
+    <!--<com.benyuan.xiaojs.ui.widget.LazyViewPager
             android:id="@+id/block_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>-->
+    <FrameLayout
+            android:id="@+id/block_tab_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 </LinearLayout>

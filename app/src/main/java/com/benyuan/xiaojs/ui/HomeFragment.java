@@ -21,14 +21,10 @@ import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.course.MyCourseAdapter;
-import com.benyuan.xiaojs.ui.home.BlockFragment;
-import com.benyuan.xiaojs.ui.home.HomeCourseFragment;
 import com.benyuan.xiaojs.ui.widget.BlockTabView;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
-import com.benyuan.xiaojs.ui.widget.function.FunctionArea;
-import com.benyuan.xiaojs.ui.widget.function.FunctionItemBean;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.ArrayList;
@@ -41,10 +37,12 @@ public class HomeFragment extends BaseFragment {
 
     @BindView(R.id.home_banner)
     BannerView mBanner;
-    @BindView(R.id.home_function_area)
-    FunctionArea mFunction;
+//    @BindView(R.id.home_function_area)
+//    FunctionArea mFunction;
     @BindView(R.id.home_my_cls)
     BlockTabView mClass;
+    @BindView(R.id.home_my_live)
+    BlockTabView mLive;
 
     AutoPullToRefreshListView mList;
 
@@ -79,23 +77,15 @@ public class HomeFragment extends BaseFragment {
         BannerAdapter adapter = new BannerAdapter(mContext,beanList);
         mBanner.setAdapter(adapter);
 
-        FunctionItemBean fb1 = new FunctionItemBean();
-        fb1.text = "我的课";
-        fb1.param = "com.benyuan.xiaojs.ui.course.MyCourseActivity";
-        FunctionItemBean fb2 = new FunctionItemBean();
-        fb2.text = "我要开课";
-        FunctionItemBean fb3 = new FunctionItemBean();
-        fb3.text = "我的报名";
-        List<FunctionItemBean> beans = new ArrayList<>();
-        beans.add(fb1);
-        beans.add(fb2);
-        beans.add(fb3);
-        mFunction.setItems(beans);
-        //gridView.setAdapter(new FunctionItemAdapter(mContext,beans));
-        List<BlockFragment> fs = new ArrayList<>();
-        fs.add(new HomeCourseFragment());
-        fs.add(new HomeCourseFragment());
-        mClass.show(null,null,fs,getChildFragmentManager(),null);
+//        List<BlockFragment> fs = new ArrayList<>();
+//        fs.add(new HomeCourseFragment());
+//        fs.add(new HomeCourseFragment());
+//        mClass.show(mContext.getString(R.string.my_xiaojs),null,fs,getChildFragmentManager(),mContext.getString(R.string.schedule));
+//
+//        List<BlockFragment> fs1 = new ArrayList<>();
+//        fs1.add(new LiveFragment());
+//        fs1.add(new LiveFragment());
+//        mLive.show("直播进行时",null,fs1,getChildFragmentManager(),"今日直播");
     }
 
     @OnClick({})

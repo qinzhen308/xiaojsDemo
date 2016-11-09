@@ -15,7 +15,6 @@ package com.benyuan.xiaojs.ui.widget;
  * ======================================================================================== */
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.util.AttributeSet;
@@ -43,8 +42,10 @@ public class BlockTabView extends FrameLayout {
     TabIndicatorView mTab;
     @BindView(R.id.block_fun)
     TextView mFun;
-    @BindView(R.id.block_pager)
-    LazyViewPager mPager;
+//    @BindView(R.id.block_pager)
+//    LazyViewPager mPager;
+    @BindView(R.id.block_tab_container)
+    FrameLayout mContainer;
 
     public BlockTabView(Context context) {
         super(context);
@@ -72,11 +73,11 @@ public class BlockTabView extends FrameLayout {
 
     }
 
-    public void show(String title, String[] tabs, List<? extends BlockFragment> fs, FragmentManager fm, String fun){
+    public void setViews(String title, String[] tabs, List<View> views,String fun){
         TextView t1 = new TextView(getContext());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         t1.setLayoutParams(lp);
-        t1.setText("我报名的课");
+        t1.setText("我学的课");
 
         TextView t2 = new TextView(getContext());
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -84,27 +85,55 @@ public class BlockTabView extends FrameLayout {
         t2.setLayoutParams(lp2);
         t2.setText("我教的课");
 
+        mTitle.setText(title);
+        mFun.setText(fun);
+
         mTab.getTabScroller().addTabView(t1);
         mTab.addView(t1);
         mTab.getTabScroller().addTabView(t2);
         mTab.addView(t2);
-        PagerAdapter adapter = new TabFragmentPagerAdapter(fm,fs);
-        mPager.setAdapter(adapter);
-        ViewGroup.LayoutParams llp = mPager.getLayoutParams();
-        llp.height = fs.get(0).getFragmentHeight();
-        mPager.setScrollState(false);
-        mPager.setLayoutParams(llp);
+        if (views == null){
+            return;
+        }
+        for (int i = 0;i < views.size();i++){
+            View v = views.get(i);
+            mContainer.addView(v);
+            if (i != 0){
+                v.setVisibility(GONE);
+            }
+        }
+//        PagerAdapter adapter = new TabFragmentPagerAdapter(fm,fs);
+//        mPager.setAdapter(adapter);
+//        ViewGroup.LayoutParams llp = mPager.getLayoutParams();
+//        llp.height = fs.get(0).getFragmentHeight(getContext());
+//        mPager.setScrollState(true);
+//        mPager.setLayoutParams(llp);
         t1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPager.setCurrentItem(0);
+//                mPager.setCurrentItem(0);
+                show(0);
             }
         });
         t2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPager.setCurrentItem(1);
+//                mPager.setCurrentItem(1);
+                show(1);
             }
         });
+    }
+
+    public void show(int position){
+        if (position >= getChildCount()){
+            return;
+        }
+        for (int i = 0;i < getChildCount();i++){
+            if (position == i){
+                getChildAt(i).setVisibility(VISIBLE);
+            }else {
+                getChildAt(i).setVisibility(GONE);
+            }
+        }
     }
 }

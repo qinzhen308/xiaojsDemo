@@ -1,11 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
+              android:background="@color/white"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <com.benyuan.xiaojs.ui.widget.HorizontalListView
-            android:id="@+id/home_course_list"
+    <RelativeLayout
+            android:layout_marginTop="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/block_course_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_22px"/>
+
+        <TextView
+                android:id="@+id/course_mark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_22px"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"/>
+
+        <TextView
+                android:id="@+id/block_course_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@id/block_course_date"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_toLeftOf="@id/course_mark"
+                android:layout_marginRight="@dimen/px30"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_22px"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px10"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px316">
+
+        <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                android:id="@+id/block_course_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                app:corner_radius="@dimen/px5"/>
+
+        <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                android:src="@drawable/profile_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                app:corner_radius="@dimen/px5"/>
+
+        <LinearLayout
+                android:id="@+id/block_course_mark_wrapper"
+                android:orientation="vertical"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/block_course_num"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_22px"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/block_course_total"
+                    android:textColor="@color/common_text"
+                    android:layout_marginTop="@dimen/px15"
+                    android:textSize="@dimen/font_22px"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/block_course_title"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_34px"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginTop="@dimen/px30"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_toLeftOf="@id/block_course_mark_wrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <LinearLayout
+                android:id="@+id/block_course_person1"
+                android:orientation="vertical"
+                android:layout_below="@id/block_course_title"
+                android:layout_marginTop="@dimen/px50"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    android:id="@+id/block_course_person1_image"
+                    android:layout_width="@dimen/px100"
+                    android:layout_height="@dimen/px100"
+                    android:scaleType="fitXY"
+                    app:corner_radius="@dimen/px50"/>
+
+            <TextView
+                    android:id="@+id/block_course_person1_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px10"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_28px"/>
+
+            <TextView
+                    android:id="@+id/block_course_person1_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px10"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_22px"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/block_course_person2"
+                android:orientation="vertical"
+                android:layout_below="@id/block_course_title"
+                android:layout_toRightOf="@id/block_course_person1"
+                android:layout_marginTop="@dimen/px50"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    android:id="@+id/block_course_person2_image"
+                    android:layout_width="@dimen/px100"
+                    android:layout_height="@dimen/px100"
+                    android:scaleType="fitXY"
+                    app:corner_radius="@dimen/px50"/>
+
+            <TextView
+                    android:id="@+id/block_course_person2_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px10"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_28px"/>
+
+            <TextView
+                    android:id="@+id/block_course_person2_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px10"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_22px"/>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/block_course_enter"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/px30"
+                android:textSize="@dimen/font_24px"
+                android:textColor="@color/font_blue"
+                android:text="@string/into_cls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_marginBottom="@dimen/px30">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/common_text"
+                android:layout_marginLeft="@dimen/px30"
+                android:textSize="@dimen/font_22px"
+                android:layout_gravity="center_vertical"
+                android:text="@string/enter_cls_stu_hint"/>
+
+        <com.benyuan.xiaojs.ui.widget.HorizontalListView
+                android:id="@+id/block_course_stu_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px30"
+                android:paddingTop="@dimen/px15"
+                android:paddingBottom="@dimen/px15"/>
+    </LinearLayout>
 </LinearLayout>
