@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
@@ -55,12 +56,15 @@ public class LoginRequest extends ServiceRequest{
                     }
 
                     if (TextUtils.isEmpty(errorBody)) {
-                        callback.onFailure(Errors.NO_ERROR);
 
+                        String errorMessage = ErrorPrompts.loginPrompt(Errors.NO_ERROR);
+                        callback.onFailure(Errors.NO_ERROR,errorMessage);
 
                     } else {
 
-                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+                        String errorCode = ApiManager.parseErrorBody(errorBody);
+                        String errorMessage = ErrorPrompts.loginPrompt(errorCode);
+                        callback.onFailure(errorCode,errorMessage);
 
                     }
 
@@ -75,7 +79,8 @@ public class LoginRequest extends ServiceRequest{
                     Logger.d("the login has occur exception");
                 }
 
-                callback.onFailure(Errors.NO_ERROR);
+                String errorMessage = ErrorPrompts.loginPrompt(Errors.NO_ERROR);
+                callback.onFailure(Errors.NO_ERROR,errorMessage);
             }
         });
 
@@ -103,12 +108,15 @@ public class LoginRequest extends ServiceRequest{
                     }
 
                     if (TextUtils.isEmpty(errorBody)) {
-                        callback.onFailure(Errors.NO_ERROR);
 
+                        String errorMessage = ErrorPrompts.logoutPrompt(Errors.NO_ERROR);
+                        callback.onFailure(Errors.NO_ERROR,errorMessage);
 
                     } else {
 
-                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+                        String errorCode = ApiManager.parseErrorBody(errorBody);
+                        String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
+                        callback.onFailure(errorCode,errorMessage);
 
                     }
 
@@ -128,9 +136,9 @@ public class LoginRequest extends ServiceRequest{
                 if(errorMsg.contains("No content to map due to end-of-input")){
                     callback.onSuccess(null);
                 }else{
-                    callback.onFailure(Errors.NO_ERROR);
+                    String errorMessage = ErrorPrompts.logoutPrompt(Errors.NO_ERROR);
+                    callback.onFailure(Errors.NO_ERROR,errorMessage);
                 }
-
 
             }
         });

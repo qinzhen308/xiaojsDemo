@@ -1,12 +1,17 @@
 package com.benyuan.xiaojs.data.api.service;
 
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.ClaimCompetency;
-import com.benyuan.xiaojs.model.CreateLession;
+import com.benyuan.xiaojs.model.CompetencyParams;
+import com.benyuan.xiaojs.model.CreateLesson;
+import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Empty;
+import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.HomeData;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
+import com.benyuan.xiaojs.model.Pagination;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.VerifyCode;
 
@@ -27,7 +32,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.4:3000/";
+    String BASE_URL = "http://192.168.1.150:3000/";
 
 
     //注册
@@ -65,12 +70,18 @@ public interface XiaojsService {
     //创建直播课
     @Headers("Content-Type: application/json")
     @POST("/v1/ctl/lessons")
-    Call<Empty> createLiveLession(@Header("SessionID") String sessionID,
-                                  @Body CreateLession lession);
+    Call<CLResponse> createLiveLesson(@Header("SessionID") String sessionID,
+                                       @Body CreateLesson lesson);
 
     //声明教学能力
     @Headers("Content-Type: application/json")
-    @POST("/v1/ctl/lessons")
+    @POST("/v1/accounts/competencies")
     Call<ClaimCompetency> claimCompetency(@Header("SessionID") String sessionID,
-                                          @Body String subject);
+                                          @Body CompetencyParams competencyParams);
+
+    //Get Lessons
+    @GET("/v1/ctl/lessons/{criteria}/{pagination}")
+    Call<GetLessonsResponse> getLessons(@Header("SessionID") String sessionID,
+                                        @Path("criteria") String criteria,
+                                        @Path("pagination") String pagination);
 }

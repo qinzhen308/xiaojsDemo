@@ -6,15 +6,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Created by maxiaobao on 2016/11/4.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateLession {
+public class CreateLesson {
 
-    private LiveLession data;
+    private LiveLesson data;
 
-    public LiveLession getData() {
+    public LiveLesson getData() {
         return data;
     }
 
-    public void setData(LiveLession data) {
+    public void setData(LiveLesson data) {
         this.data = data;
     }
 }

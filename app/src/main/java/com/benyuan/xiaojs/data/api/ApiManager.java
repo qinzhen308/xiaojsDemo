@@ -11,6 +11,8 @@ import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.util.APPUtils;
 import com.benyuan.xiaojs.util.UIUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,7 +78,7 @@ public class ApiManager {
         int appType = getAPPType();
         String appVerion = APPUtils.getAPPFullVersion(appContext);
 
-        CommonHeaderInterceptor headerInterceptor = new CommonHeaderInterceptor(appType,appVerion);
+        CommonHeaderInterceptor headerInterceptor = new CommonHeaderInterceptor(appType, appVerion);
 
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -95,10 +97,9 @@ public class ApiManager {
     }
 
 
+    private int getAPPType() {
 
-    private int getAPPType(){
-
-        if (UIUtils.isTablet(appContext)){
+        if (UIUtils.isTablet(appContext)) {
             return Platform.AppType.TABLET_ANDROID;
         }
 
@@ -107,11 +108,28 @@ public class ApiManager {
 
 
     /**
-     * 解析error body json
-     * @param errorBody
+     * Convert object to JSON string
+     * @param t
      * @return
      */
-    public static String parseErrorBody(String errorBody){
+    public static String objectToJsonString(Object object) {
+
+        String jsonStr = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            jsonStr = mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return jsonStr;
+
+    }
+
+    /**
+     * 解析error body json
+     */
+    public static String parseErrorBody(String errorBody) {
 
         String errorCode = Errors.NO_ERROR;
 
@@ -130,17 +148,16 @@ public class ApiManager {
 
     /**
      * 根据错误码，返回内部错误信息。
-     * @param errorCode
      */
     public static String getInternalErrorMessage(String errorCode) {
 
         String errorMessage = "未知错误";
 
-        if (TextUtils.isEmpty(errorCode)){
+        if (TextUtils.isEmpty(errorCode)) {
             return errorMessage;
         }
 
-        switch (errorCode){
+        switch (errorCode) {
             case Errors.NO_ERROR:
                 errorMessage = "未指定错误";
                 break;
@@ -179,4 +196,20 @@ public class ApiManager {
         }
         return errorCode;
     }
+
+    public static class Objson<T> {
+
+        public String objectToJsonString(T object) {
+
+            String jsonStr = null;
+
+            JSONObject jsonObject = new JSONObject();
+
+
+            return jsonStr;
+        }
+
+    }
+
+
 }

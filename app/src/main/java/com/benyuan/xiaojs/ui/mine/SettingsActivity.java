@@ -74,8 +74,8 @@ public class SettingsActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                Toast.makeText(mContext, Errors.getInternalErrorMessage(errorCode), Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorCode, String errorMessage) {
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }

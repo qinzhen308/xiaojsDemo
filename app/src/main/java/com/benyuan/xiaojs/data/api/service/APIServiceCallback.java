@@ -6,10 +6,10 @@ package com.benyuan.xiaojs.data.api.service;
 
 public interface APIServiceCallback<T> {
 
-
-
     void onSuccess(T object);
 
-    void onFailure(String errorCode);
+    //void onFailure(String errorCode);
+
+    void onFailure(String errorCode,String errorMessage);
 
 }

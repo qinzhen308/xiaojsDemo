@@ -1,26 +1,29 @@
 package com.benyuan.xiaojs;
 
 import android.content.Context;
-import android.provider.Settings;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.benyuan.xiaojs.api.InterceptorTest;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Security;
 import com.benyuan.xiaojs.data.AccountDataManager;
-import com.benyuan.xiaojs.data.LessionDataManager;
+import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.APIEntity;
-import com.benyuan.xiaojs.model.CreateLession;
+import com.benyuan.xiaojs.model.ClaimCompetency;
+import com.benyuan.xiaojs.model.CompetencyParams;
+import com.benyuan.xiaojs.model.CreateLesson;
+import com.benyuan.xiaojs.model.Enroll;
+import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.HomeData;
-import com.benyuan.xiaojs.model.LiveLession;
+import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.benyuan.xiaojs.model.RegisterInfo;
+import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
 import com.benyuan.xiaojs.util.APPUtils;
 import com.orhanobut.logger.Logger;
@@ -28,7 +31,7 @@ import com.orhanobut.logger.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import java.util.Date;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -58,27 +61,28 @@ public class ExampleInstrumentedTest {
         //testValidateCode(appContext);
         //testGetHomeData(appContext);
 
-        testCreateLession(appContext);
+        //testCreateLession(appContext);
+        testClaimCompetency(appContext);
     }
 
     private void testCreateLession(Context context) {
 
-        LiveLession.Enroll enroll = new LiveLession.Enroll();
+        Enroll enroll = new Enroll();
         enroll.setMax(100);
-        enroll.setType(Ctl.EnrollType.ONLINE);
+        //enroll.setType(Ctl.EnrollType.ONLINE);
 
-        LiveLession.Fee fee = new LiveLession.Fee();
+        Fee fee = new Fee();
         fee.setFree(true);
         fee.setType(Finance.PricingType.TOTAL);
         fee.setCharge(100);
 
-        LiveLession.Schedule sch = new LiveLession.Schedule();
-        sch.setStart(System.currentTimeMillis());
+        Schedule sch = new Schedule();
+        sch.setStart(new Date(System.currentTimeMillis()));
         sch.setDuration(1000);
 
 
 
-        LiveLession ll = new LiveLession();
+        LiveLesson ll = new LiveLesson();
         ll.setTitle("无人驾驶课");
         ll.setSubject("开启AI之旅");
         ll.setEnroll(enroll);
@@ -86,22 +90,46 @@ public class ExampleInstrumentedTest {
         ll.setFee(fee);
         ll.setSchedule(sch);
 
-        CreateLession cl = new CreateLession();
+        CreateLesson cl = new CreateLesson();
         cl.setData(ll);
 
 
-        LessionDataManager.requestCreateLiveLession(context, seesionId, cl, new APIServiceCallback() {
+        LessonDataManager.requestCreateLiveLesson(context, seesionId, cl, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 Logger.d("onSuccess-----------");
             }
 
             @Override
-            public void onFailure(String errorCode) {
+            public void onFailure(String errorCode,String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
 
+
+    }
+
+    private void testClaimCompetency(Context context){
+
+        String seesionId = "XdHK58sMYug_0lhhoYAVocNNLfjgjYs2";
+        String subject = "582087dcb3072a5f0b147807";
+
+        CompetencyParams cp = new CompetencyParams();
+        cp.setSubject(subject);
+
+
+        AccountDataManager.requestClaimCompetency(context, seesionId, cp, new APIServiceCallback<ClaimCompetency>() {
+            @Override
+            public void onSuccess(ClaimCompetency object) {
+                Logger.d("onSuccess-----------");
+            }
+
+            @Override
+            public void onFailure(String errorCode,String errorMessage) {
+
+                Logger.d("onFailure-----------");
+            }
+        });
 
     }
 
@@ -116,7 +144,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode) {
+            public void onFailure(String errorCode,String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
@@ -150,7 +178,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode) {
+            public void onFailure(String errorCode,String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
@@ -173,7 +201,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode) {
+            public void onFailure(String errorCode,String errorMessage) {
 
                 Logger.d("onFailure-----------");
             }
@@ -192,7 +220,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode) {
+            public void onFailure(String errorCode,String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
@@ -208,7 +236,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode) {
+            public void onFailure(String errorCode,String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
@@ -224,7 +252,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode) {
+            public void onFailure(String errorCode,String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });

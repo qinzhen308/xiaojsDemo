@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
@@ -52,13 +53,17 @@ public class RegisterRequest extends ServiceRequest{
                         e.printStackTrace();
                     }
 
-                    if (TextUtils.isEmpty(errorBody)) {
-                        callback.onFailure(Errors.NO_ERROR);
 
+                    if (TextUtils.isEmpty(errorBody)) {
+
+                        String errorMessage = ErrorPrompts.registerPrompt(Errors.NO_ERROR);
+                        callback.onFailure(Errors.NO_ERROR,errorMessage);
 
                     } else {
 
-                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+                        String errorCode = ApiManager.parseErrorBody(errorBody);
+                        String errorMessage = ErrorPrompts.registerPrompt(errorCode);
+                        callback.onFailure(errorCode,errorMessage);
 
                     }
 
@@ -78,7 +83,8 @@ public class RegisterRequest extends ServiceRequest{
                 if(errorMsg.contains("No content to map due to end-of-input")){
                     callback.onSuccess(null);
                 }else{
-                    callback.onFailure(Errors.NO_ERROR);
+                    String errorMessage = ErrorPrompts.registerPrompt(Errors.NO_ERROR);
+                    callback.onFailure(Errors.NO_ERROR,errorMessage);
                 }
 
             }
@@ -108,11 +114,13 @@ public class RegisterRequest extends ServiceRequest{
                         if (match) {
                             callback.onSuccess(null);
                         } else {
-                            callback.onFailure(Errors.NO_ERROR);
+                            String errorMessage = ErrorPrompts.validateCodePrompt(Errors.NO_ERROR);
+                            callback.onFailure(Errors.NO_ERROR,errorMessage);
                         }
 
                     } else {
-                        callback.onFailure(Errors.NO_ERROR);
+                        String errorMessage = ErrorPrompts.validateCodePrompt(Errors.NO_ERROR);
+                        callback.onFailure(Errors.NO_ERROR,errorMessage);
                     }
 
 
@@ -126,12 +134,15 @@ public class RegisterRequest extends ServiceRequest{
                     }
 
                     if (TextUtils.isEmpty(errorBody)) {
-                        callback.onFailure(Errors.NO_ERROR);
+                        String errorMessage = ErrorPrompts.validateCodePrompt(Errors.NO_ERROR);
+                        callback.onFailure(Errors.NO_ERROR,errorMessage);
 
 
                     } else {
 
-                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+                        String errorCode = ApiManager.parseErrorBody(errorBody);
+                        String errorMessage = ErrorPrompts.validateCodePrompt(errorCode);
+                        callback.onFailure(errorCode,errorMessage);
 
                     }
 
@@ -145,7 +156,8 @@ public class RegisterRequest extends ServiceRequest{
                     Logger.d("the validate code request has occur exception");
                 }
 
-                callback.onFailure(Errors.NO_ERROR);
+                String errorMessage = ErrorPrompts.validateCodePrompt(Errors.NO_ERROR);
+                callback.onFailure(Errors.NO_ERROR,errorMessage);
 
             }
         });
@@ -178,12 +190,15 @@ public class RegisterRequest extends ServiceRequest{
                     }
 
                     if (TextUtils.isEmpty(errorBody)) {
-                        callback.onFailure(Errors.NO_ERROR);
 
+                        String errorMessage = ErrorPrompts.sendCodePrompt(Errors.NO_ERROR);
+                        callback.onFailure(Errors.NO_ERROR,errorMessage);
 
                     } else {
 
-                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
+                        String errorCode = ApiManager.parseErrorBody(errorBody);
+                        String errorMessage = ErrorPrompts.sendCodePrompt(errorCode);
+                        callback.onFailure(errorCode,errorMessage);
 
                     }
 
@@ -197,7 +212,8 @@ public class RegisterRequest extends ServiceRequest{
                     Logger.d("the send code has occur exception");
                 }
 
-                callback.onFailure(Errors.NO_ERROR);
+                String errorMessage = ErrorPrompts.sendCodePrompt(Errors.NO_ERROR);
+                callback.onFailure(Errors.NO_ERROR,errorMessage);
             }
         });
     }

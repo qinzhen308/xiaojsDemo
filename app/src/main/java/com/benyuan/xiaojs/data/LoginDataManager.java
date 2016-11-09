@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.LoginRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
@@ -61,7 +62,8 @@ public class LoginDataManager {
                 Logger.d("the sessionID is empty,so the logout request return failure");
             }
 
-            callback.onFailure(Errors.UNAUTHORIZED);
+            String errorMessage = ErrorPrompts.logoutPrompt(Errors.UNAUTHORIZED);
+            callback.onFailure(Errors.UNAUTHORIZED,errorMessage);
             return;
         }
 

@@ -32,7 +32,7 @@
                 android:name=".common.crop.CropImageMainActivity"
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-        <activity android:name=".ui.TestAPIActivity"/>
+
         <activity android:name=".ui.account.RegisterActivity"/>
         <activity android:name=".ui.mine.SettingsActivity"/>
         <activity
@@ -50,6 +50,13 @@
         <activity android:name=".ui.course.LessionDetailActivity">
 
         </activity>
+        <activity android:name=".ui.TestAPIActivity">
+        </activity>
+        <activity android:name=".ui.course.LiveCourseBriefActivity"/>
+        <activity android:name=".ui.course.SalePromotionActivity"/>
+        <activity android:name=".ui.course.SitInOnActivity"/>
+        <activity android:name=".ui.course.TeacherIntroductionActivity"/>
+
     </application>
 
 </manifest>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_bg">
+
+    <!--封面设置-->
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:id="@+id/cover_add_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/add_cover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_cover"
+                    android:textColor="@color/font_dark_gray"
+                    android:textSize="@dimen/font_32px"
+                    android:drawableLeft="@drawable/add_selector"
+                    android:drawablePadding="@dimen/px16"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:paddingLeft="@dimen/px40"
+                    android:paddingRight="@dimen/px40"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/px148"
+                    android:background="@drawable/common_edittext_bg"/>
+
+            <TextView
+                    android:id="@+id/add_cover_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_cover_tips"
+                    android:textColor="@color/font_light_gray"
+                    android:textSize="@dimen/font_30px"
+                    android:layout_marginTop="@dimen/px54"
+                    android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+        <ImageView
+                android:id="@+id/cover_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </FrameLayout>
+
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_marginTop="@dimen/px32"/>
+
+    <!--直播课简介-->
+    <LinearLayout
+            android:id="@+id/live_course_brief_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_pressed"
+            android:paddingLeft="@dimen/px32"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px30"
+            android:paddingBottom="@dimen/px30"
+            android:orientation="horizontal">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px32"
+                android:textSize="@dimen/font_28px"
+                android:text="@string/live_course_brief"/>
+
+        <TextView
+                android:id="@+id/live_course_brief"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:layout_height="wrap_content"
+                android:text="@string/please_input"
+                android:drawablePadding="@dimen/px22"
+                android:drawableRight="@drawable/ic_entrance"/>
+
+    </LinearLayout>
+
+    <include
+            layout="@layout/layout_horizontal_line"/>
+
+    <!--老师介绍-->
+    <LinearLayout
+            android:id="@+id/teacher_introduction_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_pressed"
+            android:paddingLeft="@dimen/px32"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px30"
+            android:paddingBottom="@dimen/px30"
+            android:orientation="horizontal">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px32"
+                android:textSize="@dimen/font_28px"
+                android:text="@string/teacher_introduction"/>
+
+        <TextView
+                android:id="@+id/teacher_introduction"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:layout_height="wrap_content"
+                android:text="@string/please_input"
+                android:drawablePadding="@dimen/px22"
+                android:drawableRight="@drawable/ic_entrance"/>
+
+    </LinearLayout>
+
+    <include
+            layout="@layout/layout_horizontal_line"/>
+
+    <!--旁听-->
+    <LinearLayout
+            android:id="@+id/sit_in_on_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_pressed"
+            android:paddingLeft="@dimen/px32"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px30"
+            android:paddingBottom="@dimen/px30"
+            android:orientation="horizontal">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px32"
+                android:textSize="@dimen/font_28px"
+                android:text="@string/sit_in_on"/>
+
+        <TextView
+                android:id="@+id/sit_in_on"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:layout_height="wrap_content"
+                android:text="@string/please_set"
+                android:drawablePadding="@dimen/px22"
+                android:drawableRight="@drawable/ic_entrance"/>
+
+    </LinearLayout>
+
+    <include
+            layout="@layout/layout_horizontal_line"/>
+
+    <!--促销-->
+    <LinearLayout
+            android:id="@+id/sale_promotion_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_pressed"
+            android:paddingLeft="@dimen/px32"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px30"
+            android:paddingBottom="@dimen/px30"
+            android:orientation="horizontal">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px32"
+                android:textSize="@dimen/font_28px"
+                android:text="@string/sale_promotion"/>
+
+        <TextView
+                android:id="@+id/sale_promotion"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:layout_height="wrap_content"
+                android:text="@string/please_set"
+                android:drawablePadding="@dimen/px22"
+                android:drawableRight="@drawable/ic_entrance"/>
+
+    </LinearLayout>
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_marginBottom="@dimen/px88"/>
+
+    <Button
+            android:id="@+id/sub_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/BigSubmitBtn"
+            android:text="@string/finish"
+            android:layout_marginBottom="@dimen/px30"
+            android:layout_marginLeft="@dimen/px40"
+            android:layout_marginRight="@dimen/px40"
+            android:visibility="gone"/>
+
+</LinearLayout>

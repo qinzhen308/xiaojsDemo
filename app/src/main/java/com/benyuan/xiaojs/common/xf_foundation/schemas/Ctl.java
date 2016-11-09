@@ -9,6 +9,18 @@ public class Ctl {
     //region Objects
 
     //
+    // Defines the lesson source criteria.
+    //
+    public class LessonSource{
+        // All lessons
+        public static final String ALL = "All";
+        // Created by myself
+        public static final String MYSELF = "Myself";
+        // Invited by someone else
+        public static final String INVITATIONS = "Invitations";
+    }
+
+    //
     // Defines the registration types.
     //
     public class EnrollType{

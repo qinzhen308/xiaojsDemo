@@ -2,11 +2,13 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Date;
+
 /**
  * Created by maxiaobao on 2016/11/4.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LiveLession {
+public class LiveLesson {
 
     private String title;
     private String subject;
@@ -20,7 +22,16 @@ public class LiveLession {
     private TeachersIntro teachersIntro;
     private Audit audit;
     private String[] tags;
+    private Publish publish;
     private boolean autoOnShelves;
+
+    public Publish getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Publish publish) {
+        this.publish = publish;
+    }
 
     public boolean isAutoOnShelves() {
         return autoOnShelves;
@@ -126,104 +137,6 @@ public class LiveLession {
         this.tags = tags;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Enroll {
-
-        private int max;
-        private int type;
-
-
-        public int getMax() {
-            return max;
-        }
-
-        public void setMax(int max) {
-            this.max = max;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Fee {
-        private boolean free;
-        private int type;
-        private int charge;
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
-        public int getCharge() {
-            return charge;
-        }
-
-        public void setCharge(int charge) {
-            this.charge = charge;
-        }
-
-        public boolean isFree() {
-            return free;
-        }
-
-        public void setFree(boolean free) {
-            this.free = free;
-        }
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Schedule{
-        private long start;
-        private int duration;
-
-        public long getStart() {
-            return start;
-        }
-
-        public void setStart(long start) {
-            this.start = start;
-        }
-
-        public int getDuration() {
-            return duration;
-        }
-
-        public void setDuration(int duration) {
-            this.duration = duration;
-        }
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Promotion {
-        private boolean enabled;
-        private Rule[] rules;
-
-        public boolean isEnabled() {
-            return enabled;
-        }
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
-
-        public Rule[] getRules() {
-            return rules;
-        }
-
-        public void setRules(Rule[] rules) {
-            this.rules = rules;
-        }
-    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Overview{
@@ -328,6 +241,19 @@ public class LiveLession {
 
         public void setQuota(int quota) {
             this.quota = quota;
+        }
+    }
+
+
+    public static class Publish{
+        private boolean onShelves;
+
+        public boolean isOnShelves() {
+            return onShelves;
+        }
+
+        public void setOnShelves(boolean onShelves) {
+            this.onShelves = onShelves;
         }
     }
 

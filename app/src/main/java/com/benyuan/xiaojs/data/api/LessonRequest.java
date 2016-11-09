@@ -10,12 +10,12 @@ import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
-import com.benyuan.xiaojs.model.ClaimCompetency;
-import com.benyuan.xiaojs.model.CompetencyParams;
-import com.benyuan.xiaojs.model.HomeData;
+import com.benyuan.xiaojs.model.CLResponse;
+import com.benyuan.xiaojs.model.CreateLesson;
+import com.benyuan.xiaojs.model.Criteria;
+import com.benyuan.xiaojs.model.GetLessonsResponse;
+import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -24,26 +24,24 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by maxiaobao on 2016/11/3.
+ * Created by maxiaobao on 2016/11/4.
  */
 
-public class AccountRequest extends ServiceRequest{
+public class LessonRequest extends ServiceRequest {
 
 
-    public void getHomeData(Context context,
-                            @NonNull String sessionID,
-                            @NonNull final APIServiceCallback<HomeData> callback) {
+    public void createLiveLesson(Context context, String sessionID, CreateLesson lesson, @NonNull final APIServiceCallback callback) {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getHomeData(sessionID).enqueue(new Callback<HomeData>() {
+        xiaojsService.createLiveLesson(sessionID, lesson).enqueue(new Callback<CLResponse>() {
             @Override
-            public void onResponse(Call<HomeData> call, Response<HomeData> response) {
+            public void onResponse(Call<CLResponse> call, Response<CLResponse> response) {
                 int responseCode = response.code();
 
                 if (responseCode == 200) {
 
-                    HomeData homeData = response.body();
-                    callback.onSuccess(homeData);
+                    CLResponse info = response.body();
+                    callback.onSuccess(info);
 
                 } else {
 
@@ -56,16 +54,13 @@ public class AccountRequest extends ServiceRequest{
 
                     if (TextUtils.isEmpty(errorBody)) {
 
-                        if(XiaojsConfig.DEBUG){
-                            Logger.d("the get hmoe data response code=%s,but has not error code");
-                        }
-
-                        String errorMessage = ErrorPrompts.getHomeDataPrompt(Errors.NO_ERROR);
+                        String errorMessage = ErrorPrompts.createLessonPrompt(Errors.NO_ERROR);
                         callback.onFailure(Errors.NO_ERROR,errorMessage);
 
                     } else {
+
                         String errorCode = ApiManager.parseErrorBody(errorBody);
-                        String errorMessage = ErrorPrompts.getHomeDataPrompt(errorCode);
+                        String errorMessage = ErrorPrompts.createLessonPrompt(errorCode);
                         callback.onFailure(errorCode,errorMessage);
 
                     }
@@ -74,36 +69,42 @@ public class AccountRequest extends ServiceRequest{
             }
 
             @Override
-            public void onFailure(Call<HomeData> call, Throwable t) {
+            public void onFailure(Call<CLResponse> call, Throwable t) {
 
-                if(XiaojsConfig.DEBUG){
-                    Logger.d("the login has occur exception");
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the createLiveLession request has occur exception");
                 }
 
-                String errorMessage = ErrorPrompts.getHomeDataPrompt(Errors.NO_ERROR);
+                String errorMessage = ErrorPrompts.createLessonPrompt(Errors.NO_ERROR);
                 callback.onFailure(Errors.NO_ERROR,errorMessage);
-
             }
         });
 
     }
 
 
-    public void claimCompetency(Context context,
-                                String sessionID,
-                                CompetencyParams competencyParams,
-                                @NonNull final APIServiceCallback<ClaimCompetency> callback) {
+    public void getLessons(Context context,
+                           @NonNull String sessionID,
+                           @NonNull Criteria criteria,
+                           @NonNull Pagination pagination,
+                           @NonNull final APIServiceCallback<GetLessonsResponse> callback) {
+
+
+        String criteriaJsonstr = ApiManager.objectToJsonString(criteria);
+        String paginationJsonstr = ApiManager.objectToJsonString(criteria);
+
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.claimCompetency(sessionID,competencyParams).enqueue(new Callback<ClaimCompetency>() {
+        xiaojsService.getLessons(sessionID,criteriaJsonstr,paginationJsonstr).enqueue(new Callback<GetLessonsResponse>() {
             @Override
-            public void onResponse(Call<ClaimCompetency> call, Response<ClaimCompetency> response) {
+            public void onResponse(Call<GetLessonsResponse> call,
+                                   Response<GetLessonsResponse> response) {
                 int responseCode = response.code();
 
                 if (responseCode == 200) {
 
-                    ClaimCompetency claimCompetency = response.body();
-                    callback.onSuccess(claimCompetency);
+                    GetLessonsResponse lessonsResponse = response.body();
+                    callback.onSuccess(lessonsResponse);
 
                 } else {
 
@@ -116,13 +117,13 @@ public class AccountRequest extends ServiceRequest{
 
                     if (TextUtils.isEmpty(errorBody)) {
 
-                        String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.NO_ERROR);
+                        String errorMessage = ErrorPrompts.getLessonPrompt(Errors.NO_ERROR);
                         callback.onFailure(Errors.NO_ERROR,errorMessage);
 
                     } else {
 
                         String errorCode = ApiManager.parseErrorBody(errorBody);
-                        String errorMessage = ErrorPrompts.claimCompetencyPrompt(errorCode);
+                        String errorMessage = ErrorPrompts.getLessonPrompt(errorCode);
                         callback.onFailure(errorCode,errorMessage);
 
                     }
@@ -131,16 +132,19 @@ public class AccountRequest extends ServiceRequest{
             }
 
             @Override
-            public void onFailure(Call<ClaimCompetency> call, Throwable t) {
-
-                if(XiaojsConfig.DEBUG){
-                    Logger.d("the login has occur exception");
+            public void onFailure(Call<GetLessonsResponse> call, Throwable t) {
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the get lessons request has occur exception");
                 }
 
-                String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.NO_ERROR);
+                String errorMessage = ErrorPrompts.getLessonPrompt(Errors.NO_ERROR);
                 callback.onFailure(Errors.NO_ERROR,errorMessage);
+
+
             }
         });
 
     }
+
+
 }
