@@ -43,8 +43,8 @@ public class AccountDataManager {
                 Logger.d("the sessionID is empty,so the get home data request return failure");
             }
 
-            String errorMessage = ErrorPrompts.getHomeDataPrompt(Errors.UNAUTHORIZED);
-            callback.onFailure(Errors.UNAUTHORIZED,errorMessage);
+            String errorMessage = ErrorPrompts.getHomeDataPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
             return;
         }
 
@@ -77,8 +77,8 @@ public class AccountDataManager {
                 Logger.d("the sessionID is empty,so the claim competency request return failure");
             }
 
-            String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.UNAUTHORIZED);
-            callback.onFailure(Errors.UNAUTHORIZED,errorMessage);
+            String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
             return;
         }
 
@@ -88,8 +88,8 @@ public class AccountDataManager {
                 Logger.d("the params is null,so the claim competency request return failure");
             }
 
-            String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.NO_ERROR);
-            callback.onFailure(Errors.NO_ERROR,errorMessage);
+            String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.BAD_PARAMETER);
+            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
             return;
         }
 

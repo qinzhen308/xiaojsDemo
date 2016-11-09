@@ -68,13 +68,31 @@ public class TestAPIActivity extends Activity {
                 //testLogout(this);
                 //testClaimCompetency(this);
                 //testCreateLession(this);
-                testGetLessons(this);
+                //testGetLessons(this);
+                testPutLessonOnShelves(this);
                 break;
             }
 
         }
     }
 
+    private void testPutLessonOnShelves(Context context) {
+
+        String lession = "58211abfc52b32f4568faa58";
+
+        LessonDataManager.requestPutLessonOnShelves(context, sessionid, lession, new APIServiceCallback<GetLessonsResponse>() {
+            @Override
+            public void onSuccess(GetLessonsResponse object) {
+                Logger.d("onSuccess-----------");
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                Logger.d("onFailure-----------");
+            }
+        });
+    }
 
     //获取已开的课
     private void testGetLessons(Context context) {

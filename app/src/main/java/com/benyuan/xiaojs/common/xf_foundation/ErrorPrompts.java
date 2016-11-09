@@ -8,6 +8,33 @@ import android.text.TextUtils;
 
 public class ErrorPrompts {
 
+    /**
+     * 上架失败提示
+     * @param errorCode
+     * @return
+     */
+    public static String putLessonOnShelvesPrompt(String errorCode) {
+
+        String errorMessage = "上架失败";
+
+        if (TextUtils.isEmpty(errorCode)
+                || errorCode.equals(Errors.NO_ERROR)
+                || errorCode.equals(Errors.SERVER_ERROR)
+                || errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.ILLEGAL_CALL)
+                || errorCode.equals(Errors.DOC_NOT_FOUND)
+                || errorCode.equals(Errors.ACTION_NOT_FOUND)
+                || errorCode.equals(Errors.INVALID_OPERATION)) {
+            return errorMessage;
+        } else if (errorCode.equals(Errors.BAD_SESSION)) {
+            errorMessage = "bad session";
+        } else if (errorCode.equals(Errors.BAD_PARAMETER)) {
+            errorMessage = "参数错误";
+        } else if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
+            errorMessage = "您不能上架该课程";
+        }
+        return errorMessage;
+    }
 
     /**
      * 获取课程失败提示

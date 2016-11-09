@@ -116,6 +116,20 @@ public class Errors {
     // MSP not ready.
     public static final String MSP_NOT_READY = "0xA000000A";
 
+    // Assignee not found.
+    public static final String ASSIGNEE_NOT_FOUND = "0xA1000001";
+
+    // Illegal response due to it is no longer required.
+    public static final String RESPONSE_NOT_REQUIRED = "0xA1000002";
+
+    // Human process not found.
+    public static final String HUMAN_PROCESS_NOT_FOUND = "0xA1000003";
+
+    // Unknown human action.
+    public static final String UNKNOWN_HUMAN_ACTION = "0xA1000004";
+
+    // Action not found.
+    public static final String ACTION_NOT_FOUND = "0xA1000005";
 
     //endregion
 

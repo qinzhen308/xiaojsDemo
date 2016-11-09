@@ -62,8 +62,8 @@ public class LoginDataManager {
                 Logger.d("the sessionID is empty,so the logout request return failure");
             }
 
-            String errorMessage = ErrorPrompts.logoutPrompt(Errors.UNAUTHORIZED);
-            callback.onFailure(Errors.UNAUTHORIZED,errorMessage);
+            String errorMessage = ErrorPrompts.logoutPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
             return;
         }
 

@@ -84,4 +84,11 @@ public interface XiaojsService {
     Call<GetLessonsResponse> getLessons(@Header("SessionID") String sessionID,
                                         @Path("criteria") String criteria,
                                         @Path("pagination") String pagination);
+
+    //Put Lesson On Shelves
+    @POST("/v1/ctl/lessons/{lesson}/onshelves")
+    Call<Empty> putLessonOnShelves(@Header("SessionID") String sessionID,
+                                   @Path("lesson") String lesson);
+
+
 }
