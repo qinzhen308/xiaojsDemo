@@ -213,10 +213,12 @@ public class ErrorPrompts {
             return errorMessage;
         } else if (errorCode.equals(Errors.NOT_IMPLEMENTED)) {
             errorMessage = "目前不支持机构用户登陆";
-        } else if (errorCode.equals(Errors.INVALID_CREDENTIAL) || errorCode.equals(Errors.BAD_PARAMETER)) {
-            errorMessage = "用户名或密码错误";
+        } else if (errorCode.equals(Errors.INVALID_CREDENTIAL)) {
+            errorMessage = "手机号或密码错误";
         } else if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
             errorMessage = "此账户禁止登陆";
+        } else if (errorCode.equals(Errors.BAD_PARAMETER)) {
+            errorMessage = "参数错误";
         }
 
         /**
