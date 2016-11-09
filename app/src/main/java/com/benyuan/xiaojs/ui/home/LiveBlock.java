@@ -9,43 +9,59 @@ package com.benyuan.xiaojs.ui.home;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/11/8
+ * Date:2016/11/9
  * Desc:
  *
  * ======================================================================================== */
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.widget.HorizontalListView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class LiveFragment extends BlockFragment {
+public class LiveBlock extends FrameLayout {
 
     @BindView(R.id.live_block_list)
     HorizontalListView mList;
 
-    @Override
-    protected View getContentView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.fragment_live_block, null);
+    public LiveBlock(Context context) {
+        super(context);
+        init();
     }
 
-    @Override
-    protected void init() {
-        BaseAdapter adapter = new LiveAdapter(mContext);
+    public LiveBlock(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public LiveBlock(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    public LiveBlock(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private void init(){
+        LayoutInflater.from(getContext()).inflate(R.layout.layout_live_block,this,true);
+        ButterKnife.bind(this);
+    }
+
+    public void setData(){
+        BaseAdapter adapter = new LiveAdapter(getContext());
         mList.setAdapter(adapter);
         ViewGroup.LayoutParams lp = mList.getLayoutParams();
-        lp.height = 370;
+        lp.height = getResources().getDimensionPixelSize(R.dimen.px370);
         mList.setLayoutParams(lp);
-    }
-
-    @Override
-    public int getFragmentHeight(Context context) {
-        return context.getResources().getDimensionPixelSize(R.dimen.px370);
     }
 }

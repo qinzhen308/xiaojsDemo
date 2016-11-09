@@ -31,9 +31,10 @@ public class LiveAdapter extends BaseAdapter {
 
     private Context mContext;
 
-    public LiveAdapter(Context context){
+    public LiveAdapter(Context context) {
         mContext = context;
     }
+
     @Override
     public int getCount() {
         return 10;
@@ -52,37 +53,22 @@ public class LiveAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         Holder holder = null;
-        if (view == null){
-            view = LayoutInflater.from(mContext).inflate(R.layout.layout_live_block_item,null);
+        if (view == null) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.layout_live_block_item, null);
             holder = new Holder(view);
             view.setTag(holder);
-        }else {
+        } else {
             holder = (Holder) view.getTag();
         }
         holder.time.setText("12:00");
         holder.image.setImageResource(R.drawable.default_portrait);
-        holder.title.setText("title");
+        holder.title.setText("titletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitle");
         holder.stuNum.setText("111人学过");
-        if (i == 0){
-            holder.leftBlank.setVisibility(View.GONE);
-        }else {
-            holder.leftBlank.setVisibility(View.GONE);
-        }
-
-        if (i == 9){
-            holder.rightBlank.setVisibility(View.GONE);
-        }else {
-            holder.rightBlank.setVisibility(View.GONE);
-        }
         return view;
     }
 
-    class Holder extends BaseHolder{
+    class Holder extends BaseHolder {
 
-        @BindView(R.id.live_block_left_blank)
-        View leftBlank;
-        @BindView(R.id.live_block_right_blank)
-        View rightBlank;
         @BindView(R.id.live_block_time)
         TextView time;
         @BindView(R.id.live_block_image)

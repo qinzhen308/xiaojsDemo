@@ -12,8 +12,8 @@
         <TextView
                 android:id="@+id/block_title"
                 android:layout_marginLeft="@dimen/px30"
-                android:paddingTop="@dimen/px35"
-                android:paddingBottom="@dimen/px35"
+                android:paddingTop="@dimen/px24"
+                android:paddingBottom="@dimen/px24"
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
                 android:textStyle="bold"
@@ -49,10 +49,6 @@
     <View
             style="@style/DividerHorizontal"/>
 
-    <!--<com.benyuan.xiaojs.ui.widget.LazyViewPager
-            android:id="@+id/block_pager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>-->
     <FrameLayout
             android:id="@+id/block_tab_container"
             android:layout_width="match_parent"

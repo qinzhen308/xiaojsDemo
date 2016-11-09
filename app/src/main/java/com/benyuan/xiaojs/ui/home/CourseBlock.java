@@ -9,7 +9,7 @@ package com.benyuan.xiaojs.ui.home;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/11/4
+ * Date:2016/11/9
  * Desc:
  *
  * ======================================================================================== */
@@ -17,8 +17,9 @@ package com.benyuan.xiaojs.ui.home;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,11 +30,9 @@ import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.util.FastBlur;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
-/**
- * 我的小教室功能块
- */
-public class HomeCourseFragment extends BlockFragment {
+public class CourseBlock extends FrameLayout {
 
     @BindView(R.id.block_course_date)
     TextView mDate;
@@ -70,28 +69,37 @@ public class HomeCourseFragment extends BlockFragment {
 
     @BindView(R.id.block_course_stu_list)
     HorizontalListView mStuList;
-    @Override
-    protected View getContentView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.fragment_home_course,null);
+
+    public CourseBlock(Context context) {
+        super(context);
+        init();
     }
 
-    @Override
-    protected void init() {
-//        Bitmap scaledBitmap = Bitmap.createScaledBitmap(portrait,
-//                portrait.getWidth() / 3,
-//                portrait.getHeight() / 3,
-//                false);
-//        Bitmap blurBitmap = FastBlur.doBlur(scaledBitmap, 10, true);
-//        mBlurPortraitView.setImageBitmap(blurBitmap);
-        Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.default_portrait);
+    public CourseBlock(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public CourseBlock(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    public CourseBlock(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private void init(){
+        LayoutInflater.from(getContext()).inflate(R.layout.layout_course_block,this,true);
+        ButterKnife.bind(this);
+    }
+
+    public void setData(String t){
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.default_portrait);
         Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth() / 3,bitmap.getHeight() / 3,false);
         Bitmap b = FastBlur.doBlur(scaleBitmap,10,true);
         mBackground.setImageBitmap(b);
-    }
-
-    @Override
-    public int getFragmentHeight(Context context) {
-        int h = context.getResources().getDimensionPixelSize(R.dimen.px500) + context.getResources().getDimensionPixelSize(R.dimen.px30);
-        return h;
+        mDate.setText(t);
     }
 }

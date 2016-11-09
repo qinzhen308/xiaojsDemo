@@ -52,4 +52,12 @@
         <item>找课</item>
         <item>提问</item>
     </string-array>
+    <string-array name="course_block_tabs">
+        <item>我学的课</item>
+        <item>我教的课</item>
+    </string-array>
+    <string-array name="live_block_tabs">
+        <item>免费</item>
+        <item>付费</item>
+    </string-array>
 </resources>

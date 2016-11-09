@@ -20,7 +20,10 @@ import android.view.View;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
-import com.benyuan.xiaojs.ui.course.MyCourseAdapter;
+import com.benyuan.xiaojs.ui.home.CourseAdapter;
+import com.benyuan.xiaojs.ui.home.CourseBlock;
+import com.benyuan.xiaojs.ui.home.LiveBlock;
+import com.benyuan.xiaojs.ui.home.PersonBlock;
 import com.benyuan.xiaojs.ui.widget.BlockTabView;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
@@ -37,12 +40,14 @@ public class HomeFragment extends BaseFragment {
 
     @BindView(R.id.home_banner)
     BannerView mBanner;
-//    @BindView(R.id.home_function_area)
-//    FunctionArea mFunction;
     @BindView(R.id.home_my_cls)
     BlockTabView mClass;
     @BindView(R.id.home_my_live)
     BlockTabView mLive;
+    @BindView(R.id.home_teacher)
+    BlockTabView mTeacher;
+    @BindView(R.id.home_person)
+    BlockTabView mPerson;
 
     AutoPullToRefreshListView mList;
 
@@ -57,7 +62,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        AbsSwipeAdapter ada = new MyCourseAdapter(mContext,mList,false);
+        AbsSwipeAdapter ada = new CourseAdapter(mContext,mList);
         mList.setAdapter(ada);
 
         BannerBean b1 = new BannerBean();
@@ -76,16 +81,37 @@ public class HomeFragment extends BaseFragment {
         beanList.add(b4);
         BannerAdapter adapter = new BannerAdapter(mContext,beanList);
         mBanner.setAdapter(adapter);
+        List<CourseBlock> cs = new ArrayList<>();
+        CourseBlock c1 = new CourseBlock(mContext);
+        CourseBlock c2 = new CourseBlock(mContext);
+        cs.add(c1);
+        cs.add(c2);
+        c1.setData("c1");
+        c2.setData("c2");
+        mClass.setViews(mContext.getString(R.string.my_xiaojs),mContext.getResources().getStringArray(R.array.course_block_tabs),cs,mContext.getString(R.string.schedule));
 
-//        List<BlockFragment> fs = new ArrayList<>();
-//        fs.add(new HomeCourseFragment());
-//        fs.add(new HomeCourseFragment());
-//        mClass.show(mContext.getString(R.string.my_xiaojs),null,fs,getChildFragmentManager(),mContext.getString(R.string.schedule));
-//
-//        List<BlockFragment> fs1 = new ArrayList<>();
-//        fs1.add(new LiveFragment());
-//        fs1.add(new LiveFragment());
-//        mLive.show("直播进行时",null,fs1,getChildFragmentManager(),"今日直播");
+
+        List<LiveBlock> ls = new ArrayList<>();
+        LiveBlock l1 = new LiveBlock(mContext);
+        LiveBlock l2 = new LiveBlock(mContext);
+        ls.add(l1);
+        ls.add(l2);
+        l1.setData();
+        l2.setData();
+        mLive.setViews(mContext.getString(R.string.living_time),mContext.getResources().getStringArray(R.array.live_block_tabs),ls,mContext.getString(R.string.live_today));
+
+        List<PersonBlock> pss = new ArrayList<>();
+        PersonBlock p = new PersonBlock(mContext);
+        pss.add(p);
+        p.setData();
+        mTeacher.setViews(mContext.getString(R.string.teacher_recommend),null,pss,mContext.getString(R.string.become_teacher));
+
+        List<PersonBlock> ps = new ArrayList<>();
+        PersonBlock p1 = new PersonBlock(mContext);
+        ps.add(p1);
+        p1.setData();
+        mPerson.setViews(mContext.getString(R.string.perhaps_interest),null,ps,mContext.getString(R.string.recommend_self));
+
     }
 
     @OnClick({})
