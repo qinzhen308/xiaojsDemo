@@ -14,6 +14,7 @@ import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
+import com.benyuan.xiaojs.data.api.ApiManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
@@ -69,11 +70,25 @@ public class TestAPIActivity extends Activity {
                 //testClaimCompetency(this);
                 //testCreateLession(this);
                 //testGetLessons(this);
-                testPutLessonOnShelves(this);
+                //testPutLessonOnShelves(this);
+                testJsonFormat();
                 break;
             }
 
         }
+    }
+
+    private void testJsonFormat() {
+        Duration duration = new Duration();
+        duration.setStart(new Date(System.currentTimeMillis()-(3600*1000*24)));
+        duration.setEnd(new Date(System.currentTimeMillis()));
+
+        Criteria criteria = new Criteria();
+        criteria.setSource(Ctl.LessonSource.ALL);
+        criteria.setDuration(duration);
+
+        String jsonstr = ApiManager.objectToJsonString(criteria);
+        Logger.json(jsonstr);
     }
 
     private void testPutLessonOnShelves(Context context) {

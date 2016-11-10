@@ -24,7 +24,6 @@ public class ExampleUnitTest {
         //assertEquals(4, 2 + 2);
 
 
-
         Duration duration = new Duration();
         duration.setStart(new Date(System.currentTimeMillis()-(3600*1000*24)));
         duration.setEnd(new Date(System.currentTimeMillis()));
@@ -33,7 +32,8 @@ public class ExampleUnitTest {
         criteria.setSource(Ctl.LessonSource.ALL);
         criteria.setDuration(duration);
 
-        ApiManager.objectToJsonString(criteria);
+        String jsonstr = ApiManager.objectToJsonString(criteria);
+        System.out.println(jsonstr);
 
 
 
