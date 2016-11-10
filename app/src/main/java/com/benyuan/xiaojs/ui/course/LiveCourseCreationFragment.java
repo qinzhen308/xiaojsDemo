@@ -38,6 +38,7 @@ import com.benyuan.xiaojs.ui.widget.EditTextDel;
 import com.benyuan.xiaojs.util.DataPicker;
 import com.benyuan.xiaojs.util.TimeUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -336,16 +337,14 @@ public class LiveCourseCreationFragment extends BaseFragment {
         Fee fee = new Fee();
         fee.setFree(mChargeWaySwitcher.isChecked());
         int feeType = mByLiveTotalPriceTv.isSelected() ? Finance.PricingType.TOTAL : Finance.PricingType.PAY_PER_HOUR;
-        float feePrice = 0;
         try {
-            feePrice = mByLiveTotalPriceTv.isSelected() ? Float.parseFloat(mByLiveTotalPriceEdt.getText().toString()) :
+            float feePrice = mByLiveTotalPriceTv.isSelected() ? Float.parseFloat(mByLiveTotalPriceEdt.getText().toString()) :
                     Float.parseFloat(mByLiveDurationEdt.getText().toString());
+            fee.setType(feeType);
+            fee.setCharge( BigDecimal.valueOf(feePrice));
         } catch (Exception e) {
-
+            //do nothing
         }
-        fee.setType(feeType);
-        //TODO price may be float
-        fee.setCharge((int) feePrice);
 
         Schedule sch = new Schedule();
         sch.setStart(new Date(mLessonStartTime));
