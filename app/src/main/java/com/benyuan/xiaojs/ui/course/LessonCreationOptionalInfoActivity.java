@@ -34,8 +34,8 @@ import butterknife.OnClick;
  *
  * ======================================================================================== */
 
-public class CourseCreationOptionalInfoActivity extends BaseActivity implements CourseConstant {
-    private final static int COURSE_BRIEF = 0;
+public class LessonCreationOptionalInfoActivity extends BaseActivity implements CourseConstant {
+    private final static int LESSON_BRIEF = 0;
     private final static int TEACHER_INTRODUCTION = 1;
     private final static int SIT_IN_ON = 2;
     private final static int SALE_PROMOTION = 3;
@@ -47,8 +47,8 @@ public class CourseCreationOptionalInfoActivity extends BaseActivity implements 
     LinearLayout mCoverAddLayout;
     @BindView(R.id.cover_view)
     ImageView mCoverImgView;
-    @BindView(R.id.live_course_brief)
-    TextView mCourseBriefTv;
+    @BindView(R.id.live_lesson_brief)
+    TextView mLessonBriefTv;
     @BindView(R.id.teacher_introduction)
     TextView mTeachIntroTv;
     @BindView(R.id.sit_in_on)
@@ -62,11 +62,11 @@ public class CourseCreationOptionalInfoActivity extends BaseActivity implements 
     protected void addViewContent() {
         setMiddleTitle(R.string.optional_info);
 
-        addView(R.layout.activity_course_create_optional_info);
+        addView(R.layout.activity_lesson_create_optional_info);
 
         initCoverLayout();
 
-        Object object = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO);
+        Object object = getIntent().getSerializableExtra(KEY_LESSON_OPTIONAL_INFO);
         if (object instanceof LiveLesson) {
             mLesson = (LiveLesson) object;
         }
@@ -84,7 +84,7 @@ public class CourseCreationOptionalInfoActivity extends BaseActivity implements 
         imgParams.height = h;
     }
 
-    @OnClick({R.id.left_image, R.id.add_cover, R.id.live_course_brief, R.id.teacher_introduction,
+    @OnClick({R.id.left_image, R.id.add_cover, R.id.live_lesson_brief, R.id.teacher_introduction,
             R.id.sit_in_on, R.id.sale_promotion, R.id.cover_view})
     public void onClick(View v) {
         Intent i = null;
@@ -95,35 +95,35 @@ public class CourseCreationOptionalInfoActivity extends BaseActivity implements 
                 break;
             case R.id.add_cover:
                 i = new Intent(this, CropImageMainActivity.class);
-                i.putExtra(CropImagePath.CROP_IMAGE_WIDTH, CourseConstant.COURSE_COVER_WIDTH);
-                i.putExtra(CropImagePath.CROP_IMAGE_HEIGHT, CourseConstant.COURSE_COVER_HEIGHT);
+                i.putExtra(CropImagePath.CROP_IMAGE_WIDTH, COURSE_COVER_WIDTH);
+                i.putExtra(CropImagePath.CROP_IMAGE_HEIGHT, COURSE_COVER_HEIGHT);
                 startActivityForResult(i, ADD_COVER);
                 break;
             case R.id.cover_view:
                 i = new Intent(this, CropImageMainActivity.class);
                 i.putExtra(CropImageMainActivity.NEED_DELETE, true);
-                i.putExtra(CropImagePath.CROP_IMAGE_WIDTH, CourseConstant.COURSE_COVER_WIDTH);
-                i.putExtra(CropImagePath.CROP_IMAGE_HEIGHT, CourseConstant.COURSE_COVER_HEIGHT);
+                i.putExtra(CropImagePath.CROP_IMAGE_WIDTH, COURSE_COVER_WIDTH);
+                i.putExtra(CropImagePath.CROP_IMAGE_HEIGHT, COURSE_COVER_HEIGHT);
                 startActivityForResult(i, ADD_COVER);
                 break;
-            case R.id.live_course_brief:
-                i = new Intent(this, LiveCourseBriefActivity.class);
-                i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
-                startActivityForResult(i, COURSE_BRIEF);
+            case R.id.live_lesson_brief:
+                i = new Intent(this, LiveLessonBriefActivity.class);
+                i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
+                startActivityForResult(i, LESSON_BRIEF);
                 break;
             case R.id.teacher_introduction:
                 i = new Intent(this, TeacherIntroductionActivity.class);
-                i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
+                i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
                 startActivityForResult(i, TEACHER_INTRODUCTION);
                 break;
             case R.id.sit_in_on:
                 i = new Intent(this, SitInOnActivity.class);
-                i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
+                i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
                 startActivityForResult(i, SIT_IN_ON);
                 break;
             case R.id.sale_promotion:
                 i = new Intent(this, SalePromotionActivity.class);
-                i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
+                i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
                 startActivityForResult(i, SALE_PROMOTION);
                 break;
             default:
@@ -155,12 +155,12 @@ public class CourseCreationOptionalInfoActivity extends BaseActivity implements 
                     }
                 }
                 break;
-            case COURSE_BRIEF:
+            case LESSON_BRIEF:
                 lesson = getLesson(data);
                 if (lesson != null) {
                     String txt = formatResult(lesson.getOverview().getText());
                     if (!TextUtils.isEmpty(txt) && lesson.getOverview() != null) {
-                        mCourseBriefTv.setText(txt);
+                        mLessonBriefTv.setText(txt);
                     }
                 }
                 break;
@@ -208,7 +208,7 @@ public class CourseCreationOptionalInfoActivity extends BaseActivity implements 
 
     private LiveLesson getLesson(Intent data) {
         if (data != null) {
-            Object object = data.getSerializableExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO);
+            Object object = data.getSerializableExtra(KEY_LESSON_OPTIONAL_INFO);
             if (object instanceof LiveLesson) {
                 String coverUrl = mLesson.getCover();
                 mLesson = (LiveLesson) object;
@@ -232,7 +232,7 @@ public class CourseCreationOptionalInfoActivity extends BaseActivity implements 
 
     private void handleBackPressed() {
         Intent i = new Intent();
-        i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
+        i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
         setResult(RESULT_OK, i);
     }
 

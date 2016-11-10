@@ -38,7 +38,7 @@ public class SitInOnActivity extends BaseActivity {
 
     @Override
     protected void addViewContent() {
-        setMiddleTitle(R.string.sit_in_on_title);
+        setMiddleTitle(R.string.audit_title);
 
         addView(R.layout.activity_sit_in_on);
 

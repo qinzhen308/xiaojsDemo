@@ -41,12 +41,12 @@
         <activity
                 android:name=".ui.course.MyCourseActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.course.CourseCreationActivity"/>
+        <activity android:name=".ui.course.LessonCreationActivity"/>
         <activity android:name=".ui.mine.ProfileActivity"/>
         <activity
                 android:name=".ui.course.MyCourseSearchActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.course.CourseCreationOptionalInfoActivity"/>
+        <activity android:name=".ui.course.LessonCreationOptionalInfoActivity"/>
         <activity android:name=".ui.mine.TeachingAbilityActivity">
         </activity>
         <activity android:name=".ui.mine.EditTeachingAbilityActivity">
@@ -57,7 +57,7 @@
         </activity>
         <activity android:name=".ui.TestAPIActivity">
         </activity>
-        <activity android:name=".ui.course.LiveCourseBriefActivity"/>
+        <activity android:name=".ui.course.LiveLessonBriefActivity"/>
         <activity android:name=".ui.course.SalePromotionActivity"/>
         <activity android:name=".ui.course.SitInOnActivity"/>
         <activity android:name=".ui.course.TeacherIntroductionActivity"/>

@@ -31,7 +31,7 @@ import butterknife.OnClick;
  *
  * ======================================================================================== */
 
-public class LiveCourseBriefActivity extends BaseActivity {
+public class LiveLessonBriefActivity extends BaseActivity {
     private final static int MAX_CHAR = 200;
     @BindView(R.id.input_content)
     EditText mInputContentEdt;
@@ -42,7 +42,7 @@ public class LiveCourseBriefActivity extends BaseActivity {
 
     @Override
     protected void addViewContent() {
-        setMiddleTitle(R.string.live_course_brief);
+        setMiddleTitle(R.string.live_lesson_brief);
         addView(R.layout.layout_edit_info);
 
         init();
@@ -50,7 +50,7 @@ public class LiveCourseBriefActivity extends BaseActivity {
 
     private void init() {
         mInputContentEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_CHAR)});
-        mInputContentEdt.setHint(R.string.live_course_brief_hint);
+        mInputContentEdt.setHint(R.string.live_lesson_brief_hint);
 
         mInputTipsTv.setText(String.format(getString(R.string.input_tips), 0, MAX_CHAR));
 

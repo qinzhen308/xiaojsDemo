@@ -1,6 +1,5 @@
 package com.benyuan.xiaojs.ui.course;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -27,20 +26,18 @@ import butterknife.OnClick;
  *
  * ======================================================================================== */
 
-public class CourseCreationActivity extends BaseTopTabActivity {
+public class LessonCreationActivity extends BaseTopTabActivity {
     @Override
     protected void initView() {
-        setMiddleTitle(R.string.course_creation);
+        setMiddleTitle(R.string.lesson_creation);
 
         List<Fragment> fragments = new ArrayList<>();
-        List<String> mTabs = new ArrayList<String>();
+        Fragment liveLesson = new LiveLessonCreationFragment();
+        Fragment privateLesson = new PrivateLessonCreationFragment();
+        fragments.add(liveLesson);
+        fragments.add(privateLesson);
 
-        Fragment liveCourse = new LiveCourseCreationFragment();
-        Fragment privateCourse = new PrivateCourseCreationFragment();
-        fragments.add(liveCourse);
-        fragments.add(privateCourse);
-
-        addViews(new int[] {R.string.live_course, R.string.private_course}, fragments);
+        addViews(new int[] {R.string.live_lesson, R.string.private_lesson}, fragments);
     }
 
     @OnClick({R.id.left_image})

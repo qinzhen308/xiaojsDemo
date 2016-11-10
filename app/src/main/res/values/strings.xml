@@ -84,17 +84,17 @@
     <!--optional info-->
     <string name="add_cover">添加封面</string>
     <string name="add_cover_tips">一张好的直播课封面可以提供报名封面哦~</string>
-    <string name="live_course_introduce">一张好的直播课封面可以提供报名封面哦~</string>
-    <string name="live_course_brief">直播课简介</string>
-    <string name="live_course_brief_hint">请填写直播课简介</string>
+    <string name="live_lesson_introduce">一张好的直播课封面可以提供报名封面哦~</string>
+    <string name="live_lesson_brief">直播课简介</string>
+    <string name="live_lesson_brief_hint">请填写直播课简介</string>
     <string name="teacher_introduction">教师介绍</string>
     <string name="teacher_introduction_title">师资介绍</string>
     <string name="teacher_introduction_hint">请填写师资介绍</string>
-    <string name="sit_in_on">旁听</string>
-    <string name="sit_in_on_title">旁听设置</string>
-    <string name="sit_in_on_allowed">允许旁听</string>
-    <string name="sit_in_on_visible_to_stu">旁听对学生可见</string>
-    <string name="sit_in_on_person">旁听人</string>
+    <string name="audit">旁听</string>
+    <string name="audit_title">旁听设置</string>
+    <string name="audit_allowed">允许旁听</string>
+    <string name="audit_visible_to_stu">旁听对学生可见</string>
+    <string name="audit_people">旁听人</string>
     <string name="sale_promotion">促销</string>
     <string name="input_tips">%1$d/%2$d字</string>
 
@@ -112,11 +112,11 @@
     <string name="look_detail">查看</string>
     <string name="invite">邀请</string>
 
-    <!--course creation-->
-    <string name="course_creation">我要开课</string>
-    <string name="live_course">直播课</string>
-    <string name="private_course">私密课</string>
-    <string name="live_course_name">直播课名称</string>
+    <!--lesson creation-->
+    <string name="lesson_creation">我要开课</string>
+    <string name="live_lesson">直播课</string>
+    <string name="private_lesson">私密课</string>
+    <string name="live_lesson_name">直播课名称</string>
     <string name="subject_category">学科类目</string>
     <string name="teach_form">教学形式</string>
     <string name="teach_form_lecture">公开课</string>
@@ -126,30 +126,30 @@
     <string name="by_live_total_price">按总价</string>
     <string name="by_live_duration">按课时</string>
     <string name="enroll_people_limit">报名限制人数</string>
-    <string name="course_start_time">上课时间</string>
-    <string name="course_duration">上课时长</string>
+    <string name="lesson_start_time">上课时间</string>
+    <string name="lesson_duration">上课时长</string>
     <string name="optional_info">选填信息</string>
     <string name="optional_info_tips">封面、课程简介、老师结束等</string>
     <string name="on_shelves">立即上架</string>
-    <string name="live_course_name_hint">请输入%1$d&#8211;%2$d字</string>
+    <string name="live_lesson_name_hint">请输入%1$d&#8211;%2$d字</string>
     <string name="subject_category_hint">请选择学科类目</string>
     <string name="teach_form_hint">请选择教学模式</string>
     <string name="enroll_hint">开启后，学生需要报名才能参加直播课</string>
-    <string name="course_start_time_hint">请选择上课时间</string>
+    <string name="lesson_start_time_hint">请选择上课时间</string>
     <string name="other_settings">其他设置</string>
     <string name="on_shelves_tips">上架后，学生才可以报名直播课</string>
     <string name="publish_personal_page">发布到个人主页</string>
     <string name="publish_personal_page_tips">在个人主页中展示，才可以分享</string>
-    <string name="live_course_name_error">请输入%1$d&#8211;%2$d个字的直播课名称</string>
+    <string name="live_lesson_name_error">请输入%1$d&#8211;%2$d个字的直播课名称</string>
     <string name="subject_empty">请选择学科类目</string>
     <string name="teach_form_empty">请选择教学形式</string>
     <string name="enroll_people_empty">请填写报名人数</string>
     <string name="enroll_people_must_be_positive">报名人数必须大于0</string>
     <string name="enroll_people_must_be_less_than">报名人数不能多于%1$d人</string>
     <string name="charge_must_be_checked">请选择收费模式</string>
-    <string name="course_start_time_empty">请选择上课时间</string>
-    <string name="course_duration_empty">请填写上课时长</string>
-    <string name="course_duration_must_be_less_than">上课时长不能多于%1$s分钟</string>
+    <string name="lesson_start_time_empty">请选择上课时间</string>
+    <string name="lesson_duration_empty">请填写上课时长</string>
+    <string name="lesson_duration_must_be_less_than">上课时长不能多于%1$s分钟</string>
     <string name="sale_promotion_set">促销设置</string>
 
     <string name="filter">筛选</string>

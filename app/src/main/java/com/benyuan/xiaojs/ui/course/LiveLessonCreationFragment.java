@@ -49,7 +49,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class LiveCourseCreationFragment extends BaseFragment {
+public class LiveLessonCreationFragment extends BaseFragment {
     private final int MAX_ENROLL_NUM = 9999; //
     private final int MAX_LESSON_DURATION = 600; //600 minutes, 10 hours
     private final int REQUEST_CODE_OPTIONAL_INFO = 2000;
@@ -57,8 +57,8 @@ public class LiveCourseCreationFragment extends BaseFragment {
     private final int MIN_LESSON_CHAR = 3;
     private final int MAX_LESSON_CHAR = 25;
 
-    @BindView(R.id.live_course_name)
-    EditTextDel mLiveCourseNameEdt;
+    @BindView(R.id.live_lesson_name)
+    EditTextDel mLiveLessonNameEdt;
     @BindView(R.id.subject_category)
     TextView mSubjectTv;
     @BindView(R.id.enroll_people_limit)
@@ -79,10 +79,10 @@ public class LiveCourseCreationFragment extends BaseFragment {
     EditTextDel mByLiveDurationEdt;
     @BindView(R.id.by_live_total_price)
     EditTextDel mByLiveTotalPriceEdt;
-    @BindView(R.id.course_start_time)
+    @BindView(R.id.lesson_start_time)
     TextView mLessonStartTimeTv;
-    @BindView(R.id.course_duration)
-    EditTextDel mCourseDurationEdt;
+    @BindView(R.id.lesson_duration)
+    EditTextDel mLessonDurationEdt;
     @BindView(R.id.publish_personal_page)
     TextView mPublicTv;
 
@@ -93,11 +93,11 @@ public class LiveCourseCreationFragment extends BaseFragment {
     private String mSubjectId;
 
     private final String TEST_SUBJECT = "计算机"; //test subject
-    private final String TEST_SUBJECT_ID = "820a10e101db0af4bcf2fd9";
+    private final String TEST_SUBJECT_ID = "5820a10e101db0af4bcf2fd9";
 
     @Override
     protected View getContentView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.fragment_live_course_creation, null);
+        return LayoutInflater.from(mContext).inflate(R.layout.fragment_live_lesson_creation, null);
     }
 
     @Override
@@ -107,8 +107,8 @@ public class LiveCourseCreationFragment extends BaseFragment {
         mChargeWaySwitcher.setSelected(false);
         mChargeWayLayout.setVisibility(View.GONE);
 
-        mLiveCourseNameEdt.setHint(getString(R.string.live_course_name_hint, MIN_LESSON_CHAR, MAX_LESSON_CHAR));
-        mLiveCourseNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
+        mLiveLessonNameEdt.setHint(getString(R.string.live_lesson_name_hint, MIN_LESSON_CHAR, MAX_LESSON_CHAR));
+        mLiveLessonNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
 
         //TODO
         mSubjectTv.setText(TEST_SUBJECT); //test
@@ -161,7 +161,7 @@ public class LiveCourseCreationFragment extends BaseFragment {
     }
 
     @OnClick({R.id.subject_category, R.id.teach_form, R.id.enroll_way_switcher, R.id.charge_way_switcher,
-            R.id.by_live_total_price_title, R.id.by_live_duration_title, R.id.course_start_time,
+            R.id.by_live_total_price_title, R.id.by_live_duration_title, R.id.lesson_start_time,
             R.id.optional_info, R.id.sub_btn, R.id.on_shelves, R.id.publish_personal_page})
     public void onClick(View v) {
         boolean isSelected = false;
@@ -180,8 +180,8 @@ public class LiveCourseCreationFragment extends BaseFragment {
             case R.id.by_live_duration_title:
                 selectChargeMode(v);
                 break;
-            case R.id.course_start_time:
-                selectCourseStartTime();
+            case R.id.lesson_start_time:
+                selectLessonStartTime();
                 break;
             case R.id.optional_info:
                 setOptionalInfo();
@@ -220,7 +220,7 @@ public class LiveCourseCreationFragment extends BaseFragment {
         }
     }
 
-    private void selectCourseStartTime() {
+    private void selectLessonStartTime() {
         DataPicker.pickFutureDate(mContext, new DataPicker.OnDatePickListener() {
             @Override
             public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
@@ -253,7 +253,7 @@ public class LiveCourseCreationFragment extends BaseFragment {
 
     private void setOptionalInfo() {
         LiveLesson lesson = new LiveLesson();
-        Intent i = new Intent(mContext, CourseCreationOptionalInfoActivity.class);
+        Intent i = new Intent(mContext, LessonCreationOptionalInfoActivity.class);
         i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, lesson);
         startActivityForResult(i, REQUEST_CODE_OPTIONAL_INFO);
     }
@@ -262,9 +262,9 @@ public class LiveCourseCreationFragment extends BaseFragment {
         try {
             String selectTip = mContext.getString(R.string.please_select);
 
-            String name = mLiveCourseNameEdt.getText().toString();
+            String name = mLiveLessonNameEdt.getText().toString();
             if (TextUtils.isEmpty(name) || name.length() < MIN_LESSON_CHAR || name.length() > MAX_LESSON_CHAR) {
-                String nameEr = mContext.getString(R.string.live_course_name_error, MIN_LESSON_CHAR, MAX_LESSON_CHAR);
+                String nameEr = mContext.getString(R.string.live_lesson_name_error, MIN_LESSON_CHAR, MAX_LESSON_CHAR);
                 Toast.makeText(mContext, nameEr, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -305,19 +305,19 @@ public class LiveCourseCreationFragment extends BaseFragment {
 
             String startTime = mLessonStartTimeTv.getText().toString().trim();
             if (TextUtils.isEmpty(startTime) || selectTip.equals(startTime)) {
-                Toast.makeText(mContext, R.string.course_start_time_empty, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.lesson_start_time_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
-            String durationStr = mCourseDurationEdt.getText().toString().trim();
+            String durationStr = mLessonDurationEdt.getText().toString().trim();
             if (TextUtils.isEmpty(durationStr)) {
-                Toast.makeText(mContext, R.string.course_duration_empty, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.lesson_duration_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
             if (Integer.parseInt(durationStr) > MAX_LESSON_DURATION) {
                 //上课时长不能大于
-                String tips = String.format(getString(R.string.course_duration_must_be_less_than), MAX_LESSON_DURATION);
+                String tips = String.format(getString(R.string.lesson_duration_must_be_less_than), MAX_LESSON_DURATION);
                 Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -354,15 +354,15 @@ public class LiveCourseCreationFragment extends BaseFragment {
 
         Schedule sch = new Schedule();
         sch.setStart(new Date(mLessonStartTime));
-        sch.setDuration(Integer.parseInt(mCourseDurationEdt.getText().toString()));
+        sch.setDuration(Integer.parseInt(mLessonDurationEdt.getText().toString()));
 
         LiveLesson.Publish publish = new LiveLesson.Publish();
         publish.setOnShelves(mPublicTv.isSelected());
 
         LiveLesson ll = new LiveLesson();
         String subject = mSubjectTv.getText().toString();
-        ll.setTitle(mLiveCourseNameEdt.getText().toString());
-        ll.setSubject("820a10e101db0af4bcf2fd9");
+        ll.setTitle(mLiveLessonNameEdt.getText().toString());
+        ll.setSubject(TEST_SUBJECT_ID);
         ll.setEnroll(enroll);
         ll.setMode(BaseBusiness.getTeachingMode(mContext, mTeachFormTv.getText().toString()));
         ll.setFee(fee);
