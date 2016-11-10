@@ -43,8 +43,8 @@ public class LessonDataManager {
                 Logger.d("the sessionID is empty,so the create live lession request return failure");
             }
 
-            String errorMessage = ErrorPrompts.createLessonPrompt(Errors.UNAUTHORIZED);
-            callback.onFailure(Errors.UNAUTHORIZED,errorMessage);
+            String errorMessage = ErrorPrompts.createLessonPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
             return;
         }
 
@@ -66,8 +66,71 @@ public class LessonDataManager {
                                          @NonNull Pagination pagination,
                                          @NonNull APIServiceCallback<GetLessonsResponse> callback) {
 
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the GetLessons request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the GetLessons request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
         LessonRequest lessonRequest = new LessonRequest();
         lessonRequest.getLessons(context,sessionID,criteria,pagination,callback);
+
+    }
+
+    /**
+     * 上架直播课
+     * @param context
+     * @param sessionID
+     * @param lesson
+     * @param callback
+     */
+    public static void requestPutLessonOnShelves(Context context,
+                                         @NonNull String sessionID,
+                                         @NonNull String lesson,
+                                         @NonNull APIServiceCallback<GetLessonsResponse> callback) {
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the putLessonOnShelves request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the putLessonOnShelves request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+        if (TextUtils.isEmpty(lesson)) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the lesson param is empty,so the putLessonOnShelves request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.BAD_PARAMETER);
+            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.putLessonOnShelves(context,sessionID,lesson,callback);
 
     }
 }

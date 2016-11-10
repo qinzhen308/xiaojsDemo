@@ -13,6 +13,7 @@ import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
+import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
@@ -55,13 +56,13 @@ public class LessonRequest extends ServiceRequest {
                     if (TextUtils.isEmpty(errorBody)) {
 
                         String errorMessage = ErrorPrompts.createLessonPrompt(Errors.NO_ERROR);
-                        callback.onFailure(Errors.NO_ERROR,errorMessage);
+                        callback.onFailure(Errors.NO_ERROR, errorMessage);
 
                     } else {
 
                         String errorCode = ApiManager.parseErrorBody(errorBody);
                         String errorMessage = ErrorPrompts.createLessonPrompt(errorCode);
-                        callback.onFailure(errorCode,errorMessage);
+                        callback.onFailure(errorCode, errorMessage);
 
                     }
 
@@ -76,7 +77,7 @@ public class LessonRequest extends ServiceRequest {
                 }
 
                 String errorMessage = ErrorPrompts.createLessonPrompt(Errors.NO_ERROR);
-                callback.onFailure(Errors.NO_ERROR,errorMessage);
+                callback.onFailure(Errors.NO_ERROR, errorMessage);
             }
         });
 
@@ -91,11 +92,11 @@ public class LessonRequest extends ServiceRequest {
 
 
         String criteriaJsonstr = ApiManager.objectToJsonString(criteria);
-        String paginationJsonstr = ApiManager.objectToJsonString(criteria);
+        String paginationJsonstr = ApiManager.objectToJsonString(pagination);
 
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getLessons(sessionID,criteriaJsonstr,paginationJsonstr).enqueue(new Callback<GetLessonsResponse>() {
+        xiaojsService.getLessons(sessionID, criteriaJsonstr, paginationJsonstr).enqueue(new Callback<GetLessonsResponse>() {
             @Override
             public void onResponse(Call<GetLessonsResponse> call,
                                    Response<GetLessonsResponse> response) {
@@ -118,13 +119,13 @@ public class LessonRequest extends ServiceRequest {
                     if (TextUtils.isEmpty(errorBody)) {
 
                         String errorMessage = ErrorPrompts.getLessonPrompt(Errors.NO_ERROR);
-                        callback.onFailure(Errors.NO_ERROR,errorMessage);
+                        callback.onFailure(Errors.NO_ERROR, errorMessage);
 
                     } else {
 
                         String errorCode = ApiManager.parseErrorBody(errorBody);
                         String errorMessage = ErrorPrompts.getLessonPrompt(errorCode);
-                        callback.onFailure(errorCode,errorMessage);
+                        callback.onFailure(errorCode, errorMessage);
 
                     }
 
@@ -138,12 +139,71 @@ public class LessonRequest extends ServiceRequest {
                 }
 
                 String errorMessage = ErrorPrompts.getLessonPrompt(Errors.NO_ERROR);
-                callback.onFailure(Errors.NO_ERROR,errorMessage);
+                callback.onFailure(Errors.NO_ERROR, errorMessage);
 
 
             }
         });
 
+    }
+
+
+    public void putLessonOnShelves(Context context,@NonNull String sessionID,@NonNull String lesson,@NonNull final APIServiceCallback callback) {
+
+        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        xiaojsService.putLessonOnShelves(sessionID,lesson).enqueue(new Callback<Empty>() {
+            @Override
+            public void onResponse(Call<Empty> call, Response<Empty> response) {
+
+                int responseCode = response.code();
+                if (responseCode == 200) {
+
+                    callback.onSuccess(null);
+
+                } else {
+
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    if (TextUtils.isEmpty(errorBody)) {
+
+                        String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.NO_ERROR);
+                        callback.onFailure(Errors.NO_ERROR,errorMessage);
+
+                    } else {
+
+                        String errorCode = ApiManager.parseErrorBody(errorBody);
+                        String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(errorCode);
+                        callback.onFailure(errorCode,errorMessage);
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Empty> call, Throwable t) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the put lession on shelves request has occur exception");
+                }
+
+                String errorMsg = t.getMessage();
+                // FIXME: 2016/11/1
+                if(errorMsg.contains("No content to map due to end-of-input")){
+                    callback.onSuccess(null);
+                }else{
+                    String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.NO_ERROR);
+                    callback.onFailure(Errors.NO_ERROR,errorMessage);
+                }
+
+            }
+        });
     }
 
 

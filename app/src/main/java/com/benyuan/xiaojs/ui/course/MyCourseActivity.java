@@ -62,6 +62,7 @@ public class MyCourseActivity extends BaseTopTabActivity {
         mHover = getLayoutInflater().inflate(R.layout.layout_my_course_search,null);
         mFilter = (TextView) mHover.findViewById(R.id.course_filter);
         mInput = (TextView) mHover.findViewById(R.id.my_course_search);
+        mHover.setVisibility(View.GONE);
         mFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

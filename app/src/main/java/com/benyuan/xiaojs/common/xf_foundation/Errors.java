@@ -111,71 +111,73 @@ public class Errors {
     public static final String ACCESS_VIOLATION = "0x11000003";
 
 
+    //region Settlements & Transactions
+    //
+    // Low balance or frozen.
+    public static final String COFFER_NOT_READY = "0x20000001";
+
+    // A special error that pauses transaction processing.
+    public static final String BREAK_POINT = "0x20000002";
+
+    // Payment not completed.
+    public static final String PAYMENT_FAILED = "0x20000003";
+
+    // Alipay binding not found.
+    public static final String BINDING_NOT_FOUND = "0x20000004";
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    //region XPE (0xA0000000 ~ )
+
+    //
+    // Process already in execution.
+    public static final String PROCESS_RUNNING = "0xA0000001";
+
+    // Process not found.
+    public static final String PROCESS_NOT_FOUND = "0xA0000002";
+
+    // Process is not runnable.
+    public static final String PROCESS_NOT_RUNNABLE = "0xA0000003";
+
+    // Interrupted process was not loaded to continue execution.
+    public static final String INTERRUPTED_NOT_CONTINUE = "0xA0000004";
+
+    // The specific model is not process-driven.
+    public static final String MODEL_NOT_READY = "0xA0000005";
+
+    // Event already registered.
+    public static final String EVENT_ALREADY_REGISTERED = "0xA0000006";
+
+    // Process context not available.
+    public static final String CONTEXT_NOT_AVAILABLE = "0xA0000007";
+
+    // Process instance not available.
+    public static final String INSTANCE_NOT_AVAILABLLE = "0xA0000008";
+
+    // Process instance not available.
+    public static final String EVENT_NOT_REGISTERED = "0xA0000009";
+
 
     //
     // MSP not ready.
     public static final String MSP_NOT_READY = "0xA000000A";
 
+    // Assignee not found.
+    public static final String ASSIGNEE_NOT_FOUND = "0xA1000001";
+
+    // Illegal response due to it is no longer required.
+    public static final String RESPONSE_NOT_REQUIRED = "0xA1000002";
+
+    // Human process not found.
+    public static final String HUMAN_PROCESS_NOT_FOUND = "0xA1000003";
+
+    // Unknown human action.
+    public static final String UNKNOWN_HUMAN_ACTION = "0xA1000004";
+
+    // Action not found.
+    public static final String ACTION_NOT_FOUND = "0xA1000005";
 
     //endregion
-
-
-
-
-    public static String getInternalErrorMessage(String errorCode){
-        String errorMessage = "请求失败";
-
-        if (TextUtils.isEmpty(errorCode)){
-            return errorMessage;
-        }else if (errorCode.equals(Errors.NO_ERROR)) {
-            errorMessage = "请求失败";
-        }else if (errorCode.equals(Errors.ILLEGAL_CALL)) {
-            errorMessage = "非法请求或调用";
-        }else if (errorCode.equals(Errors.NOT_IMPLEMENTED)) {
-            errorMessage = "功能没有实现";
-        }else if (errorCode.equals(Errors.SERVER_ERROR)) {
-            errorMessage = "服务器内部错误";
-        }else if (errorCode.equals(Errors.INVALID_CSRF)) {
-            errorMessage = "无效的CSRF令牌";
-        }else if (errorCode.equals(Errors.INVALID_OPERATION)) {
-            errorMessage = "无效的操作";
-        }else if (errorCode.equals(Errors.TYPE_NOT_FOUND)) {
-            errorMessage = "类型没被找到";
-        }else if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
-            errorMessage = "文档没被找到";
-        }else if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
-            errorMessage = "文档已存在";
-        }else if (errorCode.equals(Errors.OPERATION_TIMEOUT)) {
-            errorMessage = "操作超时";
-        }else if (errorCode.equals(Errors.NOT_SUPPORTED)) {
-            errorMessage = "不支持该客户端";
-        }else if (errorCode.equals(Errors.BAD_PARAMETER)) {
-            errorMessage = "参数不正确";
-        }else if (errorCode.equals(Errors.INVALID_CODE)) {
-            errorMessage = "验证码不匹配";
-        }else if (errorCode.equals(Errors.BAD_CODE)) {
-            errorMessage = "验证码已过期";
-        }else if (errorCode.equals(Errors.BAD_REQUEST)) {
-            errorMessage = "错误请求";
-        }else if (errorCode.equals(Errors.LOGIN_FROZEN)) {
-            errorMessage = "登录被冻结";
-        }else if (errorCode.equals(Errors.INVALID_CREDENTIAL)) {
-            errorMessage = "无效的凭证";
-        }else if (errorCode.equals(Errors.ROLE_NOT_FOUND)) {
-            errorMessage = "未被认证的角色";
-        }else if (errorCode.equals(Errors.BENEFIT_NOT_FOUND)) {
-            errorMessage = "没有找到利益详情";
-        }else if (errorCode.equals(Errors.UNAUTHORIZED)) {
-            errorMessage = "未经授权的访问";
-        }else if (errorCode.equals(Errors.DENIED_UGC_OWNER)) {
-            errorMessage = "未经授权的访问(UGC)";
-        }else {
-            errorMessage = "请求失败";
-        }
-
-
-        return errorMessage;
-    }
-
 
 }

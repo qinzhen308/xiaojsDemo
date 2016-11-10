@@ -9,7 +9,7 @@ package com.benyuan.xiaojs.ui.home;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/11/4
+ * Date:2016/11/9
  * Desc:
  *
  * ======================================================================================== */
@@ -19,19 +19,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.widget.HorizontalListView;
+import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 
-public class MyAdapter extends BaseAdapter {
+import butterknife.BindView;
+
+public class PersonAdapter extends BaseAdapter {
+
     private Context mContext;
-    private HorizontalListView mList;
-
-    public MyAdapter(Context context,HorizontalListView list){
-        mList = list;
+    public PersonAdapter(Context context){
         mContext = context;
     }
-
     @Override
     public int getCount() {
         return 10;
@@ -49,10 +50,30 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.layout_home_course_item,null);
-        ViewGroup.LayoutParams lp = mList.getLayoutParams();
-        lp.height = 200;
-        mList.setLayoutParams(lp);
-        return v;
+        Holder holder = null;
+        if (view == null){
+            view = LayoutInflater.from(mContext).inflate(R.layout.layout_person_block_item,null);
+            holder = new Holder(view);
+            view.setTag(holder);
+        }else {
+            holder = (Holder) view.getTag();
+        }
+        holder.image.setImageResource(R.drawable.default_portrait);
+        holder.name.setText("Davie");
+        holder.desc.setText("高级讲师");
+        return view;
     }
+
+    class Holder extends BaseHolder{
+        @BindView(R.id.person_block_image)
+        ImageView image;
+        @BindView(R.id.person_block_name)
+        TextView name;
+        @BindView(R.id.person_block_desc)
+        TextView desc;
+        public Holder(View view) {
+            super(view);
+        }
+    }
+
 }

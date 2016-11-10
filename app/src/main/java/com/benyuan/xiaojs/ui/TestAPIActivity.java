@@ -14,6 +14,7 @@ import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
+import com.benyuan.xiaojs.data.api.ApiManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
@@ -32,6 +33,7 @@ import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
 import com.orhanobut.logger.Logger;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class TestAPIActivity extends Activity {
@@ -68,13 +70,45 @@ public class TestAPIActivity extends Activity {
                 //testLogout(this);
                 //testClaimCompetency(this);
                 //testCreateLession(this);
-                testGetLessons(this);
+                //testGetLessons(this);
+                //testPutLessonOnShelves(this);
+                testJsonFormat();
                 break;
             }
 
         }
     }
 
+    private void testJsonFormat() {
+        Duration duration = new Duration();
+        duration.setStart(new Date(System.currentTimeMillis()-(3600*1000*24)));
+        duration.setEnd(new Date(System.currentTimeMillis()));
+
+        Criteria criteria = new Criteria();
+        criteria.setSource(Ctl.LessonSource.ALL);
+        criteria.setDuration(duration);
+
+        String jsonstr = ApiManager.objectToJsonString(criteria);
+        Logger.json(jsonstr);
+    }
+
+    private void testPutLessonOnShelves(Context context) {
+
+        String lession = "58211abfc52b32f4568faa58";
+
+        LessonDataManager.requestPutLessonOnShelves(context, sessionid, lession, new APIServiceCallback<GetLessonsResponse>() {
+            @Override
+            public void onSuccess(GetLessonsResponse object) {
+                Logger.d("onSuccess-----------");
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                Logger.d("onFailure-----------");
+            }
+        });
+    }
 
     //获取已开的课
     private void testGetLessons(Context context) {
@@ -118,7 +152,7 @@ public class TestAPIActivity extends Activity {
         Fee fee = new Fee();
         fee.setFree(true);
         fee.setType(Finance.PricingType.TOTAL);
-        fee.setCharge(100);
+        fee.setCharge(BigDecimal.valueOf(100));
 
         Schedule sch = new Schedule();
         sch.setStart(new Date(System.currentTimeMillis()));

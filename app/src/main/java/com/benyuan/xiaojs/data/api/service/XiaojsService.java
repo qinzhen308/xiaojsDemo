@@ -32,56 +32,78 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.1.150:3000/";
+    String BASE_URL = "http://192.168.100.4:3000/";
+
+    String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    String TIME_ZONE_ID = "GMT+8";
 
 
-    //注册
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Accounts
+    //
+
+    //Claim Competency
+    @Headers("Content-Type: application/json")
+    @POST("/v1/accounts/competencies")
+    Call<ClaimCompetency> claimCompetency(@Header("SessionID") String sessionID,
+                                          @Body CompetencyParams competencyParams);
+
+    //Register
     @Headers("Content-Type: application/json")
     @POST("/v1/accounts")
     Call<Empty> accountRegister(@Body RegisterInfo registerInfo);
-
-    //登陆
-    @Headers("Content-Type: application/json")
-    @POST("/v1/security/login")
-    Call<LoginInfo> login(@Body LoginParams params);
-
-
-    //退出登陆
-    @Headers("Content-Type: application/json")
-    @DELETE("/v1/security/logout")
-    Call<Empty> logout(@Header("SessionID") String sessionID);
-
-
-    //验证验证码
-    @GET("/v1/security/validate/{method}/{mobile}/{code}")
-    Call<APIEntity> validateCode(@Path("method") int method,
-                                 @Path("mobile") long mobile,
-                                 @Path("code") int code);
-
-    //获取验证码
-    @GET("/v1/security/verify/{method}/{mobile}")
-    Call<VerifyCode> sendVerifyCode(@Path("method") int method, @Path("mobile") long mobile);
-
 
     //Get Home Data
     @GET("/v1/accounts/home")
     Call<HomeData> getHomeData(@Header("SessionID") String sessionID);
 
-    //创建直播课
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //CTL
+    //
+
+    //Create Lesson
     @Headers("Content-Type: application/json")
     @POST("/v1/ctl/lessons")
     Call<CLResponse> createLiveLesson(@Header("SessionID") String sessionID,
-                                       @Body CreateLesson lesson);
-
-    //声明教学能力
-    @Headers("Content-Type: application/json")
-    @POST("/v1/accounts/competencies")
-    Call<ClaimCompetency> claimCompetency(@Header("SessionID") String sessionID,
-                                          @Body CompetencyParams competencyParams);
+                                      @Body CreateLesson lesson);
 
     //Get Lessons
     @GET("/v1/ctl/lessons/{criteria}/{pagination}")
     Call<GetLessonsResponse> getLessons(@Header("SessionID") String sessionID,
                                         @Path("criteria") String criteria,
                                         @Path("pagination") String pagination);
+
+    //Put Lesson On Shelves
+    @POST("/v1/ctl/lessons/{lesson}/onshelves")
+    Call<Empty> putLessonOnShelves(@Header("SessionID") String sessionID,
+                                   @Path("lesson") String lesson);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Security
+    //
+
+    //Login
+    @Headers("Content-Type: application/json")
+    @POST("/v1/security/login")
+    Call<LoginInfo> login(@Body LoginParams params);
+
+    //Logout
+    @Headers("Content-Type: application/json")
+    @DELETE("/v1/security/logout")
+    Call<Empty> logout(@Header("SessionID") String sessionID);
+
+    //Validate Code
+    @GET("/v1/security/validate/{method}/{mobile}/{code}")
+    Call<APIEntity> validateCode(@Path("method") int method,
+                                 @Path("mobile") long mobile,
+                                 @Path("code") int code);
+
+    //Verify Mobile
+    @GET("/v1/security/verify/{method}/{mobile}")
+    Call<VerifyCode> sendVerifyCode(@Path("method") int method, @Path("mobile") long mobile);
+
+
 }

@@ -2,6 +2,8 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.ArrayList;
+
 /**
  * Created by maxiaobao on 2016/11/8.
  */
@@ -12,7 +14,7 @@ public class GetLessonsResponse {
     private int total;
     private int page;
     private int numOfPages;
-    private ObjectsOfPage[] objectsOfPage;
+    private ArrayList<ObjectsOfPage> objectsOfPage;
 
 
     public int getTotal() {
@@ -39,11 +41,12 @@ public class GetLessonsResponse {
         this.numOfPages = numOfPages;
     }
 
-    public ObjectsOfPage[] getObjectsOfPage() {
+
+    public ArrayList<ObjectsOfPage> getObjectsOfPage() {
         return objectsOfPage;
     }
 
-    public void setObjectsOfPage(ObjectsOfPage[] objectsOfPage) {
+    public void setObjectsOfPage(ArrayList<ObjectsOfPage> objectsOfPage) {
         this.objectsOfPage = objectsOfPage;
     }
 }
