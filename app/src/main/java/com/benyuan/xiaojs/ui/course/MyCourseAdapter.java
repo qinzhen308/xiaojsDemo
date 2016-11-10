@@ -245,7 +245,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                for (int i = 0;i<1;i++){
+                for (int i = 0;i<5;i++){
                     CourseBean bean = new CourseBean();
                     long t = System.currentTimeMillis();
                     bean.name = t / 7 + "课";

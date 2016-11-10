@@ -35,6 +35,8 @@ import android.widget.ListAdapter;
 import com.handmark.pulltorefresh.internal.EmptyViewMethodAccessor;
 import com.handmark.pulltorefresh.internal.IndicatorLayout;
 
+import java.util.logging.Logger;
+
 public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extends PullToRefreshBase<T> implements
 		OnScrollListener {
 
@@ -132,8 +134,8 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		 * visible.
 		 */
 		if (state == OnScrollListener.SCROLL_STATE_IDLE && null != mOnLastItemVisibleListener && mLastItemVisible) {
-			if(isReadyForPullEnd()){
-				//mOnLastItemVisibleListener.onLastItemVisible();
+			if(isLastItemVisibleFromBottom()){
+				mOnLastItemVisibleListener.onLastItemVisible();
 			}
 
 
@@ -430,7 +432,9 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 			if (lastVisiblePosition >= lastItemPosition - 1) {
 				final int childIndex = lastVisiblePosition - mRefreshableView.getFirstVisiblePosition();
 				final View lastVisibleChild = mRefreshableView.getChildAt(childIndex);
+
 				if (lastVisibleChild != null) {
+
 					return lastVisibleChild.getBottom() <= mRefreshableView.getBottom();
 				}
 			}
@@ -438,6 +442,46 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
 		return false;
 	}
+
+
+	private boolean isLastItemVisibleFromBottom() {
+		final Adapter adapter = mRefreshableView.getAdapter();
+
+		if (null == adapter || adapter.isEmpty()) {
+			if (DEBUG) {
+				Log.d(LOG_TAG, "isLastItemVisible. Empty View.");
+			}
+			return true;
+		} else {
+			final int lastItemPosition = mRefreshableView.getCount() - 1;
+			final int lastVisiblePosition = mRefreshableView.getLastVisiblePosition();
+
+			if (DEBUG) {
+				Log.d(LOG_TAG, "isLastItemVisible. Last Item Position: " + lastItemPosition + " Last Visible Pos: "
+						+ lastVisiblePosition);
+			}
+
+			/**
+			 * This check should really just be: lastVisiblePosition ==
+			 * lastItemPosition, but PtRListView internally uses a FooterView
+			 * which messes the positions up. For me we'll just subtract one to
+			 * account for it and rely on the inner condition which checks
+			 * getBottom().
+			 */
+			if (lastVisiblePosition >= lastItemPosition - 1) {
+				final int childIndex = lastVisiblePosition - mRefreshableView.getFirstVisiblePosition();
+				final View lastVisibleChild = mRefreshableView.getChildAt(childIndex);
+
+				if (lastVisibleChild != null) {
+
+					return lastVisibleChild.getBottom() >= mRefreshableView.getBottom();
+				}
+			}
+		}
+
+		return false;
+	}
+
 
 	private void removeIndicatorViews() {
 		if (null != mIndicatorIvTop) {
