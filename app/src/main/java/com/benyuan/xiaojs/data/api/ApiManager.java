@@ -90,9 +90,11 @@ public class ApiManager {
                 .addInterceptor(headerInterceptor)
                 .build();
 
+        JacksonConverterFactory jacksonFactory = JacksonConverterFactory.create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(XiaojsService.BASE_URL)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(jacksonFactory)
                 .client(okHttpClient)
                 .build();
 
@@ -120,8 +122,8 @@ public class ApiManager {
         String jsonStr = null;
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
-            mapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+            mapper.setDateFormat(new SimpleDateFormat(XiaojsService.DATE_FORMAT));
+            mapper.setTimeZone(TimeZone.getTimeZone(XiaojsService.TIME_ZONE_ID));
             jsonStr = mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
