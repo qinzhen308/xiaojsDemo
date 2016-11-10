@@ -21,10 +21,10 @@ import com.benyuan.xiaojs.ui.base.BaseFragment;
  *
  * ======================================================================================== */
 
-public class PrivateCourseCreationFragment extends BaseFragment {
+public class PrivateLessonCreationFragment extends BaseFragment {
     @Override
     protected View getContentView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.fragment_private_course_creation, null);
+        return LayoutInflater.from(mContext).inflate(R.layout.fragment_private_lesson_creation, null);
     }
 
     @Override

@@ -60,7 +60,7 @@
 
     <!--直播课简介-->
     <LinearLayout
-            android:id="@+id/live_course_brief_layout"
+            android:id="@+id/live_lesson_brief_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/item_pressed"
@@ -75,10 +75,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/px32"
                 android:textSize="@dimen/font_28px"
-                android:text="@string/live_course_brief"/>
+                android:text="@string/live_lesson_brief"/>
 
         <TextView
-                android:id="@+id/live_course_brief"
+                android:id="@+id/live_lesson_brief"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="right"
@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/px32"
                 android:textSize="@dimen/font_28px"
-                android:text="@string/sit_in_on"/>
+                android:text="@string/audit"/>
 
         <TextView
                 android:id="@+id/sit_in_on"
