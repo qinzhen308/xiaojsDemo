@@ -66,6 +66,4 @@ dependencies {
 
     //flex layout
     compile 'com.google.android:flexbox:0.2.3'
-    //desgin
-    compile 'com.android.support:design:24.0.0'
 }

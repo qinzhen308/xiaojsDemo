@@ -165,38 +165,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
                     />
-            <android.support.design.widget.TabLayout
-                    android:id="@+id/lession_tab_detail"
-                    android:layout_height="40dp"
-                    android:layout_width="match_parent"
-                    app:tabGravity="center"
-                    >
 
-                <android.support.design.widget.TabItem
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-
-                        android:text="简介"/>
-
-                <android.support.design.widget.TabItem
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-
-                        android:text="评价"/>
-
-            </android.support.design.widget.TabLayout>
-            <TextView
-                    android:id="@+id/tab_detail_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:textSize="15sp"
-                    android:lineSpacingExtra="2dp"
-                    android:lineSpacingMultiplier="1.5"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-
-                    />
         </com.google.android.flexbox.FlexboxLayout>
 
 
