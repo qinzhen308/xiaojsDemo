@@ -105,11 +105,12 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
         if (bean.getFee().isFree()){
             holder.desc.setText(R.string.free);
         }else {
-            holder.desc.setText(NumberUtil.getPrice(bean.getFee().getCharge()));
+            holder.desc.setText(NumberUtil.getPrice(bean.getFee().getCharge().doubleValue()));
         }
 
         holder.time.setText(TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
         holder.opera1.setTipEnable(true);
+        holder.opera1.setHasDrawable(false);
         holder.opera2.setTipEnable(true);
         holder.opera3.setTipEnable(true);
         holder.opera4.setTipEnable(true);
@@ -121,7 +122,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
             holder.opera1.setVisibility(View.VISIBLE);
             holder.opera2.setVisibility(View.VISIBLE);
             holder.opera3.setVisibility(View.VISIBLE);
-            setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+            setShow(holder.opera1,0,R.string.cls_moment);
             enterClass(holder.opera2,1);
             setShow(holder.opera3,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
             setShow(holder.opera4,R.drawable.more_selector,R.string.more);

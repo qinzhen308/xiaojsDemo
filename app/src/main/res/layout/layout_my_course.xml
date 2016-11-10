@@ -155,10 +155,9 @@
 
             <com.benyuan.xiaojs.ui.widget.RedTipTextView
                     android:id="@+id/course_opera_1"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
-                    android:paddingBottom="@dimen/px20"
-                    android:paddingTop="@dimen/px20"
+                    android:padding="@dimen/px20"
                     android:clickable="true"
                     android:textSize="@dimen/font_26px"
                     android:textColor="@color/common_text"

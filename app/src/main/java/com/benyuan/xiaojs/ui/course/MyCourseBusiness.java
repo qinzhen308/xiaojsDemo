@@ -71,4 +71,16 @@ public class MyCourseBusiness {
                 return null;
         }
     }
+
+    public static Criteria getSearch(String key){
+        Criteria criteria = new Criteria();
+
+        Duration duration = new Duration();
+        duration.setStart(TimeUtil.original());
+        duration.setEnd(TimeUtil.now());
+
+        criteria.setTitle(key);
+        criteria.setDuration(duration);
+        return criteria;
+    }
 }

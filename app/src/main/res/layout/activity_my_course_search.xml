@@ -20,16 +20,17 @@
                 android:visibility="visible"
                 android:layout_gravity="center_vertical"/>
 
-        <EditText
+        <com.benyuan.xiaojs.ui.widget.EditTextDel
                 android:id="@+id/my_course_search"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_search"
                 android:paddingLeft="@dimen/px10"
+                android:paddingRight="@dimen/px10"
                 android:hint="@string/name_of_course"
                 android:textSize="@dimen/font_28px"
-                android:drawablePadding="@dimen/px10"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:background="@drawable/common_edittext_bg"
                 android:paddingBottom="@dimen/px20"
                 android:paddingTop="@dimen/px20"

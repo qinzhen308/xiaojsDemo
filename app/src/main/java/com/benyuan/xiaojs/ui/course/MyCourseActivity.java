@@ -138,6 +138,8 @@ public class MyCourseActivity extends BaseTopTabActivity {
     private void handleRightClick(int position){
         switch (position){
             case 0://我要开课
+                Intent intent = new Intent(this,CourseCreationActivity.class);
+                startActivity(intent);
                 break;
             case 1://加入私密课
                 break;

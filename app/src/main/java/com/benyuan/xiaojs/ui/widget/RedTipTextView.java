@@ -15,6 +15,7 @@ package com.benyuan.xiaojs.ui.widget;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -30,22 +31,30 @@ public class RedTipTextView extends TextView {
     private boolean mTipEnable;
     private Bitmap mMark;
     private Paint mPaint;
+    private boolean hasDrawable = true;
+
     public RedTipTextView(Context context) {
         super(context);
-        init();
+        init(null);
     }
 
     public RedTipTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(attrs);
     }
 
     public RedTipTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(attrs);
     }
 
-    private void init(){
+    private void init(AttributeSet attrs){
+        if (attrs != null){
+            TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(
+                    attrs,
+                    R.styleable.GooeyMenu,
+                    0, 0);
+        }
         mMark = BitmapFactory.decodeResource(getResources(), R.drawable.ic_red_mark);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -55,22 +64,33 @@ public class RedTipTextView extends TextView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mTipEnable){
-            int width = getWidth();
-            Drawable[] ds = getCompoundDrawables();
-            int bitmapWidth = 0 ;
-            for (Drawable d:ds){
-                if (d != null){
-                    bitmapWidth = d.getBounds().width();
-                    break;
+            if (hasDrawable){
+                int width = getWidth();
+                Drawable[] ds = getCompoundDrawables();
+                int bitmapWidth = 0 ;
+                for (Drawable d:ds){
+                    if (d != null){
+                        bitmapWidth = d.getBounds().width();
+                        break;
+                    }
                 }
+                int left = (width - bitmapWidth) / 2 + bitmapWidth;
+                canvas.drawBitmap(mMark,left,getPaddingTop(),mPaint);
+            }else {
+                int left = getWidth() - getPaddingRight();
+                int top = getPaddingTop();
+                canvas.drawBitmap(mMark,left,top,mPaint);
             }
-            int left = (width - bitmapWidth) / 2 + bitmapWidth;
-            canvas.drawBitmap(mMark,left,getPaddingTop(),mPaint);
         }
     }
 
     public void setTipEnable(boolean enable){
         mTipEnable = enable;
+        invalidate();
+    }
+
+    public void setHasDrawable(boolean has){
+        hasDrawable = has;
         invalidate();
     }
 

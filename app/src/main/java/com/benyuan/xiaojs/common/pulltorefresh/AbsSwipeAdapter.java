@@ -95,7 +95,6 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             }
         });
         doRequest();
-
     }
 
     protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l) {

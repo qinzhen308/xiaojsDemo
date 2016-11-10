@@ -14,11 +14,13 @@ package com.benyuan.xiaojs.ui.course;
  *
  * ======================================================================================== */
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
@@ -33,12 +35,12 @@ public class MyCourseSearchActivity extends BaseActivity {
     @BindView(R.id.my_course_search_list)
     AutoPullToRefreshListView mList;
 
-
+    private MyCourseAdapter adapter;
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_my_course_search);
         needHeader(false);
-        MyCourseAdapter adapter = new MyCourseAdapter(this,mList,false);
+        adapter = new MyCourseAdapter(this,mList,false);
         mList.setAdapter(adapter);
     }
 
@@ -49,9 +51,18 @@ public class MyCourseSearchActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.my_course_search_ok://确定搜索
+                search();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void search(){
+        String key = mInput.getText().toString();
+        if (!TextUtils.isEmpty(key) && adapter != null){
+            Criteria criteria = MyCourseBusiness.getSearch(key);
+            adapter.request(criteria);
         }
     }
 }
