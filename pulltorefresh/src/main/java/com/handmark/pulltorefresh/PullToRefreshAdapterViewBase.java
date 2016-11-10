@@ -132,7 +132,10 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		 * visible.
 		 */
 		if (state == OnScrollListener.SCROLL_STATE_IDLE && null != mOnLastItemVisibleListener && mLastItemVisible) {
-			mOnLastItemVisibleListener.onLastItemVisible();
+			if(isReadyForPullEnd()){
+				//mOnLastItemVisibleListener.onLastItemVisible();
+			}
+
 
 		}
 
