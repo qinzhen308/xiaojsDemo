@@ -240,4 +240,8 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
             v.setTextColor(resources.getColor(position == vPos ? R.color.main_orange : android.R.color.black));
         }
     }
+
+    protected int getPosition(){
+        return mPosition;
+    }
 }

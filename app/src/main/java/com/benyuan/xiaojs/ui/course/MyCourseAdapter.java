@@ -50,10 +50,22 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
     private boolean mIsTeacher;
     private Bitmap mEnterClass1;//人数小于99的图
     private Bitmap mEnterClass2;//人数大于99的图
+    private Criteria mCriteria;
 
     public MyCourseAdapter(Context context, AutoPullToRefreshListView listView, boolean isTeacher) {
         super(context, listView);
         mIsTeacher = isTeacher;
+    }
+
+    @Override
+    protected void initParam(){
+        Duration duration = new Duration();
+        duration.setStart(TimeUtil.original());
+        duration.setEnd(TimeUtil.now());
+
+        mCriteria = new Criteria();
+        mCriteria.setSource(Ctl.LessonSource.ALL);
+        mCriteria.setDuration(duration);
     }
 
     @Override
@@ -212,17 +224,8 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
     }
 
     @Override
-    protected void doRequest(int pageNo) {
-        Duration duration = new Duration();
-        duration.setStart("2016-11-08T18:28:37.648+0800");
-        duration.setEnd("2016-11-09T18:28:37.657+0800");
-
-        Criteria criteria = new Criteria();
-        criteria.setSource(Ctl.LessonSource.ALL);
-        criteria.setDuration(duration);
-        criteria.setState(LessonState.DRAFT);
-
-        LessonDataManager.requestGetLessons(mContext, XiaojsConfig.mLoginUser.getSessionID(),criteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
+    protected void doRequest() {
+        LessonDataManager.requestGetLessons(mContext, XiaojsConfig.mLoginUser.getSessionID(),mCriteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 Logger.d("onSuccess-----------");
@@ -236,6 +239,13 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
             }
         });
 
+    }
+
+    public void request(Criteria criteria){
+        mCriteria = criteria;
+        mPagination.setPage(PAGE_FIRST);
+        mClearItems = true;
+        doRequest();
     }
 
     static class Holder extends BaseHolder {

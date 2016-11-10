@@ -648,4 +648,40 @@ public class TimeUtil {
 
         return duration + "分钟";
     }
+
+    public static Date original(){
+        return new Date(0);
+    }
+
+    public static Date now(){
+        return new Date(System.currentTimeMillis());
+    }
+
+    /**
+     * 获取凌晨0点时间
+     * @return
+     */
+    public static Date beforeDawn(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MINUTE,0);
+        cal.set(Calendar.MILLISECOND,0);
+
+        return new Date(cal.getTimeInMillis());
+    }
+
+    public static Date weekBefore(int before){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(cal.MONTH, -before);
+        return new Date(cal.getTimeInMillis());
+    }
+
+    public static Date yearBefore(int before){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(cal.YEAR, -before);
+        return new Date(cal.getTimeInMillis());
+    }
 }
