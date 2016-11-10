@@ -92,14 +92,7 @@ public class LessonRequest extends ServiceRequest {
 
 
         String criteriaJsonstr = ApiManager.objectToJsonString(criteria);
-        //String criteriaJsonstr = "{\"source\":\"All\",\"duration\":{\"start\":\"2014-12-31T16:00:00.000Z\",\"end\":\"2016-11-10T07:58:04.867Z\"},\"state\":\"Draft\"}";
-        //String paginationJsonstr = "{\"maxNumOfObjectsPerPage\":10,\"page\":1}";
         String paginationJsonstr = ApiManager.objectToJsonString(pagination);
-
-        if(XiaojsConfig.DEBUG){
-            Logger.json(criteriaJsonstr);
-            Logger.json(paginationJsonstr);
-        }
 
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
