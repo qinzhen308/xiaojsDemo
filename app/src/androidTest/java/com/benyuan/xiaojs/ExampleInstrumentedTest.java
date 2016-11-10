@@ -31,6 +31,7 @@ import com.orhanobut.logger.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -74,7 +75,7 @@ public class ExampleInstrumentedTest {
         Fee fee = new Fee();
         fee.setFree(true);
         fee.setType(Finance.PricingType.TOTAL);
-        fee.setCharge(100);
+        fee.setCharge(BigDecimal.valueOf(100));
 
         Schedule sch = new Schedule();
         sch.setStart(new Date(System.currentTimeMillis()));

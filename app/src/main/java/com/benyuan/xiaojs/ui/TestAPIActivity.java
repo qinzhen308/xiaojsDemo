@@ -33,6 +33,7 @@ import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
 import com.orhanobut.logger.Logger;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class TestAPIActivity extends Activity {
@@ -151,7 +152,7 @@ public class TestAPIActivity extends Activity {
         Fee fee = new Fee();
         fee.setFree(true);
         fee.setType(Finance.PricingType.TOTAL);
-        fee.setCharge(100);
+        fee.setCharge(BigDecimal.valueOf(100));
 
         Schedule sch = new Schedule();
         sch.setStart(new Date(System.currentTimeMillis()));
