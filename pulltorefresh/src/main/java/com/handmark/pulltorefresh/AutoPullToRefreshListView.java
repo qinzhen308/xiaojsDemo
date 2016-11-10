@@ -46,6 +46,8 @@ public class AutoPullToRefreshListView extends PullToRefreshListView implements 
 
         onRefreshComplete();
 
+        hiddenFooterLoading();
+
         loading = false;
 
     }
