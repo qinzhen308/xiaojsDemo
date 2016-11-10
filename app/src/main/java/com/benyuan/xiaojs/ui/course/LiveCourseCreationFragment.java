@@ -27,6 +27,8 @@ import android.widget.ToggleButton;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
+import com.benyuan.xiaojs.data.LessonDataManager;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
@@ -88,7 +90,10 @@ public class LiveCourseCreationFragment extends BaseFragment {
     private long mLessonStartTime;
     private LiveLesson mLessonOptionalInfo;
 
+    private String mSubjectId;
+
     private final String TEST_SUBJECT = "计算机"; //test subject
+    private final String TEST_SUBJECT_ID = "820a10e101db0af4bcf2fd9";
 
     @Override
     protected View getContentView() {
@@ -343,12 +348,13 @@ public class LiveCourseCreationFragment extends BaseFragment {
             fee.setType(feeType);
             fee.setCharge( BigDecimal.valueOf(feePrice));
         } catch (Exception e) {
+            e.printStackTrace();
             //do nothing
         }
 
         Schedule sch = new Schedule();
         sch.setStart(new Date(mLessonStartTime));
-        sch.setDuration(Integer.parseInt(mByLiveDurationEdt.getText().toString()));
+        sch.setDuration(Integer.parseInt(mCourseDurationEdt.getText().toString()));
 
         LiveLesson.Publish publish = new LiveLesson.Publish();
         publish.setOnShelves(mPublicTv.isSelected());
@@ -356,7 +362,7 @@ public class LiveCourseCreationFragment extends BaseFragment {
         LiveLesson ll = new LiveLesson();
         String subject = mSubjectTv.getText().toString();
         ll.setTitle(mLiveCourseNameEdt.getText().toString());
-        ll.setSubject(subject);
+        ll.setSubject("820a10e101db0af4bcf2fd9");
         ll.setEnroll(enroll);
         ll.setMode(BaseBusiness.getTeachingMode(mContext, mTeachFormTv.getText().toString()));
         ll.setFee(fee);
@@ -375,17 +381,17 @@ public class LiveCourseCreationFragment extends BaseFragment {
         CreateLesson cl = new CreateLesson();
         cl.setData(ll);
 
-        /*LessonDataManager.requestCreateLiveLesson(mContext, BaseBusiness.getSession(), cl, new APIServiceCallback() {
+        LessonDataManager.requestCreateLiveLesson(mContext, BaseBusiness.getSession(), cl, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
-
+                Toast.makeText(mContext, object.toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-
+                Toast.makeText(mContext, "error:" + errorMessage, Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
     }
 
     @Override
