@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
@@ -96,6 +97,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	private OnRefreshListener<T> mOnRefreshListener;
 	private OnRefreshListener2<T> mOnRefreshListener2;
 	private OnPullEventListener<T> mOnPullEventListener;
+	private OnHeaderReadyListener mHeaderReadyListener;
 
 	private SmoothScrollRunnable mCurrentSmoothScrollRunnable;
 
@@ -444,6 +446,11 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		mOnRefreshListener2 = listener;
 		mOnRefreshListener = null;
 	}
+
+	public final void setHeaderReadyListener(OnHeaderReadyListener listener){
+		mHeaderReadyListener = listener;
+	}
+
 
 	/**
 	 * @deprecated You should now call this method on the result of
@@ -1070,6 +1077,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		}
 	}
 
+
+	private boolean isPreDrawed = false;
 	@SuppressWarnings("deprecation")
 	private void init(Context context, AttributeSet attrs) {
 		switch (getPullToRefreshScrollDirection()) {
@@ -1107,6 +1116,35 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		// We need to create now layouts now
 		mHeaderLayout = createLoadingLayout(context, Mode.PULL_FROM_START, a);
 		mFooterLayout = createLoadingLayout(context, Mode.PULL_FROM_END, a);
+
+		ViewTreeObserver observer = mHeaderLayout.getViewTreeObserver();
+		observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+
+
+				if(isPreDrawed && mHeaderReadyListener != null){
+
+					isPreDrawed = false;
+
+					mHeaderReadyListener.onReady();
+				}
+
+			}
+
+
+		});
+
+		observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+			@Override
+			public boolean onPreDraw() {
+				mHeaderLayout.getViewTreeObserver().removeOnPreDrawListener(
+						this);
+				isPreDrawed = true;
+				return true;
+			}
+		});
 
 		/**
 		 * Styleables from XML
@@ -1435,6 +1473,12 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	// ===========================================================
 	// Inner, Anonymous Classes, and Enumerations
 	// ===========================================================
+
+	public static interface OnHeaderReadyListener{
+
+		public void onReady();
+	}
+
 
 	/**
 	 * Simple Listener that allows you to be notified when the user has scrolled

@@ -1,6 +1,14 @@
 package com.benyuan.xiaojs.ui.course;
 
+import android.content.Intent;
+import android.view.View;
+
+import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.model.LiveLesson;
+import com.benyuan.xiaojs.model.Promotion;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+
+import butterknife.OnClick;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -18,8 +26,38 @@ import com.benyuan.xiaojs.ui.base.BaseActivity;
  * ======================================================================================== */
 
 public class SalePromotionActivity extends BaseActivity {
+
+    private LiveLesson mLesson;
+
     @Override
     protected void addViewContent() {
+        setMiddleTitle(R.string.sale_promotion_set);
 
+        addView(R.layout.activity_sale_promotion);
+
+        Object object = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO);
+        if (object instanceof LiveLesson) {
+            mLesson = (LiveLesson) object;
+        }
+    }
+
+    @OnClick({R.id.left_image, R.id.sub_btn})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.left_image:
+                finish();
+                break;
+            case R.id.sub_btn:
+                Promotion promotion = new Promotion();
+                //set promotion
+                mLesson.setPromotion(promotion);
+                Intent i = new Intent();
+                i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
+                setResult(RESULT_OK, i);
+                finish();
+                break;
+            default:
+                break;
+        }
     }
 }

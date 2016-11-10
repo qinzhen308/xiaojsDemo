@@ -83,7 +83,8 @@ public class MineFragment extends BaseFragment {
             case R.id.withdrawals:
                 break;
             case R.id.teach_ability_layout:
-                startActivity(new Intent(mContext, TeachingAbilityActivity.class));
+                //startActivity(new Intent(mContext, TeachingAbilityActivity.class));
+                startActivity(new Intent(mContext, TestAPIActivity.class));
                 break;
             case R.id.my_collections:
                 break;

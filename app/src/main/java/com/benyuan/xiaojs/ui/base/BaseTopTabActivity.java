@@ -14,6 +14,7 @@ package com.benyuan.xiaojs.ui.base;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -49,7 +50,7 @@ import butterknife.BindView;
  *
  * ======================================================================================== */
 
-public abstract class BaseTopTabActivity extends BaseActivity implements View.OnClickListener{
+public abstract class BaseTopTabActivity extends BaseActivity implements View.OnClickListener {
     private final static String TAG = "BaseTabFragment";
 
     protected final static int TAB_INDICATOR_DIVIDE_EQUAL = 1;
@@ -72,6 +73,7 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
     private List<TextView> mTabTitleView;
     private List<? extends Fragment> mFragments;
     private TabFragmentPagerAdapter mAdapter;
+    private Fragment mCurrFragment;
     private int mPosition;
     private boolean mScrollable = true;
 
@@ -150,7 +152,7 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
         });
     }
 
-    protected void addHover(List<String> tabTitles, View hover, List<? extends Fragment> fragments){
+    protected void addHover(List<String> tabTitles, View hover, List<? extends Fragment> fragments) {
         if (tabTitles == null || tabTitles == null) {
             Logger.w(TAG, "Not arguments passed!");
             return;
@@ -167,7 +169,7 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
 
         if (hover != null) {
             //mHoverContainer.addView(hover);
-            mHoverContainer.addView(hover,new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+            mHoverContainer.addView(hover, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         }
 
         mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragments);
@@ -243,5 +245,10 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
 
     protected int getPosition(){
         return mPosition;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mFragments.get(mPosition).onActivityResult(requestCode, resultCode, data);
     }
 }

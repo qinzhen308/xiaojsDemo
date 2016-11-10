@@ -5,7 +5,8 @@
     <color name="colorAccent">#FF4081</color>
 
     <!--common-->
-    <color name="main_bg">#fafafa</color>
+    <color name="main_bg">#f7f7f7</color>
+    <color name="main_light_bg">#fbfbfb</color>
     <color name="header_color">#3F51B5</color>
     <color name="white">#ffffff</color>
     <color name="red">#dc2314</color>

@@ -80,6 +80,8 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
             showCropImageDialogPD();
         } else if (isNeedLook) {// 有预览
             showCropImageDialogP();
+        } else if (isNeedDelete) {
+            showCropImageDialogD();
         } else {// 无预览无删除（默认）
             showCropImageDialog();
         }
@@ -108,6 +110,41 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                         break;
                     case 2:
                         takePhoto();
+                        break;
+                    case 3:
+                        setFailure();
+                        break;
+                }
+                bottomSheet.dismiss();
+            }
+        });
+
+        bottomSheet.show();
+    }
+
+    private void showCropImageDialogD() {
+        final BottomSheet bottomSheet = new BottomSheet(this);
+        bottomSheet.setTitleVisibility(View.GONE);
+        ListView lv = new ListView(this);
+        String[] actions = getResources().getStringArray(R.array.selects_pic_d);
+        ActionAdapter adapter = new ActionAdapter(actions);
+        lv.setAdapter(adapter);
+        bottomSheet.setContent(lv);
+        bottomSheet.setOnDismissListener(this);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        pickerPhoto();
+                        break;
+                    case 1:
+                        takePhoto();
+                        break;
+                    case 2:
+                        setResult(RESULT_DELETE);
+                        finish();
                         break;
                     case 3:
                         setFailure();
@@ -508,7 +545,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
     private class ActionAdapter extends BaseAdapter {
         private String[] mActions;
 
-        public ActionAdapter(String[] actions)  {
+        public ActionAdapter(String[] actions) {
             mActions = actions;
         }
 
@@ -533,7 +570,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                 convertView = LayoutInflater.from(CropImageMainActivity.this).
                         inflate(R.layout.crop_img_action_item, null);
             }
-            ((TextView)convertView).setText(mActions[position]);
+            ((TextView) convertView).setText(mActions[position]);
             return convertView;
         }
     }

@@ -2,13 +2,14 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by maxiaobao on 2016/11/4.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LiveLesson {
+public class LiveLesson implements Serializable {
 
     private String title;
     private String subject;
@@ -139,7 +140,7 @@ public class LiveLesson {
 
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Overview{
+    public static class Overview implements Serializable {
         private String text;
 
         public String getText() {
@@ -152,7 +153,7 @@ public class LiveLesson {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class TeachersIntro{
+    public static class TeachersIntro implements Serializable {
         private boolean biography;
         private String text;
 
@@ -174,7 +175,7 @@ public class LiveLesson {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Audit{
+    public static class Audit implements Serializable {
         private boolean enabled;
         private String[] grantedTo;
         private boolean visibleToStudents;
@@ -205,7 +206,7 @@ public class LiveLesson {
     }
 
 
-    public static class Rule {
+    public static class Rule implements Serializable {
         private int before;
         private boolean enabled;
         private int discount;
@@ -245,7 +246,7 @@ public class LiveLesson {
     }
 
 
-    public static class Publish{
+    public static class Publish implements Serializable {
         private boolean onShelves;
 
         public boolean isOnShelves() {
