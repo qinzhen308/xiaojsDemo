@@ -1,567 +1,561 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/main_bg">
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ScrollView
-            android:layout_alignParentTop="true"
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_above="@+id/sub_btn">
 
+        <!--直播课-->
+        <View
+                android:layout_marginTop="@dimen/px32"
+                style="@style/DividerHorizontal"/>
+
         <LinearLayout
-                android:orientation="vertical"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:paddingTop="@dimen/px34"
+                android:paddingBottom="@dimen/px34"
+                android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <!--直播课-->
-            <View
-                    android:layout_marginTop="@dimen/px32"
-                    style="@style/DividerHorizontal"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/def"
+                    android:textSize="@dimen/font_30px"
+                    android:text="@string/live_course_name"/>
 
-            <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
-                    android:paddingTop="@dimen/px34"
-                    android:paddingBottom="@dimen/px34"
-                    android:background="@color/white"
+            <com.benyuan.xiaojs.ui.widget.EditTextDel
+                    android:id="@+id/live_course_name"
+                    android:layout_marginLeft="@dimen/px34"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/def"
-                        android:textSize="@dimen/font_30px"
-                        android:text="@string/live_course_name"/>
-
-                <com.benyuan.xiaojs.ui.widget.EditTextDel
-                        android:id="@+id/live_course_name"
-                        android:layout_marginLeft="@dimen/px34"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:textColor="@color/font_black"
-                        android:textSize="@dimen/font_28px"
-                        android:lines="1"
-                        android:maxLength="25"
-                        android:hint="@string/live_course_name_hint"/>
-            </LinearLayout>
+                    android:background="@null"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_28px"
+                    android:lines="1"
+                    android:hint="@string/live_course_name_hint"/>
+        </LinearLayout>
 
 
-            <!--学科类目-->
-            <View
-                    android:layout_marginLeft="@dimen/px32"
-                    style="@style/DividerHorizontal"/>
+        <!--学科类目-->
+        <View
+                android:layout_marginLeft="@dimen/px32"
+                style="@style/DividerHorizontal"/>
 
-            <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
-                    android:paddingTop="@dimen/px34"
-                    android:paddingBottom="@dimen/px34"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
+        <LinearLayout
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:paddingTop="@dimen/px34"
+                android:paddingBottom="@dimen/px34"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_black"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:text="@string/subject_category"/>
 
-                <TextView
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/font_black"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/subject_category"/>
-
-                <TextView
-                        android:id="@+id/subject_category"
-                        android:gravity="right"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/please_select"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/font_gray"
-                        android:drawablePadding="@dimen/px22"
-                        android:drawableRight="@drawable/ic_entrance"/>
-            </LinearLayout>
-
-            <View
-                    style="@style/DividerHorizontal"/>
-
-
-            <!--教学形式-->
-            <View
-                    android:layout_marginTop="@dimen/px32"
-                    style="@style/DividerHorizontal"/>
-
-            <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
-                    android:paddingTop="@dimen/px34"
-                    android:paddingBottom="@dimen/px34"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
+            <TextView
+                    android:id="@+id/subject_category"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:text="@string/please_select"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_gray"
+                    android:drawablePadding="@dimen/px22"
+                    android:drawableRight="@drawable/ic_entrance"/>
+        </LinearLayout>
 
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/teach_form"/>
+        <View
+                style="@style/DividerHorizontal"/>
 
-                <TextView
-                        android:id="@+id/teach_form"
-                        android:gravity="right"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/please_select"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/font_gray"
-                        android:drawablePadding="@dimen/px22"
-                        android:drawableRight="@drawable/ic_entrance"/>
-            </LinearLayout>
 
-            <!--报名方式-->
-            <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginLeft="@dimen/px30"/>
+        <!--教学形式-->
+        <View
+                android:layout_marginTop="@dimen/px32"
+                style="@style/DividerHorizontal"/>
 
-            <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
-                    android:paddingTop="@dimen/px34"
-                    android:paddingBottom="@dimen/px34"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
+        <LinearLayout
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:paddingTop="@dimen/px34"
+                android:paddingBottom="@dimen/px34"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:text="@string/teach_form"/>
 
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                    <LinearLayout
-                            android:layout_height="wrap_content"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/enroll_way"/>
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="#bfbfbf"
-                                android:textSize="@dimen/font_24px"
-                                android:text="@string/enroll_way_hint"/>
-                    </LinearLayout>
-
-
-                    <ToggleButton
-                            android:id="@+id/enroll_way_switcher"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textOff=""
-                            android:textOn=""/>
-
-                </LinearLayout>
-
-                <!--线上，线下-->
-                <LinearLayout
-                        android:id="@+id/enroll_way"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/px42"
-                        android:layout_marginBottom="@dimen/px42"
-                        android:paddingLeft="@dimen/px28"
-                        android:orientation="vertical">
-
-                    <TextView
-                            android:id="@+id/online_enroll"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/multi_check_selector"
-                            android:drawablePadding="@dimen/px25"
-                            android:text="@string/enroll_online"/>
-
-                    <TextView
-                            android:id="@+id/offline_enroll"
-                            android:layout_marginTop="@dimen/px60"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/multi_check_selector"
-                            android:drawablePadding="@dimen/px25"
-                            android:text="@string/enroll_offline"/>
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginLeft="@dimen/px32"/>
-
-            <!--报名限制人数-->
-            <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
-                    android:paddingTop="@dimen/px34"
-                    android:paddingBottom="@dimen/px34"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
+            <TextView
+                    android:id="@+id/teach_form"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:text="@string/please_select"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_gray"
+                    android:drawablePadding="@dimen/px22"
+                    android:drawableRight="@drawable/ic_entrance"/>
+        </LinearLayout>
 
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enroll_people_limit"/>
+        <!--报名方式-->
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px30"/>
 
-                <com.benyuan.xiaojs.ui.widget.EditTextDel
-                        android:id="@+id/enroll_people_limit"
-                        android:gravity="right"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:background="@null"
-                        android:hint="@string/please_set"
-                        android:textColorHint="@color/font_gray"
-                        android:textSize="@dimen/font_26px"
-                        android:layout_marginRight="@dimen/px20"
-                        android:inputType="number"
-                        android:layout_height="wrap_content"/>
 
-                <TextView
-                        android:gravity="right"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/person"/>
-            </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginLeft="@dimen/px30"/>
-
-            <!--收费-->
             <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
-                    android:paddingTop="@dimen/px34"
-                    android:paddingBottom="@dimen/px34"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                    <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="@string/charge"/>
-
-
-                    <ToggleButton
-                            android:id="@+id/charge_way_switcher"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textOff=""
-                            android:textOn=""/>
-
-                </LinearLayout>
-
-                <!--按直播总价，按课时-->
-                <LinearLayout
-                        android:id="@+id/charge_way"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/px42"
-                        android:layout_marginBottom="@dimen/px42"
-                        android:paddingLeft="@dimen/px28"
-                        android:orientation="vertical">
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                        <TextView
-                                android:id="@+id/by_live_total_price_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/multi_check_selector"
-                                android:drawablePadding="@dimen/px25"
-                                android:text="@string/by_live_total_price"/>
-
-                        <com.benyuan.xiaojs.ui.widget.EditTextDel
-                                android:id="@+id/by_live_total_price"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:minWidth="@dimen/px200"
-                                android:textSize="@dimen/font_28px"
-                                android:paddingTop="@dimen/px15"
-                                android:paddingBottom="@dimen/px15"
-                                android:paddingLeft="@dimen/px10"
-                                android:paddingRight="@dimen/px10"
-                                android:background="@drawable/common_edittext_bg"
-                                android:layout_marginLeft="@dimen/px10"
-                                android:layout_marginRight="@dimen/px10"/>
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/unit_price"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="@dimen/px20"
-                            android:gravity="center_vertical">
-
-                        <TextView
-                                android:id="@+id/by_live_duration_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/multi_check_selector"
-                                android:layout_gravity="center_vertical"
-                                android:drawablePadding="@dimen/px25"
-                                android:text="@string/by_live_duration"/>
-
-                        <com.benyuan.xiaojs.ui.widget.EditTextDel
-                                android:id="@+id/by_live_duration"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:minWidth="@dimen/px200"
-                                android:textSize="@dimen/font_28px"
-                                android:paddingTop="@dimen/px15"
-                                android:paddingBottom="@dimen/px15"
-                                android:paddingLeft="@dimen/px10"
-                                android:paddingRight="@dimen/px10"
-                                android:background="@drawable/common_edittext_bg"
-                                android:layout_marginLeft="@dimen/px65"
-                                android:layout_marginRight="@dimen/px10"/>
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/unit_price_by_hour"/>
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
-            <View
-                    style="@style/DividerHorizontal"/>
-
-            <!--上课时间-->
-            <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginTop="@dimen/px32"/>
-
-            <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
-                    android:paddingTop="@dimen/px34"
-                    android:paddingBottom="@dimen/px34"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="@string/course_start_time"/>
-
-                <TextView
-                        android:id="@+id/course_start_time"
-                        android:gravity="right"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/please_select"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/font_gray"
-                        android:drawablePadding="@dimen/px22"
-                        android:drawableRight="@drawable/ic_entrance"/>
-
-            </LinearLayout>
-
-            <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginLeft="@dimen/px32"/>
-
-            <!--上课时长-->
-            <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
-                    android:paddingTop="@dimen/px34"
-                    android:paddingBottom="@dimen/px34"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/course_duration"/>
-
-                <com.benyuan.xiaojs.ui.widget.EditTextDel
-                        android:id="@+id/course_duration"
-                        android:gravity="right"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:background="@null"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/please_set"
-                        android:textColorHint="@color/font_gray"
-                        android:textSize="@dimen/font_28px"
-                        android:inputType="number"
-                        android:layout_marginRight="@dimen/px20"/>
-
-                <TextView
-                        android:gravity="right"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/minute"
-                        android:textSize="@dimen/font_28px"/>
-
-            </LinearLayout>
-
-            <View
-                    style="@style/DividerHorizontal"/>
-
-            <!--选填信息-->
-            <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginTop="@dimen/px32"/>
-
-            <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
-                    android:paddingTop="@dimen/px34"
-                    android:paddingBottom="@dimen/px34"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/optional_info"/>
-
-                <TextView
-                        android:id="@+id/optional_info"
-                        android:gravity="right"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_28px"
-                        android:text="@string/please_select"
-                        android:drawablePadding="@dimen/px22"
-                        android:drawableRight="@drawable/ic_entrance"/>
-
-            </LinearLayout>
-
-            <View
-                    style="@style/DividerHorizontal"/>
-
-            <!--立即上架-->
-            <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginTop="@dimen/px32"/>
-
-            <LinearLayout
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px24"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:orientation="vertical"
-                        android:layout_height="wrap_content">
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/on_shelves"/>
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/font_gray"
-                            android:textSize="@dimen/font_24px"
-                            android:text="@string/on_shelves_tips"/>
-
-                </LinearLayout>
-
-
-                <ToggleButton
-                        android:id="@+id/on_shelves"
+                <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:textOff=""
-                        android:textOn=""/>
+                        android:text="@string/enroll_mandatory"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#bfbfbf"
+                        android:textSize="@dimen/font_24px"
+                        android:text="@string/enroll_hint"/>
             </LinearLayout>
 
-            <View
-                    style="@style/DividerHorizontal"/>
+
+            <ToggleButton
+                    android:id="@+id/enroll_way_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff=""
+                    android:textOn=""/>
 
         </LinearLayout>
 
-    </ScrollView>
 
-    <Button
-            android:id="@+id/sub_btn"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px20"
-            android:layout_marginBottom="@dimen/px20"
-            android:layout_marginLeft="@dimen/px40"
-            android:layout_marginRight="@dimen/px40"
-            android:text="@string/finish"
-            style="@style/BigSubmitBtn"/>
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px32"/>
 
-</RelativeLayout>
+        <!--报名限制人数-->
+        <LinearLayout
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:paddingTop="@dimen/px34"
+                android:paddingBottom="@dimen/px34"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enroll_people_limit"/>
+
+            <com.benyuan.xiaojs.ui.widget.EditTextDel
+                    android:id="@+id/enroll_people_limit"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="@null"
+                    android:hint="@string/please_set"
+                    android:textColorHint="@color/font_gray"
+                    android:textSize="@dimen/font_26px"
+                    android:layout_marginRight="@dimen/px20"
+                    android:inputType="number"
+                    android:maxLength="9"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/person"/>
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px30"/>
+
+        <!--收费-->
+        <LinearLayout
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:paddingTop="@dimen/px34"
+                android:paddingBottom="@dimen/px34"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/charge"/>
+
+
+                <ToggleButton
+                        android:id="@+id/charge_way_switcher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff=""
+                        android:textOn=""/>
+
+            </LinearLayout>
+
+            <!--按直播总价，按课时-->
+            <LinearLayout
+                    android:id="@+id/charge_way"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px42"
+                    android:layout_marginBottom="@dimen/px42"
+                    android:paddingLeft="@dimen/px28"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                    <TextView
+                            android:id="@+id/by_live_total_price_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/single_check_selector"
+                            android:drawablePadding="@dimen/px25"
+                            android:text="@string/by_live_total_price"/>
+
+                    <com.benyuan.xiaojs.ui.widget.EditTextDel
+                            android:id="@+id/by_live_total_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/px200"
+                            android:textSize="@dimen/font_28px"
+                            android:paddingTop="@dimen/px15"
+                            android:paddingBottom="@dimen/px15"
+                            android:paddingLeft="@dimen/px10"
+                            android:paddingRight="@dimen/px10"
+                            android:background="@drawable/common_edittext_bg"
+                            android:layout_marginLeft="@dimen/px10"
+                            android:layout_marginRight="@dimen/px10"
+                            android:inputType="numberDecimal"
+                            android:maxLength="10"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/unit_price"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/px20"
+                        android:gravity="center_vertical">
+
+                    <TextView
+                            android:id="@+id/by_live_duration_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/single_check_selector"
+                            android:layout_gravity="center_vertical"
+                            android:drawablePadding="@dimen/px25"
+                            android:text="@string/by_live_duration"/>
+
+                    <com.benyuan.xiaojs.ui.widget.EditTextDel
+                            android:id="@+id/by_live_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/px200"
+                            android:textSize="@dimen/font_28px"
+                            android:paddingTop="@dimen/px15"
+                            android:paddingBottom="@dimen/px15"
+                            android:paddingLeft="@dimen/px10"
+                            android:paddingRight="@dimen/px10"
+                            android:background="@drawable/common_edittext_bg"
+                            android:layout_marginLeft="@dimen/px10"
+                            android:layout_marginRight="@dimen/px10"
+                            android:maxLength="10"
+                            android:inputType="numberDecimal"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/unit_price_by_hour"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <!--上课时间-->
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px32"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:paddingTop="@dimen/px34"
+                android:paddingBottom="@dimen/px34"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/course_start_time"/>
+
+            <TextView
+                    android:id="@+id/course_start_time"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/please_select"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_gray"
+                    android:drawablePadding="@dimen/px22"
+                    android:drawableRight="@drawable/ic_entrance"/>
+
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px32"/>
+
+        <!--上课时长-->
+        <LinearLayout
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:paddingTop="@dimen/px34"
+                android:paddingBottom="@dimen/px34"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/course_duration"/>
+
+            <com.benyuan.xiaojs.ui.widget.EditTextDel
+                    android:id="@+id/course_duration"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="@null"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/please_set"
+                    android:textColorHint="@color/font_gray"
+                    android:textSize="@dimen/font_28px"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:layout_marginRight="@dimen/px20"/>
+
+            <TextView
+                    android:gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minute"
+                    android:textSize="@dimen/font_28px"/>
+
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <!--选填信息-->
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px32"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:paddingTop="@dimen/px34"
+                android:paddingBottom="@dimen/px34"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/optional_info"/>
+
+            <TextView
+                    android:id="@+id/optional_info"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_gray"
+                    android:textSize="@dimen/font_28px"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:text="@string/optional_info_tips"
+                    android:drawablePadding="@dimen/px22"
+                    android:drawableRight="@drawable/ic_entrance"/>
+
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px32"/>
+
+        <LinearLayout
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px24"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
+                    android:text="@string/other_settings"
+                    android:background="@color/white"/>
+
+            <LinearLayout
+                    android:id="@+id/on_shelves_layout"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/on_shelves"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/multi_check_selector"
+                        android:drawablePadding="@dimen/px25"
+                        android:text="@string/on_shelves"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_24px"
+                        android:paddingLeft="@dimen/px64"
+                        android:text="@string/on_shelves_tips"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/publish_personal_page_layout"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/publish_personal_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/multi_check_selector"
+                        android:drawablePadding="@dimen/px25"
+                        android:text="@string/publish_personal_page"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_24px"
+                        android:paddingLeft="@dimen/px64"
+                        android:text="@string/publish_personal_page_tips"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <Button
+                android:id="@+id/sub_btn"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_marginBottom="@dimen/px20"
+                android:layout_marginLeft="@dimen/px40"
+                android:layout_marginRight="@dimen/px40"
+                android:text="@string/finish"
+                style="@style/BigSubmitBtn"/>
+
+    </LinearLayout>
+</ScrollView>

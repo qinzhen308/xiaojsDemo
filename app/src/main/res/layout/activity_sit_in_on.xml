@@ -9,32 +9,18 @@
             style="@style/DividerHorizontal"
             android:layout_marginTop="@dimen/px20"/>
 
-    <RelativeLayout
-            android:background="@color/white"
+    <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sit_in_on_allowed"
-                android:textSize="@dimen/font_28px"
-                android:textColor="@color/font_gray"
-                android:paddingLeft="@dimen/px32"
-                android:paddingTop="@dimen/px28"
-                android:paddingBottom="@dimen/px28"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"/>
-
-        <ToggleButton
-                android:id="@+id/sit_in_on_switcher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:textOff=""
-                android:textOn=""/>
-    </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:text="@string/sit_in_on_allowed"
+            android:background="@color/white"
+            android:textSize="@dimen/font_28px"
+            android:textColor="@color/font_gray"
+            android:paddingLeft="@dimen/px32"
+            android:paddingTop="@dimen/px28"
+            android:paddingBottom="@dimen/px28"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"/>
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -46,16 +32,32 @@
         <View
                 style="@style/DividerHorizontal"/>
 
-        <TextView
-                android:layout_width="wrap_content"
+        <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/multi_check_selector"
-                android:paddingTop="@dimen/px28"
-                android:paddingBottom="@dimen/px28"
-                android:textColor="@color/font_black"
-                android:textSize="@dimen/font_28px"
-                android:drawablePadding="@dimen/px28"
-                android:text="@string/sit_in_on_visible_to_stu"/>
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px40"
+                    android:paddingTop="@dimen/px28"
+                    android:paddingBottom="@dimen/px28"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/sit_in_on_visible_to_stu"/>
+
+            <ToggleButton
+                    android:id="@+id/visible_to_stu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="@dimen/px32"
+                    android:textOff=""
+                    android:textOn=""/>
+        </RelativeLayout>
+
 
         <View
                 style="@style/DividerHorizontal"/>
@@ -69,7 +71,7 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/px65"
+                    android:paddingLeft="@dimen/px40"
                     android:paddingTop="@dimen/px28"
                     android:paddingBottom="@dimen/px28"
                     android:textColor="@color/font_black"
@@ -77,6 +79,7 @@
                     android:text="@string/sit_in_on_person"/>
 
             <TextView
+                    android:id="@+id/sit_in_on_person"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="right"
@@ -95,6 +98,7 @@
             style="@style/DividerHorizontal"/>
 
     <Button
+            android:id="@+id/sub_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px90"

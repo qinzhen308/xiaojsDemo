@@ -1,12 +1,16 @@
 package com.benyuan.xiaojs.ui.course;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseTopTabActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.OnClick;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -37,5 +41,16 @@ public class CourseCreationActivity extends BaseTopTabActivity {
         fragments.add(privateCourse);
 
         addViews(new int[] {R.string.live_course, R.string.private_course}, fragments);
+    }
+
+    @OnClick({R.id.left_image})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.left_image:
+                finish();
+                break;
+            default:
+                break;
+        }
     }
 }

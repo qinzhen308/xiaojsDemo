@@ -1,13 +1,16 @@
 package com.benyuan.xiaojs.ui.course;
 
+import android.content.Intent;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.widget.EditTextDel;
 
@@ -38,6 +41,8 @@ public class TeacherIntroductionActivity extends BaseActivity {
     @BindView(R.id.input_tips)
     TextView mInputTipsTv;
 
+    private LiveLesson mLesson;
+
     @Override
     protected void addViewContent() {
         setMiddleTitle(R.string.teacher_introduction_title);
@@ -67,6 +72,11 @@ public class TeacherIntroductionActivity extends BaseActivity {
                 mInputTipsTv.setText(String.format(getString(R.string.input_tips), s.length(), MAX_CHAR));
             }
         });
+
+        Object object = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO);
+        if (object instanceof LiveLesson) {
+            mLesson = (LiveLesson) object;
+        }
     }
 
     @OnClick({R.id.left_image, R.id.sub_btn})
@@ -76,6 +86,18 @@ public class TeacherIntroductionActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.sub_btn:
+                String content = mInputContentEdt.getText().toString().trim();
+                if (!TextUtils.isEmpty(content) && mLesson != null) {
+                    LiveLesson.TeachersIntro intro = new LiveLesson.TeachersIntro();
+                    intro.setText(content);
+                    mLesson.setTeachersIntro(intro);
+                    Intent i = new Intent();
+                    i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
+                    setResult(RESULT_OK, i);
+                    finish();
+                } else {
+                    finish();
+                }
                 break;
             default:
                 break;

@@ -1,7 +1,17 @@
 package com.benyuan.xiaojs.ui.course;
 
+import android.content.Intent;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -19,10 +29,58 @@ import com.benyuan.xiaojs.ui.base.BaseActivity;
  * ======================================================================================== */
 
 public class SitInOnActivity extends BaseActivity {
+    @BindView(R.id.visible_to_stu)
+    ToggleButton mVisibleToStu;
+    @BindView(R.id.sit_in_on_person)
+    TextView mSitInOnPerson;
+
+    private LiveLesson mLesson;
+
     @Override
     protected void addViewContent() {
         setMiddleTitle(R.string.sit_in_on_title);
 
         addView(R.layout.activity_sit_in_on);
+
+        init();
+    }
+
+    private void init() {
+        Object object = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO);
+        if (object instanceof LiveLesson) {
+            mLesson = (LiveLesson) object;
+        }
+    }
+
+    @OnClick({R.id.left_image, R.id.sub_btn})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.left_image:
+                finish();
+                break;
+            case R.id.sit_in_on_person:
+                //select sit in person
+                break;
+            case R.id.sub_btn:
+                String selectTip = getString(R.string.please_select);
+                String persons = mSitInOnPerson.getText().toString();
+                if (!mVisibleToStu.isChecked() && (TextUtils.isEmpty(persons) || selectTip.equals(persons) || persons.split(",") == null)) {
+                    finish();
+                } else {
+                    LiveLesson.TeachersIntro intro = new LiveLesson.TeachersIntro();
+                    LiveLesson.Audit audit = new LiveLesson.Audit();
+                    audit.setEnabled(true);
+                    audit.setVisibleToStudents(mVisibleToStu.isSelected());
+                    audit.setGrantedTo(persons.split(","));
+                    mLesson.setTeachersIntro(intro);
+                    Intent i = new Intent();
+                    i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
+                    setResult(RESULT_OK, i);
+                    finish();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
