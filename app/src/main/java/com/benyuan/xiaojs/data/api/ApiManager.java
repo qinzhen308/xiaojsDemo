@@ -17,6 +17,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -117,6 +120,8 @@ public class ApiManager {
         String jsonStr = null;
         try {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+            mapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
             jsonStr = mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

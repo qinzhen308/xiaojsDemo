@@ -92,7 +92,7 @@ public class LessonRequest extends ServiceRequest {
 
 
         String criteriaJsonstr = ApiManager.objectToJsonString(criteria);
-        String paginationJsonstr = ApiManager.objectToJsonString(criteria);
+        String paginationJsonstr = ApiManager.objectToJsonString(pagination);
 
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
