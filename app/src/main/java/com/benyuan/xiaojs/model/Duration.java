@@ -2,30 +2,28 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.Date;
-
 /**
  * Created by maxiaobao on 2016/11/8.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Duration {
 
-    private Date start;
-    private Date end;
+    private String start;
+    private String end;
 
-    public Date getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 }

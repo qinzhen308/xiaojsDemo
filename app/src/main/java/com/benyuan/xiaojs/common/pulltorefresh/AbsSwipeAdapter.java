@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.benyuan.xiaojs.model.Pagination;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.handmark.pulltorefresh.PullToRefreshBase;
 
@@ -35,13 +36,14 @@ import java.util.List;
  */
 public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapter{
 
-    protected final int PAGE_SIZE = 10;
+    private final int PAGE_FIRST = 1;
+    private final int PAGE_SIZE = 10;
     private AutoPullToRefreshListView mListView;
     protected Context mContext;
     protected LayoutInflater mInflater;
     protected List<B> mBeanList = new ArrayList<>();
-    protected int mCurrentPage = 0;
     private boolean isDown;
+    protected Pagination mPagination;
 
     public AbsSwipeAdapter(Context context,AutoPullToRefreshListView listView){
         mContext = context;
@@ -53,6 +55,9 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
         if (mListView != null){
             return;
         }
+        mPagination = new Pagination();
+        mPagination.setPage(PAGE_FIRST);
+        mPagination.setMaxNumOfObjectsPerPage(PAGE_SIZE);
         mListView = listView;
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -64,21 +69,22 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                mCurrentPage = 1;
                 isDown = true;
-                doRequest(mCurrentPage);
+                mPagination.setPage(PAGE_FIRST);
+                doRequest(mPagination.getPage());
             }
         });
 
         mListView.setOnLoadMoreListener(new AutoPullToRefreshListView.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                mCurrentPage++;
+                mPagination.setPage(mPagination.getPage() + 1);
                 isDown = false;
-                doRequest(mCurrentPage);
+                doRequest(mPagination.getPage());
             }
         });
-        doRequest(mCurrentPage);
+        doRequest(mPagination.getPage());
+
     }
 
     protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l){
@@ -154,7 +160,7 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
             mBeanList.clear();
         }
         if (data == null || data.size() == 0){
-            mCurrentPage--;
+            mPagination.setPage(mPagination.getPage() - 1);
             if (mBeanList.isEmpty()){//接口数据为空，本地数据也为空，则显示空视图
                 addEmptyView();
             }
@@ -166,17 +172,24 @@ public abstract class AbsSwipeAdapter<B,H extends BaseHolder> extends BaseAdapte
         }
     }
 
-    protected final void onFailure(String errorCode){
+    protected final void onFailure(String errorCode,String msg){
 
     }
 
     private void addEmptyView(){
-
         onDataEmpty();
     }
 
     protected void onDataEmpty(){
 
+    }
+
+    public void setPageNum(int pageNum){
+        mPagination.setPage(pageNum);
+    }
+
+    public void setPageSize(int pageSize){
+        mPagination.setPage(pageSize);
     }
 
 }

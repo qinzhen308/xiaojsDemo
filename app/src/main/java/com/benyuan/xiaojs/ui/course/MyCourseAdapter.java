@@ -18,8 +18,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -28,19 +26,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.common.xf_foundation.LessonState;
+import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
+import com.benyuan.xiaojs.data.LessonDataManager;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.Criteria;
+import com.benyuan.xiaojs.model.Duration;
+import com.benyuan.xiaojs.model.GetLessonsResponse;
+import com.benyuan.xiaojs.model.ObjectsOfPage;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 import com.benyuan.xiaojs.util.BitmapUtils;
 import com.benyuan.xiaojs.util.NumberUtil;
+import com.benyuan.xiaojs.util.TimeUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 
-public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter.Holder> {
+public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdapter.Holder> {
     private boolean mIsTeacher;
     private Bitmap mEnterClass1;//人数小于99的图
     private Bitmap mEnterClass2;//人数大于99的图
@@ -51,7 +57,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
     }
 
     @Override
-    protected void setViewContent(Holder holder, CourseBean bean, int position) {
+    protected void setViewContent(Holder holder, ObjectsOfPage bean, int position) {
         if (mIsTeacher){
             showTeacher(holder,bean,position);
         }else {
@@ -59,131 +65,103 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
         }
     }
 
-    private void showStu(Holder holder, CourseBean bean, int position) {
-        holder.name.setText(bean.name);
-        holder.desc.setText(mContext.getString(R.string.speaker) + bean.speaker);
-        holder.time.setText(bean.time);
+    private void showStu(Holder holder, ObjectsOfPage bean, int position) {
+        holder.name.setText(bean.getTitle());
+        //holder.desc.setText(mContext.getString(R.string.speaker) + bean.speaker);
+        holder.time.setText(TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
         holder.operaF4.setVisibility(View.GONE);
         holder.opera1.setTipEnable(true);
         holder.opera2.setTipEnable(true);
         holder.opera3.setTipEnable(true);
-        switch (bean.courseState){
-            case CourseConstant.STU_ON_COURSING:
-            case CourseConstant.STU_CANCEL_COURSE:
-            case CourseConstant.STU_PRIVATE_WAIT_COURSE:
-                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-                enterClass(holder.opera2,1);
-                setShow(holder.opera3,R.drawable.data_bank_selector,R.string.data_bank);
-                break;
-            case CourseConstant.STU_END_COURSE:
-            case CourseConstant.STU_WAIT_COURSE:
-                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-                enterClass(holder.opera2,0);
-                setShow(holder.opera3,R.drawable.more_selector,R.string.more);
-                break;
-            default:
-                break;
+
+        if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)
+                || bean.getState().equalsIgnoreCase(LessonState.LIVE)){
+            setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+            enterClass(holder.opera2,1);
+            setShow(holder.opera3,R.drawable.data_bank_selector,R.string.data_bank);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
+            setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+            enterClass(holder.opera2,0);
+            setShow(holder.opera3,R.drawable.more_selector,R.string.more);
         }
         showState(holder,bean);
     }
 
-    private void showTeacher(Holder holder, CourseBean bean, int position) {
-        holder.name.setText(bean.name);
-        holder.desc.setText(NumberUtil.getPrice(bean.price));
-        holder.time.setText(bean.time);
+    private void showTeacher(Holder holder, ObjectsOfPage bean, int position) {
+        holder.name.setText(bean.getTitle());
+        if (bean.getFee().isFree()){
+            holder.desc.setText(R.string.free);
+        }else {
+            holder.desc.setText(NumberUtil.getPrice(bean.getFee().getCharge()));
+        }
+
+        holder.time.setText(TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
         holder.opera1.setTipEnable(true);
         holder.opera2.setTipEnable(true);
         holder.opera3.setTipEnable(true);
         holder.opera4.setTipEnable(true);
 
-        switch (bean.courseState){
-            case CourseConstant.TEACHER_WAIT_GROUND:
-            case CourseConstant.TEACHER_EXAMINING:
-            case CourseConstant.TEACHER_GROUND_WAIT_COURSE:
-            case CourseConstant.TEACHER_GROUND_COURSING:
-                holder.opera1.setVisibility(View.VISIBLE);
-                holder.opera2.setVisibility(View.VISIBLE);
-                holder.opera3.setVisibility(View.VISIBLE);
-                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-                enterClass(holder.opera2,1);
-                setShow(holder.opera3,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
-                setShow(holder.opera4,R.drawable.more_selector,R.string.more);
-                break;
-            case CourseConstant.TEACHER_GROUND_END_COURSE:
-                holder.opera1.setVisibility(View.VISIBLE);
-                holder.opera2.setVisibility(View.VISIBLE);
-                holder.opera3.setVisibility(View.VISIBLE);
-                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-                setShow(holder.opera2,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
-                setShow(holder.opera3,R.drawable.ic_add_private_course_pressed,R.string.lesson_again);
-                //holder.opera3.setText(R.string.lesson_again);
-                setShow(holder.opera4,R.drawable.more_selector,R.string.more);
-                break;
-            case CourseConstant.TEACHER_FAILURE:
-                holder.opera1.setVisibility(View.INVISIBLE);
-                holder.opera2.setVisibility(View.INVISIBLE);
-                holder.opera3.setVisibility(View.INVISIBLE);
-                setShow(holder.opera4,R.drawable.more_selector,R.string.more);
-                break;
-            case CourseConstant.TEACHER_FORCE_CLOSE:
-                holder.opera1.setVisibility(View.INVISIBLE);
-                holder.opera2.setVisibility(View.INVISIBLE);
-                holder.opera3.setVisibility(View.INVISIBLE);
-                setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
-                break;
-            case CourseConstant.TEACHER_GROUND_CANCEL_COURSE:
-                holder.opera1.setVisibility(View.INVISIBLE);
-                holder.opera2.setVisibility(View.VISIBLE);
-                holder.opera3.setVisibility(View.VISIBLE);
-                setShow(holder.opera2,R.drawable.learn_circle_selector,R.string.cls_moment);
-                enterClass(holder.opera3,1);
-                setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
-                break;
-            case CourseConstant.TEACHER_PRIVATE_WAIT_COURSE:
-                holder.opera1.setVisibility(View.VISIBLE);
-                holder.opera2.setVisibility(View.VISIBLE);
-                holder.opera3.setVisibility(View.VISIBLE);
-                setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-                enterClass(holder.opera2,0);
-                setShow(holder.opera3,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
-                holder.opera4.setText(R.string.invite);
-                break;
-
-            default:
-                break;
+        if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
+                || bean.getState().equalsIgnoreCase(LessonState.LIVE)){
+            holder.opera1.setVisibility(View.VISIBLE);
+            holder.opera2.setVisibility(View.VISIBLE);
+            holder.opera3.setVisibility(View.VISIBLE);
+            setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+            enterClass(holder.opera2,1);
+            setShow(holder.opera3,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
+            setShow(holder.opera4,R.drawable.more_selector,R.string.more);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
+            holder.opera1.setVisibility(View.VISIBLE);
+            holder.opera2.setVisibility(View.VISIBLE);
+            holder.opera3.setVisibility(View.VISIBLE);
+            setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
+            setShow(holder.opera2,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
+            setShow(holder.opera3,R.drawable.ic_add_private_course_pressed,R.string.lesson_again);
+            setShow(holder.opera4,R.drawable.more_selector,R.string.more);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)){
+            holder.opera1.setVisibility(View.INVISIBLE);
+            holder.opera2.setVisibility(View.INVISIBLE);
+            holder.opera3.setVisibility(View.INVISIBLE);
+            setShow(holder.opera4,R.drawable.more_selector,R.string.more);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)){
+            holder.opera1.setVisibility(View.INVISIBLE);
+            holder.opera2.setVisibility(View.VISIBLE);
+            holder.opera3.setVisibility(View.VISIBLE);
+            setShow(holder.opera2,R.drawable.learn_circle_selector,R.string.cls_moment);
+            enterClass(holder.opera3,1);
+            setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)){
+            holder.opera1.setVisibility(View.INVISIBLE);
+            holder.opera2.setVisibility(View.INVISIBLE);
+            holder.opera3.setVisibility(View.INVISIBLE);
+            setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
         }
         showState(holder,bean);
     }
 
-    private void showState(Holder holder, CourseBean bean){
-        switch (bean.courseState){
-            case CourseConstant.STU_ON_COURSING:
-            case CourseConstant.TEACHER_GROUND_COURSING:
-                holder.courseState.setVisibility(View.VISIBLE);
-                holder.courseState.setText(R.string.course_state_playing);
-                holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
-                break;
-            case CourseConstant.STU_PRIVATE_WAIT_COURSE:
-            case CourseConstant.TEACHER_GROUND_WAIT_COURSE:
-                holder.courseState.setVisibility(View.VISIBLE);
-                holder.courseState.setText(R.string.course_state_wait);
-                holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
-                break;
-            case CourseConstant.STU_CANCEL_COURSE:
-            case CourseConstant.TEACHER_GROUND_CANCEL_COURSE:
-                holder.courseState.setVisibility(View.VISIBLE);
-                holder.courseState.setText(R.string.course_state_cancel);
-                holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
-                break;
-            case CourseConstant.STU_END_COURSE:
-            case CourseConstant.TEACHER_GROUND_END_COURSE:
-                holder.courseState.setVisibility(View.VISIBLE);
-                holder.courseState.setText(R.string.course_state_end);
-                holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
-                break;
-            default:
-                holder.courseState.setVisibility(View.GONE);
-                break;
+    private void showState(Holder holder, ObjectsOfPage bean){
+
+        if (bean.getState().equalsIgnoreCase(LessonState.LIVE)){
+            holder.courseState.setVisibility(View.VISIBLE);
+            holder.courseState.setText(R.string.course_state_playing);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
+            holder.courseState.setVisibility(View.VISIBLE);
+            holder.courseState.setText(R.string.course_state_wait);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)){
+            holder.courseState.setVisibility(View.VISIBLE);
+            holder.courseState.setText(R.string.course_state_cancel);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
+            holder.courseState.setVisibility(View.VISIBLE);
+            holder.courseState.setText(R.string.course_state_end);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
+        }else {
+            holder.courseState.setVisibility(View.GONE);
         }
     }
 
@@ -235,45 +213,30 @@ public class MyCourseAdapter extends AbsSwipeAdapter<CourseBean, MyCourseAdapter
 
     @Override
     protected void doRequest(int pageNo) {
-        mCurrentPage = pageNo;
-        new Thread(new Runnable() {
+        Duration duration = new Duration();
+        duration.setStart("2016-11-08T18:28:37.648+0800");
+        duration.setEnd("2016-11-09T18:28:37.657+0800");
+
+        Criteria criteria = new Criteria();
+        criteria.setSource(Ctl.LessonSource.ALL);
+        criteria.setDuration(duration);
+        criteria.setState(LessonState.DRAFT);
+
+        LessonDataManager.requestGetLessons(mContext, XiaojsConfig.mLoginUser.getSessionID(),criteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
             @Override
-            public void run() {
-                List<CourseBean> beans = new ArrayList<>();
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                for (int i = 0;i<5;i++){
-                    CourseBean bean = new CourseBean();
-                    long t = System.currentTimeMillis();
-                    bean.name = t / 7 + "课";
-                    bean.speaker = t / 8 + "s";
-                    bean.time = t/222225564143l + "分";
-                    if (!mIsTeacher){
-                        bean.courseState = (int) (t % 5);
-                    }else {
-                        bean.courseState = (int) (System.currentTimeMillis() % 10) + 10;
-                    }
-                    beans.add(bean);
-                }
-                Message s = Message.obtain();
-                s.obj = beans;
-                h.sendMessage(s);
+            public void onSuccess(GetLessonsResponse object) {
+                Logger.d("onSuccess-----------");
+                MyCourseAdapter.this.onSuccess(object.getObjectsOfPage());
             }
-        }).start();
+
+            @Override
+            public void onFailure(String errorCode,String errorMessage) {
+                MyCourseAdapter.this.onFailure(errorCode,errorMessage);
+                Logger.d("onFailure-----------");
+            }
+        });
 
     }
-
-    private Handler h = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message message) {
-            List<CourseBean> beans = (List<CourseBean>) message.obj;
-            onSuccess(beans);
-            return false;
-        }
-    });
 
     static class Holder extends BaseHolder {
         @BindView(R.id.course_item_image)

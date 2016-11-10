@@ -643,4 +643,9 @@ public class TimeUtil {
         }
         return time;
     }
+
+    public static String getTimeFormat(Date date,int duration){
+
+        return duration + "分钟";
+    }
 }
