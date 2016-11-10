@@ -1,7 +1,13 @@
 package com.benyuan.xiaojs.ui.course;
 
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
+import android.widget.ListView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
@@ -36,10 +42,39 @@ public class LessionDetailActivity extends BaseActivity {
 
 
     private void showApplyDlg() {
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_apply_lession_dlg, null);
+        ListView payListView = (ListView) view.findViewById(R.id.list_pay);
+
+        String[] payArray = getResources().getStringArray(R.array.lesson_pay_methods);
+        PayAdapter payAdapter = new PayAdapter(this, R.layout.layout_pay_lesson_item, payArray);
+        payListView.setAdapter(payAdapter);
+        payListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
         BottomSheet bottomSheet = new BottomSheet(this);
-        bottomSheet.setContent(R.layout.layout_apply_lession_dlg);
+        bottomSheet.setTitleVisibility(View.GONE);
+        bottomSheet.setContent(view);
         bottomSheet.show();
 
+    }
+
+
+    private class PayAdapter extends ArrayAdapter<String> {
+        public PayAdapter(Context context, int resource, String[] objects) {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = super.getView(position, convertView, parent);
+            CheckedTextView textView = (CheckedTextView) v;
+
+            if (position == 0) {
+                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alipay, 0, 0, 0);
+            } else {
+                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wechat, 0, 0, 0);
+            }
+            return v;
+        }
     }
 
 
