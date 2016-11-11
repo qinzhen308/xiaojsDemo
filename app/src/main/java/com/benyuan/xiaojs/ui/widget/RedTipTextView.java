@@ -31,7 +31,7 @@ public class RedTipTextView extends TextView {
     private boolean mTipEnable;
     private Bitmap mMark;
     private Paint mPaint;
-    private boolean hasDrawable = true;
+    private boolean hasDrawable;
 
     public RedTipTextView(Context context) {
         super(context);
@@ -52,9 +52,16 @@ public class RedTipTextView extends TextView {
         if (attrs != null){
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(
                     attrs,
-                    R.styleable.GooeyMenu,
+                    R.styleable.RedTipTextView,
                     0, 0);
+            try {
+                hasDrawable = typedArray.getBoolean(R.styleable.RedTipTextView_hasDrawable,true);
+            }finally {
+                typedArray.recycle();
+                typedArray = null;
+            }
         }
+
         mMark = BitmapFactory.decodeResource(getResources(), R.drawable.ic_red_mark);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -88,10 +95,4 @@ public class RedTipTextView extends TextView {
         mTipEnable = enable;
         invalidate();
     }
-
-    public void setHasDrawable(boolean has){
-        hasDrawable = has;
-        invalidate();
-    }
-
 }

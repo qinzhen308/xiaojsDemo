@@ -16,12 +16,10 @@ package com.benyuan.xiaojs.ui.course;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +36,9 @@ import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.ObjectsOfPage;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
-import com.benyuan.xiaojs.util.BitmapUtils;
 import com.benyuan.xiaojs.util.NumberUtil;
 import com.benyuan.xiaojs.util.TimeUtil;
+import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
@@ -48,8 +46,6 @@ import butterknife.BindView;
 
 public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdapter.Holder> {
     private boolean mIsTeacher;
-    private Bitmap mEnterClass1;//人数小于99的图
-    private Bitmap mEnterClass2;//人数大于99的图
     private Criteria mCriteria;
 
     public MyCourseAdapter(Context context, AutoPullToRefreshListView listView, boolean isTeacher) {
@@ -70,6 +66,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
 
     @Override
     protected void setViewContent(Holder holder, ObjectsOfPage bean, int position) {
+        holder.reset();
         if (mIsTeacher){
             showTeacher(holder,bean,position);
         }else {
@@ -77,133 +74,216 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
         }
     }
 
-    private void showStu(Holder holder, ObjectsOfPage bean, int position) {
+    private void showStu(Holder holder, final ObjectsOfPage bean, int position) {
         holder.name.setText(bean.getTitle());
-        //holder.desc.setText(mContext.getString(R.string.speaker) + bean.speaker);
         holder.time.setText(TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
-        holder.operaF4.setVisibility(View.GONE);
-        holder.opera1.setTipEnable(true);
-        holder.opera2.setTipEnable(true);
-        holder.opera3.setTipEnable(true);
 
-        if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)
-                || bean.getState().equalsIgnoreCase(LessonState.LIVE)){
-            setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-            enterClass(holder.opera2,1);
-            setShow(holder.opera3,R.drawable.data_bank_selector,R.string.data_bank);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
-            setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-            enterClass(holder.opera2,0);
-            setShow(holder.opera3,R.drawable.more_selector,R.string.more);
-        }
-        showState(holder,bean);
-    }
-
-    private void showTeacher(Holder holder, ObjectsOfPage bean, int position) {
-        holder.name.setText(bean.getTitle());
-        if (bean.getFee().isFree()){
-            holder.desc.setText(R.string.free);
-        }else {
-            holder.desc.setText(NumberUtil.getPrice(bean.getFee().getCharge().doubleValue()));
-        }
-
-        holder.time.setText(TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
-        holder.opera1.setTipEnable(true);
-        holder.opera1.setHasDrawable(false);
-        holder.opera2.setTipEnable(true);
-        holder.opera3.setTipEnable(true);
-        holder.opera4.setTipEnable(true);
-
-        if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
-                || bean.getState().equalsIgnoreCase(LessonState.LIVE)){
-            holder.opera1.setVisibility(View.VISIBLE);
-            holder.opera2.setVisibility(View.VISIBLE);
-            holder.opera3.setVisibility(View.VISIBLE);
-            setShow(holder.opera1,0,R.string.cls_moment);
-            enterClass(holder.opera2,1);
-            setShow(holder.opera3,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
-            setShow(holder.opera4,R.drawable.more_selector,R.string.more);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
-            holder.opera1.setVisibility(View.VISIBLE);
-            holder.opera2.setVisibility(View.VISIBLE);
-            holder.opera3.setVisibility(View.VISIBLE);
-            setShow(holder.opera1,R.drawable.learn_circle_selector,R.string.cls_moment);
-            setShow(holder.opera2,R.drawable.prepare_lesson_selector,R.string.prepare_lesson);
-            setShow(holder.opera3,R.drawable.ic_add_private_course_pressed,R.string.lesson_again);
-            setShow(holder.opera4,R.drawable.more_selector,R.string.more);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)){
-            holder.opera1.setVisibility(View.INVISIBLE);
-            holder.opera2.setVisibility(View.INVISIBLE);
-            holder.opera3.setVisibility(View.INVISIBLE);
-            setShow(holder.opera4,R.drawable.more_selector,R.string.more);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)){
-            holder.opera1.setVisibility(View.INVISIBLE);
-            holder.opera2.setVisibility(View.VISIBLE);
-            holder.opera3.setVisibility(View.VISIBLE);
-            setShow(holder.opera2,R.drawable.learn_circle_selector,R.string.cls_moment);
-            enterClass(holder.opera3,1);
-            setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)){
-            holder.opera1.setVisibility(View.INVISIBLE);
-            holder.opera2.setVisibility(View.INVISIBLE);
-            holder.opera3.setVisibility(View.INVISIBLE);
-            setShow(holder.opera4,R.drawable.show_pwd,R.string.look_detail);
-        }
-        showState(holder,bean);
-    }
-
-    private void showState(Holder holder, ObjectsOfPage bean){
-
-        if (bean.getState().equalsIgnoreCase(LessonState.LIVE)){
-            holder.courseState.setVisibility(View.VISIBLE);
-            holder.courseState.setText(R.string.course_state_playing);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
-            holder.courseState.setVisibility(View.VISIBLE);
-            holder.courseState.setText(R.string.course_state_wait);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)){
-            holder.courseState.setVisibility(View.VISIBLE);
+        holder.clsFunction.setVisibility(View.VISIBLE);
+        holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
+            @Override
+            public void onClick(View view) {
+                circle(bean);
+            }
+        });
+        holder.enter.setOnClickListener(new View.OnClickListener() {//进入教室
+            @Override
+            public void onClick(View view) {
+                enterClass(bean);
+            }
+        });
+        holder.more.setOnClickListener(new View.OnClickListener() {//更多
+            @Override
+            public void onClick(View view) {
+                more(bean);
+            }
+        });
+        if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)){
             holder.courseState.setText(R.string.course_state_cancel);
             holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
         }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
-            holder.courseState.setVisibility(View.VISIBLE);
             holder.courseState.setText(R.string.course_state_end);
             holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
-        }else {
-            holder.courseState.setVisibility(View.GONE);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)){
+            holder.courseState.setText(R.string.living);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
+            holder.courseState.setText(R.string.pending_for_course);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
         }
     }
 
-    private void setShow(TextView tv,int drawable,int text){
-        tv.setText(text);
-        tv.setCompoundDrawablesWithIntrinsicBounds(0,drawable,0,0);
-    }
-
-    private void enterClass(TextView tv,int num){
-        tv.setText(R.string.into_cls);
-        if (num > 0){
-            tv.setCompoundDrawablesWithIntrinsicBounds(null, BitmapUtils.getDrawableWithText(mContext,getEnterClassBg(num),String.valueOf(num)),null,null);
+    private void showTeacher(Holder holder, final ObjectsOfPage bean, int position) {
+        holder.name.setText(bean.getTitle());
+        holder.price.setVisibility(View.VISIBLE);
+        holder.price.setText(NumberUtil.getPrice(bean.getFee().getCharge().doubleValue()));
+        if (bean.getFee().isFree()){
+            holder.desc.setText(R.string.free);
         }else {
-            tv.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_enter_cls_no,0,0);
+            holder.desc.setText(mContext.getString(R.string.course_stu,bean.getEnroll().getCurrent(),bean.getEnroll().getMax()));
         }
-    }
 
-    private Bitmap getEnterClassBg(int num){
-        if (num > 99){
-            if (mEnterClass2 == null){
-                mEnterClass2 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_enter_cls_have);
+        holder.time.setText(TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
+
+        if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)){
+            holder.operaFunction.setVisibility(View.VISIBLE);
+            holder.shelves.setVisibility(View.VISIBLE);
+            holder.shelvesLine.setVisibility(View.VISIBLE);
+            holder.edit.setVisibility(View.VISIBLE);
+            holder.editLine.setVisibility(View.VISIBLE);
+            holder.shelves.setOnClickListener(new View.OnClickListener() {//上架
+                @Override
+                public void onClick(View view) {
+                    shelves(bean);
+                }
+            });
+            holder.edit.setOnClickListener(new View.OnClickListener() {//编辑
+                @Override
+                public void onClick(View view) {
+                    edit(bean);
+                }
+            });
+            holder.detail.setOnClickListener(new View.OnClickListener() {//查看详情
+                @Override
+                public void onClick(View view) {
+                    detail(bean);
+                }
+            });
+            holder.courseState.setText(R.string.pending_shelves);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_draft_bg);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)){
+            holder.more.setVisibility(View.VISIBLE);
+            holder.error.setText(R.string.course_examine_error_tip);
+            holder.more.setOnClickListener(new View.OnClickListener() {//更多
+                @Override
+                public void onClick(View view) {
+                    more(bean);
+                }
+            });
+            holder.courseState.setText(R.string.examine_failure);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_failure_bg);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)){
+            holder.operaFunction.setVisibility(View.VISIBLE);
+            holder.detail.setOnClickListener(new View.OnClickListener() {//查看详情
+                @Override
+                public void onClick(View view) {
+                    detail(bean);
+                }
+            });
+            holder.courseState.setText(R.string.course_state_cancel);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)){
+            holder.error.setVisibility(View.VISIBLE);
+            holder.operaFunction.setVisibility(View.VISIBLE);
+            holder.error.setText(R.string.course_stop_error_tip);
+            holder.detail.setOnClickListener(new View.OnClickListener() {//查看详情
+                @Override
+                public void onClick(View view) {
+                    detail(bean);
+                }
+            });
+            holder.courseState.setText(R.string.force_stop);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_stop_bg);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)){
+            holder.operaFunction.setVisibility(View.VISIBLE);
+            holder.cancel.setVisibility(View.VISIBLE);
+            holder.cancelLine.setVisibility(View.VISIBLE);
+            holder.cancel.setOnClickListener(new View.OnClickListener() {//撤销
+                @Override
+                public void onClick(View view) {
+                    cancel(bean);
+                }
+            });
+            holder.detail.setOnClickListener(new View.OnClickListener() {//查看详情
+                @Override
+                public void onClick(View view) {
+                    detail(bean);
+                }
+            });
+            holder.courseState.setText(R.string.examining);
+            holder.courseState.setBackgroundResource(R.drawable.course_state_examine_bg);
+        }else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
+                || bean.getState().equalsIgnoreCase(LessonState.LIVE)
+                || bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
+            holder.more.setVisibility(View.VISIBLE);
+            holder.clsFunction.setVisibility(View.VISIBLE);
+            holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
+                @Override
+                public void onClick(View view) {
+                    circle(bean);
+                }
+            });
+            holder.enter.setOnClickListener(new View.OnClickListener() {//进入教室
+                @Override
+                public void onClick(View view) {
+                    enterClass(bean);
+                }
+            });
+            holder.more.setOnClickListener(new View.OnClickListener() {//更多
+                @Override
+                public void onClick(View view) {
+                    more(bean);
+                }
+            });
+
+            if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
+                holder.courseState.setText(R.string.pending_for_course);
+                holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
+            }else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)){
+                holder.courseState.setText(R.string.living);
+                holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
+            }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
+                holder.courseState.setText(R.string.course_state_end);
+                holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
             }
-            return mEnterClass2.copy(Bitmap.Config.ARGB_8888,true);
-        }else {
-            if (mEnterClass1 == null){
-                mEnterClass1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_enter_cls_have);
-            }
-            return mEnterClass1.copy(Bitmap.Config.ARGB_8888,true);
         }
+    }
+
+    //上架
+    private void shelves(final ObjectsOfPage bean){
+        LessonDataManager.requestPutLessonOnShelves(mContext,XiaojsConfig.mLoginUser.getSessionID(),bean.getId(),new APIServiceCallback<GetLessonsResponse>() {
+            @Override
+            public void onSuccess(GetLessonsResponse object) {
+                bean.setState(LessonState.PENDING_FOR_APPROVAL);
+                notifyData(bean);
+                Logger.d("onSuccess-----------");
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ToastUtil.showToast(mContext,errorMessage);
+                Logger.d("onFailure-----------");
+            }
+        });
+    }
+
+    //编辑
+    private void edit(ObjectsOfPage bean){
+
+    }
+
+    //撤销
+    private void cancel(ObjectsOfPage bean){
+
+    }
+
+    //查看详情
+    private void detail(ObjectsOfPage bean){
+
+    }
+
+    //更多
+    private void more(ObjectsOfPage bean){
+
+    }
+
+    //班级圈
+    private void circle(ObjectsOfPage bean){
+
+    }
+
+    //进入教室
+    private void enterClass(ObjectsOfPage bean){
+
     }
 
     @Override
@@ -242,6 +322,21 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
 
     }
 
+    private void notifyData(ObjectsOfPage bean){
+        boolean changed = false;
+        for (int i = 0;i<mBeanList.size();i++){
+            ObjectsOfPage b = mBeanList.get(i);
+            if (b.getId().equalsIgnoreCase(bean.getId())){
+                mBeanList.set(i,bean);
+                changed = true;
+                break;
+            }
+        }
+        if (changed){
+            notifyDataSetChanged();
+        }
+    }
+
     public void request(Criteria criteria){
         mCriteria = criteria;
         mPagination.setPage(PAGE_FIRST);
@@ -265,24 +360,52 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
         @BindView(R.id.course_price)
         TextView price;
 
-        @BindView(R.id.course_opera_1)
-        RedTipTextView opera1;
-        @BindView(R.id.course_opera_2)
-        RedTipTextView opera2;
-        @BindView(R.id.course_opera_3)
-        RedTipTextView opera3;
-        @BindView(R.id.course_opera_4)
-        RedTipTextView opera4;
+        @BindView(R.id.course_item_fun_circle)
+        RedTipTextView circle;
+        @BindView(R.id.course_item_fun_enter)
+        RedTipTextView enter;
 
-        @BindView(R.id.course_opera_f1)
-        FrameLayout operaF1;
-        @BindView(R.id.course_opera_f2)
-        FrameLayout operaF2;
-        @BindView(R.id.course_opera_f3)
-        FrameLayout operaF3;
-        @BindView(R.id.course_opera_f4)
-        FrameLayout operaF4;
+        @BindView(R.id.course_item_fun_shelves)
+        TextView shelves;
+        @BindView(R.id.course_item_fun_edit)
+        TextView edit;
+        @BindView(R.id.course_item_fun_cancel)
+        TextView cancel;
+        @BindView(R.id.course_item_fun_detail)
+        TextView detail;
 
+        @BindView(R.id.course_item_fun_error)
+        TextView error;
+
+        @BindView(R.id.course_item_fun_more)
+        TextView more;
+
+        @BindView(R.id.course_item_fun_cls)
+        LinearLayout clsFunction;
+        @BindView(R.id.course_item_fun_opera)
+        LinearLayout operaFunction;
+
+        @BindView(R.id.course_item_fun_shelves_line)
+        View shelvesLine;
+        @BindView(R.id.course_item_fun_edit_line)
+        View editLine;
+        @BindView(R.id.course_item_fun_cancel_line)
+        View cancelLine;
+
+
+        public void reset(){
+            clsFunction.setVisibility(View.GONE);
+            operaFunction.setVisibility(View.GONE);
+            error.setVisibility(View.GONE);
+            more.setVisibility(View.GONE);
+            shelves.setVisibility(View.GONE);
+            edit.setVisibility(View.GONE);
+            cancel.setVisibility(View.GONE);
+            shelvesLine.setVisibility(View.GONE);
+            editLine.setVisibility(View.GONE);
+            cancelLine.setVisibility(View.GONE);
+            price.setVisibility(View.GONE);
+        }
 
         public Holder(View view) {
             super(view);

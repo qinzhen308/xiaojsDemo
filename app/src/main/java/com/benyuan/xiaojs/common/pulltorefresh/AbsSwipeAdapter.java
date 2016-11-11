@@ -94,11 +94,22 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 doRequest();
             }
         });
-        doRequest();
+        mListView.setHeaderReadyListener(new PullToRefreshBase.OnHeaderReadyListener() {
+            @Override
+            public void onReady() {
+                if (firstRefresh()){
+                    mListView.setRefreshing();
+                }
+            }
+        });
     }
 
     protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
+    }
+
+    protected boolean firstRefresh(){
+        return true;
     }
 
     @Override

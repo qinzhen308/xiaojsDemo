@@ -8,9 +8,9 @@ public class LessonState {
 
     public static final String DRAFT = "Draft";
 
-    public static final String PENDING_FOR_APPROVAL = "Pending for approval";
+    public static final String PENDING_FOR_APPROVAL = "PendingForApproval";
 
-    public static final String PENDING_FOR_LIVE = "Pending for live";
+    public static final String PENDING_FOR_LIVE = "PendingForLive";
 
     public static final String LIVE = "Live";
 

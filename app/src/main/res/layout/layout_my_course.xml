@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -74,8 +75,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
-                <RelativeLayout
+                <TextView
+                        android:id="@+id/time_mark"
+                        android:textSize="@dimen/font_26px"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/common_text"
                         android:layout_marginTop="@dimen/px14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <RelativeLayout
+                        android:layout_marginTop="@dimen/px28"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -92,41 +103,21 @@
                             android:layout_height="wrap_content"/>
 
                     <TextView
-                            android:id="@+id/time_mark"
+                            android:id="@+id/course_price"
                             android:layout_alignParentLeft="true"
                             android:layout_centerInParent="true"
-                            android:textSize="@dimen/font_26px"
-                            android:layout_toLeftOf="@id/course_state"
-                            android:maxLines="1"
-                            android:ellipsize="end"
-                            android:textColor="@color/common_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                </RelativeLayout>
-
-                <RelativeLayout
-                        android:layout_marginTop="@dimen/px28"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                    <TextView
-                            android:id="@+id/course_price"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerInParent="true"
-                            android:layout_marginLeft="@dimen/px30"
-                            android:textSize="@dimen/font_26px"
+                            android:textSize="@dimen/font_28px"
                             android:textColor="@color/red"
-                            android:textStyle="bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
                     <TextView
                             android:id="@+id/course_desc"
-                            android:drawablePadding="@dimen/px14"
-                            android:layout_alignParentLeft="true"
                             android:layout_centerInParent="true"
+                            android:layout_toRightOf="@id/course_price"
                             android:textSize="@dimen/font_26px"
-                            android:layout_toLeftOf="@id/course_price"
+                            android:layout_toLeftOf="@id/course_state"
+                            android:layout_marginLeft="@dimen/px10"
                             android:maxLines="1"
                             android:ellipsize="end"
                             android:textColor="@color/common_text"
@@ -142,88 +133,10 @@
             android:layout_marginLeft="@dimen/px24"
             android:layout_marginRight="@dimen/px24"/>
 
-    <LinearLayout
+    <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <FrameLayout
-                android:id="@+id/course_opera_f1"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-
-            <com.benyuan.xiaojs.ui.widget.RedTipTextView
-                    android:id="@+id/course_opera_1"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
-                    android:padding="@dimen/px20"
-                    android:clickable="true"
-                    android:textSize="@dimen/font_26px"
-                    android:textColor="@color/common_text"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"/>
-        </FrameLayout>
-
-
-        <FrameLayout
-                android:id="@+id/course_opera_f2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-
-            <com.benyuan.xiaojs.ui.widget.RedTipTextView
-                    android:id="@+id/course_opera_2"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:paddingBottom="@dimen/px20"
-                    android:paddingTop="@dimen/px20"
-                    android:clickable="true"
-                    android:textSize="@dimen/font_26px"
-                    android:textColor="@color/common_text"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"/>
-        </FrameLayout>
-
-        <FrameLayout
-                android:id="@+id/course_opera_f3"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-
-            <com.benyuan.xiaojs.ui.widget.RedTipTextView
-                    android:id="@+id/course_opera_3"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:paddingBottom="@dimen/px20"
-                    android:paddingTop="@dimen/px20"
-                    android:clickable="true"
-                    android:textSize="@dimen/font_26px"
-                    android:textColor="@color/common_text"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"/>
-        </FrameLayout>
-
-        <FrameLayout
-                android:id="@+id/course_opera_f4"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-
-            <com.benyuan.xiaojs.ui.widget.RedTipTextView
-                    android:id="@+id/course_opera_4"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:textSize="@dimen/font_26px"
-                    android:textColor="@color/common_text"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:paddingBottom="@dimen/px20"
-                    android:paddingTop="@dimen/px20"
-                    android:layout_height="wrap_content"/>
-        </FrameLayout>
-
-    </LinearLayout>
+            layout="@layout/layout_course_item_function"/>
 
     <View
             android:background="@color/course_item_stroke_line"
