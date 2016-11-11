@@ -86,6 +86,8 @@ public class LiveLessonCreationFragment extends BaseFragment {
     EditTextDel mLessonDurationEdt;
     @BindView(R.id.publish_personal_page)
     TextView mPublicTv;
+    @BindView(R.id.on_shelves)
+    TextView mOnShelvesTv;
 
     private boolean mEnrollWayOpen = false;
     private long mLessonStartTime;
@@ -110,6 +112,9 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
         mLiveLessonNameEdt.setHint(getString(R.string.live_lesson_name_hint, MIN_LESSON_CHAR, MAX_LESSON_CHAR));
         mLiveLessonNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
+
+        mOnShelvesTv.setSelected(true);
+        mPublicTv.setSelected(true);
 
         //TODO
         mSubjectTv.setText(TEST_SUBJECT); //test
