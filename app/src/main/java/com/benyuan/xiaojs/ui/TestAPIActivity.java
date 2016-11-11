@@ -17,6 +17,7 @@ import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
 import com.benyuan.xiaojs.data.api.ApiManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -107,7 +108,9 @@ public class TestAPIActivity extends Activity {
         criteria.setSource(Ctl.LessonSource.ALL);
         criteria.setDuration(duration);
 
-        String jsonstr = ApiManager.objectToJsonString(criteria);
+        ServiceRequest serviceRequest = new ServiceRequest();
+
+        String jsonstr = serviceRequest.objectToJsonString(criteria);
         Logger.json(jsonstr);
     }
 

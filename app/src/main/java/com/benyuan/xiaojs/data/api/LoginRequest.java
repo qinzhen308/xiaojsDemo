@@ -11,12 +11,14 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,12 +28,15 @@ import retrofit2.Response;
  * Created by maxiaobao on 2016/10/31.
  */
 
-public class LoginRequest extends ServiceRequest{
+public class LoginRequest extends ServiceRequest {
 
 
     public void login(Context appContext,
                       LoginParams params,
-                      @NonNull final APIServiceCallback<LoginInfo> callback) {
+                      @NonNull APIServiceCallback<LoginInfo> callback) {
+
+        final WeakReference<APIServiceCallback<LoginInfo>> callbackReference =
+                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
 
@@ -41,10 +46,15 @@ public class LoginRequest extends ServiceRequest{
 
                 int responseCode = response.code();
 
-                if (responseCode == 200) {
+                if (responseCode == SUCCESS_CODE) {
 
                     LoginInfo info = response.body();
-                    callback.onSuccess(info);
+
+                    APIServiceCallback<LoginInfo> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(info);
+                    }
+
 
                 } else {
 
@@ -55,18 +65,15 @@ public class LoginRequest extends ServiceRequest{
                         e.printStackTrace();
                     }
 
-                    if (TextUtils.isEmpty(errorBody)) {
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.loginPrompt(errorCode);
 
-                        String errorMessage = ErrorPrompts.loginPrompt(Errors.NO_ERROR);
-                        callback.onFailure(Errors.NO_ERROR,errorMessage);
-
-                    } else {
-
-                        String errorCode = ApiManager.parseErrorBody(errorBody);
-                        String errorMessage = ErrorPrompts.loginPrompt(errorCode);
-                        callback.onFailure(errorCode,errorMessage);
+                    APIServiceCallback<LoginInfo> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
 
                     }
+
 
                 }
 
@@ -75,30 +82,41 @@ public class LoginRequest extends ServiceRequest{
             @Override
             public void onFailure(Call<LoginInfo> call, Throwable t) {
 
-                if(XiaojsConfig.DEBUG){
+                if (XiaojsConfig.DEBUG) {
                     Logger.d("the login has occur exception");
                 }
 
-                String errorMessage = ErrorPrompts.loginPrompt(Errors.NO_ERROR);
-                callback.onFailure(Errors.NO_ERROR,errorMessage);
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.loginPrompt(errorCode);
+
+                APIServiceCallback<LoginInfo> callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
             }
         });
 
     }
 
-    public void logout(Context appContext,String sessionID,@NonNull final APIServiceCallback callback) {
+    public void logout(Context appContext, String sessionID,
+                       @NonNull APIServiceCallback callback) {
+
+        final WeakReference<APIServiceCallback> callbackReference =
+                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
         xiaojsService.logout(sessionID).enqueue(new Callback<Empty>() {
             @Override
             public void onResponse(Call<Empty> call, Response<Empty> response) {
                 int responseCode = response.code();
-                if (responseCode == 200) {
+                if (responseCode == SUCCESS_CODE) {
 
-                    callback.onSuccess(null);
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
 
                 } else {
-
 
                     String errorBody = null;
                     try {
@@ -107,18 +125,14 @@ public class LoginRequest extends ServiceRequest{
                         e.printStackTrace();
                     }
 
-                    if (TextUtils.isEmpty(errorBody)) {
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
 
-                        String errorMessage = ErrorPrompts.logoutPrompt(Errors.NO_ERROR);
-                        callback.onFailure(Errors.NO_ERROR,errorMessage);
-
-                    } else {
-
-                        String errorCode = ApiManager.parseErrorBody(errorBody);
-                        String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
-                        callback.onFailure(errorCode,errorMessage);
-
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
                     }
+
 
                 }
             }
@@ -126,73 +140,34 @@ public class LoginRequest extends ServiceRequest{
             @Override
             public void onFailure(Call<Empty> call, Throwable t) {
 
-                if(XiaojsConfig.DEBUG){
+                if (XiaojsConfig.DEBUG) {
                     Logger.d("the logout has occur exception");
                 }
 
 
                 String errorMsg = t.getMessage();
                 // FIXME: 2016/11/1
-                if(errorMsg.contains("No content to map due to end-of-input")){
-                    callback.onSuccess(null);
-                }else{
-                    String errorMessage = ErrorPrompts.logoutPrompt(Errors.NO_ERROR);
-                    callback.onFailure(Errors.NO_ERROR,errorMessage);
+                if (errorMsg.contains(EMPTY_EXCEPTION)) {
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
+
+                } else {
+
+                    String errorCode = getExceptionErrorCode();
+                    String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
                 }
 
             }
         });
 
     }
-
-
-//    public void logout(Context appContext,String sessionID,@NonNull final APIServiceCallback callback) {
-//
-//        XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
-//        xiaojsService.logout(sessionID).enqueue(new Callback<APIEntity>() {
-//            @Override
-//            public void onResponse(Call<APIEntity> call, Response<APIEntity> response) {
-//
-//                int responseCode = response.code();
-//                if (responseCode == 200) {
-//
-//                    callback.onSuccess(null);
-//
-//                } else {
-//
-//
-//                    String errorBody = null;
-//                    try {
-//                        errorBody = response.errorBody().string();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    if (TextUtils.isEmpty(errorBody)) {
-//                        callback.onFailure(Errors.NO_ERROR);
-//
-//
-//                    } else {
-//
-//                        callback.onFailure(ApiManager.parseErrorBody(errorBody));
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<APIEntity> call, Throwable t) {
-//
-//                if(XiaojsConfig.DEBUG){
-//                    Logger.d("the logout has occur exception");
-//                }
-//
-//                callback.onFailure(Errors.NO_ERROR);
-//            }
-//        });
-//
-//    }
 
 }

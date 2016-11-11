@@ -2,11 +2,9 @@ package com.benyuan.xiaojs.data.api;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
-import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
@@ -19,6 +17,7 @@ import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,7 +30,11 @@ import retrofit2.Response;
 public class LessonRequest extends ServiceRequest {
 
 
-    public void createLiveLesson(Context context, String sessionID, CreateLesson lesson, @NonNull final APIServiceCallback callback) {
+    public void createLiveLesson(Context context, String sessionID, CreateLesson lesson,
+                                 @NonNull APIServiceCallback<CLResponse> callback) {
+
+        final WeakReference<APIServiceCallback<CLResponse>> callbackReference =
+                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.createLiveLesson(sessionID, lesson).enqueue(new Callback<CLResponse>() {
@@ -39,10 +42,14 @@ public class LessonRequest extends ServiceRequest {
             public void onResponse(Call<CLResponse> call, Response<CLResponse> response) {
                 int responseCode = response.code();
 
-                if (responseCode == 200) {
+                if (responseCode == SUCCESS_CODE) {
 
                     CLResponse info = response.body();
-                    callback.onSuccess(info);
+
+                    APIServiceCallback<CLResponse> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(info);
+                    }
 
                 } else {
 
@@ -53,18 +60,15 @@ public class LessonRequest extends ServiceRequest {
                         e.printStackTrace();
                     }
 
-                    if (TextUtils.isEmpty(errorBody)) {
 
-                        String errorMessage = ErrorPrompts.createLessonPrompt(Errors.NO_ERROR);
-                        callback.onFailure(Errors.NO_ERROR, errorMessage);
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.createLessonPrompt(errorCode);
 
-                    } else {
-
-                        String errorCode = ApiManager.parseErrorBody(errorBody);
-                        String errorMessage = ErrorPrompts.createLessonPrompt(errorCode);
+                    APIServiceCallback<CLResponse> callback = callbackReference.get();
+                    if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
-
                     }
+
 
                 }
             }
@@ -76,8 +80,14 @@ public class LessonRequest extends ServiceRequest {
                     Logger.d("the createLiveLession request has occur exception");
                 }
 
-                String errorMessage = ErrorPrompts.createLessonPrompt(Errors.NO_ERROR);
-                callback.onFailure(Errors.NO_ERROR, errorMessage);
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.createLessonPrompt(errorCode);
+
+                APIServiceCallback<CLResponse> callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
+
             }
         });
 
@@ -88,11 +98,14 @@ public class LessonRequest extends ServiceRequest {
                            @NonNull String sessionID,
                            @NonNull Criteria criteria,
                            @NonNull Pagination pagination,
-                           @NonNull final APIServiceCallback<GetLessonsResponse> callback) {
+                           @NonNull APIServiceCallback<GetLessonsResponse> callback) {
+
+        final WeakReference<APIServiceCallback<GetLessonsResponse>> callbackReference =
+                new WeakReference<>(callback);
 
 
-        String criteriaJsonstr = ApiManager.objectToJsonString(criteria);
-        String paginationJsonstr = ApiManager.objectToJsonString(pagination);
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
 
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
@@ -102,10 +115,15 @@ public class LessonRequest extends ServiceRequest {
                                    Response<GetLessonsResponse> response) {
                 int responseCode = response.code();
 
-                if (responseCode == 200) {
+                if (responseCode == SUCCESS_CODE) {
 
                     GetLessonsResponse lessonsResponse = response.body();
-                    callback.onSuccess(lessonsResponse);
+
+                    APIServiceCallback<GetLessonsResponse> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(lessonsResponse);
+                    }
+
 
                 } else {
 
@@ -116,18 +134,15 @@ public class LessonRequest extends ServiceRequest {
                         e.printStackTrace();
                     }
 
-                    if (TextUtils.isEmpty(errorBody)) {
 
-                        String errorMessage = ErrorPrompts.getLessonPrompt(Errors.NO_ERROR);
-                        callback.onFailure(Errors.NO_ERROR, errorMessage);
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.getLessonPrompt(errorCode);
 
-                    } else {
-
-                        String errorCode = ApiManager.parseErrorBody(errorBody);
-                        String errorMessage = ErrorPrompts.getLessonPrompt(errorCode);
+                    APIServiceCallback<GetLessonsResponse> callback = callbackReference.get();
+                    if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
-
                     }
+
 
                 }
             }
@@ -138,8 +153,13 @@ public class LessonRequest extends ServiceRequest {
                     Logger.d("the get lessons request has occur exception");
                 }
 
-                String errorMessage = ErrorPrompts.getLessonPrompt(Errors.NO_ERROR);
-                callback.onFailure(Errors.NO_ERROR, errorMessage);
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.getLessonPrompt(errorCode);
+
+                APIServiceCallback<GetLessonsResponse> callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
 
 
             }
@@ -148,17 +168,27 @@ public class LessonRequest extends ServiceRequest {
     }
 
 
-    public void putLessonOnShelves(Context context,@NonNull String sessionID,@NonNull String lesson,@NonNull final APIServiceCallback callback) {
+    public void putLessonOnShelves(Context context,
+                                   @NonNull String sessionID,
+                                   @NonNull String lesson,
+                                   @NonNull final APIServiceCallback callback) {
+
+        final WeakReference<APIServiceCallback> callbackReference =
+                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.putLessonOnShelves(sessionID,lesson).enqueue(new Callback<Empty>() {
+        xiaojsService.putLessonOnShelves(sessionID, lesson).enqueue(new Callback<Empty>() {
             @Override
             public void onResponse(Call<Empty> call, Response<Empty> response) {
 
                 int responseCode = response.code();
-                if (responseCode == 200) {
+                if (responseCode == SUCCESS_CODE) {
 
-                    callback.onSuccess(null);
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
+
 
                 } else {
 
@@ -170,18 +200,14 @@ public class LessonRequest extends ServiceRequest {
                     }
 
 
-                    if (TextUtils.isEmpty(errorBody)) {
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(errorCode);
 
-                        String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.NO_ERROR);
-                        callback.onFailure(Errors.NO_ERROR,errorMessage);
-
-                    } else {
-
-                        String errorCode = ApiManager.parseErrorBody(errorBody);
-                        String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(errorCode);
-                        callback.onFailure(errorCode,errorMessage);
-
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
                     }
+
 
                 }
             }
@@ -195,11 +221,22 @@ public class LessonRequest extends ServiceRequest {
 
                 String errorMsg = t.getMessage();
                 // FIXME: 2016/11/1
-                if(errorMsg.contains("No content to map due to end-of-input")){
-                    callback.onSuccess(null);
-                }else{
-                    String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.NO_ERROR);
-                    callback.onFailure(Errors.NO_ERROR,errorMessage);
+                if (errorMsg.contains(EMPTY_EXCEPTION)) {
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
+
+                } else {
+
+                    String errorCode = getExceptionErrorCode();
+                    String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(errorCode);
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
                 }
 
             }

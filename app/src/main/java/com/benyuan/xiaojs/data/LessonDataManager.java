@@ -9,6 +9,7 @@ import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.LessonRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
@@ -28,7 +29,7 @@ public class LessonDataManager {
     public static void requestCreateLiveLesson(Context context,
                                                String sessionID,
                                                CreateLesson lesson,
-                                               APIServiceCallback callback) {
+                                               APIServiceCallback<CLResponse> callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {

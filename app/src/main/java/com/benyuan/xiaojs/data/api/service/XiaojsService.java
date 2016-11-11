@@ -81,6 +81,12 @@ public interface XiaojsService {
     Call<Empty> putLessonOnShelves(@Header("SessionID") String sessionID,
                                    @Path("lesson") String lesson);
 
+    //Cancel Lesson-On-Shelves
+    @DELETE("/v1/ctl/lessons/{lesson}/onshelves")
+    Call<Empty> cancelLessonOnShelves(@Header("SessionID") String sessionID,
+                                      @Path("lesson") String lesson);
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Categories
