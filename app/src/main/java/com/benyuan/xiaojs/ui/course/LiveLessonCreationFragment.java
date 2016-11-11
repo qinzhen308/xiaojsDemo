@@ -33,6 +33,7 @@ import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.LiveLesson;
+import com.benyuan.xiaojs.model.Promotion;
 import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.ui.base.BaseBusiness;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
@@ -217,6 +218,11 @@ public class LiveLessonCreationFragment extends BaseFragment {
         if (view instanceof ToggleButton) {
             boolean isChecked = ((ToggleButton) view).isChecked();
             mChargeWayLayout.setVisibility(!isChecked ? View.GONE : View.VISIBLE);
+            //set default selection
+            if (isChecked && !mByLiveDurationTv.isSelected() && !mByLiveTotalPriceTv.isSelected()) {
+                mByLiveTotalPriceTv.setSelected(true);
+                mByLiveDurationEdt.setEnabled(false);
+            }
         }
     }
 
@@ -254,10 +260,46 @@ public class LiveLessonCreationFragment extends BaseFragment {
     private void setOptionalInfo() {
         LiveLesson lesson = new LiveLesson();
         Intent i = new Intent(mContext, LessonCreationOptionalInfoActivity.class);
+        int pricingType = Finance.PricingType.TOTAL;
+        float price = 0;
+        if (mByLiveTotalPriceTv.isSelected()) {
+            pricingType = Finance.PricingType.TOTAL;
+            String priceStr = mByLiveTotalPriceEdt.getText().toString();
+            if (!TextUtils.isEmpty(priceStr)) {
+                price = Float.parseFloat(priceStr);
+            }
+        } else if (mByLiveDurationTv.isSelected()) {
+            pricingType = Finance.PricingType.PAY_PER_HOUR;
+            String priceStr = mByLiveDurationEdt.getText().toString();
+            if (!TextUtils.isEmpty(priceStr)) {
+                price = Float.parseFloat(priceStr);
+            }
+        }
+        String limitStr = mEnrollLimitEdt.getText().toString();
+        int limit = 0;
+        if (!TextUtils.isEmpty(limitStr)) {
+            limit = Integer.parseInt(limitStr);
+        }
+
+        Enroll enroll = new Enroll();
+        enroll.setMax(limit);
+        Schedule sch = new Schedule();
+        sch.setStart(new Date(mLessonStartTime));
+        Fee fee = new Fee();
+        fee.setFree(mChargeWaySwitcher.isChecked());
+        fee.setCharge(BigDecimal.valueOf(price));
+        fee.setType(pricingType);
+        lesson.setEnroll(enroll);
+        lesson.setSchedule(sch);
+        lesson.setFee(fee);
+
         i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, lesson);
         startActivityForResult(i, REQUEST_CODE_OPTIONAL_INFO);
     }
 
+    /**
+     * @return the info checked is legal
+     */
     private boolean checkSubmitInfo() {
         try {
             String selectTip = mContext.getString(R.string.please_select);
@@ -346,7 +388,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
             float feePrice = mByLiveTotalPriceTv.isSelected() ? Float.parseFloat(mByLiveTotalPriceEdt.getText().toString()) :
                     Float.parseFloat(mByLiveDurationEdt.getText().toString());
             fee.setType(feeType);
-            fee.setCharge( BigDecimal.valueOf(feePrice));
+            fee.setCharge(BigDecimal.valueOf(feePrice));
         } catch (Exception e) {
             e.printStackTrace();
             //do nothing

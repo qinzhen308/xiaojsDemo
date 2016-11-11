@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
@@ -43,6 +44,8 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
 
     private final static int DEFAULT_SHOW_CHAR_LEN = 8;
 
+    private final float ZERO = 0.00001f;
+
     @BindView(R.id.cover_add_layout)
     LinearLayout mCoverAddLayout;
     @BindView(R.id.cover_view)
@@ -57,6 +60,11 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     TextView mSalePromotionTv;
 
     private LiveLesson mLesson;
+    private float mPrice;
+    private int mPricingType;
+    private long mLessonStartTime;
+    private int mLimit;
+    private boolean isFree = true;
 
     @Override
     protected void addViewContent() {
@@ -65,11 +73,42 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
         addView(R.layout.activity_lesson_create_optional_info);
 
         initCoverLayout();
+        initData();
+    }
 
+    private void initData() {
         Object object = getIntent().getSerializableExtra(KEY_LESSON_OPTIONAL_INFO);
         if (object instanceof LiveLesson) {
             mLesson = (LiveLesson) object;
+            try {
+                mPrice = mLesson.getFee().getCharge().floatValue();
+                mPricingType = mLesson.getFee().getType();
+                isFree = mLesson.getFee().isFree();
+                mLessonStartTime = mLesson.getSchedule().getStart().getTime();
+                mLimit = mLesson.getEnroll().getMax();
+                if (!isFree) {
+                    findViewById(R.id.sale_promotion_divide_line).setVisibility(View.GONE);
+                    findViewById(R.id.sale_promotion_layout).setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private boolean checkPromotionEnable() {
+        if (mLimit <= 0) {
+            Toast.makeText(this, R.string.enroll_people_empty, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (mPrice <= ZERO) {
+            Toast.makeText(this, R.string.charge_empty, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (mLessonStartTime <= 0) {
+            Toast.makeText(this, R.string.lesson_start_time_empty, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     private void initCoverLayout() {
@@ -122,9 +161,11 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 startActivityForResult(i, SIT_IN_ON);
                 break;
             case R.id.sale_promotion:
-                i = new Intent(this, SalePromotionActivity.class);
-                i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
-                startActivityForResult(i, SALE_PROMOTION);
+                if (checkPromotionEnable()) {
+                    i = new Intent(this, SalePromotionActivity.class);
+                    i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
+                    startActivityForResult(i, SALE_PROMOTION);
+                }
                 break;
             default:
                 break;
@@ -133,7 +174,6 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LiveLesson lesson = null;
         switch (requestCode) {
             case ADD_COVER:
                 //TODO
@@ -156,27 +196,27 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 }
                 break;
             case LESSON_BRIEF:
-                lesson = getLesson(data);
-                if (lesson != null) {
-                    String txt = formatResult(lesson.getOverview().getText());
-                    if (!TextUtils.isEmpty(txt) && lesson.getOverview() != null) {
+                mLesson = getLesson(data);
+                if (mLesson != null) {
+                    String txt = formatResult(mLesson.getOverview().getText());
+                    if (!TextUtils.isEmpty(txt) && mLesson.getOverview() != null) {
                         mLessonBriefTv.setText(txt);
                     }
                 }
                 break;
             case TEACHER_INTRODUCTION:
-                lesson = getLesson(data);
-                if (lesson != null) {
-                    String txt = formatResult(lesson.getTeachersIntro().getText());
-                    if (!TextUtils.isEmpty(txt) && lesson.getTeachersIntro() != null) {
+                mLesson = getLesson(data);
+                if (mLesson != null) {
+                    String txt = formatResult(mLesson.getTeachersIntro().getText());
+                    if (!TextUtils.isEmpty(txt) && mLesson.getTeachersIntro() != null) {
                         mTeachIntroTv.setText(txt);
                     }
                 }
                 break;
             case SIT_IN_ON:
-                lesson = getLesson(data);
-                if (lesson != null && lesson.getAudit() != null) {
-                    String [] sitInOnPersons = lesson.getAudit().getGrantedTo();
+                mLesson = getLesson(data);
+                if (mLesson != null && mLesson.getAudit() != null) {
+                    String[] sitInOnPersons = mLesson.getAudit().getGrantedTo();
                     if (sitInOnPersons != null) {
                         int i = 0;
                         StringBuilder sb = new StringBuilder();
@@ -198,8 +238,8 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 }
                 break;
             case SALE_PROMOTION:
-                lesson = getLesson(data);
-                if (lesson != null && lesson.getPromotion() != null) {
+                mLesson = getLesson(data);
+                if (mLesson != null && mLesson.getPromotion() != null) {
                     mSalePromotionTv.setText(getString(R.string.edit));
                 }
                 break;

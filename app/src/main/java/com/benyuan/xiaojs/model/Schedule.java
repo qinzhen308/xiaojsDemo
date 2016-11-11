@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Schedule{
+public class Schedule implements Serializable {
     private Date start;
     private int duration;
 

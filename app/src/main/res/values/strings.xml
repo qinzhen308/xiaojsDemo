@@ -25,6 +25,7 @@
     <string name="please_input">请填写</string>
     <string name="unit_price">元</string>
     <string name="unit_price_by_hour">元/小时</string>
+    <string name="per_hour">/小时</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_circle">圈子</string>
@@ -147,10 +148,24 @@
     <string name="enroll_people_must_be_positive">报名人数必须大于0</string>
     <string name="enroll_people_must_be_less_than">报名人数不能多于%1$d人</string>
     <string name="charge_must_be_checked">请选择收费模式</string>
+    <string name="charge_empty">请填写收费价格</string>
     <string name="lesson_start_time_empty">请选择上课时间</string>
     <string name="lesson_duration_empty">请填写上课时长</string>
     <string name="lesson_duration_must_be_less_than">上课时长不能多于%1$s分钟</string>
     <string name="sale_promotion_set">促销设置</string>
+    <string name="sale_promotion_tips">按照相应促销规则执行，当两条同时满足时，执行最优惠的促销规则</string>
+    <string name="original_price">原价</string>
+    <string name="promotion_price">折后价</string>
+    <string name="promotion_enroll_b">报名前</string>
+    <string name="promotion_enroll_m">人，享受</string>
+    <string name="discount">折</string>
+    <string name="promotion_attend_lesson_b">上课前</string>
+    <string name="promotion_attend_lesson_m">天，享受</string>
+    <string name="promotion_people_exceed">人数不能大于%1$d</string>
+    <string name="promotion_day_exceed">天数不能大于%1$d</string>
+    <string name="promotion_info_error">请完整填写促销%1$d信息</string>
+    <string name="promotion_discount_format_error">请填写正确的折扣值，如：9.7</string>
+    <string name="promotion_info_empty">请填写促销信息</string>
 
     <string name="filter">筛选</string>
     <string name="time">时间</string>

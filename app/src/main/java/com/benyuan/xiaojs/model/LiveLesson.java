@@ -18,7 +18,7 @@ public class LiveLesson implements Serializable {
     private Fee fee;
     private Schedule schedule;
     private String cover;
-    private Promotion promotion;
+    private Promotion[] promotion;
     private Overview overview;
     private TeachersIntro teachersIntro;
     private Audit audit;
@@ -98,11 +98,11 @@ public class LiveLesson implements Serializable {
         this.schedule = schedule;
     }
 
-    public Promotion getPromotion() {
+    public Promotion[] getPromotion() {
         return promotion;
     }
 
-    public void setPromotion(Promotion promotion) {
+    public void setPromotion(Promotion[] promotion) {
         this.promotion = promotion;
     }
 

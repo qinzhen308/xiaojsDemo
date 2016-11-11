@@ -25,15 +25,14 @@
                     android:text="@string/add_cover"
                     android:textColor="@color/font_dark_gray"
                     android:textSize="@dimen/font_32px"
-                    android:drawableLeft="@drawable/add_selector"
+                    android:drawableLeft="@drawable/ic_add_lesson_cover"
                     android:drawablePadding="@dimen/px16"
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
                     android:paddingLeft="@dimen/px40"
                     android:paddingRight="@dimen/px40"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/px148"
-                    android:background="@drawable/common_edittext_bg"/>
+                    android:layout_marginTop="@dimen/px148"/>
 
             <TextView
                     android:id="@+id/add_cover_tips"
@@ -84,6 +83,7 @@
                 android:gravity="right"
                 android:layout_height="wrap_content"
                 android:text="@string/please_input"
+                android:lines="1"
                 android:drawablePadding="@dimen/px22"
                 android:drawableRight="@drawable/ic_entrance"/>
 
@@ -118,6 +118,7 @@
                 android:gravity="right"
                 android:layout_height="wrap_content"
                 android:text="@string/please_input"
+                android:lines="1"
                 android:drawablePadding="@dimen/px22"
                 android:drawableRight="@drawable/ic_entrance"/>
 
@@ -152,12 +153,14 @@
                 android:gravity="right"
                 android:layout_height="wrap_content"
                 android:text="@string/please_set"
+                android:lines="1"
                 android:drawablePadding="@dimen/px22"
                 android:drawableRight="@drawable/ic_entrance"/>
 
     </LinearLayout>
 
     <include
+            android:id="@+id/sale_promotion_divide_line"
             layout="@layout/layout_horizontal_line"/>
 
     <!--促销-->
@@ -186,6 +189,7 @@
                 android:gravity="right"
                 android:layout_height="wrap_content"
                 android:text="@string/please_set"
+                android:lines="1"
                 android:drawablePadding="@dimen/px22"
                 android:drawableRight="@drawable/ic_entrance"/>
 

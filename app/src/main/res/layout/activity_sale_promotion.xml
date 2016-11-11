@@ -1,7 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/main_bg">
+
+    <!--原价-->
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_tips"
+            android:drawablePadding="@dimen/px10"
+            android:paddingLeft="@dimen/px32"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px40"
+            android:paddingBottom="@dimen/px40"
+            android:text="@string/sale_promotion_tips"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px32"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/original_price"/>
+
+        <TextView
+                android:id="@+id/original_price"
+                android:layout_marginLeft="@dimen/px10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_red"/>
+    </LinearLayout>
+
+    <View
+            style="@style/DividerHorizontal"/>
+
+    <!--报名前几名学生的促销-->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:paddingLeft="@dimen/px40"
+            android:paddingRight="@dimen/px40"
+            android:paddingTop="@dimen/px20"
+            android:gravity="center_vertical">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/promotion_enroll_b"/>
+
+        <EditText
+                android:id="@+id/enroll_before"
+                android:layout_width="@dimen/px120"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_26px"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/px10"
+                android:padding="@dimen/px10"
+                android:lines="1"
+                android:maxLength="6"
+                android:inputType="number"
+                android:background="@drawable/common_edittext_bg"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px10"
+                android:text="@string/promotion_enroll_m"/>
+
+        <EditText
+                android:id="@+id/enroll_discount"
+                android:layout_width="@dimen/px120"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_26px"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/px10"
+                android:padding="@dimen/px10"
+                android:lines="1"
+                android:maxLength="3"
+                android:inputType="numberDecimal"
+                android:background="@drawable/common_edittext_bg"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px10"
+                android:text="@string/discount"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/px40"
+            android:paddingRight="@dimen/px40"
+            android:paddingBottom="@dimen/px20"
+            android:paddingTop="@dimen/px15"
+            android:gravity="center_vertical">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/promotion_price"/>
+
+        <TextView
+                android:id="@+id/enroll_promotion_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_red"
+                android:layout_marginLeft="@dimen/px10"/>
+    </LinearLayout>
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_marginLeft="@dimen/px40"
+            android:layout_marginRight="@dimen/px40"/>
+
+    <!--上课前几天的促销-->
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/px20"
+            android:paddingLeft="@dimen/px40"
+            android:paddingRight="@dimen/px40"
+            android:gravity="center_vertical"
+            android:background="@color/white">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/promotion_attend_lesson_b"/>
+
+        <EditText
+                android:id="@+id/attend_lesson_before"
+                android:layout_width="@dimen/px120"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_26px"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/px10"
+                android:padding="@dimen/px10"
+                android:lines="1"
+                android:maxLength="3"
+                android:inputType="number"
+                android:background="@drawable/common_edittext_bg"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px10"
+                android:text="@string/promotion_attend_lesson_m"/>
+
+        <EditText
+                android:id="@+id/attend_lesson_discount"
+                android:layout_width="@dimen/px120"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_26px"
+                android:gravity="center"
+                android:padding="@dimen/px10"
+                android:layout_marginLeft="@dimen/px10"
+                android:lines="1"
+                android:maxLength="3"
+                android:inputType="numberDecimal"
+                android:background="@drawable/common_edittext_bg"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discount"
+                android:layout_marginLeft="@dimen/px10"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingLeft="@dimen/px40"
+            android:paddingRight="@dimen/px40"
+            android:paddingBottom="@dimen/px20"
+            android:paddingTop="@dimen/px15"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/promotion_price"/>
+
+        <TextView
+                android:id="@+id/attend_lesson_promotion_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_red"
+                android:layout_marginLeft="@dimen/px10"/>
+    </LinearLayout>
 
     <Button
             android:id="@+id/sub_btn"

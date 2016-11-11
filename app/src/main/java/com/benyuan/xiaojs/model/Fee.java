@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Fee {
+public class Fee implements Serializable{
     private boolean free;
     private int type;
     private BigDecimal charge;

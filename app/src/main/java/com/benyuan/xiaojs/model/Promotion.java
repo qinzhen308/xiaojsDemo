@@ -2,15 +2,19 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by maxiaobao on 2016/11/8.
  */
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Promotion {
+@JsonIgnoreProperties(ignoreUnknown = true, value = {"type"})
+public class Promotion implements Serializable{
     private int before;
-    private int discount;
+    private float discount;
     private int quota;
+    //ignore field
+    private int type;
 
     public int getBefore() {
         return before;
@@ -20,11 +24,11 @@ public class Promotion {
         this.before = before;
     }
 
-    public int getDiscount() {
+    public float getDiscount() {
         return discount;
     }
 
-    public void setDiscount(int discount) {
+    public void setDiscount(float discount) {
         this.discount = discount;
     }
 
@@ -34,5 +38,13 @@ public class Promotion {
 
     public void setQuota(int quota) {
         this.quota = quota;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

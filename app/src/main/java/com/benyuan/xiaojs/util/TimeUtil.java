@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.util;
 
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -643,4 +644,30 @@ public class TimeUtil {
         }
         return time;
     }
+
+    // 获取两个时间的相差天、时、分、秒钟
+    public static long[] getSpaceTime(long startTime, long endTime) {
+        long[] time = new long[4];
+        if (startTime > 0 && endTime > 0) {
+            long nd = 1000 * 24 * 60 * 60;//一天的毫秒数
+            long nh = 1000 * 60 * 60;//一小时的毫秒数
+            long nm = 1000 * 60;//一分钟的毫秒数
+            long ns = 1000;//一秒钟的毫秒数long diff;
+            try {
+                long diff = endTime - startTime;
+                long day = diff / nd;//计算差多少天
+                long hour = diff % nd / nh;//计算差多少小时
+                long min = diff % nd % nh / nm;//计算差多少分钟
+                long sec = diff % nd % nh % nm / ns;//计算差多少秒//输出结果
+                time[0] = day;
+                time[1] = hour;
+                time[2] = min;
+                time[3] = sec;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return time;
+    }
+
 }
