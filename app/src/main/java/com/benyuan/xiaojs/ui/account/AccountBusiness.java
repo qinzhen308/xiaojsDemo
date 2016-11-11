@@ -31,11 +31,17 @@ import com.benyuan.xiaojs.util.XjsUtils;
 
 public class AccountBusiness {
 
-    public static void login(final Activity activity, final LoginParams loginParams) {
-        login(activity, loginParams, null);
+
+    public static void login(final Activity activity, final LoginParams loginParams, OnLoginListener listener) {
+        login(activity, loginParams, null, listener);
     }
 
-    public static void login(final Activity activity, final LoginParams loginParams, final View submitBtn) {
+    public static void login(final Activity activity, final LoginParams loginParams) {
+        login(activity, loginParams, null, null);
+    }
+
+    public static void login(final Activity activity, final LoginParams loginParams, final View submitBtn,
+                             final OnLoginListener listener) {
         if (submitBtn != null) {
             submitBtn.setEnabled(false);
         }
@@ -56,8 +62,15 @@ public class AccountBusiness {
                         XjsUtils.getSharedPreferences().edit().putString(XiaojsConfig.KEY_LOGIN_PASSWORD,
                                 loginParams.getPassword()).commit();
 
+                        if (listener != null) {
+                            listener.onLogin(true);
+                        }
                         //enter main page
                         activity.startActivity(new Intent(activity, MainActivity.class));
+                    } else {
+                        if (listener != null) {
+                            listener.onLogin(false);
+                        }
                     }
 
                 }
@@ -68,6 +81,9 @@ public class AccountBusiness {
                         submitBtn.setEnabled(true);
                     }
 
+                    if (listener != null) {
+                        listener.onLogin(false);
+                    }
                     Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -76,6 +92,14 @@ public class AccountBusiness {
             if (submitBtn != null) {
                 submitBtn.setEnabled(true);
             }
+
+            if (listener != null) {
+                listener.onLogin(false);
+            }
         }
+    }
+
+    public interface OnLoginListener {
+        public void onLogin(boolean succ);
     }
 }

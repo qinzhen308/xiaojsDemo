@@ -187,7 +187,14 @@ public class RegisterActivity extends BaseActivity {
                             final LoginParams loginParams = new LoginParams();
                             loginParams.setMobile(regInfo.getMobile());
                             loginParams.setPassword(regInfo.getPassword());
-                            AccountBusiness.login(mContext, loginParams);
+                            AccountBusiness.login(mContext, loginParams, new AccountBusiness.OnLoginListener() {
+                                @Override
+                                public void onLogin(boolean succ) {
+                                    if (succ) {
+                                        RegisterActivity.this.finish();
+                                    }
+                                }
+                            });
                         }
 
                         @Override
