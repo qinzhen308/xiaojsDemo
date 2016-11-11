@@ -33,10 +33,10 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/def"
                     android:textSize="@dimen/font_30px"
-                    android:text="@string/live_course_name"/>
+                    android:text="@string/live_lesson_name"/>
 
             <com.benyuan.xiaojs.ui.widget.EditTextDel
-                    android:id="@+id/live_course_name"
+                    android:id="@+id/live_lesson_name"
                     android:layout_marginLeft="@dimen/px34"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_28px"
                     android:lines="1"
-                    android:hint="@string/live_course_name_hint"/>
+                    android:hint="@string/live_lesson_name_hint"/>
         </LinearLayout>
 
 
@@ -361,10 +361,10 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/course_start_time"/>
+                    android:text="@string/lesson_start_time"/>
 
             <TextView
-                    android:id="@+id/course_start_time"
+                    android:id="@+id/lesson_start_time"
                     android:gravity="right"
                     android:layout_weight="1"
                     android:layout_width="0dp"
@@ -396,10 +396,10 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/course_duration"/>
+                    android:text="@string/lesson_duration"/>
 
             <com.benyuan.xiaojs.ui.widget.EditTextDel
-                    android:id="@+id/course_duration"
+                    android:id="@+id/lesson_duration"
                     android:gravity="right"
                     android:layout_weight="1"
                     android:layout_width="0dp"

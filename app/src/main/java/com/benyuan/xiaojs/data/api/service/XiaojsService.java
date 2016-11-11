@@ -8,6 +8,7 @@ import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
+import com.benyuan.xiaojs.model.GetSubjectResponse;
 import com.benyuan.xiaojs.model.HomeData;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
@@ -79,6 +80,15 @@ public interface XiaojsService {
     @POST("/v1/ctl/lessons/{lesson}/onshelves")
     Call<Empty> putLessonOnShelves(@Header("SessionID") String sessionID,
                                    @Path("lesson") String lesson);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Categories
+    //
+
+    //Get Subject (Demo)
+    @GET("/v1/categories/subjects/demo")
+    Call<GetSubjectResponse> getSubject();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

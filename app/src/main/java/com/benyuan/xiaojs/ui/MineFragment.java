@@ -24,7 +24,7 @@ import android.widget.LinearLayout;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
-import com.benyuan.xiaojs.ui.course.CourseCreationActivity;
+import com.benyuan.xiaojs.ui.course.LessonCreationActivity;
 import com.benyuan.xiaojs.ui.course.MyCourseActivity;
 import com.benyuan.xiaojs.ui.mine.ProfileActivity;
 import com.benyuan.xiaojs.ui.mine.SettingsActivity;
@@ -74,7 +74,7 @@ public class MineFragment extends BaseFragment {
                 startActivity(new Intent(mContext, MyCourseActivity.class));
                 break;
             case R.id.my_course_schedule:
-                startActivity(new Intent(mContext, CourseCreationActivity.class));
+                startActivity(new Intent(mContext, LessonCreationActivity.class));
                 break;
             case R.id.my_ask_questions:
                 break;
@@ -83,8 +83,7 @@ public class MineFragment extends BaseFragment {
             case R.id.withdrawals:
                 break;
             case R.id.teach_ability_layout:
-                //startActivity(new Intent(mContext, TeachingAbilityActivity.class));
-                startActivity(new Intent(mContext, TestAPIActivity.class));
+                startActivity(new Intent(mContext, TeachingAbilityActivity.class));
                 break;
             case R.id.my_collections:
                 break;

@@ -9,6 +9,25 @@ import android.text.TextUtils;
 public class ErrorPrompts {
 
     /**
+     * get Subject demo失败提示
+     * @param errorCode
+     * @return
+     */
+    public static String getSubjectPrompt(String errorCode) {
+
+        String errorMessage = "获取能力失败";
+
+//        if (TextUtils.isEmpty(errorCode)
+//                || errorCode.equals(Errors.NO_ERROR)
+//                || errorCode.equals(Errors.SERVER_ERROR)
+//                || errorCode.equals(Errors.UNAUTHORIZED)
+//                || errorCode.equals(Errors.ILLEGAL_CALL)) {
+//            return errorMessage;
+//        }
+        return errorMessage;
+    }
+
+    /**
      * 上架失败提示
      * @param errorCode
      * @return

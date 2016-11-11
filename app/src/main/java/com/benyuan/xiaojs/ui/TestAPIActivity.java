@@ -11,6 +11,7 @@ import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Security;
 import com.benyuan.xiaojs.data.AccountDataManager;
+import com.benyuan.xiaojs.data.CategoriesDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
@@ -24,6 +25,7 @@ import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
+import com.benyuan.xiaojs.model.GetSubjectResponse;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
@@ -72,11 +74,28 @@ public class TestAPIActivity extends Activity {
                 //testCreateLession(this);
                 //testGetLessons(this);
                 //testPutLessonOnShelves(this);
-                testJsonFormat();
+                //testJsonFormat();
+                testGetSubject(this);
                 break;
             }
 
         }
+    }
+
+    //getSubject demo
+    private void testGetSubject(Context context) {
+
+        CategoriesDataManager.requestGetSubject(context, new APIServiceCallback<GetSubjectResponse>() {
+            @Override
+            public void onSuccess(GetSubjectResponse object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 
     private void testJsonFormat() {
@@ -140,6 +159,7 @@ public class TestAPIActivity extends Activity {
             }
         });
     }
+
 
 
     //创建直播课

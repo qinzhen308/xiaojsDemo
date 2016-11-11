@@ -2,23 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="@color/white"
+
+        >
     <ListView
+            android:id="@+id/list_pay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/activity_vertical_margin"
             />
 
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:background="@color/hor_divide_line"
+            />
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:paddingLeft="20dp"
             >
         <Button
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:text="@string/pay_now"
                 android:layout_alignParentRight="true"
-                android:textSize="20sp"/>
+                android:textSize="16sp"
+                android:background="@color/main_orange"
+                android:textColor="@color/common_btn_white_text"/>
         <TextView
                 android:id="@+id/pay_money"
                 android:layout_width="wrap_content"
