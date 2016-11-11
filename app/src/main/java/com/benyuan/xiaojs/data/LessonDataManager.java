@@ -12,7 +12,9 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
+import com.benyuan.xiaojs.model.GELessonsResponse;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
+import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
 
@@ -134,4 +136,118 @@ public class LessonDataManager {
         lessonRequest.putLessonOnShelves(context,sessionID,lesson,callback);
 
     }
+
+    /**
+     * 取消上架课程
+     * @param context
+     * @param sessionID
+     * @param lesson
+     * @param callback
+     */
+    public static void requestCancelLessonOnShelves(Context context,
+                                                    @NonNull String sessionID,
+                                                    @NonNull String lesson,
+                                                    @NonNull APIServiceCallback callback) {
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the requestCancelLessonOnShelves request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the requestCancelLessonOnShelves request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.cancelLessonOnShelvesPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+        if (TextUtils.isEmpty(lesson)) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the lesson param is empty,so the requestCancelLessonOnShelves request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.cancelLessonOnShelvesPrompt(Errors.BAD_PARAMETER);
+            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.cancelLessonOnShelves(context,sessionID,lesson,callback);
+    }
+
+    /**
+     * 获取已报名的课程
+     * @param context
+     * @param sessionID
+     * @param criteria
+     * @param pagination
+     * @param callback
+     */
+    public static void requestGetEnrolledLessons(Context context,
+                                         @NonNull String sessionID,
+                                         @NonNull Criteria criteria,
+                                         @NonNull Pagination pagination,
+                                         @NonNull APIServiceCallback<GELessonsResponse> callback) {
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the GetEnrolledLessons request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the GetEnrolledLessons request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.getEnrolledLessonsPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.getEnrolledLessons(context,sessionID,criteria,pagination,callback);
+
+    }
+
+    /**
+     * 获取直播课详情
+     * @param context
+     * @param lesson
+     * @param callback
+     */
+    public static void requestGetLessonDetails(Context context,
+                                               @NonNull String lesson,
+                                               @NonNull APIServiceCallback<LessonDetail> callback) {
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the requestGetLessonDetails request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(lesson)) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the lesson param is empty,so the requestGetLessonDetails request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.getLessonDetailsPrompt(Errors.BAD_PARAMETER);
+            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.getLessonDetails(context,lesson,callback);
+    }
+
+
 }

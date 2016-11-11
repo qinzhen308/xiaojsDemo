@@ -12,6 +12,15 @@ public class Enroll {
     private int max;
     private int current;
     private boolean mandatory;
+    private boolean paused;
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
 
     public int getCurrent() {
         return current;

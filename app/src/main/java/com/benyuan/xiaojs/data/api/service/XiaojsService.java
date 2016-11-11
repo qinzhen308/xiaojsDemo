@@ -5,14 +5,14 @@ import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
-import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Empty;
+import com.benyuan.xiaojs.model.GELessonsResponse;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.GetSubjectResponse;
 import com.benyuan.xiaojs.model.HomeData;
+import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
-import com.benyuan.xiaojs.model.Pagination;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.VerifyCode;
 
@@ -85,6 +85,16 @@ public interface XiaojsService {
     @DELETE("/v1/ctl/lessons/{lesson}/onshelves")
     Call<Empty> cancelLessonOnShelves(@Header("SessionID") String sessionID,
                                       @Path("lesson") String lesson);
+
+    //Get Enrolled Lessons
+    @GET("/v1/ctl/lessons/enrolled/{criteria}/{pagination}")
+    Call<GELessonsResponse> getEnrolledLessons(@Header("SessionID") String sessionID,
+                                               @Path("criteria") String criteria,
+                                               @Path("pagination") String pagination);
+
+    //Get Lesson Details
+    @GET("/v1/ctl/lessons/{lesson}")
+    Call<LessonDetail> getLessonDetails(@Path("lesson") String lesson);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

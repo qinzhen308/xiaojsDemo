@@ -111,4 +111,29 @@ public class Ctl {
         public static final int SUNDAY = 7;
     }
 
+
+    //region MSP States
+
+    //
+    // Defines the standalone lesson lifecycle states, which inherits those common MSP states.
+    public class StandaloneLessonState {
+
+        public static final String DRAFT = "Draft";
+        // Pending for on-shelves approval
+        public static final String PENDING_FOR_APPROVAL = "PendingForApproval";
+        // Pending for live session
+        public static final String PENDING_FOR_LIVE = "PendingForLive";
+        // In class
+        public static final String LIVE = "Live";
+
+        public static final String FINISHED = "Finished";
+
+        public static final String REJECTED = "Rejected";
+
+        public static final String CANCELLED = "Cancelled";
+
+        public static final String STOPPED = "Stopped";
+
+    }
+
 }
