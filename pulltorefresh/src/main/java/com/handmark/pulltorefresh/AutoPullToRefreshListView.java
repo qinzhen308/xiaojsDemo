@@ -11,6 +11,7 @@ public class AutoPullToRefreshListView extends PullToRefreshListView implements 
 
     private boolean loading = false;
     private OnLoadMoreListener loadMoreListener;
+    private boolean isDisableLoadMore = false;
 
     public AutoPullToRefreshListView(Context context) {
         super(context);
@@ -52,9 +53,18 @@ public class AutoPullToRefreshListView extends PullToRefreshListView implements 
 
     }
 
+    public void setDisableLoadMore(boolean disable){
+        isDisableLoadMore = disable;
+    }
+
 
     @Override
     public void onLastItemVisible() {
+
+
+        if(isDisableLoadMore)
+            return;
+
 
         if(!loading && loadMoreListener!=null){
 
