@@ -111,46 +111,4 @@ public class ApiManager {
         return Platform.AppType.MOBILE_ANDROID;
     }
 
-
-    /**
-     * Convert object to JSON string
-     * @param object
-     * @return
-     */
-    public static String objectToJsonString(Object object) {
-
-        String jsonStr = null;
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.setDateFormat(new SimpleDateFormat(XiaojsService.DATE_FORMAT));
-            mapper.setTimeZone(TimeZone.getTimeZone(XiaojsService.TIME_ZONE_ID));
-            jsonStr = mapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return jsonStr;
-
-    }
-
-    /**
-     * 解析error body json
-     */
-    public static String parseErrorBody(String errorBody) {
-
-        String errorCode = Errors.NO_ERROR;
-
-        try {
-            JSONObject jobject = new JSONObject(errorBody);
-
-            errorCode = jobject.getString("ec");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return errorCode;
-
-    }
-
 }

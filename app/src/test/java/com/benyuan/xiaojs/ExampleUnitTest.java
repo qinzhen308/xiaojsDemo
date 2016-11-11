@@ -2,6 +2,7 @@ package com.benyuan.xiaojs;
 
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.data.api.ApiManager;
+import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.Fee;
@@ -42,8 +43,9 @@ public class ExampleUnitTest {
         fee.setFree(true);
         fee.setType(1);
 
+        ServiceRequest serviceRequest = new ServiceRequest();
 
-        String jsonstr = ApiManager.objectToJsonString(fee);
+        String jsonstr = serviceRequest.objectToJsonString(fee);
         System.out.println(jsonstr);
 
 

@@ -140,6 +140,14 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		mFooterLoadingView.refreshing();
 	}
 
+	protected void hiddenFooterLoading(){
+		LoadingLayout origLoadingView= getFooterLayout();
+		// Hide our original Loading View
+		origLoadingView.reset();
+		origLoadingView.hideAllViews();
+		mFooterLoadingView.setVisibility(View.GONE);
+	}
+
 	@Override
 	protected void onReset() {
 		/**

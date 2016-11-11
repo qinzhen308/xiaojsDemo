@@ -13,6 +13,15 @@ import java.util.Date;
 public class Schedule implements Serializable {
     private Date start;
     private int duration;
+    private Recurrence recurrence;
+
+    public Recurrence getRecurrence() {
+        return recurrence;
+    }
+
+    public void setRecurrence(Recurrence recurrence) {
+        this.recurrence = recurrence;
+    }
 
     public Date getStart() {
         return start;
