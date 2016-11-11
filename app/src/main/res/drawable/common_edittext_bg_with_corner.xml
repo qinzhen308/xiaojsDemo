@@ -4,4 +4,5 @@
             android:color="@color/search_stroke"
             android:width="@dimen/px1"/>
     <solid android:color="@color/white"/>
+    <corners android:radius="@dimen/px5"/>
 </shape>
