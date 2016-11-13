@@ -8,9 +8,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Action {
+    private int sort;
     private String outcome;
     private String title;
     private String _id;
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
 
     public String getOutcome() {
         return outcome;
