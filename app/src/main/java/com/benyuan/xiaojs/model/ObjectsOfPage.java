@@ -16,7 +16,7 @@ public class ObjectsOfPage {
     private String subject;
     private int mode;
     private Ugc ugc;
-    private Promotion promotion;
+    //private Promotion promotion;
     private Schedule schedule;
     private Fee fee;
     private Enroll enroll;
@@ -71,13 +71,13 @@ public class ObjectsOfPage {
         this.ugc = ugc;
     }
 
-    public Promotion getPromotion() {
-        return promotion;
-    }
-
-    public void setPromotion(Promotion promotion) {
-        this.promotion = promotion;
-    }
+//    public Promotion getPromotion() {
+//        return promotion;
+//    }
+//
+//    public void setPromotion(Promotion promotion) {
+//        this.promotion = promotion;
+//    }
 
     public Schedule getSchedule() {
         return schedule;

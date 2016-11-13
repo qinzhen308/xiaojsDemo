@@ -45,4 +45,8 @@
         <attr name="android:requiresFadingEdge" />
         <attr name="android:fadingEdgeLength" />
     </declare-styleable>
+
+    <declare-styleable name="RedTipTextView">
+        <attr name="hasDrawable" format="boolean"/>
+    </declare-styleable>
 </resources>

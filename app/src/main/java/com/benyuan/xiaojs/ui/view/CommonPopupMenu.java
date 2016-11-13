@@ -5,9 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -16,6 +14,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.util.DeviceUtil;
 
 import java.util.ArrayList;
 
@@ -28,15 +27,12 @@ public class CommonPopupMenu extends PopupWindow {
 	private View mRootView;
 	private OnItemClickListener mListener;
 
+	private int offset;
 	public CommonPopupMenu(Context ctx) {
 		super(ctx);
 		init(ctx,0);
 	}
 	
-	public CommonPopupMenu(Context ctx, int pix){
-		init(ctx,pix);
-	}
-
 	private void init(Context ctx,int pix) {
 		mContext = ctx;
 		mRootView = LayoutInflater.from(ctx).inflate(
@@ -45,12 +41,14 @@ public class CommonPopupMenu extends PopupWindow {
 		mImgList = new ArrayList<Integer>();
 		mListView = (ListView) mRootView.findViewById(R.id.listView);
 
+		mListView = (ListView) mRootView.findViewById(R.id.listView);
+
 		if(pix == 0)
 			mListView.setAdapter(new PopupMenuAdapter());
 		else
 			mListView.setAdapter(new PopupMenuAdapter(pix));
-		mPopupWindow = new PopupWindow(mRootView, LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
+		mPopupWindow = new PopupWindow(mRootView, ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT);
 		mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 	}
 	
@@ -89,17 +87,10 @@ public class CommonPopupMenu extends PopupWindow {
 
 	@Override
 	public void showAsDropDown(View parent) {
-		mRootView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		mRootView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 		final int listWidth = mListView.getMeasuredWidth();
-		int offset = 0;
-		Drawable rightIcon = mContext.getResources()
-				.getDrawable(R.mipmap.message_normal);
-		if (rightIcon != null) {
-			offset = rightIcon.getIntrinsicWidth() / 2;
-		}
-		offset -= mContext.getResources().getDimensionPixelOffset(R.dimen.px39);
-		mPopupWindow.showAsDropDown(parent,
-				-listWidth + parent.getMeasuredWidth() / 2 + offset, 0);
+		int left = DeviceUtil.getScreenWidth(mContext)  - listWidth - offset;
+		mPopupWindow.showAsDropDown(parent, left, 0);
 		mPopupWindow.setOutsideTouchable(true);
 		mPopupWindow.setFocusable(true);
 		mPopupWindow.update();
@@ -113,6 +104,11 @@ public class CommonPopupMenu extends PopupWindow {
 		mPopupWindow.update();
 	}
 
+	public void show(View anchor,int offset){
+		this.offset = offset;
+		showAsDropDown(anchor);
+	}
+
 	@Override
 	public void dismiss() {
 		mPopupWindow.dismiss();
@@ -123,7 +119,7 @@ public class CommonPopupMenu extends PopupWindow {
 		public final static int POP_PX24_TYPE = 1;
 		private ItemHolder mHolder = null;
 		private int mTextSizeType;
-		
+
 		public PopupMenuAdapter(){
 			mTextSizeType = POP_DEFAULT_TYPE;
 		}
@@ -134,7 +130,7 @@ public class CommonPopupMenu extends PopupWindow {
 		public PopupMenuAdapter(int pix){
 			mTextSizeType = POP_PX24_TYPE;
 		}
-		
+
 		@Override
 		public int getCount() {
 			return mItemList.size();
@@ -153,12 +149,11 @@ public class CommonPopupMenu extends PopupWindow {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-//				if(mTextSizeType == POP_DEFAULT_TYPE)
+				if(mTextSizeType == POP_DEFAULT_TYPE)
 					convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.common_popup_menu_item, null);
-//				else
-//					convertView = LayoutInflater.from(mContext).inflate(
-//							R.layout.common_popup_menu_item_24px, null);
+							R.layout.common_popup_menu_item, null);
+				else{}
+
 				TextView menuItem = (TextView) convertView;
 				menuItem.setText(mItemList.get(position));
 				mHolder = new ItemHolder();

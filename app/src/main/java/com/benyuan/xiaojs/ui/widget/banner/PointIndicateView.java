@@ -95,10 +95,10 @@ public class PointIndicateView extends LinearLayout implements
 		for (int i = 0; i < getChildCount(); i++) {
 			if (position == i) {
 				((ImageView) getChildAt(i)).setImageDrawable(getResources()
-						.getDrawable(R.mipmap.point_selected));
+						.getDrawable(R.drawable.ic_point_selected));
 			} else {
 				((ImageView) getChildAt(i)).setImageDrawable(getResources()
-						.getDrawable(R.mipmap.point_normal));
+						.getDrawable(R.drawable.ic_point_normal));
 			}
 		}
 	}

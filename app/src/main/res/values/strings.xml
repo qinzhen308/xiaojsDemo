@@ -111,7 +111,6 @@
     <string name="speaker">主讲：</string>
     <string name="prepare_lesson">备课</string>
     <string name="lesson_again">再次开课</string>
-    <string name="look_detail">查看</string>
     <string name="invite">邀请</string>
 
     <!--lesson creation-->
@@ -200,4 +199,18 @@
     <string name="recommend_self">推荐自己</string>
     <string name="competitive_course_recommend">精品课推荐</string>
     <string name="make_interest">定制兴趣</string>
+    <string name="free">免费</string>
+    <string name="shelves">上架</string>
+    <string name="cancel_examine">撤销审核</string>
+    <string name="look_detail">查看详情</string>
+    <string name="course_examine_error_tip">标题涉及违法内容,请重新编辑</string>
+    <string name="course_stop_error_tip">传播淫秽内容,本直播课被平台强制停止</string>
+    <string name="pending_shelves">待上架</string>
+    <string name="examine_failure">审核失败</string>
+    <string name="force_stop">强制停止</string>
+    <string name="examining">审核中</string>
+    <string name="pending_for_course">待上课</string>
+    <string name="living">上课中</string>
+    <string name="course_stu">已报名&#160;%1$d/%2$d</string>
+    <string name="shelves_need_examine">您提交的上架申请正在审核中，请耐心等待</string>
 </resources>

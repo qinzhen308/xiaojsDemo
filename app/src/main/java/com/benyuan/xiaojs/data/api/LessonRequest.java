@@ -109,6 +109,11 @@ public class LessonRequest extends ServiceRequest {
         String criteriaJsonstr = objectToJsonString(criteria);
         String paginationJsonstr = objectToJsonString(pagination);
 
+        if(XiaojsConfig.DEBUG){
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.getLessons(sessionID, criteriaJsonstr, paginationJsonstr).enqueue(new Callback<GetLessonsResponse>() {

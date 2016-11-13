@@ -56,7 +56,11 @@
     <color name="search_gray">#bfbfbf</color>
     <color name="common_text">#8a8a8a</color>
     <color name="course_state_on">#698700</color>
-    <color name="course_state_cancel">#e2e1e1</color>
-    <color name="course_state_end">#cacaca</color>
+    <color name="course_state_cancel">#bbbbbb</color>
+    <color name="course_state_stop">#cccccc</color>
+    <color name="course_state_end">#999999</color>
+    <color name="course_state_draft">#6699ff</color>
+    <color name="course_state_examine">#66cccc</color>
     <color name="course_item_stroke_line">#eff2f6</color>
+
 </resources>
