@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/course_item_fun_cls"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <com.benyuan.xiaojs.ui.widget.RedTipTextView
+                android:id="@+id/course_item_fun_circle"
+                android:padding="@dimen/px25"
+                android:textSize="@dimen/font_26px"
+                app:hasDrawable="false"
+                android:text="@string/cls_moment"
+                android:background="@drawable/white_grey_selector"
+                android:textColor="@color/common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <View
+                style="@style/DividerVertical"
+                android:layout_gravity="center_vertical"
+                android:layout_height="@dimen/px36"/>
+
+        <com.benyuan.xiaojs.ui.widget.RedTipTextView
+                android:id="@+id/course_item_fun_enter"
+                android:padding="@dimen/px25"
+                android:textSize="@dimen/font_26px"
+                android:text="@string/into_cls"
+                android:background="@drawable/white_grey_selector"
+                app:hasDrawable="false"
+                android:textColor="@color/common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/course_item_fun_opera"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/course_item_fun_shelves"
+                android:padding="@dimen/px25"
+                android:textSize="@dimen/font_26px"
+                android:text="@string/shelves"
+                android:background="@drawable/white_grey_selector"
+                android:textColor="@color/common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <View
+                android:id="@+id/course_item_fun_shelves_line"
+                style="@style/DividerVertical"
+                android:layout_gravity="center_vertical"
+                android:layout_height="@dimen/px36"/>
+
+        <TextView
+                android:id="@+id/course_item_fun_edit"
+                android:padding="@dimen/px25"
+                android:textSize="@dimen/font_26px"
+                android:text="@string/edit"
+                android:background="@drawable/white_grey_selector"
+                android:textColor="@color/common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <View
+                android:id="@+id/course_item_fun_edit_line"
+                style="@style/DividerVertical"
+                android:layout_gravity="center_vertical"
+                android:layout_height="@dimen/px36"/>
+
+        <TextView
+                android:id="@+id/course_item_fun_cancel"
+                android:padding="@dimen/px25"
+                android:textSize="@dimen/font_26px"
+                android:text="@string/cancel_examine"
+                android:background="@drawable/white_grey_selector"
+                android:textColor="@color/common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <View
+                android:id="@+id/course_item_fun_cancel_line"
+                style="@style/DividerVertical"
+                android:layout_gravity="center_vertical"
+                android:layout_height="@dimen/px36"/>
+
+        <TextView
+                android:id="@+id/course_item_fun_detail"
+                android:padding="@dimen/px25"
+                android:textSize="@dimen/font_26px"
+                android:text="@string/look_detail"
+                android:textColor="@color/common_text"
+                android:background="@drawable/white_grey_selector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/course_item_fun_error"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:textColor="@color/totally_red_font"
+            android:textSize="@dimen/font_26px"
+            android:paddingTop="@dimen/px25"
+            android:visibility="gone"
+            android:paddingBottom="@dimen/px25"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:id="@+id/course_item_fun_more"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:padding="@dimen/px25"
+            android:layout_marginRight="@dimen/px10"
+            android:visibility="gone"
+            android:background="@drawable/white_grey_selector"
+            android:textSize="@dimen/font_26px"
+            android:text="@string/more"
+            android:textColor="@color/common_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+</RelativeLayout>

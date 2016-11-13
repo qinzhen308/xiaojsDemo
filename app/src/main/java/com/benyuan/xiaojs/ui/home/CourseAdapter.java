@@ -57,7 +57,7 @@ public class CourseAdapter extends AbsSwipeAdapter<RecommendCourseBean,CourseAda
     }
 
     @Override
-    protected void doRequest(int pageNo) {
+    protected void doRequest() {
         RecommendCourseBean b = new RecommendCourseBean();
         List<RecommendCourseBean> beans = new ArrayList<>();
         beans.add(b);

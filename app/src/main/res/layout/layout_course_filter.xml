@@ -7,17 +7,20 @@
 
     <TextView
             android:text="@string/time"
-            android:layout_marginTop="@dimen/px80"
+            android:layout_marginTop="@dimen/px30"
             android:layout_marginLeft="@dimen/px30"
+            android:textSize="@dimen/px28"
+            android:textColor="@color/font_black"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     <com.benyuan.xiaojs.ui.widget.AdapterGirdView
             android:id="@+id/course_filter_time_grid"
-            android:layout_marginLeft="@dimen/px40"
-            android:layout_marginRight="@dimen/px40"
-            android:horizontalSpacing="@dimen/px6"
-            android:verticalSpacing="@dimen/px6"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:horizontalSpacing="@dimen/px14"
+            android:verticalSpacing="@dimen/px14"
             android:layout_marginTop="@dimen/px40"
             android:listSelector="@android:color/transparent"
             android:numColumns="4"
@@ -27,18 +30,21 @@
     <TextView
             android:text="@string/course_state"
             android:layout_marginTop="@dimen/px40"
-            android:layout_marginLeft="@dimen/px40"
+            android:layout_marginLeft="@dimen/px30"
+            android:textSize="@dimen/px28"
+            android:textColor="@color/font_black"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     <com.benyuan.xiaojs.ui.widget.AdapterGirdView
             android:id="@+id/course_filter_state_grid"
-            android:layout_marginLeft="@dimen/px40"
-            android:layout_marginRight="@dimen/px40"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
             android:layout_marginTop="@dimen/px40"
             android:numColumns="4"
-            android:horizontalSpacing="@dimen/px6"
-            android:verticalSpacing="@dimen/px6"
+            android:horizontalSpacing="@dimen/px14"
+            android:verticalSpacing="@dimen/px14"
             android:listSelector="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -48,13 +54,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/big_submit_btn_selector"
-            android:paddingBottom="@dimen/px30"
-            android:paddingTop="@dimen/px30"
+            android:paddingBottom="@dimen/px25"
+            android:paddingTop="@dimen/px25"
             android:text="@string/ok"
             android:textSize="@dimen/font_30px"
             android:textColor="@color/white"
             android:layout_marginRight="@dimen/px40"
             android:layout_marginLeft="@dimen/px40"
             android:layout_marginTop="@dimen/px90"
-            android:layout_marginBottom="@dimen/px75"/>
+            android:layout_marginBottom="@dimen/px90"/>
 </LinearLayout>

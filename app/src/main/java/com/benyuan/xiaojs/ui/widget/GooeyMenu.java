@@ -9,9 +9,14 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RadialGradient;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -38,7 +43,6 @@ public class GooeyMenu extends View {
     private final float START_ANGLE = 0f;
     private final float END_ANGLE = 45f;
     private int mNumberOfMenu;//Todo
-    private final float BEZIER_CONSTANT = 0.551915024494f;// pre-calculated value
 
     private int mFabButtonRadius;
     private int mMenuButtonRadius;
@@ -50,10 +54,9 @@ public class GooeyMenu extends View {
     private ArrayList<CirclePoint> mMenuPoints = new ArrayList<>();
     private ArrayList<ObjectAnimator> mShowAnimation = new ArrayList<>();
     private ArrayList<ObjectAnimator> mHideAnimation = new ArrayList<>();
-    private ValueAnimator mBezierAnimation, mBezierEndAnimation, mRotationAnimation;
+    private ValueAnimator mRotationAnimation;
     private boolean isMenuVisible = false;
     private Bitmap mPlusBitmap;
-    private float mRotationAngle;
     private ValueAnimator mRotationReverseAnimation;
     private GooeyMenuInterface mGooeyMenuInterface;
     private List<Drawable> mDrawableArray;
@@ -72,6 +75,9 @@ public class GooeyMenu extends View {
     private ArcCake mArcCake;
     private ObjectAnimator mShowArcCakeAnim;
     private ObjectAnimator mHideArcCakeAnim;
+
+    private long lastTouchTime;
+    private Bitmap mShader;
     public GooeyMenu(Context context) {
         super(context);
         init(null);
@@ -103,7 +109,6 @@ public class GooeyMenu extends View {
 
 
                 mNumberOfMenu = typedArray.getInt(R.styleable.GooeyMenu_no_of_menu, DEFUALT_MENU_NO);
-                //mFabButtonRadius = (int) typedArray.getDimension(R.styleable.GooeyMenu_fab_radius, getResources().getDimension(R.dimen.px150));
                 mMenuButtonRadius = (int) typedArray.getDimension(R.styleable.GooeyMenu_menu_radius, getResources().getDimension(R.dimen.px40));
                 mGab = (int) typedArray.getDimension(R.styleable.GooeyMenu_gap_between_menu_fab, getResources().getDimensionPixelSize(R.dimen.px200));
 
@@ -140,23 +145,6 @@ public class GooeyMenu extends View {
         mCirclePaint = new Paint();
         mCirclePaint.setAntiAlias(true);
         mCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        mShadowPaint = new Paint();
-        mShadowPaint.setAntiAlias(true);
-        mShadowPaint.setColor(getResources().getColor(R.color.translucent_50));
-        mShadowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        mBezierEndAnimation = ValueAnimator.ofFloat(BEZIER_CONSTANT + .2f, BEZIER_CONSTANT);
-        mBezierEndAnimation.setInterpolator(new LinearInterpolator());
-        mBezierEndAnimation.setDuration(300);
-        mBezierEndAnimation.addUpdateListener(mBezierUpdateListener);
-
-        mBezierAnimation = ValueAnimator.ofFloat(BEZIER_CONSTANT - .02f, BEZIER_CONSTANT + .2f);
-        mBezierAnimation.setDuration(ANIMATION_DURATION / 4);
-        mBezierAnimation.setRepeatCount(4);
-        mBezierAnimation.setInterpolator(new LinearInterpolator());
-        mBezierAnimation.addUpdateListener(mBezierUpdateListener);
-        mBezierAnimation.addListener(mBezierAnimationListener);
 
         mRotationAnimation = ValueAnimator.ofFloat(START_ANGLE, END_ANGLE);
         mRotationAnimation.setDuration(ANIMATION_DURATION / 4);
@@ -247,6 +235,10 @@ public class GooeyMenu extends View {
         mShowArcCakeAnim.addUpdateListener(mUpdateListener);
         mHideArcCakeAnim = mShowArcCakeAnim.clone();
         mHideArcCakeAnim.setFloatValues(mGab,0f);
+
+        mShadowPaint = new Paint();
+        mShadowPaint.setAntiAlias(true);
+        mShadowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
     @Override
@@ -254,13 +246,13 @@ public class GooeyMenu extends View {
         super.onAttachedToWindow();
         mPlusBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_center);
         mFabButtonRadius = mPlusBitmap.getWidth()/2;
+        mShader = BitmapFactory.decodeResource(getResources(), R.drawable.ic_center_shader);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPlusBitmap = null;
-        mBezierAnimation = null;
         mHideAnimation.clear();
         mHideAnimation = null;
         mShowAnimation.clear();
@@ -274,11 +266,11 @@ public class GooeyMenu extends View {
         if (isMenuVisible){
             canvas.save();
             canvas.translate(mCenterX, mCenterY);
-            RectF t = new RectF(-mArcCake.radius,-mArcCake.radius,mArcCake.radius,mArcCake.radius);
-            canvas.drawArc(t,mArcCake.startAngle,mArcCake.sweepAngle,false,mShadowPaint);
+            Rect res = new Rect(0,0,mShader.getWidth(),mShader.getHeight());
+            RectF dst = new RectF(-mGab,-mArcCake.radius,mGab,0);
+            canvas.drawBitmap(mShader,res,dst,mShadowPaint);
             canvas.restore();
         }
-
 
         for (int i = 0; i < mNumberOfMenu; i++) {
             CirclePoint circlePoint = mMenuPoints.get(i);
@@ -294,8 +286,6 @@ public class GooeyMenu extends View {
 
         canvas.save();
         canvas.translate(mCenterX, mCenterY);
-        //canvas.rotate(mRotationAngle);
-        //canvas.drawBitmap(mPlusBitmap, -mPlusBitmap.getWidth() / 2, -mPlusBitmap.getHeight() / 2, mCirclePaint);
         canvas.restore();
     }
 
@@ -325,7 +315,10 @@ public class GooeyMenu extends View {
                 return false;
             case MotionEvent.ACTION_UP:
                 if (isGooeyMenuTouch(event)) {
-                    mBezierAnimation.start();
+                    if (!canAnimation()){
+                        return true;
+                    }
+                    lastTouchTime = System.currentTimeMillis();
                     cancelAllAnimation();
                     if (isMenuVisible) {
                         startHideAnimate();
@@ -492,22 +485,7 @@ public class GooeyMenu extends View {
         mHideArcCakeAnim.cancel();
     }
 
-    public void hideMenu(){
-        startHideAnimate();
-    }
-
-    public void showMenu(){
-        startShowAnimate();
-    }
-
     ValueAnimator.AnimatorUpdateListener mUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            invalidate();
-        }
-    };
-
-    ValueAnimator.AnimatorUpdateListener mBezierUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
             invalidate();
@@ -516,33 +494,13 @@ public class GooeyMenu extends View {
     ValueAnimator.AnimatorUpdateListener mRotationUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            mRotationAngle = (float) valueAnimator.getAnimatedValue();
             invalidate();
         }
     };
 
-    ValueAnimator.AnimatorListener mBezierAnimationListener = new Animator.AnimatorListener() {
-        @Override
-        public void onAnimationStart(Animator animator) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animator) {
-            mBezierEndAnimation.start();
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animator) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animator) {
-
-        }
-    };
-
+    public boolean canAnimation(){
+        return System.currentTimeMillis() - lastTouchTime > (mNumberOfMenu/10 + 1.5) * ANIMATION_DURATION;
+    }
 
     public interface GooeyMenuInterface {
         /**

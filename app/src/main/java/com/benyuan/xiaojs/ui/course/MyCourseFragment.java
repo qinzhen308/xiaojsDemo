@@ -23,6 +23,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
@@ -37,7 +38,10 @@ public class MyCourseFragment extends BaseFragment {
     MyCourseAdapter adapter;
     private int lastItemPosition;
     private View mHeader;
-    private PopupWindow mDialog;
+    private CourseFilterDialog mDialog;
+    private int mTimePosition;
+    private int mStatePosition;
+
     @Override
     protected View getContentView() {
         View v = LayoutInflater.from(mContext).inflate(R.layout.fragment_my_course,null);
@@ -99,6 +103,8 @@ public class MyCourseFragment extends BaseFragment {
     private void onFilter(){
         if (mDialog == null){
             mDialog = new CourseFilterDialog(mContext);
+            mDialog.setTimeSelection(mTimePosition);
+            mDialog.setStateSelection(mStatePosition);
             mDialog.showAsDropDown(mHeader);
             mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
@@ -106,9 +112,24 @@ public class MyCourseFragment extends BaseFragment {
                     mDialog = null;
                 }
             });
+            mDialog.setOnOkListener(new CourseFilterDialog.OnOkListener() {
+                @Override
+                public void onOk(int timePosition, int statePosition) {
+                    mTimePosition = timePosition;
+                    mStatePosition = statePosition;
+                    Criteria criteria  = MyCourseBusiness.getFilter(timePosition,statePosition);
+                    request(criteria);
+                }
+            });
         }else {
             mDialog.dismiss();
             mDialog = null;
+        }
+    }
+
+    public void request(Criteria criteria){
+        if (adapter != null){
+            adapter.request(criteria);
         }
     }
 

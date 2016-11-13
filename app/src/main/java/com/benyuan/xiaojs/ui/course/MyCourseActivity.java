@@ -17,12 +17,15 @@ package com.benyuan.xiaojs.ui.course;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.ui.base.BaseTopTabActivity;
 import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
 
@@ -33,11 +36,13 @@ import butterknife.OnClick;
 
 public class MyCourseActivity extends BaseTopTabActivity {
 
-      View mHover;
-      TextView mFilter;
-      TextView mInput;
+    View mHover;
+    TextView mFilter;
+    TextView mInput;
 
-    private PopupWindow mDialog;
+    private CourseFilterDialog mDialog;
+    private int mTimePosition;
+    private int mStatePosition;
 
     @Override
     protected void initView() {
@@ -96,7 +101,8 @@ public class MyCourseActivity extends BaseTopTabActivity {
                         handleRightClick(i);
                     }
                 });
-                menu.showAsDropDown(mRightText);
+                int offset = getResources().getDimensionPixelSize(R.dimen.px68);
+                menu.show(mHeader,offset);
                 break;
             default:
                 break;
@@ -106,11 +112,24 @@ public class MyCourseActivity extends BaseTopTabActivity {
     private void filter(){
         if (mDialog == null){
             mDialog = new CourseFilterDialog(this);
-            mDialog.showAsDropDown(mHover);
+            mDialog.setTimeSelection(mTimePosition);
+            mDialog.setStateSelection(mStatePosition);
+            //mDialog.showAsDropDown(mHover);
+            mDialog.showAtLocation(mHover, Gravity.BOTTOM,100,100);
             mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
                     mDialog = null;
+                }
+            });
+            mDialog.setOnOkListener(new CourseFilterDialog.OnOkListener() {
+                @Override
+                public void onOk(int timePosition, int statePosition) {
+                    mTimePosition = timePosition;
+                    mStatePosition = statePosition;
+                    Criteria criteria  = MyCourseBusiness.getFilter(timePosition,statePosition);
+                    Fragment f = ((FragmentPagerAdapter)mViewPager.getAdapter()).getItem(getPosition());
+                    ((MyCourseFragment)f).request(criteria);
                 }
             });
         }else {
@@ -122,6 +141,8 @@ public class MyCourseActivity extends BaseTopTabActivity {
     private void handleRightClick(int position){
         switch (position){
             case 0://我要开课
+                Intent intent = new Intent(this,LessonCreationActivity.class);
+                startActivity(intent);
                 break;
             case 1://加入私密课
                 break;
