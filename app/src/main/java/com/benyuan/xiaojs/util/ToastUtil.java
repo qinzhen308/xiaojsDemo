@@ -1,7 +1,6 @@
 package com.benyuan.xiaojs.util;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -42,23 +41,19 @@ public class ToastUtil {
 
 	public static void showToast(Context context,String text){
 		if (mToast == null) {
-			mToast = new Toast(context.getApplicationContext());
+			mToast = Toast.makeText(context,text,Toast.LENGTH_LONG);
 		}
 
 		mToast.setText(text);
-		mToast.setGravity(Gravity.CENTER, 0, 0);
-		mToast.setDuration(Toast.LENGTH_SHORT);
 		mToast.show();
 	}
 
 	public static void showToast(Context context,int textId){
 		if (mToast == null) {
-			mToast = new Toast(context.getApplicationContext());
+			mToast = Toast.makeText(context,textId,Toast.LENGTH_LONG);
 		}
 
 		mToast.setText(textId);
-		mToast.setGravity(Gravity.CENTER, 0, 0);
-		mToast.setDuration(Toast.LENGTH_SHORT);
 		mToast.show();
 	}
 

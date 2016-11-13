@@ -40,7 +40,7 @@ public class MyCourseSearchActivity extends BaseActivity {
     protected void addViewContent() {
         addView(R.layout.activity_my_course_search);
         needHeader(false);
-        adapter = new MyCourseAdapter(this,mList,false);
+        adapter = new MyCourseAdapter(this,mList,true);
         mList.setAdapter(adapter);
     }
 

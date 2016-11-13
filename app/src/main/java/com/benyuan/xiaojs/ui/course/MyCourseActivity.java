@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.PopupWindow;
@@ -100,7 +101,8 @@ public class MyCourseActivity extends BaseTopTabActivity {
                         handleRightClick(i);
                     }
                 });
-                menu.showAsDropDown(mRightText);
+                int offset = getResources().getDimensionPixelSize(R.dimen.px68);
+                menu.show(mHeader,offset);
                 break;
             default:
                 break;
@@ -112,7 +114,8 @@ public class MyCourseActivity extends BaseTopTabActivity {
             mDialog = new CourseFilterDialog(this);
             mDialog.setTimeSelection(mTimePosition);
             mDialog.setStateSelection(mStatePosition);
-            mDialog.showAsDropDown(mHover);
+            //mDialog.showAsDropDown(mHover);
+            mDialog.showAtLocation(mHover, Gravity.BOTTOM,100,100);
             mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
@@ -138,7 +141,7 @@ public class MyCourseActivity extends BaseTopTabActivity {
     private void handleRightClick(int position){
         switch (position){
             case 0://我要开课
-                Intent intent = new Intent(this,CourseCreationActivity.class);
+                Intent intent = new Intent(this,LessonCreationActivity.class);
                 startActivity(intent);
                 break;
             case 1://加入私密课

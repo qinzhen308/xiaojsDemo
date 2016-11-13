@@ -30,7 +30,7 @@ import butterknife.Unbinder;
 
 public abstract class BaseActivity extends FragmentActivity {
 
-    private View mHeader;
+    protected View mHeader;
     private FrameLayout mContent;
     private TextView mLeftText;
     protected TextView mRightText;

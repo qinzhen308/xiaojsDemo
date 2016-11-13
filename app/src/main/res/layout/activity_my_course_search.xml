@@ -7,7 +7,7 @@
     <LinearLayout
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/px90"
             android:background="@color/white"
             android:orientation="horizontal">
 
@@ -28,14 +28,13 @@
                 android:paddingLeft="@dimen/px10"
                 android:paddingRight="@dimen/px10"
                 android:hint="@string/name_of_course"
+                android:layout_gravity="center_vertical"
                 android:textSize="@dimen/font_28px"
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:background="@drawable/common_edittext_bg"
-                android:paddingBottom="@dimen/px20"
-                android:paddingTop="@dimen/px20"
-                android:layout_marginTop="@dimen/px20"
-                android:layout_marginBottom="@dimen/px20"
+                android:paddingBottom="@dimen/px15"
+                android:paddingTop="@dimen/px15"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_height="wrap_content"/>
 
@@ -62,8 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
-            android:divider="@color/clicked_grey_light"
-            android:dividerHeight="@dimen/px10"
+            android:divider="@android:color/transparent"
             android:orientation="vertical"
             android:layout_below="@id/divider"/>
 </RelativeLayout>

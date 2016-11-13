@@ -14,8 +14,8 @@
     <LinearLayout
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/translucent_30"
+            android:layout_height="@dimen/px88"
+            android:background="@drawable/ic_home_title_bg"
             android:orientation="horizontal">
 
         <ImageView
@@ -31,11 +31,8 @@
         <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/common_edittext_bg"
-                android:paddingBottom="@dimen/px20"
-                android:paddingTop="@dimen/px20"
-                android:layout_marginTop="@dimen/px20"
-                android:layout_marginBottom="@dimen/px20"
+                android:background="@drawable/ic_home_search"
+                android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content">
 
             <TextView

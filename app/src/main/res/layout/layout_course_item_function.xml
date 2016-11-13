@@ -27,7 +27,7 @@
         <View
                 style="@style/DividerVertical"
                 android:layout_gravity="center_vertical"
-                android:layout_height="@dimen/px30"/>
+                android:layout_height="@dimen/px36"/>
 
         <com.benyuan.xiaojs.ui.widget.RedTipTextView
                 android:id="@+id/course_item_fun_enter"
@@ -64,7 +64,7 @@
                 android:id="@+id/course_item_fun_shelves_line"
                 style="@style/DividerVertical"
                 android:layout_gravity="center_vertical"
-                android:layout_height="@dimen/px30"/>
+                android:layout_height="@dimen/px36"/>
 
         <TextView
                 android:id="@+id/course_item_fun_edit"
@@ -80,7 +80,7 @@
                 android:id="@+id/course_item_fun_edit_line"
                 style="@style/DividerVertical"
                 android:layout_gravity="center_vertical"
-                android:layout_height="@dimen/px30"/>
+                android:layout_height="@dimen/px36"/>
 
         <TextView
                 android:id="@+id/course_item_fun_cancel"
@@ -96,7 +96,7 @@
                 android:id="@+id/course_item_fun_cancel_line"
                 style="@style/DividerVertical"
                 android:layout_gravity="center_vertical"
-                android:layout_height="@dimen/px30"/>
+                android:layout_height="@dimen/px36"/>
 
         <TextView
                 android:id="@+id/course_item_fun_detail"
@@ -113,7 +113,7 @@
             android:id="@+id/course_item_fun_error"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
-            android:textColor="@color/red"
+            android:textColor="@color/totally_red_font"
             android:textSize="@dimen/font_26px"
             android:paddingTop="@dimen/px25"
             android:visibility="gone"

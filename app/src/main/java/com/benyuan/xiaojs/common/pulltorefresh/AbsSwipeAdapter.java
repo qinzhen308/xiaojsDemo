@@ -37,7 +37,7 @@ import java.util.List;
 public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapter {
 
     protected final int PAGE_FIRST = 1;
-    protected final int PAGE_SIZE = 20;
+    protected final int PAGE_SIZE = 5;
     private AutoPullToRefreshListView mListView;
     protected Context mContext;
     protected LayoutInflater mInflater;

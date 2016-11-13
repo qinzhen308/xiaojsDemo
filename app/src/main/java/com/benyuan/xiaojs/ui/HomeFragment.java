@@ -15,7 +15,9 @@ package com.benyuan.xiaojs.ui;
  *
  * ======================================================================================== */
 
+import android.graphics.Color;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
@@ -23,12 +25,15 @@ import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.home.CourseAdapter;
 import com.benyuan.xiaojs.ui.home.CourseBlock;
 import com.benyuan.xiaojs.ui.home.LiveBlock;
+import com.benyuan.xiaojs.ui.home.OnScrollYListener;
 import com.benyuan.xiaojs.ui.home.PersonBlock;
 import com.benyuan.xiaojs.ui.widget.BlockTabView;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
+import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +53,11 @@ public class HomeFragment extends BaseFragment {
     BlockTabView mTeacher;
     @BindView(R.id.home_person)
     BlockTabView mPerson;
+
+    @BindView(R.id.title)
+    View mTitle;
+    @BindView(R.id.right_view)
+    ImageView mRightImage;
 
     AutoPullToRefreshListView mList;
 
@@ -111,7 +121,32 @@ public class HomeFragment extends BaseFragment {
         ps.add(p1);
         p1.setData();
         mPerson.setViews(mContext.getString(R.string.perhaps_interest),null,ps,mContext.getString(R.string.recommend_self));
+        mList.getRefreshableView().setOnScrollListener(new OnScrollYListener(mList.getRefreshableView()) {
+            @Override
+            public void onScrollY(int y) {
+                handleScrollChanged(y);
+                ToastUtil.showToast(mContext,"y = " + y);
+            }
+        });
+    }
 
+    private void handleScrollChanged(int offsetY) {
+        if (offsetY >= 0) {
+            int bannerHeight = mBanner.getMeasuredHeight();
+            int bgColor = 0;
+            if (offsetY >= bannerHeight && offsetY <= 2 * bannerHeight) {
+                int alpha = (int)((float)(offsetY - bannerHeight) / bannerHeight * 255);
+                Logger.d("alpha = " + alpha);
+                bgColor = Color.argb(alpha,0xf5,0xf5,0xf5);
+                mTitle.setBackgroundColor(bgColor);
+            }else if (offsetY > 2 * bannerHeight){
+                bgColor = Color.argb(255,0xf5,0xf5,0xf5);
+                mTitle.setBackgroundColor(bgColor);
+                mRightImage.setImageResource(R.drawable.home_message_selector2);
+            }else if (offsetY < bannerHeight){
+                mRightImage.setImageResource(R.drawable.home_message_selector);
+            }
+        }
     }
 
     @OnClick({})

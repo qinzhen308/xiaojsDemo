@@ -684,4 +684,92 @@ public class TimeUtil {
         cal.add(cal.YEAR, -before);
         return new Date(cal.getTimeInMillis());
     }
+
+    /**
+     * 根据传入的日期返回xx分钟之前/后,今天、明天、昨天或者具体时间
+     * @param date
+     * @return
+     */
+    public static String getTimeByNow(Date date){
+        StringBuilder time = new StringBuilder();
+        Date now = new Date(System.currentTimeMillis());
+        if (inOneHour(date,now)){
+            time.append(getTimeInOneHour(date,now));
+        }else if (isSameDay(date,now)){
+            time.append("今天 ");
+            time.append(format(date,TIME_HH_MM));
+        }else if (isYesterday(date,now)){
+            time.append("昨天 ");
+            time.append(format(date,TIME_HH_MM));
+        }else if (isTomorrow(date,now)){
+            time.append("明天 ");
+            time.append(format(date,TIME_HH_MM));
+        }else if (getTime(date,Calendar.YEAR) == getTime(now,Calendar.YEAR)){//同一年
+            time.append(format(date,TIME_MM_DD_HH_MM));
+        }else {
+            time.append(format(date,TIME_YYYY_MM_DD_HH_MM));
+        }
+
+        return time.toString();
+    }
+
+    private static boolean isSameDay(Date dayOne,Date dayTwo){
+        return  getTime(dayOne,Calendar.YEAR) == getTime(dayTwo,Calendar.YEAR)
+                && getTime(dayOne,Calendar.MONTH) == getTime(dayTwo,Calendar.MONTH)
+                && getTime(dayOne,Calendar.DAY_OF_MONTH) == getTime(dayTwo,Calendar.DAY_OF_MONTH);
+    }
+
+    private static boolean inOneHour(Date target,Date now){
+        if (isSameDay(target,now)){
+            return getTime(target,Calendar.HOUR_OF_DAY) == getTime(now,Calendar.HOUR_OF_DAY);
+        }
+        return false;
+    }
+
+    private static boolean isYesterday(Date target,Date now){
+        long dis = now.getTime() - target.getTime();
+        if (dis > 1000 * 3600 * 24 && dis < 1000 * 3600 * 24 * 2){
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isTomorrow(Date target,Date now){
+        long dis = target.getTime() - now.getTime();
+        if (dis > 1000 * 3600 * 24 && dis < 1000 * 3600 * 24 * 2){
+            return true;
+        }
+        return false;
+    }
+
+
+    private static String getTimeInOneHour(Date target,Date now){
+        StringBuilder time = new StringBuilder();
+        if (target.getTime() >= now.getTime()){//之后
+            int dis = getTime(target,Calendar.MINUTE) - getTime(now,Calendar.MINUTE);
+            time.append(dis);
+            time.append("分钟之后");
+            return time.toString();
+        }else {//之前
+            int dis = getTime(now,Calendar.MINUTE) - getTime(target,Calendar.MINUTE);
+            time.append(dis);
+            time.append("分钟之前");
+            return time.toString();
+        }
+
+    }
+
+    private static int getTime(Date date,int type){
+        Calendar calendarTarget = Calendar.getInstance();
+        calendarTarget.setTime(date);
+
+        return calendarTarget.get(type);
+    }
+
+    public static String format(Date date,String format) {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return formatter.format(cal.getTime());
+    }
 }

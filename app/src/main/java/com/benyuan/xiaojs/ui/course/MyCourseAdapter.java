@@ -33,14 +33,22 @@ import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Duration;
+import com.benyuan.xiaojs.model.Enroll;
+import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.ObjectsOfPage;
+import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 import com.benyuan.xiaojs.util.NumberUtil;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -76,7 +84,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
 
     private void showStu(Holder holder, final ObjectsOfPage bean, int position) {
         holder.name.setText(bean.getTitle());
-        holder.time.setText(TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
+        holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
 
         holder.clsFunction.setVisibility(View.VISIBLE);
         holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
@@ -122,7 +130,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
             holder.desc.setText(mContext.getString(R.string.course_stu,bean.getEnroll().getCurrent(),bean.getEnroll().getMax()));
         }
 
-        holder.time.setText(TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
+        holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
 
         if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)){
             holder.operaFunction.setVisibility(View.VISIBLE);
@@ -245,13 +253,12 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
             public void onSuccess(GetLessonsResponse object) {
                 bean.setState(LessonState.PENDING_FOR_APPROVAL);
                 notifyData(bean);
-                Logger.d("onSuccess-----------");
+                ToastUtil.showToast(mContext,R.string.shelves_need_examine);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 ToastUtil.showToast(mContext,errorMessage);
-                Logger.d("onFailure-----------");
             }
         });
     }
@@ -310,7 +317,26 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 Logger.d("onSuccess-----------");
-                MyCourseAdapter.this.onSuccess(object.getObjectsOfPage());
+                ObjectsOfPage bean = new ObjectsOfPage();
+                bean.setTitle("java course1");
+                Schedule schedule = new Schedule();
+                schedule.setStart(new Date(System.currentTimeMillis() + 1000 * 60 *60 *22));
+                schedule.setDuration(100);
+                bean.setSchedule(schedule);
+                Fee fee = new Fee();
+                fee.setFree(false);
+                fee.setCharge(BigDecimal.valueOf(555));
+                bean.setFee(fee);
+                Enroll enroll = new Enroll();
+                enroll.setCurrent(12);
+                enroll.setMax(50);
+                enroll.setMandatory(true);
+                bean.setEnroll(enroll);
+                bean.setState(LessonState.LIVE);
+
+                List<ObjectsOfPage> beans = new ArrayList<ObjectsOfPage>();
+                beans.add(bean);
+                MyCourseAdapter.this.onSuccess(beans);
             }
 
             @Override

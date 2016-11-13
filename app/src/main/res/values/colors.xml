@@ -61,4 +61,5 @@
     <color name="course_state_draft">#6699ff</color>
     <color name="course_state_examine">#66cccc</color>
     <color name="course_item_stroke_line">#eff2f6</color>
+
 </resources>
