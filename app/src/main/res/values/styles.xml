@@ -70,4 +70,39 @@
         <item name="android:background">@drawable/item_pressed</item>
         <item name="android:clickable">true</item>
     </style>
+
+
+    <!--live lesson detail-->
+    <style name="LiveLessonTextView">
+        <item name="android:paddingTop">@dimen/px34</item>
+        <item name="android:paddingBottom">@dimen/px34</item>
+        <item name="android:textSize">@dimen/font_26px</item>
+        <item name="android:textColor">@color/font_gray</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="LiveLessonItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/px32</item>
+        <item name="android:paddingRight">@dimen/px32</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <style name="LiveLessonTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">@dimen/px170</item>
+        <item name="android:paddingTop">@dimen/px34</item>
+        <item name="android:paddingBottom">@dimen/px34</item>
+        <item name="android:textSize">@dimen/font_26px</item>
+        <item name="android:textColor">@color/font_black</item>
+    </style>
+    <style name="LiveLessonText" parent="LiveLessonTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/px14</item>
+        <item name="android:lines">1</item>
+    </style>
 </resources>

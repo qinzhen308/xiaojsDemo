@@ -33,7 +33,6 @@ import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.LiveLesson;
-import com.benyuan.xiaojs.model.Promotion;
 import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.ui.base.BaseBusiness;
 import com.benyuan.xiaojs.ui.base.BaseFragment;

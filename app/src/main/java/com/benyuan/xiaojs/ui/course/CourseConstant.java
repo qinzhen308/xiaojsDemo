@@ -32,8 +32,8 @@ public interface CourseConstant {
     public static final int TEACHER_FORCE_CLOSE = 18;//强制关闭
     public static final int TEACHER_PRIVATE_WAIT_COURSE = 19;//老师私密课待开课
 
-    public final static int COURSE_COVER_WIDTH = 260; //课程封面宽
-    public final static int COURSE_COVER_HEIGHT = 147;//课程封面高
+    public final static int COURSE_COVER_WIDTH = 260 * 2; //课程封面宽
+    public final static int COURSE_COVER_HEIGHT = 147 * 2;//课程封面高
 
     public final static String KEY_LESSON_OPTIONAL_INFO = "key_lesson_optional_info";
 

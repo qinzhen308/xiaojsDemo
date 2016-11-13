@@ -61,6 +61,7 @@
         <activity android:name=".ui.course.SalePromotionActivity"/>
         <activity android:name=".ui.course.SitInOnActivity"/>
         <activity android:name=".ui.course.TeacherIntroductionActivity"/>
+        <activity android:name=".ui.course.LiveLessonDetailActivity"/>
 
     </application>
 

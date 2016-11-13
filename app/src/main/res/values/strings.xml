@@ -26,6 +26,7 @@
     <string name="unit_price">元</string>
     <string name="unit_price_by_hour">元/小时</string>
     <string name="per_hour">/小时</string>
+    <string name="unfold_view_all">展开查看全部</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_circle">圈子</string>
@@ -126,7 +127,7 @@
     <string name="enroll_mandatory">需要报名</string>
     <string name="by_live_total_price">按总价</string>
     <string name="by_live_duration">按课时</string>
-    <string name="enroll_people_limit">报名限制人数</string>
+    <string name="enroll_people_limit">学生人数</string>
     <string name="lesson_start_time">上课时间</string>
     <string name="lesson_duration">上课时长</string>
     <string name="optional_info">选填信息</string>
@@ -166,6 +167,12 @@
     <string name="promotion_info_error">请完整填写促销%1$d信息</string>
     <string name="promotion_discount_format_error">请填写正确的折扣值，如：9.7</string>
     <string name="promotion_info_empty">请填写促销信息</string>
+
+    <!--live lesson detail-->
+    <string name="live_lesson_detail">直播课详情</string>
+    <string name="not_enroll">报名</string>
+    <string name="not_enroll_tips">改直播不需要报名</string>
+    <string name="enrolled">已报名</string>
 
     <string name="filter">筛选</string>
     <string name="time">时间</string>

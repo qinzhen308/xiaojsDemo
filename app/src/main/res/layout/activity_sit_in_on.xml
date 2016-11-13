@@ -32,6 +32,51 @@
         <View
                 style="@style/DividerHorizontal"/>
 
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/px32"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px40"
+                    android:paddingTop="@dimen/px28"
+                    android:paddingBottom="@dimen/px28"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/audit_people"/>
+
+            <LinearLayout
+                    android:id="@+id/audit_portrait"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/px14"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/audit_select"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/px22"
+                    android:text="@string/please_select"
+                    android:textColor="@color/font_light_gray"
+                    android:textSize="@dimen/font_28px"
+                    android:drawableRight="@drawable/ic_entrance"/>
+        </LinearLayout>
+
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,40 +102,6 @@
                     android:textOff=""
                     android:textOn=""/>
         </RelativeLayout>
-
-
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/px32"
-                android:orientation="horizontal">
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/px40"
-                    android:paddingTop="@dimen/px28"
-                    android:paddingBottom="@dimen/px28"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_28px"
-                    android:text="@string/audit_people"/>
-
-            <TextView
-                    android:id="@+id/sit_in_on_person"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/px22"
-                    android:text="@string/please_select"
-                    android:textColor="@color/font_light_gray"
-                    android:textSize="@dimen/font_28px"
-                    android:drawableRight="@drawable/ic_entrance"/>
-        </LinearLayout>
-
 
     </LinearLayout>
 

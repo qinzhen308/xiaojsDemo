@@ -31,7 +31,7 @@ import butterknife.OnClick;
 public class SitInOnActivity extends BaseActivity {
     @BindView(R.id.visible_to_stu)
     ToggleButton mVisibleToStu;
-    @BindView(R.id.sit_in_on_person)
+    @BindView(R.id.audit_select)
     TextView mSitInOnPerson;
 
     private LiveLesson mLesson;
@@ -58,7 +58,7 @@ public class SitInOnActivity extends BaseActivity {
             case R.id.left_image:
                 finish();
                 break;
-            case R.id.sit_in_on_person:
+            case R.id.audit_select:
                 //select sit in person
                 break;
             case R.id.sub_btn:
