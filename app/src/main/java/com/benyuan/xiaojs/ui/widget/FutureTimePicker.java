@@ -56,7 +56,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
 
     private String mTodayStr = "今天";
     private String mTomorrowStr = "明天";
-    private String mAfterTomorrowStr = "后天";
+    //private String mAfterTomorrowStr = "后天";
     private String mNextYear = "明年";
     private String mMonthStr;
     private String mDayStr;
@@ -85,7 +85,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
 
         mTodayStr = getResources().getString(com.wheelpicker.R.string._today);
         mTomorrowStr = getResources().getString(com.wheelpicker.R.string._tomorrow);
-        mAfterTomorrowStr = getResources().getString(com.wheelpicker.R.string._after_tomorrow);
+        //mAfterTomorrowStr = getResources().getString(com.wheelpicker.R.string._after_tomorrow);
         mNextYear = getResources().getString(com.wheelpicker.R.string._next_year);
 
         mMonthStr = getResources().getString(com.wheelpicker.R.string._month);
@@ -174,11 +174,11 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                     str = mTomorrowStr;
                     mDayMap.put(mTomorrowStr, today + oneDay);
                     break;
-                case 2:
+                //case 2:
                     //after tomorrow
-                    str = mAfterTomorrowStr;
-                    mDayMap.put(mAfterTomorrowStr, today + 2 * oneDay);
-                    break;
+                    //str = mAfterTomorrowStr;
+                    //mDayMap.put(mAfterTomorrowStr, today + 2 * oneDay);
+                    //break;
                 default:
                     //xx year xx month xx day
                     calendar.setTimeInMillis(today + i * oneDay);
