@@ -31,7 +31,6 @@ import com.benyuan.xiaojs.ui.widget.BlockTabView;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
-import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
@@ -125,7 +124,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onScrollY(int y) {
                 handleScrollChanged(y);
-                ToastUtil.showToast(mContext,"y = " + y);
+                //ToastUtil.showToast(mContext,"y = " + y);
             }
         });
     }
