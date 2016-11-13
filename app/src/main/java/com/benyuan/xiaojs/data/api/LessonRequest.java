@@ -460,4 +460,78 @@ public class LessonRequest extends ServiceRequest {
     }
 
 
+    public void confirmLessonEnrollment(Context context,
+                                        @NonNull String sessionID,
+                                        @NonNull String lesson,
+                                        @NonNull APIServiceCallback callback) {
+
+        final WeakReference<APIServiceCallback> callbackReference =
+                new WeakReference<>(callback);
+
+        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        xiaojsService.confirmLessonEnrollment(sessionID,lesson).enqueue(new Callback<Empty>() {
+            @Override
+            public void onResponse(Call<Empty> call, Response<Empty> response) {
+                int responseCode = response.code();
+                if (responseCode == SUCCESS_CODE) {
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
+
+
+                } else {
+
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.confirmLessonEnrollmentPrompt(errorCode);
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Empty> call, Throwable t) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the confirmLessonEnrollment request has occur exception");
+                }
+
+                String errorMsg = t.getMessage();
+                // FIXME: 2016/11/1
+                if (errorMsg.contains(EMPTY_EXCEPTION)) {
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
+
+                } else {
+
+                    String errorCode = getExceptionErrorCode();
+                    String errorMessage = ErrorPrompts.confirmLessonEnrollmentPrompt(errorCode);
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
+                }
+            }
+        });
+    }
+
+
 }

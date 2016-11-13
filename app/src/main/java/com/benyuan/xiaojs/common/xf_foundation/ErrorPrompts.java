@@ -8,6 +8,96 @@ import android.text.TextUtils;
 
 public class ErrorPrompts {
 
+    public static String confirmLessonEnrollmentPrompt(String errorCode) {
+
+        String errorMessage = "报名失败";
+
+        if (TextUtils.isEmpty(errorCode)
+                || errorCode.equals(Errors.NO_ERROR)
+                || errorCode.equals(Errors.SERVER_ERROR)
+                || errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.ILLEGAL_CALL)) {
+            return errorMessage;
+        } else if (errorCode.equals(Errors.BAD_SESSION)) {
+            errorMessage = "bad session";
+        } else if (errorCode.equals(Errors.BAD_PARAMETER)){
+            errorMessage = "参数错误";
+        }
+        return errorMessage;
+    }
+
+    public static String ignoreNotificationsPrompt(String errorCode) {
+
+        String errorMessage = "忽略消息失败";
+
+        if (TextUtils.isEmpty(errorCode)
+                || errorCode.equals(Errors.NO_ERROR)
+                || errorCode.equals(Errors.SERVER_ERROR)
+                || errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.ILLEGAL_CALL)) {
+            return errorMessage;
+        } else if (errorCode.equals(Errors.BAD_SESSION)) {
+            errorMessage = "bad session";
+        } else if (errorCode.equals(Errors.BAD_PARAMETER)){
+            errorMessage = "参数错误";
+        }
+        return errorMessage;
+    }
+
+
+    public static String deleteNotificationPrompt(String errorCode) {
+
+        String errorMessage = "删除消息失败";
+
+        if (TextUtils.isEmpty(errorCode)
+                || errorCode.equals(Errors.NO_ERROR)
+                || errorCode.equals(Errors.SERVER_ERROR)
+                || errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.ILLEGAL_CALL)) {
+            return errorMessage;
+        } else if (errorCode.equals(Errors.BAD_SESSION)) {
+            errorMessage = "bad session";
+        } else if (errorCode.equals(Errors.BAD_PARAMETER)){
+            errorMessage = "参数错误";
+        }
+        return errorMessage;
+    }
+
+    public static String getNotificationsPrompt(String errorCode) {
+
+        String errorMessage = "获取消息失败";
+
+        if (TextUtils.isEmpty(errorCode)
+                || errorCode.equals(Errors.NO_ERROR)
+                || errorCode.equals(Errors.SERVER_ERROR)
+                || errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.ILLEGAL_CALL)) {
+            return errorMessage;
+        } else if (errorCode.equals(Errors.BAD_SESSION)) {
+            errorMessage = "bad session";
+        } else if (errorCode.equals(Errors.BAD_PARAMETER)){
+            errorMessage = "参数错误";
+        }
+        return errorMessage;
+    }
+
+    public static String getNotificationsOverviewPrompt(String errorCode) {
+
+        String errorMessage = "获取消息类别失败";
+
+        if (TextUtils.isEmpty(errorCode)
+                || errorCode.equals(Errors.NO_ERROR)
+                || errorCode.equals(Errors.SERVER_ERROR)
+                || errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.ILLEGAL_CALL)) {
+            return errorMessage;
+        } else if (errorCode.equals(Errors.BAD_SESSION)) {
+            errorMessage = "bad session";
+        } else if (errorCode.equals(Errors.BAD_PARAMETER)){
+            errorMessage = "参数错误";
+        }
+        return errorMessage;
+    }
 
     public static String getLessonDetailsPrompt(String errorCode) {
 

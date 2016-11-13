@@ -30,6 +30,8 @@ public class Account {
         // true means man, otherwise woman
         private boolean sex;
 
+        private String name;
+
         public String getTitle() {
             return title;
         }
@@ -44,6 +46,14 @@ public class Account {
 
         public void setSex(boolean sex) {
             this.sex = sex;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 }

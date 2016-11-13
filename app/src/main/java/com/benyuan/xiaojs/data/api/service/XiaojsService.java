@@ -7,14 +7,19 @@ import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.GELessonsResponse;
+import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.GetSubjectResponse;
 import com.benyuan.xiaojs.model.HomeData;
+import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
+import com.benyuan.xiaojs.model.Notification;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.VerifyCode;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,6 +27,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -96,6 +102,12 @@ public interface XiaojsService {
     @GET("/v1/ctl/lessons/{lesson}")
     Call<LessonDetail> getLessonDetails(@Path("lesson") String lesson);
 
+    //Confirm Lesson Enrollment
+    @GET("/v1/ctl/lessons/{lesson}/enroll")
+    Call<Empty> confirmLessonEnrollment(@Header("SessionID") String sessionID,
+                                        @Path("lesson") String lesson);
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -105,6 +117,36 @@ public interface XiaojsService {
     //Get Subject (Demo)
     @GET("/v1/categories/subjects/demo")
     Call<GetSubjectResponse> getSubject();
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Platform
+    //
+
+    //Get Notifications Overview
+    @GET("/v1/platform/notifications/overview/{pagination}")
+    Call<GNOResponse> getNotificationsOverview(@Header("SessionID") String sessionID,
+                                              @Path("pagination") String pagination);
+
+    //Get Notifications
+    @GET("/v1/platform/notifications/{criteria}/{pagination}")
+    Call<ArrayList<Notification>> getNotifications(@Header("SessionID") String sessionID,
+                                                   @Path("criteria") String criteria,
+                                                   @Path("pagination") String pagination);
+
+    //Delete Notification
+    @DELETE("/v1/platform/notifications/{notification}")
+    Call<Empty> deleteNotification(@Header("SessionID") String sessionID,
+                                   @Path("notification") String notification);
+
+
+    //Ignore Notifications
+    @PATCH("/v1/platform/notifications/{criteria}")
+    Call<IgnoreNResponse> ignoreNotifications(@Header("SessionID") String sessionID,
+                                             @Path("criteria") String criteria);
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
