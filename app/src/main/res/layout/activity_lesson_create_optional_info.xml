@@ -60,32 +60,16 @@
     <!--直播课简介-->
     <LinearLayout
             android:id="@+id/live_lesson_brief_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/item_pressed"
-            android:paddingLeft="@dimen/px32"
-            android:paddingRight="@dimen/px32"
-            android:paddingTop="@dimen/px30"
-            android:paddingBottom="@dimen/px30"
-            android:orientation="horizontal">
+            style="@style/LiveLessonItem">
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px32"
-                android:textSize="@dimen/font_28px"
+                style="@style/LiveLessonCreateTitle"
                 android:text="@string/live_lesson_brief"/>
 
         <TextView
                 android:id="@+id/live_lesson_brief"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:layout_height="wrap_content"
-                android:text="@string/please_input"
-                android:lines="1"
-                android:drawablePadding="@dimen/px22"
-                android:drawableRight="@drawable/ic_entrance"/>
+                style="@style/LiveLessonRightEntrance"
+                android:text="@string/please_input"/>
 
     </LinearLayout>
 
@@ -95,32 +79,16 @@
     <!--老师介绍-->
     <LinearLayout
             android:id="@+id/teacher_introduction_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/item_pressed"
-            android:paddingLeft="@dimen/px32"
-            android:paddingRight="@dimen/px32"
-            android:paddingTop="@dimen/px30"
-            android:paddingBottom="@dimen/px30"
-            android:orientation="horizontal">
+            style="@style/LiveLessonItem">
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px32"
-                android:textSize="@dimen/font_28px"
+                style="@style/LiveLessonCreateTitle"
                 android:text="@string/teacher_introduction"/>
 
         <TextView
                 android:id="@+id/teacher_introduction"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:layout_height="wrap_content"
-                android:text="@string/please_input"
-                android:lines="1"
-                android:drawablePadding="@dimen/px22"
-                android:drawableRight="@drawable/ic_entrance"/>
+                style="@style/LiveLessonRightEntrance"
+                android:text="@string/please_input"/>
 
     </LinearLayout>
 
@@ -130,32 +98,16 @@
     <!--旁听-->
     <LinearLayout
             android:id="@+id/sit_in_on_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/item_pressed"
-            android:paddingLeft="@dimen/px32"
-            android:paddingRight="@dimen/px32"
-            android:paddingTop="@dimen/px30"
-            android:paddingBottom="@dimen/px30"
-            android:orientation="horizontal">
+            style="@style/LiveLessonItem">
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px32"
-                android:textSize="@dimen/font_28px"
+                style="@style/LiveLessonCreateTitle"
                 android:text="@string/audit"/>
 
         <TextView
                 android:id="@+id/sit_in_on"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:layout_height="wrap_content"
-                android:text="@string/please_set"
-                android:lines="1"
-                android:drawablePadding="@dimen/px22"
-                android:drawableRight="@drawable/ic_entrance"/>
+                style="@style/LiveLessonRightEntrance"
+                android:text="@string/please_set"/>
 
     </LinearLayout>
 
@@ -166,32 +118,16 @@
     <!--促销-->
     <LinearLayout
             android:id="@+id/sale_promotion_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/item_pressed"
-            android:paddingLeft="@dimen/px32"
-            android:paddingRight="@dimen/px32"
-            android:paddingTop="@dimen/px30"
-            android:paddingBottom="@dimen/px30"
-            android:orientation="horizontal">
+            style="@style/LiveLessonItem">
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px32"
-                android:textSize="@dimen/font_28px"
+                style="@style/LiveLessonCreateTitle"
                 android:text="@string/sale_promotion"/>
 
         <TextView
                 android:id="@+id/sale_promotion"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:layout_height="wrap_content"
-                android:text="@string/please_set"
-                android:lines="1"
-                android:drawablePadding="@dimen/px22"
-                android:drawableRight="@drawable/ic_entrance"/>
+                style="@style/LiveLessonRightEntrance"
+                android:text="@string/please_set"/>
 
     </LinearLayout>
 

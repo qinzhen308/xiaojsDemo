@@ -28,7 +28,7 @@ import butterknife.OnClick;
  *
  * ======================================================================================== */
 
-public class SitInOnActivity extends BaseActivity {
+public class AuditActivity extends BaseActivity {
     @BindView(R.id.visible_to_stu)
     ToggleButton mVisibleToStu;
     @BindView(R.id.audit_select)
@@ -40,7 +40,7 @@ public class SitInOnActivity extends BaseActivity {
     protected void addViewContent() {
         setMiddleTitle(R.string.audit_title);
 
-        addView(R.layout.activity_sit_in_on);
+        addView(R.layout.activity_audit);
 
         init();
     }
@@ -58,6 +58,7 @@ public class SitInOnActivity extends BaseActivity {
             case R.id.left_image:
                 finish();
                 break;
+            case R.id.audit_portrait:
             case R.id.audit_select:
                 //select sit in person
                 break;

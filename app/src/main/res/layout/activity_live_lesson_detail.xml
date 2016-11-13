@@ -58,7 +58,7 @@
 
             <TextView
                     style="@style/LiveLessonTitle"
-                    android:text="@string/enroll_people_limit"/>
+                    android:text="@string/lesson_people_limit"/>
 
             <TextView
                     android:id="@+id/lesson_stu_count"

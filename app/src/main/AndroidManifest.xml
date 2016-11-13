@@ -59,7 +59,7 @@
         </activity>
         <activity android:name=".ui.course.LiveLessonBriefActivity"/>
         <activity android:name=".ui.course.SalePromotionActivity"/>
-        <activity android:name=".ui.course.SitInOnActivity"/>
+        <activity android:name=".ui.course.AuditActivity"/>
         <activity android:name=".ui.course.TeacherIntroductionActivity"/>
         <activity android:name=".ui.course.LiveLessonDetailActivity"/>
 

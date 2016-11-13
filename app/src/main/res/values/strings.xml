@@ -126,7 +126,7 @@
     <string name="enroll_mandatory">需要报名</string>
     <string name="by_live_total_price">按总价</string>
     <string name="by_live_duration">按课时</string>
-    <string name="enroll_people_limit">学生人数</string>
+    <string name="lesson_people_limit">学生人数</string>
     <string name="lesson_start_time">上课时间</string>
     <string name="lesson_duration">上课时长</string>
     <string name="optional_info">选填信息</string>

@@ -19,70 +19,36 @@
                 style="@style/DividerHorizontal"/>
 
         <LinearLayout
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:paddingTop="@dimen/px34"
-                android:paddingBottom="@dimen/px34"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                style="@style/LiveLessonItem">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/def"
-                    android:textSize="@dimen/font_30px"
+                    style="@style/LiveLessonCreateTitle"
                     android:text="@string/live_lesson_name"/>
 
             <com.benyuan.xiaojs.ui.widget.EditTextDel
                     android:id="@+id/live_lesson_name"
-                    android:layout_marginLeft="@dimen/px34"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_28px"
-                    android:lines="1"
+                    style="@style/LiveLessonCreateEdt"
+                    android:layout_marginLeft="@dimen/px40"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:hint="@string/live_lesson_name_hint"/>
         </LinearLayout>
 
 
         <!--学科类目-->
-        <View
-                android:layout_marginLeft="@dimen/px32"
-                style="@style/DividerHorizontal"/>
+        <include layout="@layout/layout_horizontal_line"/>
 
         <LinearLayout
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:paddingTop="@dimen/px34"
-                android:paddingBottom="@dimen/px34"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                style="@style/LiveLessonItem">
 
             <TextView
-                    android:textSize="@dimen/font_28px"
-                    android:textColor="@color/font_black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/LiveLessonCreateTitle"
                     android:text="@string/subject_category"/>
 
             <TextView
-                    android:id="@+id/subject_category"
-                    android:gravity="right"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/please_select"
-                    android:textSize="@dimen/font_28px"
-                    android:textColor="@color/font_gray"
-                    android:drawablePadding="@dimen/px22"
-                    android:drawableRight="@drawable/ic_entrance"/>
+                    android:id="@+id/lesson_subject"
+                    style="@style/LiveLessonRightEntrance"
+                    android:text="@string/please_select"/>
         </LinearLayout>
 
         <View
@@ -95,32 +61,16 @@
                 style="@style/DividerHorizontal"/>
 
         <LinearLayout
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:paddingTop="@dimen/px34"
-                android:paddingBottom="@dimen/px34"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                style="@style/LiveLessonItem">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/LiveLessonCreateTitle"
                     android:text="@string/teach_form"/>
 
             <TextView
                     android:id="@+id/teach_form"
-                    android:gravity="right"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/please_select"
-                    android:textSize="@dimen/font_28px"
-                    android:textColor="@color/font_gray"
-                    android:drawablePadding="@dimen/px22"
-                    android:drawableRight="@drawable/ic_entrance"/>
+                    style="@style/LiveLessonRightEntrance"
+                    android:text="@string/please_select"/>
         </LinearLayout>
 
         <!--报名方式-->
@@ -130,13 +80,7 @@
 
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:background="@color/white"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                style="@style/LiveLessonItem">
 
             <LinearLayout
                     android:layout_height="wrap_content"
@@ -176,31 +120,22 @@
 
         <!--报名限制人数-->
         <LinearLayout
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:paddingTop="@dimen/px34"
-                android:paddingBottom="@dimen/px34"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                style="@style/LiveLessonItem">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/enroll_people_limit"/>
+                    style="@style/LiveLessonCreateTitle"
+                    android:text="@string/lesson_people_limit"/>
 
             <com.benyuan.xiaojs.ui.widget.EditTextDel
-                    android:id="@+id/enroll_people_limit"
+                    android:id="@+id/lesson_people_limit"
                     android:gravity="right"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:background="@null"
                     android:hint="@string/please_set"
                     android:textColorHint="@color/font_gray"
-                    android:textSize="@dimen/font_26px"
                     android:layout_marginRight="@dimen/px20"
+                    style="@style/LessonText"
                     android:inputType="number"
                     android:maxLength="9"
                     android:layout_height="wrap_content"/>
@@ -218,20 +153,15 @@
 
         <!--收费-->
         <LinearLayout
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:paddingTop="@dimen/px34"
-                android:paddingBottom="@dimen/px34"
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    style="@style/LiveLessonItem"
+                    android:paddingTop="@dimen/px10"
+                    android:paddingBottom="@dimen/px10">
 
                 <TextView
                         android:layout_width="0dp"
@@ -254,10 +184,10 @@
                     android:id="@+id/charge_way"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/px42"
-                    android:layout_marginBottom="@dimen/px42"
-                    android:paddingLeft="@dimen/px28"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px40"
+                    android:paddingLeft="@dimen/px72">
 
                 <LinearLayout
                         android:layout_width="match_parent"
@@ -266,7 +196,7 @@
                         android:gravity="center_vertical">
 
                     <TextView
-                            android:id="@+id/by_live_total_price_title"
+                            android:id="@+id/by_total_price_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/single_check_selector"
@@ -274,7 +204,7 @@
                             android:text="@string/by_live_total_price"/>
 
                     <com.benyuan.xiaojs.ui.widget.EditTextDel
-                            android:id="@+id/by_live_total_price"
+                            android:id="@+id/by_total_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:minWidth="@dimen/px300"
@@ -303,7 +233,7 @@
                         android:gravity="center_vertical">
 
                     <TextView
-                            android:id="@+id/by_live_duration_title"
+                            android:id="@+id/by_duration_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/single_check_selector"
@@ -312,7 +242,7 @@
                             android:text="@string/by_live_duration"/>
 
                     <com.benyuan.xiaojs.ui.widget.EditTextDel
-                            android:id="@+id/by_live_duration"
+                            android:id="@+id/by_duration"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:minWidth="@dimen/px300"
@@ -349,32 +279,16 @@
                 android:layout_marginTop="@dimen/px32"/>
 
         <LinearLayout
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:paddingTop="@dimen/px34"
-                android:paddingBottom="@dimen/px34"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                style="@style/LiveLessonItem">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/LiveLessonTitle"
                     android:text="@string/lesson_start_time"/>
 
             <TextView
                     android:id="@+id/lesson_start_time"
-                    android:gravity="right"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/please_select"
-                    android:textSize="@dimen/font_28px"
-                    android:textColor="@color/font_gray"
-                    android:drawablePadding="@dimen/px22"
-                    android:drawableRight="@drawable/ic_entrance"/>
+                    style="@style/LiveLessonRightEntrance"
+                    android:text="@string/please_select"/>
 
         </LinearLayout>
 
@@ -384,19 +298,10 @@
 
         <!--上课时长-->
         <LinearLayout
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:paddingTop="@dimen/px34"
-                android:paddingBottom="@dimen/px34"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                style="@style/LiveLessonItem">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/LiveLessonTitle"
                     android:text="@string/lesson_duration"/>
 
             <com.benyuan.xiaojs.ui.widget.EditTextDel
@@ -408,7 +313,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/please_set"
                     android:textColorHint="@color/font_gray"
-                    android:textSize="@dimen/font_28px"
+                    style="@style/LessonText"
                     android:inputType="number"
                     android:maxLength="3"
                     android:layout_marginRight="@dimen/px20"/>
@@ -417,6 +322,7 @@
                     android:gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="@style/LessonText"
                     android:text="@string/minute"
                     android:textSize="@dimen/font_28px"/>
 
@@ -431,34 +337,16 @@
                 android:layout_marginTop="@dimen/px32"/>
 
         <LinearLayout
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:paddingTop="@dimen/px34"
-                android:paddingBottom="@dimen/px34"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                style="@style/LiveLessonItem">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/LiveLessonTitle"
                     android:text="@string/optional_info"/>
 
             <TextView
                     android:id="@+id/optional_info"
-                    android:gravity="right"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/font_gray"
-                    android:textSize="@dimen/font_28px"
-                    android:lines="1"
-                    android:ellipsize="end"
-                    android:text="@string/optional_info_tips"
-                    android:drawablePadding="@dimen/px22"
-                    android:drawableRight="@drawable/ic_entrance"/>
+                    style="@style/LiveLessonRightEntrance"
+                    android:text="@string/optional_info_tips"/>
 
         </LinearLayout>
 

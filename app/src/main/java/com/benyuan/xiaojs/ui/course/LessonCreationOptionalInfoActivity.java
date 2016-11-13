@@ -156,7 +156,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 startActivityForResult(i, TEACHER_INTRODUCTION);
                 break;
             case R.id.sit_in_on:
-                i = new Intent(this, SitInOnActivity.class);
+                i = new Intent(this, AuditActivity.class);
                 i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
                 startActivityForResult(i, SIT_IN_ON);
                 break;

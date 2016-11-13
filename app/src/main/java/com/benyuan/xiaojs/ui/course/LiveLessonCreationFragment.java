@@ -58,26 +58,26 @@ public class LiveLessonCreationFragment extends BaseFragment {
     private final int MAX_LESSON_CHAR = 25;
 
     @BindView(R.id.live_lesson_name)
-    EditTextDel mLiveLessonNameEdt;
-    @BindView(R.id.subject_category)
-    TextView mSubjectTv;
-    @BindView(R.id.enroll_people_limit)
-    EditTextDel mEnrollLimitEdt;
+    EditTextDel mLessonNameEdt;
+    @BindView(R.id.lesson_subject)
+    TextView mLessonSubjectTv;
+    @BindView(R.id.lesson_people_limit)
+    EditTextDel mLessonLimitEdt;
     @BindView(R.id.teach_form)
     TextView mTeachFormTv;
     @BindView(R.id.enroll_way_switcher)
     ToggleButton mEnrollWaySwitcher;
     @BindView(R.id.charge_way_switcher)
     ToggleButton mChargeWaySwitcher;
-    @BindView(R.id.by_live_duration_title)
+    @BindView(R.id.by_duration_title)
     TextView mByLiveDurationTv;
-    @BindView(R.id.by_live_total_price_title)
+    @BindView(R.id.by_total_price_title)
     TextView mByLiveTotalPriceTv;
     @BindView(R.id.charge_way)
     View mChargeWayLayout;
-    @BindView(R.id.by_live_duration)
+    @BindView(R.id.by_duration)
     EditTextDel mByLiveDurationEdt;
-    @BindView(R.id.by_live_total_price)
+    @BindView(R.id.by_total_price)
     EditTextDel mByLiveTotalPriceEdt;
     @BindView(R.id.lesson_start_time)
     TextView mLessonStartTimeTv;
@@ -109,14 +109,14 @@ public class LiveLessonCreationFragment extends BaseFragment {
         mChargeWaySwitcher.setSelected(false);
         mChargeWayLayout.setVisibility(View.GONE);
 
-        mLiveLessonNameEdt.setHint(getString(R.string.live_lesson_name_hint, MIN_LESSON_CHAR, MAX_LESSON_CHAR));
-        mLiveLessonNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
+        mLessonNameEdt.setHint(getString(R.string.live_lesson_name_hint, MIN_LESSON_CHAR, MAX_LESSON_CHAR));
+        mLessonNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
 
         mOnShelvesTv.setSelected(true);
         mPublicTv.setSelected(true);
 
         //TODO
-        mSubjectTv.setText(TEST_SUBJECT); //test
+        mLessonSubjectTv.setText(TEST_SUBJECT); //test
 
 
         mByLiveTotalPriceEdt.addTextChangedListener(new TextWatcher() {
@@ -165,13 +165,13 @@ public class LiveLessonCreationFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.subject_category, R.id.teach_form, R.id.enroll_way_switcher, R.id.charge_way_switcher,
-            R.id.by_live_total_price_title, R.id.by_live_duration_title, R.id.lesson_start_time,
+    @OnClick({R.id.lesson_subject, R.id.teach_form, R.id.enroll_way_switcher, R.id.charge_way_switcher,
+            R.id.by_total_price_title, R.id.by_duration_title, R.id.lesson_start_time,
             R.id.optional_info, R.id.sub_btn, R.id.on_shelves, R.id.publish_personal_page})
     public void onClick(View v) {
         boolean isSelected = false;
         switch (v.getId()) {
-            case R.id.subject_category:
+            case R.id.lesson_subject:
                 break;
             case R.id.teach_form:
                 selectTeachForm();
@@ -181,8 +181,8 @@ public class LiveLessonCreationFragment extends BaseFragment {
             case R.id.charge_way_switcher:
                 openOrCloseChargeWay(v);
                 break;
-            case R.id.by_live_total_price_title:
-            case R.id.by_live_duration_title:
+            case R.id.by_total_price_title:
+            case R.id.by_duration_title:
                 selectChargeMode(v);
                 break;
             case R.id.lesson_start_time:
@@ -246,13 +246,13 @@ public class LiveLessonCreationFragment extends BaseFragment {
     private void selectChargeMode(View v) {
         boolean isSelected = v.isSelected();
         switch (v.getId()) {
-            case R.id.by_live_total_price_title:
+            case R.id.by_total_price_title:
                 v.setSelected(!isSelected ? true : false);
                 mByLiveDurationTv.setSelected(isSelected);
                 mByLiveDurationEdt.setEnabled(isSelected);
                 mByLiveTotalPriceEdt.setEnabled(!isSelected);
                 break;
-            case R.id.by_live_duration_title:
+            case R.id.by_duration_title:
                 v.setSelected(!isSelected ? true : false);
                 mByLiveTotalPriceTv.setSelected(isSelected);
                 mByLiveDurationEdt.setEnabled(!isSelected);
@@ -279,7 +279,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 price = Float.parseFloat(priceStr);
             }
         }
-        String limitStr = mEnrollLimitEdt.getText().toString();
+        String limitStr = mLessonLimitEdt.getText().toString();
         int limit = 0;
         if (!TextUtils.isEmpty(limitStr)) {
             limit = Integer.parseInt(limitStr);
@@ -308,14 +308,14 @@ public class LiveLessonCreationFragment extends BaseFragment {
         try {
             String selectTip = mContext.getString(R.string.please_select);
 
-            String name = mLiveLessonNameEdt.getText().toString();
+            String name = mLessonNameEdt.getText().toString();
             if (TextUtils.isEmpty(name) || name.length() < MIN_LESSON_CHAR || name.length() > MAX_LESSON_CHAR) {
                 String nameEr = mContext.getString(R.string.live_lesson_name_error, MIN_LESSON_CHAR, MAX_LESSON_CHAR);
                 Toast.makeText(mContext, nameEr, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
-            if (TextUtils.isEmpty(mSubjectTv.getText().toString().trim())) {
+            if (TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
                 Toast.makeText(mContext, R.string.subject_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -325,7 +325,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 return false;
             }
 
-            String limitPeople = mEnrollLimitEdt.getText().toString().trim();
+            String limitPeople = mLessonLimitEdt.getText().toString().trim();
             if (TextUtils.isEmpty(limitPeople)) {
                 Toast.makeText(mContext, R.string.enroll_people_empty, Toast.LENGTH_SHORT).show();
                 return false;
@@ -381,7 +381,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
         }
 
         Enroll enroll = new Enroll();
-        int limitPeople = Integer.parseInt(mEnrollLimitEdt.getText().toString());
+        int limitPeople = Integer.parseInt(mLessonLimitEdt.getText().toString());
         enroll.setMax(limitPeople);
         enroll.setMandatory(mEnrollWaySwitcher.isChecked());
 
@@ -406,8 +406,8 @@ public class LiveLessonCreationFragment extends BaseFragment {
         publish.setOnShelves(mPublicTv.isSelected());
 
         LiveLesson ll = new LiveLesson();
-        String subject = mSubjectTv.getText().toString();
-        ll.setTitle(mLiveLessonNameEdt.getText().toString());
+        String subject = mLessonSubjectTv.getText().toString();
+        ll.setTitle(mLessonNameEdt.getText().toString());
         ll.setSubject(TEST_SUBJECT_ID);
         ll.setEnroll(enroll);
         ll.setMode(BaseBusiness.getTeachingMode(mContext, mTeachFormTv.getText().toString()));
