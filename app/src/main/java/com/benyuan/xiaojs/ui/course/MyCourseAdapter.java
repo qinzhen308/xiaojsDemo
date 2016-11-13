@@ -33,22 +33,14 @@ import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Duration;
-import com.benyuan.xiaojs.model.Enroll;
-import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.ObjectsOfPage;
-import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 import com.benyuan.xiaojs.util.NumberUtil;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -317,26 +309,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 Logger.d("onSuccess-----------");
-                ObjectsOfPage bean = new ObjectsOfPage();
-                bean.setTitle("java course1");
-                Schedule schedule = new Schedule();
-                schedule.setStart(new Date(System.currentTimeMillis() + 1000 * 60 *60 *22));
-                schedule.setDuration(100);
-                bean.setSchedule(schedule);
-                Fee fee = new Fee();
-                fee.setFree(false);
-                fee.setCharge(BigDecimal.valueOf(555));
-                bean.setFee(fee);
-                Enroll enroll = new Enroll();
-                enroll.setCurrent(12);
-                enroll.setMax(50);
-                enroll.setMandatory(true);
-                bean.setEnroll(enroll);
-                bean.setState(LessonState.LIVE);
-
-                List<ObjectsOfPage> beans = new ArrayList<ObjectsOfPage>();
-                beans.add(bean);
-                MyCourseAdapter.this.onSuccess(beans);
+                MyCourseAdapter.this.onSuccess(object.getObjectsOfPage());
             }
 
             @Override
