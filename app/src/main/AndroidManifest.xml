@@ -24,10 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity" android:screenOrientation="portrait">
-
+        <activity
+                android:name=".ui.MainActivity"
+                android:screenOrientation="portrait">
         </activity>
-
         <activity
                 android:name=".common.crop.CropImageActivity"
                 android:screenOrientation="portrait"/>
@@ -35,7 +35,6 @@
                 android:name=".common.crop.CropImageMainActivity"
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
         <activity android:name=".ui.account.RegisterActivity"/>
         <activity android:name=".ui.mine.SettingsActivity"/>
         <activity
@@ -50,10 +49,8 @@
         <activity android:name=".ui.mine.TeachingAbilityActivity">
         </activity>
         <activity android:name=".ui.mine.EditTeachingAbilityActivity">
-
         </activity>
         <activity android:name=".ui.course.LessionDetailActivity">
-
         </activity>
         <activity android:name=".ui.TestAPIActivity">
         </activity>
@@ -62,7 +59,8 @@
         <activity android:name=".ui.course.AuditActivity"/>
         <activity android:name=".ui.course.TeacherIntroductionActivity"/>
         <activity android:name=".ui.course.LiveLessonDetailActivity"/>
-
+        <activity android:name=".ui.mine.TeachAbilityDemoActivity">
+        </activity>
     </application>
 
 </manifest>
