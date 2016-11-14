@@ -4,14 +4,13 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Enroll;
@@ -24,8 +23,6 @@ import com.benyuan.xiaojs.ui.base.BaseBusiness;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.bumptech.glide.Glide;
-
-import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -118,8 +115,11 @@ public class LiveLessonDetailActivity extends BaseActivity {
     @BindView(R.id.visible_to_stu)
     ToggleButton mAuditVisibleBtn;
 
-
+    private final static int INTRO_DEFAULT_LINES = 3;
+    private final static int INTRO_MAX_LINES = 100;
     private final static String MONEY = "￥";
+    private boolean mLessonBriefSwitcher = false;
+    private boolean mTeacherIntroSwitcher = false;
 
     @Override
     protected void addViewContent() {
@@ -127,9 +127,11 @@ public class LiveLessonDetailActivity extends BaseActivity {
         addView(R.layout.activity_live_lesson_detail);
 
         setData(getTestLesson());
+        init();
     }
 
-    @OnClick({R.id.left_image, R.id.audit_person_select_enter})
+    @OnClick({R.id.left_image, R.id.audit_person_select_enter, R.id.audit_portrait, R.id.visible_to_stu,
+            R.id.unfold_lesson_brief, R.id.unfold_teacher_intro})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -142,15 +144,86 @@ public class LiveLessonDetailActivity extends BaseActivity {
             case R.id.visible_to_stu:
                 setVisibleToStu();
                 break;
+            case R.id.unfold_lesson_brief:
+            case R.id.unfold_teacher_intro:
+                foldOrUnfold(v);
             default:
                 break;
         }
+    }
+
+    private void init() {
+        final int padding = getResources().getDimensionPixelOffset(R.dimen.px28);
+
+        ViewTreeObserver observer = mLessonBriefTv.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+                int count = mLessonBriefTv.getLineCount();
+                if (count > INTRO_DEFAULT_LINES) {
+                    if (mUnfoldLessonBriefTv.getVisibility() != View.VISIBLE) {
+                        mUnfoldLessonBriefTv.setVisibility(View.VISIBLE);
+                    }
+                }else {
+                    mLessonBriefTv.setPadding(0, 0, 0, padding);
+                }
+                return true;
+            }
+        });
+
+
+        ViewTreeObserver observer1 = mTeacherIntroTv.getViewTreeObserver();
+        observer1.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+                int count = mTeacherIntroTv.getLineCount();
+                if (count > INTRO_DEFAULT_LINES) {
+                    if (mUnfoldTeacherIntroTv.getVisibility() != View.VISIBLE) {
+                        mUnfoldTeacherIntroTv.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    mTeacherIntroTv.setPadding(0, 0, 0, padding);
+                }
+                return true;
+            }
+        });
+
+
     }
 
 
     private void setData(LiveLesson lesson) {
         setBaseData(lesson);
         setOptionalData(lesson);
+    }
+
+    private void foldOrUnfold(View v) {
+        switch (v.getId()) {
+            case R.id.unfold_lesson_brief:
+                if (mLessonBriefSwitcher) {
+                    //close
+                    mLessonBriefSwitcher = false;
+                    mLessonBriefTv.setMaxLines(INTRO_DEFAULT_LINES);
+                } else {
+                    //open
+                    mLessonBriefSwitcher = true;
+                    mLessonBriefTv.setMaxLines(INTRO_MAX_LINES);
+                }
+                break;
+            case R.id.unfold_teacher_intro:
+                if (mTeacherIntroSwitcher) {
+                    mTeacherIntroSwitcher = false;
+                    mTeacherIntroTv.setMaxLines(INTRO_DEFAULT_LINES);
+                } else {
+                    mTeacherIntroSwitcher = true;
+                    mTeacherIntroTv.setMaxLines(INTRO_MAX_LINES);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -166,13 +239,13 @@ public class LiveLessonDetailActivity extends BaseActivity {
             if (enroll != null && enroll.isMandatory()) {
                 mEnrolledView.setVisibility(View.VISIBLE);
                 mEnrolledDivideLine.setVisibility(View.VISIBLE);
-                String p = getString(R.string.person);
-                mLessonStuCountTv.setText(String.valueOf(enroll.getMax()) + p);
             } else {
                 mEnrolledView.setVisibility(View.GONE);
                 mEnrolledDivideLine.setVisibility(View.GONE);
             }
 
+            String p = getString(R.string.person);
+            mLessonStuCountTv.setText(String.valueOf(enroll.getMax()) + p);
             mTeachFormTv.setText(BaseBusiness.getTeachingMode(this, lesson.getMode()));
 
             //fee
@@ -416,6 +489,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 "。在北蔡中学连续担任17年班主任，深受学生喜爱。课堂教学能遵循学生的认知发展规律，能吸引学生主" +
                 "动学习。教学之余能分析教学中的得与失，撰写的多篇论文在各类杂志上发表，曾获得过国家级论文比赛二等奖。" +
                 "教育格言是“爱，是教育的灵魂。");
+        //teachersIntro.setText(teachersIntro.getText().substring(0, 50));
         ll.setTeachersIntro(teachersIntro);
 
         //audit

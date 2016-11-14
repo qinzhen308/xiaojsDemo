@@ -287,7 +287,8 @@
                 <TextView
                         android:id="@+id/live_lesson_brief"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:maxLines="3"/>
 
                 <TextView
                         android:id="@+id/unfold_lesson_brief"
@@ -299,7 +300,7 @@
                         android:text="@string/unfold_view_all"
                         android:textColor="@color/font_gray"
                         android:textSize="@dimen/font_22px"
-                        android:maxLines="3"/>
+                        android:visibility="gone"/>
 
             </LinearLayout>
 
@@ -330,7 +331,8 @@
                 <TextView
                         android:id="@+id/teacher_introduction"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:maxLines="3"/>
 
                 <TextView
                         android:id="@+id/unfold_teacher_intro"
@@ -341,7 +343,8 @@
                         android:paddingBottom="@dimen/px16"
                         android:text="@string/unfold_view_all"
                         android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_22px"/>
+                        android:textSize="@dimen/font_22px"
+                        android:visibility="gone"/>
 
             </LinearLayout>
 
