@@ -111,6 +111,11 @@ public class PlatformRequest extends ServiceRequest {
         String criteriaJson = objectToJsonString(criteria);
         String paginationJson = objectToJsonString(pagination);
 
+        if(XiaojsConfig.DEBUG){
+            Logger.json(criteriaJson);
+            Logger.json(paginationJson);
+        }
+
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.getNotifications(sessionID,criteriaJson,paginationJson).enqueue(
                 new Callback<ArrayList<Notification>>() {
@@ -258,6 +263,10 @@ public class PlatformRequest extends ServiceRequest {
                 new WeakReference<>(callback);
 
         String criteriaJson = objectToJsonString(criteria);
+
+        if(XiaojsConfig.DEBUG){
+            Logger.json(criteriaJson);
+        }
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.ignoreNotifications(sessionID,criteriaJson).enqueue(
