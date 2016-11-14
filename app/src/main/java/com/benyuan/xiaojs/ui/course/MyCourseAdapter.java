@@ -16,6 +16,7 @@ package com.benyuan.xiaojs.ui.course;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -33,11 +34,9 @@ import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Duration;
-import com.benyuan.xiaojs.model.Enroll;
-import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.ObjectsOfPage;
-import com.benyuan.xiaojs.model.Schedule;
+import com.benyuan.xiaojs.ui.widget.ListBottomDialog;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 import com.benyuan.xiaojs.util.NumberUtil;
 import com.benyuan.xiaojs.util.TimeUtil;
@@ -45,16 +44,18 @@ import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import butterknife.BindView;
 
 public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdapter.Holder> {
     private boolean mIsTeacher;
     private Criteria mCriteria;
+    private MyCourseFragment mFragment;
+
+    public MyCourseAdapter(Context context, AutoPullToRefreshListView listView, boolean isTeacher,MyCourseFragment fragment) {
+        super(context, listView);
+        mIsTeacher = isTeacher;
+        mFragment = fragment;
+    }
 
     public MyCourseAdapter(Context context, AutoPullToRefreshListView listView, boolean isTeacher) {
         super(context, listView);
@@ -123,12 +124,13 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
     private void showTeacher(Holder holder, final ObjectsOfPage bean, int position) {
         holder.name.setText(bean.getTitle());
         holder.price.setVisibility(View.VISIBLE);
-        holder.price.setText(NumberUtil.getPrice(bean.getFee().getCharge().doubleValue()));
+
         if (bean.getFee().isFree()){
-            holder.desc.setText(R.string.free);
+            holder.price.setText(R.string.free);
         }else {
-            holder.desc.setText(mContext.getString(R.string.course_stu,bean.getEnroll().getCurrent(),bean.getEnroll().getMax()));
+            holder.price.setText(NumberUtil.getPrice(bean.getFee().getCharge().doubleValue()));
         }
+        holder.desc.setText(mContext.getString(R.string.course_stu,bean.getEnroll().getCurrent(),bean.getEnroll().getMax()));
 
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
 
@@ -275,23 +277,151 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
 
     //查看详情
     private void detail(ObjectsOfPage bean){
-
-    }
-
-    //更多
-    private void more(ObjectsOfPage bean){
-
+        ListBottomDialog dialog = new ListBottomDialog(mContext);
+        String[] ss = new String[]{"备课","报名注册","分享"};
+        dialog.setItems(ss);
+        dialog.show();
     }
 
     //班级圈
     private void circle(ObjectsOfPage bean){
-
+        modifyLesson(bean);
     }
 
     //进入教室
     private void enterClass(ObjectsOfPage bean){
 
     }
+
+    private void modifyLesson(ObjectsOfPage bean){
+        Intent intent = new Intent(mContext,ModifyLessonActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(CourseConstant.KEY_LESSON_NAME,bean.getTitle());
+        bundle.putLong(CourseConstant.KEY_LESSON_TIME, bean.getSchedule().getStart().getTime());
+        bundle.putInt(CourseConstant.KEY_LESSON_DURATION,bean.getSchedule().getDuration());
+        intent.putExtras(bundle);
+        mContext.startActivity(intent);
+    }
+
+    //更多
+    private void more(final ObjectsOfPage bean){
+        if (mIsTeacher){
+            if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
+                String[] items = new String[]{mContext.getString(R.string.registration),
+                mContext.getString(R.string.share),
+                mContext.getString(R.string.look_detail),
+                mContext.getString(R.string.modify_lesson_time),
+                mContext.getString(R.string.cancel_lesson),
+                mContext.getString(R.string.cancel_publish)};
+                ListBottomDialog dialog = new ListBottomDialog(mContext);
+                dialog.setItems(items);
+                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                    @Override
+                    public void onItemClick(int position) {
+                        modifyLesson(bean);
+                        switch (position){
+
+
+                        }
+                    }
+                });
+                dialog.show();
+            }else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)){
+                String[] items = new String[]{
+                        mContext.getString(R.string.look_detail),
+                        mContext.getString(R.string.publish_to_home_page)};
+                ListBottomDialog dialog = new ListBottomDialog(mContext);
+                dialog.setItems(items);
+                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                    @Override
+                    public void onItemClick(int position) {
+                        switch (position){
+
+                        }
+                    }
+                });
+                dialog.show();
+            }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
+                String[] items = new String[]{
+                        mContext.getString(R.string.share),
+                        mContext.getString(R.string.look_detail),
+                        mContext.getString(R.string.cancel_publish)};
+                ListBottomDialog dialog = new ListBottomDialog(mContext);
+                dialog.setItems(items);
+                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                    @Override
+                    public void onItemClick(int position) {
+                        switch (position){
+
+                        }
+                    }
+                });
+                dialog.show();
+            }else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)){
+                String[] items = new String[]{
+                        mContext.getString(R.string.edit),
+                        mContext.getString(R.string.look_detail),
+                        mContext.getString(R.string.delete)};
+                ListBottomDialog dialog = new ListBottomDialog(mContext);
+                dialog.setItems(items);
+                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                    @Override
+                    public void onItemClick(int position) {
+                        switch (position){
+
+                        }
+                    }
+                });
+                dialog.show();
+            }else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)){
+                String[] items = new String[]{
+                        mContext.getString(R.string.look_detail),
+                        mContext.getString(R.string.delete)};
+                ListBottomDialog dialog = new ListBottomDialog(mContext);
+                dialog.setItems(items);
+                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                    @Override
+                    public void onItemClick(int position) {
+                        switch (position){
+
+                        }
+                    }
+                });
+                dialog.show();
+            }
+        }else {
+            if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
+                String[] items = new String[]{
+                        mContext.getString(R.string.data_bank),
+                        mContext.getString(R.string.leave_lesson)};
+                ListBottomDialog dialog = new ListBottomDialog(mContext);
+                dialog.setItems(items);
+                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                    @Override
+                    public void onItemClick(int position) {
+                        switch (position){
+
+                        }
+                    }
+                });
+                dialog.show();
+            }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
+                String[] items = new String[]{mContext.getString(R.string.evaluate),
+                        mContext.getString(R.string.data_bank)};
+                ListBottomDialog dialog = new ListBottomDialog(mContext);
+                dialog.setItems(items);
+                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                    @Override
+                    public void onItemClick(int position) {
+                        switch (position){
+
+                        }
+                    }
+                });
+                dialog.show();
+            }
+        }
+     }
 
     @Override
     protected View createContentView(int position) {
@@ -317,26 +447,31 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 Logger.d("onSuccess-----------");
-                ObjectsOfPage bean = new ObjectsOfPage();
-                bean.setTitle("java course1");
-                Schedule schedule = new Schedule();
-                schedule.setStart(new Date(System.currentTimeMillis() + 1000 * 60 *60 *22));
-                schedule.setDuration(100);
-                bean.setSchedule(schedule);
-                Fee fee = new Fee();
-                fee.setFree(false);
-                fee.setCharge(BigDecimal.valueOf(555));
-                bean.setFee(fee);
-                Enroll enroll = new Enroll();
-                enroll.setCurrent(12);
-                enroll.setMax(50);
-                enroll.setMandatory(true);
-                bean.setEnroll(enroll);
-                bean.setState(LessonState.LIVE);
-
-                List<ObjectsOfPage> beans = new ArrayList<ObjectsOfPage>();
-                beans.add(bean);
-                MyCourseAdapter.this.onSuccess(beans);
+                if (object.getObjectsOfPage() != null && object.getObjectsOfPage().size() > 0){
+                    if (mFragment != null){
+                        mFragment.hideTop();
+                    }
+                }
+//                ObjectsOfPage bean = new ObjectsOfPage();
+//                bean.setTitle("java course1");
+//                Schedule schedule = new Schedule();
+//                schedule.setStart(new Date(System.currentTimeMillis() + 1000 * 60 *60 *22));
+//                schedule.setDuration(100);
+//                bean.setSchedule(schedule);
+//                Fee fee = new Fee();
+//                fee.setFree(false);
+//                fee.setCharge(BigDecimal.valueOf(555));
+//                bean.setFee(fee);
+//                Enroll enroll = new Enroll();
+//                enroll.setCurrent(12);
+//                enroll.setMax(50);
+//                enroll.setMandatory(true);
+//                bean.setEnroll(enroll);
+//                bean.setState(LessonState.LIVE);
+//
+//                List<ObjectsOfPage> beans = new ArrayList<ObjectsOfPage>();
+//                beans.add(bean);
+                MyCourseAdapter.this.onSuccess(object.getObjectsOfPage());
             }
 
             @Override
@@ -346,6 +481,13 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
             }
         });
 
+    }
+
+    @Override
+    protected void onDataEmpty() {
+        if (mFragment != null){
+            mFragment.showTop();
+        }
     }
 
     private void notifyData(ObjectsOfPage bean){

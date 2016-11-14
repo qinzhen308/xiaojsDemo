@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:layout_marginTop="@dimen/px30"
+                android:gravity="center"
+                android:text="@string/modify_lesson_time_mark"/>
+
+        <LinearLayout
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:paddingBottom="@dimen/px30"
+                    android:paddingTop="@dimen/px30"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/font_black"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:minEms="7"
+                    android:gravity="right"
+                    android:text="@string/lesson_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/modify_lesson_origin_name"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_text"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/font_26px"/>
+        </LinearLayout>
+
+        <View style="@style/DividerHorizontal"/>
+
+        <LinearLayout
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:paddingBottom="@dimen/px30"
+                    android:paddingTop="@dimen/px30"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/font_black"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:minEms="7"
+                    android:gravity="right"
+                    android:text="@string/origin_lesson_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/modify_lesson_origin_time"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_text"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/font_26px"/>
+
+            <TextView
+                    android:id="@+id/modify_lesson_origin_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_text"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/font_26px"/>
+        </LinearLayout>
+
+        <View style="@style/DividerHorizontal"/>
+
+        <LinearLayout
+                android:id="@+id/limit_select_time"
+                android:orientation="horizontal"
+                android:background="@drawable/white_grey_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:paddingBottom="@dimen/px30"
+                    android:paddingTop="@dimen/px30"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/font_black"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:minEms="7"
+                    android:gravity="right"
+                    android:text="@string/new_lesson_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/modify_lesson_new_time"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/modify_lesson_time_tip"
+                    android:textColor="@color/common_text"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/font_26px"/>
+
+            <ImageView
+                    android:src="@drawable/ic_entrance"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitXY"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <TextView
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginTop="@dimen/px30"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_black"
+                android:text="@string/reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <com.benyuan.xiaojs.ui.widget.LimitInputBox
+                android:id="@+id/modify_lesson_reason"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px350"/>
+
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/modify_lesson_ok"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:text="@string/ok"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/big_submit_btn_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</RelativeLayout>

@@ -36,6 +36,9 @@ public interface CourseConstant {
     public final static int COURSE_COVER_HEIGHT = 147;//课程封面高
 
     public final static String KEY_LESSON_OPTIONAL_INFO = "key_lesson_optional_info";
-
+    public final static String KEY_IS_TEACHER = "key_is_teacher";
+    public final static String KEY_LESSON_NAME = "lesson_name";
+    public final static String KEY_LESSON_TIME = "lesson_time";
+    public final static String KEY_LESSON_DURATION = "lesson_duration";
 
 }

@@ -49,4 +49,7 @@
     <declare-styleable name="RedTipTextView">
         <attr name="hasDrawable" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="BottomLineTextView">
+        <attr name="line_height" format="integer|reference" />
+    </declare-styleable>
 </resources>
