@@ -15,7 +15,9 @@ package com.benyuan.xiaojs.ui.widget;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -27,39 +29,53 @@ public class BottomLineTextView extends TextView {
     private Paint mPaint;
     public BottomLineTextView(Context context) {
         super(context);
-        init();
+        init(null);
     }
 
     public BottomLineTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(attrs);
     }
 
     public BottomLineTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(attrs);
     }
 
     public BottomLineTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        init(attrs);
     }
 
-    private void init(){
+    private void init(AttributeSet attrs){
+        if (attrs != null) {
+            TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(
+                    attrs,
+                    R.styleable.BottomLineTextView,
+                    0, 0);
+            try {
+                lineHeight = typedArray.getDimensionPixelSize(R.styleable.BottomLineTextView_line_height,getResources().getDimensionPixelSize(R.dimen.px6));
+            }finally {
+                typedArray.recycle();
+                typedArray = null;
+            }
+        }
         setPadding(getResources().getDimensionPixelSize(R.dimen.px5),
                 getResources().getDimensionPixelSize(R.dimen.px20),
                 getResources().getDimensionPixelSize(R.dimen.px5),
                 getResources().getDimensionPixelSize(R.dimen.px20));
-        lineHeight = getResources().getDimensionPixelSize(R.dimen.px4);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaint.setColor(getResources().getColor(R.color.main_orange));
+        mPaint.setStrokeWidth(lineHeight);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawLine(0,getHeight() - lineHeight,getWidth(),getHeight(),mPaint);
+        if (isSelected()){
+            mPaint.setColor(getCurrentTextColor());
+            canvas.drawLine(0,getHeight() - lineHeight,getWidth(),getHeight() - lineHeight,mPaint);
+        }
     }
 }

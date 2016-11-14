@@ -25,7 +25,7 @@ public class TeachingAbilityActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.edit_ability_layout:
-                startActivity(new Intent(TeachingAbilityActivity.this,EditTeachingAbilityActivity.class));
+                startActivity(new Intent(TeachingAbilityActivity.this,TeachAbilityDemoActivity.class));
                 break;
         }
     }

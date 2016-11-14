@@ -34,13 +34,21 @@ public class MyCourseFragment extends BaseFragment {
     AutoPullToRefreshListView mListView;
     TextView mSearch;
     TextView mFilter;
+    @BindView(R.id.hover)
+    View mHover;
+    @BindView(R.id.my_course_search)
+    TextView mLocalSearch;
+    @BindView(R.id.course_filter)
+    TextView mLocalFilter;
 
     MyCourseAdapter adapter;
     private int lastItemPosition;
     private View mHeader;
     private CourseFilterDialog mDialog;
-    private int mTimePosition;
-    private int mStatePosition;
+
+    private  int timePosition;
+    private  int statePosition;
+    private boolean isTeacher;
 
     @Override
     protected View getContentView() {
@@ -51,11 +59,10 @@ public class MyCourseFragment extends BaseFragment {
     @Override
     protected void init() {
         Bundle b = getArguments();
-        boolean isTeacher = false;
         if (b != null){
-            isTeacher = b.getBoolean("key");
+            isTeacher = b.getBoolean(CourseConstant.KEY_IS_TEACHER);
         }
-        adapter = new MyCourseAdapter(mContext,mListView,isTeacher);
+        adapter = new MyCourseAdapter(mContext,mListView,isTeacher,this);
         mListView.setAdapter(adapter);
         mHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_my_course_search,null);
         mSearch = (TextView) mHeader.findViewById(R.id.my_course_search);
@@ -77,13 +84,13 @@ public class MyCourseFragment extends BaseFragment {
             public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
                 if (firstVisibleItem > lastItemPosition){
                     //上拉
-                    ((MyCourseActivity)mContext).hideTop();
+                    hideTop();
                 }else if (firstVisibleItem < lastItemPosition){
                     //下拉
                     if (firstVisibleItem > 0){
-                    ((MyCourseActivity)mContext).showTop();
+                    showTop();
                 }else {
-                    ((MyCourseActivity)mContext).hideTop();
+                    hideTop();
                 }
                 }else if (firstVisibleItem == lastItemPosition){
                     return;
@@ -94,30 +101,49 @@ public class MyCourseFragment extends BaseFragment {
         mSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext,MyCourseSearchActivity.class);
-                mContext.startActivity(intent);
+                onSearch();
+            }
+        });
+
+        mLocalFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFilter();
+            }
+        });
+
+        mLocalSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSearch();
             }
         });
     }
 
     private void onFilter(){
         if (mDialog == null){
-            mDialog = new CourseFilterDialog(mContext);
-            mDialog.setTimeSelection(mTimePosition);
-            mDialog.setStateSelection(mStatePosition);
-            mDialog.showAsDropDown(mHeader);
+            mDialog = new CourseFilterDialog(mContext,isTeacher);
+            mDialog.setTimeSelection(timePosition);
+            mDialog.setStateSelection(statePosition);
+            if (mHover.getVisibility() == View.VISIBLE){
+                mDialog.showAsDropDown(mHover);
+            }else {
+                mDialog.showAsDropDown(mHeader);
+            }
+            mFilter.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_filter_up,0);
             mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
+                    mFilter.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_filter_down,0);
                     mDialog = null;
                 }
             });
             mDialog.setOnOkListener(new CourseFilterDialog.OnOkListener() {
                 @Override
                 public void onOk(int timePosition, int statePosition) {
-                    mTimePosition = timePosition;
-                    mStatePosition = statePosition;
-                    Criteria criteria  = MyCourseBusiness.getFilter(timePosition,statePosition);
+                    MyCourseFragment.this.timePosition = timePosition;
+                    MyCourseFragment.this.statePosition = statePosition;
+                    Criteria criteria  = MyCourseBusiness.getFilter(timePosition,statePosition,isTeacher);
                     request(criteria);
                 }
             });
@@ -127,10 +153,23 @@ public class MyCourseFragment extends BaseFragment {
         }
     }
 
+    private void onSearch(){
+        Intent intent = new Intent(mContext,MyCourseSearchActivity.class);
+        mContext.startActivity(intent);
+    }
+
     public void request(Criteria criteria){
         if (adapter != null){
             adapter.request(criteria);
         }
+    }
+
+    public void showTop(){
+        mHover.setVisibility(View.VISIBLE);
+    }
+
+    public void hideTop(){
+        mHover.setVisibility(View.GONE);
     }
 
 }

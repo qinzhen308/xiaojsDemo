@@ -20,10 +20,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,12 +35,18 @@ public class BlockTabView extends FrameLayout {
 
     @BindView(R.id.block_title)
     TextView mTitle;
-    @BindView(R.id.block_tab)
-    TabIndicatorView mTab;
     @BindView(R.id.block_fun)
     TextView mFun;
+    @BindView(R.id.block_tab_bar)
+    RelativeLayout mTabBar;
+    @BindView(R.id.block_tab1)
+    BottomLineTextView mTab1;
+    @BindView(R.id.block_tab2)
+    BottomLineTextView mTab2;
     @BindView(R.id.block_tab_container)
     FrameLayout mContainer;
+
+    private List<BottomLineTextView> textViews;
 
     public BlockTabView(Context context) {
         super(context);
@@ -63,7 +71,9 @@ public class BlockTabView extends FrameLayout {
     private void init() {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_block_tab, this, true);
         ButterKnife.bind(this);
-
+        textViews = new ArrayList<>();
+        textViews.add(mTab1);
+        textViews.add(mTab2);
     }
 
     public void setViews(String title, String[] tabs, List<? extends View> views, String fun) {
@@ -71,68 +81,42 @@ public class BlockTabView extends FrameLayout {
         if (views == null) {
             return;
         }
+
+        if (tabs != null && tabs.length > 0){
+            mTabBar.setVisibility(VISIBLE);
+        }else {
+            mTabBar.setVisibility(GONE);
+        }
         for (int i = 0; i < views.size(); i++) {
             View v = views.get(i);
             mContainer.addView(v);
             if (i != 0) {
                 v.setVisibility(GONE);
+            }else {
+                textViews.get(i).setSelected(true);
             }
 
             if (tabs != null && tabs.length == views.size()) {
-                TextView t = new TextView(getContext());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                if (i > 0){
-                    lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.px90);
+                if (i >= textViews.size()){
+                    break;
                 }
-                t.setLayoutParams(lp);
-                t.setText(tabs[i]);
-                mTab.getTabScroller().addTabView(t);
-                mTab.addView(t);
-                final int index = i ;
-                t.setOnClickListener(new OnClickListener() {
+                textViews.get(i).setText(tabs[i]);
+                final int index = i;
+                textViews.get(i).setOnClickListener(new OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        show(index);
+                    public void onClick(View v) {
+                        selectTab(index);
                     }
                 });
             }
 
         }
-//        TextView t1 = new TextView(getContext());
-//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        t1.setLayoutParams(lp);
-//        t1.setText("我学的课");
-//
-//        TextView t2 = new TextView(getContext());
-//        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        lp2.leftMargin = 50;
-//        t2.setLayoutParams(lp2);
-//        t2.setText("我教的课");
 
         mTitle.setText(title);
         mFun.setText(fun);
-//
-//        mTab.getTabScroller().addTabView(t1);
-//        mTab.addView(t1);
-//        mTab.getTabScroller().addTabView(t2);
-//        mTab.addView(t2);
-//
-//
-//        t1.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                show(0);
-//            }
-//        });
-//        t2.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                show(1);
-//            }
-//        });
     }
 
-    public void show(int position) {
+    private void show(int position) {
         if (position >= mContainer.getChildCount()) {
             return;
         }
@@ -143,5 +127,18 @@ public class BlockTabView extends FrameLayout {
                 mContainer.getChildAt(i).setVisibility(GONE);
             }
         }
+    }
+
+    private void selectTab(int position){
+        if (position >= textViews.size())
+            return;
+        for (int i=0;i<textViews.size();i++){
+            if (i == position){
+                textViews.get(position).setSelected(true);
+            }else {
+                textViews.get(i).setSelected(false);
+            }
+        }
+        show(position);
     }
 }

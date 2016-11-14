@@ -25,9 +25,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.widget.HorizontalListView;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+import com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout;
 import com.benyuan.xiaojs.util.FastBlur;
+import com.benyuan.xiaojs.util.StringUtil;
+import com.benyuan.xiaojs.util.TimeUtil;
+import com.benyuan.xiaojs.util.ToastUtil;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,8 +74,8 @@ public class CourseBlock extends FrameLayout {
     @BindView(R.id.block_course_person2_desc)
     TextView mPersonDesc2;
 
-    @BindView(R.id.block_course_stu_list)
-    HorizontalListView mStuList;
+    @BindView(R.id.image_flow)
+    ImageFlowLayout mImageFlow;
 
     public CourseBlock(Context context) {
         super(context);
@@ -95,11 +102,52 @@ public class CourseBlock extends FrameLayout {
         ButterKnife.bind(this);
     }
 
-    public void setData(String t){
+    public void setData(Date date){
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.default_portrait);
         Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth() / 3,bitmap.getHeight() / 3,false);
         Bitmap b = FastBlur.doBlur(scaleBitmap,10,true);
         mBackground.setImageBitmap(b);
-        mDate.setText(t);
+        mDate.setText(TimeUtil.format(date,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+        mTime.setText("时长：95分钟");
+        String timeMark = getContext().getString(R.string.block_cls_time_mark,57);
+        String time = String.valueOf(57);
+        mTimeMark.setText(StringUtil.getSpecialString(timeMark,time,getResources().getDimensionPixelSize(R.dimen.font_26px),getResources().getColor(R.color.font_orange)));
+        mTitle.setText("人力资源管理师3级冬季2班人力资源管理师3级冬季2班");
+        String courseNum = getContext().getString(R.string.block_cls_course_num,3);
+        mCourseNum.setText(StringUtil.getSpecialString(courseNum,String.valueOf(3),getResources().getDimensionPixelSize(R.dimen.font_26px),getResources().getColor(R.color.font_orange)));
+        mCourseTotal.setText(getContext().getString(R.string.block_cls_course_total,8));
+        mPersonImage1.setImageResource(R.drawable.default_portrait);
+        mPersonImage2.setImageResource(R.drawable.default_portrait);
+        mPersonName1.setText("张晓丽张晓丽张晓丽");
+        mPersonName2.setText("李明博张晓丽张晓丽张晓丽");
+        mPersonDesc1.setText("高级讲师");
+        mPersonDesc2.setText("高级助教");
+
+        Bitmap b1 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
+        Bitmap b2 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
+        Bitmap b3 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
+        Bitmap b4 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
+        Bitmap b5 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
+        Bitmap b6 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
+        Bitmap b7 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
+        Bitmap b8 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
+
+        List<Bitmap> list = new ArrayList<>();
+        list.add(b1);
+        list.add(b2);
+        list.add(b3);
+        list.add(b4);
+        list.add(b5);
+        list.add(b6);
+        list.add(b7);
+        list.add(b8);
+
+        mImageFlow.show(list);
+        mImageFlow.setOnItemClickListener(new ImageFlowLayout.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                ToastUtil.showToast(getContext(),"image position" + position);
+            }
+        });
     }
 }

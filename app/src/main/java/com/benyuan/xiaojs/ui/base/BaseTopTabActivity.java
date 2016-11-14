@@ -152,6 +152,52 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
         });
     }
 
+    protected void addViews(Fragment fragment) {
+//        if (tabTitles == null || tabTitles == null) {
+//            Logger.w(TAG, "Not arguments passed!");
+//            return;
+//        }
+
+//        if (tabTitles != null && fragments != null && tabTitles.size() != fragments.size()) {
+//            throw new IllegalArgumentException("Base tab fragment, illegal arguments passed!");
+//        }
+
+        mTabIndicator.setVisibility(View.GONE);
+
+//        mTabTitles = tabTitles;
+//        mFragments = fragments;
+
+        //createTabs(tabTitles);
+
+//        if (fixedView != null) {
+//            mTabFixedView.addView(fixedView, mTabFixedView.getChildCount());
+//        }
+        List<Fragment> fs = new ArrayList<>();
+        fs.add(fragment);
+        mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fs);
+        mViewPager.setAdapter(mAdapter);
+        //mViewPager.setScrollState(mScrollable);
+//        mViewPager.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                if (mTabIndicator != null && mTabIndicator.getTabScroller() != null) {
+//                    mTabIndicator.getTabScroller().onTabScrolled(position, positionOffset);
+//                }
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                mPosition = position;
+//                updateTabTextColor(position);
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
+    }
+
     protected void addHover(List<String> tabTitles, View hover, List<? extends Fragment> fragments) {
         if (tabTitles == null || tabTitles == null) {
             Logger.w(TAG, "Not arguments passed!");

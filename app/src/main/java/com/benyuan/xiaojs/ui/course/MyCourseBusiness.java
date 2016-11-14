@@ -23,9 +23,9 @@ import java.util.Date;
 
 public class MyCourseBusiness {
 
-    public static Criteria getFilter(int timePosition,int statePosition){
+    public static Criteria getFilter(int timePosition,int statePosition,boolean isTeacher){
         Criteria criteria = new Criteria();
-        criteria.setState(getStateByPosition(statePosition));
+        criteria.setState(getStateByPosition(statePosition,isTeacher));
 
         Duration duration = new Duration();
         duration.setStart(getDateByPosition(timePosition));
@@ -55,20 +55,45 @@ public class MyCourseBusiness {
     }
 
 
-    public static String getStateByPosition(int position){
-        switch (position){
-            case 0:
-                return null;
-            case 1:
-                return LessonState.PENDING_FOR_LIVE;
-            case 2:
-                return LessonState.LIVE;
-            case 3:
-                return LessonState.FINISHED;
-            case 4:
-                return LessonState.CANCELLED;
-            default:
-                return null;
+    public static String getStateByPosition(int position,boolean isTeacher){
+        if (isTeacher){
+            switch (position){
+                case 0:
+                    return null;
+                case 1:
+                    return LessonState.DRAFT;
+                case 2:
+                    return LessonState.PENDING_FOR_APPROVAL;
+                case 3:
+                    return LessonState.PENDING_FOR_LIVE;
+                case 4:
+                    return LessonState.LIVE;
+                case 5:
+                    return LessonState.FINISHED;
+                case 6:
+                    return LessonState.REJECTED;
+                case 7:
+                    return LessonState.CANCELLED;
+                case 8:
+                    return LessonState.STOPPED;
+                default:
+                    return null;
+            }
+        }else {
+            switch (position){
+                case 0:
+                    return null;
+                case 1:
+                    return LessonState.PENDING_FOR_LIVE;
+                case 2:
+                    return LessonState.LIVE;
+                case 3:
+                    return LessonState.FINISHED;
+                case 4:
+                    return LessonState.CANCELLED;
+                default:
+                    return null;
+            }
         }
     }
 

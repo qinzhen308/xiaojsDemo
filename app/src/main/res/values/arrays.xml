@@ -44,11 +44,22 @@
         <item>近3月</item>
         <item>近1年</item>
     </string-array>
-    <string-array name="course_state_filter">
+    <string-array name="course_state_filter_stu">
         <item>全部</item>
-        <item>待课中</item>
-        <item>开课中</item>
+        <item>待上课</item>
+        <item>上课中</item>
         <item>已完课</item>
+        <item>已取消</item>
+    </string-array>
+    <string-array name="course_state_filter_teacher">
+        <item>全部</item>
+        <item>待上架</item>
+        <item>审核中</item>
+        <item>待上课</item>
+        <item>上课中</item>
+        <item>已完课</item>
+        <item>审核失败</item>
+        <item>强制停止</item>
         <item>已取消</item>
     </string-array>
     <string-array name="center_tab_items">

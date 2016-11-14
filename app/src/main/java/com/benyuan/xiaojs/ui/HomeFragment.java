@@ -17,7 +17,6 @@ package com.benyuan.xiaojs.ui;
 
 import android.graphics.Color;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
@@ -28,6 +27,7 @@ import com.benyuan.xiaojs.ui.home.LiveBlock;
 import com.benyuan.xiaojs.ui.home.OnScrollYListener;
 import com.benyuan.xiaojs.ui.home.PersonBlock;
 import com.benyuan.xiaojs.ui.widget.BlockTabView;
+import com.benyuan.xiaojs.ui.widget.MessageImageView;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
@@ -35,6 +35,7 @@ import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -56,7 +57,7 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.title)
     View mTitle;
     @BindView(R.id.right_view)
-    ImageView mRightImage;
+    MessageImageView mRightImage;
 
     AutoPullToRefreshListView mList;
 
@@ -95,8 +96,8 @@ public class HomeFragment extends BaseFragment {
         CourseBlock c2 = new CourseBlock(mContext);
         cs.add(c1);
         cs.add(c2);
-        c1.setData("c1");
-        c2.setData("c2");
+        c1.setData(new Date(System.currentTimeMillis() + 1000*60*60*36));
+        c2.setData(new Date(System.currentTimeMillis() + 1000*60*60*23));
         mClass.setViews(mContext.getString(R.string.my_xiaojs),mContext.getResources().getStringArray(R.array.course_block_tabs),cs,mContext.getString(R.string.schedule));
 
 
@@ -127,6 +128,7 @@ public class HomeFragment extends BaseFragment {
                 //ToastUtil.showToast(mContext,"y = " + y);
             }
         });
+        //mList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
     }
 
     private void handleScrollChanged(int offsetY) {

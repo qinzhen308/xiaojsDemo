@@ -24,8 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity" android:screenOrientation="portrait">
-
+        <activity
+                android:name=".ui.MainActivity"
+                android:screenOrientation="portrait">
         </activity>
 
         <activity
@@ -62,6 +63,9 @@
         <activity android:name=".ui.course.AuditActivity"/>
         <activity android:name=".ui.course.TeacherIntroductionActivity"/>
         <activity android:name=".ui.course.LiveLessonDetailActivity"/>
+        <activity android:name=".ui.mine.TeachAbilityDemoActivity">
+        </activity>
+        <activity android:name=".ui.course.ModifyLessonActivity" android:screenOrientation="portrait"/>
 
     </application>
 

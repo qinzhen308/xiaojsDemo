@@ -17,15 +17,10 @@ package com.benyuan.xiaojs.ui.course;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.ui.base.BaseTopTabActivity;
 import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
 
@@ -36,25 +31,18 @@ import butterknife.OnClick;
 
 public class MyCourseActivity extends BaseTopTabActivity {
 
-    View mHover;
-    TextView mFilter;
-    TextView mInput;
-
-    private CourseFilterDialog mDialog;
-    private int mTimePosition;
-    private int mStatePosition;
-
     @Override
     protected void initView() {
         setMiddleTitle(R.string.my_course);
         setRightImage(R.drawable.add_selector);
         setLeftImage(R.drawable.back_arrow);
 
+
         List<Fragment> fs = new ArrayList<>();
         Bundle b1 = new Bundle();
-        b1.putBoolean("key",false);
+        b1.putBoolean(CourseConstant.KEY_IS_TEACHER,false);
         Bundle b2 = new Bundle();
-        b2.putBoolean("key",true);
+        b2.putBoolean(CourseConstant.KEY_IS_TEACHER,true);
         Fragment f1 = new MyCourseFragment();
         f1.setArguments(b1);
         fs.add(f1);
@@ -62,26 +50,10 @@ public class MyCourseActivity extends BaseTopTabActivity {
         f2.setArguments(b2);
         fs.add(f2);
         List<String> ss = new ArrayList<>();
-        ss.add("我学的课");
-        ss.add("我授的课");
-        mHover = getLayoutInflater().inflate(R.layout.layout_my_course_search,null);
-        mFilter = (TextView) mHover.findViewById(R.id.course_filter);
-        mInput = (TextView) mHover.findViewById(R.id.my_course_search);
-        mHover.setVisibility(View.GONE);
-        mFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                filter();
-            }
-        });
-        mInput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MyCourseActivity.this,MyCourseSearchActivity.class);
-                startActivity(intent);
-            }
-        });
-        addHover(ss,mHover,fs);
+        ss.add(getString(R.string.course_of_learn));
+        ss.add(getString(R.string.course_of_teach));
+        addViews(ss,fs);
+        //addViews(fs.get(1));
     }
 
     @OnClick({R.id.left_image,R.id.right_image})
@@ -109,35 +81,6 @@ public class MyCourseActivity extends BaseTopTabActivity {
         }
     }
 
-    private void filter(){
-        if (mDialog == null){
-            mDialog = new CourseFilterDialog(this);
-            mDialog.setTimeSelection(mTimePosition);
-            mDialog.setStateSelection(mStatePosition);
-            //mDialog.showAsDropDown(mHover);
-            mDialog.showAtLocation(mHover, Gravity.BOTTOM,100,100);
-            mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    mDialog = null;
-                }
-            });
-            mDialog.setOnOkListener(new CourseFilterDialog.OnOkListener() {
-                @Override
-                public void onOk(int timePosition, int statePosition) {
-                    mTimePosition = timePosition;
-                    mStatePosition = statePosition;
-                    Criteria criteria  = MyCourseBusiness.getFilter(timePosition,statePosition);
-                    Fragment f = ((FragmentPagerAdapter)mViewPager.getAdapter()).getItem(getPosition());
-                    ((MyCourseFragment)f).request(criteria);
-                }
-            });
-        }else {
-            mDialog.dismiss();
-            mDialog = null;
-        }
-    }
-
     private void handleRightClick(int position){
         switch (position){
             case 0://我要开课
@@ -149,13 +92,5 @@ public class MyCourseActivity extends BaseTopTabActivity {
             default:
                 break;
         }
-    }
-
-    public void hideTop(){
-        mHover.setVisibility(View.GONE);
-    }
-
-    public void showTop(){
-        mHover.setVisibility(View.VISIBLE);
     }
 }

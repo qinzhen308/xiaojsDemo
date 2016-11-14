@@ -49,15 +49,16 @@
         </RelativeLayout>
 
 
-        <ImageView
+        <com.benyuan.xiaojs.ui.widget.MessageImageView
                 android:id="@+id/right_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/home_message_selector"
                 android:clickable="true"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_marginLeft="@dimen/px30"
+                android:padding="@dimen/px20"
+                android:layout_marginRight="@dimen/px10"
+                android:layout_marginLeft="@dimen/px10"
                 android:visibility="visible"/>
     </LinearLayout>
 
