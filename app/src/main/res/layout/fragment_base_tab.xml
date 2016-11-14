@@ -15,7 +15,8 @@
         <com.benyuan.xiaojs.ui.widget.TabIndicatorView
                 android:id="@+id/tab_scroller"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:background="@color/white"/>
 
         <View
                 style="@style/DividerHorizontal"/>
