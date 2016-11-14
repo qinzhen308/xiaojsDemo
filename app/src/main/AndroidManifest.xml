@@ -50,7 +50,7 @@
         </activity>
         <activity android:name=".ui.mine.EditTeachingAbilityActivity">
         </activity>
-        <activity android:name=".ui.course.LessionDetailActivity">
+        <activity android:name=".ui.course.LessonHomeActivity">
         </activity>
         <activity android:name=".ui.TestAPIActivity">
         </activity>

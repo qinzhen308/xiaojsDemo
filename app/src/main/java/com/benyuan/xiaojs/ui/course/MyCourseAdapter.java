@@ -299,7 +299,7 @@ public class MyCourseAdapter extends AbsSwipeAdapter<ObjectsOfPage, MyCourseAdap
     @Override
     protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         Toast.makeText(mContext,"position = " + position,Toast.LENGTH_SHORT).show();
-        mContext.startActivity(new Intent(mContext,LessionDetailActivity.class));
+        mContext.startActivity(new Intent(mContext,LessonHomeActivity.class));
 
     }
 

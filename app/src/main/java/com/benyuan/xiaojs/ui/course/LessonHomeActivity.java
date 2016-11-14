@@ -15,7 +15,7 @@ import com.benyuan.xiaojs.ui.widget.BottomSheet;
 
 import butterknife.OnClick;
 
-public class LessionDetailActivity extends BaseActivity {
+public class LessonHomeActivity extends BaseActivity {
 
 
     @Override
