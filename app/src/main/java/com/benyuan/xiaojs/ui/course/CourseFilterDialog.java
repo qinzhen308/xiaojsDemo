@@ -39,12 +39,15 @@ public class CourseFilterDialog extends BaseFullWindow {
     @BindView(R.id.course_filter_ok)
     Button mOk;
 
+    private boolean isTeacher;
+
     private int mTimePosition;
     private int mStatePosition;
     private OnOkListener mListener;
 
-    public CourseFilterDialog(Context context) {
+    public CourseFilterDialog(Context context,boolean isTeacher) {
         super(context);
+        this.isTeacher = isTeacher;
     }
 
     @Override
@@ -104,8 +107,12 @@ public class CourseFilterDialog extends BaseFullWindow {
 
     @Override
     public void showAsDropDown(View anchor) {
+        int stateId = R.array.course_state_filter_stu;
+        if (isTeacher){
+            stateId = R.array.course_state_filter_teacher;
+        }
         String[] times = mContext.getResources().getStringArray(R.array.course_time_filter);
-        String[] states = mContext.getResources().getStringArray(R.array.course_state_filter);
+        String[] states = mContext.getResources().getStringArray(stateId);
         mTime.setAdapter(new CommonAdapter(times,mTimePosition));
         mState.setAdapter(new CommonAdapter(states,mStatePosition));
         mTime.setOnItemClickListener(new AdapterView.OnItemClickListener() {
