@@ -249,5 +249,30 @@ public class LessonDataManager {
         lessonRequest.getLessonDetails(context,lesson,callback);
     }
 
+    public void requestLessonEnrollment(Context context,
+                                        @NonNull String sessionID,
+                                        @NonNull String lesson,
+                                        @NonNull APIServiceCallback callback) {
 
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(lesson)) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the lesson param is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.confirmLessonEnrollmentPrompt(Errors.BAD_PARAMETER);
+            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.confirmLessonEnrollment(context,sessionID,lesson,callback);
+    }
 }
