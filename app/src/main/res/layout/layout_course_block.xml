@@ -68,8 +68,9 @@
         <LinearLayout
                 android:id="@+id/block_course_mark_wrapper"
                 android:orientation="vertical"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_marginTop="@dimen/px30"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -77,14 +78,16 @@
                     android:id="@+id/block_course_num"
                     android:textColor="@color/common_text"
                     android:textSize="@dimen/font_22px"
+                    android:layout_gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             <TextView
                     android:id="@+id/block_course_total"
                     android:textColor="@color/common_text"
-                    android:layout_marginTop="@dimen/px15"
+                    android:layout_marginTop="@dimen/px10"
                     android:textSize="@dimen/font_22px"
+                    android:layout_gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -93,10 +96,11 @@
                 android:id="@+id/block_course_title"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_34px"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginTop="@dimen/px30"
-                android:maxLines="2"
+                android:layout_marginLeft="@dimen/px20"
+                android:layout_marginTop="@dimen/px20"
+                android:maxLines="1"
                 android:ellipsize="end"
+                android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/block_course_mark_wrapper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -105,8 +109,8 @@
                 android:id="@+id/block_course_person1"
                 android:orientation="vertical"
                 android:layout_below="@id/block_course_title"
-                android:layout_marginTop="@dimen/px50"
-                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_marginLeft="@dimen/px20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -114,6 +118,7 @@
                     android:id="@+id/block_course_person1_image"
                     android:layout_width="@dimen/px100"
                     android:layout_height="@dimen/px100"
+                    android:layout_gravity="center_horizontal"
                     android:scaleType="fitXY"
                     app:corner_radius="@dimen/px50"/>
 
@@ -122,6 +127,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px10"
+                    android:maxEms="4"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_28px"/>
@@ -131,6 +139,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px10"
+                    android:maxEms="4"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/common_text"
                     android:textSize="@dimen/font_22px"/>
@@ -141,7 +152,7 @@
                 android:orientation="vertical"
                 android:layout_below="@id/block_course_title"
                 android:layout_toRightOf="@id/block_course_person1"
-                android:layout_marginTop="@dimen/px50"
+                android:layout_marginTop="@dimen/px30"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -150,6 +161,7 @@
                     android:id="@+id/block_course_person2_image"
                     android:layout_width="@dimen/px100"
                     android:layout_height="@dimen/px100"
+                    android:layout_gravity="center_horizontal"
                     android:scaleType="fitXY"
                     app:corner_radius="@dimen/px50"/>
 
@@ -158,6 +170,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px10"
+                    android:maxEms="4"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_28px"/>
@@ -167,6 +182,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px10"
+                    android:maxEms="4"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/common_text"
                     android:textSize="@dimen/font_22px"/>
@@ -189,8 +207,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginRight="@dimen/px30"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_marginRight="@dimen/px20"
             android:layout_marginTop="@dimen/px30"
             android:layout_marginBottom="@dimen/px30">
 
@@ -203,12 +221,10 @@
                 android:layout_gravity="center_vertical"
                 android:text="@string/enter_cls_stu_hint"/>
 
-        <com.benyuan.xiaojs.ui.widget.HorizontalListView
-                android:id="@+id/block_course_stu_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px30"
-                android:paddingTop="@dimen/px15"
-                android:paddingBottom="@dimen/px15"/>
+        <com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout
+                android:id="@+id/image_flow"
+                android:layout_marginLeft="@dimen/px10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
     </LinearLayout>
 </LinearLayout>

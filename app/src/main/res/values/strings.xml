@@ -4,11 +4,14 @@
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
     <string name="finish">完成</string>
+    <string name="share">分享</string>
+    <string name="delete">删除</string>
     <string name="search">搜索</string>
     <string name="save">保存</string>
     <string name="rotate">旋转</string>
     <string name="phone_num">手机号</string>
     <string name="pwd">密码</string>
+    <string name="reason">原因：</string>
     <string name="person">人</string>
     <string name="day">天</string>
     <string name="hour">小时</string>
@@ -54,7 +57,10 @@
     <!--login-->
     <string name="login">登录</string>
     <string name="register_guide">还没有账号，立即注册</string>
-
+    <!--home-->
+    <string name="block_cls_time_mark">距上课还有%1$d分钟</string>
+    <string name="block_cls_course_num">第&#160;%1$d&#160;课</string>
+    <string name="block_cls_course_total">共%1$d节</string>
     <!--mine-->
     <string name="fans">粉丝</string>
     <string name="follows">关注</string>
@@ -77,6 +83,8 @@
     <string name="get_more_right">可享更多权益</string>
     <string name="settings">设置</string>
     <string name="recommend_to_friends">推荐给好友</string>
+    <string name="my_profile_txt">为自己写一句个性签名，让被人更了解你</string>
+
     <!--my sub page-->
     <string name="exit_login">退出当前账号</string>
     <!--my profile-->
@@ -98,7 +106,7 @@
     <string name="audit_visible_to_stu">旁听对学生可见</string>
     <string name="audit_people">旁听人</string>
     <string name="sale_promotion">促销</string>
-    <string name="input_tips">%1$d/%2$d字</string>
+    <string name="input_tips"><![CDATA[<font color="#cc0000">%1$d</font>]]>/%2$d字</string>
 
     <string name="home_search_hint">直播课/老师/机构</string>
     <string name="course_of_learn">我学的课</string>
@@ -108,8 +116,10 @@
     <string name="into_cls">进入教室</string>
     <string name="data_bank">资料库</string>
     <string name="more">更多</string>
+    <string name="leave_lesson">退课</string>
     <string name="speaker">主讲：</string>
     <string name="prepare_lesson">备课</string>
+    <string name="evaluate">评价</string>
     <string name="lesson_again">再次开课</string>
     <string name="invite">邀请</string>
 
@@ -166,6 +176,7 @@
     <string name="promotion_info_error">请完整填写促销%1$d信息</string>
     <string name="promotion_discount_format_error">请填写正确的折扣值，如：9.7</string>
     <string name="promotion_info_empty">请填写促销信息</string>
+    <string name="lesson_creation_success">创建直播课成功</string>
 
     <!--live lesson detail-->
     <string name="live_lesson_detail">直播课详情</string>
@@ -182,7 +193,7 @@
 
     <string name="filter">筛选</string>
     <string name="time">时间</string>
-    <string name="course_state">开课状态</string>
+    <string name="course_state">状态</string>
 
     <string name="lession_detail">课程详情</string>
     <string name="lession_apply">立即报名</string>
@@ -220,4 +231,18 @@
     <string name="living">上课中</string>
     <string name="course_stu">已报名&#160;%1$d/%2$d</string>
     <string name="shelves_need_examine">您提交的上架申请正在审核中，请耐心等待</string>
+    <string name="registration">报名注册</string>
+    <string name="modify_lesson_time">修改上课时间</string>
+    <string name="cancel_lesson">取消上课</string>
+    <string name="cancel_publish">取消发布</string>
+    <string name="publish_to_home_page">发布到主页</string>
+
+    <!-- 修改上课时间 -->
+    <string name="modify_lesson_time_mark">注：修改上课会影响您的信用等级，请谨慎</string>
+    <string name="lesson_name">直播课名称：</string>
+    <string name="origin_lesson_time">原上课时间：</string>
+    <string name="new_lesson_time">新的上课时间：</string>
+    <string name="modify_lesson_time_tip">请点击选择</string>
+    <string name="modify_lesson">修改上课时间</string>
+    <string name="lesson_duration_tip">时长%1$d分钟</string>
 </resources>

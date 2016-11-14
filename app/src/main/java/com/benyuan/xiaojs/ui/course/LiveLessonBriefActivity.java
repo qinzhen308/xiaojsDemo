@@ -2,7 +2,9 @@ package com.benyuan.xiaojs.ui.course;
 
 import android.content.Intent;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -52,8 +54,7 @@ public class LiveLessonBriefActivity extends BaseActivity {
         mInputContentEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_CHAR)});
         mInputContentEdt.setHint(R.string.live_lesson_brief_hint);
 
-        mInputTipsTv.setText(String.format(getString(R.string.input_tips), 0, MAX_CHAR));
-
+        mInputTipsTv.setText(Html.fromHtml(String.format(getString(R.string.input_tips), 0, MAX_CHAR)));
         mInputContentEdt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -67,13 +68,19 @@ public class LiveLessonBriefActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mInputTipsTv.setText(String.format(getString(R.string.input_tips), s.length(), MAX_CHAR));
+                Spanned tips = Html.fromHtml(String.format(getString(R.string.input_tips), s.length(), MAX_CHAR));
+                mInputTipsTv.setText(tips);
             }
         });
 
         Object object = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO);
         if (object instanceof LiveLesson) {
             mLesson = (LiveLesson) object;
+            if (mLesson.getOverview() != null) {
+                String text = mLesson.getOverview().getText();
+                mInputContentEdt.setText(text);
+                mInputContentEdt.setSelection(text.length());
+            }
         }
     }
 

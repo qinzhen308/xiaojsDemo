@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:background="@color/white"
+             android:background="@drawable/white_grey_selector"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
@@ -19,9 +19,10 @@
 
             <TextView
                     android:id="@+id/live_block_time"
-                    android:drawableLeft="@drawable/ic_filter_down"
+                    android:drawableLeft="@drawable/ic_home_time_down"
                     android:textColor="@color/common_text"
                     android:textSize="@dimen/font_22px"
+                    android:gravity="center_vertical"
                     android:drawablePadding="@dimen/px10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>

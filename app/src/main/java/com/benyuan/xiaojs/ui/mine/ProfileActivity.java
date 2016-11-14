@@ -59,7 +59,7 @@ public class ProfileActivity extends BaseActivity {
         loadPortrait();
     }
 
-    @OnClick({R.id.left_image, R.id.edit_portrait, R.id.sex, R.id.birthday})
+    @OnClick({R.id.left_image, R.id.edit_portrait, R.id.sex, R.id.birthday, R.id.right_view})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -78,6 +78,8 @@ public class ProfileActivity extends BaseActivity {
                 pickSex();
                 break;
 
+            case R.id.right_view:
+                break;
             default:
                 break;
         }
