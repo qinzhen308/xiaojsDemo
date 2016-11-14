@@ -14,6 +14,7 @@ package com.benyuan.xiaojs.ui.course;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -21,6 +22,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -76,9 +78,9 @@ public class LiveLessonCreationFragment extends BaseFragment {
     @BindView(R.id.charge_way)
     View mChargeWayLayout;
     @BindView(R.id.by_duration)
-    EditTextDel mByLiveDurationEdt;
+    EditText mByLiveDurationEdt;
     @BindView(R.id.by_total_price)
-    EditTextDel mByLiveTotalPriceEdt;
+    EditText mByLiveTotalPriceEdt;
     @BindView(R.id.lesson_start_time)
     TextView mLessonStartTimeTv;
     @BindView(R.id.lesson_duration)
@@ -96,6 +98,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
     private final String TEST_SUBJECT = "计算机"; //test subject
     private final String TEST_SUBJECT_ID = "5820a10e101db0af4bcf2fd9";
+    private int mBlackFont;
 
     @Override
     protected View getContentView() {
@@ -152,6 +155,10 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 formatPrice(s);
             }
         });
+
+
+        //get color
+        mBlackFont = getResources().getColor(R.color.font_black);
     }
 
     private void formatPrice(Editable s) {
@@ -169,9 +176,9 @@ public class LiveLessonCreationFragment extends BaseFragment {
             R.id.by_total_price_title, R.id.by_duration_title, R.id.lesson_start_time,
             R.id.optional_info, R.id.sub_btn, R.id.on_shelves, R.id.publish_personal_page})
     public void onClick(View v) {
-        boolean isSelected = false;
         switch (v.getId()) {
             case R.id.lesson_subject:
+                selectSubject();
                 break;
             case R.id.teach_form:
                 selectTeachForm();
@@ -203,6 +210,10 @@ public class LiveLessonCreationFragment extends BaseFragment {
         }
     }
 
+    private void selectSubject() {
+        mLessonSubjectTv.setTextColor(mBlackFont);
+    }
+
     private void selectTeachForm() {
         List<String> sexList = new ArrayList<String>();
         sexList.add(getString(R.string.teach_form_lecture));
@@ -213,6 +224,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
             public void onDataPicked(Object data) {
                 if (data instanceof String) {
                     mTeachFormTv.setText((String) data);
+                    mTeachFormTv.setTextColor(mBlackFont);
                 }
             }
         });
@@ -239,6 +251,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 mLessonStartTime = calendar.getTimeInMillis();
                 String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
                 mLessonStartTimeTv.setText(dateStr);
+                mLessonStartTimeTv.setTextColor(mBlackFont);
             }
         });
     }
@@ -430,12 +443,14 @@ public class LiveLessonCreationFragment extends BaseFragment {
         LessonDataManager.requestCreateLiveLesson(mContext, BaseBusiness.getSession(), cl, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
-                Toast.makeText(mContext, object.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                Toast.makeText(mContext, "error:" + errorMessage, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }

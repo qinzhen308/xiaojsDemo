@@ -68,12 +68,11 @@ public class AuditActivity extends BaseActivity {
                 if (!mVisibleToStu.isChecked() && (TextUtils.isEmpty(persons) || selectTip.equals(persons) || persons.split(",") == null)) {
                     finish();
                 } else {
-                    LiveLesson.TeachersIntro intro = new LiveLesson.TeachersIntro();
                     LiveLesson.Audit audit = new LiveLesson.Audit();
                     audit.setEnabled(true);
                     audit.setVisibleToStudents(mVisibleToStu.isSelected());
-                    audit.setGrantedTo(persons.split(","));
-                    mLesson.setTeachersIntro(intro);
+                    //audit.setGrantedTo(persons.split(","));
+                    mLesson.setAudit(audit);
                     Intent i = new Intent();
                     i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
                     setResult(RESULT_OK, i);

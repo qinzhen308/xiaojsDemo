@@ -104,7 +104,7 @@
                         android:layout_width="wrap_content"
                         android:paddingLeft="@dimen/px60"
                         android:paddingRight="@dimen/px88"
-                        android:text="每一个人都可以站在大地，分享这个世界，并触摸天空"
+                        android:text="@string/my_profile_txt"
                         android:layout_marginBottom="@dimen/px32"
                         android:textSize="@dimen/font_22px"
                         android:textColor="@color/font_gray"

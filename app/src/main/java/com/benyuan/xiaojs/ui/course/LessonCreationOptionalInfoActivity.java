@@ -65,6 +65,8 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     private long mLessonStartTime;
     private int mLimit;
     private boolean isFree = true;
+    private int mBlackFont;
+    private int mLightGrayFont;
 
     @Override
     protected void addViewContent() {
@@ -77,6 +79,9 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     }
 
     private void initData() {
+        mBlackFont = getResources().getColor(R.color.font_black);
+        mLightGrayFont = getResources().getColor(R.color.font_light_gray);
+
         Object object = getIntent().getSerializableExtra(KEY_LESSON_OPTIONAL_INFO);
         if (object instanceof LiveLesson) {
             mLesson = (LiveLesson) object;
@@ -197,24 +202,31 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 break;
             case LESSON_BRIEF:
                 mLesson = getLesson(data);
-                if (mLesson != null) {
+                if (mLesson != null && mLesson.getOverview() != null) {
                     String txt = formatResult(mLesson.getOverview().getText());
                     if (!TextUtils.isEmpty(txt) && mLesson.getOverview() != null) {
                         mLessonBriefTv.setText(txt);
+                        mLessonBriefTv.setTextColor(mBlackFont);
+                    } else {
+                        mLessonBriefTv.setTextColor(mLightGrayFont);
                     }
                 }
                 break;
             case TEACHER_INTRODUCTION:
                 mLesson = getLesson(data);
-                if (mLesson != null) {
+                if (mLesson != null && mLesson.getTeachersIntro() != null) {
                     String txt = formatResult(mLesson.getTeachersIntro().getText());
                     if (!TextUtils.isEmpty(txt) && mLesson.getTeachersIntro() != null) {
                         mTeachIntroTv.setText(txt);
+                        mTeachIntroTv.setTextColor(mBlackFont);
+                    } else {
+                        mTeachIntroTv.setTextColor(mLightGrayFont);
                     }
                 }
                 break;
             case SIT_IN_ON:
                 mLesson = getLesson(data);
+                mSitInOnv.setTextColor(mLightGrayFont);
                 if (mLesson != null && mLesson.getAudit() != null) {
                     String[] sitInOnPersons = mLesson.getAudit().getGrantedTo();
                     if (sitInOnPersons != null) {
@@ -233,6 +245,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                         }
                         if (!TextUtils.isEmpty(txt)) {
                             mSitInOnv.setText(txt);
+                            mSitInOnv.setTextColor(mBlackFont);
                         }
                     }
                 }
@@ -241,6 +254,9 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 mLesson = getLesson(data);
                 if (mLesson != null && mLesson.getPromotion() != null) {
                     mSalePromotionTv.setText(getString(R.string.edit));
+                    mSalePromotionTv.setTextColor(mBlackFont);
+                } else {
+                    mSalePromotionTv.setTextColor(mLightGrayFont);
                 }
                 break;
         }
@@ -257,7 +273,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
             }
         }
 
-        return null;
+        return mLesson;
     }
 
     private String formatResult(String s) {

@@ -203,7 +203,7 @@
                             android:drawablePadding="@dimen/px25"
                             android:text="@string/by_live_total_price"/>
 
-                    <com.benyuan.xiaojs.ui.widget.EditTextDel
+                    <EditText
                             android:id="@+id/by_total_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -241,7 +241,7 @@
                             android:drawablePadding="@dimen/px25"
                             android:text="@string/by_live_duration"/>
 
-                    <com.benyuan.xiaojs.ui.widget.EditTextDel
+                    <EditText
                             android:id="@+id/by_duration"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
