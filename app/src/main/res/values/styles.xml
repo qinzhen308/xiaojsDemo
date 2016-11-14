@@ -147,4 +147,25 @@
         <item name="android:paddingLeft">@dimen/px14</item>
         <item name="android:lines">1</item>
     </style>
+
+    <style name="LiveLessonDetailTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">@dimen/px170</item>
+        <item name="android:textSize">@dimen/font_30px</item>
+        <item name="android:paddingTop">@dimen/px16</item>
+        <item name="android:paddingBottom">@dimen/px16</item>
+        <item name="android:textColor">@color/font_light_gray</item>
+    </style>
+
+    <style name="LiveLessonDetailText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/font_30px</item>
+        <item name="android:paddingTop">@dimen/px16</item>
+        <item name="android:paddingBottom">@dimen/px16</item>
+        <item name="android:textColor">@color/font_black</item>
+        <item name="android:paddingLeft">@dimen/px14</item>
+        <item name="android:lines">1</item>
+    </style>
 </resources>

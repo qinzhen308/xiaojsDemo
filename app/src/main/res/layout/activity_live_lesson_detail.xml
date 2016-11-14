@@ -13,126 +13,150 @@
             android:background="@color/main_bg"
             android:layout_above="@+id/sub_btn">
 
+        <!--已报名，已浏览，已收藏-->
+        <LinearLayout
+                android:layout_marginTop="@dimen/px32"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:id="@+id/enrolled_layout"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20">
+
+                <TextView
+                        android:id="@+id/enrolled"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_26px"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lesson_enrolled"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_marginTop="@dimen/px20"/>
+            </LinearLayout>
+
+            <View
+                    android:id="@+id/enrolled_divide_line"
+                    style="@style/DividerVertical"
+                    android:layout_marginTop="@dimen/px20"
+                    android:layout_marginBottom="@dimen/px20"/>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20">
+
+                <TextView
+                        android:id="@+id/lesson_viewed"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_26px"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lesson_viewed"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_marginTop="@dimen/px20"/>
+            </LinearLayout>
+
+            <View
+                    style="@style/DividerVertical"
+                    android:layout_marginTop="@dimen/px20"
+                    android:layout_marginBottom="@dimen/px20"/>
+
+            <!--已收藏-->
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20">
+
+                <TextView
+                        android:id="@+id/lesson_collected"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_26px"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lesson_collected"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_marginTop="@dimen/px20"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <!--直播课-->
         <View
-                android:layout_marginTop="@dimen/px32"
                 style="@style/DividerHorizontal"/>
 
         <LinearLayout
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonTitle"
+                    style="@style/LiveLessonDetailTitle"
                     android:text="@string/live_lesson_name"/>
 
             <TextView
                     android:id="@+id/lesson_name"
-                    style="@style/LiveLessonText"/>
+                    style="@style/LiveLessonDetailText"/>
         </LinearLayout>
-
-        <include layout="@layout/layout_horizontal_line"/>
 
         <!--学科类目-->
         <LinearLayout
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonTitle"
+                    style="@style/LiveLessonDetailTitle"
                     android:text="@string/subject_category"/>
 
             <TextView
                     android:id="@+id/lesson_subject"
-                    style="@style/LiveLessonText"/>
+                    style="@style/LiveLessonDetailText"/>
         </LinearLayout>
-
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <View
-                android:layout_marginTop="@dimen/px32"
-                style="@style/DividerHorizontal"/>
 
         <!--学生人数-->
         <LinearLayout
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonTitle"
+                    style="@style/LiveLessonDetailTitle"
                     android:text="@string/lesson_people_limit"/>
 
             <TextView
                     android:id="@+id/lesson_stu_count"
-                    style="@style/LiveLessonText"
-                    android:layout_width="wrap_content"
-                    android:minWidth="@dimen/px60"/>
-
-            <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/person"
-                    android:layout_marginLeft="@dimen/px12"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_26px"/>
-        </LinearLayout>
-
-        <include layout="@layout/layout_horizontal_line"/>
-
-        <!--未报名-->
-        <LinearLayout
-                android:id="@+id/enroll_empty_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-            <LinearLayout
-                    style="@style/LiveLessonItem">
-
-                <TextView
-                        style="@style/LiveLessonTitle"
-                        android:text="@string/not_enroll"/>
-
-                <TextView
-                        style="@style/LiveLessonText"
-                        android:text="@string/not_enroll_tips"/>
-
-            </LinearLayout>
-
-            <include layout="@layout/layout_horizontal_line"/>
-        </LinearLayout>
-
-        <!--已报名-->
-        <LinearLayout
-                android:id="@+id/enrolled_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-            <LinearLayout
-                    style="@style/LiveLessonItem">
-
-                <TextView
-                        style="@style/LiveLessonTitle"
-                        android:text="@string/enrolled"/>
-
-                <LinearLayout
-                        android:id="@+id/enrolled_portrait"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="right"
-                        android:layout_marginLeft="@dimen/px14"
-                        android:layout_marginRight="@dimen/px22"
-                        android:layout_weight="1">
-                </LinearLayout>
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_entrance"/>
-
-            </LinearLayout>
-
-            <include layout="@layout/layout_horizontal_line"/>
+                    style="@style/LiveLessonDetailText"/>
         </LinearLayout>
 
         <!--教学形式-->
@@ -140,35 +164,26 @@
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonTitle"
+                    style="@style/LiveLessonDetailTitle"
                     android:text="@string/teach_form"/>
 
             <TextView
                     android:id="@+id/teach_form"
-                    style="@style/LiveLessonText"/>
+                    style="@style/LiveLessonDetailText"/>
         </LinearLayout>
-
-        <include layout="@layout/layout_horizontal_line"/>
 
         <!--收费-->
         <LinearLayout
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonTitle"
+                    style="@style/LiveLessonDetailTitle"
                     android:text="@string/charge"/>
 
             <TextView
                     android:id="@+id/lesson_fee"
-                    style="@style/LiveLessonText"/>
+                    style="@style/LiveLessonDetailText"/>
         </LinearLayout>
-
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <View
-                android:layout_marginTop="@dimen/px32"
-                style="@style/DividerHorizontal"/>
 
 
         <!--上课时间-->
@@ -176,63 +191,96 @@
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonTitle"
+                    style="@style/LiveLessonDetailTitle"
                     android:text="@string/lesson_start_time"/>
 
             <TextView
                     android:id="@+id/lesson_start_time"
-                    style="@style/LiveLessonText"/>
+                    style="@style/LiveLessonDetailText"/>
         </LinearLayout>
-
-        <include layout="@layout/layout_horizontal_line"/>
 
         <!--上课时长-->
         <LinearLayout
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonTitle"
+                    style="@style/LiveLessonDetailTitle"
                     android:text="@string/lesson_duration"/>
 
             <TextView
                     android:id="@+id/lesson_duration"
-                    style="@style/LiveLessonText"
-                    android:layout_width="wrap_content"
-                    android:minWidth="@dimen/px60"/>
+                    style="@style/LiveLessonDetailText"/>
 
-            <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/minute"
-                    android:layout_marginLeft="@dimen/px12"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_26px"/>
         </LinearLayout>
 
         <View
                 style="@style/DividerHorizontal"/>
+
+        <!--选填信息-->
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px32"/>
+
+        <TextView
+                android:text="@string/optional_info"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px32"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_light_gray"
+                android:textSize="@dimen/font_30px"
+                android:background="@color/white"/>
+
+        <include layout="@layout/layout_horizontal_line"/>
+
+        <!--直播课封面-->
+        <LinearLayout
+                android:id="@+id/lesson_cover_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px32"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+            <TextView
+                    style="@style/LiveLessonDetailTitle"
+                    android:text="@string/live_lesson_cover"/>
+
+            <ImageView
+                    android:id="@+id/lesson_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"/>
+
+            <View
+                    style="@style/DividerHorizontal"
+                    android:layout_marginTop="@dimen/px40"/>
+
+        </LinearLayout>
+
 
         <!--直播课简介-->
         <LinearLayout
                 android:id="@+id/lesson_brief_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px32"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px32"
+                android:background="@color/white"
                 android:orientation="vertical">
-
-            <View
-                    style="@style/DividerHorizontal"/>
 
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px32"
-                    android:background="@color/white"
                     android:orientation="vertical">
 
                 <TextView
-                        style="@style/LiveLessonTitle"
+                        style="@style/LiveLessonDetailTitle"
                         android:layout_width="match_parent"
                         android:text="@string/live_lesson_brief"/>
 
@@ -250,10 +298,13 @@
                         android:paddingBottom="@dimen/px16"
                         android:text="@string/unfold_view_all"
                         android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_22px"/>
+                        android:textSize="@dimen/font_22px"
+                        android:maxLines="3"/>
 
             </LinearLayout>
 
+            <View
+                    style="@style/DividerHorizontal"/>
         </LinearLayout>
 
         <!--老师简介-->
@@ -261,22 +312,18 @@
                 android:id="@+id/teacher_intro_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px32"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px32"
+                android:background="@color/white"
                 android:orientation="vertical">
-
-            <View
-                    style="@style/DividerHorizontal"/>
 
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px32"
-                    android:background="@color/white"
                     android:orientation="vertical">
 
                 <TextView
-                        style="@style/LiveLessonTitle"
+                        style="@style/LiveLessonDetailTitle"
                         android:layout_width="match_parent"
                         android:text="@string/teacher_introduction"/>
 
@@ -298,6 +345,9 @@
 
             </LinearLayout>
 
+            <View
+                    style="@style/DividerHorizontal"/>
+
         </LinearLayout>
 
         <!--促销-->
@@ -305,65 +355,41 @@
                 android:id="@+id/sale_promotion_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px32"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px32"
+                android:background="@color/white"
                 android:orientation="vertical">
 
-            <View
-                    style="@style/DividerHorizontal"/>
-
             <TextView
-                    style="@style/LiveLessonTitle"
+                    android:id="@+id/sale_promotion_title"
+                    style="@style/LiveLessonDetailTitle"
                     android:layout_width="match_parent"
-                    android:background="@color/white"
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px32"
                     android:text="@string/sale_promotion"/>
-
-            <View
-                    style="@style/DividerHorizontal"/>
             <!--促销1-->
             <LinearLayout
                     android:id="@+id/enroll_before_promotion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px32"
-                    android:background="@color/white">
+                    android:orientation="horizontal">
 
-                <LinearLayout
-                        android:layout_width="match_parent"
+                <TextView
+                        android:id="@+id/enroll_before_title"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:textSize="@dimen/font_30px"
+                        android:textColor="@color/font_light_gray"/>
 
-                    <TextView
-                            style="@style/LiveLessonTextView"
-                            android:text="@string/promotion_enroll_b"/>
+                <TextView
+                        android:id="@+id/enroll_before"
+                        android:layout_marginLeft="@dimen/px10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/px16"
+                        android:paddingBottom="@dimen/px16"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_26px"
+                        android:text="@string/enroll_before_promotion"/>
 
-                    <TextView
-                            android:id="@+id/enroll_before"
-                            style="@style/LiveLessonTextView"/>
-
-                    <TextView
-                            style="@style/LiveLessonTextView"
-                            android:layout_marginLeft="@dimen/px10"
-                            android:text="@string/promotion_enroll_m"/>
-
-                    <TextView
-                            android:id="@+id/enroll_before_discount"
-                            style="@style/LiveLessonTextView"/>
-
-                    <TextView
-                            style="@style/LiveLessonTextView"
-                            android:text="@string/discount"
-                            android:layout_marginLeft="@dimen/px10"/>
-
-                </LinearLayout>
-
-                <View
-                        android:id="@+id/sale_promotion_one_line"
-                        style="@style/DividerHorizontal"/>
             </LinearLayout>
 
             <!--促销2-->
@@ -371,32 +397,26 @@
                     android:id="@+id/lesson_before_promotion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px32"
-                    android:gravity="center_vertical"
-                    android:background="@color/white">
+                    android:orientation="horizontal">
 
                 <TextView
-                        style="@style/LiveLessonTextView"
-                        android:text="@string/promotion_attend_lesson_b"/>
+                        android:id="@+id/lesson_before_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_30px"
+                        android:textColor="@color/font_light_gray"/>
 
                 <TextView
                         android:id="@+id/lesson_before"
-                        style="@style/LiveLessonTextView"/>
-
-                <TextView
-                        style="@style/LiveLessonTextView"
                         android:layout_marginLeft="@dimen/px10"
-                        android:text="@string/promotion_attend_lesson_m"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_26px"
+                        android:paddingTop="@dimen/px16"
+                        android:paddingBottom="@dimen/px16"
+                        android:text="@string/lesson_before_promotion"/>
 
-                <TextView
-                        android:id="@+id/lesson_before_discount"
-                        style="@style/LiveLessonTextView"/>
-
-                <TextView
-                        style="@style/LiveLessonTextView"
-                        android:text="@string/discount"
-                        android:layout_marginLeft="@dimen/px10"/>
             </LinearLayout>
 
             <View
@@ -409,31 +429,23 @@
                 android:id="@+id/audit_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px32"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px32"
+                android:background="@color/white"
                 android:orientation="vertical">
-
-            <View
-                    style="@style/DividerHorizontal"/>
-
-            <TextView
-                    style="@style/LiveLessonTitle"
-                    android:layout_width="match_parent"
-                    android:background="@color/white"
-                    android:paddingLeft="@dimen/px32"
-                    android:paddingRight="@dimen/px32"
-                    android:text="@string/audit"/>
-
-            <View
-                    style="@style/DividerHorizontal"/>
 
             <!--旁听人-->
             <LinearLayout
                     android:id="@+id/audit_person_layout"
-                    style="@style/LiveLessonItem">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                 <TextView
-                        android:paddingLeft="@dimen/px40"
-                        style="@style/LiveLessonTitle"
+                        style="@style/LiveLessonDetailTitle"
                         android:text="@string/audit_people"/>
 
                 <LinearLayout
@@ -447,34 +459,27 @@
                 </LinearLayout>
 
                 <ImageView
+                        android:id="@+id/audit_person_select_enter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_entrance"/>
             </LinearLayout>
 
-            <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white">
-
-                <View
-                        style="@style/DividerHorizontal"
-                        android:layout_marginLeft="@dimen/px72"/>
-            </FrameLayout>
+            <View
+                    style="@style/DividerHorizontal"/>
 
             <!--旁听对学生可见-->
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:paddingLeft="@dimen/px32"
                     android:paddingTop="@dimen/px10"
                     android:paddingBottom="@dimen/px10"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                 <TextView
-                        style="@style/LiveLessonTitle"
-                        android:paddingLeft="@dimen/px40"
+                        style="@style/LiveLessonDetailTitle"
                         android:layout_alignParentLeft="true"
                         android:layout_centerInParent="true"
                         android:text="@string/audit_visible_to_stu"/>
@@ -485,7 +490,6 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
-                        android:layout_marginRight="@dimen/px32"
                         android:textOff=""
                         android:textOn=""/>
             </RelativeLayout>

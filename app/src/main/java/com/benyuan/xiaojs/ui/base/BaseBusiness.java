@@ -22,7 +22,11 @@ import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 
+import java.text.DecimalFormat;
+
 public class BaseBusiness {
+    public final static DecimalFormat mPriceDecimalFormat = new DecimalFormat("0.00");
+    public final static DecimalFormat mDiscountDecimalFormat = new DecimalFormat("0.0");
 
     public static String getSession() {
         if (XiaojsConfig.mLoginUser == null) {
@@ -48,4 +52,34 @@ public class BaseBusiness {
 
         return Ctl.TeachingMode.ONE_2_MANY;
     }
+
+    public static String getTeachingMode(@NonNull Context context, @NonNull int teachingMode) {
+        String str = context.getString(R.string.teach_form_one2many);
+        switch (teachingMode) {
+            case Ctl.TeachingMode.ONE_2_MANY:
+                str = context.getString(R.string.teach_form_one2many);
+                break;
+            case Ctl.TeachingMode.ONE_2_ONE:
+                str = context.getString(R.string.teach_form_one2one);
+                break;
+            case Ctl.TeachingMode.LECTURE:
+                str = context.getString(R.string.teach_form_lecture);
+                break;
+        }
+
+        return str;
+    }
+
+    public static String formatPrice(float price) {
+        return mPriceDecimalFormat.format(price);
+    }
+
+    public static String formatPrice(double price) {
+        return mPriceDecimalFormat.format(price);
+    }
+
+    public static String formatDiscount(float price) {
+        return mDiscountDecimalFormat.format(price);
+    }
+
 }
