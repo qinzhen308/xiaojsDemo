@@ -2,6 +2,8 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Date;
+
 /**
  * Created by maxiaobao on 2016/10/31.
  */
@@ -32,6 +34,14 @@ public class Account {
 
         private String name;
 
+        private String avatar;
+
+        private Date birthday;
+
+
+
+
+
         public String getTitle() {
             return title;
         }
@@ -54,6 +64,22 @@ public class Account {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
+        }
+
+        public Date getBirthday() {
+            return birthday;
+        }
+
+        public void setBirthday(Date birthday) {
+            this.birthday = birthday;
         }
     }
 }

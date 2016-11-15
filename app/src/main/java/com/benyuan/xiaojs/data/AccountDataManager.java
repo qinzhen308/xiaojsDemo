@@ -9,6 +9,7 @@ import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.AccountRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.HomeData;
@@ -97,4 +98,77 @@ public class AccountDataManager {
         AccountRequest accountRequest = new AccountRequest();
         accountRequest.claimCompetency(context,sessionID,competencyParams,callback);
     }
+
+
+    public static void requestEditProfile(Context context,
+                            @NonNull String sessionID,
+                            @NonNull Account.Basic basic,
+                            @NonNull APIServiceCallback callback) {
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the  request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.editProfilePrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+        AccountRequest accountRequest = new AccountRequest();
+        accountRequest.editProfile(context,sessionID,basic,callback);
+
+    }
+
+    public static void requestProfile(Context context,
+                                  @NonNull String sessionID,
+                                  @NonNull APIServiceCallback<Account> callback) {
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the  request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.getProfilePrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+        AccountRequest accountRequest = new AccountRequest();
+        accountRequest.getProfile(context,sessionID,callback);
+
+    }
+
+
+
+
+    public static void requestAvatorUpToken(Context context,APIServiceCallback<String> callback) {
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the claim competency request");
+            }
+            return;
+        }
+
+        AccountRequest accountRequest = new AccountRequest();
+        accountRequest.getAvatarUpToken(context,callback);
+    }
+
+
 }

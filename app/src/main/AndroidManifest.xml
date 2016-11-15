@@ -54,7 +54,6 @@
 
         </activity>
         <activity android:name=".ui.course.LessonHomeActivity">
-
         </activity>
         <activity android:name=".ui.TestAPIActivity">
         </activity>

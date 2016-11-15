@@ -66,4 +66,7 @@ dependencies {
 
     //flex layout
     compile 'com.google.android:flexbox:0.2.3'
+
+    //qiniu
+    compile 'com.qiniu:qiniu-android-sdk:7.2.+'
 }

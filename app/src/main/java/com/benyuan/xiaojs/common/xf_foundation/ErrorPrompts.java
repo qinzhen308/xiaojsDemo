@@ -8,6 +8,32 @@ import android.text.TextUtils;
 
 public class ErrorPrompts {
 
+
+    public static String getProfilePrompt(String errorCode) {
+
+        String errorMessage = "获取个人资料失败";
+
+
+        return errorMessage;
+    }
+
+
+    public static String editProfilePrompt(String errorCode) {
+
+        String errorMessage = "编辑个人资料失败";
+
+
+        return errorMessage;
+    }
+
+    public static String getAvatarUpTokenPrompt(String errorCode) {
+
+        String errorMessage = "获取上传头像token失败";
+
+
+        return errorMessage;
+    }
+
     public static String confirmLessonEnrollmentPrompt(String errorCode) {
 
         String errorMessage = "报名失败";

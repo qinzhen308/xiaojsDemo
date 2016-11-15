@@ -1,6 +1,7 @@
 package com.benyuan.xiaojs.data.api.service;
 
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
@@ -65,6 +66,20 @@ public interface XiaojsService {
     @GET("/v1/accounts/home")
     Call<HomeData> getHomeData(@Header("SessionID") String sessionID);
 
+    //Edit Profile
+    @PATCH("/v1/accounts/profile")
+    Call<Empty> editProfile(@Header("SessionID") String sessionID,
+                            @Body Account.Basic accountBasic);
+
+    //Get Profile
+    @GET("/v1/accounts/profile")
+    Call<Account> getProfile(@Header("SessionID") String sessionID);
+
+    //Get upToken
+    @GET("/v1/accounts/up_avatar_token")
+    Call<String> getAvatarUpToken();
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //CTL
@@ -108,7 +123,6 @@ public interface XiaojsService {
                                         @Path("lesson") String lesson);
 
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Categories
@@ -127,7 +141,7 @@ public interface XiaojsService {
     //Get Notifications Overview
     @GET("/v1/platform/notifications/overview/{pagination}")
     Call<GNOResponse> getNotificationsOverview(@Header("SessionID") String sessionID,
-                                              @Path("pagination") String pagination);
+                                               @Path("pagination") String pagination);
 
     //Get Notifications
     @GET("/v1/platform/notifications/{criteria}/{pagination}")
@@ -144,8 +158,7 @@ public interface XiaojsService {
     //Ignore Notifications
     @PATCH("/v1/platform/notifications/{criteria}")
     Call<IgnoreNResponse> ignoreNotifications(@Header("SessionID") String sessionID,
-                                             @Path("criteria") String criteria);
-
+                                              @Path("criteria") String criteria);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

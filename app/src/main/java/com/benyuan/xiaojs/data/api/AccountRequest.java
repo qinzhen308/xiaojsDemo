@@ -9,8 +9,10 @@ import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
+import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
+import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.HomeData;
 import com.orhanobut.logger.Logger;
 
@@ -159,5 +161,208 @@ public class AccountRequest extends ServiceRequest {
             }
         });
 
+    }
+
+    public void editProfile(Context context,
+                            @NonNull String sessionID,
+                            @NonNull Account.Basic basic,
+                            @NonNull APIServiceCallback callback) {
+
+
+        final WeakReference<APIServiceCallback> callbackReference =
+                new WeakReference<>(callback);
+
+        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        xiaojsService.editProfile(sessionID,basic).enqueue(new Callback<Empty>() {
+            @Override
+            public void onResponse(Call<Empty> call, Response<Empty> response) {
+
+                int responseCode = response.code();
+                if (responseCode == SUCCESS_CODE) {
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
+
+                } else {
+
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.editProfilePrompt(errorCode);
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Empty> call, Throwable t) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the editProfile request has occur exception");
+                }
+
+                String errorMsg = t.getMessage();
+                // FIXME: 2016/11/1
+                if (errorMsg.contains(EMPTY_EXCEPTION)) {
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
+
+                } else {
+
+                    String errorCode = getExceptionErrorCode();
+                    String errorMessage = ErrorPrompts.editProfilePrompt(errorCode);
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
+                }
+            }
+        });
+
+
+    }
+
+    public void getProfile(Context context,
+                           @NonNull String sessionID,
+                           @NonNull APIServiceCallback<Account> callback) {
+        final WeakReference<APIServiceCallback<Account>> callbackReference =
+                new WeakReference<>(callback);
+
+        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        xiaojsService.getProfile(sessionID).enqueue(new Callback<Account>() {
+            @Override
+            public void onResponse(Call<Account> call, Response<Account> response) {
+                int responseCode = response.code();
+
+                if (responseCode == SUCCESS_CODE) {
+
+                    Account account = response.body();
+
+                    APIServiceCallback<Account> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(account);
+                    }
+
+                } else {
+
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.getProfilePrompt(errorCode);
+
+                    APIServiceCallback<Account> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Account> call, Throwable t) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the getProfile has occur exception");
+                }
+
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.getProfilePrompt(errorCode);
+
+                APIServiceCallback<Account> callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
+            }
+        });
+
+
+    }
+
+
+    public void getAvatarUpToken(Context context,APIServiceCallback<String> callback) {
+
+        final WeakReference<APIServiceCallback<String>> callbackReference =
+                new WeakReference<>(callback);
+
+        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        xiaojsService.getAvatarUpToken().enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                int responseCode = response.code();
+
+                if (responseCode == SUCCESS_CODE) {
+
+                    String token = response.body();
+
+                    APIServiceCallback<String> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(token);
+                    }
+
+                } else {
+
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(errorCode);
+
+                    APIServiceCallback<String> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the getAvatarUpToken has occur exception");
+                }
+
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(errorCode);
+
+                APIServiceCallback<String> callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
+            }
+        });
     }
 }

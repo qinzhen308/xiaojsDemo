@@ -18,6 +18,7 @@ import com.benyuan.xiaojs.data.RegisterDataManager;
 import com.benyuan.xiaojs.data.api.ApiManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
+import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -44,7 +45,7 @@ public class TestAPIActivity extends Activity {
     private int vcode;
     private long mob = 13812345687l;
     private String subject = "5820a10e101db0af4bcf2fd9";
-    private String sessionid = "gm0yoitpiIf3uP3rbMP6wOJYH4ZaeKbC";
+    private String sessionid = "OIVW8TVDqy0Zr7-1tw9-C-9Ljf6bRW5U";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +77,63 @@ public class TestAPIActivity extends Activity {
                 //testGetLessons(this);
                 //testPutLessonOnShelves(this);
                 //testJsonFormat();
-                testGetSubject(this);
+                //testGetSubject(this);
+                //testGetUpToken(this);
+                //editProfile(this);
+                getProfile(this);
                 break;
             }
 
         }
+    }
+
+    private void getProfile(Context context) {
+
+        AccountDataManager.requestProfile(context, sessionid, new APIServiceCallback<Account>() {
+            @Override
+            public void onSuccess(Account object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+    }
+
+    private void editProfile(Context context) {
+        Account.Basic b = new Account.Basic();
+        b.setBirthday(new Date(System.currentTimeMillis()));
+        b.setSex(false);
+        b.setTitle("天下唯我独尊");
+
+        AccountDataManager.requestEditProfile(context, sessionid, b, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+    }
+
+    private void testGetUpToken(Context context) {
+
+        AccountDataManager.requestAvatorUpToken(context, new APIServiceCallback<String>() {
+            @Override
+            public void onSuccess(String object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 
     //getSubject demo
