@@ -100,4 +100,8 @@ public class LimitInputBox extends FrameLayout {
         total = limit;
         setFilter();
     }
+
+    public EditText getInput(){
+        return mInput;
+    }
 }

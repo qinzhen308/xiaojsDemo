@@ -14,12 +14,14 @@ package com.benyuan.xiaojs.ui.course;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
@@ -27,7 +29,7 @@ import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MyCourseSearchActivity extends BaseActivity {
+public class LessonSearchActivity extends BaseActivity {
     @BindView(R.id.my_course_search)
     EditText mInput;
     @BindView(R.id.my_course_search_ok)
@@ -35,12 +37,23 @@ public class MyCourseSearchActivity extends BaseActivity {
     @BindView(R.id.my_course_search_list)
     AutoPullToRefreshListView mList;
 
-    private MyCourseAdapter adapter;
+    private AbsSwipeAdapter adapter;
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_my_course_search);
         needHeader(false);
-        adapter = new MyCourseAdapter(this,mList,true);
+        Intent intent = getIntent();
+        boolean isTeacher = false;
+        if (intent != null){
+            isTeacher = intent.getBooleanExtra(CourseConstant.KEY_IS_TEACHER,false);
+        }
+        if (isTeacher){
+            adapter = new TeachLessonAdapter(this,mList);
+        }else {
+            adapter = new EnrollLessonAdapter(this,mList);
+        }
+        adapter.setRefreshOnLoad(false);
+
         mList.setAdapter(adapter);
     }
 
@@ -61,8 +74,12 @@ public class MyCourseSearchActivity extends BaseActivity {
     private void search(){
         String key = mInput.getText().toString();
         if (!TextUtils.isEmpty(key) && adapter != null){
-            Criteria criteria = MyCourseBusiness.getSearch(key);
-            adapter.request(criteria);
+            Criteria criteria = LessonBusiness.getSearch(key);
+            if (adapter instanceof TeachLessonAdapter){
+                ((TeachLessonAdapter)adapter).request(criteria);
+            }else if (adapter instanceof EnrollLessonAdapter){
+                ((EnrollLessonAdapter)adapter).request(criteria);
+            }
         }
     }
 }

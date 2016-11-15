@@ -26,7 +26,7 @@ import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.course.LessonCreationActivity;
 import com.benyuan.xiaojs.ui.course.LiveLessonDetailActivity;
-import com.benyuan.xiaojs.ui.course.MyCourseActivity;
+import com.benyuan.xiaojs.ui.course.MyLessonActivity;
 import com.benyuan.xiaojs.ui.mine.ProfileActivity;
 import com.benyuan.xiaojs.ui.mine.SettingsActivity;
 import com.benyuan.xiaojs.ui.mine.TeachingAbilityActivity;
@@ -72,7 +72,7 @@ public class MineFragment extends BaseFragment {
             case R.id.my_page:
                 break;
             case R.id.my_course:
-                startActivity(new Intent(mContext, MyCourseActivity.class));
+                startActivity(new Intent(mContext, MyLessonActivity.class));
                 break;
             case R.id.my_course_schedule:
                 startActivity(new Intent(mContext, LessonCreationActivity.class));
