@@ -38,6 +38,7 @@ public interface CourseConstant {
     public final static String KEY_LESSON_OPTIONAL_INFO = "key_lesson_optional_info";
     public final static String KEY_IS_TEACHER = "key_is_teacher";
     public final static String KEY_LESSON_BEAN = "lesson_bean";
+    public final static String KEY_LESSON_ID = "lesson_id";
 
     public final static int CODE_EDIT_LESSON = 1;
     public final static int CODE_LESSON_AGAIN = 2;

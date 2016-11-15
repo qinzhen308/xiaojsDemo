@@ -1,9 +1,12 @@
 package com.benyuan.xiaojs.ui.course;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.model.TeachLesson;
 import com.benyuan.xiaojs.ui.base.BaseTopTabActivity;
 
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import butterknife.OnClick;
  * ======================================================================================== */
 
 public class LessonCreationActivity extends BaseTopTabActivity {
+
     @Override
     protected void initView() {
         setMiddleTitle(R.string.lesson_creation);
@@ -36,6 +40,10 @@ public class LessonCreationActivity extends BaseTopTabActivity {
         Fragment privateLesson = new PrivateLessonCreationFragment();
         fragments.add(liveLesson);
         fragments.add(privateLesson);
+
+        Bundle data = new Bundle();
+        data.putString(CourseConstant.KEY_LESSON_ID, getLessonId());
+        liveLesson.setArguments(data);
 
         addViews(new int[] {R.string.live_lesson, R.string.private_lesson}, fragments);
     }
@@ -49,5 +57,14 @@ public class LessonCreationActivity extends BaseTopTabActivity {
             default:
                 break;
         }
+    }
+
+    private String getLessonId () {
+        Object obj = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
+        if (obj instanceof TeachLesson) {
+            return ((TeachLesson)obj).getId();
+        }
+
+        return null;
     }
 }
