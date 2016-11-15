@@ -17,12 +17,17 @@ package com.benyuan.xiaojs.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.model.Account;
+import com.benyuan.xiaojs.model.User;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.course.LessonCreationActivity;
 import com.benyuan.xiaojs.ui.course.LiveLessonDetailActivity;
@@ -32,6 +37,11 @@ import com.benyuan.xiaojs.ui.mine.SettingsActivity;
 import com.benyuan.xiaojs.ui.mine.TeachingAbilityActivity;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.util.FastBlur;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -49,6 +59,10 @@ public class MineFragment extends BaseFragment {
     LinearLayout mBaseInfo;
     @BindView(R.id.authentication_info)
     LinearLayout mAuthenticationInfo;
+    @BindView(R.id.user_name)
+    TextView mUserName;
+    @BindView(R.id.user_title)
+    TextView mUserTitle;
 
     @Override
     protected View getContentView() {
@@ -57,8 +71,8 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        setPortrait();
-        setNameAuth();
+        setPersonBaseInfo();
+
     }
 
     @OnClick({R.id.settings, R.id.edit_profile, R.id.my_course, R.id.my_course_schedule, R.id.my_ask_questions,
@@ -101,23 +115,78 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    private void setPortrait() {
-        Bitmap portrait = BitmapFactory.decodeResource(getResources(), R.drawable.default_portrait);
-        mPortraitView.setImageBitmap(portrait);
-        setupBlurPortraitView(portrait);
+    private void setPersonBaseInfo() {
+        User u = XiaojsConfig.mLoginUser;
+        Account ac = u.getAccount();
+        //set avatar
+        setAvatar();
+
+        mUserName.setText(u.getName());
+
+        //set title
+        if (ac != null && ac.getBasic() != null) {
+            String title = ac.getBasic().getTitle();
+            if (TextUtils.isEmpty(title)) {
+                mUserTitle.setText(R.string.my_profile_txt);
+            } else {
+                mUserTitle.setText(ac.getBasic().getTitle());
+            }
+        } else {
+            mUserTitle.setText(R.string.my_profile_txt);
+        }
+
+        mNameAuthView.setImageResource(R.drawable.ic_name_authed);
+    }
+
+    private void setAvatar() {
+        mPortraitView.setBorderColor(getResources().getColor(R.color.round_img_border));
+        mPortraitView.setBorderWidth(R.dimen.px5);
+        Account ac = XiaojsConfig.mLoginUser.getAccount();
+        /*if (ac != null) {
+            //set avatar
+            if (ac.getBasic() != null) {
+                Glide.with(mContext).load(ac.getBasic().getAvatar())
+                        .error(R.drawable.default_avatar)
+                        .into(new GlideDrawableImageViewTarget(mPortraitView) {
+                            @Override
+                            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                                super.onResourceReady(resource, animation);
+                                if (resource instanceof GlideBitmapDrawable) {
+                                    Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
+                                    setupBlurPortraitView(bmp);
+                                }
+                            }
+                        });
+            }
+        } else {
+            //set default
+            mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        }*/
+
+        //test
+        Glide.with(mContext).load("http://cdn.duitang.com/uploads/item/201405/27/20140527165332_JJnWu.thumb.224_0.jpeg")
+                .error(R.drawable.default_avatar)
+                .into(new GlideDrawableImageViewTarget(mPortraitView) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                        super.onResourceReady(resource, animation);
+                        if (resource instanceof GlideBitmapDrawable) {
+                            Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
+                            setupBlurPortraitView(bmp);
+                        }
+                    }
+
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        super.onLoadFailed(e, errorDrawable);
+                        mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+                    }
+                });
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(portrait,
-                portrait.getWidth() / 3,
-                portrait.getHeight() / 3,
-                false);
-        Bitmap blurBitmap = FastBlur.doBlur(scaledBitmap, 10, true);
+        Bitmap blurBitmap = FastBlur.smartBlur(portrait, 2, true);
         mBlurPortraitView.setImageBitmap(blurBitmap);
-    }
-
-    private void setNameAuth() {
-        mNameAuthView.setImageResource(R.drawable.ic_name_authed);
     }
 
     private void editProfile() {

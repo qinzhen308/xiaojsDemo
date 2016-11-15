@@ -11,29 +11,32 @@
     <color name="white">#ffffff</color>
     <color name="red">#dc2314</color>
     <color name="def">#000000</color>
+
     <!--app base color-->
     <color name="main_orange">#ff9833</color>
     <color name="main_blue">#0076ff</color>
     <color name="main_orange_pressed">#d27d2b</color>
     <color name="main_orange_disabled">#ffcc9b</color>
     <color name="main_blue_pressed">#0088FF</color>
+    <color name="item_pressed">#f6f6f6</color>
+    <color name="stroke_common">#e9e9e9</color>
+    <color name="round_img_border">#88ffffff</color>
     <!--disable color, eg btn-->
     <color name="disable_btn">#999999</color>
     <!--horizontal divide line-->
     <color name="hor_divide_line">#d1d5db</color>
     <color name="hor_divide_line2">#d1d5db</color>
     <color name="hor_divide_line3">#d1d5db</color>
-    <color name="stroke_common">#e9e9e9</color>
     <!--vertical divide line-->
     <color name="ver_divide_line">#d1d5db</color>
     <color name="link_hover">#0076ff</color>
+    <!--font color-->
     <color name="font_dark_gray">#8b8b8b</color>
     <color name="font_gray">#bababa</color>
     <color name="font_light_gray">#bfbfbf</color>
     <color name="font_black">#333333</color>
     <color name="font_blue">#0076ff</color>
     <color name="font_orange">#ff9833</color>
-    <color name="item_pressed">#f6f6f6</color>
     <color name="font_red">#cc0000</color>
 
     <!-- 二维码 -->

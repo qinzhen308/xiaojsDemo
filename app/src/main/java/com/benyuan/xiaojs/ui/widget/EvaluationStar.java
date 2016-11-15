@@ -105,7 +105,7 @@ public class EvaluationStar extends LinearLayout {
                 switch (grading) {
                     case HALF:
                         setStarStyle(0, STAR_HALF);
-                    break;
+                        break;
                     case ONE:
                         setStarStyle(0, STAR_FULL);
                         break;

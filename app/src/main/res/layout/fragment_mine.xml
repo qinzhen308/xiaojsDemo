@@ -99,15 +99,15 @@
                 </RelativeLayout>
 
                 <TextView
-                        android:id="@+id/user_profile"
+                        android:id="@+id/user_title"
                         android:layout_marginTop="@dimen/px40"
                         android:layout_width="wrap_content"
                         android:paddingLeft="@dimen/px60"
                         android:paddingRight="@dimen/px88"
                         android:text="@string/my_profile_txt"
-                        android:layout_marginBottom="@dimen/px32"
+                        android:layout_marginBottom="@dimen/px60"
                         android:textSize="@dimen/font_22px"
-                        android:textColor="@color/font_gray"
+                        android:textColor="@color/font_light_gray"
                         android:layout_height="wrap_content"/>
             </LinearLayout>
 
