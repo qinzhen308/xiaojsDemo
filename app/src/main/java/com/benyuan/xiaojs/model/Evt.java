@@ -2,13 +2,15 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by maxiaobao on 2016/11/8.
  */
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Evt {
+public class Evt implements Serializable {
 
     private String data;
     private String callback;

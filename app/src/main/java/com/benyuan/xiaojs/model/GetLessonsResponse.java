@@ -14,7 +14,7 @@ public class GetLessonsResponse {
     private int total;
     private int page;
     private int numOfPages;
-    private ArrayList<ObjectsOfPage> objectsOfPage;
+    private ArrayList<TeachLesson> objectsOfPage;
 
 
     public int getTotal() {
@@ -42,11 +42,11 @@ public class GetLessonsResponse {
     }
 
 
-    public ArrayList<ObjectsOfPage> getObjectsOfPage() {
+    public ArrayList<TeachLesson> getObjectsOfPage() {
         return objectsOfPage;
     }
 
-    public void setObjectsOfPage(ArrayList<ObjectsOfPage> objectsOfPage) {
+    public void setObjectsOfPage(ArrayList<TeachLesson> objectsOfPage) {
         this.objectsOfPage = objectsOfPage;
     }
 }

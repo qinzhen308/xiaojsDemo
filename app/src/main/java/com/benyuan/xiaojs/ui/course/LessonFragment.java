@@ -23,13 +23,14 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import butterknife.BindView;
 
-public class MyCourseFragment extends BaseFragment {
+public class LessonFragment extends BaseFragment {
     @BindView(R.id.listview)
     AutoPullToRefreshListView mListView;
     TextView mSearch;
@@ -41,7 +42,7 @@ public class MyCourseFragment extends BaseFragment {
     @BindView(R.id.course_filter)
     TextView mLocalFilter;
 
-    MyCourseAdapter adapter;
+    AbsSwipeAdapter adapter;
     private int lastItemPosition;
     private View mHeader;
     private CourseFilterDialog mDialog;
@@ -62,7 +63,12 @@ public class MyCourseFragment extends BaseFragment {
         if (b != null){
             isTeacher = b.getBoolean(CourseConstant.KEY_IS_TEACHER);
         }
-        adapter = new MyCourseAdapter(mContext,mListView,isTeacher,this);
+        if (isTeacher){
+            adapter = new TeachLessonAdapter(mContext,mListView,this);
+        }else {
+            adapter = new EnrollLessonAdapter(mContext,mListView,this);
+        }
+
         mListView.setAdapter(adapter);
         mHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_my_course_search,null);
         mSearch = (TextView) mHeader.findViewById(R.id.my_course_search);
@@ -141,9 +147,9 @@ public class MyCourseFragment extends BaseFragment {
             mDialog.setOnOkListener(new CourseFilterDialog.OnOkListener() {
                 @Override
                 public void onOk(int timePosition, int statePosition) {
-                    MyCourseFragment.this.timePosition = timePosition;
-                    MyCourseFragment.this.statePosition = statePosition;
-                    Criteria criteria  = MyCourseBusiness.getFilter(timePosition,statePosition,isTeacher);
+                    LessonFragment.this.timePosition = timePosition;
+                    LessonFragment.this.statePosition = statePosition;
+                    Criteria criteria  = LessonBusiness.getFilter(timePosition,statePosition,isTeacher);
                     request(criteria);
                 }
             });
@@ -154,13 +160,18 @@ public class MyCourseFragment extends BaseFragment {
     }
 
     private void onSearch(){
-        Intent intent = new Intent(mContext,MyCourseSearchActivity.class);
+        Intent intent = new Intent(mContext,LessonSearchActivity.class);
         mContext.startActivity(intent);
     }
 
     public void request(Criteria criteria){
         if (adapter != null){
-            adapter.request(criteria);
+            if (adapter instanceof TeachLessonAdapter){
+                ((TeachLessonAdapter)adapter).request(criteria);
+            }else if (adapter instanceof EnrollLessonAdapter){
+                ((EnrollLessonAdapter)adapter).request(criteria);
+            }
+
         }
     }
 

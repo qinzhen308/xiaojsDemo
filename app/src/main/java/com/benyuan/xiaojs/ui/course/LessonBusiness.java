@@ -21,7 +21,7 @@ import com.benyuan.xiaojs.util.TimeUtil;
 
 import java.util.Date;
 
-public class MyCourseBusiness {
+public class LessonBusiness {
 
     public static Criteria getFilter(int timePosition,int statePosition,boolean isTeacher){
         Criteria criteria = new Criteria();

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@drawable/common_white_bg_corner"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+            android:id="@+id/common_dialog_title"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_36px"
+            android:layout_marginTop="@dimen/px60"
+            android:textStyle="bold"
+            android:text="title"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:id="@+id/common_dialog_desc"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_28px"
+            android:text="desc"
+            android:layout_marginTop="@dimen/px30"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_marginTop="@dimen/px60"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <Button
+                android:id="@+id/left_btn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/common_white_bottomleft_cornor_selector"
+                android:text="@string/cancel"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/font_blue"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:layout_height="wrap_content"/>
+
+        <View style="@style/DividerVertical"/>
+
+        <Button
+                android:id="@+id/right_btn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/common_white_bottomright_cornor_selector"
+                android:text="@string/ok"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/font_blue"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -29,7 +29,7 @@ import java.util.List;
 
 import butterknife.OnClick;
 
-public class MyCourseActivity extends BaseTopTabActivity {
+public class MyLessonActivity extends BaseTopTabActivity {
 
     @Override
     protected void initView() {
@@ -43,10 +43,10 @@ public class MyCourseActivity extends BaseTopTabActivity {
         b1.putBoolean(CourseConstant.KEY_IS_TEACHER,false);
         Bundle b2 = new Bundle();
         b2.putBoolean(CourseConstant.KEY_IS_TEACHER,true);
-        Fragment f1 = new MyCourseFragment();
+        Fragment f1 = new LessonFragment();
         f1.setArguments(b1);
         fs.add(f1);
-        Fragment f2 = new MyCourseFragment();
+        Fragment f2 = new LessonFragment();
         f2.setArguments(b2);
         fs.add(f2);
         List<String> ss = new ArrayList<>();
