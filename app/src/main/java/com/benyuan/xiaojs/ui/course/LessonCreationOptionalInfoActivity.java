@@ -64,7 +64,8 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     private int mPricingType;
     private long mLessonStartTime;
     private int mLimit;
-    private boolean isFree = true;
+    private boolean mIsFree = true;
+    private boolean mIsMandatory = true;
     private int mBlackFont;
     private int mLightGrayFont;
 
@@ -88,10 +89,11 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
             try {
                 mPrice = mLesson.getFee().getCharge().floatValue();
                 mPricingType = mLesson.getFee().getType();
-                isFree = mLesson.getFee().isFree();
+                mIsFree = mLesson.getFee().isFree();
                 mLessonStartTime = mLesson.getSchedule().getStart().getTime();
                 mLimit = mLesson.getEnroll().getMax();
-                if (!isFree) {
+                mIsMandatory = mLesson.getEnroll().isMandatory();
+                if (mIsFree || !mIsMandatory) {
                     findViewById(R.id.sale_promotion_divide_line).setVisibility(View.GONE);
                     findViewById(R.id.sale_promotion_layout).setVisibility(View.GONE);
                 }
