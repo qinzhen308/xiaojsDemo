@@ -64,7 +64,7 @@ public class RegisterActivity extends BaseActivity {
     @BindView(R.id.verify_code)
     EditText mRegVerifyEdit;
     @BindView(R.id.get_verify_code)
-    TextView mGetRegVerifyEdit;
+    TextView mGetRegVerifyTv;
     @BindView(R.id.reg_pwd)
     EditText mRegPwdEdit;
 
@@ -266,16 +266,16 @@ public class RegisterActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (mCurrVerifyTime > 0) {
-                mGetRegVerifyEdit.setEnabled(false);
+                mGetRegVerifyTv.setEnabled(false);
                 mCurrVerifyTime--;
                 mHandler.sendEmptyMessageDelayed(MSG_RE_SEND, 1000);
-
-                mGetRegVerifyEdit.setText(Html.fromHtml(getString(R.string.verity_code_countdown,
+                mGetRegVerifyTv.setTextColor(getResources().getColor(R.color.font_gray));
+                mGetRegVerifyTv.setText(Html.fromHtml(getString(R.string.verity_code_countdown,
                         mCurrVerifyTime)));
             } else {
-                mGetRegVerifyEdit.setEnabled(true);
-                mGetRegVerifyEdit.setTextColor(getResources().getColor(R.color.disable_btn));
-                mGetRegVerifyEdit.setText(R.string.verity_code_re_send);
+                mGetRegVerifyTv.setEnabled(true);
+                mGetRegVerifyTv.setTextColor(getResources().getColor(R.color.font_blue));
+                mGetRegVerifyTv.setText(R.string.verity_code_re_send);
             }
         }
     };

@@ -52,9 +52,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class LiveLessonCreationFragment extends BaseFragment {
-    private final int MAX_ENROLL_NUM = 9999; //
+    private final int MAX_STUDENT_COUNT = 9999; //
     private final int MAX_LESSON_DURATION = 600; //600 minutes, 10 hours
     private final int REQUEST_CODE_OPTIONAL_INFO = 2000;
+    private final int DEFAULT_SUT_COUNT = 50;
 
     private final int MIN_LESSON_CHAR = 3;
     private final int MAX_LESSON_CHAR = 25;
@@ -63,12 +64,14 @@ public class LiveLessonCreationFragment extends BaseFragment {
     EditTextDel mLessonNameEdt;
     @BindView(R.id.lesson_subject)
     TextView mLessonSubjectTv;
-    @BindView(R.id.lesson_people_limit)
-    EditTextDel mLessonLimitEdt;
+    @BindView(R.id.lesson_stu_count)
+    EditTextDel mLessonStuCount;
     @BindView(R.id.teach_form)
     TextView mTeachFormTv;
-    @BindView(R.id.enroll_way_switcher)
-    ToggleButton mEnrollWaySwitcher;
+    @BindView(R.id.enroll_switcher)
+    ToggleButton mEnrollSwitcher;
+    @BindView(R.id.charge_layout)
+    View mChargeLayout;
     @BindView(R.id.charge_way_switcher)
     ToggleButton mChargeWaySwitcher;
     @BindView(R.id.by_duration_title)
@@ -99,6 +102,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
     private final String TEST_SUBJECT = "计算机"; //test subject
     private final String TEST_SUBJECT_ID = "5820a10e101db0af4bcf2fd9";
     private int mBlackFont;
+    private boolean mStuCountTipsFlag = true;
 
     @Override
     protected View getContentView() {
@@ -107,9 +111,58 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        mEnrollWaySwitcher.setChecked(false);
+        loadData();
+        initView();
+        addViewListener();
+    }
 
-        mChargeWaySwitcher.setSelected(false);
+    @OnClick({R.id.lesson_subject, R.id.teach_form, R.id.enroll_switcher, R.id.charge_way_switcher,
+            R.id.by_total_price_title, R.id.by_duration_title, R.id.lesson_start_time,
+            R.id.optional_info, R.id.sub_btn, R.id.on_shelves, R.id.publish_personal_page})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.lesson_subject:
+                selectSubject();
+                break;
+            case R.id.teach_form:
+                selectTeachForm();
+                break;
+            case R.id.enroll_switcher:
+                mChargeLayout.setVisibility(((ToggleButton)v).isChecked() ? View.VISIBLE : View.GONE);
+                break;
+            case R.id.charge_way_switcher:
+                openOrCloseChargeWay(v);
+                break;
+            case R.id.by_total_price_title:
+            case R.id.by_duration_title:
+                selectChargeMode(v);
+                break;
+            case R.id.lesson_start_time:
+                selectLessonStartTime();
+                break;
+            case R.id.optional_info:
+                enterOptionalInfoPage();
+                break;
+            case R.id.on_shelves:
+            case R.id.publish_personal_page:
+                v.setSelected(!v.isSelected() ? true : false);
+                break;
+            case R.id.sub_btn:
+                createLiveLesson();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void loadData () {
+        //LiveLesson lesson = getArguments().getSerializable();
+    }
+
+    private void initView() {
+        mEnrollSwitcher.setChecked(true);
+
+        mChargeWaySwitcher.setChecked(false);
         mChargeWayLayout.setVisibility(View.GONE);
 
         mLessonNameEdt.setHint(getString(R.string.live_lesson_name_hint, MIN_LESSON_CHAR, MAX_LESSON_CHAR));
@@ -118,10 +171,16 @@ public class LiveLessonCreationFragment extends BaseFragment {
         mOnShelvesTv.setSelected(true);
         mPublicTv.setSelected(true);
 
-        //TODO
-        mLessonSubjectTv.setText(TEST_SUBJECT); //test
+        //get color
+        mBlackFont = getResources().getColor(R.color.font_black);
+
+        //TODO  //test
+        mLessonSubjectTv.setText(TEST_SUBJECT);
+        mLessonSubjectTv.setTextColor(mBlackFont);
+    }
 
 
+    private void addViewListener () {
         mByLiveTotalPriceEdt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -156,9 +215,61 @@ public class LiveLessonCreationFragment extends BaseFragment {
             }
         });
 
+        mLessonStuCount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        //get color
-        mBlackFont = getResources().getColor(R.color.font_black);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    int count = Integer.parseInt(s.toString());
+
+                    if (count > DEFAULT_SUT_COUNT && mStuCountTipsFlag) {
+                        mStuCountTipsFlag = false;
+                        String tips = getString(R.string.lesson_stu_exceed, DEFAULT_SUT_COUNT);
+                        Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (count == 1) {
+                        mTeachFormTv.setTextColor(mBlackFont);
+                        mTeachFormTv.setText(R.string.teach_form_one2one);
+                    } else if (count > 1 && count <= DEFAULT_SUT_COUNT) {
+                        mTeachFormTv.setTextColor(mBlackFont);
+                        mTeachFormTv.setText(R.string.teach_form_one2many);
+                    } else if (count > DEFAULT_SUT_COUNT) {
+                        mTeachFormTv.setTextColor(mBlackFont);
+                        mTeachFormTv.setText(R.string.teach_form_lecture);
+                    }
+                }
+            }
+        });
+
+
+        mLessonDurationEdt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    checkLessonConflict(mLessonStartTime, Integer.parseInt(s.toString()));
+                }
+            }
+        });
     }
 
     private void formatPrice(Editable s) {
@@ -169,44 +280,6 @@ public class LiveLessonCreationFragment extends BaseFragment {
         }
         if (temp.length() - posDot - 1 > 2) {
             s.delete(posDot + 3, posDot + 4);
-        }
-    }
-
-    @OnClick({R.id.lesson_subject, R.id.teach_form, R.id.enroll_way_switcher, R.id.charge_way_switcher,
-            R.id.by_total_price_title, R.id.by_duration_title, R.id.lesson_start_time,
-            R.id.optional_info, R.id.sub_btn, R.id.on_shelves, R.id.publish_personal_page})
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.lesson_subject:
-                selectSubject();
-                break;
-            case R.id.teach_form:
-                selectTeachForm();
-                break;
-            case R.id.enroll_way_switcher:
-                break;
-            case R.id.charge_way_switcher:
-                openOrCloseChargeWay(v);
-                break;
-            case R.id.by_total_price_title:
-            case R.id.by_duration_title:
-                selectChargeMode(v);
-                break;
-            case R.id.lesson_start_time:
-                selectLessonStartTime();
-                break;
-            case R.id.optional_info:
-                setOptionalInfo();
-                break;
-            case R.id.on_shelves:
-            case R.id.publish_personal_page:
-                v.setSelected(!v.isSelected() ? true : false);
-                break;
-            case R.id.sub_btn:
-                createLiveLesson();
-                break;
-            default:
-                break;
         }
     }
 
@@ -252,6 +325,10 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
                 mLessonStartTimeTv.setText(dateStr);
                 mLessonStartTimeTv.setTextColor(mBlackFont);
+
+                if (!TextUtils.isEmpty(mLessonDurationEdt.getText().toString())) {
+                    checkLessonConflict(mLessonStartTime, Integer.parseInt(mLessonDurationEdt.getText().toString()));
+                }
             }
         });
     }
@@ -274,7 +351,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
         }
     }
 
-    private void setOptionalInfo() {
+    private void enterOptionalInfoPage() {
         LiveLesson lesson = new LiveLesson();
         Intent i = new Intent(mContext, LessonCreationOptionalInfoActivity.class);
         int pricingType = Finance.PricingType.TOTAL;
@@ -292,7 +369,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 price = Float.parseFloat(priceStr);
             }
         }
-        String limitStr = mLessonLimitEdt.getText().toString();
+        String limitStr = mLessonStuCount.getText().toString();
         int limit = 0;
         if (!TextUtils.isEmpty(limitStr)) {
             limit = Integer.parseInt(limitStr);
@@ -300,10 +377,11 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
         Enroll enroll = new Enroll();
         enroll.setMax(limit);
+        enroll.setMandatory(mEnrollSwitcher.isChecked());
         Schedule sch = new Schedule();
         sch.setStart(new Date(mLessonStartTime));
         Fee fee = new Fee();
-        fee.setFree(mChargeWaySwitcher.isChecked());
+        fee.setFree(!mChargeWaySwitcher.isChecked());
         fee.setCharge(BigDecimal.valueOf(price));
         fee.setType(pricingType);
         lesson.setEnroll(enroll);
@@ -312,6 +390,11 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
         i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, lesson);
         startActivityForResult(i, REQUEST_CODE_OPTIONAL_INFO);
+    }
+
+    //TODO not implemented
+    private void checkLessonConflict(long startTime, int duration) {
+        //Toast.makeText(mContext, R.string.lesson_duration_conflict, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -338,14 +421,14 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 return false;
             }
 
-            String limitPeople = mLessonLimitEdt.getText().toString().trim();
+            String limitPeople = mLessonStuCount.getText().toString().trim();
             if (TextUtils.isEmpty(limitPeople)) {
                 Toast.makeText(mContext, R.string.enroll_people_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
             int limit = Integer.parseInt(limitPeople);
-            /*if (limit > MAX_ENROLL_NUM) {
-                String tips = String.format(getString(R.string.enroll_people_must_be_less_than), MAX_ENROLL_NUM);
+            /*if (limit > MAX_STUDENT_COUNT) {
+                String tips = String.format(getString(R.string.enroll_people_must_be_less_than), MAX_STUDENT_COUNT);
                 Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return false;
             }*/
@@ -394,9 +477,9 @@ public class LiveLessonCreationFragment extends BaseFragment {
         }
 
         Enroll enroll = new Enroll();
-        int limitPeople = Integer.parseInt(mLessonLimitEdt.getText().toString());
+        int limitPeople = Integer.parseInt(mLessonStuCount.getText().toString());
         enroll.setMax(limitPeople);
-        enroll.setMandatory(mEnrollWaySwitcher.isChecked());
+        enroll.setMandatory(mEnrollSwitcher.isChecked());
 
         Fee fee = new Fee();
         fee.setFree(mChargeWaySwitcher.isChecked());

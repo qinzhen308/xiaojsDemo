@@ -19,16 +19,19 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.model.TeachLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.util.DataPicker;
 import com.benyuan.xiaojs.util.TimeUtil;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
+/**
+ * 修改上课时间
+ */
 public class ModifyLessonActivity extends BaseActivity {
 
     @BindView(R.id.modify_lesson_origin_time)
@@ -40,22 +43,23 @@ public class ModifyLessonActivity extends BaseActivity {
     @BindView(R.id.modify_lesson_new_time)
     TextView mNewTime;
 
+    private TeachLesson bean;
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_modify_lesson);
         setMiddleTitle(R.string.modify_lesson);
         Intent intent = getIntent();
         if (intent != null) {
-            String name = intent.getStringExtra(CourseConstant.KEY_LESSON_NAME);
-            long time = intent.getLongExtra(CourseConstant.KEY_LESSON_TIME, 0);
-            int duration = intent.getIntExtra(CourseConstant.KEY_LESSON_DURATION, 0);
-            mOriginTime.setText(TimeUtil.format(new Date(time), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
-            mName.setText(name);
-            mDuration.setText(getString(R.string.lesson_duration_tip, duration));
+            bean = (TeachLesson) intent.getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
+            if (bean != null){
+                mOriginTime.setText(TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                mName.setText(bean.getTitle());
+                mDuration.setText(getString(R.string.lesson_duration_tip, bean.getSchedule().getDuration()));
+            }
         }
     }
 
-    @OnClick({R.id.left_image, R.id.limit_select_time})
+    @OnClick({R.id.left_image, R.id.limit_select_time,R.id.modify_lesson_ok})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_image:
@@ -73,8 +77,17 @@ public class ModifyLessonActivity extends BaseActivity {
                     }
                 });
                 break;
+            case R.id.modify_lesson_ok:
+                modify();
+                break;
             default:
                 break;
+        }
+    }
+
+    private void modify(){
+        if (bean != null){
+
         }
     }
 }

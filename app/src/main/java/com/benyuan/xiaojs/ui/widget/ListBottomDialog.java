@@ -15,12 +15,9 @@ package com.benyuan.xiaojs.ui.widget;
  * ======================================================================================== */
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,30 +43,6 @@ public class ListBottomDialog extends BottomSheet {
         super(context, cancelable, cancelListener);
     }
 
-
-    private void init() {
-        setCanceledOnTouchOutside(true);
-        Window dialogWindow = getWindow();
-        setContentView(R.layout.dialog_base_bottom);
-        dialogWindow.setWindowAnimations(R.style.BottomSheetAnim);
-        WindowManager.LayoutParams params = dialogWindow.getAttributes();
-        params.dimAmount = 0.5f;
-        dialogWindow.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        dialogWindow.setAttributes(params);
-        dialogWindow.setLayout(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-                android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialogWindow.setGravity(Gravity.BOTTOM);
-
-        mList = (ListView) dialogWindow.findViewById(R.id.base_bottom_dialog_list);
-        mCancel = (TextView) dialogWindow.findViewById(R.id.base_bottom_dialog_cancel);
-        mCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-    }
 
     public void setItems(String[] its) {
         mItems = its;
@@ -122,10 +95,10 @@ public class ListBottomDialog extends BottomSheet {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    dismiss();
                     if (listener != null){
                         listener.onItemClick(position);
                     }
-                    dismiss();
                 }
             });
             return item;

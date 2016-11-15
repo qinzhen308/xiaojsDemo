@@ -46,6 +46,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     protected Pagination mPagination;
     private View mEmptyView;
     protected boolean mClearItems;
+    private boolean mRefreshOnLoad = true;
 
     public AbsSwipeAdapter(Context context, AutoPullToRefreshListView listView) {
         mContext = context;
@@ -97,7 +98,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mListView.setHeaderReadyListener(new PullToRefreshBase.OnHeaderReadyListener() {
             @Override
             public void onReady() {
-                if (firstRefresh()){
+                if (refreshOnLoad()){
                     mListView.setRefreshing();
                 }
             }
@@ -108,8 +109,12 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     }
 
-    protected boolean firstRefresh(){
-        return true;
+    public void setRefreshOnLoad(boolean b){
+        mRefreshOnLoad = b;
+    }
+
+    public boolean refreshOnLoad(){
+        return mRefreshOnLoad;
     }
 
     @Override

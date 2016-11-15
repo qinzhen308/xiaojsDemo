@@ -23,6 +23,25 @@ import android.renderscript.ScriptIntrinsicBlur;
  *
  * ======================================================================================== */
 public class FastBlur {
+    public static final int MAX_SIZE = 150 * 150;
+
+    public static Bitmap smartBlur(Bitmap oriBmp, int radius, boolean canReuseInBitmap) {
+        if (oriBmp == null) {
+            return null;
+        }
+        Bitmap scaledBmp = oriBmp;
+        int currSize = oriBmp.getWidth() * oriBmp.getHeight();
+        if (!oriBmp.isMutable() || currSize > MAX_SIZE) {
+            if (currSize > MAX_SIZE) {
+                float scale =  (float)MAX_SIZE / currSize;
+                scaledBmp = BitmapUtils.resizeBitmapByScale(oriBmp, scale, false);
+            } else {
+                scaledBmp = Bitmap.createScaledBitmap(oriBmp, oriBmp.getWidth(), oriBmp.getHeight(), false);
+            }
+        }
+
+       return doBlur(scaledBmp, radius, canReuseInBitmap);
+    }
 
     public static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
         return doBlur(null, sentBitmap, radius, canReuseInBitmap);

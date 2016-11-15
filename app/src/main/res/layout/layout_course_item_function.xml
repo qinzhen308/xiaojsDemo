@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/px90">
 
     <LinearLayout
             android:visibility="gone"
@@ -109,30 +109,43 @@
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <TextView
-            android:id="@+id/course_item_fun_error"
-            android:layout_alignParentLeft="true"
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_centerInParent="true"
-            android:textColor="@color/totally_red_font"
-            android:textSize="@dimen/font_26px"
-            android:paddingTop="@dimen/px25"
-            android:visibility="gone"
-            android:paddingBottom="@dimen/px25"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-            android:id="@+id/course_item_fun_more"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:padding="@dimen/px25"
-            android:layout_marginRight="@dimen/px10"
-            android:visibility="gone"
-            android:background="@drawable/white_grey_selector"
-            android:textSize="@dimen/font_26px"
-            android:text="@string/more"
-            android:textColor="@color/common_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/course_item_fun_error"
+                android:textColor="@color/totally_red_font"
+                android:textSize="@dimen/font_26px"
+                android:paddingTop="@dimen/px25"
+                android:visibility="invisible"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="@dimen/px25"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+        <com.benyuan.xiaojs.ui.widget.RedTipImageView
+                android:id="@+id/course_item_fun_more"
+                android:padding="@dimen/px35"
+                android:visibility="gone"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_lesson_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <com.benyuan.xiaojs.ui.widget.RedTipImageView
+                android:id="@+id/course_item_fun_data_base"
+                android:padding="@dimen/px10"
+                android:visibility="gone"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/data_base_selector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
 </RelativeLayout>

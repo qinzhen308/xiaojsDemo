@@ -38,10 +38,6 @@ public class Account {
 
         private Date birthday;
 
-
-
-
-
         public String getTitle() {
             return title;
         }
@@ -81,5 +77,6 @@ public class Account {
         public void setBirthday(Date birthday) {
             this.birthday = birthday;
         }
+
     }
 }

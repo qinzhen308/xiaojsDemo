@@ -2,15 +2,16 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.Date;
+import java.io.Serializable;
 
 /**
  * Created by maxiaobao on 2016/11/8.
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EnrolledLesson {
+public class EnrolledLesson implements Serializable{
 
+    private String id;
     private String createdBy;
     private String title;
     private String subject;
@@ -22,6 +23,14 @@ public class EnrolledLesson {
     private String state;
     private Teacher teacher;
     private Assistant[] assistants;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCreatedBy() {
         return createdBy;

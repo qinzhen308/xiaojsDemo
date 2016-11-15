@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ObjectsOfPage {
+public class TeachLesson implements Serializable{
 
     private String createdBy;
     private String title;
@@ -21,6 +22,7 @@ public class ObjectsOfPage {
     private Fee fee;
     private Enroll enroll;
     private String id;
+    private String cover;
     private String hp;
     private Evt[] evts;
     private String outcome;
@@ -78,6 +80,15 @@ public class ObjectsOfPage {
 //    public void setPromotion(Promotion promotion) {
 //        this.promotion = promotion;
 //    }
+
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
     public Schedule getSchedule() {
         return schedule;

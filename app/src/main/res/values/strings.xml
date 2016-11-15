@@ -145,8 +145,8 @@
     <string name="live_lesson_name_hint">请输入%1$d&#8211;%2$d字</string>
     <string name="subject_category_hint">请选择学科类目</string>
     <string name="teach_form_hint">请选择教学模式</string>
-    <string name="enroll_hint">开启后，学生需要报名才能参加直播课</string>
     <string name="lesson_start_time_hint">请选择上课时间</string>
+    <string name="lesson_duration_conflict">您已经在该时间有教授的课，确定需要在该时间继续开课</string>
     <string name="other_settings">其他设置</string>
     <string name="on_shelves_tips">上架后，学生才可以报名直播课</string>
     <string name="publish_personal_page">发布到个人主页</string>
@@ -155,8 +155,8 @@
     <string name="subject_empty">请选择学科类目</string>
     <string name="teach_form_empty">请选择教学形式</string>
     <string name="enroll_people_empty">请填写报名人数</string>
-    <string name="enroll_people_must_be_positive">报名人数必须大于0</string>
-    <string name="enroll_people_must_be_less_than">报名人数不能多于%1$d人</string>
+    <string name="enroll_people_must_be_positive">学生人数必须大于0</string>
+    <string name="enroll_people_must_be_less_than">学生人数不能多于%1$d人</string>
     <string name="charge_must_be_checked">请选择收费模式</string>
     <string name="charge_empty">请填写收费价格</string>
     <string name="lesson_start_time_empty">请选择上课时间</string>
@@ -177,6 +177,7 @@
     <string name="promotion_discount_format_error">请填写正确的折扣值，如：9.7</string>
     <string name="promotion_info_empty">请填写促销信息</string>
     <string name="lesson_creation_success">创建直播课成功</string>
+    <string name="lesson_stu_exceed">该课的学生人数超过%1$d人，建议您选择公开课的形式</string>
 
     <!--live lesson detail-->
     <string name="live_lesson_detail">直播课详情</string>
@@ -238,7 +239,7 @@
     <string name="publish_to_home_page">发布到主页</string>
 
     <!-- 修改上课时间 -->
-    <string name="modify_lesson_time_mark">注：修改上课会影响您的信用等级，请谨慎</string>
+    <string name="modify_lesson_time_mark">注：修改上课会影响您的信用等级，请谨慎。</string>
     <string name="lesson_name">直播课名称：</string>
     <string name="origin_lesson_time">原上课时间：</string>
     <string name="new_lesson_time">新的上课时间：</string>
@@ -248,4 +249,6 @@
 
     <!--lesson home page-->
     <string name="lesson_report">举报</string>
+    <string name="cancel_lesson_time_mark">注：取消后上线报名的费用将退还给报名学生，线下报名的费用请自行处理。取消后会影响您的信用等级，请谨慎操作。</string>
+    <string name="cancel_examine_tip">撤销审核后，您可以重新编辑再提交审核</string>
 </resources>
