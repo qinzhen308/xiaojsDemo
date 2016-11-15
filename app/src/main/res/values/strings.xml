@@ -245,4 +245,7 @@
     <string name="modify_lesson_time_tip">请点击选择</string>
     <string name="modify_lesson">修改上课时间</string>
     <string name="lesson_duration_tip">时长%1$d分钟</string>
+
+    <!--lesson home page-->
+    <string name="lesson_report">举报</string>
 </resources>

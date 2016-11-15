@@ -82,16 +82,17 @@ public class LessonHomeActivity extends BaseActivity {
 
         TextView textView1 = createTextView();
         textView1.setText("大时代雷锋萨达六块腹肌阿斯利康的风景阿" +
-                "斯顿发克里斯朵夫及阿莱克斯打飞机啊水淀粉是东方" +
-                "时空的风景是达六块腹肌阿里斯顿开发及阿里山的风景阿" +
-                "斯顿发水淀粉矢口抵赖飞机失联" +
-                "的开发及历史的风景阿斯顿浪费");
+                "斯顿发克里斯朵夫及阿莱克但是公司的分公司地方公司的分公司的风格梵蒂冈的风格斯打飞机啊水淀粉是东方" +
+                "时空的风景是达六块腹肌阿电饭锅电饭锅电饭锅里斯顿开发及阿里山的风景阿" +
+                "斯顿发水淀粉矢的分公司地方公司的风格口抵赖飞机失联" +
+                "的开发及历史的风的分公司地方公司的风格景阿斯顿浪费");
 
 
         TextView textView2 = createTextView();
-        textView2.setText("2312423dsvdvasdvasdvasdvasdvasdvadsvas" +
-                "dvsdvasdvasdvsdavasdvasdvasdvsadvdfvf" +
-                "gngjrmfgdsfadvdsavsadsvsdvsdfwefeqfdsdfbs");
+        textView2.setText("电饭锅电饭锅电饭锅；司法解释；对佛诶认为哦 i 人 大是大非 i 欧式地方 i 哦苏东坡" +
+                "发送东方爬上发呆第三方 i 是豆腐皮送到附送IP的发送滴批发 u 烧豆腐似佛苏东坡发 i" +
+                "的发送东方 i 哦说发破碎都发破碎地方视频地方水淀粉是的分手第发送东方 i 是滴批发 i 偶阿" +
+                "首都发死都发视频奋斗的 v 旧恨新仇离开 v 就喜欢 v 吃来了虚假看了下火车 v 新款雏菊行cvxcliv");
 
         textViews.add(textView1);
         textViews.add(textView2);
