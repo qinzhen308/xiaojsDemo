@@ -54,8 +54,7 @@
         <View
                 style="@style/DividerHorizontal"/>
 
-
-        <!--教学形式-->
+        <!--学生人数-->
         <View
                 android:layout_marginTop="@dimen/px32"
                 style="@style/DividerHorizontal"/>
@@ -65,69 +64,10 @@
 
             <TextView
                     style="@style/LiveLessonCreateTitle"
-                    android:text="@string/teach_form"/>
-
-            <TextView
-                    android:id="@+id/teach_form"
-                    style="@style/LiveLessonRightEntrance"
-                    android:text="@string/please_select"/>
-        </LinearLayout>
-
-        <!--报名方式-->
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginLeft="@dimen/px30"/>
-
-
-        <LinearLayout
-                style="@style/LiveLessonItem">
-
-            <LinearLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
-                    android:orientation="vertical">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enroll_mandatory"/>
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#bfbfbf"
-                        android:textSize="@dimen/font_24px"
-                        android:text="@string/enroll_hint"/>
-            </LinearLayout>
-
-
-            <ToggleButton
-                    android:id="@+id/enroll_way_switcher"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textOff=""
-                    android:textOn=""/>
-
-        </LinearLayout>
-
-
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginLeft="@dimen/px32"/>
-
-        <!--报名限制人数-->
-        <LinearLayout
-                style="@style/LiveLessonItem">
-
-            <TextView
-                    style="@style/LiveLessonCreateTitle"
                     android:text="@string/lesson_people_limit"/>
 
             <com.benyuan.xiaojs.ui.widget.EditTextDel
-                    android:id="@+id/lesson_people_limit"
+                    android:id="@+id/lesson_stu_count"
                     android:gravity="right"
                     android:layout_weight="1"
                     android:layout_width="0dp"
@@ -147,21 +87,66 @@
                     android:text="@string/person"/>
         </LinearLayout>
 
+        <!--报名方式-->
         <View
                 style="@style/DividerHorizontal"
                 android:layout_marginLeft="@dimen/px30"/>
 
+
+        <LinearLayout
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonCreateTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/enroll_mandatory"/>
+
+            <ToggleButton
+                    android:id="@+id/enroll_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff=""
+                    android:textOn=""/>
+
+        </LinearLayout>
+
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px32"/>
+
+        <!--教学形式-->
+
+        <LinearLayout
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonCreateTitle"
+                    android:text="@string/teach_form"/>
+
+            <TextView
+                    android:id="@+id/teach_form"
+                    style="@style/LiveLessonRightEntrance"
+                    android:text="@string/please_select"/>
+        </LinearLayout>
+
+
         <!--收费-->
         <LinearLayout
+                android:id="@+id/charge_layout"
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+            <include layout="@layout/layout_horizontal_line"/>
+
             <LinearLayout
                     style="@style/LiveLessonItem"
                     android:paddingTop="@dimen/px10"
-                    android:paddingBottom="@dimen/px10">
+                    android:paddingBottom="@dimen/px10"
+                    android:orientation="horizontal">
 
                 <TextView
                         android:layout_width="0dp"

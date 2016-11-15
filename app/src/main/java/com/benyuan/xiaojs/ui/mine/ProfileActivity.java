@@ -3,10 +3,8 @@ package com.benyuan.xiaojs.ui.mine;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
@@ -14,11 +12,11 @@ import com.benyuan.xiaojs.common.crop.CropImagePath;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.util.DataPicker;
-import com.wheelpicker.DateWheelPicker;
+import com.benyuan.xiaojs.util.TimeUtil;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -106,7 +104,10 @@ public class ProfileActivity extends BaseActivity {
         DataPicker.pickBirthday(this, new DataPicker.OnBirthdayPickListener() {
             @Override
             public void onBirthPicked(int year, int month, int day) {
-                mBirthdayView.setText("" + year+"-" + month + "-" + day);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, day, 0, 0, 0);
+                String dateStr = TimeUtil.formatDate(calendar.getTimeInMillis(), TimeUtil.TIME_YYYY_MM_DD);
+                mBirthdayView.setText(dateStr);
             }
         });
     }
