@@ -10,7 +10,7 @@
             android:id="@+id/list_pay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_vertical_margin"
+            android:padding="@dimen/px40"
             />
 
     <View
@@ -28,23 +28,26 @@
                 android:layout_height="match_parent"
                 android:text="@string/pay_now"
                 android:layout_alignParentRight="true"
-                android:textSize="16sp"
-                android:background="@color/main_orange"
+                android:textSize="@dimen/font_32px"
+                android:background="@drawable/big_submit_btn_selector"
                 android:textColor="@color/common_btn_white_text"/>
         <TextView
                 android:id="@+id/pay_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$90"
+                android:textSize="22sp"
+                android:text="¥90.00"
+                android:textColor="@color/font_red"
                 android:paddingTop="5dp"
-                android:textSize="22sp"/>
+                />
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已优惠30元"
-                android:textSize="14sp"
+                android:textSize="@dimen/font_32px"
                 android:paddingTop="2dp"
                 android:layout_below="@id/pay_money"
+                android:textColor="@color/common_text"
                 android:layout_alignLeft="@id/pay_money"/>
     </RelativeLayout>
 

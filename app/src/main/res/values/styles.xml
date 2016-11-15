@@ -169,4 +169,15 @@
         <item name="android:paddingLeft">@dimen/px14</item>
         <item name="android:lines">1</item>
     </style>
+    <style name="lesson_home_layout">
+        <item name="android:paddingLeft">@dimen/px24</item>
+        <item name="android:paddingRight">@dimen/px24</item>
+        <item name="android:paddingTop">@dimen/px32</item>
+        <item name="android:paddingBottom">@dimen/px32</item>
+        <item name="android:background">@drawable/lesson_home_lay_bg</item>
+    </style>
+    <style name="lesson_home_textview">
+        <item name="android:layout_marginTop">@dimen/px22</item>
+        <item name="android:textSize">@dimen/font_26px</item>
+    </style>
 </resources>
