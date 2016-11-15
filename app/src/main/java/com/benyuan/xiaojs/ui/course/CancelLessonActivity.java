@@ -33,12 +33,14 @@ public class CancelLessonActivity extends BaseActivity {
     @BindView(R.id.cancel_lesson_reason)
     LimitInputBox mInput;
 
+    private TeachLesson lesson;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_cancel_lesson);
         Intent intent = getIntent();
         if (intent != null) {
-            TeachLesson lesson = (TeachLesson) intent.getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
+            lesson = (TeachLesson) intent.getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
             if (lesson != null) {
                 mName.setText(lesson.getTitle());
             }
@@ -52,11 +54,17 @@ public class CancelLessonActivity extends BaseActivity {
             case R.id.left_image:
                 finish();
                 break;
-            case R.id.cancel_lesson_ok:
-
+            case R.id.cancel_lesson_ok://确定取消
+                cancel();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void cancel(){
+        if (lesson != null){
+
         }
     }
 }

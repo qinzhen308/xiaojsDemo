@@ -16,6 +16,7 @@ package com.benyuan.xiaojs.ui.course;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -24,23 +25,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.common.xf_foundation.LessonState;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
-import com.benyuan.xiaojs.data.LessonDataManager;
-import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.EnrolledLesson;
-import com.benyuan.xiaojs.model.GELessonsResponse;
+import com.benyuan.xiaojs.model.Fee;
+import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.ui.widget.ListBottomDialog;
 import com.benyuan.xiaojs.ui.widget.RedTipImageView;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
-import com.orhanobut.logger.Logger;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -73,6 +75,10 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         holder.reset();
         holder.name.setText(bean.getTitle());
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
+        String state = LessonBusiness.getStateByPosition(position,false);
+        if (!TextUtils.isEmpty(state)){
+            bean.setState(state);
+        }
 
         holder.clsFunction.setVisibility(View.VISIBLE);
         holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
@@ -87,51 +93,73 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
                 enterClass(bean);
             }
         });
-        holder.more.setOnClickListener(new View.OnClickListener() {//更多
-            @Override
-            public void onClick(View view) {
-                more(bean);
-            }
-        });
+
         if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
+            holder.databank.setVisibility(View.VISIBLE);
+            holder.databank.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    databank(bean);
+                }
+            });
             holder.courseState.setText(R.string.course_state_cancel);
             holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+            holder.more.setVisibility(View.VISIBLE);
+            holder.more.setOnClickListener(new View.OnClickListener() {//更多
+                @Override
+                public void onClick(View view) {
+                    more(bean);
+                }
+            });
             holder.courseState.setText(R.string.course_state_end);
             holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
+            holder.databank.setVisibility(View.VISIBLE);
+            holder.databank.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    databank(bean);
+                }
+            });
             holder.courseState.setText(R.string.living);
             holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
+            holder.more.setVisibility(View.VISIBLE);
+            holder.more.setOnClickListener(new View.OnClickListener() {//更多
+                @Override
+                public void onClick(View view) {
+                    more(bean);
+                }
+            });
             holder.courseState.setText(R.string.pending_for_course);
             holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
         }
     }
 
-    //查看详情
-    private void detail(EnrolledLesson bean) {
-        ListBottomDialog dialog = new ListBottomDialog(mContext);
-        String[] ss = new String[]{"备课", "报名注册", "分享"};
-        dialog.setItems(ss);
-        dialog.show();
-    }
-
     //班级圈
     private void circle(EnrolledLesson bean) {
-        modifyLesson(bean);
+
     }
 
     //进入教室
     private void enterClass(EnrolledLesson bean) {
-        Intent intent = new Intent(mContext, CancelLessonActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
-        mContext.startActivity(intent);
+        
     }
 
-    private void modifyLesson(EnrolledLesson bean) {
-        Intent intent = new Intent(mContext, ModifyLessonActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
-        mContext.startActivity(intent);
+    //资料库
+    private void databank(EnrolledLesson bean){
+
+    }
+
+    //退课
+    private void dropClass(EnrolledLesson bean){
+
+    }
+
+    //评价
+    private void evaluate(EnrolledLesson bean){
+
     }
 
     //更多
@@ -147,7 +175,12 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
                 @Override
                 public void onItemClick(int position) {
                     switch (position) {
-
+                        case 0:
+                            databank(bean);
+                            break;
+                        case 1:
+                            dropClass(bean);
+                            break;
                     }
                 }
             });
@@ -161,7 +194,12 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
                 @Override
                 public void onItemClick(int position) {
                     switch (position) {
-
+                        case 0:
+                            evaluate(bean);
+                            break;
+                        case 1:
+                            databank(bean);
+                            break;
                     }
                 }
             });
@@ -183,31 +221,49 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     @Override
     protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         Toast.makeText(mContext, "position = " + position, Toast.LENGTH_SHORT).show();
-        mContext.startActivity(new Intent(mContext, LessionDetailActivity.class));
+        mContext.startActivity(new Intent(mContext, LessonHomeActivity.class));
 
     }
 
     @Override
     protected void doRequest() {
-        LessonDataManager.requestGetEnrolledLessons(mContext, XiaojsConfig.mLoginUser.getSessionID(), mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
-            @Override
-            public void onSuccess(GELessonsResponse object) {
-                Logger.d("onSuccess-----------");
-                if (object.getObjectsOfPage() != null && object.getObjectsOfPage().size() > 0) {
-                    if (mFragment != null) {
-                        mFragment.hideTop();
-                    }
-                }
-                EnrollLessonAdapter.this.onSuccess(object.getObjectsOfPage());
-            }
+//        LessonDataManager.requestGetEnrolledLessons(mContext, XiaojsConfig.mLoginUser.getSessionID(), mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
+//            @Override
+//            public void onSuccess(GELessonsResponse object) {
+//                Logger.d("onSuccess-----------");
+//                if (object.getObjectsOfPage() != null && object.getObjectsOfPage().size() > 0) {
+//                    if (mFragment != null) {
+//                        mFragment.hideTop();
+//                    }
+//                }
+//                EnrollLessonAdapter.this.onSuccess(object.getObjectsOfPage());
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//                EnrollLessonAdapter.this.onFailure(errorCode, errorMessage);
+//                Logger.d("onFailure-----------");
+//            }
+//        });
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                EnrollLessonAdapter.this.onFailure(errorCode, errorMessage);
-                Logger.d("onFailure-----------");
-            }
-        });
-
+        EnrolledLesson e1 = new EnrolledLesson();
+        e1.setTitle("人力资源冲刺考试直播课");
+        Schedule schedule = new Schedule();
+        schedule.setDuration(123);
+        schedule.setStart(TimeUtil.beforeDawn());
+        e1.setSchedule(schedule);
+        Fee fee = new Fee();
+        fee.setCharge(BigDecimal.valueOf(5565666));
+        fee.setFree(true);
+        e1.setFee(fee);
+        e1.setState("LIVE");
+        List<EnrolledLesson> ls = new ArrayList<>();
+        ls.add(e1);
+        ls.add(e1);
+        ls.add(e1);
+        ls.add(e1);
+        ls.add(e1);
+        onSuccess(ls);
     }
 
     @Override
@@ -255,12 +311,12 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         TextView detail;
 
         @BindView(R.id.course_item_fun_error)
-        RedTipImageView error;
+        TextView error;
         @BindView(R.id.course_item_fun_data_base)
         RedTipImageView databank;
 
         @BindView(R.id.course_item_fun_more)
-        TextView more;
+        RedTipImageView more;
 
         @BindView(R.id.course_item_fun_cls)
         LinearLayout clsFunction;
