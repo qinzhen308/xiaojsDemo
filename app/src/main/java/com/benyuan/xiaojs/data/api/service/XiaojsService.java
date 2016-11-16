@@ -22,6 +22,7 @@ import com.benyuan.xiaojs.model.VerifyCode;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -40,7 +41,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.4:3000/";
+    String BASE_URL = "http://192.168.100.78:3000/";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -77,7 +78,12 @@ public interface XiaojsService {
 
     //Get upToken
     @GET("/v1/accounts/up_avatar_token")
-    Call<String> getAvatarUpToken();
+    Call<ResponseBody> getAvatarUpToken(@Header("SessionID") String sessionID);
+
+    //Get upToken
+    @GET("/v1/accounts/up_resource_token")
+    Call<ResponseBody> getCoverUpToken(@Header("SessionID") String sessionID);
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

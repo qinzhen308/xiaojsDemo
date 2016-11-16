@@ -8,7 +8,9 @@ import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.LessonRequest;
+import com.benyuan.xiaojs.data.api.QiniuRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
@@ -274,5 +276,37 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest();
         lessonRequest.confirmLessonEnrollment(context,sessionID,lesson,callback);
+    }
+
+    public static void requestUploadCover(Context context,
+                                           @NonNull String sessionID,
+                                           @NonNull final String userID,
+                                           @NonNull final String filePath,
+                                           @NonNull QiniuService qiniuService) {
+
+
+        if (qiniuService == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the request");
+            }
+            qiniuService.uploadFailure();
+            return;
+        }
+
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            qiniuService.uploadFailure();
+            return;
+        }
+
+
+        QiniuRequest qiniuRequest = new QiniuRequest();
+        qiniuRequest.uploadCover(context,sessionID,userID,filePath,qiniuService);
+
+
     }
 }
