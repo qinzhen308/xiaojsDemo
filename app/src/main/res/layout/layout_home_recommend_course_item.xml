@@ -58,6 +58,12 @@
                         android:textSize="@dimen/font_22px"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+
+                <com.benyuan.xiaojs.ui.widget.EvaluationStar
+                        android:layout_marginLeft="@dimen/px20"
+                        android:id="@+id/recommend_course_star"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

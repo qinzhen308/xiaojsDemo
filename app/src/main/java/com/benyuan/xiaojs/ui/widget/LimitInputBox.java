@@ -14,6 +14,7 @@ package com.benyuan.xiaojs.ui.widget;
  *
  * ======================================================================================== */
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -53,6 +54,7 @@ public class LimitInputBox extends FrameLayout {
         init();
     }
 
+    @TargetApi(21)
     public LimitInputBox(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
@@ -81,13 +83,12 @@ public class LimitInputBox extends FrameLayout {
     }
 
     private void updateCounter(int len) {
-        if (len < total) {
+        if (len <= total) {
             StringBuilder sb = new StringBuilder();
-            sb.append('(');
             sb.append(len);
             sb.append('/');
             sb.append(total);
-            sb.append(')');
+            sb.append("字");
             mCounter.setText(sb);
         }
     }
@@ -103,5 +104,9 @@ public class LimitInputBox extends FrameLayout {
 
     public EditText getInput(){
         return mInput;
+    }
+
+    public void setHint(String hint){
+        mInput.setHint(hint);
     }
 }

@@ -128,7 +128,7 @@
             android:visibility="gone"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
-            android:layout_marginRight="@dimen/px30"
+            android:layout_marginRight="@dimen/px5"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_lesson_more"
             android:layout_width="wrap_content"

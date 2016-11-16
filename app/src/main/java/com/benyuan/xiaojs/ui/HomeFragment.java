@@ -125,10 +125,8 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onScrollY(int y) {
                 handleScrollChanged(y);
-                //ToastUtil.showToast(mContext,"y = " + y);
             }
         });
-        //mList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
     }
 
     private void handleScrollChanged(int offsetY) {

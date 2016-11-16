@@ -9,17 +9,20 @@
             android:id="@+id/limit_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1234"
             android:layout_marginRight="@dimen/px30"
-            android:layout_marginBottom="@dimen/px10"
+            android:layout_marginBottom="@dimen/px24"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_22px"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"/>
 
     <EditText
             android:id="@+id/limit_input"
             android:background="@color/white"
-            android:padding="@dimen/px15"
+            android:padding="@dimen/px30"
             android:gravity="left|top"
+            android:textSize="@dimen/font_26px"
+            android:textColor="@color/font_black"
             android:layout_above="@id/limit_counter"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
