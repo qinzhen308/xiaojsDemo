@@ -1,4 +1,4 @@
-package com.benyuan.xiaojs.ui;
+package com.benyuan.xiaojs.ui.message;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -26,7 +26,7 @@ import com.benyuan.xiaojs.util.BitmapUtils;
 
 import butterknife.BindView;
 
-public class LiveFragment extends BaseFragment {
+public class MessageFragment extends BaseFragment {
 
     @BindView(R.id.tt)
     TextView tt;

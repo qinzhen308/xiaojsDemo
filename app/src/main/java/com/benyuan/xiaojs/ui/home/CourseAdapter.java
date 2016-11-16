@@ -67,7 +67,7 @@ public class CourseAdapter extends AbsSwipeAdapter<RecommendCourseBean,CourseAda
         beans.add(b);
         beans.add(b);
         beans.add(b);
-        onSuccess(beans);
+          onSuccess(null);
     }
 
     class Holder extends BaseHolder {
@@ -85,5 +85,10 @@ public class CourseAdapter extends AbsSwipeAdapter<RecommendCourseBean,CourseAda
         public Holder(View view) {
             super(view);
         }
+    }
+
+    @Override
+    protected boolean showEmptyView() {
+        return false;
     }
 }

@@ -5,6 +5,8 @@ import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseTabActivity;
+import com.benyuan.xiaojs.ui.home.HomeFragment;
+import com.benyuan.xiaojs.ui.message.MessageFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,12 @@ public class MainActivity extends BaseTabActivity {
         needHeader(false);
         List<Fragment> fs = new ArrayList<>();
         fs.add(new HomeFragment());
-        fs.add(new LiveFragment());
+        fs.add(new MessageFragment());
         fs.add(new LearnFragment());
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);
-        addViews(new int[]{R.string.home_tab_index, R.string.home_tab_circle, R.string.home_tab_query, R.string.home_tab_mine},
-                new int[]{R.drawable.home_tab_selector, R.drawable.circle_tab_selector, R.drawable.query_tab_selector, R.drawable.mine_tab_selector},
+        addViews(new int[]{R.string.home_tab_index, R.string.home_tab_message, R.string.home_tab_circle, R.string.home_tab_mine},
+                new int[]{R.drawable.home_tab_selector, R.drawable.query_tab_selector, R.drawable.circle_tab_selector, R.drawable.mine_tab_selector},
                 fs);
         new OkHttpClient();
     }
