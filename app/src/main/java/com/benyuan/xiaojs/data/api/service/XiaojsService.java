@@ -81,7 +81,7 @@ public interface XiaojsService {
     Call<ResponseBody> getAvatarUpToken(@Header("SessionID") String sessionID);
 
     //Get upToken
-    @GET("/v1/accounts/up_resource_token")
+    @GET("/v1/lessons/up_resource_token")
     Call<ResponseBody> getCoverUpToken(@Header("SessionID") String sessionID);
 
 
@@ -127,6 +127,12 @@ public interface XiaojsService {
     @GET("/v1/ctl/lessons/{lesson}/enroll")
     Call<Empty> confirmLessonEnrollment(@Header("SessionID") String sessionID,
                                         @Path("lesson") String lesson);
+
+    //Get Lesson Homepage
+    @GET("/v1/ctl/lesson-home/{lesson}")
+    Call<LessonDetail> getLessonHomepage(@Path("lesson") String lesson);
+
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

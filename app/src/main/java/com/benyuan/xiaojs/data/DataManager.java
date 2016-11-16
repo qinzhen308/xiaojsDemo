@@ -8,5 +8,10 @@ package com.benyuan.xiaojs.data;
 public class DataManager {
 
 
+    public static String generateUploadKey(String fileName) {
+
+        return fileName+System.currentTimeMillis();
+
+    }
 
 }

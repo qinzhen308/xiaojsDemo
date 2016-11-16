@@ -29,7 +29,35 @@ public class QiniuRequest {
                             @NonNull final String key,
                             @NonNull final String filePath,
                             @NonNull QiniuService qiniuService) {
-        uploadAvatar(context,sessionID,key,filePath,qiniuService);
+
+        final WeakReference<QiniuService> callbackReference =
+                new WeakReference<>(qiniuService);
+
+        AccountRequest accountRequest = new AccountRequest();
+
+        accountRequest.getCoverUpToken(context, sessionID, new APIServiceCallback<String>() {
+            @Override
+            public void onSuccess(String object) {
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("get upload for token onSuccess:%s ",object);
+                }
+
+                uploadFile(filePath,key,object,callbackReference);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("get upload for token onFailure ");
+                }
+
+                QiniuService callback = callbackReference.get();
+                if (callback!=null){
+                    callback.uploadFailure();
+                }
+            }
+        });
     }
 
     public void uploadAvatar(Context context,
@@ -52,7 +80,7 @@ public class QiniuRequest {
                     Logger.d("get upload for token onSuccess:%s ",object);
                 }
 
-                uploadAvatar(filePath,key,object,callbackReference);
+                uploadFile(filePath,key,object,callbackReference);
 
             }
 
@@ -76,7 +104,7 @@ public class QiniuRequest {
 
     }
 
-    private void uploadAvatar(@NonNull String filePath,
+    private void uploadFile(@NonNull String filePath,
                               @NonNull String key,
                               @NonNull String token,
                               @NonNull final WeakReference<QiniuService> callbackReference){

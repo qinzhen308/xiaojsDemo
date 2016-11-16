@@ -20,6 +20,8 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
+import java.security.MessageDigest;
+
 public class StringUtil {
 
     public static Spannable getSpecialString(String origin,String target,int fontSize,int fontColor){
@@ -30,4 +32,5 @@ public class StringUtil {
         span.setSpan(new AbsoluteSizeSpan(fontSize),start,end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return span;
     }
+
 }
