@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.model.TeachLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+import com.benyuan.xiaojs.ui.widget.LimitInputBox;
 import com.benyuan.xiaojs.util.DataPicker;
 import com.benyuan.xiaojs.util.TimeUtil;
 
@@ -42,6 +43,8 @@ public class ModifyLessonActivity extends BaseActivity {
     TextView mDuration;
     @BindView(R.id.modify_lesson_new_time)
     TextView mNewTime;
+    @BindView(R.id.modify_lesson_reason)
+    LimitInputBox mInput;
 
     private TeachLesson bean;
     @Override
@@ -57,6 +60,7 @@ public class ModifyLessonActivity extends BaseActivity {
                 mDuration.setText(getString(R.string.lesson_duration_tip, bean.getSchedule().getDuration()));
             }
         }
+        mInput.setHint(getString(R.string.delay_reason_hint));
     }
 
     @OnClick({R.id.left_image, R.id.limit_select_time,R.id.modify_lesson_ok})

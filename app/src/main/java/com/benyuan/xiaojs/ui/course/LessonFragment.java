@@ -161,6 +161,7 @@ public class LessonFragment extends BaseFragment {
 
     private void onSearch(){
         Intent intent = new Intent(mContext,LessonSearchActivity.class);
+        intent.putExtra(CourseConstant.KEY_IS_TEACHER,isTeacher);
         mContext.startActivity(intent);
     }
 

@@ -46,6 +46,7 @@ public class CancelLessonActivity extends BaseActivity {
             }
         }
         setMiddleTitle(R.string.cancel_lesson);
+        mInput.setHint(getString(R.string.cancel_reason_hint));
     }
 
     @OnClick({R.id.left_image, R.id.cancel_lesson_ok})

@@ -11,7 +11,7 @@
     <string name="rotate">旋转</string>
     <string name="phone_num">手机号</string>
     <string name="pwd">密码</string>
-    <string name="reason">原因：</string>
+    <string name="reason">推迟原因</string>
     <string name="person">人</string>
     <string name="day">天</string>
     <string name="hour">小时</string>
@@ -238,16 +238,20 @@
     <string name="publish_to_home_page">发布到主页</string>
 
     <!-- 修改上课时间 -->
-    <string name="modify_lesson_time_mark">注：修改上课会影响您的信用等级，请谨慎。</string>
-    <string name="lesson_name">直播课名称：</string>
-    <string name="origin_lesson_time">原上课时间：</string>
-    <string name="new_lesson_time">新的上课时间：</string>
+    <string name="modify_lesson_time_mark">修改上课时间会影响您的信用等级，请谨慎操作</string>
+    <string name="lesson_name">直播课名称</string>
+    <string name="origin_lesson_time">原上课时间</string>
+    <string name="new_lesson_time">新上课时间</string>
     <string name="modify_lesson_time_tip">请点击选择</string>
     <string name="modify_lesson">修改上课时间</string>
     <string name="lesson_duration_tip">时长%1$d分钟</string>
+    <string name="delay_reason_hint">请填写您推迟上课的原因</string>
+    <string name="cancel_reason">取消原因</string>
+    <string name="cancel_reason_hint">请输入取消原因</string>
+
 
     <!--lesson home page-->
     <string name="lesson_report">举报</string>
-    <string name="cancel_lesson_time_mark">注：取消后上线报名的费用将退还给报名学生，线下报名的费用请自行处理。取消后会影响您的信用等级，请谨慎操作。</string>
+    <string name="cancel_lesson_time_mark">取消后上线报名的费用将退还给报名学生，线下报名的费用请自行处理。取消后会影响您的信用等级，请谨慎操作。</string>
     <string name="cancel_examine_tip">撤销审核后，您可以重新编辑再提交审核</string>
 </resources>

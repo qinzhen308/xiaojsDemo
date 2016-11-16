@@ -61,10 +61,10 @@ public class GooeyMenu extends View {
     private GooeyMenuInterface mGooeyMenuInterface;
     private List<Drawable> mDrawableArray;
     private int[] icons = new int[]{R.drawable.ic_tab_dynamic,
-                                    R.drawable.ic_tab_open_course,
                                     R.drawable.ic_tab_chat,
-                                    R.drawable.ic_tab_find_lesson,
-                                    R.drawable.ic_tab_query};
+                                    R.drawable.ic_acounse,
+                                    R.drawable.ic_tab_query,
+                                    R.drawable.ic_tab_open_course};
 
     public static final int[] STATE_ACTIVE =
             {android.R.attr.state_enabled, android.R.attr.state_active};

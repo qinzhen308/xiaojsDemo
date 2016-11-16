@@ -63,6 +63,7 @@
         <item name="android:textSize">@dimen/font_28px</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="MinePageItem">

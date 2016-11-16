@@ -87,6 +87,21 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
 
         if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)){
+            holder.clsFunction.setVisibility(View.VISIBLE);
+            holder.circle.setText(R.string.shelves);
+            holder.enter.setText(R.string.edit);
+            holder.circle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    shelves(bean);
+                }
+            });
+            holder.enter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    edit(bean);
+                }
+            });
             holder.more.setVisibility(View.VISIBLE);
             holder.more.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -145,6 +160,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 || bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
             holder.more.setVisibility(View.VISIBLE);
             holder.clsFunction.setVisibility(View.VISIBLE);
+            holder.circle.setText(R.string.cls_moment);
+            holder.enter.setText(R.string.into_cls);
             holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
                 @Override
                 public void onClick(View view) {
@@ -305,8 +322,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     private void more(final TeachLesson bean){
 
             if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)){
-                String[] items = new String[]{mContext.getString(R.string.shelves),
-                        mContext.getString(R.string.edit),
+                String[] items = new String[]{
                         mContext.getString(R.string.look_detail),
                         mContext.getString(R.string.delete)};
                 ListBottomDialog dialog = new ListBottomDialog(mContext);
@@ -316,18 +332,11 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     public void onItemClick(int position) {
                         switch (position){
                             case 0://上架
-                                shelves(bean);
-                                break;
-                            case 1://编辑
-                                edit(bean);
-                                break;
-                            case 2://查看详情
                                 detail(bean);
                                 break;
-                            case 3://删除
+                            case 1://编辑
                                 delete(bean);
                                 break;
-
                         }
                     }
                 });
@@ -366,7 +375,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
                     @Override
                     public void onItemClick(int position) {
-                        modifyLesson(bean);
                         switch (position){
                             case 0://备课
                                 prepare(bean);
