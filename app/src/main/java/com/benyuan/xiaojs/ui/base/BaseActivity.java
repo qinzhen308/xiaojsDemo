@@ -37,6 +37,7 @@ public abstract class BaseActivity extends FragmentActivity {
     private TextView mMiddleText;
     private ImageView mLeftImage;
     private ImageView mRightImage;
+    private View mHeaderDivider;
 
     private Unbinder mBinder;
 
@@ -51,14 +52,25 @@ public abstract class BaseActivity extends FragmentActivity {
         mMiddleText = (TextView) findViewById(R.id.middle_view);
         mLeftImage = (ImageView) findViewById(R.id.left_image);
         mRightImage = (ImageView) findViewById(R.id.right_image);
+        mHeaderDivider = findViewById(R.id.base_header_divider);
         addViewContent();
     }
 
     protected void needHeader(boolean need){
         if (!need){
             mHeader.setVisibility(View.GONE);
+            mHeaderDivider.setVisibility(View.GONE);
         }else {
             mHeader.setVisibility(View.VISIBLE);
+            mHeaderDivider.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void needHeaderDivider(boolean need){
+        if (need){
+            mHeaderDivider.setVisibility(View.VISIBLE);
+        }else {
+            mHeaderDivider.setVisibility(View.GONE);
         }
     }
 

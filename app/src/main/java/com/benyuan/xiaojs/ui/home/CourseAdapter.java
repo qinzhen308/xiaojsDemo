@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.ui.widget.EvaluationStar;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class CourseAdapter extends AbsSwipeAdapter<RecommendCourseBean,CourseAda
         holder.name.setText("Android高级开发 自定义控件/NDK/架构设计/性能优化");
         holder.desc.setText("免费");
         holder.stuNum.setText("99999人已学");
+        holder.mStar.setGrading(EvaluationStar.Grading.FOUR);
     }
 
     @Override
@@ -77,6 +79,8 @@ public class CourseAdapter extends AbsSwipeAdapter<RecommendCourseBean,CourseAda
         TextView desc;
         @BindView(R.id.recommend_course_stu_num)
         TextView stuNum;
+        @BindView(R.id.recommend_course_star)
+        EvaluationStar mStar;
 
         public Holder(View view) {
             super(view);

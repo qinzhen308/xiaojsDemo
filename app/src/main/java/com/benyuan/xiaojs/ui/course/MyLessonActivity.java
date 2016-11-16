@@ -36,7 +36,7 @@ public class MyLessonActivity extends BaseTopTabActivity {
         setMiddleTitle(R.string.my_course);
         setRightImage(R.drawable.add_selector);
         setLeftImage(R.drawable.back_arrow);
-
+        needHeaderDivider(false);
 
         List<Fragment> fs = new ArrayList<>();
         Bundle b1 = new Bundle();
