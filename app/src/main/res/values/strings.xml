@@ -190,8 +190,8 @@
     <string name="live_lesson_cover">直播课封面</string>
     <string name="promotion_one">促销1</string>
     <string name="promotion_two">促销2</string>
-    <string name="enroll_before_promotion">报名前%1$s人，享受%2$s折，折后价￥<![CDATA[<font color="#cc0000">%3$s</font>]]>/小时</string>
-    <string name="lesson_before_promotion">上课前%1$s天，享受%2$s折，折后价￥<![CDATA[<font color="#cc0000">%3$s</font>]]></string>
+    <string name="enroll_before_promotion">报名前%1$s人，享受%2$s折，折后价<![CDATA[<font color="#cc0000">￥%3$s</font>]]></string>
+    <string name="lesson_before_promotion">上课前%1$s天，享受%2$s折，折后价<![CDATA[<font color="#cc0000">￥%3$s</font>]]></string>
 
     <string name="filter">筛选</string>
     <string name="time">时间</string>

@@ -245,7 +245,8 @@
                 android:paddingTop="@dimen/px10"
                 android:paddingBottom="@dimen/px10"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
@@ -272,7 +273,8 @@
                 android:paddingLeft="@dimen/px32"
                 android:paddingRight="@dimen/px32"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -316,7 +318,8 @@
                 android:paddingLeft="@dimen/px32"
                 android:paddingRight="@dimen/px32"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -361,7 +364,8 @@
                 android:paddingLeft="@dimen/px32"
                 android:paddingRight="@dimen/px32"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
             <TextView
                     android:id="@+id/sale_promotion_title"
@@ -390,8 +394,7 @@
                         android:paddingTop="@dimen/px16"
                         android:paddingBottom="@dimen/px16"
                         android:textColor="@color/font_black"
-                        android:textSize="@dimen/font_26px"
-                        android:text="@string/enroll_before_promotion"/>
+                        android:textSize="@dimen/font_26px"/>
 
             </LinearLayout>
 
@@ -417,8 +420,7 @@
                         android:textColor="@color/font_black"
                         android:textSize="@dimen/font_26px"
                         android:paddingTop="@dimen/px16"
-                        android:paddingBottom="@dimen/px16"
-                        android:text="@string/lesson_before_promotion"/>
+                        android:paddingBottom="@dimen/px16"/>
 
             </LinearLayout>
 

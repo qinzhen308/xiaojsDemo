@@ -29,8 +29,6 @@ import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.User;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
-import com.benyuan.xiaojs.ui.course.LessonCreationActivity;
-import com.benyuan.xiaojs.ui.course.LiveLessonDetailActivity;
 import com.benyuan.xiaojs.ui.course.MyLessonActivity;
 import com.benyuan.xiaojs.ui.mine.ProfileActivity;
 import com.benyuan.xiaojs.ui.mine.SettingsActivity;
@@ -93,10 +91,8 @@ public class MineFragment extends BaseFragment {
                 startActivity(new Intent(mContext, MyLessonActivity.class));
                 break;
             case R.id.my_course_schedule:
-                startActivity(new Intent(mContext, LessonCreationActivity.class));
                 break;
             case R.id.my_ask_questions:
-                startActivity(new Intent(mContext, LiveLessonDetailActivity.class));
                 break;
             case R.id.recharge:
                 break;
@@ -131,7 +127,7 @@ public class MineFragment extends BaseFragment {
         //set name
         //TODO base对象的name和login返回的name不同时存在
         User u = XiaojsConfig.mLoginUser;
-        if (basic != null) {
+        if (basic != null && !TextUtils.isEmpty(basic.getName())) {
             u.setName(basic.getName());
             mUserName.setText(basic.getName());
         } else {

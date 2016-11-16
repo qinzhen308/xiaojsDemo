@@ -27,6 +27,7 @@ public class LessonDetail {
     private Fee fee;
     private Enroll enroll;
     private String id;
+    private String cover;
 
     public String getCreatedBy() {
         return createdBy;
@@ -162,5 +163,13 @@ public class LessonDetail {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }
