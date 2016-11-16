@@ -19,11 +19,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".ui.account.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity
                 android:name=".ui.MainActivity"
@@ -57,7 +53,11 @@
         <activity android:name=".ui.course.LessonHomeActivity">
         </activity>
         <activity android:name=".ui.TestAPIActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity android:name=".ui.course.LiveLessonBriefActivity"/>
         <activity android:name=".ui.course.SalePromotionActivity"/>

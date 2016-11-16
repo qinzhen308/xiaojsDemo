@@ -28,6 +28,16 @@ public class LessonDetail {
     private Enroll enroll;
     private String id;
     private String cover;
+    private Account teacher;
+
+
+    public Account getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Account teacher) {
+        this.teacher = teacher;
+    }
 
     public String getCreatedBy() {
         return createdBy;

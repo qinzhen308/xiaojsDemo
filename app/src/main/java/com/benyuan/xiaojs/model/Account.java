@@ -12,6 +12,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account implements Serializable{
 
+    private String id;
     private Basic basic;
 
     public Basic getBasic() {
@@ -22,8 +23,13 @@ public class Account implements Serializable{
         this.basic = basic;
     }
 
+    public String getId() {
+        return id;
+    }
 
-
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Basic implements Serializable{

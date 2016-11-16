@@ -8,6 +8,13 @@ import android.text.TextUtils;
 
 public class ErrorPrompts {
 
+    public static String getLessonHomepagePrompt(String errorCode) {
+
+        String errorMessage = "获取直播课主页失败";
+
+
+        return errorMessage;
+    }
 
     public static String getCoverUpTokenPrompt(String errorCode) {
 

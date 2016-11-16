@@ -24,7 +24,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/4.
  */
 
-public class LessonDataManager {
+public class LessonDataManager extends DataManager{
 
 
     /**
@@ -280,7 +280,7 @@ public class LessonDataManager {
 
     public static void requestUploadCover(Context context,
                                            @NonNull String sessionID,
-                                           @NonNull final String userID,
+                                           @NonNull final String fileName,
                                            @NonNull final String filePath,
                                            @NonNull QiniuService qiniuService) {
 
@@ -304,9 +304,30 @@ public class LessonDataManager {
         }
 
 
+        String lessonKey = generateUploadKey(fileName);
+
         QiniuRequest qiniuRequest = new QiniuRequest();
-        qiniuRequest.uploadCover(context,sessionID,userID,filePath,qiniuService);
+        qiniuRequest.uploadCover(context,sessionID,"5827e51fa20843720290e2f5",filePath,qiniuService);
 
 
     }
+
+
+    public static void requestLessonHomepage(Context context,
+                                             @NonNull String lesson,
+                                             @NonNull APIServiceCallback<LessonDetail> callback) {
+
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the request");
+            }
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.getLessonHomepage(context,lesson,callback);
+    }
+
+
 }
