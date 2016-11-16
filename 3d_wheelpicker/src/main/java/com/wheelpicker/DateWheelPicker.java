@@ -2,7 +2,6 @@ package com.wheelpicker;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -473,7 +472,6 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
     private void updateMaxMonths(int maxMonth) {
         mMonths.clear();
 
-        Log.i("aaa", "maxMonth================"+maxMonth);
         for (int i = 0; i <= maxMonth; i++) {
             mMonths.add((i + 1) + mMonthStr);
         }

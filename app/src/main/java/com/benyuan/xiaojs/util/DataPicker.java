@@ -17,7 +17,6 @@ package com.benyuan.xiaojs.util;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.View;
 
 import com.benyuan.xiaojs.R;
