@@ -106,18 +106,18 @@ public class TestAPIActivity extends Activity {
 
     private void testCoverUpLoad(Context context ) {
 
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.getCoverUpToken(context, sessionid,new APIServiceCallback<String>() {
-            @Override
-            public void onSuccess(String object) {
-                token = object;
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+//        AccountRequest accountRequest = new AccountRequest();
+//        accountRequest.getCoverUpToken(context, sessionid,new APIServiceCallback<String>() {
+//            @Override
+//            public void onSuccess(String object) {
+//                token = object;
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 
 

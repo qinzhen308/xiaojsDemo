@@ -306,7 +306,7 @@ public class AccountRequest extends ServiceRequest {
     }
 
 
-    public void getAvatarUpToken(Context context,@NonNull String sessionID,@NonNull APIServiceCallback<String> callback) {
+    protected void getAvatarUpToken(Context context,@NonNull String sessionID,@NonNull APIServiceCallback<String> callback) {
 
         final WeakReference<APIServiceCallback<String>> callbackReference =
                 new WeakReference<>(callback);
@@ -383,7 +383,7 @@ public class AccountRequest extends ServiceRequest {
     }
 
 
-    public void getCoverUpToken(Context context,@NonNull String sessionID,@NonNull APIServiceCallback<String> callback) {
+    protected void getCoverUpToken(Context context,@NonNull String sessionID,@NonNull APIServiceCallback<String> callback) {
 
         final WeakReference<APIServiceCallback<String>> callbackReference =
                 new WeakReference<>(callback);

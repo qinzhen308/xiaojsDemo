@@ -160,28 +160,28 @@ public class AccountDataManager {
 
 
 
-    public static void requestAvatorUpToken(Context context,@NonNull String sessionID, @NonNull APIServiceCallback<String> callback) {
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the claim competency request");
-            }
-            return;
-        }
-
-        if (TextUtils.isEmpty(sessionID)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
-            return;
-        }
-
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.getAvatarUpToken(context,sessionID,callback);
-    }
+//    public static void requestAvatorUpToken(Context context,@NonNull String sessionID, @NonNull APIServiceCallback<String> callback) {
+//        if (callback == null) {
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the api service callback is null,so cancel the claim competency request");
+//            }
+//            return;
+//        }
+//
+//        if (TextUtils.isEmpty(sessionID)) {
+//
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the sessionID is empty,so the request return failure");
+//            }
+//
+//            String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(Errors.BAD_SESSION);
+//            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+//            return;
+//        }
+//
+//        AccountRequest accountRequest = new AccountRequest();
+//        accountRequest.getAvatarUpToken(context,sessionID,callback);
+//    }
 
 
     public static void requestUploadAvatar(Context context,
