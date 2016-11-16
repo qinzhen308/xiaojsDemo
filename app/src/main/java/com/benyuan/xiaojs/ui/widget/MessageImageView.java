@@ -14,6 +14,7 @@ package com.benyuan.xiaojs.ui.widget;
  *
  * ======================================================================================== */
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,12 +47,13 @@ public class MessageImageView extends ImageView {
         init();
     }
 
+    @TargetApi(21)
     public MessageImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init(){
+    private void init() {
         mBackground = BitmapFactory.decodeResource(getResources(), R.drawable.ic_msg_bg);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -64,27 +66,37 @@ public class MessageImageView extends ImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (mValue <= 0){
+        if (mValue <= 0) {
             return;
         }
-        if (mValue > 0 && mValue < 99){
-            int bgLeft = getWidth()/2 + getDrawable().getIntrinsicWidth()/2 - mBackground.getWidth()/2;
-            int bgTop = getHeight() - (getHeight() / 2 + getDrawable().getIntrinsicHeight() / 2 + mBackground.getHeight() / 2);
-            Rect src = new Rect(0,0,mBackground.getWidth(),mBackground.getHeight());
-            Rect dst = new Rect(bgLeft,bgTop,bgLeft + mBackground.getWidth(),bgTop + mBackground.getHeight());
-            canvas.drawBitmap(mBackground,src,dst,mPaint);
-            int len = (int) mPaint.measureText(String.valueOf(mValue));
-            int txtLeft = (getWidth() - getDrawable().getIntrinsicWidth())/2 + getDrawable().getIntrinsicWidth() - len/2;
+        if (mValue > 0 && mValue < 99) {
+            //bg: left, top
+            int bgLeft = getWidth() / 2 + getDrawable().getIntrinsicWidth() / 2 - mBackground.getWidth() / 2;
+            int bgTop = getHeight() / 2 - (getDrawable().getIntrinsicHeight() / 2 + mBackground.getHeight() / 2);
+
+            //draw bg
+            Rect src = new Rect(0, 0, mBackground.getWidth(), mBackground.getHeight());
+            Rect dst = new Rect(bgLeft, bgTop, bgLeft + mBackground.getWidth(), bgTop + mBackground.getHeight());
+            canvas.drawBitmap(mBackground, src, dst, mPaint);
+
+            //text: w, h
             Paint.FontMetricsInt fontMetrics = mPaint.getFontMetricsInt();
-            int tt = 1/2 * (fontMetrics.descent- fontMetrics.ascent) - fontMetrics.bottom;
-            int baseline = getHeight() - ((getHeight() - getDrawable().getIntrinsicHeight())/2 + getDrawable().getIntrinsicHeight()) - tt;
-            canvas.drawText(String.valueOf(mValue),txtLeft,baseline,mPaint);
-        }else {
+            int txtW = (int) mPaint.measureText(String.valueOf(mValue));
+            int txtH = fontMetrics.descent - fontMetrics.ascent;
+
+            //text: x, y, baseline
+            int x = bgLeft + (mBackground.getWidth() - txtW) / 2;
+            int y = bgTop + (mBackground.getHeight() - txtH) / 2;
+            int baseline = y - fontMetrics.ascent;
+
+            //draw text
+            canvas.drawText(String.valueOf(mValue), x, baseline, mPaint);
+        } else {
 
         }
     }
 
-    public void setCount(int value){
+    public void setCount(int value) {
         mValue = value;
         invalidate();
     }
