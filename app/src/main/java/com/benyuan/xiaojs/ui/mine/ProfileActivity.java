@@ -64,6 +64,7 @@ public class ProfileActivity extends BaseActivity {
     private String mAvatarUrl;
     private Account mAccount;
     private long mOldTime;
+    private Account.Basic mBasic;
 
     @Override
     protected void addViewContent() {
@@ -195,7 +196,10 @@ public class ProfileActivity extends BaseActivity {
             return;
         }
 
-        Account.Basic basic = new Account.Basic();
+        if (mBasic == null) {
+            mBasic = new Account.Basic();
+        }
+        Account.Basic basic = mBasic;
         basic.setName(mName.getText().toString());
         basic.setTitle(mUserTitle.getText().toString());
 
@@ -217,12 +221,14 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onSuccess(Account account) {
                 Toast.makeText(ProfileActivity.this, R.string.edit_profile_success, Toast.LENGTH_SHORT).show();
-                //TODO api need to return account
-                if (account != null) {
-                    Intent i = new Intent();
-                    i.putExtra(KEY_ACCOUNT_BEAN, account);
-                    setResult(RESULT_OK, i);
+                if (mAccount == null) {
+                    mAccount = new Account();
                 }
+                mAccount.setBasic(mBasic);
+
+                Intent i = new Intent();
+                i.putExtra(KEY_ACCOUNT_BEAN, mAccount);
+                setResult(RESULT_OK, i);
                 finish();
             }
 

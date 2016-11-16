@@ -128,8 +128,16 @@ public class MineFragment extends BaseFragment {
         //set avatar
         setAvatar(basic);
 
+        //set name
+        //TODO base对象的name和login返回的name不同时存在
+        User u = XiaojsConfig.mLoginUser;
         if (basic != null) {
+            u.setName(basic.getName());
             mUserName.setText(basic.getName());
+        } else {
+            if (u != null && !TextUtils.isEmpty(u.getName())) {
+                mUserName.setText(u.getName());
+            }
         }
 
         //set title
