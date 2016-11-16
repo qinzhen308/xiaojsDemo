@@ -140,7 +140,7 @@ public class TestAPIActivity extends Activity {
 
                         AccountDataManager.requestUploadAvatar(TestAPIActivity.this, sessionid, id, cropImgPath, new QiniuService() {
                             @Override
-                            public void uploadSucess(String fileName,String fileUrl) {
+                            public void uploadSuccess(String fileName, String fileUrl) {
 
 
 

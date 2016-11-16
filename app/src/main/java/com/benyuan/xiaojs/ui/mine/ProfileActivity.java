@@ -1,8 +1,6 @@
 package com.benyuan.xiaojs.ui.mine;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -13,6 +11,7 @@ import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
 import com.benyuan.xiaojs.common.crop.CropImagePath;
 import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.base.BaseBusiness;
@@ -61,10 +60,11 @@ public class ProfileActivity extends BaseActivity {
     EditTextDel mUserTitle;
 
     private Date mBirthDayDate;
-    private String mAvatarUrl;
+    private String mAvatarFileName;
     private Account mAccount;
     private long mOldTime;
     private Account.Basic mBasic;
+    private boolean mImgUploading = false;
 
     @Override
     protected void addViewContent() {
@@ -176,20 +176,18 @@ public class ProfileActivity extends BaseActivity {
             }
         }
 
-        if (basic.getAvatar() == null) {
-            if (!TextUtils.isEmpty(mAvatarUrl)) {
-                return true;
-            }
-        } else {
-            if (!basic.getAvatar().equals(mAvatarUrl)) {
-                return true;
-            }
+        if (mAvatarFileName != null) {
+            return true;
         }
 
         return false;
     }
 
     private void submitEditProfile() {
+        if (mImgUploading) {
+            return;
+        }
+
         if (!checkSubmitEditInfo()) {
             //not editing
             finish();
@@ -213,8 +211,8 @@ public class ProfileActivity extends BaseActivity {
             basic.setBirthday(new Date(mBirthDayDate.getTime()));
         }
 
-        if (!TextUtils.isEmpty(mAvatarUrl)) {
-            basic.setAvatar(mAvatarUrl);
+        if (!TextUtils.isEmpty(mAvatarFileName)) {
+            basic.setAvatar(mAvatarFileName);
         }
 
         AccountDataManager.requestEditProfile(this, BaseBusiness.getSession(), basic, new APIServiceCallback<Account>() {
@@ -277,11 +275,32 @@ public class ProfileActivity extends BaseActivity {
             case RESULT_OK:
                 if (data != null) {
                     String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
-                    Bitmap portrait = BitmapFactory.decodeFile(cropImgPath);
-                    if (portrait != null) {
-                        mPortraitView.setImageBitmap(portrait);
+                    //Bitmap portrait = BitmapFactory.decodeFile(cropImgPath);
+                    if (cropImgPath != null) {
+                        //mPortraitView.setImageBitmap(portrait);
+                        //TODO upload avatar and get filename
+                        mImgUploading = true;
+                        AccountDataManager.requestUploadAvatar(ProfileActivity.this,
+                                BaseBusiness.getSession(),
+                                BaseBusiness.getUserId(),
+                                cropImgPath,
+                                new QiniuService() {
 
-                        //TODO upload avatar and get mAvatarUrl
+                                    @Override
+                                    public void uploadSuccess(String fileName, String fileUrl) {
+                                        Glide.with(ProfileActivity.this)
+                                                .load(fileUrl)
+                                                .into(mPortraitView);
+                                        mAvatarFileName = fileName;
+
+                                        mImgUploading = false;
+                                    }
+
+                                    @Override
+                                    public void uploadFailure() {
+                                        mImgUploading = false;
+                                    }
+                                } );
                     }
                 }
                 break;

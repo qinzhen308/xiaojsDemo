@@ -37,6 +37,15 @@ public class BaseBusiness {
 
     }
 
+    public static String getUserId() {
+        if (XiaojsConfig.mLoginUser == null) {
+            return null;
+        }
+
+        return XiaojsConfig.mLoginUser.getId();
+
+    }
+
     public static int getTeachingMode(@NonNull Context context, @NonNull String teachingModeStr) {
         if (TextUtils.isEmpty(teachingModeStr)) {
             return Ctl.TeachingMode.ONE_2_MANY;
