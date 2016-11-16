@@ -8,7 +8,9 @@ import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.AccountRequest;
+import com.benyuan.xiaojs.data.api.QiniuRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
@@ -158,16 +160,63 @@ public class AccountDataManager {
 
 
 
-    public static void requestAvatarUpToken(Context context,APIServiceCallback<String> callback) {
-        if (callback == null) {
+//    public static void requestAvatarUpToken(Context context,APIServiceCallback<String> callback) {
+//        if (callback == null) {
+
+//    public static void requestAvatorUpToken(Context context,@NonNull String sessionID, @NonNull APIServiceCallback<String> callback) {
+//        if (callback == null) {
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the api service callback is null,so cancel the claim competency request");
+//            }
+//            return;
+//        }
+//
+//        if (TextUtils.isEmpty(sessionID)) {
+//
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the sessionID is empty,so the request return failure");
+//            }
+//
+//            String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(Errors.BAD_SESSION);
+//            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+//            return;
+//        }
+//
+//        AccountRequest accountRequest = new AccountRequest();
+//        accountRequest.getAvatarUpToken(context,sessionID,callback);
+//    }
+
+
+    public static void requestUploadAvatar(Context context,
+                                           @NonNull String sessionID,
+                                           @NonNull final String userID,
+                                           @NonNull final String filePath,
+                                           @NonNull QiniuService qiniuService) {
+
+
+        if (qiniuService == null) {
             if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the claim competency request");
+                Logger.d("the api service callback is null,so cancel the request");
             }
+            qiniuService.uploadFailure();
             return;
         }
 
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.getAvatarUpToken(context,callback);
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            qiniuService.uploadFailure();
+            return;
+        }
+
+
+        QiniuRequest qiniuRequest = new QiniuRequest();
+        qiniuRequest.uploadAvatar(context,sessionID,userID,filePath,qiniuService);
+
+
     }
 
 

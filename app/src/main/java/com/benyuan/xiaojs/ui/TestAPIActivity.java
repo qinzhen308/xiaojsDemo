@@ -2,11 +2,16 @@ package com.benyuan.xiaojs.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
+import com.benyuan.xiaojs.common.crop.CropImagePath;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Security;
@@ -15,8 +20,11 @@ import com.benyuan.xiaojs.data.CategoriesDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
+import com.benyuan.xiaojs.data.api.AccountRequest;
 import com.benyuan.xiaojs.data.api.ApiManager;
+import com.benyuan.xiaojs.data.api.QiniuRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.ClaimCompetency;
@@ -37,6 +45,7 @@ import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
 import com.orhanobut.logger.Logger;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -45,7 +54,12 @@ public class TestAPIActivity extends Activity {
     private int vcode;
     private long mob = 13812345687l;
     private String subject = "5820a10e101db0af4bcf2fd9";
-    private String sessionid = "OIVW8TVDqy0Zr7-1tw9-C-9Ljf6bRW5U";
+    private String sessionid = "0519JlXgx3Hl45DPFrKJpqdKdip4fJ4K";
+    private String id = "5827e51fa20843720290e2f5";
+    private String token = "";///"7ILUcJUmJGSmyeaB3QNWpUlPdT3-E2MXkC1oZhqJ:HBHjxd_oTlAiwaht4niHQFDmh6Q=:eyJyZXR1cm5Cb2R5Ijoie1xuICAgICAgICAgICAgXCJuYW1lXCI6ICQoZm5hbWUpLFxuICAgICAgICAgICAgXCJzaXplXCI6ICQoZnNpemUpLFxuICAgICAgICAgICAgXCJ3XCI6ICQoaW1hZ2VJbmZvLndpZHRoKSxcbiAgICAgICAgICAgIFwiaFwiOiAkKGltYWdlSW5mby5oZWlnaHQpLFxuICAgICAgICAgICAgXCJoYXNoXCI6ICQoZXRhZylcbiAgICAgICAgfSIsInNjb3BlIjoidW5kZWZpbmVkOjU4MjkyMGFmYzcwMDkzM2M0ZDZjMjVkYyIsImRlYWRsaW5lIjoxNDc5MjQ4NDA2fQ==";
+
+
+    private final static int CROP_PORTRAIT = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +71,15 @@ public class TestAPIActivity extends Activity {
     public void btnClicked(View v) {
         switch (v.getId()) {
             case R.id.btn_svc: {
-                testSendCode(this);
+                //testSendCode(this);
 
                 break;
             }
             case R.id.btn_svm: {
                 //testValidateCode(this);
                 //testRegister(this);
-                testLogin(this);
+                //testLogin(this);
+                testGetUpToken(this);
                 break;
             }
             case R.id.btn_q: {
@@ -80,10 +95,68 @@ public class TestAPIActivity extends Activity {
                 //testGetSubject(this);
                 //testGetUpToken(this);
                 //editProfile(this);
-                getProfile(this);
+                //getProfile(this);
+                testCoverUpLoad(this);
+
                 break;
             }
 
+        }
+    }
+
+    private void testCoverUpLoad(Context context ) {
+
+//        AccountRequest accountRequest = new AccountRequest();
+//        accountRequest.getCoverUpToken(context, sessionid,new APIServiceCallback<String>() {
+//            @Override
+//            public void onSuccess(String object) {
+//                token = object;
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+
+
+
+    }
+
+
+    private void editPortrait() {
+        Intent i = new Intent(this, CropImageMainActivity.class);
+        startActivityForResult(i, CROP_PORTRAIT);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) {
+            case RESULT_OK:
+                if (data != null) {
+                    String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
+                    Bitmap portrait = BitmapFactory.decodeFile(cropImgPath);
+                    if (portrait != null) {
+
+                        AccountDataManager.requestUploadAvatar(TestAPIActivity.this, sessionid, id, cropImgPath, new QiniuService() {
+                            @Override
+                            public void uploadSucess(String fileName,String fileUrl) {
+
+
+
+                            }
+
+                            @Override
+                            public void uploadFailure() {
+
+
+
+                            }
+                        });
+
+                    }
+                }
+                break;
         }
     }
 
@@ -123,17 +196,18 @@ public class TestAPIActivity extends Activity {
 
     private void testGetUpToken(Context context) {
 
-        AccountDataManager.requestAvatarUpToken(context, new APIServiceCallback<String>() {
-            @Override
-            public void onSuccess(String object) {
+//        AccountDataManager.requestAvatorUpToken(context, sessionid,new APIServiceCallback<String>() {
+//            @Override
+//            public void onSuccess(String object) {
+//                token = object;
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
     }
 
     //getSubject demo
