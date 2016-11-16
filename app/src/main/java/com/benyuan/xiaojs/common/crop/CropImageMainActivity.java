@@ -1,6 +1,8 @@
 package com.benyuan.xiaojs.common.crop;
 
+import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -21,6 +23,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.permissiongen.PermissionFail;
+import com.benyuan.xiaojs.common.permissiongen.PermissionGen;
+import com.benyuan.xiaojs.common.permissiongen.PermissionSuccess;
+import com.benyuan.xiaojs.common.permissiongen.internal.PermissionUtil;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.widget.BottomSheet;
 import com.benyuan.xiaojs.util.FileUtil;
@@ -43,6 +49,7 @@ import java.net.URI;
  *
  * ======================================================================================== */
 public class CropImageMainActivity extends BaseActivity implements BottomSheet.OnDialogCloseListener {
+    private static final int REQUEST_GALLERY_PERMISSION = 1000;
     private static final String LOG_TAG = "CropImageMainActivity";
     public static final String NEED_DELETE = "need_delete";// 需要删除按钮
     public static final String NEED_LOOK = "need_look";// 需要预览
@@ -57,6 +64,11 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
     public static final int RESULT_DELETE = RESULT_FIRST_USER + 1;
     public static final int RESULT_LOOK = RESULT_FIRST_USER + 2;
     public static final int RESULT_COVER = RESULT_FIRST_USER + 3;
+
+    private Uri mUri;
+    private String mSelection;
+    private String[] mSelectionArgs;
+    private Dialog mDialog;
 
     @Override
     public void addViewContent() {
@@ -120,6 +132,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         });
 
         bottomSheet.show();
+        mDialog = bottomSheet;
     }
 
     private void showCropImageDialogD() {
@@ -155,6 +168,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         });
 
         bottomSheet.show();
+        mDialog = bottomSheet;
     }
 
     private void showCropImageDialogPD() {
@@ -194,6 +208,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         });
 
         bottomSheet.show();
+        mDialog = bottomSheet;
     }
 
     private void showCropImageDialogPDC() {
@@ -237,6 +252,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         });
 
         bottomSheet.show();
+        mDialog = bottomSheet;
     }
 
     private void showCropImageDialog() {
@@ -268,6 +284,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         });
 
         bottomSheet.show();
+        mDialog = bottomSheet;
     }
 
     @Override
@@ -283,28 +300,12 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                         cursor.moveToFirst();
                         int columnIndex = cursor.getColumnIndex(MediaColumns.DATA);
                         String picturePath = cursor.getString(columnIndex);
+                        cursor.close();
                         if (picturePath == null) {
-                            picturePath = getPath(this, imageUri);
+                            picturePath = getPath(CropImageMainActivity.this, imageUri);
                         }
-
-                        File file = new File(picturePath);
-                        if (file.exists()) {
-                            FileUtil.copyFiles(picturePath,
-                                    CropImagePath.UPLOAD_IMAGE_PATH, true);
-                            Intent intent = new Intent();
-                            intent.setClass(this, CropImageActivity.class);
-                            intent.putExtra(CropImagePath.CROP_IMAGE_WIDTH, mWidth);
-                            intent.putExtra(CropImagePath.CROP_IMAGE_HEIGHT,
-                                    mHeight);
-                            intent.putExtra(CropImagePath.CROP_NEVER, isNotCrop);
-                            intent.putExtra(CropImagePath.UPLOAD_COMPRESS, isUploadCompress);
-                            startActivityForResult(intent,
-                                    CropImagePath.CROP_IMAGE_REQUEST_CODE);
-                            cursor.close();
-                        } else {
-                            cursor.close();
-                            //ToastUtil.showCustomViewToast(this, R.string.not_find_image);
-                            finish();
+                        if (!PermissionUtil.isOverMarshmallow()) {
+                            setImgPathToResult(picturePath);
                         }
                     } else {
                         URI uri = URI.create(data.getData().toString());
@@ -462,27 +463,62 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+    public String getDataColumn(Context context, Uri uri, String selection,
+                                String[] selectionArgs) {
+        if (!PermissionUtil.isOverMarshmallow()) {
+            Cursor cursor = null;
+            final String column = "_data";
+            final String[] projection = {column};
+            try {
+                cursor = getContentResolver().query(uri, projection, selection, selectionArgs,
+                        null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    final int index = cursor.getColumnIndexOrThrow(column);
+                    return cursor.getString(index);
+                }
+            } finally {
+                if (cursor != null)
+                    cursor.close();
+            }
+            return null;
+        } else {
+            mUri = uri;
+            mSelection = selection;
+            mSelectionArgs = selectionArgs;
 
+            PermissionGen.needPermission(CropImageMainActivity.this, REQUEST_GALLERY_PERMISSION,
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
+            return null;
+
+        }
+    }
+
+    @PermissionSuccess(requestCode = REQUEST_GALLERY_PERMISSION)
+    public void getGallerySuccess() {
         Cursor cursor = null;
         final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
+        final String[] projection = {column};
+        String path = null;
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+            cursor = getContentResolver().query(mUri, projection, mSelection, mSelectionArgs,
                     null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
+                path = cursor.getString(index);
             }
         } finally {
             if (cursor != null)
                 cursor.close();
         }
-        return null;
+
+        setImgPathToResult(path);
+    }
+
+    @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
+    public void getGalleryFailure() {
+        if (mDialog != null) {
+            mDialog.cancel();
+        }
     }
 
     /**
@@ -572,6 +608,30 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
             }
             ((TextView) convertView).setText(mActions[position]);
             return convertView;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
+
+    private void setImgPathToResult(String picturePath) {
+        File file = new File(picturePath);
+        if (file.exists()) {
+            FileUtil.copyFiles(picturePath,
+                    CropImagePath.UPLOAD_IMAGE_PATH, true);
+            Intent intent = new Intent();
+            intent.setClass(this, CropImageActivity.class);
+            intent.putExtra(CropImagePath.CROP_IMAGE_WIDTH, mWidth);
+            intent.putExtra(CropImagePath.CROP_IMAGE_HEIGHT,
+                    mHeight);
+            intent.putExtra(CropImagePath.CROP_NEVER, isNotCrop);
+            intent.putExtra(CropImagePath.UPLOAD_COMPRESS, isUploadCompress);
+            startActivityForResult(intent,
+                    CropImagePath.CROP_IMAGE_REQUEST_CODE);
+        } else {
+            finish();
         }
     }
 }

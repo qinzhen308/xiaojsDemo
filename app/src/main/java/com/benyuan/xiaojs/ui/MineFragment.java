@@ -72,7 +72,7 @@ public class MineFragment extends BaseFragment {
     @Override
     protected void init() {
         User u = XiaojsConfig.mLoginUser;
-        if (u.getAccount() != null) {
+        if (u != null && u.getAccount() != null) {
             setPersonBaseInfo(u.getAccount());
         }
     }

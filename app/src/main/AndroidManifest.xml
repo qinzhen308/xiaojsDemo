@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
@@ -64,8 +65,12 @@
         <activity android:name=".ui.course.LiveLessonDetailActivity"/>
         <activity android:name=".ui.mine.TeachAbilityDemoActivity">
         </activity>
-        <activity android:name=".ui.course.ModifyLessonActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.course.CancelLessonActivity" android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.course.ModifyLessonActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.course.CancelLessonActivity"
+                android:screenOrientation="portrait"/>
 
     </application>
 
