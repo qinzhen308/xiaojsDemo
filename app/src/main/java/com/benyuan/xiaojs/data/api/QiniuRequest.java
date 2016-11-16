@@ -95,7 +95,9 @@ public class QiniuRequest {
                 if (info.isOK()){
                     QiniuService callback = callbackReference.get();
                     if (callback != null) {
-                        callback.uploadSucess(key);
+                        StringBuilder fileUrl = new StringBuilder(QiniuService.AVATAR_BASE_URL);
+                        fileUrl.append(key);
+                        callback.uploadSucess(key,fileUrl.toString());
                     }
                 }else{
                     QiniuService callback = callbackReference.get();
