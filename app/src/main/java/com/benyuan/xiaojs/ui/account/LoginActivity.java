@@ -62,6 +62,7 @@ public class LoginActivity extends BaseActivity {
         mContext = this;
         addView(R.layout.activity_login);
         setMiddleTitle(R.string.login);
+        setLeftImage(-1);
 
         initRegGuideStyle();
         initLoginInfo();
