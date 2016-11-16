@@ -158,7 +158,7 @@ public class AccountDataManager {
 
 
 
-    public static void requestAvatorUpToken(Context context,APIServiceCallback<String> callback) {
+    public static void requestAvatarUpToken(Context context,APIServiceCallback<String> callback) {
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the api service callback is null,so cancel the claim competency request");

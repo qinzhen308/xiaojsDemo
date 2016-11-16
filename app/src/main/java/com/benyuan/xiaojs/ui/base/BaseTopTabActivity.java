@@ -293,8 +293,4 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
         return mPosition;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mFragments.get(mPosition).onActivityResult(requestCode, resultCode, data);
-    }
 }

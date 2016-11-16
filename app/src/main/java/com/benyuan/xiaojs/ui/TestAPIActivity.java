@@ -123,7 +123,7 @@ public class TestAPIActivity extends Activity {
 
     private void testGetUpToken(Context context) {
 
-        AccountDataManager.requestAvatorUpToken(context, new APIServiceCallback<String>() {
+        AccountDataManager.requestAvatarUpToken(context, new APIServiceCallback<String>() {
             @Override
             public void onSuccess(String object) {
 

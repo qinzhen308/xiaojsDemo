@@ -99,6 +99,7 @@ public class EvaluationStar extends LinearLayout {
     }
 
     public void setGrading(Grading grading, int type) {
+        reset();
         switch (type) {
             case NORMAL:
                 default:
@@ -178,6 +179,14 @@ public class EvaluationStar extends LinearLayout {
             default:
                 iv.setImageResource(R.drawable.ic_eval_star_none);
                 break;
+        }
+    }
+
+    private void reset() {
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            ImageView iv = (ImageView)getChildAt(i);
+            iv.setImageResource(R.drawable.ic_eval_star_none);
         }
     }
 }

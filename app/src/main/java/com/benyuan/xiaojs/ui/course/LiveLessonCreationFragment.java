@@ -16,6 +16,7 @@ package com.benyuan.xiaojs.ui.course;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -34,8 +35,10 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
+import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.Schedule;
+import com.benyuan.xiaojs.model.TeachLesson;
 import com.benyuan.xiaojs.ui.base.BaseBusiness;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.widget.EditTextDel;
@@ -66,20 +69,20 @@ public class LiveLessonCreationFragment extends BaseFragment {
     TextView mLessonSubjectTv;
     @BindView(R.id.lesson_stu_count)
     EditTextDel mLessonStuCount;
-    @BindView(R.id.teach_form)
-    TextView mTeachFormTv;
     @BindView(R.id.enroll_switcher)
     ToggleButton mEnrollSwitcher;
+    @BindView(R.id.teach_form)
+    TextView mTeachFormTv;
     @BindView(R.id.charge_layout)
     View mChargeLayout;
     @BindView(R.id.charge_way_switcher)
     ToggleButton mChargeWaySwitcher;
+    @BindView(R.id.charge_way)
+    View mChargeWayLayout;
     @BindView(R.id.by_duration_title)
     TextView mByLiveDurationTv;
     @BindView(R.id.by_total_price_title)
     TextView mByLiveTotalPriceTv;
-    @BindView(R.id.charge_way)
-    View mChargeWayLayout;
     @BindView(R.id.by_duration)
     EditText mByLiveDurationEdt;
     @BindView(R.id.by_total_price)
@@ -128,7 +131,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 selectTeachForm();
                 break;
             case R.id.enroll_switcher:
-                mChargeLayout.setVisibility(((ToggleButton)v).isChecked() ? View.VISIBLE : View.GONE);
+                mChargeLayout.setVisibility(((ToggleButton) v).isChecked() ? View.VISIBLE : View.GONE);
                 break;
             case R.id.charge_way_switcher:
                 openOrCloseChargeWay(v);
@@ -155,8 +158,87 @@ public class LiveLessonCreationFragment extends BaseFragment {
         }
     }
 
-    private void loadData () {
-        //LiveLesson lesson = getArguments().getSerializable();
+    private void loadData() {
+        Bundle data = getArguments();
+        if (data != null) {
+            String lessonId = data.getString(CourseConstant.KEY_LESSON_ID);
+            LessonDataManager.requestGetLessonDetails(mContext, lessonId, new APIServiceCallback<LessonDetail>() {
+                @Override
+                public void onSuccess(LessonDetail lessonDetail) {
+                    initBaseInfo(lessonDetail);
+                    initOptionalInfo(lessonDetail);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+
+                }
+            });
+        }
+    }
+
+    private void initBaseInfo(LessonDetail lessonDetail) {
+        if (lessonDetail == null) {
+            return;
+        }
+
+        mLessonNameEdt.setText(lessonDetail.getTitle());
+        //TODO need to get subject name by id
+        mLessonSubjectTv.setText(lessonDetail.getSubject());
+
+        Enroll enroll = lessonDetail.getEnroll();
+        if (enroll != null) {
+            mLessonStuCount.setText(String.valueOf(enroll.getMax()));
+            mEnrollSwitcher.setChecked(enroll.isMandatory());
+        }
+
+        mTeachFormTv.setText(BaseBusiness.getTeachingMode(mContext, lessonDetail.getMode()));
+
+        Fee fee = lessonDetail.getFee();
+        if (fee != null) {
+            mChargeWaySwitcher.setChecked(!fee.isFree());
+
+            if (fee.getType() == Finance.PricingType.TOTAL) {
+                mByLiveTotalPriceEdt.setText(BaseBusiness.formatPrice(fee.getCharge().doubleValue()));
+            } else if (fee.getType() == Finance.PricingType.PAY_PER_HOUR) {
+                mByLiveDurationEdt.setText(BaseBusiness.formatPrice(fee.getCharge().doubleValue()));
+            }
+        }
+
+        Schedule sch = lessonDetail.getSchedule();
+        if (sch != null) {
+            mLessonStartTime = sch.getStart().getTime();
+            String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
+            mLessonStartTimeTv.setText(dateStr);
+            mLessonStartTimeTv.setTextColor(mBlackFont);
+
+            mLessonDurationEdt.setText(String.valueOf(sch.getDuration()));
+        }
+
+        //TODO publish person page, not implemented
+        LiveLesson.Publish publish = lessonDetail.getPublish();
+        if (publish != null) {
+            mPublicTv.setSelected(publish.isOnShelves());
+        }
+        //mOnShelvesTv
+    }
+
+    private void initOptionalInfo(LessonDetail lessonDetail) {
+        if (lessonDetail == null) {
+            return;
+        }
+
+        if (mLessonOptionalInfo == null) {
+            mLessonOptionalInfo = new LiveLesson();
+        }
+
+        //TODO cover not exist
+        //mLessonOptionalInfo.setCover(lessonDetail.get);
+        mLessonOptionalInfo.setTags(lessonDetail.getTags());
+        mLessonOptionalInfo.setTeachersIntro(lessonDetail.getTeachersIntro());
+        mLessonOptionalInfo.setOverview(lessonDetail.getOverview());
+        mLessonOptionalInfo.setAudit(lessonDetail.getAudit());
+        mLessonOptionalInfo.setPromotion(lessonDetail.getPromotion());
     }
 
     private void initView() {
@@ -180,7 +262,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
     }
 
 
-    private void addViewListener () {
+    private void addViewListener() {
         mByLiveTotalPriceEdt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -352,7 +434,11 @@ public class LiveLessonCreationFragment extends BaseFragment {
     }
 
     private void enterOptionalInfoPage() {
-        LiveLesson lesson = new LiveLesson();
+        if (mLessonOptionalInfo == null) {
+            mLessonOptionalInfo = new LiveLesson();
+        }
+
+        LiveLesson lesson = mLessonOptionalInfo;
         Intent i = new Intent(mContext, LessonCreationOptionalInfoActivity.class);
         int pricingType = Finance.PricingType.TOTAL;
         float price = 0;

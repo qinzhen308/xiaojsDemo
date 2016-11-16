@@ -3,6 +3,7 @@ package com.benyuan.xiaojs.ui.course;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,6 +17,11 @@ import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
 import com.benyuan.xiaojs.common.crop.CropImagePath;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -79,57 +85,6 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
         initData();
     }
 
-    private void initData() {
-        mBlackFont = getResources().getColor(R.color.font_black);
-        mLightGrayFont = getResources().getColor(R.color.font_light_gray);
-
-        Object object = getIntent().getSerializableExtra(KEY_LESSON_OPTIONAL_INFO);
-        if (object instanceof LiveLesson) {
-            mLesson = (LiveLesson) object;
-            try {
-                mPrice = mLesson.getFee().getCharge().floatValue();
-                mPricingType = mLesson.getFee().getType();
-                mIsFree = mLesson.getFee().isFree();
-                mLessonStartTime = mLesson.getSchedule().getStart().getTime();
-                mLimit = mLesson.getEnroll().getMax();
-                mIsMandatory = mLesson.getEnroll().isMandatory();
-                if (mIsFree || !mIsMandatory) {
-                    findViewById(R.id.sale_promotion_divide_line).setVisibility(View.GONE);
-                    findViewById(R.id.sale_promotion_layout).setVisibility(View.GONE);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private boolean checkPromotionEnable() {
-        if (mLimit <= 0) {
-            Toast.makeText(this, R.string.enroll_people_empty, Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (mPrice <= ZERO) {
-            Toast.makeText(this, R.string.charge_empty, Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (mLessonStartTime <= 0) {
-            Toast.makeText(this, R.string.lesson_start_time_empty, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return true;
-    }
-
-    private void initCoverLayout() {
-        mCoverImgView.setVisibility(View.GONE);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mCoverAddLayout.getLayoutParams();
-        FrameLayout.LayoutParams imgParams = (FrameLayout.LayoutParams) mCoverImgView.getLayoutParams();
-        int w = getResources().getDisplayMetrics().widthPixels;
-        int h = (int) ((COURSE_COVER_HEIGHT / (float) COURSE_COVER_WIDTH) * w);
-        params.height = h;
-        params.width = w;
-        imgParams.width = w;
-        imgParams.height = h;
-    }
-
     @OnClick({R.id.left_image, R.id.add_cover, R.id.live_lesson_brief, R.id.teacher_introduction,
             R.id.sit_in_on, R.id.sale_promotion, R.id.cover_view})
     public void onClick(View v) {
@@ -179,6 +134,81 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
         }
     }
 
+    private void initData() {
+        mBlackFont = getResources().getColor(R.color.font_black);
+        mLightGrayFont = getResources().getColor(R.color.font_light_gray);
+
+        Object object = getIntent().getSerializableExtra(KEY_LESSON_OPTIONAL_INFO);
+        if (object instanceof LiveLesson) {
+            mLesson = (LiveLesson) object;
+            try {
+                mPrice = mLesson.getFee().getCharge().floatValue();
+                mPricingType = mLesson.getFee().getType();
+                mIsFree = mLesson.getFee().isFree();
+                mLessonStartTime = mLesson.getSchedule().getStart().getTime();
+                mLimit = mLesson.getEnroll().getMax();
+                mIsMandatory = mLesson.getEnroll().isMandatory();
+                if (mIsFree || !mIsMandatory) {
+                    findViewById(R.id.sale_promotion_divide_line).setVisibility(View.GONE);
+                    findViewById(R.id.sale_promotion_layout).setVisibility(View.GONE);
+                }
+
+                //set cover
+                if (TextUtils.isEmpty(mLesson.getCover())) {
+                    Glide.with(this).load(mLesson.getCover()).into(new GlideDrawableImageViewTarget(mCoverImgView) {
+                        @Override
+                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                            super.onResourceReady(resource, animation);
+                            mCoverImgView.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            super.onLoadFailed(e, errorDrawable);
+                            mCoverImgView.setVisibility(View.GONE);
+                        }
+                    });
+                }
+
+                initLessonBrief();
+                initTeacherIntro();
+                initAudit();
+                initPromotion();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private boolean checkPromotionEnable() {
+        if (mLimit <= 0) {
+            Toast.makeText(this, R.string.enroll_people_empty, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (mPrice <= ZERO) {
+            Toast.makeText(this, R.string.charge_empty, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (mLessonStartTime <= 0) {
+            Toast.makeText(this, R.string.lesson_start_time_empty, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void initCoverLayout() {
+        mCoverImgView.setVisibility(View.GONE);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mCoverAddLayout.getLayoutParams();
+        FrameLayout.LayoutParams imgParams = (FrameLayout.LayoutParams) mCoverImgView.getLayoutParams();
+        int w = getResources().getDisplayMetrics().widthPixels;
+        int h = (int) ((COURSE_COVER_HEIGHT / (float) COURSE_COVER_WIDTH) * w);
+        params.height = h;
+        params.width = w;
+        imgParams.width = w;
+        imgParams.height = h;
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -203,79 +233,92 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 }
                 break;
             case LESSON_BRIEF:
-                mLesson = getLesson(data);
-                if (mLesson != null && mLesson.getOverview() != null) {
-                    String txt = formatResult(mLesson.getOverview().getText());
-                    if (!TextUtils.isEmpty(txt) && mLesson.getOverview() != null) {
-                        mLessonBriefTv.setText(txt);
-                        mLessonBriefTv.setTextColor(mBlackFont);
-                    } else {
-                        mLessonBriefTv.setTextColor(mLightGrayFont);
-                    }
-                }
+                updateLesson(data);
+                initLessonBrief();
                 break;
             case TEACHER_INTRODUCTION:
-                mLesson = getLesson(data);
-                if (mLesson != null && mLesson.getTeachersIntro() != null) {
-                    String txt = formatResult(mLesson.getTeachersIntro().getText());
-                    if (!TextUtils.isEmpty(txt) && mLesson.getTeachersIntro() != null) {
-                        mTeachIntroTv.setText(txt);
-                        mTeachIntroTv.setTextColor(mBlackFont);
-                    } else {
-                        mTeachIntroTv.setTextColor(mLightGrayFont);
-                    }
-                }
+                updateLesson(data);
+                initTeacherIntro();
                 break;
             case SIT_IN_ON:
-                mLesson = getLesson(data);
-                mSitInOnv.setTextColor(mLightGrayFont);
-                if (mLesson != null && mLesson.getAudit() != null) {
-                    String[] sitInOnPersons = mLesson.getAudit().getGrantedTo();
-                    if (sitInOnPersons != null) {
-                        int i = 0;
-                        StringBuilder sb = new StringBuilder();
-
-                        for (String per : sitInOnPersons) {
-                            if (++i > 2) {
-                                break;
-                            }
-                            sb.append(per + ",");
-                        }
-                        String txt = sb.toString();
-                        if (!TextUtils.isEmpty(txt)) {
-                            txt = txt.substring(0, txt.length() - 1);
-                        }
-                        if (!TextUtils.isEmpty(txt)) {
-                            mSitInOnv.setText(txt);
-                            mSitInOnv.setTextColor(mBlackFont);
-                        }
-                    }
-                }
+                updateLesson(data);
+                initAudit();
                 break;
             case SALE_PROMOTION:
-                mLesson = getLesson(data);
-                if (mLesson != null && mLesson.getPromotion() != null) {
-                    mSalePromotionTv.setText(getString(R.string.edit));
-                    mSalePromotionTv.setTextColor(mBlackFont);
-                } else {
-                    mSalePromotionTv.setTextColor(mLightGrayFont);
-                }
+                updateLesson(data);
+                initPromotion();
                 break;
         }
     }
 
-    private LiveLesson getLesson(Intent data) {
+    private void initLessonBrief() {
+        if (mLesson != null && mLesson.getOverview() != null) {
+            String txt = formatResult(mLesson.getOverview().getText());
+            if (!TextUtils.isEmpty(txt) && mLesson.getOverview() != null) {
+                mLessonBriefTv.setText(txt);
+                mLessonBriefTv.setTextColor(mBlackFont);
+            } else {
+                mLessonBriefTv.setTextColor(mLightGrayFont);
+            }
+        }
+    }
+
+    private void initTeacherIntro() {
+        if (mLesson != null && mLesson.getTeachersIntro() != null) {
+            String txt = formatResult(mLesson.getTeachersIntro().getText());
+            if (!TextUtils.isEmpty(txt) && mLesson.getTeachersIntro() != null) {
+                mTeachIntroTv.setText(txt);
+                mTeachIntroTv.setTextColor(mBlackFont);
+            } else {
+                mTeachIntroTv.setTextColor(mLightGrayFont);
+            }
+        }
+    }
+
+    private void initAudit() {
+        mSitInOnv.setTextColor(mLightGrayFont);
+        if (mLesson != null && mLesson.getAudit() != null) {
+            String[] sitInOnPersons = mLesson.getAudit().getGrantedTo();
+            if (sitInOnPersons != null) {
+                int i = 0;
+                StringBuilder sb = new StringBuilder();
+
+                for (String per : sitInOnPersons) {
+                    if (++i > 2) {
+                        break;
+                    }
+                    sb.append(per + ",");
+                }
+                String txt = sb.toString();
+                if (!TextUtils.isEmpty(txt)) {
+                    txt = txt.substring(0, txt.length() - 1);
+                }
+                if (!TextUtils.isEmpty(txt)) {
+                    mSitInOnv.setText(txt);
+                    mSitInOnv.setTextColor(mBlackFont);
+                }
+            }
+        }
+    }
+
+    private void initPromotion() {
+        if (mLesson != null && mLesson.getPromotion() != null) {
+            mSalePromotionTv.setText(getString(R.string.edit));
+            mSalePromotionTv.setTextColor(mBlackFont);
+        } else {
+            mSalePromotionTv.setTextColor(mLightGrayFont);
+        }
+    }
+
+    private void updateLesson(Intent data) {
         if (data != null) {
             Object object = data.getSerializableExtra(KEY_LESSON_OPTIONAL_INFO);
             if (object instanceof LiveLesson) {
                 String coverUrl = mLesson.getCover();
                 mLesson = (LiveLesson) object;
                 mLesson.setCover(coverUrl);
-                return mLesson;
             }
         }
-
-        return mLesson;
     }
 
     private String formatResult(String s) {
