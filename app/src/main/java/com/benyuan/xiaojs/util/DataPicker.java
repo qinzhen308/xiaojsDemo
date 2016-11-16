@@ -17,6 +17,7 @@ package com.benyuan.xiaojs.util;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.View;
 
 import com.benyuan.xiaojs.R;
@@ -42,16 +43,15 @@ public class DataPicker {
 
     private static Object mPickedData;
 
-    public static void pickBirthday(Context context, final OnBirthdayPickListener pickListener) {
+    public static void pickBirthday(Context context, Date birthday, final OnBirthdayPickListener pickListener) {
         BottomSheet bottomSheet = new BottomSheet(context);
         final DateWheelPicker picker = new DateWheelPicker(context);
 
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         calendar.setTime(new Date());
-
-        mYear = calendar.get(java.util.Calendar.YEAR);
-        mMonth = calendar.get(java.util.Calendar.MONTH) + 1;
-        mDay = calendar.get(java.util.Calendar.DATE);
+        int dy = calendar.get(java.util.Calendar.YEAR);
+        int dm = calendar.get(java.util.Calendar.MONTH);
+        int dd = calendar.get(java.util.Calendar.DATE);
 
         picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         picker.setTextColor(context.getResources().getColor(R.color.font_black));
@@ -59,7 +59,7 @@ public class DataPicker {
         picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
         picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
 
-        picker.setDateRange(mYear - 100, mYear);
+        picker.setDateRange(dy - 100, dy);
         picker.setOnDatePickListener(new DateWheelPicker.OnDatePickListener() {
             @Override
             public void onDatePicked(int year, int month, int day) {
@@ -69,6 +69,16 @@ public class DataPicker {
             }
         });
         //after set onDatePickerLister
+        if (birthday != null) {
+            calendar.setTime(birthday);
+            mYear = calendar.get(java.util.Calendar.YEAR);
+            mMonth = calendar.get(java.util.Calendar.MONTH);
+            mDay= calendar.get(java.util.Calendar.DATE);
+        } else {
+            mYear = dy;
+            mMonth = dm;
+            mDay = dd;
+        }
         picker.setCurrentDate(mYear, mMonth, mDay);
 
         int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);

@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Account {
+public class Account implements Serializable{
 
     private Basic basic;
 
@@ -25,7 +26,7 @@ public class Account {
 
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Basic{
+    public static class Basic implements Serializable{
 
         private String title;
 

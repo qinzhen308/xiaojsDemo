@@ -797,4 +797,9 @@ public class TimeUtil {
         cal.setTime(date);
         return formatter.format(cal.getTime());
     }
+
+    public static String format(long date,String format) {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        return formatter.format(date);
+    }
 }

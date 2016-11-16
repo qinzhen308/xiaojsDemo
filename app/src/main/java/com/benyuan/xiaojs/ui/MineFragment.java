@@ -47,6 +47,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MineFragment extends BaseFragment {
+    private final static int REQUEST_EDIT = 1000;
+
     @BindView(R.id.portrait)
     RoundedImageView mPortraitView;
     @BindView(R.id.blur_portrait)
@@ -71,8 +73,10 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        setPersonBaseInfo();
-
+        User u = XiaojsConfig.mLoginUser;
+        if (u.getAccount() != null) {
+            setPersonBaseInfo(u.getAccount());
+        }
     }
 
     @OnClick({R.id.settings, R.id.edit_profile, R.id.my_course, R.id.my_course_schedule, R.id.my_ask_questions,
@@ -115,21 +119,26 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    private void setPersonBaseInfo() {
-        User u = XiaojsConfig.mLoginUser;
-        Account ac = u.getAccount();
-        //set avatar
-        setAvatar();
+    private void setPersonBaseInfo(Account account) {
+        if (account == null) {
+            return;
+        }
 
-        mUserName.setText(u.getName());
+        Account.Basic basic = account.getBasic();
+        //set avatar
+        setAvatar(basic);
+
+        if (basic != null) {
+            mUserName.setText(basic.getName());
+        }
 
         //set title
-        if (ac != null && ac.getBasic() != null) {
-            String title = ac.getBasic().getTitle();
+        if (basic != null) {
+            String title = basic.getTitle();
             if (TextUtils.isEmpty(title)) {
                 mUserTitle.setText(R.string.my_profile_txt);
             } else {
-                mUserTitle.setText(ac.getBasic().getTitle());
+                mUserTitle.setText(basic.getTitle());
             }
         } else {
             mUserTitle.setText(R.string.my_profile_txt);
@@ -138,26 +147,29 @@ public class MineFragment extends BaseFragment {
         mNameAuthView.setImageResource(R.drawable.ic_name_authed);
     }
 
-    private void setAvatar() {
+    private void setAvatar(Account.Basic basic) {
         mPortraitView.setBorderColor(getResources().getColor(R.color.round_img_border));
         mPortraitView.setBorderWidth(R.dimen.px5);
-        Account ac = XiaojsConfig.mLoginUser.getAccount();
-        /*if (ac != null) {
-            //set avatar
-            if (ac.getBasic() != null) {
-                Glide.with(mContext).load(ac.getBasic().getAvatar())
-                        .error(R.drawable.default_avatar)
-                        .into(new GlideDrawableImageViewTarget(mPortraitView) {
-                            @Override
-                            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                                super.onResourceReady(resource, animation);
-                                if (resource instanceof GlideBitmapDrawable) {
-                                    Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
-                                    setupBlurPortraitView(bmp);
-                                }
+        //set avatar
+        /*if (basic != null) {
+            Glide.with(mContext).load(basic.getAvatar())
+                    .error(R.drawable.default_avatar)
+                    .into(new GlideDrawableImageViewTarget(mPortraitView) {
+                        @Override
+                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                            super.onResourceReady(resource, animation);
+                            if (resource instanceof GlideBitmapDrawable) {
+                                Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
+                                setupBlurPortraitView(bmp);
                             }
-                        });
-            }
+                        }
+
+                        @Override
+                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            super.onLoadFailed(e, errorDrawable);
+                            mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+                        }
+                    });
         } else {
             //set default
             mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
@@ -171,7 +183,7 @@ public class MineFragment extends BaseFragment {
                     public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                         super.onResourceReady(resource, animation);
                         if (resource instanceof GlideBitmapDrawable) {
-                            Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
+                            Bitmap bmp = ((GlideBitmapDrawable) resource).getBitmap();
                             setupBlurPortraitView(bmp);
                         }
                     }
@@ -190,7 +202,20 @@ public class MineFragment extends BaseFragment {
     }
 
     private void editProfile() {
-        startActivity(new Intent(mContext, ProfileActivity.class));
+        startActivityForResult(new Intent(mContext, ProfileActivity.class), REQUEST_EDIT);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_EDIT:
+                if (data != null) {
+                    Object obj = data.getSerializableExtra(ProfileActivity.KEY_ACCOUNT_BEAN);
+                    if (obj instanceof Account) {
+                        setPersonBaseInfo((Account) obj);
+                    }
+                }
+                break;
+        }
+    }
 }
