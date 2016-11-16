@@ -17,7 +17,7 @@
 #}
 
 
-#--------------------retrofit--------------------------------------------------------------------------
+#--------------------retrofit-----------------------------------------------------------------------
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
 # Platform used when running on RoboVM on iOS. Will not be used at runtime.
@@ -37,7 +37,7 @@
 }
 -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
-#------------------butterknife---------------------------------------------------------------------------
+#------------------butterknife----------------------------------------------------------------------
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
 -keep class **$$ViewBinder { *; }
@@ -49,3 +49,8 @@
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
 }
+
+#-----------------qiniu-----------------------------------------------------------------------------
+-keep class com.qiniu.**{*;}
+-keep class com.qiniu.**{public <init>();}
+-ignorewarnings

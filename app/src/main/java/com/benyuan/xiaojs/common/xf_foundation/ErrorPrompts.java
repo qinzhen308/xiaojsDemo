@@ -9,6 +9,22 @@ import android.text.TextUtils;
 public class ErrorPrompts {
 
 
+    public static String getCoverUpTokenPrompt(String errorCode) {
+
+        String errorMessage = "获取上传封面token失败";
+
+
+        return errorMessage;
+    }
+
+    public static String uploadAvatorPrompt(String errorCode) {
+
+        String errorMessage = "上传头像失败";
+
+
+        return errorMessage;
+    }
+
     public static String getProfilePrompt(String errorCode) {
 
         String errorMessage = "获取个人资料失败";

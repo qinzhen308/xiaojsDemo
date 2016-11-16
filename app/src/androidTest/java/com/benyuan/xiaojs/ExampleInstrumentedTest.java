@@ -63,7 +63,7 @@ public class ExampleInstrumentedTest {
         //testGetHomeData(appContext);
 
         //testCreateLession(appContext);
-        testClaimCompetency(appContext);
+        //testClaimCompetency(appContext);
     }
 
     private void testCreateLession(Context context) {
