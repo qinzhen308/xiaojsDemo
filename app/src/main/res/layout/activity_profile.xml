@@ -80,8 +80,7 @@
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_30px"
                 android:background="@null"
-                android:paddingRight="@dimen/px32"
-                android:text="王晓晓"/>
+                android:paddingRight="@dimen/px32"/>
     </LinearLayout>
 
     <View
@@ -111,8 +110,7 @@
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_30px"
                 android:paddingRight="@dimen/px32"
-                android:background="@null"
-                android:text="男"/>
+                android:background="@null"/>
     </LinearLayout>
 
     <View
@@ -142,8 +140,7 @@
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
                 android:background="@null"
-                android:paddingRight="@dimen/px32"
-                android:text="2008-02-06"/>
+                android:paddingRight="@dimen/px32"/>
     </LinearLayout>
 
     <View
@@ -167,14 +164,13 @@
                 android:text="@string/personalized_sign"/>
 
         <com.benyuan.xiaojs.ui.widget.EditTextDel
-                android:id="@+id/personalized_sign"
+                android:id="@+id/user_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
                 android:paddingRight="@dimen/px32"
-                android:background="@null"
-                android:text="岁月静好，墨彩生香！岁月沉淀，人生知味。"/>
+                android:background="@null"/>
     </LinearLayout>
 
     <View

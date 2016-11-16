@@ -91,6 +91,7 @@
     <string name="my_profile">我的资料</string>
     <string name="edit_portrait">编辑头像</string>
     <string name="personalized_sign">个性签名</string>
+    <string name="edit_profile_success">个人资料修改成功</string>
     <!--optional info-->
     <string name="add_cover">添加封面</string>
     <string name="add_cover_tips">一张好的直播课封面可以提供报名封面哦~</string>
