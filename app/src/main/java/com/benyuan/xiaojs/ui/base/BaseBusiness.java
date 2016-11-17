@@ -27,6 +27,7 @@ import java.text.DecimalFormat;
 public class BaseBusiness {
     public final static DecimalFormat mPriceDecimalFormat = new DecimalFormat("0.00");
     public final static DecimalFormat mDiscountDecimalFormat = new DecimalFormat("0.0");
+    public final static String MONEY = "￥";
 
     public static String getSession() {
         if (XiaojsConfig.mLoginUser == null) {
@@ -80,11 +81,11 @@ public class BaseBusiness {
     }
 
     public static String formatPrice(float price) {
-        return mPriceDecimalFormat.format(price);
+        return MONEY + mPriceDecimalFormat.format(price);
     }
 
     public static String formatPrice(double price) {
-        return mPriceDecimalFormat.format(price);
+        return MONEY + mPriceDecimalFormat.format(price);
     }
 
     public static String formatDiscount(float price) {

@@ -5,6 +5,8 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -177,6 +180,7 @@ public class LessonHomeActivity extends BaseActivity {
             if (fee == null || fee.isFree()) {
                 mLessonMoneyTv.setText(R.string.free);
                 mLessonOriMoneyTv.setVisibility(View.GONE);
+                mPromotionInfoTv.setVisibility(View.GONE);
             } else {
                 //mLessonOriMoneyTv.setVisibility(View.VISIBLE);
                 double originCharge = fee.getTotal() != null ? fee.getTotal().doubleValue() : 0;
@@ -192,7 +196,8 @@ public class LessonHomeActivity extends BaseActivity {
             //schedule
             Schedule schedule = lesson.getSchedule();
             if (schedule != null) {
-                mLessonBeginTimeTv.setText(TimeUtil.format(schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                mLessonBeginTimeTv.setText(TimeUtil.format(schedule.getStart().getTime(),
+                        TimeUtil.TIME_YYYY_MM_DD_HH_MM));
                 String m = getString(R.string.minute);
                 mLessonDurationTv.setText(String.valueOf(schedule.getDuration()) + m);
             }
@@ -219,7 +224,7 @@ public class LessonHomeActivity extends BaseActivity {
         }
 
         if (!TextUtils.isEmpty(s)) {
-            mEnrollmentCountTv.setText(s);
+            mPromotionInfoTv.setText(Html.fromHtml(s).toString());
         }
     }
 
@@ -230,9 +235,22 @@ public class LessonHomeActivity extends BaseActivity {
         if (lesson != null) {
             Teacher tea = lesson.getTeacher();
             if (tea != null && tea.getBasic() != null) {
-                Glide.with(this).load(tea.getBasic().getAvatar()).into(mTeaAvatarImg);
+                Glide.with(this).load(tea.getBasic().getAvatar())
+                        .error(new ColorDrawable(getResources().getColor(R.color.round_img_border_)))
+                        .into(mTeaAvatarImg);
                 mTeaNameTv.setText(tea.getBasic().getName());
-                mTeaTitleTv.setText(tea.getBasic().getTitle());
+
+                String title = tea.getBasic().getTitle();
+                if (!TextUtils.isEmpty(title)) {
+                    mTeaTitleTv.setText(title);
+                } else {
+                    mTeaTitleTv.setVisibility(View.GONE);
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mTeaNameTv.getLayoutParams();
+                    params.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    params = (RelativeLayout.LayoutParams)mTeaEvalStar.getLayoutParams();
+                    params.addRule(RelativeLayout.CENTER_IN_PARENT);
+                }
+
                 //TODO test
                 mTeaEvalStar.setGrading(EvaluationStar.Grading.FOUR);
             }

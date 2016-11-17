@@ -13,8 +13,7 @@
         <ImageView
                 android:id="@+id/lesson_img"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:background="@android:color/holo_green_light"/>
+                android:layout_height="wrap_content"/>
 
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -30,13 +29,14 @@
 
             <LinearLayout
                     android:id="@+id/lesson_time_layout"
-                    android:layout_width="match_parent"
+                    android:layout_below="@+id/lesson_title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px22"
                     android:orientation="horizontal">
 
                 <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/lesson_begin_time"
                         android:textSize="@dimen/font_26px"
@@ -45,7 +45,7 @@
 
                 <TextView
                         android:id="@+id/lesson_begin_time"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/font_26px"
                         android:layout_below="@id/lesson_title"
@@ -53,9 +53,10 @@
 
                 <TextView
                         android:id="@+id/lesson_duration"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/font_26px"
+                        android:layout_marginLeft="@dimen/px12"
                         android:layout_below="@id/lesson_title"
                         android:textColor="@color/common_text"/>
 

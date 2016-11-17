@@ -568,7 +568,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
         enroll.setMandatory(mEnrollSwitcher.isChecked());
 
         Fee fee = new Fee();
-        fee.setFree(mChargeWaySwitcher.isChecked());
+        fee.setFree(!mChargeWaySwitcher.isChecked());
         int feeType = mByLiveTotalPriceTv.isSelected() ? Finance.PricingType.TOTAL : Finance.PricingType.PAY_PER_HOUR;
         try {
             float feePrice = mByLiveTotalPriceTv.isSelected() ? Float.parseFloat(mByLiveTotalPriceEdt.getText().toString()) :

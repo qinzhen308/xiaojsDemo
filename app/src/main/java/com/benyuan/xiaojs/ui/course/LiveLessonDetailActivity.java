@@ -286,10 +286,10 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 double charge = fee.getCharge().doubleValue();
                 if (fee.getType() == Finance.PricingType.TOTAL) {
                     String byTotalPrice = getString(R.string.by_live_total_price);
-                    mLessonFeeTv.setText(byTotalPrice + MONEY + BaseBusiness.formatPrice(charge));
+                    mLessonFeeTv.setText(byTotalPrice + BaseBusiness.formatPrice(charge));
                 } else if (fee.getType() == Finance.PricingType.PAY_PER_HOUR) {
                     String byDuration = getString(R.string.by_live_duration);
-                    mLessonFeeTv.setText(byDuration + MONEY + BaseBusiness.formatPrice(charge));
+                    mLessonFeeTv.setText(byDuration + BaseBusiness.formatPrice(charge));
                 }
             }
 
