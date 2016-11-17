@@ -35,7 +35,7 @@ import butterknife.BindView;
 public class PlatformNotificationAdapter extends CanInScrollviewListView.Adapter {
 
     private int[] mIcons = new int[]{
-            R.drawable.ic_message_invitation,
+            R.drawable.ic_message_invite,
     R.drawable.ic_message_course_information,
     R.drawable.ic_message_socialnews,
             R.drawable.ic_message_qanswerme,
