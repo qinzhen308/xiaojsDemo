@@ -17,8 +17,11 @@ package com.benyuan.xiaojs.ui.widget.flow;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
@@ -28,18 +31,43 @@ import java.util.List;
 public class ImageFlowLayout extends FlowBaseLayout{
 
     private OnItemClickListener l;
+    private int defaultMargin = getResources().getDimensionPixelSize(R.dimen.px10);
 
     public ImageFlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     public void show(List<Bitmap> bitmaps){
+        show(bitmaps,getResources().getDimensionPixelSize(R.dimen.px30),defaultMargin);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener l){
+        this.l = l;
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    private ImageView getItem(List<Bitmap> bitmaps,int radius,int margin){
+        RoundedImageView image = new RoundedImageView(getContext());
+        MarginLayoutParams mlp = new MarginLayoutParams(radius * 2,radius * 2);
+        mlp.leftMargin = margin;
+        mlp.rightMargin = margin;
+        image.setLayoutParams(mlp);
+        image.setImageResource(R.drawable.default_portrait);
+        image.setOval(true);
+        image.setCornerRadius((float) radius);
+        return image;
+    }
+
+    public void show(List<Bitmap> bitmaps,int radius,int margin){
         if (bitmaps == null || bitmaps.size() == 0)
             return;
         removeAllViews();
         setMaxLines(1);
         for (int i = 0;i<bitmaps.size();i++){
-            ImageView image = getItem();
+            ImageView image = getItem(bitmaps,radius,margin);
             addView(image);
             final int index = i;
             image.setOnClickListener(new OnClickListener() {
@@ -53,23 +81,26 @@ public class ImageFlowLayout extends FlowBaseLayout{
         }
     }
 
-    public void setOnItemClickListener(OnItemClickListener l){
-        this.l = l;
-    }
-
-    public interface OnItemClickListener{
-        void onItemClick(int position);
-    }
-
-    private ImageView getItem(){
-        RoundedImageView image = new RoundedImageView(getContext());
-        MarginLayoutParams mlp = new MarginLayoutParams(getResources().getDimensionPixelSize(R.dimen.px60),getResources().getDimensionPixelSize(R.dimen.px60));
-        mlp.leftMargin = getResources().getDimensionPixelSize(R.dimen.px10);
-        mlp.rightMargin = getResources().getDimensionPixelSize(R.dimen.px10);
-        image.setLayoutParams(mlp);
-        image.setImageResource(R.drawable.default_portrait);
-        image.setOval(true);
-        image.setCornerRadius((float) getResources().getDimensionPixelSize(R.dimen.px30));
-        return image;
+    public void showWithNum(List<Bitmap> bitmaps,int radius,int num,int margin){
+        show(bitmaps,radius,margin);
+        if (num > 0){
+            TextView textView = new TextView(getContext());
+            ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(radius * 2,radius * 2);
+            lp.leftMargin = margin;
+            textView.setGravity(Gravity.CENTER);
+            textView.setLayoutParams(lp);
+            textView.setTextColor(getResources().getColor(R.color.common_text));
+            textView.setBackgroundResource(R.drawable.grey_circle);
+            textView.setText(String.valueOf(num));
+            addView(textView);
+            textView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (l != null){
+                        l.onItemClick(getChildCount() - 1);
+                    }
+                }
+            });
+        }
     }
 }
