@@ -5,19 +5,37 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.data.LessonDataManager;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.Enroll;
+import com.benyuan.xiaojs.model.Fee;
+import com.benyuan.xiaojs.model.LessonDetail;
+import com.benyuan.xiaojs.model.Promotion;
+import com.benyuan.xiaojs.model.Schedule;
+import com.benyuan.xiaojs.model.Teacher;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+import com.benyuan.xiaojs.ui.base.BaseBusiness;
 import com.benyuan.xiaojs.ui.widget.BlockTabView;
 import com.benyuan.xiaojs.ui.widget.BottomSheet;
+import com.benyuan.xiaojs.ui.widget.EvaluationStar;
+import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+import com.benyuan.xiaojs.util.TimeUtil;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -25,14 +43,47 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class LessonHomeActivity extends BaseActivity {
+    public final static int ENTRANCE_FROM_TEACH_LESSON = 0;
+    public final static int ENTRANCE_FROM_ENROLL_LESSON = 1;
 
+    @BindView(R.id.lesson_img)
+    ImageView mLessonCoverImg;
+    @BindView(R.id.lesson_title)
+    TextView mLessonTitleTv;
+    @BindView(R.id.lesson_begin_time)
+    TextView mLessonBeginTimeTv;
+    @BindView(R.id.lesson_duration)
+    TextView mLessonDurationTv;
+    @BindView(R.id.lesson_money)
+    TextView mLessonMoneyTv;
+    @BindView(R.id.lesson_origin_money)
+    TextView mLessonOriMoneyTv;
+    @BindView(R.id.enrollment_count)
+    TextView mEnrollmentCountTv;
+    @BindView(R.id.promotion_info)
+    TextView mPromotionInfoTv;
+    @BindView(R.id.tea_avatar)
+    RoundedImageView mTeaAvatarImg;
+    @BindView(R.id.tea_name)
+    TextView mTeaNameTv;
+    @BindView(R.id.tea_title)
+    TextView mTeaTitleTv;
+    @BindView(R.id.eval_star)
+    EvaluationStar mTeaEvalStar;
+    @BindView(R.id.report)
+    TextView mReportTv;
+    @BindView(R.id.consulting)
+    Button mConsultingBtn;
+
+    @BindView(R.id.report_layout)
+    View mReportLayout;
+    @BindView(R.id.report_divide_live)
+    View mReportDivideLine;
+    @BindView(R.id.lesson_opera_bar_lay)
+    View mLessonEnrollLayout;
 
     @BindView(R.id.block_detail_bar)
-    BlockTabView blockTabView;
-
-    @BindView(R.id.lession_old_money)
-    TextView olgMoneyTextView;
-
+    BlockTabView mBlockTabView;
 
     private ArrayList<TextView> textViews;
 
@@ -44,16 +95,18 @@ public class LessonHomeActivity extends BaseActivity {
 
         initTabBar();
 
-        olgMoneyTextView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        mLessonOriMoneyTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
-
+        loadData();
     }
 
-    @OnClick({R.id.left_image, R.id.apply_btn})
+    @OnClick({R.id.left_image, R.id.report, R.id.apply_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_image:
                 finish();
+                break;
+            case R.id.report:
                 break;
             case R.id.apply_btn:
                 showApplyDlg();
@@ -62,43 +115,149 @@ public class LessonHomeActivity extends BaseActivity {
         }
     }
 
+    private void loadData() {
+        int type = getIntent().getIntExtra(CourseConstant.KEY_ENTRANCE_TYPE, ENTRANCE_FROM_TEACH_LESSON);
+        if (type == ENTRANCE_FROM_TEACH_LESSON) {
+            mReportLayout.setVisibility(View.GONE);
+            mReportDivideLine.setVisibility(View.GONE);
+            mLessonEnrollLayout.setVisibility(View.GONE);
+        }
+
+        String lessonId = getIntent().getStringExtra(CourseConstant.KEY_LESSON_ID);
+        if (TextUtils.isEmpty(lessonId)) {
+            finish();
+            return;
+        }
+
+        LessonDataManager.requestLessonHomepage(this, lessonId, new APIServiceCallback<LessonDetail>() {
+            @Override
+            public void onSuccess(LessonDetail lessonDetail) {
+                setData(lessonDetail);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                Toast.makeText(LessonHomeActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setData (LessonDetail lesson) {
+        if (lesson != null) {
+            //set cover
+            if (!TextUtils.isEmpty(lesson.getCover())) {
+                mLessonCoverImg.setVisibility(View.VISIBLE);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLessonCoverImg.getLayoutParams();
+                int padding = getResources().getDimensionPixelOffset(R.dimen.px32);
+                int w = getResources().getDisplayMetrics().widthPixels - padding * 2;
+                int h = (int) ((CourseConstant.COURSE_COVER_HEIGHT / (float) CourseConstant.COURSE_COVER_WIDTH) * w);
+                params.height = h;
+                params.width = w;
+                Glide.with(this).load(lesson.getCover()).into(mLessonCoverImg);
+            } else {
+                //set gone
+                mLessonCoverImg.setVisibility(View.GONE);
+            }
+
+            //set title
+            mLessonTitleTv.setText(lesson.getTitle());
+
+            //enroll
+            Enroll enroll = lesson.getEnroll();
+            if (enroll != null && enroll.isMandatory()) {
+                mEnrollmentCountTv.setVisibility(View.VISIBLE);
+                mEnrollmentCountTv.setText(getString(R.string.enrolled_count,
+                        enroll.getCurrent(), enroll.getMax()));
+            } else {
+                mEnrollmentCountTv.setVisibility(View.GONE);
+            }
+
+            //fee
+            Fee fee = lesson.getFee();
+            if (fee == null || fee.isFree()) {
+                mLessonMoneyTv.setText(R.string.free);
+                mLessonOriMoneyTv.setVisibility(View.GONE);
+            } else {
+                //mLessonOriMoneyTv.setVisibility(View.VISIBLE);
+                double originCharge = fee.getTotal() != null ? fee.getTotal().doubleValue() : 0;
+                mLessonOriMoneyTv.setText(BaseBusiness.formatPrice(originCharge));
+                if (fee.getDiscounted() != null) {
+                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(fee.getDiscounted().getSaved().doubleValue()));
+                } else {
+                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge));
+                }
+                setSalePromotion(lesson.getPromotion(), originCharge);
+            }
+
+            //schedule
+            Schedule schedule = lesson.getSchedule();
+            if (schedule != null) {
+                mLessonBeginTimeTv.setText(TimeUtil.format(schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                String m = getString(R.string.minute);
+                mLessonDurationTv.setText(String.valueOf(schedule.getDuration()) + m);
+            }
+
+            setTeacherInfo(lesson);
+        }
+    }
+
+    private void setSalePromotion(Promotion[] promotions, double totalPrice) {
+        if (promotions == null || promotions.length == 0) {
+            return;
+        }
+
+        Promotion promotion = promotions[0];
+        String s = null;
+        if (promotion.getQuota() > 0) {
+            //enroll before promotion
+            String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
+            s = getString(R.string.enroll_before_promotion, promotion.getQuota(), discount, totalPrice);
+        } else if (promotion.getBefore() > 0) {
+            //lesson before promotion
+            String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
+            s = getString(R.string.lesson_before_promotion, promotion.getBefore(), discount, totalPrice);
+        }
+
+        if (!TextUtils.isEmpty(s)) {
+            mEnrollmentCountTv.setText(s);
+        }
+    }
+
+    /**
+     * set teacher info
+     */
+    private void setTeacherInfo(LessonDetail lesson) {
+        if (lesson != null) {
+            Teacher tea = lesson.getTeacher();
+            if (tea != null && tea.getBasic() != null) {
+                Glide.with(this).load(tea.getBasic().getAvatar()).into(mTeaAvatarImg);
+                mTeaNameTv.setText(tea.getBasic().getName());
+                mTeaTitleTv.setText(tea.getBasic().getTitle());
+                //TODO test
+                mTeaEvalStar.setGrading(EvaluationStar.Grading.FOUR);
+            }
+
+            if (lesson.getTeachersIntro() != null && textViews != null) {
+                textViews.get(0).setText(lesson.getTeachersIntro().getText());
+                //evaluate: not implemented
+            }
+        }
+    }
+
 
     private void initTabBar() {
-
         String[] titles =getResources().getStringArray(R.array.lesson_home_tab_titles);
-
         initShowTextView();
-
-        blockTabView.setViews("",titles,textViews,"");
+        mBlockTabView.setViews("",titles,textViews,"");
     }
 
     private void initShowTextView() {
-
-
-        textViews = new ArrayList<>(2);
-
-
-
-
+        textViews = new ArrayList<TextView>(2);
         TextView textView1 = createTextView();
-        textView1.setText("大时代雷锋萨达六块腹肌阿斯利康的风景阿" +
-                "斯顿发克里斯朵夫及阿莱克但是公司的分公司地方公司的分公司的风格梵蒂冈的风格斯打飞机啊水淀粉是东方" +
-                "时空的风景是达六块腹肌阿电饭锅电饭锅电饭锅里斯顿开发及阿里山的风景阿" +
-                "斯顿发水淀粉矢的分公司地方公司的风格口抵赖飞机失联" +
-                "的开发及历史的风的分公司地方公司的风格景阿斯顿浪费");
-
-
         TextView textView2 = createTextView();
-        textView2.setText("电饭锅电饭锅电饭锅；司法解释；对佛诶认为哦 i 人 大是大非 i 欧式地方 i 哦苏东坡" +
-                "发送东方爬上发呆第三方 i 是豆腐皮送到附送IP的发送滴批发 u 烧豆腐似佛苏东坡发 i" +
-                "的发送东方 i 哦说发破碎都发破碎地方视频地方水淀粉是的分手第发送东方 i 是滴批发 i 偶阿" +
-                "首都发死都发视频奋斗的 v 旧恨新仇离开 v 就喜欢 v 吃来了虚假看了下火车 v 新款雏菊行cvxcliv");
 
         textViews.add(textView1);
         textViews.add(textView2);
-
-
-
     }
 
     private TextView createTextView() {

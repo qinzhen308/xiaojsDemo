@@ -32,7 +32,7 @@ public class PermissionGen {
         return new PermissionGen(fragment);
     }
 
-    public PermissionGen permissions(String... permissions) {
+    public PermissionGen permissions(String[] permissions) {
         this.mPermissions = permissions;
         return this;
     }
@@ -103,8 +103,11 @@ public class PermissionGen {
     private static void executeMethod(Object activity, Method executeMethod) {
         if (executeMethod != null) {
             try {
-                if (!executeMethod.isAccessible()) executeMethod.setAccessible(true);
-                executeMethod.invoke(activity, null);
+                if (!executeMethod.isAccessible()) {
+                    executeMethod.setAccessible(true);
+                }
+                Object[] arr = null;
+                executeMethod.invoke(activity, arr);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {

@@ -14,6 +14,8 @@ public class Fee implements Serializable{
     private boolean free;
     private int type;
     private BigDecimal charge;
+    private BigDecimal total;
+    private Discounted discounted;
 
     public int getType() {
         return type;
@@ -37,5 +39,51 @@ public class Fee implements Serializable{
 
     public void setFree(boolean free) {
         this.free = free;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    public Discounted getDiscounted() {
+        return discounted;
+    }
+
+    public void setDiscounted(Discounted discounted) {
+        this.discounted = discounted;
+    }
+
+    public class Discounted {
+        private BigDecimal subtotal;
+        private float ratio;
+        private BigDecimal saved;
+
+        public BigDecimal getSubtotal() {
+            return subtotal;
+        }
+
+        public void setSubtotal(BigDecimal subtotal) {
+            this.subtotal = subtotal;
+        }
+
+        public float getRatio() {
+            return ratio;
+        }
+
+        public void setRatio(float ratio) {
+            this.ratio = ratio;
+        }
+
+        public BigDecimal getSaved() {
+            return saved;
+        }
+
+        public void setSaved(BigDecimal saved) {
+            this.saved = saved;
+        }
     }
 }

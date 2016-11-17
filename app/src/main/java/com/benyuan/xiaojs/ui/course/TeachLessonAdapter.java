@@ -537,7 +537,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     @Override
     protected void onDataItemClick(int position,TeachLesson bean) {
         Toast.makeText(mContext,"position = " + position,Toast.LENGTH_SHORT).show();
-        mContext.startActivity(new Intent(mContext,LessonHomeActivity.class));
+        Intent i = new Intent(mContext, LessonHomeActivity.class);
+        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        mContext.startActivity(i);
 
     }
 
