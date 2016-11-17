@@ -16,6 +16,8 @@ package com.benyuan.xiaojs.ui.course;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +38,8 @@ import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.ui.widget.ListBottomDialog;
 import com.benyuan.xiaojs.ui.widget.RedTipImageView;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
+import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+import com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
@@ -48,10 +52,14 @@ import butterknife.BindView;
 public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.Holder> {
     private Criteria mCriteria;
     private LessonFragment mFragment;
+    private Bitmap bitmap;
+    private int radius;
 
     public EnrollLessonAdapter(Context context, AutoPullToRefreshListView listView, LessonFragment fragment) {
         super(context, listView);
         mFragment = fragment;
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.default_portrait);
+        radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
     public EnrollLessonAdapter(Context context, AutoPullToRefreshListView listView) {
@@ -79,6 +87,9 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             bean.setState(state);
         }
 
+        holder.desc.setText("老师");
+
+        holder.teacherImage.setVisibility(View.VISIBLE);
         holder.clsFunction.setVisibility(View.VISIBLE);
         holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
             @Override
@@ -93,6 +104,10 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             }
         });
 
+        List<Bitmap> bitmaps = new ArrayList<>();
+        bitmaps.add(bitmap);
+        bitmaps.add(bitmap);
+        holder.imageFlow.showWithNum(bitmaps,mContext.getResources().getDimensionPixelSize(R.dimen.px20),22,mContext.getResources().getDimensionPixelSize(R.dimen.px5));
         if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
             holder.databank.setVisibility(View.VISIBLE);
             holder.databank.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +236,6 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     protected void onDataItemClick(int position,EnrolledLesson bean) {
         Toast.makeText(mContext, "position = " + position, Toast.LENGTH_SHORT).show();
         mContext.startActivity(new Intent(mContext, LessonHomeActivity.class));
-
     }
 
     @Override
@@ -294,11 +308,15 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         TextView time;
         @BindView(R.id.course_price)
         TextView price;
+        @BindView(R.id.course_teacher_image)
+        RoundedImageView teacherImage;
 
         @BindView(R.id.course_item_fun_circle)
         RedTipTextView circle;
         @BindView(R.id.course_item_fun_enter)
         RedTipTextView enter;
+        @BindView(R.id.course_item_fun_stu_images)
+        ImageFlowLayout imageFlow;
 
         @BindView(R.id.course_item_fun_shelves)
         TextView shelves;
