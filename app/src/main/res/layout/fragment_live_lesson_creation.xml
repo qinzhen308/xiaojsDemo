@@ -106,6 +106,7 @@
                     android:id="@+id/enroll_switcher"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_btn_selector"
                     android:textOff=""
                     android:textOn=""/>
 
@@ -144,8 +145,8 @@
 
             <LinearLayout
                     style="@style/LiveLessonItem"
-                    android:paddingTop="@dimen/px10"
-                    android:paddingBottom="@dimen/px10"
+                    android:paddingTop="@dimen/px30"
+                    android:paddingBottom="@dimen/px30"
                     android:orientation="horizontal">
 
                 <TextView
@@ -159,6 +160,7 @@
                         android:id="@+id/charge_way_switcher"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/toggle_btn_selector"
                         android:textOff=""
                         android:textOn=""/>
 
