@@ -42,7 +42,7 @@ public class QiniuRequest {
                     Logger.d("get upload for token onSuccess:%s ",object);
                 }
 
-                uploadFile(filePath,key,object,callbackReference);
+                uploadFile(true,filePath,key,object,callbackReference);
             }
 
             @Override
@@ -80,7 +80,7 @@ public class QiniuRequest {
                     Logger.d("get upload for token onSuccess:%s ",object);
                 }
 
-                uploadFile(filePath,key,object,callbackReference);
+                uploadFile(false,filePath,key,object,callbackReference);
 
             }
 
@@ -104,10 +104,10 @@ public class QiniuRequest {
 
     }
 
-    private void uploadFile(@NonNull String filePath,
-                              @NonNull String key,
-                              @NonNull String token,
-                              @NonNull final WeakReference<QiniuService> callbackReference){
+    private void uploadFile(final boolean isLesson, @NonNull final String filePath,
+                            @NonNull String key,
+                            @NonNull String token,
+                            @NonNull final WeakReference<QiniuService> callbackReference){
 
         Configuration configuration = createConfiguration();
 
@@ -123,7 +123,12 @@ public class QiniuRequest {
                 if (info.isOK()){
                     QiniuService callback = callbackReference.get();
                     if (callback != null) {
-                        StringBuilder fileUrl = new StringBuilder(QiniuService.AVATAR_BASE_URL);
+                        StringBuilder fileUrl = new StringBuilder();
+                        if (isLesson){
+                            fileUrl.append(QiniuService.COVER_BASE_URL);
+                        }else{
+                            fileUrl.append(QiniuService.AVATAR_BASE_URL);
+                        }
                         fileUrl.append(key);
                         callback.uploadSuccess(key,fileUrl.toString());
                     }
