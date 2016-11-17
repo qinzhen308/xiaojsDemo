@@ -39,6 +39,12 @@ public interface CourseConstant {
     public final static String KEY_IS_TEACHER = "key_is_teacher";
     public final static String KEY_LESSON_BEAN = "lesson_bean";
     public final static String KEY_LESSON_ID = "lesson_id";
+    public final static String KEY_ENTRANCE_TYPE = "key_entrance_type";
+    public final static String KEY_TEACH_ACTION_TYPE = "teach_action_type";
+    //编辑课
+    public final static int TYPE_LESSON_EDIT = 1;
+    //再次开课
+    public final static int TYPE_LESSON_AGAIN = 2;
 
     public final static int CODE_EDIT_LESSON = 1;
     public final static int CODE_LESSON_AGAIN = 2;

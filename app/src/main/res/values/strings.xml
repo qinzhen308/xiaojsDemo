@@ -32,8 +32,8 @@
     <string name="unfold_view_all">展开查看全部</string>
 
     <string name="home_tab_index">首页</string>
-    <string name="home_tab_circle">圈子</string>
-    <string name="home_tab_query">学习圈</string>
+    <string name="home_tab_circle">小圈</string>
+    <string name="home_tab_message">消息</string>
     <string name="home_tab_mine">我的</string>
     <string name="qr_code">二维码</string>
 
@@ -256,4 +256,6 @@
     <string name="lesson_report">举报</string>
     <string name="cancel_lesson_time_mark">取消后上线报名的费用将退还给报名学生，线下报名的费用请自行处理。取消后会影响您的信用等级，请谨慎操作。</string>
     <string name="cancel_examine_tip">撤销审核后，您可以重新编辑再提交审核</string>
+    <string name="lesson_begin_time">开课时间：</string>
+    <string name="enrolled_count">已报名%1$d/%2$d</string>
 </resources>

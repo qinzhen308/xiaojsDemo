@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        >
+        android:layout_height="match_parent">
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -15,11 +11,10 @@
             android:orientation="vertical">
 
         <ImageView
-                android:id="@+id/lession_img"
+                android:id="@+id/lesson_img"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-                android:background="@android:color/holo_green_light"
-                />
+                android:background="@android:color/holo_green_light"/>
 
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -27,69 +22,85 @@
                 style="@style/lesson_home_layout">
 
             <TextView
-                    android:id="@+id/lession_title"
+                    android:id="@+id/lesson_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="气质形象提升修炼魅力女性"
                     android:textSize="@dimen/font_36px"
                     android:layout_alignParentTop="true"/>
 
-            <TextView
-                    android:id="@+id/lession_time"
+            <LinearLayout
+                    android:id="@+id/lesson_time_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/lesson_home_textview"
-                    android:text="开课时间：2016/09/23   50分钟"
-                    android:layout_below="@id/lession_title"
-                    android:textColor="@color/common_text"/>
+                    android:layout_marginTop="@dimen/px22"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lesson_begin_time"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_below="@id/lesson_title"
+                        android:textColor="@color/common_text"/>
+
+                <TextView
+                        android:id="@+id/lesson_begin_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_below="@id/lesson_title"
+                        android:textColor="@color/common_text"/>
+
+                <TextView
+                        android:id="@+id/lesson_duration"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_below="@id/lesson_title"
+                        android:textColor="@color/common_text"/>
+
+            </LinearLayout>
 
             <View
-                    android:id="@+id/lession_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:background="@color/hor_divide_line"
+                    android:id="@+id/lesson_line"
+                    style="@style/DividerHorizontal"
                     android:layout_marginTop="@dimen/px32"
                     android:layout_marginBottom="@dimen/px32"
-                    android:layout_below="@id/lession_time"
-                    />
+                    android:layout_below="@id/lesson_time_layout"/>
 
             <TextView
-                    android:id="@+id/lession_money"
+                    android:id="@+id/lesson_money"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="8dp"
                     android:textSize="18sp"
-                    android:text="¥90.00"
                     android:textColor="@color/font_red"
-                    android:layout_below="@id/lession_line"/>
+                    android:layout_below="@id/lesson_line"/>
 
             <TextView
-                    android:id="@+id/lession_old_money"
+                    android:id="@+id/lesson_origin_money"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="¥120"
                     android:textColor="@color/common_text"
                     android:textSize="@dimen/font_26px"
-                    android:layout_toRightOf="@id/lession_money"
-                    android:layout_alignBaseline="@id/lession_money"
-                    />
+                    android:layout_toRightOf="@id/lesson_money"
+                    android:layout_alignBaseline="@id/lesson_money"/>
 
             <TextView
+                    android:id="@+id/enrollment_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="已报名40"
                     android:layout_alignParentRight="true"
-                    android:layout_alignBaseline="@id/lession_money"
+                    android:layout_alignBaseline="@id/lesson_money"
                     android:textColor="@color/common_text"
-                    android:textSize="@dimen/font_26px"
-                    />
+                    android:textSize="@dimen/font_26px"/>
 
             <TextView
+                    android:id="@+id/promotion_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/lesson_home_textview"
-                    android:text="报名前三人，开课前五天，可享90.0"
-                    android:layout_below="@id/lession_money"
+                    android:layout_below="@id/lesson_money"
                     android:textColor="@color/font_orange"/>
 
         </RelativeLayout>
@@ -101,7 +112,7 @@
                 style="@style/lesson_home_layout">
 
             <com.benyuan.xiaojs.ui.widget.RoundedImageView
-                    android:id="@+id/teach_ic"
+                    android:id="@+id/tea_avatar"
                     app:oval="true"
                     android:layout_width="@dimen/px120"
                     android:layout_height="@dimen/px120"
@@ -114,84 +125,80 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_entrance"
-                    />
+                    android:src="@drawable/ic_entrance"/>
 
             <TextView
-                    android:id="@+id/teach_title"
+                    android:id="@+id/tea_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/teach_ic"
+                    android:layout_toRightOf="@id/tea_avatar"
                     android:layout_marginTop="8dp"
-                    android:text="李早早"
                     android:textSize="16sp"/>
 
             <com.benyuan.xiaojs.ui.widget.EvaluationStar
-                    android:layout_toRightOf="@id/teach_title"
+                    android:id="@+id/eval_star"
+                    android:layout_toRightOf="@id/tea_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/teach_title"
+                    android:layout_alignTop="@id/tea_name"
                     android:paddingTop="7dp"
-                    android:layout_marginLeft="8dp"
-
-                    />
+                    android:layout_marginLeft="8dp"/>
 
             <TextView
+                    android:id="@+id/tea_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@id/nav_right"
-                    android:layout_below="@id/teach_title"
-                    android:text="知识专家，新媒体专家，作家"
+                    android:layout_below="@id/tea_name"
                     style="@style/lesson_home_textview"
                     android:textColor="@color/common_text"
-                    android:layout_alignLeft="@id/teach_title"/>
+                    android:layout_alignLeft="@id/tea_name"/>
 
         </RelativeLayout>
 
         <View
-                android:layout_width="match_parent"
-                android:layout_height="0.1dp"
-                android:background="@color/hor_divide_line"
-                android:layout_marginTop="@dimen/px24"
-                />
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px24"/>
 
         <com.benyuan.xiaojs.ui.widget.BlockTabView
                 android:id="@+id/block_detail_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content"/>
 
         <FrameLayout
+                android:id="@+id/report_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                style="@style/lesson_home_layout"
-                >
-            <Button
+                android:background="@color/white">
+
+            <TextView
+                    android:id="@+id/report"
+                    android:layout_marginBottom="@dimen/px20"
+                    android:layout_marginRight="@dimen/px32"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="right"
                     android:text="@string/lesson_report"
                     android:textColor="@color/common_text"
                     android:textSize="@dimen/font_26px"
                     android:drawableLeft="@drawable/ic_report"
-                    android:drawablePadding="5dp"
-                    android:layout_gravity="right"
-                    android:background="@android:color/transparent"/>
+                    android:drawablePadding="@dimen/px12"/>
         </FrameLayout>
 
+
         <View
-                android:layout_width="match_parent"
-                android:layout_height="0.1dp"
-                android:background="@color/hor_divide_line"
-                />
+                android:id="@+id/report_divide_live"
+                style="@style/DividerHorizontal"/>
+
         <LinearLayout
-                android:id="@+id/lession_opera_bar_lay"
+                android:id="@+id/lesson_opera_bar_lay"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:background="@drawable/lesson_home_lay_bg">
 
             <Button
+                    android:id="@+id/consulting"
                     android:layout_width="120dp"
                     android:layout_height="match_parent"
                     android:text="@string/consulting"
@@ -201,8 +208,7 @@
                     android:background="@color/white"
                     android:gravity="center"
                     android:paddingLeft="25dp"
-                    android:paddingRight="25dp"
-                    />
+                    android:paddingRight="25dp"/>
 
             <Button
                     android:id="@+id/apply_btn"
@@ -212,8 +218,7 @@
                     android:text="@string/lession_apply"
                     android:textColor="@drawable/common_btn_white_text_selector"
                     android:background="@drawable/big_submit_btn_selector"
-                    android:textSize="@dimen/font_32px"
-                    />
+                    android:textSize="@dimen/font_32px"/>
 
         </LinearLayout>
 

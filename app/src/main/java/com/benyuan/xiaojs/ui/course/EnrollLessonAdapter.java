@@ -18,7 +18,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -219,9 +218,12 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     }
 
     @Override
-    protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+    protected void onDataItemClick(int position,EnrolledLesson bean) {
         Toast.makeText(mContext, "position = " + position, Toast.LENGTH_SHORT).show();
-        mContext.startActivity(new Intent(mContext, LessonHomeActivity.class));
+        Intent i = new Intent(mContext, LessonHomeActivity.class);
+        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_ENROLL_LESSON);
+        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        mContext.startActivity(i);
 
     }
 

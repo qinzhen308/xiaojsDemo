@@ -28,14 +28,14 @@ public class LessonDetail {
     private Enroll enroll;
     private String id;
     private String cover;
-    private Account teacher;
+    private Teacher teacher;
 
 
-    public Account getTeacher() {
+    public Teacher getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(Account teacher) {
+    public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
 

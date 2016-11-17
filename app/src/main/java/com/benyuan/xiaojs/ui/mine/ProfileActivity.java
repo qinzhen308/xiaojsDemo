@@ -108,7 +108,7 @@ public class ProfileActivity extends BaseActivity {
         setLeftImage(R.drawable.back_arrow);
         setRightText(R.string.finish);
         mRightText.setTextColor(getResources().getColor(R.color.main_orange));
-        mBirthDayDate = new Date(0);
+        mBirthDayDate = new Date(System.currentTimeMillis());
     }
 
     private void loadData() {

@@ -16,8 +16,8 @@ package com.benyuan.xiaojs.ui.course;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -76,6 +76,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     protected void setViewContent(Holder holder,final TeachLesson bean, int position) {
         holder.reset();
         holder.name.setText(bean.getTitle());
+        String state = LessonBusiness.getStateByPosition(position,true);
+        if (!TextUtils.isEmpty(state)){
+            bean.setState(state);
+        }
         holder.price.setVisibility(View.VISIBLE);
         if (bean.getFee().isFree()){
             holder.price.setText(R.string.free);
@@ -215,6 +219,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     private void edit(TeachLesson bean){
         Intent intent = new Intent(mContext,LessonCreationActivity.class);
         intent.putExtra(CourseConstant.KEY_LESSON_BEAN,bean);
+        intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE,CourseConstant.TYPE_LESSON_EDIT);
         ((BaseActivity)mContext).startActivityForResult(intent,CourseConstant.CODE_EDIT_LESSON);
     }
 
@@ -315,6 +320,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     private void lessonAgain(TeachLesson bean){
         Intent intent = new Intent(mContext,LessonCreationActivity.class);
         intent.putExtra(CourseConstant.KEY_LESSON_BEAN,bean);
+        intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE,CourseConstant.TYPE_LESSON_AGAIN);
         ((BaseActivity)mContext).startActivityForResult(intent,CourseConstant.CODE_LESSON_AGAIN);
     }
 
@@ -529,9 +535,12 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     }
 
     @Override
-    protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+    protected void onDataItemClick(int position,TeachLesson bean) {
         Toast.makeText(mContext,"position = " + position,Toast.LENGTH_SHORT).show();
-        mContext.startActivity(new Intent(mContext,LessonHomeActivity.class));
+        Intent i = new Intent(mContext, LessonHomeActivity.class);
+        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        mContext.startActivity(i);
 
     }
 

@@ -37,7 +37,7 @@ import java.util.List;
 public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapter {
 
     protected final int PAGE_FIRST = 1;
-    protected final int PAGE_SIZE = 5;
+    protected final int PAGE_SIZE = 10;
     private AutoPullToRefreshListView mListView;
     protected Context mContext;
     protected LayoutInflater mInflater;
@@ -71,10 +71,15 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mPagination.setPage(PAGE_FIRST);
         mPagination.setMaxNumOfObjectsPerPage(getPageSize());
         mListView = listView;
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                onDataItemClick(adapterView, view, i, l);
+                int headerCount = mListView.getRefreshableView().getHeaderViewsCount();//有header的话要减去header
+                int idx = i - headerCount;
+                if (idx >= 0 && idx < mBeanList.size()){
+                    onDataItemClick(i,mBeanList.get(idx));
+                }
             }
         });
 
@@ -105,7 +110,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         });
     }
 
-    protected void onDataItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+    protected void onDataItemClick(int position,B bean) {
 
     }
 
@@ -184,7 +189,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         }
         if (data == null || data.size() == 0) {
             mPagination.setPage(mPagination.getPage() - 1);
-            if (mBeanList.isEmpty()) {//接口数据为空，本地数据也为空，则显示空视图
+            if (mBeanList.isEmpty() && showEmptyView()) {//接口数据为空，本地数据也为空，则显示空视图
                 addEmptyView();
             }
             return;
@@ -214,5 +219,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     protected int getPageSize() {
         return PAGE_SIZE;
+    }
+
+    protected boolean showEmptyView(){
+
+        return true;
     }
 }
