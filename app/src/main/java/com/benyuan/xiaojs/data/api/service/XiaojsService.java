@@ -4,6 +4,7 @@ import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.CLResponse;
+import com.benyuan.xiaojs.model.CancelReason;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -20,11 +21,13 @@ import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.benyuan.xiaojs.model.Notification;
+import com.benyuan.xiaojs.model.OfflineRegistrant;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.VerifyCode;
 
 import java.util.ArrayList;
 
+import butterknife.Optional;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -46,7 +49,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.115:3000/";
+    String BASE_URL = "http://192.168.100.4:3000/";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -137,7 +140,8 @@ public interface XiaojsService {
     //Enroll Lesson
     @POST("/v1/ctl/lessons/{lesson}/enroll")
     Call<ELResponse> enrollLesson(@Header("SessionID") String sessionID,
-                                  @Path("lesson") String lesson);
+                                  @Path("lesson") String lesson,
+                                  @Body OfflineRegistrant offlineRegistrant);
 
 
     //Get Lesson Homepage
@@ -151,6 +155,13 @@ public interface XiaojsService {
     Call<ResponseBody> editLesson(@Header("SessionID") String sessionID,
                                 @Path("lesson") String lesson,
                                 @Body LiveLesson liveLesson);
+
+    //Cancel Lesson
+    @Headers("Content-Type: application/json")
+    @POST("/v1/ctl/lessons/{lesson}/cancel")
+    Call<ResponseBody> cancelLesson(@Header("SessionID") String sessionID,
+                                  @Path("lesson") String lesson,
+                                  @Body CancelReason reason);
 
 
 

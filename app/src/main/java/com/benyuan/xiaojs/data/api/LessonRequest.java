@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.data.api;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
@@ -10,6 +11,7 @@ import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.CLResponse;
+import com.benyuan.xiaojs.model.CancelReason;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.ELResponse;
@@ -18,6 +20,7 @@ import com.benyuan.xiaojs.model.GELessonsResponse;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
+import com.benyuan.xiaojs.model.OfflineRegistrant;
 import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
 
@@ -606,13 +609,15 @@ public class LessonRequest extends ServiceRequest {
     public void enrollLesson(Context context,
                              @NonNull String sessionID,
                              @NonNull String lesson,
+                             @Nullable OfflineRegistrant offlineRegistrant,
                              @NonNull APIServiceCallback<ELResponse> callback) {
 
         final WeakReference<APIServiceCallback<ELResponse>> callbackReference =
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.enrollLesson(sessionID, lesson).enqueue(new Callback<ELResponse>() {
+        xiaojsService.enrollLesson(sessionID, lesson,offlineRegistrant).enqueue(
+                new Callback<ELResponse>() {
             @Override
             public void onResponse(Call<ELResponse> call, Response<ELResponse> response) {
 
@@ -729,6 +734,71 @@ public class LessonRequest extends ServiceRequest {
                     callback.onFailure(errorCode, errorMessage);
                 }
 
+            }
+        });
+    }
+
+    public void cancelLesson(Context context,
+                             @NonNull String sessionID,
+                             @NonNull String lesson,
+                             @NonNull CancelReason reason,
+                             @NonNull APIServiceCallback callback) {
+
+        final WeakReference<APIServiceCallback> callbackReference =
+                new WeakReference<>(callback);
+
+        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        xiaojsService.cancelLesson(sessionID,lesson,reason).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                int responseCode = response.code();
+                if (responseCode == SUCCESS_CODE) {
+
+                    APIServiceCallback callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
+
+
+                } else {
+
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.cancelLessonPrompt(errorCode);
+
+                    APIServiceCallback<CLEResponse> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the cancelLesson request has occur exception");
+                }
+
+
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.cancelLessonPrompt(errorCode);
+
+                APIServiceCallback<CLEResponse> callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
             }
         });
     }
