@@ -112,17 +112,17 @@ public class TestAPIActivity extends Activity {
     private void testEnrollLesson(Context context){
 
         String lesson= "582d58353d73a5046fc24490";
-        LessonDataManager.requestEnrollLesson(context, sessionid, lesson, new APIServiceCallback<ELResponse>() {
-            @Override
-            public void onSuccess(ELResponse object) {
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+//        LessonDataManager.requestEnrollLesson(context, sessionid, lesson, new APIServiceCallback<ELResponse>() {
+//            @Override
+//            public void onSuccess(ELResponse object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
     }
 
 
