@@ -32,8 +32,8 @@
     <string name="unfold_view_all">展开查看全部</string>
 
     <string name="home_tab_index">首页</string>
-    <string name="home_tab_circle">圈子</string>
-    <string name="home_tab_query">学习圈</string>
+    <string name="home_tab_circle">小圈</string>
+    <string name="home_tab_message">消息</string>
     <string name="home_tab_mine">我的</string>
     <string name="qr_code">二维码</string>
 

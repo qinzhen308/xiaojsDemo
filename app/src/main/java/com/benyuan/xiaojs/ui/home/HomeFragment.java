@@ -1,4 +1,4 @@
-package com.benyuan.xiaojs.ui;
+package com.benyuan.xiaojs.ui.home;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -21,16 +21,12 @@ import android.view.View;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
-import com.benyuan.xiaojs.ui.home.CourseAdapter;
-import com.benyuan.xiaojs.ui.home.CourseBlock;
-import com.benyuan.xiaojs.ui.home.LiveBlock;
-import com.benyuan.xiaojs.ui.home.OnScrollYListener;
-import com.benyuan.xiaojs.ui.home.PersonBlock;
 import com.benyuan.xiaojs.ui.widget.BlockTabView;
 import com.benyuan.xiaojs.ui.widget.MessageImageView;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
+import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
@@ -148,9 +144,13 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    @OnClick({})
+    @OnClick({R.id.right_view})
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.right_view:
+                ToastUtil.showToast(mContext,"message");
+                break;
+        }
     }
 
     @Override

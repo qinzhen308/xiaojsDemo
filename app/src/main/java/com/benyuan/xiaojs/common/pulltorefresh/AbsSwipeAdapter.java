@@ -184,7 +184,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         }
         if (data == null || data.size() == 0) {
             mPagination.setPage(mPagination.getPage() - 1);
-            if (mBeanList.isEmpty()) {//接口数据为空，本地数据也为空，则显示空视图
+            if (mBeanList.isEmpty() && showEmptyView()) {//接口数据为空，本地数据也为空，则显示空视图
                 addEmptyView();
             }
             return;
@@ -214,5 +214,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     protected int getPageSize() {
         return PAGE_SIZE;
+    }
+
+    protected boolean showEmptyView(){
+
+        return true;
     }
 }
