@@ -187,12 +187,12 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                     int day = calendar.get(Calendar.DATE);
 
                     String m = String.valueOf(month);
-                    if (month < 9) {
+                    if (month < 10) {
                         m = "0" + m;
                     }
 
                     String d = String.valueOf(day);
-                    if (day < 9) {
+                    if (day < 10) {
                         d = "0" + d;
                     }
 
