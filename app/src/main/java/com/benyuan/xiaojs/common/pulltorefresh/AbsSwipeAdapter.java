@@ -78,7 +78,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 int headerCount = mListView.getRefreshableView().getHeaderViewsCount();//有header的话要减去header
                 int idx = i - headerCount;
                 if (idx >= 0 && idx < mBeanList.size()){
-                    onDataItemClick(i,mBeanList.get(idx));
+                    onDataItemClick(idx,mBeanList.get(idx));
                 }
             }
         });
