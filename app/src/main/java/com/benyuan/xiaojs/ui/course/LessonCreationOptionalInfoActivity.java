@@ -18,7 +18,6 @@ import com.benyuan.xiaojs.common.crop.CropImagePath;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -183,7 +182,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
 
     private boolean checkPromotionEnable() {
         if (mLimit <= 0) {
-            Toast.makeText(this, R.string.enroll_people_empty, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.lesson_people_empty, Toast.LENGTH_SHORT).show();
             return false;
         } else if (mPrice <= ZERO) {
             Toast.makeText(this, R.string.charge_empty, Toast.LENGTH_SHORT).show();
