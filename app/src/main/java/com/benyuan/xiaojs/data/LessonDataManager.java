@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
@@ -12,6 +13,7 @@ import com.benyuan.xiaojs.data.api.QiniuRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.model.CLResponse;
+import com.benyuan.xiaojs.model.CancelReason;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.ELResponse;
@@ -19,6 +21,7 @@ import com.benyuan.xiaojs.model.GELessonsResponse;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
+import com.benyuan.xiaojs.model.OfflineRegistrant;
 import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
 
@@ -337,9 +340,10 @@ public class LessonDataManager extends DataManager{
 
 
     public static void requestEnrollLesson(Context context,
-                             @NonNull String sessionID,
-                             @NonNull String lesson,
-                             @NonNull APIServiceCallback<ELResponse> callback) {
+                                           @NonNull String sessionID,
+                                           @NonNull String lesson,
+                                           @Nullable OfflineRegistrant offlineRegistrant,
+                                           @NonNull APIServiceCallback<ELResponse> callback) {
 
 
         if (callback == null) {
@@ -361,7 +365,7 @@ public class LessonDataManager extends DataManager{
         }
 
         LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.enrollLesson(context,sessionID,lesson,callback);
+        lessonRequest.enrollLesson(context,sessionID,lesson,offlineRegistrant,callback);
 
     }
 
@@ -391,6 +395,35 @@ public class LessonDataManager extends DataManager{
 
         LessonRequest lessonRequest = new LessonRequest();
         lessonRequest.confirmLessonEnrollment(context,sessionID,lesson,registrant,callback);
+    }
+
+
+    public static void requestCancelLesson(Context context,
+                                           @NonNull String sessionID,
+                                           @NonNull String lesson,
+                                           @NonNull CancelReason reason,
+                                           @NonNull APIServiceCallback callback) {
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(lesson)) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the lesson param is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.confirmLessonEnrollmentPrompt(Errors.BAD_PARAMETER);
+            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.cancelLesson(context,sessionID,lesson,reason,callback);
+
     }
 
 
