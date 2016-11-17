@@ -155,9 +155,9 @@
     <string name="live_lesson_name_error">请输入%1$d&#8211;%2$d个字的直播课名称</string>
     <string name="subject_empty">请选择学科类目</string>
     <string name="teach_form_empty">请选择教学形式</string>
-    <string name="enroll_people_empty">请填写报名人数</string>
-    <string name="enroll_people_must_be_positive">学生人数必须大于0</string>
-    <string name="enroll_people_must_be_less_than">学生人数不能多于%1$d人</string>
+    <string name="lesson_people_empty">请填写报名人数</string>
+    <string name="lesson_people_must_be_positive">学生人数必须大于0</string>
+    <string name="lesson_people_must_be_less_than">学生人数不能多于%1$d人</string>
     <string name="charge_must_be_checked">请选择收费模式</string>
     <string name="charge_empty">请填写收费价格</string>
     <string name="lesson_start_time_empty">请选择上课时间</string>

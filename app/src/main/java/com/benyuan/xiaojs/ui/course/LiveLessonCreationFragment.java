@@ -38,7 +38,6 @@ import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.Schedule;
-import com.benyuan.xiaojs.model.TeachLesson;
 import com.benyuan.xiaojs.ui.base.BaseBusiness;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.widget.EditTextDel;
@@ -509,7 +508,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
             String limitPeople = mLessonStuCount.getText().toString().trim();
             if (TextUtils.isEmpty(limitPeople)) {
-                Toast.makeText(mContext, R.string.enroll_people_empty, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.lesson_people_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
             int limit = Integer.parseInt(limitPeople);
@@ -519,7 +518,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 return false;
             }*/
             if (limit <= 0) {
-                Toast.makeText(mContext, R.string.enroll_people_must_be_positive, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.lesson_people_must_be_positive, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
