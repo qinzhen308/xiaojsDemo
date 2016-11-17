@@ -14,8 +14,8 @@ package com.benyuan.xiaojs.ui.widget;
  *
  * ======================================================================================== */
 
-import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,37 +23,43 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.benyuan.xiaojs.R;
 
-public class MessageImageView extends ImageView {
+public class MessageImageView extends RoundedImageView {
     private Bitmap mBackground;
     private Paint mPaint;
     private int mValue = 22;
+    private boolean mIsCircle;
 
     public MessageImageView(Context context) {
         super(context);
-        init();
+        init(null);
     }
 
     public MessageImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(attrs);
     }
 
     public MessageImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(attrs);
     }
 
-    @TargetApi(21)
-    public MessageImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
-    private void init() {
+    private void init(AttributeSet attrs) {
+        if (attrs != null) {
+            TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(
+                    attrs,
+                    R.styleable.MessageImageView,
+                    0, 0);
+            try {
+                mIsCircle = typedArray.getBoolean(R.styleable.MessageImageView_isCircle,false);
+            }finally {
+                typedArray.recycle();
+                typedArray = null;
+            }
+        }
         mBackground = BitmapFactory.decodeResource(getResources(), R.drawable.ic_msg_bg);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -63,16 +69,18 @@ public class MessageImageView extends ImageView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         if (mValue <= 0) {
             return;
         }
         if (mValue > 0 && mValue < 99) {
+
+
             //bg: left, top
-            int bgLeft = getWidth() / 2 + getDrawable().getIntrinsicWidth() / 2 - mBackground.getWidth() / 2;
-            int bgTop = getHeight() / 2 - (getDrawable().getIntrinsicHeight() / 2 + mBackground.getHeight() / 2);
+            int bgLeft = getBgLeft();
+            int bgTop = getBgTop();
 
             //draw bg
             Rect src = new Rect(0, 0, mBackground.getWidth(), mBackground.getHeight());
@@ -99,5 +107,29 @@ public class MessageImageView extends ImageView {
     public void setCount(int value) {
         mValue = value;
         invalidate();
+    }
+
+    private int getBgLeft(){
+        int drawableWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+        if (mIsCircle){//是圆形图片的话要按圆形内部最大正方形的宽度计算，
+            int r = drawableWidth / 2;
+            int half = (int) Math.sqrt(r * r / 2) ;//2x*x = r*r
+            return getWidth() / 2 + half - mBackground.getWidth() / 2;
+        }else {
+            return getWidth() / 2 + drawableWidth / 2 - mBackground.getWidth() / 2;
+        }
+
+    }
+
+    private int getBgTop(){
+        int drawableHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+
+        if (mIsCircle){
+            int r = drawableHeight / 2;
+            int half = (int) Math.sqrt(r * r / 2) ;
+            return getHeight() / 2 - (half + mBackground.getHeight() / 2);
+        }else {
+            return getHeight() / 2 - (drawableHeight / 2 + mBackground.getHeight() / 2);
+        }
     }
 }

@@ -52,4 +52,8 @@
     <declare-styleable name="BottomLineTextView">
         <attr name="line_height" format="integer|reference" />
     </declare-styleable>
+
+    <declare-styleable name="MessageImageView">
+        <attr name="isCircle" format="boolean" />
+    </declare-styleable>
 </resources>

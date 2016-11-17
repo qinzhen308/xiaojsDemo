@@ -15,35 +15,56 @@ package com.benyuan.xiaojs.ui.message;
  *
  * ======================================================================================== */
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
-import com.benyuan.xiaojs.util.BitmapUtils;
+import com.benyuan.xiaojs.ui.widget.CanInScrollviewListView;
+import com.benyuan.xiaojs.util.ToastUtil;
+import com.handmark.pulltorefresh.AutoPullToRefreshListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
 public class MessageFragment extends BaseFragment {
 
-    @BindView(R.id.tt)
-    TextView tt;
+    @BindView(R.id.listview)
+    AutoPullToRefreshListView mPullList;
+
+    View mHeader;
+    CanInScrollviewListView mListView;
     @Override
     protected View getContentView() {
-        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_live, null);
+        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_message, null);
         return v;
     }
 
     @Override
     protected void init() {
-        Bitmap iconBitmap = BitmapFactory.decodeResource(
-                mContext.getResources(), R.drawable.ic_center_tab_bg).copy(Bitmap.Config.ARGB_8888,true);
-        Bitmap chat = BitmapFactory.decodeResource(
-                mContext.getResources(), R.drawable.ic_tab_chat).copy(Bitmap.Config.ARGB_8888,true);
-        tt.setCompoundDrawablesWithIntrinsicBounds(null, BitmapUtils.getTabDrawable(mContext,iconBitmap,chat,"聊天"),null,null);
-        //tt.setCompoundDrawables();
+        mHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_message_header,null);
+        mListView = (CanInScrollviewListView) mHeader.findViewById(R.id.list);
+        List<MessageBean> beans = new ArrayList<>();
+        MessageBean b = new MessageBean();
+        beans.add(b);
+        beans.add(b);
+        beans.add(b);
+        beans.add(b);
+        beans.add(b);
+        beans.add(b);
+
+        mListView.setNeedDivider(true);
+        mListView.setAdapter(new PlatformMessageAdapter(mContext,beans));
+        mListView.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                ToastUtil.showToast(mContext,"position = " + position);
+            }
+        });
+        mPullList.getRefreshableView().addHeaderView(mHeader);
+        mPullList.setAdapter(new MessageAdapter(mContext,mPullList));
     }
 
 

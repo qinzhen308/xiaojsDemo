@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/main_bg"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <View
+            android:layout_marginTop="@dimen/px30"
+            style="@style/DividerHorizontal"/>
+
+    <com.benyuan.xiaojs.ui.widget.CanInScrollviewListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <View
+            android:layout_marginBottom="@dimen/px30"
+            style="@style/DividerHorizontal"/>
+</LinearLayout>

@@ -26,6 +26,7 @@ import com.benyuan.xiaojs.ui.widget.MessageImageView;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
+import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
@@ -143,9 +144,13 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    @OnClick({})
+    @OnClick({R.id.right_view})
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.right_view:
+                ToastUtil.showToast(mContext,"message");
+                break;
+        }
     }
 
     @Override

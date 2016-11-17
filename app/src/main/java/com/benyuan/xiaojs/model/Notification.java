@@ -17,4 +17,6 @@ public class Notification {
     public Initiator initiator;
     public Action[] actions;
     public Doc doc;
+
+    public boolean read;//是否已读，本地字段
 }
