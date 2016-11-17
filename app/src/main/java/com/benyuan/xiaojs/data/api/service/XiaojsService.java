@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.data.api.service;
 
 import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.model.Account;
+import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
@@ -129,9 +130,9 @@ public interface XiaojsService {
 
     //Confirm Lesson Enrollment
     @GET("/v1/ctl/lessons/{lesson}/enroll/{registrant}")
-    Call<Empty> confirmLessonEnrollment(@Header("SessionID") String sessionID,
-                                        @Path("lesson") String lesson,
-                                        @Path("registrant") String registrant);
+    Call<CLEResponse> confirmLessonEnrollment(@Header("SessionID") String sessionID,
+                                              @Path("lesson") String lesson,
+                                              @Path("registrant") String registrant);
 
     //Enroll Lesson
     @POST("/v1/ctl/lessons/{lesson}/enroll")
@@ -140,7 +141,7 @@ public interface XiaojsService {
 
 
     //Get Lesson Homepage
-    @GET("/v1/ctl/lesson-home/{lesson}")
+    @GET("/v1/ctl/lessons-home/{lesson}")
     Call<LessonDetail> getLessonHomepage(@Path("lesson") String lesson);
 
 

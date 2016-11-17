@@ -336,7 +336,7 @@ public class LessonDataManager extends DataManager{
     }
 
 
-    public void requestEnrollLesson(Context context,
+    public static void requestEnrollLesson(Context context,
                              @NonNull String sessionID,
                              @NonNull String lesson,
                              @NonNull APIServiceCallback<ELResponse> callback) {
@@ -365,9 +365,10 @@ public class LessonDataManager extends DataManager{
 
     }
 
-    public void requestLessonEnrollment(Context context,
+    public static void requestLessonEnrollment(Context context,
                                         @NonNull String sessionID,
                                         @NonNull String lesson,
+                                        @NonNull String registrant,
                                         @NonNull APIServiceCallback callback) {
 
 
@@ -389,7 +390,7 @@ public class LessonDataManager extends DataManager{
         }
 
         LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.confirmLessonEnrollment(context,sessionID,lesson,callback);
+        lessonRequest.confirmLessonEnrollment(context,sessionID,lesson,registrant,callback);
     }
 
 

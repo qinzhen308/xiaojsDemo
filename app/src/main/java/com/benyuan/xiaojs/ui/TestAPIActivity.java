@@ -32,6 +32,7 @@ import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Duration;
+import com.benyuan.xiaojs.model.ELResponse;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
@@ -106,6 +107,24 @@ public class TestAPIActivity extends Activity {
 
         }
     }
+
+
+    private void testEnrollLesson(Context context){
+
+        String lesson= "582d58353d73a5046fc24490";
+        LessonDataManager.requestEnrollLesson(context, sessionid, lesson, new APIServiceCallback<ELResponse>() {
+            @Override
+            public void onSuccess(ELResponse object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+    }
+
 
     private void testEditLesson(Context context) {
 
