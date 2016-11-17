@@ -6,6 +6,7 @@ import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
+import com.benyuan.xiaojs.model.ELResponse;
 import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.GELessonsResponse;
 import com.benyuan.xiaojs.model.GNOResponse;
@@ -14,6 +15,7 @@ import com.benyuan.xiaojs.model.GetSubjectResponse;
 import com.benyuan.xiaojs.model.HomeData;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.LessonDetail;
+import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.benyuan.xiaojs.model.Notification;
@@ -29,8 +31,10 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.OPTIONS;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 
@@ -41,7 +45,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.78:3000/";
+    String BASE_URL = "http://192.168.100.115:3000/";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -124,13 +128,28 @@ public interface XiaojsService {
     Call<LessonDetail> getLessonDetails(@Path("lesson") String lesson);
 
     //Confirm Lesson Enrollment
-    @GET("/v1/ctl/lessons/{lesson}/enroll")
+    @GET("/v1/ctl/lessons/{lesson}/enroll/{registrant}")
     Call<Empty> confirmLessonEnrollment(@Header("SessionID") String sessionID,
-                                        @Path("lesson") String lesson);
+                                        @Path("lesson") String lesson,
+                                        @Path("registrant") String registrant);
+
+    //Enroll Lesson
+    @POST("/v1/ctl/lessons/{lesson}/enroll")
+    Call<ELResponse> enrollLesson(@Header("SessionID") String sessionID,
+                                  @Path("lesson") String lesson);
+
 
     //Get Lesson Homepage
     @GET("/v1/ctl/lesson-home/{lesson}")
     Call<LessonDetail> getLessonHomepage(@Path("lesson") String lesson);
+
+
+    //Edit Lesson
+    @Headers("Content-Type: application/json")
+    @PUT("/v1/ctl/lessons/{lesson}")
+    Call<ResponseBody> editLesson(@Header("SessionID") String sessionID,
+                                @Path("lesson") String lesson,
+                                @Body LiveLesson liveLesson);
 
 
 

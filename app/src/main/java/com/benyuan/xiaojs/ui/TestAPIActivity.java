@@ -55,8 +55,8 @@ public class TestAPIActivity extends Activity {
     private int vcode;
     private long mob = 13812345687l;
     private String subject = "5820a10e101db0af4bcf2fd9";
-    private String sessionid = "0519JlXgx3Hl45DPFrKJpqdKdip4fJ4K";
-    private String id = "5827e51fa20843720290e2f5";
+    private String sessionid = "8oa8Sm3qRicog-SYnPOVcOYhBYkuOfEn";
+    private String id = "582bc19580144c1b773611e9";
     private String token = "";///"7ILUcJUmJGSmyeaB3QNWpUlPdT3-E2MXkC1oZhqJ:HBHjxd_oTlAiwaht4niHQFDmh6Q=:eyJyZXR1cm5Cb2R5Ijoie1xuICAgICAgICAgICAgXCJuYW1lXCI6ICQoZm5hbWUpLFxuICAgICAgICAgICAgXCJzaXplXCI6ICQoZnNpemUpLFxuICAgICAgICAgICAgXCJ3XCI6ICQoaW1hZ2VJbmZvLndpZHRoKSxcbiAgICAgICAgICAgIFwiaFwiOiAkKGltYWdlSW5mby5oZWlnaHQpLFxuICAgICAgICAgICAgXCJoYXNoXCI6ICQoZXRhZylcbiAgICAgICAgfSIsInNjb3BlIjoidW5kZWZpbmVkOjU4MjkyMGFmYzcwMDkzM2M0ZDZjMjVkYyIsImRlYWRsaW5lIjoxNDc5MjQ4NDA2fQ==";
 
 
@@ -99,11 +99,52 @@ public class TestAPIActivity extends Activity {
                 //getProfile(this);
                 //testCoverUpLoad(this);
                 //testLessonHomePage(this);
-                editPortrait();
+                //editPortrait();
+                testEditLesson(this);
                 break;
             }
 
         }
+    }
+
+    private void testEditLesson(Context context) {
+
+        String lesson= "582d58353d73a5046fc24490";
+        Enroll enroll = new Enroll();
+        enroll.setMax(100);
+        enroll.setMandatory(false);
+
+        Fee fee = new Fee();
+        fee.setFree(false);
+        fee.setType(Finance.PricingType.TOTAL);
+        fee.setCharge(BigDecimal.valueOf(100));
+
+        Schedule sch = new Schedule();
+        sch.setStart(new Date(System.currentTimeMillis()));
+        sch.setDuration(1000);
+
+
+        LiveLesson ll = new LiveLesson();
+        ll.setTitle("无人驾驶课");
+        ll.setSubject(subject);
+        ll.setEnroll(enroll);
+        ll.setMode(Ctl.TeachingMode.ONE_2_ONE);
+        ll.setFee(fee);
+        ll.setSchedule(sch);
+
+        LessonDataManager.requestEditLesson(context, sessionid, lesson, ll, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
+
     }
 
     private void testLessonHomePage(Context context) {
@@ -183,6 +224,8 @@ public class TestAPIActivity extends Activity {
                 break;
         }
     }
+
+
 
     private void getProfile(Context context) {
 

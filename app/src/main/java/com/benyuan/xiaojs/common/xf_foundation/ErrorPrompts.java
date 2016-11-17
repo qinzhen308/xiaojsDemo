@@ -8,6 +8,22 @@ import android.text.TextUtils;
 
 public class ErrorPrompts {
 
+    public static String enrollLessonPrompt(String errorCode) {
+
+        String errorMessage = "报名失败";
+
+
+        return errorMessage;
+    }
+
+    public static String editLessonPrompt(String errorCode) {
+
+        String errorMessage = "修改直播课失败";
+
+
+        return errorMessage;
+    }
+
     public static String getLessonHomepagePrompt(String errorCode) {
 
         String errorMessage = "获取直播课主页失败";

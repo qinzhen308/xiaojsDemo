@@ -14,9 +14,11 @@ import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
+import com.benyuan.xiaojs.model.ELResponse;
 import com.benyuan.xiaojs.model.GELessonsResponse;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.LessonDetail;
+import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
 
@@ -251,32 +253,6 @@ public class LessonDataManager extends DataManager{
         lessonRequest.getLessonDetails(context,lesson,callback);
     }
 
-    public void requestLessonEnrollment(Context context,
-                                        @NonNull String sessionID,
-                                        @NonNull String lesson,
-                                        @NonNull APIServiceCallback callback) {
-
-
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the request");
-            }
-            return;
-        }
-
-        if (TextUtils.isEmpty(lesson)) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the lesson param is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.confirmLessonEnrollmentPrompt(Errors.BAD_PARAMETER);
-            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
-            return;
-        }
-
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.confirmLessonEnrollment(context,sessionID,lesson,callback);
-    }
 
     public static void requestUploadCover(Context context,
                                            @NonNull String sessionID,
@@ -307,7 +283,7 @@ public class LessonDataManager extends DataManager{
         String lessonKey = generateUploadKey(fileName);
 
         QiniuRequest qiniuRequest = new QiniuRequest();
-        qiniuRequest.uploadCover(context,sessionID,"5827e51fa20843720290e2f5",filePath,qiniuService);
+        qiniuRequest.uploadCover(context,sessionID,lessonKey,filePath,qiniuService);
 
 
     }
@@ -328,6 +304,94 @@ public class LessonDataManager extends DataManager{
         LessonRequest lessonRequest = new LessonRequest();
         lessonRequest.getLessonHomepage(context,lesson,callback);
     }
+
+
+    public static void requestEditLesson(Context context,
+                                  @NonNull String sessionID,
+                                  @NonNull String lesson,
+                                  @NonNull LiveLesson liveLesson,
+                                  @NonNull APIServiceCallback callback) {
+
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.editLessonPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.editLesson(context,sessionID,lesson,liveLesson,callback);
+    }
+
+
+    public void requestEnrollLesson(Context context,
+                             @NonNull String sessionID,
+                             @NonNull String lesson,
+                             @NonNull APIServiceCallback<ELResponse> callback) {
+
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(sessionID)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.enrollLessonPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.enrollLesson(context,sessionID,lesson,callback);
+
+    }
+
+    public void requestLessonEnrollment(Context context,
+                                        @NonNull String sessionID,
+                                        @NonNull String lesson,
+                                        @NonNull APIServiceCallback callback) {
+
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the request");
+            }
+            return;
+        }
+
+        if (TextUtils.isEmpty(lesson)) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the lesson param is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.confirmLessonEnrollmentPrompt(Errors.BAD_PARAMETER);
+            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.confirmLessonEnrollment(context,sessionID,lesson,callback);
+    }
+
 
 
 }

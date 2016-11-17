@@ -64,6 +64,28 @@ public class ExampleInstrumentedTest {
 
         //testCreateLession(appContext);
         //testClaimCompetency(appContext);
+        testEditLesson(appContext);
+    }
+
+    private void testEditLesson(Context context) {
+
+        String lesson= "582d42b6ac3a72d80b14a2e6";
+        LiveLesson liveLesson = new LiveLesson();
+        liveLesson.setTitle("我是");
+
+        LessonDataManager.requestEditLesson(context, seesionId, lesson, liveLesson, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
+
     }
 
     private void testCreateLession(Context context) {
