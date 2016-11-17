@@ -9,18 +9,12 @@ package com.benyuan.xiaojs.ui.message;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/11/16
+ * Date:2016/11/17
  * Desc:
  *
  * ======================================================================================== */
 
-import java.io.Serializable;
-import java.util.Date;
-
-public class MessageBean implements Serializable {
-    public int resId;
-    public String title;
-    public String content;
-    public Date time;
-    public int type;
+public interface NotificationConstant {
+    public static final String KEY_NOTIFICATION_CATEGORY_ID = "notification_category_id";
+    public static final String KEY_NOTIFICATION_TITLE = "notification_title";
 }

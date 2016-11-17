@@ -73,6 +73,7 @@
         <activity
                 android:name=".ui.course.CancelLessonActivity"
                 android:screenOrientation="portrait"/>
+        <activity android:name=".ui.message.NotificationCategoryListActivity" android:screenOrientation="portrait"/>
 
     </application>
 

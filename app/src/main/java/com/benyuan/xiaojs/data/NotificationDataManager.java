@@ -13,6 +13,7 @@ import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.Notification;
+import com.benyuan.xiaojs.model.NotificationCriteria;
 import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
 
@@ -55,7 +56,7 @@ public class NotificationDataManager extends DataManager {
 
     public static void requestNotifications(Context context,
                                             @NonNull String sessionID,
-                                            @NonNull Criteria criteria,
+                                            @NonNull NotificationCriteria criteria,
                                             @NonNull Pagination pagination,
                                             @NonNull APIServiceCallback<ArrayList<Notification>> callback) {
 

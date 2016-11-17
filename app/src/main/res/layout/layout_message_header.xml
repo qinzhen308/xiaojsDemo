@@ -13,8 +13,4 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-
-    <View
-            android:layout_marginBottom="@dimen/px30"
-            style="@style/DividerHorizontal"/>
 </LinearLayout>

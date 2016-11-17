@@ -126,6 +126,15 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
+    protected final void setMiddleTitle(String title){
+        if (!TextUtils.isEmpty(title)){
+            mMiddleText.setVisibility(View.VISIBLE);
+            mMiddleText.setText(title);
+        }else {
+            mMiddleText.setVisibility(View.GONE);
+        }
+    }
+
     protected final void setRightText(int resId){
         if (resId > 0 && !TextUtils.isEmpty(getResources().getText(resId))){
             mRightText.setVisibility(View.VISIBLE);

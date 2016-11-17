@@ -1,4 +1,9 @@
-package com.benyuan.xiaojs.ui.message;
+package com.benyuan.xiaojs.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.Date;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,26 +14,13 @@ package com.benyuan.xiaojs.ui.message;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/11/16
- * Desc:
+ * Date:2016/11/17
+ * Desc:Get Notifications的请求参数
  *
  * ======================================================================================== */
 
-import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.base.BaseActivity;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
-
-import butterknife.BindView;
-
-public class MessageCategoryListActivity extends BaseActivity {
-
-    @BindView(R.id.message_list)
-    AutoPullToRefreshListView mList;
-
-    @Override
-    protected void addViewContent() {
-        addView(R.layout.activity_message_list);
-
-
-    }
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class NotificationCriteria {
+    public String category;
+    public Date before;
 }

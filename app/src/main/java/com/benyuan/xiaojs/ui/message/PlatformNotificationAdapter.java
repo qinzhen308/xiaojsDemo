@@ -22,16 +22,17 @@ import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.model.Notification;
+import com.benyuan.xiaojs.model.NotificationCategory;
 import com.benyuan.xiaojs.ui.widget.CanInScrollviewListView;
 import com.benyuan.xiaojs.ui.widget.MessageImageView;
 import com.benyuan.xiaojs.util.TimeUtil;
 
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class PlatformMessageAdapter extends CanInScrollviewListView.Adapter {
+public class PlatformNotificationAdapter extends CanInScrollviewListView.Adapter {
 
     private int[] mIcons = new int[]{
             R.drawable.ic_message_invitation,
@@ -39,25 +40,25 @@ public class PlatformMessageAdapter extends CanInScrollviewListView.Adapter {
     R.drawable.ic_message_socialnews,
             R.drawable.ic_message_qanswerme,
             R.drawable.ic_message_transactionmessage,
-    R.drawable.ic_message_recommendedselection};
+    R.drawable.ic_message_recommendedselection,
+    R.drawable.ic_message_xiaojs};
 
     private String titles[];
     private Context mContext;
-    private List<MessageBean> beans ;
+    private List<NotificationCategory> beans ;
 
-    public PlatformMessageAdapter(Context context,List<MessageBean> beans){
+    public PlatformNotificationAdapter(Context context,String[] titles){
         mContext = context;
-        this.beans = beans;
-        titles = mContext.getResources().getStringArray(R.array.platform_message_title);
+        this.titles = titles;
     }
     @Override
     public int getCount() {
-        return beans == null ? 0 : beans.size();
+        return titles.length;
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public NotificationCategory getItem(int position) {
+        return NotificationBusiness.getPlatformMessageCategory(beans,position);
     }
 
     @Override
@@ -78,10 +79,29 @@ public class PlatformMessageAdapter extends CanInScrollviewListView.Adapter {
 
         holder.image.setImageResource(mIcons[position]);
         holder.title.setText(titles[position]);
-        holder.time.setText(TimeUtil.format(new Date(System.currentTimeMillis()),TimeUtil.TIME_YYYY_MM_DD_HH_MM));
-        holder.content.setText("这是一条"+ titles[position] +"的内容");
-        holder.image.setCount(36);
+        if (position == mIcons.length - 1){
+            holder.special();
+        }else {
+            holder.normal();
+        }
+
+        if (beans != null && beans.size() > 0){
+            NotificationCategory category = NotificationBusiness.getPlatformMessageCategory(beans,position);
+            if (category != null && category.notifications != null && category.notifications.size() > 0){
+                Notification notification = category.notifications.get(0);
+                holder.time.setText(TimeUtil.format(notification.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                holder.content.setText(notification.body);
+                holder.image.setCount(category.count);
+            }
+        }
         return convertView;
+    }
+
+    public void setData(List<NotificationCategory> beans){
+        if (beans == null || beans.size() == 0)
+            return;
+        this.beans = beans;
+        notifyDataSetChanged();
     }
 
     class Holder extends BaseHolder{
@@ -93,6 +113,24 @@ public class PlatformMessageAdapter extends CanInScrollviewListView.Adapter {
         TextView time;
         @BindView(R.id.message_content)
         TextView content;
+        @BindView(R.id.message_head)
+        View head;
+        @BindView(R.id.message_top_divider)
+        View topDivider;
+        @BindView(R.id.message_bottom_divider)
+        View bottomDivider;
+
+        public void normal(){
+            head.setVisibility(View.GONE);
+            topDivider.setVisibility(View.GONE);
+            bottomDivider.setVisibility(View.GONE);
+        }
+
+        public void special(){
+            head.setVisibility(View.VISIBLE);
+            topDivider.setVisibility(View.VISIBLE);
+            bottomDivider.setVisibility(View.VISIBLE);
+        }
 
         public Holder(View view) {
             super(view);
