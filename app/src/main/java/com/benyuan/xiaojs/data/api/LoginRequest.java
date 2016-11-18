@@ -20,6 +20,7 @@ import com.orhanobut.logger.Logger;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -105,9 +106,9 @@ public class LoginRequest extends ServiceRequest {
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
-        xiaojsService.logout(sessionID).enqueue(new Callback<Empty>() {
+        xiaojsService.logout(sessionID).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Empty> call, Response<Empty> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int responseCode = response.code();
                 if (responseCode == SUCCESS_CODE) {
 
@@ -138,31 +139,21 @@ public class LoginRequest extends ServiceRequest {
             }
 
             @Override
-            public void onFailure(Call<Empty> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                String errorMsg = t.getMessage();
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the logout has occur exception");
+                    Logger.d("the logout has occur exception:\n%s", errorMsg);
                 }
 
 
-                String errorMsg = t.getMessage();
-                // FIXME: 2016/11/1
-                if (errorMsg.contains(EMPTY_EXCEPTION)) {
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(null);
-                    }
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
 
-                } else {
-
-                    String errorCode = getExceptionErrorCode();
-                    String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
-
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
+                APIServiceCallback callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
                 }
 
             }

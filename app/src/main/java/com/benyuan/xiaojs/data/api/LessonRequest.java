@@ -191,9 +191,9 @@ public class LessonRequest extends ServiceRequest {
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.putLessonOnShelves(sessionID, lesson).enqueue(new Callback<Empty>() {
+        xiaojsService.putLessonOnShelves(sessionID, lesson).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Empty> call, Response<Empty> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
                 if (responseCode == SUCCESS_CODE) {
@@ -227,33 +227,25 @@ public class LessonRequest extends ServiceRequest {
             }
 
             @Override
-            public void onFailure(Call<Empty> call, Throwable t) {
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the put lession on shelves request has occur exception");
-                }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
                 String errorMsg = t.getMessage();
-                // FIXME: 2016/11/1
-                if (errorMsg.contains(EMPTY_EXCEPTION)) {
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(null);
-                    }
 
-                } else {
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the put lession on shelves request has occur exception:%s", errorMsg);
+                }
 
-                    String errorCode = getExceptionErrorCode();
-                    String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(errorCode);
 
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(errorCode);
 
+                APIServiceCallback callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
                 }
 
             }
+
         });
     }
 
@@ -266,9 +258,9 @@ public class LessonRequest extends ServiceRequest {
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.cancelLessonOnShelves(sessionID, lesson).enqueue(new Callback<Empty>() {
+        xiaojsService.cancelLessonOnShelves(sessionID, lesson).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Empty> call, Response<Empty> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
                 if (responseCode == SUCCESS_CODE) {
@@ -302,31 +294,22 @@ public class LessonRequest extends ServiceRequest {
             }
 
             @Override
-            public void onFailure(Call<Empty> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                String errorMsg = t.getMessage();
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the cancelLessonOnShelves request has occur exception");
+                    Logger.d("the cancelLessonOnShelves request has occur exception:%s", errorMsg);
                 }
 
-                String errorMsg = t.getMessage();
-                // FIXME: 2016/11/1
-                if (errorMsg.contains(EMPTY_EXCEPTION)) {
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(null);
-                    }
 
-                } else {
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.cancelLessonOnShelvesPrompt(errorCode);
 
-                    String errorCode = getExceptionErrorCode();
-                    String errorMessage = ErrorPrompts.cancelLessonOnShelvesPrompt(errorCode);
-
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
+                APIServiceCallback callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
                 }
+
             }
         });
     }
@@ -616,62 +599,62 @@ public class LessonRequest extends ServiceRequest {
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.enrollLesson(sessionID, lesson,offlineRegistrant).enqueue(
+        xiaojsService.enrollLesson(sessionID, lesson, offlineRegistrant).enqueue(
                 new Callback<ELResponse>() {
-            @Override
-            public void onResponse(Call<ELResponse> call, Response<ELResponse> response) {
+                    @Override
+                    public void onResponse(Call<ELResponse> call, Response<ELResponse> response) {
 
-                int responseCode = response.code();
+                        int responseCode = response.code();
 
-                if (responseCode == SUCCESS_CODE) {
+                        if (responseCode == SUCCESS_CODE) {
 
-                    ELResponse elResponse = response.body();
+                            ELResponse elResponse = response.body();
 
-                    APIServiceCallback<ELResponse> callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(elResponse);
+                            APIServiceCallback<ELResponse> callback = callbackReference.get();
+                            if (callback != null) {
+                                callback.onSuccess(elResponse);
+                            }
+
+
+                        } else {
+
+                            String errorBody = null;
+                            try {
+                                errorBody = response.errorBody().string();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            String errorCode = parseErrorBody(errorBody);
+                            String errorMessage = ErrorPrompts.enrollLessonPrompt(errorCode);
+
+                            APIServiceCallback<ELResponse> callback = callbackReference.get();
+                            if (callback != null) {
+                                callback.onFailure(errorCode, errorMessage);
+                            }
+
+
+                        }
+
                     }
 
+                    @Override
+                    public void onFailure(Call<ELResponse> call, Throwable t) {
 
-                } else {
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the enrollLesson request has occur exception");
+                        }
 
-                    String errorBody = null;
-                    try {
-                        errorBody = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        String errorCode = getExceptionErrorCode();
+                        String errorMessage = ErrorPrompts.enrollLessonPrompt(errorCode);
+
+                        APIServiceCallback<ELResponse> callback = callbackReference.get();
+                        if (callback != null) {
+                            callback.onFailure(errorCode, errorMessage);
+                        }
                     }
-
-
-                    String errorCode = parseErrorBody(errorBody);
-                    String errorMessage = ErrorPrompts.enrollLessonPrompt(errorCode);
-
-                    APIServiceCallback<ELResponse> callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ELResponse> call, Throwable t) {
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the enrollLesson request has occur exception");
-                }
-
-                String errorCode = getExceptionErrorCode();
-                String errorMessage = ErrorPrompts.enrollLessonPrompt(errorCode);
-
-                APIServiceCallback<ELResponse> callback = callbackReference.get();
-                if (callback != null) {
-                    callback.onFailure(errorCode, errorMessage);
-                }
-            }
-        });
+                });
     }
 
     public void confirmLessonEnrollment(Context context,
@@ -748,7 +731,7 @@ public class LessonRequest extends ServiceRequest {
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.cancelLesson(sessionID,lesson,reason).enqueue(new Callback<ResponseBody>() {
+        xiaojsService.cancelLesson(sessionID, lesson, reason).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 

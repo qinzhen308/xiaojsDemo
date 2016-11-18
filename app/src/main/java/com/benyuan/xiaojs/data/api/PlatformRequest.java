@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,60 +43,60 @@ public class PlatformRequest extends ServiceRequest {
         String paginationJson = objectToJsonString(pagination);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getNotificationsOverview(sessionID,paginationJson).enqueue(
+        xiaojsService.getNotificationsOverview(sessionID, paginationJson).enqueue(
                 new Callback<GNOResponse>() {
-            @Override
-            public void onResponse(Call<GNOResponse> call, Response<GNOResponse> response) {
-                int responseCode = response.code();
+                    @Override
+                    public void onResponse(Call<GNOResponse> call, Response<GNOResponse> response) {
+                        int responseCode = response.code();
 
-                if (responseCode == SUCCESS_CODE) {
+                        if (responseCode == SUCCESS_CODE) {
 
-                    GNOResponse gnoResponse = response.body();
+                            GNOResponse gnoResponse = response.body();
 
-                    APIServiceCallback<GNOResponse> callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(gnoResponse);
+                            APIServiceCallback<GNOResponse> callback = callbackReference.get();
+                            if (callback != null) {
+                                callback.onSuccess(gnoResponse);
+                            }
+
+                        } else {
+
+                            String errorBody = null;
+                            try {
+                                errorBody = response.errorBody().string();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            String errorCode = parseErrorBody(errorBody);
+                            String errorMessage = ErrorPrompts.getNotificationsOverviewPrompt(errorCode);
+
+                            APIServiceCallback<GNOResponse> callback = callbackReference.get();
+                            if (callback != null) {
+                                callback.onFailure(errorCode, errorMessage);
+                            }
+
+
+                        }
                     }
 
-                } else {
+                    @Override
+                    public void onFailure(Call<GNOResponse> call, Throwable t) {
 
-                    String errorBody = null;
-                    try {
-                        errorBody = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the getNotificationsOverview request has occur exception");
+                        }
+
+                        String errorCode = getExceptionErrorCode();
+                        String errorMessage = ErrorPrompts.getNotificationsOverviewPrompt(errorCode);
+
+                        APIServiceCallback<GNOResponse> callback = callbackReference.get();
+                        if (callback != null) {
+                            callback.onFailure(errorCode, errorMessage);
+                        }
+
                     }
-
-
-                    String errorCode = parseErrorBody(errorBody);
-                    String errorMessage = ErrorPrompts.getNotificationsOverviewPrompt(errorCode);
-
-                    APIServiceCallback<GNOResponse> callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GNOResponse> call, Throwable t) {
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the getNotificationsOverview request has occur exception");
-                }
-
-                String errorCode = getExceptionErrorCode();
-                String errorMessage = ErrorPrompts.getNotificationsOverviewPrompt(errorCode);
-
-                APIServiceCallback<GNOResponse> callback = callbackReference.get();
-                if (callback != null) {
-                    callback.onFailure(errorCode, errorMessage);
-                }
-
-            }
-        });
+                });
 
     }
 
@@ -112,69 +113,69 @@ public class PlatformRequest extends ServiceRequest {
         String criteriaJson = objectToJsonString(criteria);
         String paginationJson = objectToJsonString(pagination);
 
-        if(XiaojsConfig.DEBUG){
+        if (XiaojsConfig.DEBUG) {
             Logger.json(criteriaJson);
             Logger.json(paginationJson);
         }
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getNotifications(sessionID,criteriaJson,paginationJson).enqueue(
+        xiaojsService.getNotifications(sessionID, criteriaJson, paginationJson).enqueue(
                 new Callback<ArrayList<Notification>>() {
 
-            @Override
-            public void onResponse(Call<ArrayList<Notification>> call,
-                                   Response<ArrayList<Notification>> response) {
+                    @Override
+                    public void onResponse(Call<ArrayList<Notification>> call,
+                                           Response<ArrayList<Notification>> response) {
 
-                int responseCode = response.code();
+                        int responseCode = response.code();
 
-                if (responseCode == SUCCESS_CODE) {
+                        if (responseCode == SUCCESS_CODE) {
 
-                    ArrayList<Notification> notifications = response.body();
+                            ArrayList<Notification> notifications = response.body();
 
-                    APIServiceCallback<ArrayList<Notification>> callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(notifications);
+                            APIServiceCallback<ArrayList<Notification>> callback = callbackReference.get();
+                            if (callback != null) {
+                                callback.onSuccess(notifications);
+                            }
+
+                        } else {
+
+                            String errorBody = null;
+                            try {
+                                errorBody = response.errorBody().string();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            String errorCode = parseErrorBody(errorBody);
+                            String errorMessage = ErrorPrompts.getNotificationsPrompt(errorCode);
+
+                            APIServiceCallback<ArrayList<Notification>> callback = callbackReference.get();
+                            if (callback != null) {
+                                callback.onFailure(errorCode, errorMessage);
+                            }
+
+
+                        }
+
                     }
 
-                } else {
+                    @Override
+                    public void onFailure(Call<ArrayList<Notification>> call, Throwable t) {
 
-                    String errorBody = null;
-                    try {
-                        errorBody = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the getNotificationsOverview request has occur exception");
+                        }
+
+                        String errorCode = getExceptionErrorCode();
+                        String errorMessage = ErrorPrompts.getNotificationsPrompt(errorCode);
+
+                        APIServiceCallback<ArrayList<Notification>> callback = callbackReference.get();
+                        if (callback != null) {
+                            callback.onFailure(errorCode, errorMessage);
+                        }
                     }
-
-
-                    String errorCode = parseErrorBody(errorBody);
-                    String errorMessage = ErrorPrompts.getNotificationsPrompt(errorCode);
-
-                    APIServiceCallback<ArrayList<Notification>> callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Notification>> call, Throwable t) {
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the getNotificationsOverview request has occur exception");
-                }
-
-                String errorCode = getExceptionErrorCode();
-                String errorMessage = ErrorPrompts.getNotificationsPrompt(errorCode);
-
-                APIServiceCallback<ArrayList<Notification>> callback = callbackReference.get();
-                if (callback != null) {
-                    callback.onFailure(errorCode, errorMessage);
-                }
-            }
-        });
+                });
 
 
     }
@@ -188,9 +189,9 @@ public class PlatformRequest extends ServiceRequest {
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.deleteNotification(sessionID,notification).enqueue(new Callback<Empty>() {
+        xiaojsService.deleteNotification(sessionID, notification).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Empty> call, Response<Empty> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
                 if (responseCode == SUCCESS_CODE) {
@@ -224,32 +225,23 @@ public class PlatformRequest extends ServiceRequest {
             }
 
             @Override
-            public void onFailure(Call<Empty> call, Throwable t) {
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the deleteNotification request has occur exception");
-                }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
                 String errorMsg = t.getMessage();
-                // FIXME: 2016/11/1
-                if (errorMsg.contains(EMPTY_EXCEPTION)) {
 
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(null);
-                    }
-
-                } else {
-
-                    String errorCode = getExceptionErrorCode();
-                    String errorMessage = ErrorPrompts.deleteNotificationPrompt(errorCode);
-
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the deleteNotification request has occur exception:\n%s", errorMsg);
                 }
+
+
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.deleteNotificationPrompt(errorCode);
+
+                APIServiceCallback callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
+
 
             }
         });
@@ -265,65 +257,65 @@ public class PlatformRequest extends ServiceRequest {
 
         String criteriaJson = objectToJsonString(criteria);
 
-        if(XiaojsConfig.DEBUG){
+        if (XiaojsConfig.DEBUG) {
             Logger.json(criteriaJson);
         }
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.ignoreNotifications(sessionID,criteriaJson).enqueue(
+        xiaojsService.ignoreNotifications(sessionID, criteriaJson).enqueue(
                 new Callback<IgnoreNResponse>() {
 
-            @Override
-            public void onResponse(Call<IgnoreNResponse> call, Response<IgnoreNResponse> response) {
+                    @Override
+                    public void onResponse(Call<IgnoreNResponse> call, Response<IgnoreNResponse> response) {
 
-                int responseCode = response.code();
+                        int responseCode = response.code();
 
-                if (responseCode == SUCCESS_CODE) {
+                        if (responseCode == SUCCESS_CODE) {
 
-                    IgnoreNResponse ignoreNResponse = response.body();
+                            IgnoreNResponse ignoreNResponse = response.body();
 
-                    APIServiceCallback<IgnoreNResponse> callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(ignoreNResponse);
+                            APIServiceCallback<IgnoreNResponse> callback = callbackReference.get();
+                            if (callback != null) {
+                                callback.onSuccess(ignoreNResponse);
+                            }
+
+                        } else {
+
+                            String errorBody = null;
+                            try {
+                                errorBody = response.errorBody().string();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            String errorCode = parseErrorBody(errorBody);
+                            String errorMessage = ErrorPrompts.ignoreNotificationsPrompt(errorCode);
+
+                            APIServiceCallback<IgnoreNResponse> callback = callbackReference.get();
+                            if (callback != null) {
+                                callback.onFailure(errorCode, errorMessage);
+                            }
+
+
+                        }
                     }
 
-                } else {
+                    @Override
+                    public void onFailure(Call<IgnoreNResponse> call, Throwable t) {
 
-                    String errorBody = null;
-                    try {
-                        errorBody = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the ignoreNotifications request has occur exception");
+                        }
+
+                        String errorCode = getExceptionErrorCode();
+                        String errorMessage = ErrorPrompts.ignoreNotificationsPrompt(errorCode);
+
+                        APIServiceCallback<IgnoreNResponse> callback = callbackReference.get();
+                        if (callback != null) {
+                            callback.onFailure(errorCode, errorMessage);
+                        }
                     }
-
-
-                    String errorCode = parseErrorBody(errorBody);
-                    String errorMessage = ErrorPrompts.ignoreNotificationsPrompt(errorCode);
-
-                    APIServiceCallback<IgnoreNResponse> callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<IgnoreNResponse> call, Throwable t) {
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the ignoreNotifications request has occur exception");
-                }
-
-                String errorCode = getExceptionErrorCode();
-                String errorMessage = ErrorPrompts.ignoreNotificationsPrompt(errorCode);
-
-                APIServiceCallback<IgnoreNResponse> callback = callbackReference.get();
-                if (callback != null) {
-                    callback.onFailure(errorCode, errorMessage);
-                }
-            }
-        });
+                });
     }
 }
