@@ -41,12 +41,8 @@ public class LessonCreationActivity extends BaseTopTabActivity {
         fragments.add(liveLesson);
         fragments.add(privateLesson);
 
-        String lessonId = getLessonId();
-        if (!TextUtils.isEmpty(lessonId)) {
-            Bundle data = new Bundle();
-            data.putString(CourseConstant.KEY_LESSON_ID, getLessonId());
-            liveLesson.setArguments(data);
-        }
+        Bundle data = new Bundle(getIntent().getExtras());
+        liveLesson.setArguments(data);
 
         addViews(new int[] {R.string.live_lesson, R.string.private_lesson}, fragments);
     }
@@ -60,14 +56,5 @@ public class LessonCreationActivity extends BaseTopTabActivity {
             default:
                 break;
         }
-    }
-
-    private String getLessonId () {
-        Object obj = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
-        if (obj instanceof TeachLesson) {
-            return ((TeachLesson)obj).getId();
-        }
-
-        return null;
     }
 }
