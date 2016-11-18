@@ -60,7 +60,7 @@ public class Fee implements Serializable{
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class Discounted {
+    public class Discounted implements Serializable{
         private BigDecimal subtotal;
         private float ratio;
         private BigDecimal saved;

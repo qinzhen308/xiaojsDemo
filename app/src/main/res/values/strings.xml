@@ -98,6 +98,10 @@
     <string name="live_lesson_introduce">一张好的直播课封面可以提供报名封面哦~</string>
     <string name="live_lesson_brief">直播课简介</string>
     <string name="live_lesson_brief_hint">请填写直播课简介</string>
+    <string name="live_lesson_label">标签</string>
+    <string name="live_lesson_label_hint">添加标签更容易被搜索</string>
+    <string name="add_label">添加标签</string>
+    <string name="add_label_hint">5个字内</string>
     <string name="teacher_introduction">教师介绍</string>
     <string name="teacher_introduction_title">师资介绍</string>
     <string name="teacher_introduction_hint">请填写师资介绍</string>

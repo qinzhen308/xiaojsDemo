@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/main_bg">
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_marginTop="@dimen/px32"/>
+
+    <LinearLayout
+            android:id="@+id/add_label_layout"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:id="@+id/add_label_controller"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:textSize="@dimen/font_28px"
+                    android:paddingLeft="@dimen/px32"
+                    android:textColor="@color/font_gray"
+                    android:drawableLeft="@drawable/ic_add"
+                    android:drawablePadding="@dimen/px12"
+                    android:paddingTop="@dimen/px32"
+                    android:paddingBottom="@dimen/px32"
+                    android:text="@string/add_label"
+                    android:layout_height="wrap_content"/>
+
+            <View
+                    style="@style/DividerHorizontal"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/sub_btn"
+            style="@style/BigSubmitBtn"
+            android:text="@string/finish"
+            android:layout_marginTop="@dimen/px90"
+            android:layout_marginLeft="@dimen/px40"
+            android:layout_marginRight="@dimen/px40"/>
+
+</LinearLayout>
