@@ -198,8 +198,10 @@ public class LiveLessonCreationFragment extends BaseFragment {
             mChargeWaySwitcher.setChecked(!fee.isFree());
 
             if (fee.getType() == Finance.PricingType.TOTAL) {
+                mByLiveTotalPriceTv.setSelected(true);
                 mByLiveTotalPriceEdt.setText(BaseBusiness.formatPrice(fee.getCharge().doubleValue()));
             } else if (fee.getType() == Finance.PricingType.PAY_PER_HOUR) {
+                mByLiveDurationTv.setSelected(true);
                 mByLiveDurationEdt.setText(BaseBusiness.formatPrice(fee.getCharge().doubleValue()));
             }
 
