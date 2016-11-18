@@ -41,7 +41,7 @@ public class LessonCreationActivity extends BaseTopTabActivity {
         fragments.add(liveLesson);
         fragments.add(privateLesson);
 
-        Bundle data = new Bundle(getIntent().getExtras());
+        Bundle data = getIntent().getExtras();
         liveLesson.setArguments(data);
 
         addViews(new int[] {R.string.live_lesson, R.string.private_lesson}, fragments);
