@@ -36,6 +36,8 @@ public class CourseFilterDialog extends BaseFullWindow {
     AdapterGirdView mTime;
     @BindView(R.id.course_filter_state_grid)
     AdapterGirdView mState;
+    @BindView(R.id.course_filter_source_grid)
+    AdapterGirdView mSource;
     @BindView(R.id.course_filter_ok)
     Button mOk;
 
@@ -43,6 +45,7 @@ public class CourseFilterDialog extends BaseFullWindow {
 
     private int mTimePosition;
     private int mStatePosition;
+    private int mSourcePosition;
     private OnOkListener mListener;
 
     public CourseFilterDialog(Context context,boolean isTeacher) {
@@ -63,6 +66,9 @@ public class CourseFilterDialog extends BaseFullWindow {
 
     public void setStateSelection(int position){
         mStatePosition = position;
+    }
+    public void setSourcePosition(int position){
+        mSourcePosition = position;
     }
 
     public void setOnOkListener(OnOkListener l){
@@ -110,6 +116,15 @@ public class CourseFilterDialog extends BaseFullWindow {
         int stateId = R.array.course_state_filter_stu;
         if (isTeacher){
             stateId = R.array.course_state_filter_teacher;
+            String[] sources = mContext.getResources().getStringArray(R.array.course_source_filter);
+            mSource.setAdapter(new CommonAdapter(sources,mSourcePosition));
+            mSource.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    changeState(parent, position);
+                    mSourcePosition = position;
+                }
+            });
         }
         String[] times = mContext.getResources().getStringArray(R.array.course_time_filter);
         String[] states = mContext.getResources().getStringArray(stateId);
@@ -133,7 +148,7 @@ public class CourseFilterDialog extends BaseFullWindow {
             @Override
             public void onClick(View view) {
                 if (mListener != null){
-                    mListener.onOk(mTimePosition,mStatePosition);
+                    mListener.onOk(mTimePosition,mStatePosition,mSourcePosition);
                 }
                 dismiss();
             }
@@ -154,6 +169,6 @@ public class CourseFilterDialog extends BaseFullWindow {
     }
 
     public interface OnOkListener{
-        void onOk(int timePosition,int statePosition);
+        void onOk(int timePosition,int statePosition,int sourcePosition);
     }
 }

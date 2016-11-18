@@ -15,13 +15,19 @@ package com.benyuan.xiaojs.ui.course;
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.data.LessonDataManager;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.CancelReason;
 import com.benyuan.xiaojs.model.TeachLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.widget.LimitInputBox;
+import com.benyuan.xiaojs.util.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -64,8 +70,27 @@ public class CancelLessonActivity extends BaseActivity {
     }
 
     private void cancel(){
+        String input = mInput.getInput().getText().toString();
+        if (TextUtils.isEmpty(input)){
+            ToastUtil.showToast(this,R.string.cancel_reason_hint);
+            return;
+        }
         if (lesson != null){
+            CancelReason reason = new CancelReason();
+            reason.setReason(input);
+            LessonDataManager.requestCancelLesson(this, XiaojsConfig.mLoginUser.getSessionID(), lesson.getId(), reason, new APIServiceCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    ToastUtil.showToast(CancelLessonActivity.this,"成功取消上课");
+                    setResult(RESULT_OK);
+                    finish();
+                }
 
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    ToastUtil.showToast(CancelLessonActivity.this,errorMessage);
+                }
+            });
         }
     }
 }

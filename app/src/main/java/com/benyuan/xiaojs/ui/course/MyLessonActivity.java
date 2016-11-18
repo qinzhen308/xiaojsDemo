@@ -93,4 +93,12 @@ public class MyLessonActivity extends BaseTopTabActivity {
                 break;
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Fragment fragment = getCurrFragment();
+        if (fragment != null){
+            fragment.onActivityResult(requestCode,resultCode,data);
+        }
+    }
 }

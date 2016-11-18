@@ -49,6 +49,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+    <com.benyuan.xiaojs.ui.widget.AdapterGirdView
+            android:id="@+id/course_filter_source_grid"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:numColumns="4"
+            android:horizontalSpacing="@dimen/px14"
+            android:verticalSpacing="@dimen/px14"
+            android:listSelector="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     <Button
             android:id="@+id/course_filter_ok"
             android:layout_width="match_parent"
