@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <EditText
+            android:id="@+id/label_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/px32"
+            android:paddingBottom="@dimen/px32"
+            android:paddingLeft="@dimen/px32"
+            android:hint="@string/add_label_hint"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_28px"
+            android:textColorHint="@color/font_light_gray"
+            android:lines="1"
+            android:maxLength="20"
+            android:background="@null"/>
+
+    <ImageView
+            android:id="@+id/del_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:paddingLeft="@dimen/px32"
+            android:src="@drawable/ic_del_label"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"/>
+
+
+    <View
+            android:layout_below="@+id/label_name"
+            style="@style/DividerHorizontal"/>
+
+
+</RelativeLayout>
