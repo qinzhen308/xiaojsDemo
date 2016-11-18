@@ -1,11 +1,12 @@
 package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Created by maxiaobao on 2016/11/4.
  */
-
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Competency {
 
@@ -37,7 +38,7 @@ public class Competency {
         this.current = current;
     }
 
-
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Current {
         private int TSIL;

@@ -1,11 +1,13 @@
 package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Created by maxiaobao on 2016/11/4.
  */
 
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HomeData {
 
@@ -37,6 +39,7 @@ public class HomeData {
         this.countOfUnreadN = countOfUnreadN;
     }
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Reputation{
         private String grade;
@@ -68,6 +71,7 @@ public class HomeData {
         }
     }
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Followed {
 

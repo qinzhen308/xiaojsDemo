@@ -32,6 +32,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -49,7 +50,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.4:3000/";
+    String BASE_URL = "http://192.168.100.115:3000/";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -105,7 +106,7 @@ public interface XiaojsService {
     Call<CLResponse> createLiveLesson(@Header("SessionID") String sessionID,
                                       @Body CreateLesson lesson);
 
-    //Get Lessons
+    //Get Lessonsgit
     @GET("/v1/ctl/lessons/{criteria}/{pagination}")
     Call<GetLessonsResponse> getLessons(@Header("SessionID") String sessionID,
                                         @Path("criteria") String criteria,

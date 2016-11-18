@@ -1,6 +1,7 @@
 package com.benyuan.xiaojs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * Created by maxiaobao on 2016/11/8.
  */
-
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Fee implements Serializable{
     private boolean free;
@@ -57,6 +58,7 @@ public class Fee implements Serializable{
         this.discounted = discounted;
     }
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class Discounted {
         private BigDecimal subtotal;
