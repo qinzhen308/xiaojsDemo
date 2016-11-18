@@ -244,6 +244,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     public void onSuccess(Object object) {
                         bean.setState(LessonState.DRAFT);
                         notifyData(bean);
+                        ToastUtil.showToast(mContext,R.string.off_shelves_success);
                     }
 
                     @Override

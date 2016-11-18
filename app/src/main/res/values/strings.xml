@@ -242,6 +242,7 @@
     <string name="cancel_lesson">取消上课</string>
     <string name="cancel_publish">取消发布</string>
     <string name="publish_to_home_page">发布到主页</string>
+    <string name="off_shelves_success">撤销成功</string>
 
     <!-- 修改上课时间 -->
     <string name="modify_lesson_time_mark">修改上课时间会影响您的信用等级，请谨慎操作</string>

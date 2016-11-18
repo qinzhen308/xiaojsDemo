@@ -29,8 +29,9 @@ import com.benyuan.xiaojs.R;
 public class MessageImageView extends RoundedImageView {
     private Bitmap mBackground;
     private Paint mPaint;
-    private int mValue = 0;
+    private int mValue = 152;
     private boolean mIsCircle;
+    private Paint mPlus;
 
     public MessageImageView(Context context) {
         super(context);
@@ -66,6 +67,12 @@ public class MessageImageView extends RoundedImageView {
         mPaint.setDither(true);// 防抖动
         mPaint.setColor(Color.WHITE);
         mPaint.setTextSize(getResources().getDimension(R.dimen.font_20px));
+
+        mPlus = new Paint();
+        mPlus.setAntiAlias(true);
+        mPlus.setDither(true);// 防抖动
+        mPlus.setColor(Color.WHITE);
+        mPlus.setTextSize(getResources().getDimension(R.dimen.font_18px));
     }
 
     @Override
@@ -75,7 +82,7 @@ public class MessageImageView extends RoundedImageView {
         if (mValue <= 0) {
             return;
         }
-        if (mValue > 0 && mValue < 99) {
+       // if (mValue > 0 && mValue < 99) {
 
 
             //bg: left, top
@@ -98,10 +105,23 @@ public class MessageImageView extends RoundedImageView {
             int baseline = y - fontMetrics.ascent;
 
             //draw text
-            canvas.drawText(String.valueOf(mValue), x, baseline, mPaint);
-        } else {
+            if (mValue > 99){
+                canvas.drawText("99", x, baseline, mPaint);
+                Paint.FontMetricsInt fontMetricsInt = mPlus.getFontMetricsInt();
+                int plusW = (int) mPlus.measureText("+");
+                int plusH = fontMetricsInt.descent - fontMetricsInt.ascent;
 
-        }
+                int plusX = x + txtW / 2 + plusW / 3;
+                int plusY = y - plusH / 3;
+                int plusBaseline = plusY - fontMetricsInt.ascent;
+
+                canvas.drawText("+",plusX,plusBaseline,mPlus);
+            }else {
+                canvas.drawText(String.valueOf(mValue), x, baseline, mPaint);
+            }
+//        } else {
+//
+//        }
     }
 
     public void setCount(int value) {
