@@ -87,7 +87,7 @@ public class RegisterActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.get_verify_code:
-                getVerifyCode();
+                getVerifyCode(v);
                 break;
             case R.id.register_btn:
                 submitReg();
@@ -122,7 +122,7 @@ public class RegisterActivity extends BaseActivity {
         mRegPwdEdit.setSelection(str.length());
     }
 
-    private void getVerifyCode() {
+    private void getVerifyCode(final View view) {
         String phoneTxt = mRegPhoneEdit.getEditableText().toString().trim();
         if (TextUtils.isEmpty(phoneTxt)) {
             Toast.makeText(this, R.string.phone_empty, Toast.LENGTH_SHORT).show();
@@ -135,6 +135,7 @@ public class RegisterActivity extends BaseActivity {
         }
 
         try {
+            mGetRegVerifyTv.setEnabled(false);
             long phone = Long.parseLong(mRegPhoneEdit.getEditableText().toString());
             RegisterDataManager.requestSendVerifyCode(this, phone, new APIServiceCallback<VerifyCode>() {
 
@@ -147,11 +148,13 @@ public class RegisterActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
+                    mGetRegVerifyTv.setEnabled(true);
                     Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (NumberFormatException e) {
             Logger.i(TAG, "phone num error");
+            mGetRegVerifyTv.setEnabled(true);
         }
 
         XjsUtils.hideIMM(this, getCurrentFocus().getWindowToken());
