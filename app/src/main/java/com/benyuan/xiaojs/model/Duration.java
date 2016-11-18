@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by maxiaobao on 2016/11/8.
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Duration {
 

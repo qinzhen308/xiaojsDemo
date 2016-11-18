@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Evt implements Serializable {
 

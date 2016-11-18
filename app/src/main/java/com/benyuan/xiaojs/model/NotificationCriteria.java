@@ -20,7 +20,7 @@ import java.util.Date;
  *
  * ======================================================================================== */
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NotificationCriteria {
     public String category;

@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by maxiaobao on 2016/10/31.
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account implements Serializable{
 
@@ -32,7 +32,7 @@ public class Account implements Serializable{
         this.id = id;
     }
 
-    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Basic implements Serializable{
 

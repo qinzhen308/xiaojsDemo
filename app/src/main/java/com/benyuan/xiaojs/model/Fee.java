@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * Created by maxiaobao on 2016/11/8.
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Fee implements Serializable{
     private boolean free;
@@ -58,7 +58,7 @@ public class Fee implements Serializable{
         this.discounted = discounted;
     }
 
-    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class Discounted implements Serializable{
         private BigDecimal subtotal;

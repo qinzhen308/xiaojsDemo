@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by maxiaobao on 2016/11/11.
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Teacher implements Serializable{
     private Account.Basic basic;
