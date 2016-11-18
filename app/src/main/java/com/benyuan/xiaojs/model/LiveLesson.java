@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by maxiaobao on 2016/11/4.
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LiveLesson implements Serializable {
 
@@ -140,7 +140,7 @@ public class LiveLesson implements Serializable {
         this.tags = tags;
     }
 
-
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Overview implements Serializable {
         private String text;
@@ -154,6 +154,7 @@ public class LiveLesson implements Serializable {
         }
     }
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TeachersIntro implements Serializable {
         private boolean biography;
@@ -176,6 +177,7 @@ public class LiveLesson implements Serializable {
         }
     }
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Audit implements Serializable {
         private boolean enabled;
@@ -207,7 +209,8 @@ public class LiveLesson implements Serializable {
         }
     }
 
-
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Rule implements Serializable {
         private int before;
         private boolean enabled;
@@ -247,7 +250,8 @@ public class LiveLesson implements Serializable {
         }
     }
 
-
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Publish implements Serializable {
         private boolean onShelves;
 
