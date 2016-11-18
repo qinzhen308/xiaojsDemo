@@ -81,11 +81,27 @@ public class BaseBusiness {
     }
 
     public static String formatPrice(float price) {
-        return MONEY + mPriceDecimalFormat.format(price);
+        return mPriceDecimalFormat.format(price);
     }
 
     public static String formatPrice(double price) {
-        return MONEY + mPriceDecimalFormat.format(price);
+        return  mPriceDecimalFormat.format(price);
+    }
+
+    public static String formatPrice(float price, boolean withPrefix) {
+        if (withPrefix) {
+            return MONEY + mPriceDecimalFormat.format(price);
+        }
+
+        return mPriceDecimalFormat.format(price);
+    }
+
+    public static String formatPrice(double price, boolean withPrefix) {
+        if (withPrefix) {
+            return MONEY + mPriceDecimalFormat.format(price);
+        }
+
+        return mPriceDecimalFormat.format(price);
     }
 
     public static String formatDiscount(float price) {

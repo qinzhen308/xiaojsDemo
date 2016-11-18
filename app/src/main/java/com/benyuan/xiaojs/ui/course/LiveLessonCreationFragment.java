@@ -202,6 +202,8 @@ public class LiveLessonCreationFragment extends BaseFragment {
             } else if (fee.getType() == Finance.PricingType.PAY_PER_HOUR) {
                 mByLiveDurationEdt.setText(BaseBusiness.formatPrice(fee.getCharge().doubleValue()));
             }
+
+            openOrCloseChargeWay(mChargeWaySwitcher);
         }
 
         Schedule sch = lessonDetail.getSchedule();

@@ -229,7 +229,7 @@ public class SalePromotionActivity extends BaseActivity {
     }
 
     private SpannableString formatPrice(float price, int pricingType) {
-        String priceStr = BaseBusiness.formatPrice(price);
+        String priceStr = BaseBusiness.formatPrice(price, true);
         SpannableString ss = new SpannableString(priceStr);
         ss.setSpan(new ForegroundColorSpan(mDiscountColor), 0, priceStr.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
