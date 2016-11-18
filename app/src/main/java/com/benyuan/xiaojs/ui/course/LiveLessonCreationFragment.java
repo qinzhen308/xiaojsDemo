@@ -159,8 +159,8 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
     private void loadData() {
         Bundle data = getArguments();
-        if (data != null) {
-            String lessonId = data.getString(CourseConstant.KEY_LESSON_ID);
+        String lessonId = data.getString(CourseConstant.KEY_LESSON_ID);
+        if (data != null && !TextUtils.isEmpty(lessonId)) {
             LessonDataManager.requestGetLessonDetails(mContext, lessonId, new APIServiceCallback<LessonDetail>() {
                 @Override
                 public void onSuccess(LessonDetail lessonDetail) {

@@ -150,7 +150,14 @@ public class LoginActivity extends BaseActivity {
             final LoginParams loginParams = new LoginParams();
             loginParams.setMobile(Long.parseLong(userName));
             loginParams.setPassword(password);
-            AccountBusiness.login(this, loginParams);
+            AccountBusiness.login(this, loginParams, new AccountBusiness.OnLoginListener() {
+                @Override
+                public void onLogin(boolean succ) {
+                    if (succ) {
+                        LoginActivity.this.finish();
+                    }
+                }
+            });
         } catch (Exception e) {
             //do nothing
         }
