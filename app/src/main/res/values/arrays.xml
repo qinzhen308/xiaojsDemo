@@ -39,10 +39,11 @@
     <string-array name="course_time_filter">
         <item>全部</item>
         <item>今天</item>
-        <item>近1周</item>
-        <item>近1月</item>
-        <item>近3月</item>
-        <item>近1年</item>
+        <item>未来7天</item>
+        <item>未来30天</item>
+        <item>未来90天</item>
+        <item>过去半年</item>
+        <item>过去1年</item>
     </string-array>
     <string-array name="course_state_filter_stu">
         <item>全部</item>
@@ -61,6 +62,11 @@
         <item>审核失败</item>
         <item>强制停止</item>
         <item>已取消</item>
+    </string-array>
+    <string-array name="course_source_filter">
+        <item>全部</item>
+        <item>我开的课</item>
+        <item>邀请我的课</item>
     </string-array>
     <string-array name="center_tab_items">
         <item>发动态</item>

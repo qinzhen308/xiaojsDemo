@@ -67,7 +67,7 @@ public class CourseAdapter extends AbsSwipeAdapter<RecommendCourseBean,CourseAda
         beans.add(b);
         beans.add(b);
         beans.add(b);
-        onSuccess(null);
+        onSuccess(beans);
     }
 
     class Holder extends BaseHolder {
