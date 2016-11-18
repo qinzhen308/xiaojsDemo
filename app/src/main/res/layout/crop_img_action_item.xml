@@ -3,5 +3,9 @@
           android:gravity="center"
           android:padding="10dip"
           android:background="#ffffff"
+          android:textSize="@dimen/font_32px"
+          android:textColor="@color/font_blue"
+          android:paddingTop="@dimen/px32"
+          android:paddingBottom="@dimen/px32"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"/>

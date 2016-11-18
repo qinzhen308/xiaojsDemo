@@ -8,6 +8,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -106,6 +107,8 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         String[] actions = getResources().getStringArray(R.array.selects_pic_p);
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
+        lv.setDivider(new ColorDrawable(getResources().getColor(R.color.hor_divide_line)));
+        lv.setDividerHeight(1);
         bottomSheet.setContent(lv);
         bottomSheet.setOnDismissListener(this);
 
@@ -139,6 +142,8 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         final BottomSheet bottomSheet = new BottomSheet(this);
         bottomSheet.setTitleVisibility(View.GONE);
         ListView lv = new ListView(this);
+        lv.setDivider(new ColorDrawable(getResources().getColor(R.color.hor_divide_line)));
+        lv.setDividerHeight(1);
         String[] actions = getResources().getStringArray(R.array.selects_pic_d);
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
@@ -175,6 +180,8 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         final BottomSheet bottomSheet = new BottomSheet(this);
         bottomSheet.setTitleVisibility(View.GONE);
         ListView lv = new ListView(this);
+        lv.setDivider(new ColorDrawable(getResources().getColor(R.color.hor_divide_line)));
+        lv.setDividerHeight(1);
         String[] actions = getResources().getStringArray(R.array.selects_pic_pd);
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
@@ -215,6 +222,8 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         final BottomSheet bottomSheet = new BottomSheet(this);
         bottomSheet.setTitleVisibility(View.GONE);
         ListView lv = new ListView(this);
+        lv.setDivider(new ColorDrawable(getResources().getColor(R.color.hor_divide_line)));
+        lv.setDividerHeight(1);
         String[] actions = getResources().getStringArray(R.array.selects_pic_pdc);
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
@@ -259,6 +268,8 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         final BottomSheet bottomSheet = new BottomSheet(this);
         bottomSheet.setTitleVisibility(View.GONE);
         ListView lv = new ListView(this);
+        lv.setDivider(new ColorDrawable(getResources().getColor(R.color.hor_divide_line)));
+        lv.setDividerHeight(1);
         String[] actions = getResources().getStringArray(R.array.selects_pic);
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
