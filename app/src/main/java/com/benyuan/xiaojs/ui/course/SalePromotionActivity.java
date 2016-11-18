@@ -17,6 +17,7 @@ import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.Promotion;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+import com.benyuan.xiaojs.ui.base.BaseBusiness;
 import com.benyuan.xiaojs.util.TimeUtil;
 
 import java.text.DecimalFormat;
@@ -60,11 +61,9 @@ public class SalePromotionActivity extends BaseActivity {
     private final static int PROMOTION_ENROLL_BEFORE = 1;
     private final static int PROMOTION_LESSON_BEFORE = 2;
 
-    private final static String MONEY = "￥";
     private int mDiscountColor;
     private int mDiscountBlackColor;
     private LiveLesson mLesson;
-    private DecimalFormat mDecimalFormat;
 
     private float mOriginalPrice;
     private int mPricingType;
@@ -122,7 +121,6 @@ public class SalePromotionActivity extends BaseActivity {
             mLesson = (LiveLesson) object;
         }
 
-        mDecimalFormat = new DecimalFormat("0.00");
         mUnitPriceStr = getString(R.string.per_hour);
         try {
             mOriginalPrice = mLesson.getFee().getCharge().floatValue();
@@ -231,7 +229,7 @@ public class SalePromotionActivity extends BaseActivity {
     }
 
     private SpannableString formatPrice(float price, int pricingType) {
-        String priceStr = MONEY + mDecimalFormat.format(price);
+        String priceStr = BaseBusiness.formatPrice(price);
         SpannableString ss = new SpannableString(priceStr);
         ss.setSpan(new ForegroundColorSpan(mDiscountColor), 0, priceStr.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

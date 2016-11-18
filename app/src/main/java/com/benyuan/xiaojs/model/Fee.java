@@ -58,7 +58,7 @@ public class Fee implements Serializable{
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class Discounted {
+    public class Discounted implements Serializable{
         private BigDecimal subtotal;
         private float ratio;
         private BigDecimal saved;

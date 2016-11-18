@@ -43,9 +43,10 @@ import butterknife.OnClick;
 public class LessonCreationOptionalInfoActivity extends BaseActivity implements CourseConstant {
     private final static int LESSON_BRIEF = 0;
     private final static int TEACHER_INTRODUCTION = 1;
-    private final static int SIT_IN_ON = 2;
-    private final static int SALE_PROMOTION = 3;
-    private final static int ADD_COVER = 4;
+    private final static int LESSON_LABEL = 2;
+    private final static int SIT_IN_ON = 3;
+    private final static int SALE_PROMOTION = 4;
+    private final static int ADD_COVER = 5;
 
     private final static int DEFAULT_SHOW_CHAR_LEN = 8;
 
@@ -85,7 +86,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     }
 
     @OnClick({R.id.left_image, R.id.add_cover, R.id.live_lesson_brief, R.id.teacher_introduction,
-            R.id.sit_in_on, R.id.sale_promotion, R.id.cover_view})
+            R.id.live_lesson_label, R.id.sit_in_on, R.id.sale_promotion, R.id.cover_view})
     public void onClick(View v) {
         Intent i = null;
         switch (v.getId()) {
@@ -110,6 +111,11 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 i = new Intent(this, LiveLessonBriefActivity.class);
                 i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
                 startActivityForResult(i, LESSON_BRIEF);
+                break;
+            case R.id.live_lesson_label:
+                i = new Intent(this, LiveLessonLabelActivity.class);
+                i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
+                startActivityForResult(i, LESSON_LABEL);
                 break;
             case R.id.teacher_introduction:
                 i = new Intent(this, TeacherIntroductionActivity.class);
@@ -234,6 +240,9 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
             case LESSON_BRIEF:
                 updateLesson(data);
                 initLessonBrief();
+                break;
+            case LESSON_LABEL:
+                updateLesson(data);
                 break;
             case TEACHER_INTRODUCTION:
                 updateLesson(data);

@@ -63,6 +63,7 @@
         </activity>
         <activity android:name=".ui.course.LiveLessonBriefActivity"/>
         <activity android:name=".ui.course.SalePromotionActivity"/>
+        <activity android:name=".ui.course.LiveLessonLabelActivity"/>
         <activity android:name=".ui.course.AuditActivity"/>
         <activity android:name=".ui.course.TeacherIntroductionActivity"/>
         <activity android:name=".ui.course.LiveLessonDetailActivity"/>
@@ -74,7 +75,9 @@
         <activity
                 android:name=".ui.course.CancelLessonActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.message.NotificationCategoryListActivity" android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.message.NotificationCategoryListActivity"
+                android:screenOrientation="portrait"/>
 
     </application>
 
