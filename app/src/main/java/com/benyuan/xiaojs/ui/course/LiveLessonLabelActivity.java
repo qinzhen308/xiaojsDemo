@@ -1,5 +1,7 @@
 package com.benyuan.xiaojs.ui.course;
 
+import android.content.Intent;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ import butterknife.OnClick;
 
 public class LiveLessonLabelActivity extends BaseActivity implements View.OnClickListener{
     private final static int MAX_LABEL_COUNT = 5;
+    private final static int MAX_LABEL_CHAR = 5;
 
     @BindView(R.id.add_label_layout)
     LinearLayout mAddLabelLayout;
@@ -62,6 +65,11 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.sub_btn:
                 setLabel();
+
+                Intent i = new Intent();
+                i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
+                setResult(RESULT_OK, i);
+                finish();
                 break;
             default:
                 break;
@@ -112,6 +120,8 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
         View view = LayoutInflater.from(this).inflate(R.layout.layout_lesson_label_add, null);
         EditText et = (EditText)view.findViewById(R.id.label_name);
         et.setText(tagItem.label);
+        et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LABEL_CHAR)});
+        et.setHint(getString(R.string.add_label_hint, MAX_LABEL_CHAR));
         tagItem.labelEdt = et;
 
         View del = view.findViewById(R.id.del_label);
@@ -136,6 +146,7 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
         } else {
             String[] tagArr = new String[tags.size()];
             tags.toArray(tagArr);
+            mLesson.setTags(tagArr);
         }
     }
 

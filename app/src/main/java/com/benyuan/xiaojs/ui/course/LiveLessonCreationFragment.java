@@ -105,6 +105,8 @@ public class LiveLessonCreationFragment extends BaseFragment {
     private final String TEST_SUBJECT_ID = "5820a10e101db0af4bcf2fd9";
     private int mBlackFont;
     private boolean mStuCountTipsFlag = true;
+    private int mType = CourseConstant.TYPE_LESSON_CREATE;
+    private String mLessonId;
 
     @Override
     protected View getContentView() {
@@ -150,7 +152,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
                 v.setSelected(!v.isSelected() ? true : false);
                 break;
             case R.id.sub_btn:
-                createLiveLesson();
+                createOrEditLiveLesson();
                 break;
             default:
                 break;
@@ -159,9 +161,11 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
     private void loadData() {
         Bundle data = getArguments();
-        String lessonId = data != null ? data.getString(CourseConstant.KEY_LESSON_ID) : null;
-        if (!TextUtils.isEmpty(lessonId)) {
-            LessonDataManager.requestGetLessonDetails(mContext, lessonId, new APIServiceCallback<LessonDetail>() {
+        mLessonId = data != null ? data.getString(CourseConstant.KEY_LESSON_ID) : null;
+        mType = data != null ? data.getInt(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_CREATE)
+                : CourseConstant.TYPE_LESSON_CREATE;
+        if (!TextUtils.isEmpty(mLessonId)) {
+            LessonDataManager.requestGetLessonDetails(mContext, mLessonId, new APIServiceCallback<LessonDetail>() {
                 @Override
                 public void onSuccess(LessonDetail lessonDetail) {
                     initBaseInfo(lessonDetail);
@@ -558,7 +562,7 @@ public class LiveLessonCreationFragment extends BaseFragment {
         return true;
     }
 
-    private void createLiveLesson() {
+    private void createOrEditLiveLesson() {
         if (!checkSubmitInfo()) {
             return;
         }
@@ -610,7 +614,36 @@ public class LiveLessonCreationFragment extends BaseFragment {
         CreateLesson cl = new CreateLesson();
         cl.setData(ll);
 
+        switch (mType) {
+            case CourseConstant.TYPE_LESSON_CREATE:
+            case CourseConstant.TYPE_LESSON_AGAIN:
+                requestCreateLesson(cl);
+                break;
+            case CourseConstant.TYPE_LESSON_EDIT:
+                requestEditLesson(ll);
+                break;
+        }
+
+    }
+
+    private void requestCreateLesson(CreateLesson cl) {
         LessonDataManager.requestCreateLiveLesson(mContext, BaseBusiness.getSession(), cl, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void requestEditLesson(LiveLesson ls) {
+        LessonDataManager.requestEditLesson(mContext, BaseBusiness.getSession(), mLessonId, ls, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();

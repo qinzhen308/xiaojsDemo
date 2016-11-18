@@ -41,6 +41,8 @@ public interface CourseConstant {
     public final static String KEY_LESSON_ID = "lesson_id";
     public final static String KEY_ENTRANCE_TYPE = "key_entrance_type";
     public final static String KEY_TEACH_ACTION_TYPE = "teach_action_type";
+    //创建直播课
+    public final static int TYPE_LESSON_CREATE = 0;
     //编辑课
     public final static int TYPE_LESSON_EDIT = 1;
     //再次开课
