@@ -159,8 +159,8 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
     private void loadData() {
         Bundle data = getArguments();
-        String lessonId = data.getString(CourseConstant.KEY_LESSON_ID);
-        if (data != null && !TextUtils.isEmpty(lessonId)) {
+        String lessonId = data != null ? data.getString(CourseConstant.KEY_LESSON_ID) : null;
+        if (!TextUtils.isEmpty(lessonId)) {
             LessonDataManager.requestGetLessonDetails(mContext, lessonId, new APIServiceCallback<LessonDetail>() {
                 @Override
                 public void onSuccess(LessonDetail lessonDetail) {
@@ -524,7 +524,6 @@ public class LiveLessonCreationFragment extends BaseFragment {
 
             if (mChargeWaySwitcher.isChecked()) {
                 if (!mByLiveTotalPriceTv.isSelected() && !mByLiveDurationTv.isSelected()) {
-                    //提示请选择收费模式
                     Toast.makeText(mContext, R.string.charge_must_be_checked, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -543,7 +542,6 @@ public class LiveLessonCreationFragment extends BaseFragment {
             }
 
             if (Integer.parseInt(durationStr) > MAX_LESSON_DURATION) {
-                //上课时长不能大于
                 String tips = String.format(getString(R.string.lesson_duration_must_be_less_than), MAX_LESSON_DURATION);
                 Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return false;
