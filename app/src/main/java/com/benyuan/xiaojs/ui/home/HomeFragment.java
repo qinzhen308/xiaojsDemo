@@ -17,6 +17,8 @@ package com.benyuan.xiaojs.ui.home;
 
 import android.graphics.Color;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
@@ -63,6 +65,10 @@ public class HomeFragment extends BaseFragment {
         mList = (AutoPullToRefreshListView) v.findViewById(R.id.home_list);
         View header = mContext.getLayoutInflater().inflate(R.layout.layout_home_list_header,null);
         mList.getRefreshableView().addHeaderView(header);
+        View view = new View(mContext);
+        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mContext.getResources().getDimensionPixelSize(R.dimen.px100));
+        view.setLayoutParams(lp);
+        mList.getRefreshableView().addFooterView(view);
         return v;
     }
 
