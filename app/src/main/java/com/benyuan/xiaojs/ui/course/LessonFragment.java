@@ -14,6 +14,7 @@ package com.benyuan.xiaojs.ui.course;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -47,30 +48,31 @@ public class LessonFragment extends BaseFragment {
     private View mHeader;
     private CourseFilterDialog mDialog;
 
-    private  int timePosition;
-    private  int statePosition;
+    private int timePosition;
+    private int statePosition;
+    private int sourcePosition;
     private boolean isTeacher;
 
     @Override
     protected View getContentView() {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.fragment_my_course,null);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.fragment_my_course, null);
         return v;
     }
 
     @Override
     protected void init() {
         Bundle b = getArguments();
-        if (b != null){
+        if (b != null) {
             isTeacher = b.getBoolean(CourseConstant.KEY_IS_TEACHER);
         }
-        if (isTeacher){
-            adapter = new TeachLessonAdapter(mContext,mListView,this);
-        }else {
-            adapter = new EnrollLessonAdapter(mContext,mListView,this);
+        if (isTeacher) {
+            adapter = new TeachLessonAdapter(mContext, mListView, this);
+        } else {
+            adapter = new EnrollLessonAdapter(mContext, mListView, this);
         }
 
         mListView.setAdapter(adapter);
-        mHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_my_course_search,null);
+        mHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_my_course_search, null);
         mSearch = (TextView) mHeader.findViewById(R.id.my_course_search);
         mFilter = (TextView) mHeader.findViewById(R.id.course_filter);
         mFilter.setOnClickListener(new View.OnClickListener() {
@@ -88,17 +90,17 @@ public class LessonFragment extends BaseFragment {
 
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
-                if (firstVisibleItem > lastItemPosition){
+                if (firstVisibleItem > lastItemPosition) {
                     //上拉
                     hideTop();
-                }else if (firstVisibleItem < lastItemPosition){
+                } else if (firstVisibleItem < lastItemPosition) {
                     //下拉
-                    if (firstVisibleItem > 0){
-                    showTop();
-                }else {
-                    hideTop();
-                }
-                }else if (firstVisibleItem == lastItemPosition){
+                    if (firstVisibleItem > 0) {
+                        showTop();
+                    } else {
+                        hideTop();
+                    }
+                } else if (firstVisibleItem == lastItemPosition) {
                     return;
                 }
                 lastItemPosition = firstVisibleItem;
@@ -126,62 +128,79 @@ public class LessonFragment extends BaseFragment {
         });
     }
 
-    private void onFilter(){
-        if (mDialog == null){
-            mDialog = new CourseFilterDialog(mContext,isTeacher);
+    private void onFilter() {
+        if (mDialog == null) {
+            mDialog = new CourseFilterDialog(mContext, isTeacher);
             mDialog.setTimeSelection(timePosition);
             mDialog.setStateSelection(statePosition);
-            if (mHover.getVisibility() == View.VISIBLE){
+            if (mHover.getVisibility() == View.VISIBLE) {
                 mDialog.showAsDropDown(mHover);
-            }else {
+            } else {
                 mDialog.showAsDropDown(mHeader);
             }
-            mFilter.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_filter_up,0);
+            mFilter.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_filter_up, 0);
             mDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
-                    mFilter.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_filter_down,0);
+                    mFilter.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_filter_down, 0);
                     mDialog = null;
                 }
             });
             mDialog.setOnOkListener(new CourseFilterDialog.OnOkListener() {
                 @Override
-                public void onOk(int timePosition, int statePosition) {
+                public void onOk(int timePosition, int statePosition,int sourcePosition) {
                     LessonFragment.this.timePosition = timePosition;
                     LessonFragment.this.statePosition = statePosition;
-                    Criteria criteria  = LessonBusiness.getFilter(timePosition,statePosition,isTeacher);
+                    LessonFragment.this.sourcePosition = sourcePosition;
+                    Criteria criteria = LessonBusiness.getFilter(timePosition, statePosition,sourcePosition,isTeacher);
                     request(criteria);
                 }
             });
-        }else {
+        } else {
             mDialog.dismiss();
             mDialog = null;
         }
     }
 
-    private void onSearch(){
-        Intent intent = new Intent(mContext,LessonSearchActivity.class);
-        intent.putExtra(CourseConstant.KEY_IS_TEACHER,isTeacher);
+    private void onSearch() {
+        Intent intent = new Intent(mContext, LessonSearchActivity.class);
+        intent.putExtra(CourseConstant.KEY_IS_TEACHER, isTeacher);
         mContext.startActivity(intent);
     }
 
-    public void request(Criteria criteria){
-        if (adapter != null){
-            if (adapter instanceof TeachLessonAdapter){
-                ((TeachLessonAdapter)adapter).request(criteria);
-            }else if (adapter instanceof EnrollLessonAdapter){
-                ((EnrollLessonAdapter)adapter).request(criteria);
+    public void request(Criteria criteria) {
+        if (adapter != null) {
+            if (adapter instanceof TeachLessonAdapter) {
+                ((TeachLessonAdapter) adapter).request(criteria);
+            } else if (adapter instanceof EnrollLessonAdapter) {
+                ((EnrollLessonAdapter) adapter).request(criteria);
             }
 
         }
     }
 
-    public void showTop(){
+    public void showTop() {
         mHover.setVisibility(View.VISIBLE);
     }
 
-    public void hideTop(){
+    public void hideTop() {
         mHover.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case CourseConstant.CODE_CANCEL_LESSON:
+            case CourseConstant.CODE_EDIT_LESSON:
+            case CourseConstant.CODE_LESSON_AGAIN:
+                if (resultCode == Activity.RESULT_OK){
+                    if (adapter != null && adapter instanceof TeachLessonAdapter){
+                        TeachLessonAdapter lessonAdapter = (TeachLessonAdapter)adapter;
+                        lessonAdapter.setPageNum(1);
+                        lessonAdapter.doRequest();
+                    }
+                }
+                break;
+        }
+    }
 }

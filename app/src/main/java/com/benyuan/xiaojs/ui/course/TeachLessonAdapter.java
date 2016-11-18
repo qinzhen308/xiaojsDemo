@@ -278,13 +278,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     private void modifyLesson(TeachLesson bean){
         Intent intent = new Intent(mContext,ModifyLessonActivity.class);
         intent.putExtra(CourseConstant.KEY_LESSON_BEAN,bean);
-        mContext.startActivity(intent);
+        ((BaseActivity)mContext).startActivityForResult(intent,CourseConstant.CODE_EDIT_LESSON);
     }
     //取消上课
     private void cancelLesson(TeachLesson bean){
         Intent intent = new Intent(mContext,CancelLessonActivity.class);
         intent.putExtra(CourseConstant.KEY_LESSON_BEAN,bean);
-        mContext.startActivity(intent);
+        ((BaseActivity)mContext).startActivityForResult(intent,CourseConstant.CODE_CANCEL_LESSON);
     }
 
     //删除

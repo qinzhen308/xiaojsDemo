@@ -14,7 +14,6 @@ package com.benyuan.xiaojs.ui.base;
  *
  * ======================================================================================== */
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -293,4 +292,10 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
         return mPosition;
     }
 
+    protected Fragment getCurrFragment(){
+        if (mPosition > 0 && mPosition < mFragments.size()){
+            return mFragments.get(mPosition);
+        }
+        return null;
+    }
 }
