@@ -61,7 +61,7 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
                 addLabel();
                 break;
             case R.id.sub_btn:
-
+                setLabel();
                 break;
             default:
                 break;
@@ -112,6 +112,7 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
         View view = LayoutInflater.from(this).inflate(R.layout.layout_lesson_label_add, null);
         EditText et = (EditText)view.findViewById(R.id.label_name);
         et.setText(tagItem.label);
+        tagItem.labelEdt = et;
 
         View del = view.findViewById(R.id.del_label);
         del.setTag(tagItem);
@@ -120,12 +121,30 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
         return view;
     }
 
+    private void setLabel() {
+        List<String> tags = new ArrayList<String>();
+        for (int i = 0; i < mTags.size(); i++) {
+            TagItem tagItem = mTags.get(i);
+            tagItem.label = tagItem.labelEdt.getText().toString();
+            if (!TextUtils.isEmpty(tagItem.label)) {
+                tags.add(tagItem.label);
+            }
+        }
+
+        if (tags == null || tags.size() == 0) {
+            mLesson.setTags(null);
+        } else {
+            String[] tagArr = new String[tags.size()];
+            tags.toArray(tagArr);
+        }
+    }
+
 
     @Override
     public void onClick(View v) {
         Object tag = v.getTag();
         if (tag instanceof TagItem) {
-            mAddLabelController.removeView(((TagItem) tag).view);
+            mAddLabelLayout.removeView(((TagItem) tag).view);
             mTags.remove((TagItem) tag);
             if (mTags.size() < MAX_LABEL_COUNT) {
                 mAddLabelController.setVisibility(View.VISIBLE);
@@ -135,6 +154,7 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
 
     private class TagItem {
         public View view;
+        public EditText labelEdt;
         public String label;
     }
 }

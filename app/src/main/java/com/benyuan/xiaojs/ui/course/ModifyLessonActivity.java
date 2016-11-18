@@ -15,17 +15,25 @@ package com.benyuan.xiaojs.ui.course;
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.data.LessonDataManager;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.LiveLesson;
+import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.TeachLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.widget.LimitInputBox;
 import com.benyuan.xiaojs.util.DataPicker;
 import com.benyuan.xiaojs.util.TimeUtil;
+import com.benyuan.xiaojs.util.ToastUtil;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,6 +55,7 @@ public class ModifyLessonActivity extends BaseActivity {
     LimitInputBox mInput;
 
     private TeachLesson bean;
+    private long newDate;
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_modify_lesson);
@@ -75,8 +84,8 @@ public class ModifyLessonActivity extends BaseActivity {
                     public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, month, day, hour, minute, second);
-                        long time = calendar.getTimeInMillis();
-                        String dateStr = TimeUtil.formatDate(time, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
+                        newDate = calendar.getTimeInMillis();
+                        String dateStr = TimeUtil.formatDate(newDate, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
                         mNewTime.setText(dateStr);
                     }
                 });
@@ -90,8 +99,33 @@ public class ModifyLessonActivity extends BaseActivity {
     }
 
     private void modify(){
+        if (newDate <= 0){
+            ToastUtil.showToast(this,"请输入正确的时间！");
+            return;
+        }
         if (bean != null){
+            String input = mInput.getInput().getText().toString();
+            if (TextUtils.isEmpty(input)){
+                ToastUtil.showToast(this,R.string.delay_reason_hint);
+                return;
+            }
+            LiveLesson liveLesson = new LiveLesson();
+            Schedule schedule = new Schedule();
+            schedule.setStart(new Date(newDate));
+            liveLesson.setSchedule(schedule);
+            LessonDataManager.requestEditLesson(this, XiaojsConfig.mLoginUser.getSessionID(), bean.getId(), liveLesson, new APIServiceCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    ToastUtil.showToast(ModifyLessonActivity.this,"修改上课时间成功！");
+                    setResult(RESULT_OK);
+                    finish();
+                }
 
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    ToastUtil.showToast(ModifyLessonActivity.this,errorMessage);
+                }
+            });
         }
     }
 }

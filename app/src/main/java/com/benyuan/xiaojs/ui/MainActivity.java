@@ -1,10 +1,11 @@
 package com.benyuan.xiaojs.ui;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseTabActivity;
+import com.benyuan.xiaojs.ui.course.LessonCreationActivity;
 import com.benyuan.xiaojs.ui.home.HomeFragment;
 import com.benyuan.xiaojs.ui.message.NotificationFragment;
 
@@ -33,6 +34,11 @@ public class MainActivity extends BaseTabActivity {
 
     @Override
     protected void onGooeyMenuClick(int position) {
-        Toast.makeText(this,"position = " + position,Toast.LENGTH_SHORT).show();
+        switch (position){
+            case 1:
+                Intent lessonIntent = new Intent(this, LessonCreationActivity.class);
+                startActivity(lessonIntent);
+                break;
+        }
     }
 }

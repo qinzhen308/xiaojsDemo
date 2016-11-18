@@ -184,11 +184,11 @@ public class LessonHomeActivity extends BaseActivity {
             } else {
                 //mLessonOriMoneyTv.setVisibility(View.VISIBLE);
                 double originCharge = fee.getTotal() != null ? fee.getTotal().doubleValue() : 0;
-                mLessonOriMoneyTv.setText(BaseBusiness.formatPrice(originCharge));
+                mLessonOriMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
                 if (fee.getDiscounted() != null) {
-                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(fee.getDiscounted().getSaved().doubleValue()));
+                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(fee.getDiscounted().getSaved().doubleValue(), true));
                 } else {
-                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge));
+                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
                 }
                 setSalePromotion(lesson.getPromotion(), originCharge);
             }

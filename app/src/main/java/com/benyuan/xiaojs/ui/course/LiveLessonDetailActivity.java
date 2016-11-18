@@ -286,10 +286,10 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 double charge = fee.getCharge().doubleValue();
                 if (fee.getType() == Finance.PricingType.TOTAL) {
                     String byTotalPrice = getString(R.string.by_live_total_price);
-                    mLessonFeeTv.setText(byTotalPrice + BaseBusiness.formatPrice(charge));
+                    mLessonFeeTv.setText(byTotalPrice + BaseBusiness.formatPrice(charge, true));
                 } else if (fee.getType() == Finance.PricingType.PAY_PER_HOUR) {
                     String byDuration = getString(R.string.by_live_duration);
-                    mLessonFeeTv.setText(byDuration + BaseBusiness.formatPrice(charge));
+                    mLessonFeeTv.setText(byDuration + BaseBusiness.formatPrice(charge, true));
                 }
             }
 
@@ -427,7 +427,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
         if (promotion.getQuota() > 0) {
             //enroll before promotion
-            String price = BaseBusiness.formatPrice(promotion.getQuota() * promotion.getDiscount());
+            String price = BaseBusiness.formatPrice(promotion.getQuota() * promotion.getDiscount(), true);
             String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
             String s = getString(R.string.enroll_before_promotion, promotion.getQuota(), discount, price);
             if (type == Finance.PricingType.PAY_PER_HOUR) {
@@ -436,7 +436,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
             mEnrollBeforeTv.setText(Html.fromHtml(s));
         } else if (promotion.getBefore() > 0) {
             //lesson before promotion
-            String price = BaseBusiness.formatPrice(promotion.getBefore() * promotion.getDiscount());
+            String price = BaseBusiness.formatPrice(promotion.getBefore() * promotion.getDiscount(), true);
             String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
             String s = getString(R.string.lesson_before_promotion, promotion.getBefore(), discount, price);
             if (type == Finance.PricingType.PAY_PER_HOUR) {
