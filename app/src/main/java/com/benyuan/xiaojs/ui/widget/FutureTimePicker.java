@@ -292,6 +292,17 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                 mSelectedYear = calendar.get(Calendar.YEAR);
                 mSelectedMonth = calendar.get(Calendar.MONTH) + 1;
                 mSelectedDay = calendar.get(Calendar.DATE);
+
+                if (mSelectedDay == mCurrDay) {
+                    updateMinHour(mCurrHour);
+                    updateMinMinute(mCurrMinute);
+                } else {
+                    updateMinHour(0);
+                    updateMinMinute(0);
+                }
+
+                mHourPickerAdapter.setData(mHours);
+                mMinutePickerAdapter.setData(mMinutes);
                 break;
             case TYPE_HOUR:
                 mSelectedHour = getCurrentDate(data, mHourStr);
