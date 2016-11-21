@@ -70,7 +70,7 @@ public interface XiaojsService {
     //Register
     @Headers("Content-Type: application/json")
     @POST("/v1/accounts")
-    Call<Empty> accountRegister(@Body RegisterInfo registerInfo);
+    Call<ResponseBody> accountRegister(@Body RegisterInfo registerInfo);
 
     //Get Home Data
     @GET("/v1/accounts/home")
@@ -78,7 +78,7 @@ public interface XiaojsService {
 
     //Edit Profile
     @PATCH("/v1/accounts/profile")
-    Call<Empty> editProfile(@Header("SessionID") String sessionID,
+    Call<ResponseBody> editProfile(@Header("SessionID") String sessionID,
                             @Body Account.Basic accountBasic);
 
     //Get Profile
@@ -114,12 +114,12 @@ public interface XiaojsService {
 
     //Put Lesson On Shelves
     @POST("/v1/ctl/lessons/{lesson}/onshelves")
-    Call<Empty> putLessonOnShelves(@Header("SessionID") String sessionID,
+    Call<ResponseBody> putLessonOnShelves(@Header("SessionID") String sessionID,
                                    @Path("lesson") String lesson);
 
     //Cancel Lesson-On-Shelves
     @DELETE("/v1/ctl/lessons/{lesson}/onshelves")
-    Call<Empty> cancelLessonOnShelves(@Header("SessionID") String sessionID,
+    Call<ResponseBody> cancelLessonOnShelves(@Header("SessionID") String sessionID,
                                       @Path("lesson") String lesson);
 
     //Get Enrolled Lessons
@@ -195,7 +195,7 @@ public interface XiaojsService {
 
     //Delete Notification
     @DELETE("/v1/platform/notifications/{notification}")
-    Call<Empty> deleteNotification(@Header("SessionID") String sessionID,
+    Call<ResponseBody> deleteNotification(@Header("SessionID") String sessionID,
                                    @Path("notification") String notification);
 
 
@@ -218,7 +218,7 @@ public interface XiaojsService {
     //Logout
     @Headers("Content-Type: application/json")
     @DELETE("/v1/security/logout")
-    Call<Empty> logout(@Header("SessionID") String sessionID);
+    Call<ResponseBody> logout(@Header("SessionID") String sessionID);
 
     //Validate Code
     @GET("/v1/security/validate/{method}/{mobile}/{code}")

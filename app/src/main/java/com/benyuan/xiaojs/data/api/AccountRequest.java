@@ -175,9 +175,9 @@ public class AccountRequest extends ServiceRequest {
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.editProfile(sessionID,basic).enqueue(new Callback<Empty>() {
+        xiaojsService.editProfile(sessionID, basic).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Empty> call, Response<Empty> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
                 if (responseCode == SUCCESS_CODE) {
@@ -210,32 +210,23 @@ public class AccountRequest extends ServiceRequest {
             }
 
             @Override
-            public void onFailure(Call<Empty> call, Throwable t) {
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the editProfile request has occur exception");
-                }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
                 String errorMsg = t.getMessage();
-                // FIXME: 2016/11/1
-                if (errorMsg.contains(EMPTY_EXCEPTION)) {
 
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(null);
-                    }
-
-                } else {
-
-                    String errorCode = getExceptionErrorCode();
-                    String errorMessage = ErrorPrompts.editProfilePrompt(errorCode);
-
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the editProfile request has occur exception:\n%s", errorMsg);
                 }
+
+
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.editProfilePrompt(errorCode);
+
+                APIServiceCallback callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
+
             }
         });
 
@@ -306,7 +297,7 @@ public class AccountRequest extends ServiceRequest {
     }
 
 
-    protected void getAvatarUpToken(Context context,@NonNull String sessionID,@NonNull APIServiceCallback<String> callback) {
+    protected void getAvatarUpToken(Context context, @NonNull String sessionID, @NonNull APIServiceCallback<String> callback) {
 
         final WeakReference<APIServiceCallback<String>> callbackReference =
                 new WeakReference<>(callback);
@@ -334,8 +325,8 @@ public class AccountRequest extends ServiceRequest {
 
                             String errorCode = getDefaultErrorCode();
                             String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(errorCode);
-                            callback.onFailure(errorCode,errorMessage);
-                        }else{
+                            callback.onFailure(errorCode, errorMessage);
+                        } else {
                             callback.onSuccess(token);
                         }
 
@@ -383,7 +374,7 @@ public class AccountRequest extends ServiceRequest {
     }
 
 
-    protected void getCoverUpToken(Context context,@NonNull String sessionID,@NonNull APIServiceCallback<String> callback) {
+    protected void getCoverUpToken(Context context, @NonNull String sessionID, @NonNull APIServiceCallback<String> callback) {
 
         final WeakReference<APIServiceCallback<String>> callbackReference =
                 new WeakReference<>(callback);
@@ -411,8 +402,8 @@ public class AccountRequest extends ServiceRequest {
 
                             String errorCode = getDefaultErrorCode();
                             String errorMessage = ErrorPrompts.getCoverUpTokenPrompt(errorCode);
-                            callback.onFailure(errorCode,errorMessage);
-                        }else{
+                            callback.onFailure(errorCode, errorMessage);
+                        } else {
                             callback.onSuccess(token);
                         }
 

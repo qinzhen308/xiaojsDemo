@@ -18,6 +18,8 @@ package com.benyuan.xiaojs.ui.message;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.model.NotificationCategory;
@@ -28,6 +30,7 @@ import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class NotificationFragment extends BaseFragment {
 
@@ -71,12 +74,26 @@ public class NotificationFragment extends BaseFragment {
             }
         });
         mPullList.getRefreshableView().addHeaderView(mHeader);
+        View view = new View(mContext);
+        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mContext.getResources().getDimensionPixelSize(R.dimen.px100));
+        view.setLayoutParams(lp);
+        mPullList.getRefreshableView().addFooterView(view);
         mPullList.setAdapter(new NotificationAdapter(mContext,mPullList,this));
     }
 
     public void notifyHeader(List<NotificationCategory> beans){
         if (platformMessageAdapter != null){
             platformMessageAdapter.setData(beans);
+        }
+    }
+
+    @OnClick({R.id.right_image,R.id.people_image})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.right_image:
+                break;
+            case R.id.people_image:
+                break;
         }
     }
 

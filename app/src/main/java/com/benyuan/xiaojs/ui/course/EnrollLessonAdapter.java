@@ -107,7 +107,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         List<Bitmap> bitmaps = new ArrayList<>();
         bitmaps.add(bitmap);
         bitmaps.add(bitmap);
-        holder.imageFlow.showWithNum(bitmaps,mContext.getResources().getDimensionPixelSize(R.dimen.px20),22,mContext.getResources().getDimensionPixelSize(R.dimen.px5));
+        holder.imageFlow.showWithNum(bitmaps,mContext.getResources().getDimensionPixelSize(R.dimen.px20),122,mContext.getResources().getDimensionPixelSize(R.dimen.px5));
         if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
             holder.databank.setVisibility(View.VISIBLE);
             holder.databank.setOnClickListener(new View.OnClickListener() {

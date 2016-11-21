@@ -17,6 +17,7 @@ package com.benyuan.xiaojs.ui.widget.flow;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,11 +88,18 @@ public class ImageFlowLayout extends FlowBaseLayout{
             TextView textView = new TextView(getContext());
             ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(radius * 2,radius * 2);
             lp.leftMargin = margin;
-            textView.setGravity(Gravity.CENTER);
             textView.setLayoutParams(lp);
+            textView.setGravity(Gravity.CENTER);
             textView.setTextColor(getResources().getColor(R.color.common_text));
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimensionPixelSize(R.dimen.font_22px));
             textView.setBackgroundResource(R.drawable.grey_circle);
-            textView.setText(String.valueOf(num));
+            if (num <= 0){
+                textView.setText(String.valueOf(0));
+            }else if (num > 0 && num < 99){
+                textView.setText(String.valueOf(num));
+            }else {
+                textView.setText("99+");
+            }
             addView(textView);
             textView.setOnClickListener(new OnClickListener() {
                 @Override

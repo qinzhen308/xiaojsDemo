@@ -17,6 +17,7 @@ import com.orhanobut.logger.Logger;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,9 +38,9 @@ public class RegisterRequest extends ServiceRequest {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
 
-        xiaojsService.accountRegister(registerInfo).enqueue(new Callback<Empty>() {
+        xiaojsService.accountRegister(registerInfo).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Empty> call, Response<Empty> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
                 if (responseCode == SUCCESS_CODE) {
@@ -66,29 +67,18 @@ public class RegisterRequest extends ServiceRequest {
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
-
-
                 }
 
             }
 
             @Override
-            public void onFailure(Call<Empty> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
+                String exception = t.getMessage();
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the register request has occur exception");
+                    Logger.d("the register request has occur exception:\n %s",exception);
                 }
 
-                String errorMsg = t.getMessage();
-                // FIXME: 2016/11/1
-                if (errorMsg.contains(EMPTY_EXCEPTION)) {
-
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onSuccess(null);
-                    }
-
-                } else {
 
                     String errorCode = getExceptionErrorCode();
                     String errorMessage = ErrorPrompts.registerPrompt(errorCode);
@@ -100,7 +90,6 @@ public class RegisterRequest extends ServiceRequest {
 
                 }
 
-            }
         });
 
     }
