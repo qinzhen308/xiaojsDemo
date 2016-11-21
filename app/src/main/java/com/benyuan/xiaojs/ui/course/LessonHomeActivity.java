@@ -186,7 +186,7 @@ public class LessonHomeActivity extends BaseActivity {
                 double originCharge = fee.getTotal() != null ? fee.getTotal().doubleValue() : 0;
                 mLessonOriMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
                 if (fee.getDiscounted() != null) {
-                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(fee.getDiscounted().getSaved().doubleValue(), true));
+                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(fee.getDiscounted().getSubtotal().doubleValue(), true));
                 } else {
                     mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
                 }
