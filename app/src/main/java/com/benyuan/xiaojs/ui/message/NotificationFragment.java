@@ -38,6 +38,7 @@ import com.benyuan.xiaojs.util.DeviceUtil;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -134,7 +135,7 @@ public class NotificationFragment extends BaseFragment {
         }
         Duration duration = new Duration();
         duration.setStart(TimeUtil.original());
-        duration.setEnd(TimeUtil.now());
+        duration.setEnd(new Date("2016-11-22T04:12:01.226Z"));
         criteria.duration = duration;
         NotificationDataManager.ignoreNotifications(mContext, criteria, new APIServiceCallback<IgnoreNResponse>() {
             @Override

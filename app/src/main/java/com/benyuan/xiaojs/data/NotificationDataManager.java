@@ -9,6 +9,7 @@ import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.PlatformRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.GENotificationsResponse;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.Notification;
@@ -56,7 +57,7 @@ public class NotificationDataManager extends DataManager {
     public static void requestNotifications(Context context,
                                             @NonNull NotificationCriteria criteria,
                                             @NonNull Pagination pagination,
-                                            @NonNull APIServiceCallback<ArrayList<Notification>> callback) {
+                                            @NonNull APIServiceCallback<GENotificationsResponse> callback) {
 
 
         if (callback == null) {

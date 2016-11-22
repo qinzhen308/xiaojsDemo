@@ -11,13 +11,24 @@
             android:layout_marginTop="@dimen/px40"
             style="@style/DividerHorizontal"/>
 
-    <LinearLayout
+    <RelativeLayout
             android:background="@color/white"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:paddingLeft="@dimen/px43"
             android:paddingRight="@dimen/px43"
             android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/reg_name_title"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:minWidth="@dimen/px170"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                android:text="@string/reg_name_title"/>
 
         <com.benyuan.xiaojs.ui.widget.EditTextDel
                 android:id="@+id/reg_name"
@@ -29,20 +40,33 @@
                 android:textColorHint="@color/font_gray"
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
-                android:hint="@string/name_hint"/>
+                android:hint="@string/name_empty"
+                android:layout_toRightOf="@+id/reg_name_title"/>
 
         <View
-                style="@style/DividerHorizontal"/>
-    </LinearLayout>
+                style="@style/DividerHorizontal"
+                android:layout_below="@+id/reg_name"/>
+    </RelativeLayout>
 
 
-    <LinearLayout
+    <RelativeLayout
             android:background="@color/white"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:paddingLeft="@dimen/px43"
             android:paddingRight="@dimen/px43"
             android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/reg_phone_title"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:minWidth="@dimen/px170"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                android:text="@string/phone_num"/>
 
         <com.benyuan.xiaojs.ui.widget.EditTextDel
                 android:id="@+id/reg_phone"
@@ -57,11 +81,13 @@
                 android:imeOptions="actionNext"
                 android:inputType="phone"
                 android:maxLength="11"
-                android:hint="@string/phone_num"/>
+                android:hint="@string/phone_empty"
+                android:layout_toRightOf="@+id/reg_phone_title"/>
 
         <View
-                style="@style/DividerHorizontal"/>
-    </LinearLayout>
+                style="@style/DividerHorizontal"
+                android:layout_below="@+id/reg_phone"/>
+    </RelativeLayout>
 
     <LinearLayout
             android:background="@color/white"
@@ -75,13 +101,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+            <TextView
+                    android:id="@+id/verify_code_title"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:minWidth="@dimen/px170"
+                    android:textColor="@color/font_dark_gray"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/verify_code_title"/>
+
             <com.benyuan.xiaojs.ui.widget.EditTextDel
                     android:id="@+id/verify_code"
                     android:background="@null"
-                    android:layout_alignParentLeft="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/verify_code_hint"
+                    android:hint="@string/verify_empty"
                     android:imeOptions="actionNext"
                     android:paddingTop="@dimen/px30"
                     android:paddingBottom="@dimen/px30"
@@ -89,6 +125,7 @@
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_28px"
                     android:inputType="number"
+                    android:layout_toRightOf="@+id/verify_code_title"
                     android:layout_toLeftOf="@+id/get_verify_code"
                     android:layout_marginRight="@dimen/px22"
                     android:layout_centerInParent="true"/>
@@ -101,7 +138,7 @@
                     android:paddingTop="@dimen/px10"
                     android:paddingBottom="@dimen/px10"
                     android:textSize="@dimen/font_28px"
-                    android:textColor="@color/font_gray"
+                    android:textColor="@color/font_blue"
                     android:text="@string/verify_code_send_hint"
                     android:layout_centerInParent="true"/>
         </RelativeLayout>
@@ -118,10 +155,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+        <TextView
+                android:id="@+id/reg_pwd_title"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:minWidth="@dimen/px170"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                android:text="@string/pwd"/>
+
         <com.benyuan.xiaojs.ui.widget.EditTextDel
                 android:id="@+id/reg_pwd"
                 android:background="@null"
-                android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,6 +182,7 @@
                 android:inputType="textPassword"
                 android:layout_marginRight="@dimen/px22"
                 android:maxLength="16"
+                android:layout_toRightOf="@+id/reg_pwd_title"
                 android:layout_toLeftOf="@+id/hide_show_pwd"/>
 
         <ImageView

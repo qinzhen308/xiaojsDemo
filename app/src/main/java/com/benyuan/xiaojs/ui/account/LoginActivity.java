@@ -19,7 +19,10 @@ import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.data.AccountDataManager;
+import com.benyuan.xiaojs.data.preference.AccountPref;
 import com.benyuan.xiaojs.model.LoginParams;
+import com.benyuan.xiaojs.ui.MainActivity;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.widget.EditTextDel;
 import com.benyuan.xiaojs.util.VerifyUtils;
@@ -58,6 +61,13 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void addViewContent() {
+        if (AccountDataManager.isLogin(this)) {
+            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            return;
+        }
 
         mContext = this;
         addView(R.layout.activity_login);

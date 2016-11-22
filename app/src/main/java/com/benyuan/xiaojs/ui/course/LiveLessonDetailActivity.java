@@ -122,7 +122,6 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
     private final static int INTRO_DEFAULT_LINES = 3;
     private final static int INTRO_MAX_LINES = 100;
-    private final static String MONEY = "￥";
     private boolean mLessonBriefSwitcher = false;
     private boolean mTeacherIntroSwitcher = false;
 
@@ -171,7 +170,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                     if (mUnfoldLessonBriefTv.getVisibility() != View.VISIBLE) {
                         mUnfoldLessonBriefTv.setVisibility(View.VISIBLE);
                     }
-                }else {
+                } else {
                     mLessonBriefTv.setPadding(0, 0, 0, padding);
                 }
                 return true;
@@ -202,7 +201,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
     private void loadData() {
         Object obj = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
         if (obj instanceof TeachLesson) {
-            String lessonId = ((TeachLesson)obj).getId();
+            String lessonId = ((TeachLesson) obj).getId();
             if (TextUtils.isEmpty(lessonId)) {
                 finish();
             }
@@ -344,6 +343,11 @@ public class LiveLessonDetailActivity extends BaseActivity {
             }
 
             //set sale promotion
+            Fee fee = lesson.getFee();
+            if (fee == null || fee.isFree()) {
+                mSalePromotionLayout.setVisibility(View.GONE);
+                return;
+            }
             Promotion[] promotions = lesson.getPromotion();
             if (promotions != null && promotions.length > 0) {
                 //set sale promotion title
@@ -364,7 +368,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
                 mSalePromotionLayout.setVisibility(View.VISIBLE);
                 if (promotions.length == 1) {
-                    setOnlyOnePromotion(promotions[0], type);
+                    setOnlyOnePromotion(lesson.getFee(), promotions[0], type);
                 } else if (promotions.length == 2) {
                     int i = 0;
                     Promotion temp = null;
@@ -377,13 +381,13 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
                     if (i == 1) {
                         //only one valid promotion
-                        setOnlyOnePromotion(temp, type);
+                        setOnlyOnePromotion(lesson.getFee(), temp, type);
                     } else if (i == 2) {
                         mEnrollBeforePromotionLayout.setVisibility(View.VISIBLE);
                         mLessonBeforePromotionLayout.setVisibility(View.VISIBLE);
 
-                        setSalePromotion(promotions[0], type);
-                        setSalePromotion(promotions[1], type);
+                        setSalePromotion(lesson.getFee(), promotions[0], type);
+                        setSalePromotion(lesson.getFee(), promotions[1], type);
                         //enroll before promotion
                         mEnrollBeforeTitle.setText(getString(R.string.promotion_one));
                         //lesson before promotion
@@ -400,11 +404,11 @@ public class LiveLessonDetailActivity extends BaseActivity {
         }
     }
 
-    private void setOnlyOnePromotion(Promotion promotion, int type) {
+    private void setOnlyOnePromotion(Fee fee, Promotion promotion, int type) {
         if (promotion == null) {
             mSalePromotionLayout.setVisibility(View.GONE);
         } else {
-            setSalePromotion(promotion, type);
+            setSalePromotion(fee, promotion, type);
 
             if (promotion.getQuota() > 0) {
                 //enroll before promotion
@@ -420,14 +424,15 @@ public class LiveLessonDetailActivity extends BaseActivity {
         }
     }
 
-    private void setSalePromotion(Promotion promotion, int type) {
+    private void setSalePromotion(Fee fee, Promotion promotion, int type) {
         if (promotion == null) {
             return;
         }
 
         if (promotion.getQuota() > 0) {
             //enroll before promotion
-            String price = BaseBusiness.formatPrice(promotion.getQuota() * promotion.getDiscount(), true);
+            String price = fee == null ? String.valueOf("0") :
+                    BaseBusiness.formatPrice(fee.getTotal().doubleValue() * promotion.getDiscount(), true);
             String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
             String s = getString(R.string.enroll_before_promotion, promotion.getQuota(), discount, price);
             if (type == Finance.PricingType.PAY_PER_HOUR) {
@@ -436,7 +441,8 @@ public class LiveLessonDetailActivity extends BaseActivity {
             mEnrollBeforeTv.setText(Html.fromHtml(s));
         } else if (promotion.getBefore() > 0) {
             //lesson before promotion
-            String price = BaseBusiness.formatPrice(promotion.getBefore() * promotion.getDiscount(), true);
+            String price = fee == null ? String.valueOf("0") :
+                    BaseBusiness.formatPrice(fee.getTotal().doubleValue() * promotion.getDiscount(), true);
             String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
             String s = getString(R.string.lesson_before_promotion, promotion.getBefore(), discount, price);
             if (type == Finance.PricingType.PAY_PER_HOUR) {

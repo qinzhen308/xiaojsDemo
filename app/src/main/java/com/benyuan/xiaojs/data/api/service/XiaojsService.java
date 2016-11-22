@@ -9,8 +9,8 @@ import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.ELResponse;
-import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.GELessonsResponse;
+import com.benyuan.xiaojs.model.GENotificationsResponse;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.GetSubjectResponse;
@@ -20,24 +20,18 @@ import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
-import com.benyuan.xiaojs.model.Notification;
 import com.benyuan.xiaojs.model.OfflineRegistrant;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.TokenResponse;
 import com.benyuan.xiaojs.model.VerifyCode;
 
-import java.util.ArrayList;
-
-import butterknife.Optional;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
-import retrofit2.http.OPTIONS;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -51,7 +45,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.115:3000/";
+    String BASE_URL = "http://192.168.100.4:3000/";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -191,7 +185,7 @@ public interface XiaojsService {
 
     //Get Notifications
     @GET("/v1/platform/notifications/{criteria}/{pagination}")
-    Call<ArrayList<Notification>> getNotifications(@Header("SessionID") String sessionID,
+    Call<GENotificationsResponse> getNotifications(@Header("SessionID") String sessionID,
                                                    @Path("criteria") String criteria,
                                                    @Path("pagination") String pagination);
 

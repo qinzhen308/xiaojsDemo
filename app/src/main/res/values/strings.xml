@@ -40,15 +40,15 @@
     <!--account-->
     <!--register-->
     <string name="register">注册</string>
-    <string name="name_hint">您的真实姓名</string>
-    <string name="verify_code_hint">验证码</string>
+    <string name="reg_name_title">真实姓名</string>
+    <string name="verify_code_title">验证码</string>
     <string name="verify_code_send_hint">发送验证码</string>
     <string name="verity_code_countdown">%1$sS</string>
     <string name="verity_code_re_send">重发</string>
     <string name="pwd_hint">请输入6&#8211;16位密码</string>
     <string name="register_protocol">《小教室用户注册协议》</string>
     <string name="register_protocol_agree">点击注册默认您同意</string>
-    <string name="name_empty">请输用户名</string>
+    <string name="name_empty">请输入姓名</string>
     <string name="phone_empty">请输入手机号</string>
     <string name="phone_error">请输入正确的手机号</string>
     <string name="verify_empty">请输入验证码</string>
@@ -195,8 +195,8 @@
     <string name="live_lesson_cover">直播课封面</string>
     <string name="promotion_one">促销1</string>
     <string name="promotion_two">促销2</string>
-    <string name="enroll_before_promotion">报名前%1$s人，享受%2$s折，折后价<![CDATA[<font color="#cc0000">￥%3$s</font>]]></string>
-    <string name="lesson_before_promotion">上课前%1$s天，享受%2$s折，折后价<![CDATA[<font color="#cc0000">￥%3$s</font>]]></string>
+    <string name="enroll_before_promotion">报名前%1$s人，享受%2$s折，折后价<![CDATA[<font color="#cc0000">%3$s</font>]]></string>
+    <string name="lesson_before_promotion">上课前%1$s天，享受%2$s折，折后价<![CDATA[<font color="#cc0000">%3$s</font>]]></string>
 
     <string name="filter">筛选</string>
     <string name="time">时间</string>
