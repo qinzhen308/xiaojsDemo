@@ -74,6 +74,8 @@ public class MineFragment extends BaseFragment {
         User u = XiaojsConfig.mLoginUser;
         if (u != null && u.getAccount() != null) {
             setPersonBaseInfo(u.getAccount());
+        } else {
+            setAvatar(null);
         }
     }
 
@@ -155,7 +157,7 @@ public class MineFragment extends BaseFragment {
         mPortraitView.setBorderColor(getResources().getColor(R.color.round_img_border));
         mPortraitView.setBorderWidth(R.dimen.px5);
         //set avatar
-        /*if (basic != null) {
+        if (basic != null) {
             Glide.with(mContext).load(basic.getAvatar())
                     .error(R.drawable.default_avatar)
                     .into(new GlideDrawableImageViewTarget(mPortraitView) {
@@ -171,16 +173,19 @@ public class MineFragment extends BaseFragment {
                         @Override
                         public void onLoadFailed(Exception e, Drawable errorDrawable) {
                             super.onLoadFailed(e, errorDrawable);
+                            mProfileBgView.setBackgroundDrawable(null);
                             mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
                         }
                     });
         } else {
             //set default
+            mPortraitView.setImageResource(R.drawable.default_avatar);
+            mProfileBgView.setBackgroundDrawable(null);
             mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
-        }*/
+        }
 
         //test
-        Glide.with(mContext).load("http://cdn.duitang.com/uploads/item/201405/27/20140527165332_JJnWu.thumb.224_0.jpeg")
+        /*Glide.with(mContext).load("http://cdn.duitang.com/uploads/item/201405/27/20140527165332_JJnWu.thumb.224_0.jpeg")
                 .error(R.drawable.default_avatar)
                 .into(new GlideDrawableImageViewTarget(mPortraitView) {
                     @Override
@@ -197,7 +202,7 @@ public class MineFragment extends BaseFragment {
                         super.onLoadFailed(e, errorDrawable);
                         mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
                     }
-                });
+                });*/
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
