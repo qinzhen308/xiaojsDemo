@@ -67,4 +67,6 @@
     <color name="course_state_examine">#66cccc</color>
     <color name="course_item_stroke_line">#eff2f6</color>
     <color name="common_btn_white_bg_press">#ffd7d7db</color>
+
+    <color name="progresshud_default_color">#b1000000</color>
 </resources>
