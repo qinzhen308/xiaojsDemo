@@ -24,7 +24,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Duration;
@@ -137,7 +136,7 @@ public class NotificationFragment extends BaseFragment {
         duration.setStart(TimeUtil.original());
         duration.setEnd(TimeUtil.now());
         criteria.duration = duration;
-        NotificationDataManager.ignoreNotifications(mContext, XiaojsConfig.mLoginUser.getSessionID(), criteria, new APIServiceCallback<IgnoreNResponse>() {
+        NotificationDataManager.ignoreNotifications(mContext, criteria, new APIServiceCallback<IgnoreNResponse>() {
             @Override
             public void onSuccess(IgnoreNResponse object) {
                 notificationCategory.count = 0;

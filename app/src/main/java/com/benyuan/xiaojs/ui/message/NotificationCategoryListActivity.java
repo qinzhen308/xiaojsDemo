@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
@@ -97,7 +96,7 @@ public class NotificationCategoryListActivity extends BaseActivity {
 
     private void delete(final int position){
         String id = adapter.getItem(position).id;
-        NotificationDataManager.requestDelNotification(this, XiaojsConfig.mLoginUser.getSessionID(), id, new APIServiceCallback() {
+        NotificationDataManager.requestDelNotification(this, id, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 setResult(RESULT_OK);

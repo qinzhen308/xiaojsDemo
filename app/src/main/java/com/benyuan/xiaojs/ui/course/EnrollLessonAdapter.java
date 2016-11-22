@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.common.xf_foundation.LessonState;
@@ -247,7 +246,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     @Override
     protected void doRequest() {
-        LessonDataManager.requestGetEnrolledLessons(mContext, XiaojsConfig.mLoginUser.getSessionID(), mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
+        LessonDataManager.requestGetEnrolledLessons(mContext, mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
             @Override
             public void onSuccess(GELessonsResponse object) {
                 Logger.d("onSuccess-----------");
