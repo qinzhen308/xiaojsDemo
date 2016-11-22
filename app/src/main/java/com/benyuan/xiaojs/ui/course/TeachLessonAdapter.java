@@ -25,6 +25,7 @@ import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.common.xf_foundation.LessonState;
+import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Criteria;
@@ -63,9 +64,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         duration.setStart(TimeUtil.original());
         duration.setEnd(TimeUtil.now());
 
-//        mCriteria = new Criteria();
-//        mCriteria.setSource(Ctl.LessonSource.ALL);
-        //mCriteria.setDuration(duration);
+        mCriteria = new Criteria();
+        mCriteria.setSource(Ctl.LessonSource.ALL);
+        mCriteria.setDuration(duration);
     }
 
     @Override

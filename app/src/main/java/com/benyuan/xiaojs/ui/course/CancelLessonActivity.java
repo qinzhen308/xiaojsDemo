@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.CancelReason;
@@ -81,6 +80,7 @@ public class CancelLessonActivity extends BaseActivity {
             LessonDataManager.requestCancelLesson(this, lesson.getId(), reason, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
+                    cancelProgress();
                     ToastUtil.showToast(CancelLessonActivity.this,"成功取消上课!");
                     setResult(RESULT_OK);
                     finish();
@@ -88,9 +88,12 @@ public class CancelLessonActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
                     ToastUtil.showToast(CancelLessonActivity.this,errorMessage);
                 }
             });
+
+            showProgress(true);
         }
     }
 }

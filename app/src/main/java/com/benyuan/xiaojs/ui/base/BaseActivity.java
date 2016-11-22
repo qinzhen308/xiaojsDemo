@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.widget.progress.ProgressHUD;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -40,6 +41,7 @@ public abstract class BaseActivity extends FragmentActivity {
     private View mHeaderDivider;
 
     private Unbinder mBinder;
+    private ProgressHUD progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,11 +164,29 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
+    public void showProgress(boolean cancellable){
+        if (progress == null){
+            progress = ProgressHUD.create(this);
+        }
+        progress.setCancellable(cancellable);
+        progress.show();
+    }
+
+    public void cancelProgress(){
+        if (progress != null && progress.isShowing()){
+            progress.dismiss();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mBinder != null){
             mBinder.unbind();
+        }
+        if (progress != null && progress.isShowing()){
+            progress.dismiss();
+            progress = null;
         }
     }
 }
