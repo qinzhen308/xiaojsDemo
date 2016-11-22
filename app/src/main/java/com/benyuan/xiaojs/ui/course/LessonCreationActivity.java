@@ -174,7 +174,7 @@ public class LessonCreationActivity extends BaseActivity {
         mType = data != null ? data.getInt(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_CREATE)
                 : CourseConstant.TYPE_LESSON_CREATE;
         if (!TextUtils.isEmpty(mLessonId)) {
-            LessonDataManager.requestGetLessonDetails(mContext, mLessonId, new APIServiceCallback<LessonDetail>() {
+            LessonDataManager.requestLessonData(mContext, mLessonId, new APIServiceCallback<LessonDetail>() {
                 @Override
                 public void onSuccess(LessonDetail lessonDetail) {
                     initBaseInfo(lessonDetail);

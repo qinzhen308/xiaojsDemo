@@ -123,9 +123,14 @@ public interface XiaojsService {
                                                @Path("criteria") String criteria,
                                                @Path("pagination") String pagination);
 
-    //Get Lesson Details
+    //Get Lesson Data
     @GET("/v1/ctl/lessons/{lesson}")
+    Call<LessonDetail> getLessonData(@Path("lesson") String lesson);
+
+    //Get Lesson Details
+    @GET("/v1/ctl/lessons/{lesson}/home")
     Call<LessonDetail> getLessonDetails(@Path("lesson") String lesson);
+
 
     //Confirm Lesson Enrollment
     @GET("/v1/ctl/lessons/{lesson}/enroll/{registrant}")
@@ -139,12 +144,6 @@ public interface XiaojsService {
     Call<ELResponse> enrollLesson(@Header("SessionID") String sessionID,
                                   @Path("lesson") String lesson,
                                   @Body OfflineRegistrant offlineRegistrant);
-
-
-    //Get Lesson Homepage
-    @GET("/v1/ctl/lessons-home/{lesson}")
-    Call<LessonDetail> getLessonHomepage(@Path("lesson") String lesson);
-
 
     //Edit Lesson
     @Headers("Content-Type: application/json")

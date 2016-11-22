@@ -206,7 +206,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 finish();
             }
 
-            LessonDataManager.requestGetLessonDetails(this, lessonId, new APIServiceCallback<LessonDetail>() {
+            LessonDataManager.requestLessonData(this, lessonId, new APIServiceCallback<LessonDetail>() {
                 @Override
                 public void onSuccess(LessonDetail lessonDetail) {
                     setData(lessonDetail);

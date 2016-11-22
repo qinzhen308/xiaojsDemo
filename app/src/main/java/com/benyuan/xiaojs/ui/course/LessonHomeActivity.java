@@ -132,7 +132,7 @@ public class LessonHomeActivity extends BaseActivity {
             return;
         }
 
-        LessonDataManager.requestLessonHomepage(this, lessonId, new APIServiceCallback<LessonDetail>() {
+        LessonDataManager.requestLessonDetails(this, lessonId, new APIServiceCallback<LessonDetail>() {
             @Override
             public void onSuccess(LessonDetail lessonDetail) {
                 setData(lessonDetail);

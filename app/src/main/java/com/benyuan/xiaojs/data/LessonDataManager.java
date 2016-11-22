@@ -234,7 +234,7 @@ public class LessonDataManager extends DataManager{
      * @param lesson
      * @param callback
      */
-    public static void requestGetLessonDetails(Context context,
+    public static void requestLessonData(Context context,
                                                @NonNull String lesson,
                                                @NonNull APIServiceCallback<LessonDetail> callback) {
 
@@ -256,7 +256,7 @@ public class LessonDataManager extends DataManager{
         }
 
         LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.getLessonDetails(context,lesson,callback);
+        lessonRequest.getLessonData(context,lesson,callback);
     }
 
 
@@ -293,7 +293,7 @@ public class LessonDataManager extends DataManager{
     }
 
 
-    public static void requestLessonHomepage(Context context,
+    public static void requestLessonDetails(Context context,
                                              @NonNull String lesson,
                                              @NonNull APIServiceCallback<LessonDetail> callback) {
 
@@ -306,7 +306,7 @@ public class LessonDataManager extends DataManager{
         }
 
         LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.getLessonHomepage(context,lesson,callback);
+        lessonRequest.getLessonDetails(context,lesson,callback);
     }
 
 

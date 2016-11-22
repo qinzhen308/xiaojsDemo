@@ -25,11 +25,27 @@ public class ErrorPrompts {
         return errorMessage;
     }
 
-    public static String getLessonHomepagePrompt(String errorCode) {
+    public static String getLessonDetailsPrompt(String errorCode) {
 
         String errorMessage = "获取直播课主页失败";
 
 
+        return errorMessage;
+    }
+
+    public static String getLessonDataPrompt(String errorCode) {
+
+        String errorMessage = "获取课程详情失败";
+
+        if (TextUtils.isEmpty(errorCode)
+                || errorCode.equals(Errors.NO_ERROR)
+                || errorCode.equals(Errors.SERVER_ERROR)
+                || errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.ILLEGAL_CALL)) {
+            return errorMessage;
+        } else if (errorCode.equals(Errors.BAD_SESSION)) {
+            errorMessage = "bad session";
+        }
         return errorMessage;
     }
 
@@ -206,21 +222,7 @@ public class ErrorPrompts {
         return errorMessage;
     }
 
-    public static String getLessonDetailsPrompt(String errorCode) {
 
-        String errorMessage = "获取课程详情失败";
-
-        if (TextUtils.isEmpty(errorCode)
-                || errorCode.equals(Errors.NO_ERROR)
-                || errorCode.equals(Errors.SERVER_ERROR)
-                || errorCode.equals(Errors.UNAUTHORIZED)
-                || errorCode.equals(Errors.ILLEGAL_CALL)) {
-            return errorMessage;
-        } else if (errorCode.equals(Errors.BAD_SESSION)) {
-            errorMessage = "bad session";
-        }
-        return errorMessage;
-    }
 
     public static String getEnrolledLessonsPrompt(String errorCode) {
 
