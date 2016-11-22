@@ -92,11 +92,11 @@ public class SalePromotionActivity extends BaseActivity {
         mEnrollDiscountEdt.addTextChangedListener(new PromotionTextWatcher(mEnrollDiscountEdt));
         mLessonDiscountEdt.addTextChangedListener(new PromotionTextWatcher(mLessonDiscountEdt));
 
-        //
-        mPromotionOneStatus.setVisibility(View.GONE);
-        mPromotionTwoStatus.setVisibility(View.GONE);
-        mPromotionOneDl.setVisibility(View.GONE);
-        mPromotionTwoDl.setVisibility(View.GONE);
+        //hide
+        //mPromotionOneStatus.setVisibility(View.GONE);
+        //mPromotionTwoStatus.setVisibility(View.GONE);
+        //mPromotionOneDl.setVisibility(View.GONE);
+        //mPromotionTwoDl.setVisibility(View.GONE);
 
         initData();
     }
@@ -189,14 +189,16 @@ public class SalePromotionActivity extends BaseActivity {
             float op = 1.0f;
             switch (mView.getId()) {
                 case R.id.enroll_before:
-                    checkLimitPeople(s.toString());
+                    checkLimitPeople(s.toString(), true);
+                    mPromotionOneStatus.setSelected(checkPromotionOne());
                     break;
                 case R.id.attend_lesson_before:
-                    checkLessonDay(s.toString());
+                    checkLessonDay(s.toString(), true);
+                    mPromotionTwoStatus.setSelected(checkPromotionTwo());
                     break;
                 case R.id.enroll_discount:
                     if (s.length() > 0) {
-                        if (checkDiscountLegal(s.toString())) {
+                        if (checkDiscountLegal(s.toString(), true)) {
                             mEnrollPromotionPriceTv.setText(formatPrice(mOriginalPrice * getDiscount(s.toString()), mPricingType));
                         } else {
                             mEnrollPromotionPriceTv.setText("");
@@ -204,10 +206,11 @@ public class SalePromotionActivity extends BaseActivity {
                     } else {
                         mEnrollPromotionPriceTv.setText("");
                     }
+                    mPromotionOneStatus.setSelected(checkPromotionOne());
                     break;
                 case R.id.attend_lesson_discount:
                     if (s.length() > 0) {
-                        if (checkDiscountLegal(s.toString())) {
+                        if (checkDiscountLegal(s.toString(), true)) {
                             mLessonPromotionPriceTv.setText(formatPrice(mOriginalPrice * getDiscount(s.toString()), mPricingType));
                         } else {
                             mLessonPromotionPriceTv.setText("");
@@ -215,6 +218,7 @@ public class SalePromotionActivity extends BaseActivity {
                     } else {
                         mLessonPromotionPriceTv.setText("");
                     }
+                    mPromotionTwoStatus.setSelected(checkPromotionTwo());
                     break;
             }
         }
@@ -261,32 +265,45 @@ public class SalePromotionActivity extends BaseActivity {
         return ss;
     }
 
-    private boolean checkLimitPeople(String enrBefore) {
-        if (enrBefore.length() > 0 && Integer.parseInt(enrBefore) > mLimit) {
-            String tips = getString(R.string.promotion_people_exceed, mLimit);
-            Toast.makeText(SalePromotionActivity.this, tips, Toast.LENGTH_SHORT).show();
+    private boolean checkLimitPeople(String enrBefore, boolean withTips) {
+        if (enrBefore.length() > 0 && (Integer.parseInt(enrBefore) > mLimit || Integer.parseInt(enrBefore) <= 0 )) {
+            if ((Integer.parseInt(enrBefore) > mLimit)) {
+                if (withTips) {
+                    String tips = getString(R.string.promotion_people_exceed, mLimit);
+                    Toast.makeText(SalePromotionActivity.this, tips, Toast.LENGTH_SHORT).show();
+                }
+            } else if (Integer.parseInt(enrBefore) <= 0 ) {
+                if (withTips) {
+                    String tips = getString(R.string.promotion_people_error, mLimit);
+                    Toast.makeText(SalePromotionActivity.this, tips, Toast.LENGTH_SHORT).show();
+                }
+            }
             return false;
         }
 
         return true;
     }
 
-    private boolean checkLessonDay(String lessonBefore) {
+    private boolean checkLessonDay(String lessonBefore, boolean withTips) {
         long spaceDays = getSpaceDays();
         if (lessonBefore.length() > 0 && Integer.parseInt(lessonBefore.toString()) > spaceDays) {
-            String tips = getString(R.string.promotion_day_exceed, spaceDays);
-            Toast.makeText(SalePromotionActivity.this, tips, Toast.LENGTH_SHORT).show();
+            if (withTips) {
+                String tips = getString(R.string.promotion_day_exceed, spaceDays);
+                Toast.makeText(SalePromotionActivity.this, tips, Toast.LENGTH_SHORT).show();
+            }
             return false;
         }
 
         return true;
     }
 
-    private boolean checkDiscountLegal(String discount) {
+    private boolean checkDiscountLegal(String discount, boolean withTips) {
         if (!TextUtils.isEmpty(discount)) {
             if (discount.length() > 1 && discount.charAt(1) != '.') {
-                Toast.makeText(SalePromotionActivity.this, R.string.promotion_discount_format_error,
-                        Toast.LENGTH_SHORT).show();
+                if (withTips) {
+                    Toast.makeText(SalePromotionActivity.this, R.string.promotion_discount_format_error,
+                            Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }
         }
@@ -306,7 +323,7 @@ public class SalePromotionActivity extends BaseActivity {
         ArrayList<Promotion> temp = new ArrayList<Promotion>(2);
         if ((TextUtils.isEmpty(enrBefore) && TextUtils.isEmpty(enrDiscount))
                 || (!TextUtils.isEmpty(enrBefore) && !TextUtils.isEmpty(enrDiscount))) {
-            boolean flag = checkLimitPeople(enrBefore) && checkDiscountLegal(enrDiscount);
+            boolean flag = checkLimitPeople(enrBefore, true) && checkDiscountLegal(enrDiscount, true);
             if (!TextUtils.isEmpty(enrBefore) && !TextUtils.isEmpty(enrDiscount)) {
                 if (flag) {
                     promotion1 = new Promotion();
@@ -327,7 +344,7 @@ public class SalePromotionActivity extends BaseActivity {
 
         if ((TextUtils.isEmpty(lessBefore) && TextUtils.isEmpty(lessDiscount))
                 || (!TextUtils.isEmpty(lessBefore) && !TextUtils.isEmpty(lessDiscount))) {
-            boolean flag = checkLessonDay(lessBefore) && checkDiscountLegal(lessDiscount);
+            boolean flag = checkLessonDay(lessBefore, true) && checkDiscountLegal(lessDiscount, true);
             if (!TextUtils.isEmpty(lessBefore) && !TextUtils.isEmpty(lessDiscount)) {
                 if (flag) {
                     promotion2 = new Promotion();
@@ -355,5 +372,37 @@ public class SalePromotionActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+
+    private boolean checkPromotionOne() {
+        String enrBefore = mEnrollBeforeEdt.getText().toString().trim();
+        String enrDiscount = mEnrollDiscountEdt.getText().toString().trim();
+        if ((TextUtils.isEmpty(enrBefore) && TextUtils.isEmpty(enrDiscount))
+                || (!TextUtils.isEmpty(enrBefore) && !TextUtils.isEmpty(enrDiscount))) {
+            if (!TextUtils.isEmpty(enrBefore) && !TextUtils.isEmpty(enrDiscount)) {
+                return checkLimitPeople(enrBefore, false) && checkDiscountLegal(enrDiscount, false);
+            }
+        } else {
+            return false;
+        }
+
+        return false;
+    }
+
+    private boolean checkPromotionTwo() {
+        String lessBefore = mLessonBeforeEdt.getText().toString().trim();
+        String lessDiscount = mLessonDiscountEdt.getText().toString().trim();
+
+        if ((TextUtils.isEmpty(lessBefore) && TextUtils.isEmpty(lessDiscount))
+                || (!TextUtils.isEmpty(lessBefore) && !TextUtils.isEmpty(lessDiscount))) {
+            if (!TextUtils.isEmpty(lessBefore) && !TextUtils.isEmpty(lessDiscount)) {
+               return checkLessonDay(lessBefore, false) && checkDiscountLegal(lessDiscount, false);
+            }
+        } else {
+            return false;
+        }
+
+        return false;
     }
 }
