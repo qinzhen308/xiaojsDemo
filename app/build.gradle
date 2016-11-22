@@ -68,7 +68,6 @@ dependencies {
 
     //crash report
     compile 'com.tencent.bugly:crashreport:latest.release'
-    compile 'com.kaopiz:kprogresshud:1.0.5'
 
     //suport test
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

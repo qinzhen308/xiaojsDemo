@@ -41,6 +41,7 @@ import com.benyuan.xiaojs.model.Pagination;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
+import com.benyuan.xiaojs.ui.widget.progress.ProgressHUD;
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
@@ -70,7 +71,7 @@ public class TestAPIActivity extends Activity {
         imageView = (ImageView) findViewById(R.id.loading);
 
 
-        Glide.with(this).load(R.drawable.loading).into(imageView);
+        Glide.with(this).load(R.drawable.flickr).into(imageView);
 
     }
 
@@ -108,7 +109,7 @@ public class TestAPIActivity extends Activity {
                 //editPortrait();
                 //testEditLesson(this);
                 //confirmEnllor(this);
-                testHUB2(this);
+                testHUB(this);
                 break;
             }
 
@@ -117,23 +118,12 @@ public class TestAPIActivity extends Activity {
 
     private void testHUB2(Context context){
 
-        /*ImageView im = new ImageView(context);
-        im.setLayoutParams(new ViewGroup.LayoutParams(70,70));
-        Glide.with(this).load(R.drawable.loading).into(im);
-
-        KProgressHUD.create(context)
-                .setCustomView(im)
-                //.setLabel("This is a custom view")
-                .show();*/
     }
 
     private void testHUB(Context context) {
-        /*KProgressHUD.create(context)
-                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setCancellable(false)
-                .setAnimationSpeed(2)
-                .setDimAmount(0.5f)
-                .show();*/
+
+        ProgressHUD.create(context).show();
+
     }
 
     private void confirmEnllor(Context context) {
