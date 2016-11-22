@@ -122,7 +122,6 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
     private final static int INTRO_DEFAULT_LINES = 3;
     private final static int INTRO_MAX_LINES = 100;
-    private final static String MONEY = "￥";
     private boolean mLessonBriefSwitcher = false;
     private boolean mTeacherIntroSwitcher = false;
 
