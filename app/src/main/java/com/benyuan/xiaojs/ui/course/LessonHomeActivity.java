@@ -190,7 +190,7 @@ public class LessonHomeActivity extends BaseActivity {
                 } else {
                     mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
                 }
-                setSalePromotion(lesson.getPromotion(), originCharge);
+                setSalePromotion(fee);
             }
 
             //schedule
@@ -206,21 +206,23 @@ public class LessonHomeActivity extends BaseActivity {
         }
     }
 
-    private void setSalePromotion(Promotion[] promotions, double totalPrice) {
-        if (promotions == null || promotions.length == 0) {
+    private void setSalePromotion(Fee fee) {
+        Fee.Applied applied = fee.getApplied();
+        if (applied == null) {
+            mPromotionInfoTv.setVisibility(View.GONE);
             return;
         }
 
-        Promotion promotion = promotions[0];
         String s = null;
-        if (promotion.getQuota() > 0) {
+        double discPrice = fee.getDiscounted() != null ? fee.getDiscounted().getSubtotal().doubleValue() : 0;
+        if (applied.getQuota() > 0) {
             //enroll before promotion
-            String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
-            s = getString(R.string.enroll_before_promotion, promotion.getQuota(), discount, totalPrice);
-        } else if (promotion.getBefore() > 0) {
+            String discount = BaseBusiness.formatDiscount(applied.getDiscount());
+            s = getString(R.string.enroll_before_promotion, applied.getQuota(), discount, discPrice);
+        } else if (applied.getBefore() > 0) {
             //lesson before promotion
-            String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
-            s = getString(R.string.lesson_before_promotion, promotion.getBefore(), discount, totalPrice);
+            String discount = BaseBusiness.formatDiscount(applied.getDiscount());
+            s = getString(R.string.lesson_before_promotion, applied.getBefore(), discount, discPrice);
         }
 
         if (!TextUtils.isEmpty(s)) {
@@ -252,7 +254,7 @@ public class LessonHomeActivity extends BaseActivity {
                 }
 
                 //TODO test
-                mTeaEvalStar.setGrading(EvaluationStar.Grading.FOUR);
+                //mTeaEvalStar.setGrading(EvaluationStar.Grading.FOUR);
             }
 
             if (lesson.getTeachersIntro() != null && textViews != null) {
