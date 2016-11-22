@@ -84,23 +84,6 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
         NotificationDataManager.requestNotifications(mContext, criteria, mPagination, new APIServiceCallback<ArrayList<Notification>>() {
             @Override
             public void onSuccess(ArrayList<Notification> object) {
-                if (object == null || object.size() == 0){
-                    Notification n1 = new Notification();
-                    n1.body = "【天康老师的高考英语全国卷真题精讲课】即将在30分钟后开课";
-                    n1.createdOn = new Date(System.currentTimeMillis() - 1000 * 60 * 50);
-
-                    Notification n2 = new Notification();
-                    n2.body = "第二节课";
-                    n2.createdOn = new Date(System.currentTimeMillis() - 1000 * 60 * 50);
-
-                    Notification n3 = new Notification();
-                    n3.body = "第三节课";
-                    n3.createdOn = new Date(System.currentTimeMillis() - 1000 * 60 * 50);
-                    object = new ArrayList<Notification>();
-                    object.add(n1);
-                    object.add(n2);
-                    object.add(n3);
-                }
                 NotificationCategoryAdapter.this.onSuccess(object);
             }
 

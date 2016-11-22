@@ -15,16 +15,27 @@ package com.benyuan.xiaojs.ui.message;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.data.NotificationDataManager;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.Duration;
+import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.NotificationCategory;
+import com.benyuan.xiaojs.model.NotificationCriteria;
+import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
+import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
 import com.benyuan.xiaojs.ui.widget.CanInScrollviewListView;
+import com.benyuan.xiaojs.util.DeviceUtil;
+import com.benyuan.xiaojs.util.TimeUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.List;
@@ -41,6 +52,8 @@ public class NotificationFragment extends BaseFragment {
     CanInScrollviewListView mListView;
 
     PlatformNotificationAdapter platformMessageAdapter;
+
+    NotificationAdapter notificationAdapter;
 
     private String[] titles;
     @Override
@@ -70,7 +83,29 @@ public class NotificationFragment extends BaseFragment {
                 Intent intent = new Intent(mContext,NotificationCategoryListActivity.class);
                 intent.putExtra(NotificationConstant.KEY_NOTIFICATION_CATEGORY_ID,categoryId);
                 intent.putExtra(NotificationConstant.KEY_NOTIFICATION_TITLE,title);
-                startActivity(intent);
+                ((BaseActivity)mContext).startActivityForResult(intent,NotificationConstant.REQUEST_NOTIFICATION_CATEGORY_LIST);
+            }
+        });
+        mListView.setOnItemLongClickListener(new CanInScrollviewListView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view,final int position) {
+                CommonPopupMenu menu = new CommonPopupMenu(mContext);
+                String[] items = new String[]{"标记为已读"};
+                menu.addTextItems(items);
+                menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        switch (i){
+                            case 0:
+                                NotificationCategory category = platformMessageAdapter.getItem(i);
+                                mark(category,0);
+                                break;
+                        }
+                    }
+                });
+                int offset = DeviceUtil.getScreenWidth(mContext) / 2;
+                menu.show(view,offset);
+                return true;
             }
         });
         mPullList.getRefreshableView().addHeaderView(mHeader);
@@ -78,7 +113,46 @@ public class NotificationFragment extends BaseFragment {
         AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mContext.getResources().getDimensionPixelSize(R.dimen.px100));
         view.setLayoutParams(lp);
         mPullList.getRefreshableView().addFooterView(view);
-        mPullList.setAdapter(new NotificationAdapter(mContext,mPullList,this));
+        notificationAdapter = new NotificationAdapter(mContext,mPullList,this);
+        mPullList.setAdapter(notificationAdapter);
+        mPullList.getRefreshableView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                int index = position - mPullList.getRefreshableView().getHeaderViewsCount();
+                NotificationCategory category = notificationAdapter.getItem(index);
+                mark(category,1);
+                return true;
+            }
+        });
+    }
+
+
+    private void mark(final NotificationCategory notificationCategory,final int type){
+        NotificationCriteria criteria = new NotificationCriteria();
+        if (notificationCategory != null){
+            criteria.category = notificationCategory.id;
+        }
+        Duration duration = new Duration();
+        duration.setStart(TimeUtil.original());
+        duration.setEnd(TimeUtil.now());
+        criteria.duration = duration;
+        NotificationDataManager.ignoreNotifications(mContext, criteria, new APIServiceCallback<IgnoreNResponse>() {
+            @Override
+            public void onSuccess(IgnoreNResponse object) {
+                notificationCategory.count = 0;
+                if (type == 0){
+                    platformMessageAdapter.notifyDataSetChanged();
+                }else {
+                    notificationAdapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 
     public void notifyHeader(List<NotificationCategory> beans){
@@ -97,4 +171,14 @@ public class NotificationFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case NotificationConstant.REQUEST_NOTIFICATION_CATEGORY_LIST:
+                if (resultCode == Activity.RESULT_OK){
+                    notificationAdapter.refresh();
+                }
+                break;
+        }
+    }
 }

@@ -8,8 +8,6 @@ import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
-import com.benyuan.xiaojs.model.Criteria;
-import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.Notification;
@@ -249,7 +247,7 @@ public class PlatformRequest extends ServiceRequest {
 
     public void ignoreNotifications(Context context,
                                     @NonNull String sessionID,
-                                    @NonNull Criteria criteria,
+                                    @NonNull NotificationCriteria criteria,
                                     @NonNull APIServiceCallback<IgnoreNResponse> callback) {
 
         final WeakReference<APIServiceCallback<IgnoreNResponse>> callbackReference =

@@ -81,7 +81,7 @@ public class CancelLessonActivity extends BaseActivity {
             LessonDataManager.requestCancelLesson(this, lesson.getId(), reason, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
-                    ToastUtil.showToast(CancelLessonActivity.this,"成功取消上课");
+                    ToastUtil.showToast(CancelLessonActivity.this,"成功取消上课!");
                     setResult(RESULT_OK);
                     finish();
                 }

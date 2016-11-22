@@ -26,6 +26,7 @@ public class CanInScrollviewListView extends LinearLayout implements
 	private int mDividerLeftMargin;
 	private int mDividerRightMargin;
 	private OnItemClickListener mListener;
+	private OnItemLongClickListener mLongListener;
 
 	public static interface DataSetObserverAdapter {
 		public void setDataSetObserver(
@@ -172,6 +173,15 @@ public class CanInScrollviewListView extends LinearLayout implements
 							}
 						}
 					});
+					view.setOnLongClickListener(new OnLongClickListener() {
+						@Override
+						public boolean onLongClick(View v) {
+							if (mLongListener != null){
+								return mLongListener.onItemLongClick(view,index);
+							}
+							return false;
+						}
+					});
 					if (mNeedDivider && (i != (mAdapter.getCount() - 1))) {
 						addView(buildDivider());
 					}
@@ -183,6 +193,10 @@ public class CanInScrollviewListView extends LinearLayout implements
 
 	public void setOnItemClickListener(OnItemClickListener listener){
 		mListener = listener;
+	}
+
+	public void setOnItemLongClickListener(OnItemLongClickListener listener){
+		mLongListener = listener;
 	}
 
 	@Override
@@ -198,5 +212,9 @@ public class CanInScrollviewListView extends LinearLayout implements
 
 	public interface OnItemClickListener{
 		void onItemClick(View view,int position);
+	}
+
+	public interface OnItemLongClickListener{
+		boolean onItemLongClick(View view,int position);
 	}
 }

@@ -9,7 +9,6 @@ import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.PlatformRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
-import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.Notification;
@@ -115,7 +114,7 @@ public class NotificationDataManager extends DataManager {
     }
 
     public static void ignoreNotifications(Context context,
-                                           @NonNull Criteria criteria,
+                                           @NonNull NotificationCriteria criteria,
                                            @NonNull APIServiceCallback<IgnoreNResponse> callback) {
 
         if (callback == null) {
