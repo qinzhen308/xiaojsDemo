@@ -40,15 +40,15 @@
     <!--account-->
     <!--register-->
     <string name="register">注册</string>
-    <string name="name_hint">您的真实姓名</string>
-    <string name="verify_code_hint">验证码</string>
+    <string name="reg_name_title">真实姓名</string>
+    <string name="verify_code_title">验证码</string>
     <string name="verify_code_send_hint">发送验证码</string>
     <string name="verity_code_countdown">%1$sS</string>
     <string name="verity_code_re_send">重发</string>
     <string name="pwd_hint">请输入6&#8211;16位密码</string>
     <string name="register_protocol">《小教室用户注册协议》</string>
     <string name="register_protocol_agree">点击注册默认您同意</string>
-    <string name="name_empty">请输用户名</string>
+    <string name="name_empty">请输入姓名</string>
     <string name="phone_empty">请输入手机号</string>
     <string name="phone_error">请输入正确的手机号</string>
     <string name="verify_empty">请输入验证码</string>

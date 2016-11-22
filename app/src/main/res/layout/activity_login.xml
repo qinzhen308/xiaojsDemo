@@ -18,13 +18,24 @@
     <View
             style="@style/DividerHorizontal"/>
 
-    <LinearLayout
+    <RelativeLayout
             android:background="@color/white"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:paddingLeft="@dimen/px43"
             android:paddingRight="@dimen/px43"
             android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/login_name_title"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:minWidth="@dimen/px170"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                android:text="@string/phone_num"/>
 
         <com.benyuan.xiaojs.ui.widget.EditTextDel
                 android:id="@+id/login_name"
@@ -33,17 +44,19 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/px30"
                 android:paddingBottom="@dimen/px30"
-                android:hint="@string/phone_num"
+                android:hint="@string/phone_empty"
                 android:imeOptions="actionNext"
                 android:inputType="phone"
-                android:textColorHint="@color/font_gray"
+                android:textColorHint="@color/font_light_gray"
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
+                android:layout_toRightOf="@+id/login_name_title"
                 android:maxLength="11"/>
 
         <View
-                style="@style/DividerHorizontal"/>
-    </LinearLayout>
+                style="@style/DividerHorizontal"
+                android:layout_below="@+id/login_name"/>
+    </RelativeLayout>
 
     <RelativeLayout
             android:background="@color/white"
@@ -52,18 +65,29 @@
             android:paddingLeft="@dimen/px43"
             android:paddingRight="@dimen/px43">
 
+        <TextView
+                android:id="@+id/login_pwd_title"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:minWidth="@dimen/px170"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                android:text="@string/pwd"/>
+
         <com.benyuan.xiaojs.ui.widget.EditTextDel
                 android:id="@+id/login_pwd"
                 android:background="@null"
-                android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/px30"
                 android:paddingBottom="@dimen/px30"
-                android:hint="@string/pwd"
+                android:hint="@string/pwd_empty"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
+                android:layout_toRightOf="@+id/login_pwd_title"
                 android:layout_toLeftOf="@+id/hide_show_pwd"
                 android:textColorHint="@color/font_gray"
                 android:textColor="@color/font_black"
