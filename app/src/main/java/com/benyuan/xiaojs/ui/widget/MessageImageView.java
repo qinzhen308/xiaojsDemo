@@ -32,7 +32,12 @@ public class MessageImageView extends RoundedImageView {
     private int mValue = 0;
     private boolean mIsCircle;
     private Paint mPlus;
+    private int mType = TYPE_NUM;
 
+    public static final int TYPE_NUM = 1;//显示数字
+    public static final int TYPE_MARK = 2;//显示圆点
+
+    private Bitmap mMark;
     public MessageImageView(Context context) {
         super(context);
         init(null);
@@ -62,6 +67,7 @@ public class MessageImageView extends RoundedImageView {
             }
         }
         mBackground = BitmapFactory.decodeResource(getResources(), R.drawable.ic_msg_bg);
+        mMark = BitmapFactory.decodeResource(getResources(),R.drawable.ic_red_mark);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);// 防抖动
@@ -82,9 +88,11 @@ public class MessageImageView extends RoundedImageView {
         if (mValue <= 0) {
             return;
         }
-       // if (mValue > 0 && mValue < 99) {
-
-
+        if (mType == TYPE_NUM){
+            String value = String.valueOf(mValue);
+            if (mValue > 99){
+                value = "99+";
+            }
             //bg: left, top
             int bgLeft = getBgLeft();
             int bgTop = getBgTop();
@@ -96,7 +104,7 @@ public class MessageImageView extends RoundedImageView {
 
             //text: w, h
             Paint.FontMetricsInt fontMetrics = mPaint.getFontMetricsInt();
-            int txtW = (int) mPaint.measureText(String.valueOf(mValue));
+            int txtW = (int) mPaint.measureText(value);
             int txtH = fontMetrics.descent - fontMetrics.ascent;
 
             //text: x, y, baseline
@@ -105,27 +113,27 @@ public class MessageImageView extends RoundedImageView {
             int baseline = y - fontMetrics.ascent;
 
             //draw text
-            if (mValue > 99){
-                canvas.drawText("99", x, baseline, mPaint);
-                Paint.FontMetricsInt fontMetricsInt = mPlus.getFontMetricsInt();
-                int plusW = (int) mPlus.measureText("+");
-                int plusH = fontMetricsInt.descent - fontMetricsInt.ascent;
+            canvas.drawText(value, x, baseline, mPaint);
+        }else if (mType == TYPE_MARK){
+            //bg: left, top
+            int bgLeft = getBgLeft();
+            int bgTop = getBgTop();
 
-                int plusX = x + txtW / 2 + plusW / 3;
-                int plusY = y - plusH / 3;
-                int plusBaseline = plusY - fontMetricsInt.ascent;
+            //draw bg
+            Rect src = new Rect(0, 0, mMark.getWidth(), mMark.getHeight());
+            Rect dst = new Rect(bgLeft, bgTop, bgLeft + mMark.getWidth(), bgTop + mMark.getHeight());
+            canvas.drawBitmap(mMark, src, dst, mPaint);
+        }
 
-                canvas.drawText("+",plusX,plusBaseline,mPlus);
-            }else {
-                canvas.drawText(String.valueOf(mValue), x, baseline, mPaint);
-            }
-//        } else {
-//
-//        }
     }
 
     public void setCount(int value) {
         mValue = value;
+        invalidate();
+    }
+
+    public void setType(int type){
+        mType = type;
         invalidate();
     }
 

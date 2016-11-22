@@ -81,7 +81,9 @@ public class PlatformNotificationAdapter extends CanInScrollviewListView.Adapter
         holder.title.setText(titles[position]);
         if (position == mIcons.length - 1){
             holder.special();
+            holder.image.setType(MessageImageView.TYPE_NUM);
         }else {
+            holder.image.setType(MessageImageView.TYPE_MARK);
             holder.normal();
         }
 
