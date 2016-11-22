@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.QiniuService;
+import com.benyuan.xiaojs.model.TokenResponse;
 import com.orhanobut.logger.Logger;
 import com.qiniu.android.common.ServiceAddress;
 import com.qiniu.android.common.Zone;
@@ -26,7 +27,6 @@ public class QiniuRequest {
 
     public void uploadCover(Context context,
                             @NonNull String sessionID,
-                            @NonNull final String key,
                             @NonNull final String filePath,
                             @NonNull QiniuService qiniuService) {
 
@@ -35,14 +35,19 @@ public class QiniuRequest {
 
         AccountRequest accountRequest = new AccountRequest();
 
-        accountRequest.getCoverUpToken(context, sessionID, new APIServiceCallback<String>() {
+        accountRequest.getCoverUpToken(context, sessionID, new APIServiceCallback<TokenResponse>() {
             @Override
-            public void onSuccess(String object) {
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("get upload for token onSuccess:%s ",object);
-                }
+            public void onSuccess(TokenResponse tokenResponse) {
 
-                uploadFile(true,filePath,key,object,callbackReference);
+                String token = tokenResponse.getToken();
+                String key = tokenResponse.getKey();
+                String domain = tokenResponse.getDomain();
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("get upload for token onSuccess token=%s,key=%s,domain=%s",token,key,domain);
+                }
+                uploadFile(domain,filePath,key,token,callbackReference);
+
             }
 
             @Override
@@ -62,7 +67,6 @@ public class QiniuRequest {
 
     public void uploadAvatar(Context context,
                              @NonNull String sessionID,
-                             @NonNull final String key,
                              @NonNull final String filePath,
                              @NonNull QiniuService qiniuService) {
 
@@ -73,14 +77,19 @@ public class QiniuRequest {
 
         AccountRequest accountRequest = new AccountRequest();
 
-        accountRequest.getAvatarUpToken(context, sessionID, new APIServiceCallback<String>() {
+        accountRequest.getAvatarUpToken(context, sessionID, new APIServiceCallback<TokenResponse>() {
             @Override
-            public void onSuccess(String object) {
+            public void onSuccess(TokenResponse tokenResponse) {
+
+                String token = tokenResponse.getToken();
+                String key = tokenResponse.getKey();
+                String domain = tokenResponse.getDomain();
+
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("get upload for token onSuccess:%s ",object);
+                    Logger.d("get upload for token onSuccess token=%s,key=%s,domain=%s",token,key,domain);
                 }
 
-                uploadFile(false,filePath,key,object,callbackReference);
+                uploadFile(domain,filePath,key,token,callbackReference);
 
             }
 
@@ -104,15 +113,16 @@ public class QiniuRequest {
 
     }
 
-    private void uploadFile(final boolean isLesson, @NonNull final String filePath,
-                            @NonNull String key,
-                            @NonNull String token,
+    private void uploadFile(final String domain,
+                            @NonNull final String filePath,
+                            @NonNull String uploadKey,
+                            @NonNull String uploadToken,
                             @NonNull final WeakReference<QiniuService> callbackReference){
 
         Configuration configuration = createConfiguration();
 
         UploadManager uploadManager = new UploadManager(configuration);
-        uploadManager.put(filePath, key, token, new UpCompletionHandler() {
+        uploadManager.put(filePath, uploadKey, uploadToken, new UpCompletionHandler() {
             @Override
             public void complete(String key, ResponseInfo info, JSONObject response) {
 
@@ -123,13 +133,12 @@ public class QiniuRequest {
                 if (info.isOK()){
                     QiniuService callback = callbackReference.get();
                     if (callback != null) {
-                        StringBuilder fileUrl = new StringBuilder();
-                        if (isLesson){
-                            fileUrl.append(QiniuService.COVER_BASE_URL);
-                        }else{
-                            fileUrl.append(QiniuService.AVATAR_BASE_URL);
-                        }
-                        fileUrl.append(key);
+
+                        StringBuilder fileUrl = new StringBuilder(domain)
+                                .append("/")
+                                .append(key);
+
+
                         callback.uploadSuccess(key,fileUrl.toString());
                     }
                 }else{

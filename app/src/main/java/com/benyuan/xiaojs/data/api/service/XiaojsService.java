@@ -23,6 +23,7 @@ import com.benyuan.xiaojs.model.LoginParams;
 import com.benyuan.xiaojs.model.Notification;
 import com.benyuan.xiaojs.model.OfflineRegistrant;
 import com.benyuan.xiaojs.model.RegisterInfo;
+import com.benyuan.xiaojs.model.TokenResponse;
 import com.benyuan.xiaojs.model.VerifyCode;
 
 import java.util.ArrayList;
@@ -87,11 +88,11 @@ public interface XiaojsService {
 
     //Get upToken
     @GET("/v1/accounts/up_avatar_token")
-    Call<ResponseBody> getAvatarUpToken(@Header("SessionID") String sessionID);
+    Call<TokenResponse> getAvatarUpToken(@Header("SessionID") String sessionID);
 
     //Get upToken
     @GET("/v1/lessons/up_resource_token")
-    Call<ResponseBody> getCoverUpToken(@Header("SessionID") String sessionID);
+    Call<TokenResponse> getCoverUpToken(@Header("SessionID") String sessionID);
 
 
 

@@ -15,6 +15,7 @@ import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.HomeData;
+import com.benyuan.xiaojs.model.TokenResponse;
 import com.orhanobut.logger.Logger;
 
 
@@ -299,39 +300,26 @@ public class AccountRequest extends ServiceRequest {
 
     protected void getAvatarUpToken(Context context,
                                     @NonNull String sessionID,
-                                    @NonNull APIServiceCallback<String> callback) {
+                                    @NonNull APIServiceCallback<TokenResponse> callback) {
 
-        final WeakReference<APIServiceCallback<String>> callbackReference =
+        final WeakReference<APIServiceCallback<TokenResponse>> callbackReference =
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getAvatarUpToken(sessionID).enqueue(new Callback<ResponseBody>() {
+        xiaojsService.getAvatarUpToken(sessionID).enqueue(new Callback<TokenResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
 
                 int responseCode = response.code();
 
                 if (responseCode == SUCCESS_CODE) {
 
-                    String token = null;
-                    try {
-                        token = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    TokenResponse tokenResponse = response.body();
 
-
-                    APIServiceCallback<String> callback = callbackReference.get();
+                    APIServiceCallback<TokenResponse> callback = callbackReference.get();
                     if (callback != null) {
-                        if (TextUtils.isEmpty(token)) {
 
-                            String errorCode = getDefaultErrorCode();
-                            String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(errorCode);
-                            callback.onFailure(errorCode, errorMessage);
-                        } else {
-                            callback.onSuccess(token);
-                        }
-
+                        callback.onSuccess(tokenResponse);
                     }
 
                 } else {
@@ -343,22 +331,20 @@ public class AccountRequest extends ServiceRequest {
                         e.printStackTrace();
                     }
 
-
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(errorCode);
 
-                    APIServiceCallback<String> callback = callbackReference.get();
+                    APIServiceCallback<TokenResponse> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
-
 
                 }
 
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<TokenResponse> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("the getAvatarUpToken has occur exception");
@@ -367,7 +353,7 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(errorCode);
 
-                APIServiceCallback<String> callback = callbackReference.get();
+                APIServiceCallback<TokenResponse> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }
@@ -378,38 +364,26 @@ public class AccountRequest extends ServiceRequest {
 
     protected void getCoverUpToken(Context context,
                                    @NonNull String sessionID,
-                                   @NonNull APIServiceCallback<String> callback) {
+                                   @NonNull APIServiceCallback<TokenResponse> callback) {
 
-        final WeakReference<APIServiceCallback<String>> callbackReference =
+        final WeakReference<APIServiceCallback<TokenResponse>> callbackReference =
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getCoverUpToken(sessionID).enqueue(new Callback<ResponseBody>() {
+        xiaojsService.getCoverUpToken(sessionID).enqueue(new Callback<TokenResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
 
                 int responseCode = response.code();
 
                 if (responseCode == SUCCESS_CODE) {
 
-                    String token = null;
-                    try {
-                        token = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    TokenResponse tokenResponse = response.body();
 
-
-                    APIServiceCallback<String> callback = callbackReference.get();
+                    APIServiceCallback<TokenResponse> callback = callbackReference.get();
                     if (callback != null) {
-                        if (TextUtils.isEmpty(token)) {
 
-                            String errorCode = getDefaultErrorCode();
-                            String errorMessage = ErrorPrompts.getCoverUpTokenPrompt(errorCode);
-                            callback.onFailure(errorCode, errorMessage);
-                        } else {
-                            callback.onSuccess(token);
-                        }
+                        callback.onSuccess(tokenResponse);
 
                     }
 
@@ -426,7 +400,7 @@ public class AccountRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getCoverUpTokenPrompt(errorCode);
 
-                    APIServiceCallback<String> callback = callbackReference.get();
+                    APIServiceCallback<TokenResponse> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -437,7 +411,7 @@ public class AccountRequest extends ServiceRequest {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<TokenResponse> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("the getCoverUpToken has occur exception");
@@ -446,7 +420,7 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getCoverUpTokenPrompt(errorCode);
 
-                APIServiceCallback<String> callback = callbackReference.get();
+                APIServiceCallback<TokenResponse> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }

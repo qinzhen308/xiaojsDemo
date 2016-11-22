@@ -282,7 +282,6 @@ public class ProfileActivity extends BaseActivity {
                         //TODO upload avatar and get filename
                         mImgUploading = true;
                         AccountDataManager.requestUploadAvatar(ProfileActivity.this,
-                                BaseBusiness.getUserId(),
                                 cropImgPath,
                                 new QiniuService() {
 

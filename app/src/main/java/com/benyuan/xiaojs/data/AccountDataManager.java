@@ -253,7 +253,6 @@ public class AccountDataManager {
 
 
     public static void requestUploadAvatar(Context context,
-                                           @NonNull final String userID,
                                            @NonNull final String filePath,
                                            @NonNull QiniuService qiniuService) {
 
@@ -280,10 +279,12 @@ public class AccountDataManager {
 
 
         QiniuRequest qiniuRequest = new QiniuRequest();
-        qiniuRequest.uploadAvatar(context,session,userID,filePath,qiniuService);
+        qiniuRequest.uploadAvatar(context,session,filePath,qiniuService);
 
 
     }
+
+
 
 
 }

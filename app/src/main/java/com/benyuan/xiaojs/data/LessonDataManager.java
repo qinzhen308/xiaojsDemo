@@ -261,7 +261,6 @@ public class LessonDataManager extends DataManager{
 
 
     public static void requestUploadCover(Context context,
-                                           @NonNull final String fileName,
                                            @NonNull final String filePath,
                                            @NonNull QiniuService qiniuService) {
 
@@ -287,10 +286,8 @@ public class LessonDataManager extends DataManager{
         }
 
 
-        String lessonKey = generateUploadKey(fileName);
-
         QiniuRequest qiniuRequest = new QiniuRequest();
-        qiniuRequest.uploadCover(context,session,lessonKey,filePath,qiniuService);
+        qiniuRequest.uploadCover(context,session,filePath,qiniuService);
 
 
     }
