@@ -13,6 +13,7 @@
                 android:id="@+id/empty_image"
                 android:scaleType="fitXY"
                 android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_data_empty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -20,7 +21,28 @@
                 android:id="@+id/empty_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data empty"
+                android:layout_marginTop="@dimen/px30"
+                android:visibility="gone"
+                android:text="@string/load_failed_tip"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_28px"
                 android:layout_gravity="center_horizontal"/>
+
+        <TextView
+                android:id="@+id/empty_desc1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/load_failed_tip_2"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_28px"
+                android:layout_gravity="center_horizontal"/>
+
+        <Button
+                android:id="@+id/empty_click"
+                style="@style/BigSubmitBtn"
+                android:layout_marginTop="@dimen/px90"
+                android:visibility="gone"
+                android:text="@string/reload"/>
     </LinearLayout>
 </RelativeLayout>

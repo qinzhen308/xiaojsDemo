@@ -18,10 +18,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.model.Pagination;
@@ -46,6 +48,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private boolean isDown;
     protected Pagination mPagination;
     private View mEmptyView;
+    private View mFailedView;
     protected boolean mClearItems;
     private boolean mRefreshOnLoad = true;
     private final int PLACE_HOLDER_ID = 0x12;
@@ -126,7 +129,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     @Override
     public int getCount() {
-        return mBeanList.size() == 0 ? 1 : mBeanList.size();
+        return mBeanList.size() == 0 ? 0 : mBeanList.size();
     }
 
     @Override
@@ -145,11 +148,14 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         }
         mBeanList.remove(position);
         notifyDataSetChanged();
+        if (mBeanList.size() == 0){
+            addEmptyView();
+        }
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if (mBeanList.size() > 0){
+//        if (mBeanList.size() > 0){
             H holder = null;
             if (view == null) {
                 view = createContentView(i);
@@ -165,13 +171,15 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             }
             setViewContent(holder, getItem(i), i);
             return view;
-        }else {//解决加了header后，header高度超过1屏无法下拉
-            View v = new View(mContext);
-            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,1);
-            v.setBackgroundResource(android.R.color.transparent);
-            v.setLayoutParams(lp);
-            return v;
-        }
+//        }
+
+//        else {//解决加了header后，header高度超过1屏无法下拉
+//            View v = new View(mContext);
+//            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,1);
+//            v.setBackgroundResource(android.R.color.transparent);
+//            v.setLayoutParams(lp);
+//            return v;
+//        }
 
     }
 
@@ -216,6 +224,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             mPagination.setPage(mPagination.getPage() - 1);
             if (mBeanList.isEmpty() && showEmptyView()) {//接口数据为空，本地数据也为空，则显示空视图
                 addEmptyView();
+
             }
             return;
         }
@@ -227,6 +236,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     protected final void onFailure(String errorCode, String msg) {
         mListView.onRefreshOrLoadComplete();
+        addFailedView();
     }
 
     private void addEmptyView() {
@@ -234,7 +244,34 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         onDataEmpty();
     }
 
+    private void addFailedView(){
+        if (mFailedView == null){
+            mFailedView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty,null);
+            TextView desc = (TextView) mFailedView.findViewById(R.id.empty_desc);
+            TextView desc1 = (TextView) mFailedView.findViewById(R.id.empty_desc1);
+            Button click = (Button) mFailedView.findViewById(R.id.empty_click);
+            ImageView image = (ImageView) mFailedView.findViewById(R.id.empty_image);
+            desc.setVisibility(View.VISIBLE);
+            desc1.setVisibility(View.VISIBLE);
+            click.setVisibility(View.VISIBLE);
+            image.setImageResource(R.drawable.ic_data_failed);
+            click.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListView.setRefreshing();
+                }
+            });
+        }
+
+        mListView.setEmptyView(mFailedView);
+        onDataFailed();
+    }
+
     protected void onDataEmpty() {
+
+    }
+
+    protected void onDataFailed(){
 
     }
 

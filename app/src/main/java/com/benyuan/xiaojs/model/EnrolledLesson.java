@@ -14,12 +14,12 @@ import java.io.Serializable;
 public class EnrolledLesson implements Serializable{
 
     private String id;
-    private String createdBy;
+    //private String createdBy;
     private String title;
-    private String subject;
+    private CSubject subject;
     private int mode;
     private Ugc ugc;
-    private Promotion promotion;
+    private Promotion[] promotion;
     private Schedule schedule;
     private Fee fee;
     private String state;
@@ -34,12 +34,12 @@ public class EnrolledLesson implements Serializable{
         this.id = id;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public CSubject getSubject() {
+        return subject;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setSubject(CSubject subject) {
+        this.subject = subject;
     }
 
     public String getTitle() {
@@ -48,14 +48,6 @@ public class EnrolledLesson implements Serializable{
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
     }
 
     public int getMode() {
@@ -74,11 +66,11 @@ public class EnrolledLesson implements Serializable{
         this.ugc = ugc;
     }
 
-    public Promotion getPromotion() {
+    public Promotion[] getPromotion() {
         return promotion;
     }
 
-    public void setPromotion(Promotion promotion) {
+    public void setPromotion(Promotion[] promotion) {
         this.promotion = promotion;
     }
 
