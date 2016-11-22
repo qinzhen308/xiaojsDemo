@@ -8,16 +8,15 @@ import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
+import com.benyuan.xiaojs.model.GENotificationsResponse;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
-import com.benyuan.xiaojs.model.Notification;
 import com.benyuan.xiaojs.model.NotificationCriteria;
 import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -103,9 +102,9 @@ public class PlatformRequest extends ServiceRequest {
                                  @NonNull String sessionID,
                                  @NonNull NotificationCriteria criteria,
                                  @NonNull Pagination pagination,
-                                 @NonNull APIServiceCallback<ArrayList<Notification>> callback) {
+                                 @NonNull APIServiceCallback<GENotificationsResponse> callback) {
 
-        final WeakReference<APIServiceCallback<ArrayList<Notification>>> callbackReference =
+        final WeakReference<APIServiceCallback<GENotificationsResponse>> callbackReference =
                 new WeakReference<>(callback);
 
         String criteriaJson = objectToJsonString(criteria);
@@ -118,19 +117,19 @@ public class PlatformRequest extends ServiceRequest {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.getNotifications(sessionID, criteriaJson, paginationJson).enqueue(
-                new Callback<ArrayList<Notification>>() {
+                new Callback<GENotificationsResponse>() {
 
                     @Override
-                    public void onResponse(Call<ArrayList<Notification>> call,
-                                           Response<ArrayList<Notification>> response) {
+                    public void onResponse(Call<GENotificationsResponse> call,
+                                           Response<GENotificationsResponse> response) {
 
                         int responseCode = response.code();
 
                         if (responseCode == SUCCESS_CODE) {
 
-                            ArrayList<Notification> notifications = response.body();
+                            GENotificationsResponse notifications = response.body();
 
-                            APIServiceCallback<ArrayList<Notification>> callback = callbackReference.get();
+                            APIServiceCallback<GENotificationsResponse> callback = callbackReference.get();
                             if (callback != null) {
                                 callback.onSuccess(notifications);
                             }
@@ -148,7 +147,7 @@ public class PlatformRequest extends ServiceRequest {
                             String errorCode = parseErrorBody(errorBody);
                             String errorMessage = ErrorPrompts.getNotificationsPrompt(errorCode);
 
-                            APIServiceCallback<ArrayList<Notification>> callback = callbackReference.get();
+                            APIServiceCallback<GENotificationsResponse> callback = callbackReference.get();
                             if (callback != null) {
                                 callback.onFailure(errorCode, errorMessage);
                             }
@@ -159,7 +158,7 @@ public class PlatformRequest extends ServiceRequest {
                     }
 
                     @Override
-                    public void onFailure(Call<ArrayList<Notification>> call, Throwable t) {
+                    public void onFailure(Call<GENotificationsResponse> call, Throwable t) {
 
                         if (XiaojsConfig.DEBUG) {
                             Logger.d("the getNotificationsOverview request has occur exception");
@@ -168,7 +167,7 @@ public class PlatformRequest extends ServiceRequest {
                         String errorCode = getExceptionErrorCode();
                         String errorMessage = ErrorPrompts.getNotificationsPrompt(errorCode);
 
-                        APIServiceCallback<ArrayList<Notification>> callback = callbackReference.get();
+                        APIServiceCallback<GENotificationsResponse> callback = callbackReference.get();
                         if (callback != null) {
                             callback.onFailure(errorCode, errorMessage);
                         }

@@ -20,17 +20,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.GENotificationsResponse;
 import com.benyuan.xiaojs.model.Notification;
 import com.benyuan.xiaojs.model.NotificationCriteria;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -81,10 +80,12 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
     @Override
     protected void doRequest() {
         criteria.category = categoryId;
-        NotificationDataManager.requestNotifications(mContext, criteria, mPagination, new APIServiceCallback<ArrayList<Notification>>() {
+        NotificationDataManager.requestNotifications(mContext, criteria, mPagination, new APIServiceCallback<GENotificationsResponse>() {
             @Override
-            public void onSuccess(ArrayList<Notification> object) {
-                NotificationCategoryAdapter.this.onSuccess(object);
+            public void onSuccess(GENotificationsResponse response) {
+                if (response != null){
+                    NotificationCategoryAdapter.this.onSuccess(response.objectsOfPage);
+                }
             }
 
             @Override
