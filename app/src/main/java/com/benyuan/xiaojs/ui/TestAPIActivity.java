@@ -33,7 +33,7 @@ import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
-import com.benyuan.xiaojs.model.GetSubjectResponse;
+import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
@@ -337,9 +337,9 @@ public class TestAPIActivity extends Activity {
     //getSubject demo
     private void testGetSubject(Context context) {
 
-        CategoriesDataManager.requestGetSubject(context, new APIServiceCallback<GetSubjectResponse>() {
+        CategoriesDataManager.requestGetSubject(context, new APIServiceCallback<CSubject>() {
             @Override
-            public void onSuccess(GetSubjectResponse object) {
+            public void onSuccess(CSubject object) {
 
             }
 

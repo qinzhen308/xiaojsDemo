@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.data.api.CategoriesRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
-import com.benyuan.xiaojs.model.GetSubjectResponse;
+import com.benyuan.xiaojs.model.CSubject;
 import com.orhanobut.logger.Logger;
 
 /**
@@ -16,7 +16,7 @@ import com.orhanobut.logger.Logger;
 public class CategoriesDataManager extends DataManager {
 
     public static void requestGetSubject(@NonNull Context context,
-                                         @NonNull APIServiceCallback<GetSubjectResponse> callback){
+                                         @NonNull APIServiceCallback<CSubject> callback){
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {

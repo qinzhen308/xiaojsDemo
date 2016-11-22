@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
@@ -236,7 +235,6 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     @Override
     protected void onDataItemClick(int position,EnrolledLesson bean) {
-        Toast.makeText(mContext, "position = " + position, Toast.LENGTH_SHORT).show();
         Intent i = new Intent(mContext, LessonHomeActivity.class);
         i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_ENROLL_LESSON);
         i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
@@ -288,7 +286,14 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     @Override
     protected void onDataEmpty() {
         if (mFragment != null) {
-            //mFragment.showTop();
+            mFragment.showTop();
+        }
+    }
+
+    @Override
+    protected void onDataFailed() {
+        if (mFragment != null){
+            mFragment.showTop();
         }
     }
 

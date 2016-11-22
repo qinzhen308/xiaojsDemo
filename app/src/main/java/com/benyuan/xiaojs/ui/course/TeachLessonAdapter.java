@@ -20,13 +20,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.common.xf_foundation.LessonState;
-import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Criteria;
@@ -65,9 +63,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         duration.setStart(TimeUtil.original());
         duration.setEnd(TimeUtil.now());
 
-        mCriteria = new Criteria();
-        mCriteria.setSource(Ctl.LessonSource.ALL);
-        mCriteria.setDuration(duration);
+//        mCriteria = new Criteria();
+//        mCriteria.setSource(Ctl.LessonSource.ALL);
+        //mCriteria.setDuration(duration);
     }
 
     @Override
@@ -565,7 +563,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     @Override
     protected void onDataItemClick(int position,TeachLesson bean) {
-        Toast.makeText(mContext,"position = " + position,Toast.LENGTH_SHORT).show();
         Intent i = new Intent(mContext, LessonHomeActivity.class);
         i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
         i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
@@ -599,7 +596,14 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     @Override
     protected void onDataEmpty() {
         if (mFragment != null){
-            //mFragment.showTop();
+            mFragment.showTop();
+        }
+    }
+
+    @Override
+    protected void onDataFailed() {
+        if (mFragment != null){
+            mFragment.showTop();
         }
     }
 

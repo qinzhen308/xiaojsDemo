@@ -10,9 +10,8 @@ import com.benyuan.xiaojs.data.CategoriesDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
-import com.benyuan.xiaojs.model.GetSubjectResponse;
+import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
-import com.benyuan.xiaojs.ui.base.BaseBusiness;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -60,9 +59,9 @@ public class TeachAbilityDemoActivity extends BaseActivity {
 
     private void getSubjects() {
 
-        CategoriesDataManager.requestGetSubject(this, new APIServiceCallback<GetSubjectResponse>() {
+        CategoriesDataManager.requestGetSubject(this, new APIServiceCallback<CSubject>() {
             @Override
-            public void onSuccess(GetSubjectResponse object) {
+            public void onSuccess(CSubject object) {
 
                 if(object ==null){
 

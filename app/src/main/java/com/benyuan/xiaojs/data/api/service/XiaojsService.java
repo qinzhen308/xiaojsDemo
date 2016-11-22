@@ -13,7 +13,7 @@ import com.benyuan.xiaojs.model.GELessonsResponse;
 import com.benyuan.xiaojs.model.GENotificationsResponse;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
-import com.benyuan.xiaojs.model.GetSubjectResponse;
+import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.model.HomeData;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.LessonDetail;
@@ -45,7 +45,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.4:3000/";
+    String BASE_URL = "http://192.168.100.115:3000/";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -170,7 +170,7 @@ public interface XiaojsService {
 
     //Get Subject (Demo)
     @GET("/v1/categories/subjects/demo")
-    Call<GetSubjectResponse> getSubject();
+    Call<CSubject> getSubject();
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
