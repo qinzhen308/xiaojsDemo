@@ -9,6 +9,7 @@ import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.PlatformRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.Notification;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 public class NotificationDataManager extends DataManager {
 
     public static void requestNotificationsOverview(Context context,
-                           @NonNull String sessionID,
                            @NonNull Pagination pagination,
                            @NonNull APIServiceCallback<GNOResponse> callback) {
 
@@ -37,7 +37,8 @@ public class NotificationDataManager extends DataManager {
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)) {
+        String session = AccountDataManager.getSessionID(context);
+        if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the request return failure");
@@ -50,11 +51,10 @@ public class NotificationDataManager extends DataManager {
 
 
         PlatformRequest platformRequest = new PlatformRequest();
-        platformRequest.getNotificationsOverview(context,sessionID,pagination,callback);
+        platformRequest.getNotificationsOverview(context,session,pagination,callback);
     }
 
     public static void requestNotifications(Context context,
-                                            @NonNull String sessionID,
                                             @NonNull NotificationCriteria criteria,
                                             @NonNull Pagination pagination,
                                             @NonNull APIServiceCallback<ArrayList<Notification>> callback) {
@@ -67,7 +67,8 @@ public class NotificationDataManager extends DataManager {
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)) {
+        String session = AccountDataManager.getSessionID(context);
+        if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the request return failure");
@@ -80,13 +81,12 @@ public class NotificationDataManager extends DataManager {
 
 
         PlatformRequest platformRequest = new PlatformRequest();
-        platformRequest.getNotifications(context,sessionID,criteria,pagination,callback);
+        platformRequest.getNotifications(context,session,criteria,pagination,callback);
 
 
     }
 
     public static void requestDelNotification(Context context,
-                                          @NonNull String sessionID,
                                           @NonNull String notification,
                                           @NonNull APIServiceCallback callback) {
 
@@ -97,7 +97,8 @@ public class NotificationDataManager extends DataManager {
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)) {
+        String session = AccountDataManager.getSessionID(context);
+        if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the request return failure");
@@ -109,12 +110,11 @@ public class NotificationDataManager extends DataManager {
         }
 
         PlatformRequest platformRequest = new PlatformRequest();
-        platformRequest.deleteNotification(context,sessionID,notification,callback);
+        platformRequest.deleteNotification(context,session,notification,callback);
 
     }
 
     public static void ignoreNotifications(Context context,
-                                           @NonNull String sessionID,
                                            @NonNull NotificationCriteria criteria,
                                            @NonNull APIServiceCallback<IgnoreNResponse> callback) {
 
@@ -125,7 +125,8 @@ public class NotificationDataManager extends DataManager {
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)) {
+        String session = AccountDataManager.getSessionID(context);
+        if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the request return failure");
@@ -137,6 +138,6 @@ public class NotificationDataManager extends DataManager {
         }
 
         PlatformRequest platformRequest = new PlatformRequest();
-        platformRequest.ignoreNotifications(context,sessionID,criteria,callback);
+        platformRequest.ignoreNotifications(context,session,criteria,callback);
     }
 }

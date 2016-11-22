@@ -73,7 +73,7 @@ public class NotificationAdapter extends AbsSwipeAdapter<NotificationCategory,No
     @Override
     protected void doRequest() {
 
-        NotificationDataManager.requestNotificationsOverview(mContext, XiaojsConfig.mLoginUser.getSessionID(), mPagination, new APIServiceCallback<GNOResponse>() {
+        NotificationDataManager.requestNotificationsOverview(mContext, mPagination, new APIServiceCallback<GNOResponse>() {
             @Override
             public void onSuccess(GNOResponse object) {
                 if (object.categories != null){

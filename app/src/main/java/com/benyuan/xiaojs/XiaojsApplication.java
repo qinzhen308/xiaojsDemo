@@ -6,6 +6,7 @@ import com.benyuan.xiaojs.util.XjsUtils;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.Settings;
+import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * Created by maxiaobao on 2016/10/19.
@@ -23,10 +24,15 @@ public class XiaojsApplication extends Application {
                 .methodCount(3)
                 .methodOffset(0);
 
-        //发布Release版本时，需要将loglevel设为NONE。
+
         if (!XiaojsConfig.DEBUG) {
+            //发布Release版本时，需要将loglevel设为NONE。
             logSetting.logLevel(LogLevel.NONE);
+
+            //发布Release版本时，需要引入crash report
+            CrashReport.initCrashReport(getApplicationContext(), "注册时申请的APPID", false);
         }
+
 
         //init xiaojs utils
         XjsUtils.init(this);

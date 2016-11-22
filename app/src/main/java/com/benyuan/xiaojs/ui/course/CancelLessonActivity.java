@@ -78,7 +78,7 @@ public class CancelLessonActivity extends BaseActivity {
         if (lesson != null){
             CancelReason reason = new CancelReason();
             reason.setReason(input);
-            LessonDataManager.requestCancelLesson(this, XiaojsConfig.mLoginUser.getSessionID(), lesson.getId(), reason, new APIServiceCallback() {
+            LessonDataManager.requestCancelLesson(this, lesson.getId(), reason, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
                     ToastUtil.showToast(CancelLessonActivity.this,"成功取消上课!");

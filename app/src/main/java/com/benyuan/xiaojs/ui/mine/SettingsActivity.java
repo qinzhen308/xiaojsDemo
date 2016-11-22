@@ -11,6 +11,7 @@ import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.ui.MainActivity;
 import com.benyuan.xiaojs.ui.account.LoginActivity;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 
@@ -61,10 +62,10 @@ public class SettingsActivity extends BaseActivity {
 
     private void exitLogin() {
         String sessionId = XiaojsConfig.mLoginUser.getSessionID();
-        LoginDataManager.requestLogoutByAPI(this, sessionId, new APIServiceCallback() {
+        LoginDataManager.requestLogoutByAPI(this, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
-                Toast.makeText(mContext, "账户已经退出", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.logout_tips, Toast.LENGTH_SHORT).show();
                 XiaojsConfig.mLoginUser = null;
 
                 //jump login page

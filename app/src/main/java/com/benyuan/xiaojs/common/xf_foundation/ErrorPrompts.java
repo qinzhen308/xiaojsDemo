@@ -16,13 +16,6 @@ public class ErrorPrompts {
         return errorMessage;
     }
 
-    public static String enrollLessonPrompt(String errorCode) {
-
-        String errorMessage = "报名失败";
-
-
-        return errorMessage;
-    }
 
     public static String editLessonPrompt(String errorCode) {
 
@@ -81,7 +74,7 @@ public class ErrorPrompts {
         return errorMessage;
     }
 
-    public static String confirmLessonEnrollmentPrompt(String errorCode) {
+    public static String enrollLessonPrompt(String errorCode) {
 
         String errorMessage = "报名失败";
 
@@ -89,13 +82,54 @@ public class ErrorPrompts {
                 || errorCode.equals(Errors.NO_ERROR)
                 || errorCode.equals(Errors.SERVER_ERROR)
                 || errorCode.equals(Errors.UNAUTHORIZED)
-                || errorCode.equals(Errors.ILLEGAL_CALL)) {
+                || errorCode.equals(Errors.ILLEGAL_CALL)
+                || errorCode.equals(Errors.INVALID_OPERATION)) {
             return errorMessage;
         } else if (errorCode.equals(Errors.BAD_SESSION)) {
             errorMessage = "bad session";
         } else if (errorCode.equals(Errors.BAD_PARAMETER)){
             errorMessage = "参数错误";
+        } else if(errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+            errorMessage = "已报名该课程";
+        } else if(errorCode.equals(Errors.DOC_NOT_FOUND)) {
+            errorMessage = "用户不存在";
+        } else if(errorCode.equals(Errors.QUOTA_LIMIT)) {
+            errorMessage = "名额已满";
+        } else if(errorCode.equals(Errors.NO_ENROLL)) {
+            errorMessage = "报名已截止";
+        } else if(errorCode.equals(Errors.BAD_SUBTOTAL)) {
+            errorMessage = "折扣或者促销已过期";
         }
+
+        return errorMessage;
+    }
+
+
+    public static String confirmLessonEnrollmentPrompt(String errorCode) {
+
+        String errorMessage = "确认报名失败";
+
+        if (TextUtils.isEmpty(errorCode)
+                || errorCode.equals(Errors.NO_ERROR)
+                || errorCode.equals(Errors.SERVER_ERROR)
+                || errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.ILLEGAL_CALL)
+                || errorCode.equals(Errors.INVALID_OPERATION)) {
+            return errorMessage;
+        } else if (errorCode.equals(Errors.BAD_SESSION)) {
+            errorMessage = "bad session";
+        } else if (errorCode.equals(Errors.BAD_PARAMETER)){
+            errorMessage = "参数错误";
+        } else if(errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+            errorMessage = "已报名该课程";
+        } else if(errorCode.equals(Errors.DOC_NOT_FOUND)) {
+            errorMessage = "用户不存在";
+        } else if(errorCode.equals(Errors.QUOTA_LIMIT)) {
+            errorMessage = "名额已满";
+        } else if(errorCode.equals(Errors.NO_ENROLL)) {
+            errorMessage = "报名已截止";
+        }
+
         return errorMessage;
     }
 

@@ -139,6 +139,7 @@ public interface XiaojsService {
                                               @Path("registrant") String registrant);
 
     //Enroll Lesson
+    @Headers("Content-Type: application/json")
     @POST("/v1/ctl/lessons/{lesson}/enroll")
     Call<ELResponse> enrollLesson(@Header("SessionID") String sessionID,
                                   @Path("lesson") String lesson,

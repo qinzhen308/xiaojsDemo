@@ -54,11 +54,7 @@ dependencies {
     compile 'com.orhanobut:logger:1.15'
     //pull refresh
     compile project(':pulltorefresh')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    testCompile 'junit:junit:4.12'
+
     compile files('libs/zxing.jar')
     //3d wheel picker
     compile project(':3d_wheelpicker')
@@ -69,4 +65,18 @@ dependencies {
 
     //qiniu
     compile 'com.qiniu:qiniu-android-sdk:7.2.+'
+
+    //crash report
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.kaopiz:kprogresshud:1.0.5'
+
+    //suport test
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    testCompile 'junit:junit:4.12'
+
+
+
 }

@@ -56,6 +56,15 @@ public class SalePromotionActivity extends BaseActivity {
     EditText mLessonDiscountEdt;
     @BindView(R.id.attend_lesson_promotion_price)
     TextView mLessonPromotionPriceTv;
+    @BindView(R.id.sale_promotion_one_status)
+    TextView mPromotionOneStatus;
+    @BindView(R.id.sale_promotion_two_status)
+    TextView mPromotionTwoStatus;
+    @BindView(R.id.sale_promotion_one_dl)
+    View mPromotionOneDl;
+    @BindView(R.id.sale_promotion_two_dl)
+    View mPromotionTwoDl;
+
 
 
     private final static int PROMOTION_ENROLL_BEFORE = 1;
@@ -82,6 +91,12 @@ public class SalePromotionActivity extends BaseActivity {
         mLessonBeforeEdt.addTextChangedListener(new PromotionTextWatcher(mLessonBeforeEdt));
         mEnrollDiscountEdt.addTextChangedListener(new PromotionTextWatcher(mEnrollDiscountEdt));
         mLessonDiscountEdt.addTextChangedListener(new PromotionTextWatcher(mLessonDiscountEdt));
+
+        //
+        mPromotionOneStatus.setVisibility(View.GONE);
+        mPromotionTwoStatus.setVisibility(View.GONE);
+        mPromotionOneDl.setVisibility(View.GONE);
+        mPromotionTwoDl.setVisibility(View.GONE);
 
         initData();
     }

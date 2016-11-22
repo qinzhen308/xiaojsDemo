@@ -81,7 +81,7 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
     @Override
     protected void doRequest() {
         criteria.category = categoryId;
-        NotificationDataManager.requestNotifications(mContext, XiaojsConfig.mLoginUser.getSessionID(), criteria, mPagination, new APIServiceCallback<ArrayList<Notification>>() {
+        NotificationDataManager.requestNotifications(mContext, criteria, mPagination, new APIServiceCallback<ArrayList<Notification>>() {
             @Override
             public void onSuccess(ArrayList<Notification> object) {
                 NotificationCategoryAdapter.this.onSuccess(object);

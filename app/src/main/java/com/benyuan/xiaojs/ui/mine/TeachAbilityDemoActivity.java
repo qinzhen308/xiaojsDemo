@@ -104,7 +104,7 @@ public class TeachAbilityDemoActivity extends BaseActivity {
 
         CompetencyParams cp = new CompetencyParams();
         cp.setSubject(subId);
-        AccountDataManager.requestClaimCompetency(this, BaseBusiness.getSession(), cp, new APIServiceCallback<ClaimCompetency>() {
+        AccountDataManager.requestClaimCompetency(this, cp, new APIServiceCallback<ClaimCompetency>() {
             @Override
             public void onSuccess(ClaimCompetency object) {
                 Toast.makeText(TeachAbilityDemoActivity.this,"声明成功",Toast.LENGTH_SHORT).show();

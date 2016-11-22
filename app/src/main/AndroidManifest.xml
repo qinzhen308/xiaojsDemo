@@ -7,10 +7,15 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
+
+    <!--bugly-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
             android:name=".XiaojsApplication"
@@ -20,7 +25,6 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".ui.account.LoginActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -59,6 +63,7 @@
         <activity android:name=".ui.course.LessonHomeActivity">
         </activity>
         <activity android:name=".ui.TestAPIActivity">
+
 
         </activity>
         <activity android:name=".ui.course.LiveLessonBriefActivity"/>
