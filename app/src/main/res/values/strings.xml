@@ -243,6 +243,8 @@
     <string name="cancel_publish">取消发布</string>
     <string name="publish_to_home_page">发布到主页</string>
     <string name="off_shelves_success">撤销成功</string>
+    <string name="cancel_publish_tip">直播课取消发布后，该直播课将不再在您的主页中展示且不能对外分享</string>
+    <string name="delete_lesson_tip">确定需要删除该直播课吗？删除后不可恢复</string>
 
     <!-- 修改上课时间 -->
     <string name="modify_lesson_time_mark">修改上课时间会影响您的信用等级，请谨慎操作</string>

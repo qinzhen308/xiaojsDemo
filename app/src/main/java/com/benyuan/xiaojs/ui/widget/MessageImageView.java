@@ -29,7 +29,7 @@ import com.benyuan.xiaojs.R;
 public class MessageImageView extends RoundedImageView {
     private Bitmap mBackground;
     private Paint mPaint;
-    private int mValue = 152;
+    private int mValue = 0;
     private boolean mIsCircle;
     private Paint mPlus;
 

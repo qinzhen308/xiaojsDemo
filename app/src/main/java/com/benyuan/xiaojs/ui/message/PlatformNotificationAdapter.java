@@ -87,11 +87,13 @@ public class PlatformNotificationAdapter extends CanInScrollviewListView.Adapter
 
         if (beans != null && beans.size() > 0){
             NotificationCategory category = NotificationBusiness.getPlatformMessageCategory(beans,position);
-            if (category != null && category.notifications != null && category.notifications.size() > 0){
-                Notification notification = category.notifications.get(0);
-                holder.time.setText(TimeUtil.format(notification.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
-                holder.content.setText(notification.body);
+            if (category != null){
                 holder.image.setCount(category.count);
+                if (category.notifications != null && category.notifications.size() > 0){
+                    Notification notification = category.notifications.get(0);
+                    holder.time.setText(TimeUtil.format(notification.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                    holder.content.setText(notification.body);
+                }
             }
         }
         return convertView;
@@ -102,6 +104,10 @@ public class PlatformNotificationAdapter extends CanInScrollviewListView.Adapter
             return;
         this.beans = beans;
         notifyDataSetChanged();
+    }
+
+    public List<NotificationCategory> getData(){
+        return beans;
     }
 
     class Holder extends BaseHolder{

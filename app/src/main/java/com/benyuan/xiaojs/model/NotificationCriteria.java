@@ -25,4 +25,5 @@ import java.util.Date;
 public class NotificationCriteria {
     public String category;
     public Date before;
+    public Duration duration;
 }

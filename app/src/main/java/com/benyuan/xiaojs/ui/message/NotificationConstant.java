@@ -17,4 +17,6 @@ package com.benyuan.xiaojs.ui.message;
 public interface NotificationConstant {
     public static final String KEY_NOTIFICATION_CATEGORY_ID = "notification_category_id";
     public static final String KEY_NOTIFICATION_TITLE = "notification_title";
+
+    public static final int REQUEST_NOTIFICATION_CATEGORY_LIST = 1;
 }

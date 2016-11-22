@@ -17,9 +17,16 @@ package com.benyuan.xiaojs.ui.message;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.data.NotificationDataManager;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
+import com.benyuan.xiaojs.util.DeviceUtil;
+import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import butterknife.BindView;
@@ -47,6 +54,14 @@ public class NotificationCategoryListActivity extends BaseActivity {
         if (!TextUtils.isEmpty(categoryId)){
             adapter = new NotificationCategoryAdapter(this,mList,categoryId);
             mList.setAdapter(adapter);
+            mList.getRefreshableView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    int index = position - mList.getRefreshableView().getHeaderViewsCount();
+                    showLongClickDialog(view,index);
+                    return true;
+                }
+            });
 //            mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //                @Override
 //                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -60,6 +75,40 @@ public class NotificationCategoryListActivity extends BaseActivity {
 //                }
 //            });
         }
+    }
+
+    private void showLongClickDialog(View view, final int position){
+        CommonPopupMenu menu = new CommonPopupMenu(this);
+        String[] items = new String[]{"删除"};
+        menu.addTextItems(items);
+        menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i){
+                    case 0:
+                        delete(position);
+                        break;
+                }
+            }
+        });
+        int offset = DeviceUtil.getScreenWidth(this) / 2;
+        menu.show(view,offset);
+    }
+
+    private void delete(final int position){
+        String id = adapter.getItem(position).id;
+        NotificationDataManager.requestDelNotification(this, XiaojsConfig.mLoginUser.getSessionID(), id, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                setResult(RESULT_OK);
+                adapter.removeItem(position);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ToastUtil.showToast(NotificationCategoryListActivity.this,"删除失败！");
+            }
+        });
     }
 
     @OnClick({R.id.left_image})

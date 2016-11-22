@@ -87,7 +87,7 @@ public class NotificationAdapter extends AbsSwipeAdapter<NotificationCategory,No
 
                 }
 
-                NotificationAdapter.this.onSuccess(object.categories);
+                NotificationAdapter.this.onSuccess(null);
             }
 
             @Override

@@ -18,6 +18,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -47,6 +48,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private View mEmptyView;
     protected boolean mClearItems;
     private boolean mRefreshOnLoad = true;
+    private final int PLACE_HOLDER_ID = 0x12;
 
     public AbsSwipeAdapter(Context context, AutoPullToRefreshListView listView) {
         mContext = context;
@@ -124,7 +126,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     @Override
     public int getCount() {
-        return mBeanList.size();
+        return mBeanList.size() == 0 ? 1 : mBeanList.size();
     }
 
     @Override
@@ -147,16 +149,30 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        H holder = null;
-        if (view == null) {
-            view = createContentView(i);
-            holder = initHolder(view);
-            view.setTag(holder);
-        } else {
-            holder = (H) view.getTag();
+        if (mBeanList.size() > 0){
+            H holder = null;
+            if (view == null) {
+                view = createContentView(i);
+                holder = initHolder(view);
+                view.setTag(holder);
+            } else {
+                holder = (H) view.getTag();
+            }
+            if (holder == null){//view可能会传成下方的占位view
+                view = createContentView(i);
+                holder = initHolder(view);
+                view.setTag(holder);
+            }
+            setViewContent(holder, getItem(i), i);
+            return view;
+        }else {//解决加了header后，header高度超过1屏无法下拉
+            View v = new View(mContext);
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,1);
+            v.setBackgroundResource(android.R.color.transparent);
+            v.setLayoutParams(lp);
+            return v;
         }
-        setViewContent(holder, getItem(i), i);
-        return view;
+
     }
 
     /**
@@ -178,6 +194,15 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
      * 实现retrofit访问接口
      */
     protected abstract void doRequest();
+
+    /**
+     * 模拟下拉刷新，但不显示下拉转圈，从第一页数据拉取
+     */
+    public void refresh(){
+        mPagination.setPage(1);
+        isDown = true;
+        doRequest();
+    }
 
     protected final void onSuccess(List<B> data) {
         mListView.onRefreshOrLoadComplete();

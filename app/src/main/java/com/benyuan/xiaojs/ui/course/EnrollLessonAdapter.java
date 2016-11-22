@@ -18,7 +18,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,15 +25,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.common.xf_foundation.LessonState;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
+import com.benyuan.xiaojs.data.LessonDataManager;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.EnrolledLesson;
-import com.benyuan.xiaojs.model.Fee;
-import com.benyuan.xiaojs.model.Schedule;
+import com.benyuan.xiaojs.model.GELessonsResponse;
 import com.benyuan.xiaojs.ui.widget.ListBottomDialog;
 import com.benyuan.xiaojs.ui.widget.RedTipImageView;
 import com.benyuan.xiaojs.ui.widget.RedTipTextView;
@@ -42,10 +43,7 @@ import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 
@@ -82,14 +80,19 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         holder.reset();
         holder.name.setText(bean.getTitle());
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
-        String state = LessonBusiness.getStateByPosition(position,false);
-        if (!TextUtils.isEmpty(state)){
-            bean.setState(state);
+//        String state = LessonBusiness.getStateByPosition(position,false);
+//        if (!TextUtils.isEmpty(state)){
+//            bean.setState(state);
+//        }
+        if(bean.getTeacher() != null){
+            if (bean.getTeacher().getBasic() != null){
+                holder.desc.setText(bean.getTeacher().getBasic().getName());
+            }
         }
 
-        holder.desc.setText("老师");
+        //holder.desc.setText("老师");
 
-        holder.teacherImage.setVisibility(View.VISIBLE);
+        //holder.teacherImage.setVisibility(View.VISIBLE);
         holder.clsFunction.setVisibility(View.VISIBLE);
         holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
             @Override
@@ -104,10 +107,10 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             }
         });
 
-        List<Bitmap> bitmaps = new ArrayList<>();
-        bitmaps.add(bitmap);
-        bitmaps.add(bitmap);
-        holder.imageFlow.showWithNum(bitmaps,mContext.getResources().getDimensionPixelSize(R.dimen.px20),122,mContext.getResources().getDimensionPixelSize(R.dimen.px5));
+//        List<Bitmap> bitmaps = new ArrayList<>();
+//        bitmaps.add(bitmap);
+//        bitmaps.add(bitmap);
+//        holder.imageFlow.showWithNum(bitmaps,mContext.getResources().getDimensionPixelSize(R.dimen.px20),122,mContext.getResources().getDimensionPixelSize(R.dimen.px5));
         if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
             holder.databank.setVisibility(View.VISIBLE);
             holder.databank.setOnClickListener(new View.OnClickListener() {
@@ -244,49 +247,49 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     @Override
     protected void doRequest() {
-//        LessonDataManager.requestGetEnrolledLessons(mContext, XiaojsConfig.mLoginUser.getSessionID(), mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
-//            @Override
-//            public void onSuccess(GELessonsResponse object) {
-//                Logger.d("onSuccess-----------");
-//                if (object.getObjectsOfPage() != null && object.getObjectsOfPage().size() > 0) {
-//                    if (mFragment != null) {
-//                        mFragment.hideTop();
-//                    }
-//                }
-//                EnrollLessonAdapter.this.onSuccess(object.getObjectsOfPage());
-//            }
-//
-//            @Override
-//            public void onFailure(String errorCode, String errorMessage) {
-//                EnrollLessonAdapter.this.onFailure(errorCode, errorMessage);
-//                Logger.d("onFailure-----------");
-//            }
-//        });
+        LessonDataManager.requestGetEnrolledLessons(mContext, XiaojsConfig.mLoginUser.getSessionID(), mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
+            @Override
+            public void onSuccess(GELessonsResponse object) {
+                Logger.d("onSuccess-----------");
+                if (object.getObjectsOfPage() != null && object.getObjectsOfPage().size() > 0) {
+                    if (mFragment != null) {
+                        mFragment.hideTop();
+                    }
+                }
+                EnrollLessonAdapter.this.onSuccess(object.getObjectsOfPage());
+            }
 
-        EnrolledLesson e1 = new EnrolledLesson();
-        e1.setTitle("人力资源冲刺考试直播课");
-        Schedule schedule = new Schedule();
-        schedule.setDuration(123);
-        schedule.setStart(TimeUtil.beforeDawn());
-        e1.setSchedule(schedule);
-        Fee fee = new Fee();
-        fee.setCharge(BigDecimal.valueOf(5565666));
-        fee.setFree(true);
-        e1.setFee(fee);
-        e1.setState("LIVE");
-        List<EnrolledLesson> ls = new ArrayList<>();
-        ls.add(e1);
-        ls.add(e1);
-        ls.add(e1);
-        ls.add(e1);
-        ls.add(e1);
-        onSuccess(ls);
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                EnrollLessonAdapter.this.onFailure(errorCode, errorMessage);
+                Logger.d("onFailure-----------");
+            }
+        });
+
+//        EnrolledLesson e1 = new EnrolledLesson();
+//        e1.setTitle("人力资源冲刺考试直播课");
+//        Schedule schedule = new Schedule();
+//        schedule.setDuration(123);
+//        schedule.setStart(TimeUtil.beforeDawn());
+//        e1.setSchedule(schedule);
+//        Fee fee = new Fee();
+//        fee.setCharge(BigDecimal.valueOf(5565666));
+//        fee.setFree(true);
+//        e1.setFee(fee);
+//        e1.setState("LIVE");
+//        List<EnrolledLesson> ls = new ArrayList<>();
+//        ls.add(e1);
+//        ls.add(e1);
+//        ls.add(e1);
+//        ls.add(e1);
+//        ls.add(e1);
+//        onSuccess(ls);
     }
 
     @Override
     protected void onDataEmpty() {
         if (mFragment != null) {
-            mFragment.showTop();
+            //mFragment.showTop();
         }
     }
 

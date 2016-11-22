@@ -290,7 +290,22 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     //删除
     private void delete(TeachLesson bean){
+        final CommonDialog dialog = new CommonDialog(mContext);
+        dialog.setTitle(R.string.delete);
+        dialog.setDesc(R.string.delete_lesson_tip);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
 
+            }
+        });
+        dialog.show();
     }
     //备课
     private void prepare(TeachLesson bean){
@@ -314,7 +329,22 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     //取消发布
     private void cancelPublish(TeachLesson bean){
+        final CommonDialog dialog = new CommonDialog(mContext);
+        dialog.setTitle(R.string.cancel_publish);
+        dialog.setDesc(R.string.cancel_publish_tip);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
 
+            }
+        });
+        dialog.show();
     }
 
     //再次开课
@@ -571,7 +601,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     @Override
     protected void onDataEmpty() {
         if (mFragment != null){
-            mFragment.showTop();
+            //mFragment.showTop();
         }
     }
 
