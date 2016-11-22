@@ -5,6 +5,7 @@ import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.CancelReason;
+import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -88,6 +89,9 @@ public interface XiaojsService {
     @GET("/v1/lessons/up_resource_token")
     Call<TokenResponse> getCoverUpToken(@Header("SessionID") String sessionID);
 
+    //Get Center Data
+    @GET("/v1/accounts/center")
+    Call<CenterData> getCenterData(@Header("SessionID") String sessionID);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

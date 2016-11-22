@@ -33,7 +33,7 @@ public class Account implements Serializable{
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonIgnoreProperties(ignoreUnknown = true,value = "sex")
     public static class Basic implements Serializable{
 
         private String title;

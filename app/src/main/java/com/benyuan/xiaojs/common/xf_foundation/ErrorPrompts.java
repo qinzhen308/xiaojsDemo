@@ -8,6 +8,12 @@ import android.text.TextUtils;
 
 public class ErrorPrompts {
 
+    public static String getCenterDataPrompt(String errorCode) {
+
+        String errorMessage = "获取个人中心数据失败";
+        return errorMessage;
+    }
+
     public static String cancelLessonPrompt(String errorCode) {
 
         String errorMessage = "取消失败";

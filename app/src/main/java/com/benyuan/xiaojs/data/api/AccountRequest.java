@@ -11,6 +11,7 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.Account;
+import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.Empty;
@@ -426,6 +427,74 @@ public class AccountRequest extends ServiceRequest {
                 }
             }
         });
+    }
+
+    public void getCenterData(Context context,
+                              @NonNull String sessionID,
+                              @NonNull APIServiceCallback<CenterData> callback) {
+
+        final WeakReference<APIServiceCallback<CenterData>> callbackReference =
+                new WeakReference<>(callback);
+
+        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        xiaojsService.getCenterData(sessionID).enqueue(new Callback<CenterData>() {
+            @Override
+            public void onResponse(Call<CenterData> call, Response<CenterData> response) {
+
+                int responseCode = response.code();
+
+                if (responseCode == SUCCESS_CODE) {
+
+                    CenterData centerData = response.body();
+
+                    APIServiceCallback<CenterData> callback = callbackReference.get();
+                    if (callback != null) {
+
+                        callback.onSuccess(centerData);
+
+                    }
+
+                } else {
+
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.getCenterDataPrompt(errorCode);
+
+                    APIServiceCallback<CenterData> callback = callbackReference.get();
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<CenterData> call, Throwable t) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the getCenterData has occur exception");
+                }
+
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.getCenterDataPrompt(errorCode);
+
+                APIServiceCallback<CenterData> callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
+            }
+        });
+
+
     }
 
 }

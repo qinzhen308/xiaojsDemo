@@ -13,6 +13,7 @@ import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -64,8 +65,11 @@ public class ExampleInstrumentedTest {
 
         //testCreateLession(appContext);
         //testClaimCompetency(appContext);
-        testEditLesson(appContext);
+        //testEditLesson(appContext);
+        //testCenterData(appContext);
     }
+
+
 
     private void testEditLesson(Context context) {
 
