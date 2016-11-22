@@ -8,7 +8,7 @@ import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
-import com.benyuan.xiaojs.model.GetSubjectResponse;
+import com.benyuan.xiaojs.model.CSubject;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
@@ -25,25 +25,25 @@ import retrofit2.Response;
 public class CategoriesRequest extends ServiceRequest {
 
     public void getSubject(@NonNull Context context,
-                           @NonNull APIServiceCallback<GetSubjectResponse> callback) {
+                           @NonNull APIServiceCallback<CSubject> callback) {
 
-        final WeakReference<APIServiceCallback<GetSubjectResponse>> callbackReference =
+        final WeakReference<APIServiceCallback<CSubject>> callbackReference =
                 new WeakReference<>(callback);
 
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getSubject().enqueue(new Callback<GetSubjectResponse>() {
+        xiaojsService.getSubject().enqueue(new Callback<CSubject>() {
             @Override
-            public void onResponse(Call<GetSubjectResponse> call,
-                                   Response<GetSubjectResponse> response) {
+            public void onResponse(Call<CSubject> call,
+                                   Response<CSubject> response) {
 
                 int responseCode = response.code();
 
                 if (responseCode == SUCCESS_CODE) {
 
-                    GetSubjectResponse info = response.body();
+                    CSubject info = response.body();
 
-                    APIServiceCallback<GetSubjectResponse> callback = callbackReference.get();
+                    APIServiceCallback<CSubject> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(info);
                     }
@@ -62,7 +62,7 @@ public class CategoriesRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getSubjectPrompt(errorCode);
 
-                    APIServiceCallback<GetSubjectResponse> callback = callbackReference.get();
+                    APIServiceCallback<CSubject> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -72,7 +72,7 @@ public class CategoriesRequest extends ServiceRequest {
             }
 
             @Override
-            public void onFailure(Call<GetSubjectResponse> call, Throwable t) {
+            public void onFailure(Call<CSubject> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("the getSubject has occur exception");
@@ -81,7 +81,7 @@ public class CategoriesRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.loginPrompt(errorCode);
 
-                APIServiceCallback<GetSubjectResponse> callback = callbackReference.get();
+                APIServiceCallback<CSubject> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }

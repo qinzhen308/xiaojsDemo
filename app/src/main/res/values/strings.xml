@@ -30,6 +30,9 @@
     <string name="unit_price_by_hour">元/小时</string>
     <string name="per_hour">/小时</string>
     <string name="unfold_view_all">展开查看全部</string>
+    <string name="reload">重新加载</string>
+    <string name="load_failed_tip">数据加载失败</string>
+    <string name="load_failed_tip_2">请确保您的手机已连网</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_circle">小圈</string>
