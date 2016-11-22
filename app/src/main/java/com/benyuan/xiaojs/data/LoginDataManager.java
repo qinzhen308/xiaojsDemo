@@ -46,7 +46,6 @@ public class LoginDataManager {
      * 调用退出登陆API，进行退出登陆
      */
     public static void requestLogoutByAPI(@NonNull Context appContext,
-                                          String sessionID,
                                           @NonNull APIServiceCallback callback) {
 
         if (callback == null){
@@ -56,7 +55,8 @@ public class LoginDataManager {
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)){
+        String session = AccountDataManager.getSessionID(appContext);
+        if (TextUtils.isEmpty(session)){
 
             if(XiaojsConfig.DEBUG){
                 Logger.d("the sessionID is empty,so the logout request return failure");
@@ -69,6 +69,6 @@ public class LoginDataManager {
 
 
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.logout(appContext, sessionID, callback);
+        loginRequest.logout(appContext, session, callback);
     }
 }

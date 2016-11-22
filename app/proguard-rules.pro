@@ -54,3 +54,7 @@
 -keep class com.qiniu.**{*;}
 -keep class com.qiniu.**{public <init>();}
 -ignorewarnings
+
+#------------------bugly----------------------------------------------------------------------------
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}

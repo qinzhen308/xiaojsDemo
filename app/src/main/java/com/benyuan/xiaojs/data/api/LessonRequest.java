@@ -667,7 +667,8 @@ public class LessonRequest extends ServiceRequest {
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.confirmLessonEnrollment(sessionID, lesson, registrant).enqueue(new Callback<CLEResponse>() {
+        xiaojsService.confirmLessonEnrollment(sessionID, lesson, registrant).enqueue(
+                new Callback<CLEResponse>() {
             @Override
             public void onResponse(Call<CLEResponse> call, Response<CLEResponse> response) {
                 int responseCode = response.code();

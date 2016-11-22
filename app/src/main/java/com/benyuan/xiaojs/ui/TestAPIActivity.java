@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
@@ -27,6 +29,7 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.model.Account;
+import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -45,6 +48,8 @@ import com.benyuan.xiaojs.model.Pagination;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
+import com.bumptech.glide.Glide;
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
@@ -56,17 +61,26 @@ public class TestAPIActivity extends Activity {
     private int vcode;
     private long mob = 13812345687l;
     private String subject = "5820a10e101db0af4bcf2fd9";
-    private String sessionid = "8oa8Sm3qRicog-SYnPOVcOYhBYkuOfEn";
+    private String sessionid = "oyPm--oJmTko27XHnaxoyyr0aNgGs424";
     private String id = "582bc19580144c1b773611e9";
     private String token = "";///"7ILUcJUmJGSmyeaB3QNWpUlPdT3-E2MXkC1oZhqJ:HBHjxd_oTlAiwaht4niHQFDmh6Q=:eyJyZXR1cm5Cb2R5Ijoie1xuICAgICAgICAgICAgXCJuYW1lXCI6ICQoZm5hbWUpLFxuICAgICAgICAgICAgXCJzaXplXCI6ICQoZnNpemUpLFxuICAgICAgICAgICAgXCJ3XCI6ICQoaW1hZ2VJbmZvLndpZHRoKSxcbiAgICAgICAgICAgIFwiaFwiOiAkKGltYWdlSW5mby5oZWlnaHQpLFxuICAgICAgICAgICAgXCJoYXNoXCI6ICQoZXRhZylcbiAgICAgICAgfSIsInNjb3BlIjoidW5kZWZpbmVkOjU4MjkyMGFmYzcwMDkzM2M0ZDZjMjVkYyIsImRlYWRsaW5lIjoxNDc5MjQ4NDA2fQ==";
 
 
     private final static int CROP_PORTRAIT = 100;
 
+
+    private ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_api);
+
+        imageView = (ImageView) findViewById(R.id.loading);
+
+
+        Glide.with(this).load(R.drawable.loading).into(imageView);
+
     }
 
 
@@ -101,11 +115,53 @@ public class TestAPIActivity extends Activity {
                 //testCoverUpLoad(this);
                 //testLessonHomePage(this);
                 //editPortrait();
-                testEditLesson(this);
+                //testEditLesson(this);
+                //confirmEnllor(this);
+                testHUB2(this);
                 break;
             }
 
         }
+    }
+
+    private void testHUB2(Context context){
+
+        ImageView im = new ImageView(context);
+        im.setLayoutParams(new ViewGroup.LayoutParams(70,70));
+        Glide.with(this).load(R.drawable.loading).into(im);
+
+        KProgressHUD.create(context)
+                .setCustomView(im)
+                //.setLabel("This is a custom view")
+                .show();
+    }
+
+    private void testHUB(Context context) {
+        KProgressHUD.create(context)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setCancellable(false)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f)
+                .show();
+    }
+
+    private void confirmEnllor(Context context) {
+
+
+        String lesson = "5832adb511efdb0a38faffe1";
+        String re = "5832aeaa11efdb0a38fafff1";
+
+        LessonDataManager.requestLessonEnrollment(context, sessionid, lesson, re, new APIServiceCallback<CLEResponse>() {
+            @Override
+            public void onSuccess(CLEResponse object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 
 

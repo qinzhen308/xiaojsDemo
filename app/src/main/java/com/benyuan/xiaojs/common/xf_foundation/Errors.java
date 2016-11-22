@@ -125,6 +125,20 @@ public class Errors {
     // Alipay binding not found.
     public static final String BINDING_NOT_FOUND = "0x20000004";
 
+    // Bad subtotal or specific promotion rule expired.
+    public static final String BAD_SUBTOTAL = "0x20000005";
+
+    // Quota limit.
+    public static final String QUOTA_LIMIT = "0x20000006";
+
+    // Enrollment forbidden.
+    public static final String NO_ENROLL = "0x20000007";
+
+    // Quota is incorrect.
+    public static final String QUOTA_INCONSISTENCY = "0x20000008";
+
+    //endregion
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
+import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
@@ -32,7 +33,7 @@ import retrofit2.Response;
 public class LoginRequest extends ServiceRequest {
 
 
-    public void login(Context appContext,
+    public void login(final Context appContext,
                       LoginParams params,
                       @NonNull APIServiceCallback<LoginInfo> callback) {
 
@@ -50,6 +51,8 @@ public class LoginRequest extends ServiceRequest {
                 if (responseCode == SUCCESS_CODE) {
 
                     LoginInfo info = response.body();
+
+                    AccountDataManager.saveUserInfo(appContext,info.getUser());
 
                     APIServiceCallback<LoginInfo> callback = callbackReference.get();
                     if (callback != null) {
@@ -99,7 +102,7 @@ public class LoginRequest extends ServiceRequest {
 
     }
 
-    public void logout(Context appContext, String sessionID,
+    public void logout(final Context appContext, String sessionID,
                        @NonNull APIServiceCallback callback) {
 
         final WeakReference<APIServiceCallback> callbackReference =
@@ -111,6 +114,9 @@ public class LoginRequest extends ServiceRequest {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int responseCode = response.code();
                 if (responseCode == SUCCESS_CODE) {
+
+
+                    AccountDataManager.clearUserInfo(appContext);
 
                     APIServiceCallback callback = callbackReference.get();
                     if (callback != null) {
@@ -160,5 +166,8 @@ public class LoginRequest extends ServiceRequest {
         });
 
     }
+
+
+
 
 }

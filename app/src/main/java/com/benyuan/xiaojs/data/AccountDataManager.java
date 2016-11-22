@@ -11,10 +11,12 @@ import com.benyuan.xiaojs.data.api.AccountRequest;
 import com.benyuan.xiaojs.data.api.QiniuRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.QiniuService;
+import com.benyuan.xiaojs.data.preference.AccountPref;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.HomeData;
+import com.benyuan.xiaojs.model.User;
 import com.orhanobut.logger.Logger;
 
 /**
@@ -22,6 +24,65 @@ import com.orhanobut.logger.Logger;
  */
 
 public class AccountDataManager {
+
+    /**
+     * 获取session
+     * @param context
+     * @return
+     */
+    public static String getSessionID(Context context) {
+        return AccountPref.getAuthToken(context);
+    }
+
+    /**
+     * 获取账户ID
+     * @param context
+     * @return
+     */
+    public static String getAccountID(Context context) {
+        return AccountPref.getAccountID(context);
+    }
+
+    /**
+     * 是否登陆
+     * @param context
+     * @return true 已登陆 否则false
+     */
+    public static boolean isLogin(Context context) {
+
+        String sessionID = AccountPref.getAuthToken(context);
+
+        return TextUtils.isEmpty(sessionID) ? false : true ;
+
+    }
+
+    public static void saveUserInfo(Context context,@NonNull User user) {
+
+        if (user == null){
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("The user is null,so save user failed and return");
+            }
+
+            return;
+        }
+
+        String phone = user.getSessionID();
+        AccountPref.setAuthToken(context,phone);
+
+        String id = user.getId();
+        AccountPref.setAccountID(context,id);
+
+
+    }
+
+    public static void clearUserInfo(Context context) {
+
+        AccountPref.setAuthToken(context,"");
+        AccountPref.setAccountID(context,"");
+
+    }
+
 
     /**
      * 获取个人主页数据API
@@ -40,7 +101,9 @@ public class AccountDataManager {
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)) {
+        String session = getSessionID(context);
+
+        if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the get home data request return failure");
@@ -52,7 +115,7 @@ public class AccountDataManager {
         }
 
         AccountRequest accountRequest = new AccountRequest();
-        accountRequest.getHomeData(context,sessionID,callback);
+        accountRequest.getHomeData(context,session,callback);
     }
 
     /**
@@ -63,7 +126,6 @@ public class AccountDataManager {
      * @param callback
      */
     public static void requestClaimCompetency(Context context,
-                                              @NonNull String sessionID,
                                               @NonNull CompetencyParams competencyParams,
                                               @NonNull APIServiceCallback<ClaimCompetency> callback) {
 
@@ -74,7 +136,9 @@ public class AccountDataManager {
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)) {
+        String session = getSessionID(context);
+
+        if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the claim competency request return failure");
@@ -98,14 +162,13 @@ public class AccountDataManager {
 
 
         AccountRequest accountRequest = new AccountRequest();
-        accountRequest.claimCompetency(context,sessionID,competencyParams,callback);
+        accountRequest.claimCompetency(context,session,competencyParams,callback);
     }
 
 
     public static void requestEditProfile(Context context,
-                            @NonNull String sessionID,
-                            @NonNull Account.Basic basic,
-                            @NonNull APIServiceCallback callback) {
+                                          @NonNull Account.Basic basic,
+                                          @NonNull APIServiceCallback callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
@@ -114,7 +177,9 @@ public class AccountDataManager {
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)) {
+        String session = getSessionID(context);
+
+        if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the request return failure");
@@ -126,13 +191,12 @@ public class AccountDataManager {
         }
 
         AccountRequest accountRequest = new AccountRequest();
-        accountRequest.editProfile(context,sessionID,basic,callback);
+        accountRequest.editProfile(context,session,basic,callback);
 
     }
 
     public static void requestProfile(Context context,
-                                  @NonNull String sessionID,
-                                  @NonNull APIServiceCallback<Account> callback) {
+                                      @NonNull APIServiceCallback<Account> callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
@@ -140,8 +204,9 @@ public class AccountDataManager {
             }
             return;
         }
+        String session = getSessionID(context);
 
-        if (TextUtils.isEmpty(sessionID)) {
+        if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the request return failure");
@@ -153,7 +218,7 @@ public class AccountDataManager {
         }
 
         AccountRequest accountRequest = new AccountRequest();
-        accountRequest.getProfile(context,sessionID,callback);
+        accountRequest.getProfile(context,session,callback);
 
     }
 
@@ -188,7 +253,6 @@ public class AccountDataManager {
 
 
     public static void requestUploadAvatar(Context context,
-                                           @NonNull String sessionID,
                                            @NonNull final String userID,
                                            @NonNull final String filePath,
                                            @NonNull QiniuService qiniuService) {
@@ -202,7 +266,9 @@ public class AccountDataManager {
             return;
         }
 
-        if (TextUtils.isEmpty(sessionID)) {
+        String session = getSessionID(context);
+
+        if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the sessionID is empty,so the request return failure");
@@ -214,7 +280,7 @@ public class AccountDataManager {
 
 
         QiniuRequest qiniuRequest = new QiniuRequest();
-        qiniuRequest.uploadAvatar(context,sessionID,userID,filePath,qiniuService);
+        qiniuRequest.uploadAvatar(context,session,userID,filePath,qiniuService);
 
 
     }
