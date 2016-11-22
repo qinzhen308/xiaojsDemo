@@ -66,7 +66,9 @@ public class AccountBusiness {
                             listener.onLogin(true);
                         }
                         //enter main page
-                        activity.startActivity(new Intent(activity, MainActivity.class));
+                        Intent intent = new Intent(activity, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        activity.startActivity(intent);
                     } else {
                         if (listener != null) {
                             listener.onLogin(false);

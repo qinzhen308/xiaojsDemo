@@ -200,7 +200,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     //上架
     private void shelves(final TeachLesson bean){
-        LessonDataManager.requestPutLessonOnShelves(mContext,XiaojsConfig.mLoginUser.getSessionID(),bean.getId(),new APIServiceCallback<GetLessonsResponse>() {
+        LessonDataManager.requestPutLessonOnShelves(mContext, bean.getId(), new APIServiceCallback<GetLessonsResponse>() {
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 bean.setState(LessonState.PENDING_FOR_APPROVAL);
@@ -239,7 +239,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             @Override
             public void onClick() {
                 dialog.cancel();
-                LessonDataManager.requestCancelLessonOnShelves(mContext, XiaojsConfig.mLoginUser.getSessionID(), bean.getId(), new APIServiceCallback() {
+                LessonDataManager.requestCancelLessonOnShelves(mContext, bean.getId(), new APIServiceCallback() {
                     @Override
                     public void onSuccess(Object object) {
                         bean.setState(LessonState.DRAFT);
@@ -547,7 +547,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     @Override
     protected void doRequest() {
-        LessonDataManager.requestGetLessons(mContext, XiaojsConfig.mLoginUser.getSessionID(),mCriteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
+        LessonDataManager.requestGetLessons(mContext, mCriteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 Logger.d("onSuccess-----------");

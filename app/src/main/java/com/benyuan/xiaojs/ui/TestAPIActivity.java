@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,11 +21,7 @@ import com.benyuan.xiaojs.data.CategoriesDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
-import com.benyuan.xiaojs.data.api.AccountRequest;
-import com.benyuan.xiaojs.data.api.ApiManager;
-import com.benyuan.xiaojs.data.api.QiniuRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
-import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLEResponse;
@@ -35,12 +30,10 @@ import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.model.Duration;
-import com.benyuan.xiaojs.model.ELResponse;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
 import com.benyuan.xiaojs.model.GetSubjectResponse;
-import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
@@ -49,10 +42,8 @@ import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
 import com.bumptech.glide.Glide;
-import com.kaopiz.kprogresshud.KProgressHUD;
 import com.orhanobut.logger.Logger;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -126,23 +117,23 @@ public class TestAPIActivity extends Activity {
 
     private void testHUB2(Context context){
 
-        ImageView im = new ImageView(context);
+        /*ImageView im = new ImageView(context);
         im.setLayoutParams(new ViewGroup.LayoutParams(70,70));
         Glide.with(this).load(R.drawable.loading).into(im);
 
         KProgressHUD.create(context)
                 .setCustomView(im)
                 //.setLabel("This is a custom view")
-                .show();
+                .show();*/
     }
 
     private void testHUB(Context context) {
-        KProgressHUD.create(context)
+        /*KProgressHUD.create(context)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setCancellable(false)
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f)
-                .show();
+                .show();*/
     }
 
     private void confirmEnllor(Context context) {
@@ -151,7 +142,7 @@ public class TestAPIActivity extends Activity {
         String lesson = "5832adb511efdb0a38faffe1";
         String re = "5832aeaa11efdb0a38fafff1";
 
-        LessonDataManager.requestLessonEnrollment(context, sessionid, lesson, re, new APIServiceCallback<CLEResponse>() {
+        LessonDataManager.requestLessonEnrollment(context, lesson, re, new APIServiceCallback<CLEResponse>() {
             @Override
             public void onSuccess(CLEResponse object) {
 
@@ -207,7 +198,7 @@ public class TestAPIActivity extends Activity {
         ll.setFee(fee);
         ll.setSchedule(sch);
 
-        LessonDataManager.requestEditLesson(context, sessionid, lesson, ll, new APIServiceCallback() {
+        LessonDataManager.requestEditLesson(context, lesson, ll, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
 
@@ -304,7 +295,7 @@ public class TestAPIActivity extends Activity {
 
     private void getProfile(Context context) {
 
-        AccountDataManager.requestProfile(context, sessionid, new APIServiceCallback<Account>() {
+        AccountDataManager.requestProfile(context, new APIServiceCallback<Account>() {
             @Override
             public void onSuccess(Account object) {
 
@@ -324,7 +315,7 @@ public class TestAPIActivity extends Activity {
         b.setSex(false);
         b.setTitle("天下唯我独尊");
 
-        AccountDataManager.requestEditProfile(context, sessionid, b, new APIServiceCallback() {
+        AccountDataManager.requestEditProfile(context, b, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
 
@@ -388,7 +379,7 @@ public class TestAPIActivity extends Activity {
 
         String lession = "58211abfc52b32f4568faa58";
 
-        LessonDataManager.requestPutLessonOnShelves(context, sessionid, lession, new APIServiceCallback<GetLessonsResponse>() {
+        LessonDataManager.requestPutLessonOnShelves(context, lession, new APIServiceCallback<GetLessonsResponse>() {
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 Logger.d("onSuccess-----------");
@@ -419,7 +410,7 @@ public class TestAPIActivity extends Activity {
         pagination.setMaxNumOfObjectsPerPage(20);
 
 
-        LessonDataManager.requestGetLessons(context, sessionid,criteria, pagination, new APIServiceCallback<GetLessonsResponse>() {
+        LessonDataManager.requestGetLessons(context, criteria, pagination, new APIServiceCallback<GetLessonsResponse>() {
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 Logger.d("onSuccess-----------");
@@ -464,7 +455,7 @@ public class TestAPIActivity extends Activity {
         cl.setData(ll);
 
 
-        LessonDataManager.requestCreateLiveLesson(context, sessionid, cl, new APIServiceCallback() {
+        LessonDataManager.requestCreateLiveLesson(context, cl, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 Logger.d("onSuccess-----------");
@@ -487,7 +478,7 @@ public class TestAPIActivity extends Activity {
         cp.setSubject(subject);
 
 
-        AccountDataManager.requestClaimCompetency(context, sessionid, cp, new APIServiceCallback<ClaimCompetency>() {
+        AccountDataManager.requestClaimCompetency(context, cp, new APIServiceCallback<ClaimCompetency>() {
             @Override
             public void onSuccess(ClaimCompetency object) {
                 Logger.d("onSuccess-----------");
@@ -507,7 +498,7 @@ public class TestAPIActivity extends Activity {
     private void testLogout(Context context) {
 
 
-        LoginDataManager.requestLogoutByAPI(context, sessionid, new APIServiceCallback() {
+        LoginDataManager.requestLogoutByAPI(context, new APIServiceCallback() {
 
             @Override
             public void onSuccess(Object object) {

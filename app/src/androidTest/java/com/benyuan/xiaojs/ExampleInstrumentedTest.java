@@ -73,7 +73,7 @@ public class ExampleInstrumentedTest {
         LiveLesson liveLesson = new LiveLesson();
         liveLesson.setTitle("我是");
 
-        LessonDataManager.requestEditLesson(context, seesionId, lesson, liveLesson, new APIServiceCallback() {
+        LessonDataManager.requestEditLesson(context, lesson, liveLesson, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
 
@@ -117,7 +117,7 @@ public class ExampleInstrumentedTest {
         cl.setData(ll);
 
 
-        LessonDataManager.requestCreateLiveLesson(context, seesionId, cl, new APIServiceCallback() {
+        LessonDataManager.requestCreateLiveLesson(context, cl, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 Logger.d("onSuccess-----------");
@@ -141,7 +141,7 @@ public class ExampleInstrumentedTest {
         cp.setSubject(subject);
 
 
-        AccountDataManager.requestClaimCompetency(context, seesionId, cp, new APIServiceCallback<ClaimCompetency>() {
+        AccountDataManager.requestClaimCompetency(context, cp, new APIServiceCallback<ClaimCompetency>() {
             @Override
             public void onSuccess(ClaimCompetency object) {
                 Logger.d("onSuccess-----------");
@@ -235,7 +235,7 @@ public class ExampleInstrumentedTest {
 
         String sessionID = "123444444rgdgdfgs";
 
-        LoginDataManager.requestLogoutByAPI(context, sessionID, new APIServiceCallback() {
+        LoginDataManager.requestLogoutByAPI(context, new APIServiceCallback() {
 
             @Override
             public void onSuccess(Object object) {

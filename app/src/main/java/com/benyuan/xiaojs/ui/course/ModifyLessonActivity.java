@@ -113,7 +113,7 @@ public class ModifyLessonActivity extends BaseActivity {
             Schedule schedule = new Schedule();
             schedule.setStart(new Date(newDate));
             liveLesson.setSchedule(schedule);
-            LessonDataManager.requestEditLesson(this, XiaojsConfig.mLoginUser.getSessionID(), bean.getId(), liveLesson, new APIServiceCallback() {
+            LessonDataManager.requestEditLesson(this, bean.getId(), liveLesson, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
                     ToastUtil.showToast(ModifyLessonActivity.this,"修改上课时间成功！");

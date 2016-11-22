@@ -113,7 +113,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void loadData() {
-        AccountDataManager.requestProfile(this, BaseBusiness.getSession(), new APIServiceCallback<Account>() {
+        AccountDataManager.requestProfile(this, new APIServiceCallback<Account>() {
             @Override
             public void onSuccess(Account account) {
                 if (account != null) {
@@ -216,7 +216,7 @@ public class ProfileActivity extends BaseActivity {
             basic.setAvatar(mAvatarFileName);
         }
 
-        AccountDataManager.requestEditProfile(this, BaseBusiness.getSession(), basic, new APIServiceCallback<Account>() {
+        AccountDataManager.requestEditProfile(this, basic, new APIServiceCallback<Account>() {
             @Override
             public void onSuccess(Account account) {
                 Toast.makeText(ProfileActivity.this, R.string.edit_profile_success, Toast.LENGTH_SHORT).show();
@@ -282,7 +282,6 @@ public class ProfileActivity extends BaseActivity {
                         //TODO upload avatar and get filename
                         mImgUploading = true;
                         AccountDataManager.requestUploadAvatar(ProfileActivity.this,
-                                BaseBusiness.getSession(),
                                 BaseBusiness.getUserId(),
                                 cropImgPath,
                                 new QiniuService() {

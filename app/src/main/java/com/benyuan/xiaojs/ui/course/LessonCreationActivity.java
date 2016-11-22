@@ -636,7 +636,7 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void requestCreateLesson(CreateLesson cl) {
-        LessonDataManager.requestCreateLiveLesson(mContext, BaseBusiness.getSession(), cl, new APIServiceCallback() {
+        LessonDataManager.requestCreateLiveLesson(mContext, cl, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
@@ -651,7 +651,7 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void requestEditLesson(LiveLesson ls) {
-        LessonDataManager.requestEditLesson(mContext, BaseBusiness.getSession(), mLessonId, ls, new APIServiceCallback() {
+        LessonDataManager.requestEditLesson(mContext, mLessonId, ls, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
