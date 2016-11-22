@@ -26,10 +26,14 @@ import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
+import com.benyuan.xiaojs.model.User;
 import com.benyuan.xiaojs.ui.MainActivity;
+import com.benyuan.xiaojs.util.CacheUtil;
+import com.benyuan.xiaojs.util.ObjectSerializableUtil;
 import com.benyuan.xiaojs.util.XjsUtils;
 
 public class AccountBusiness {
+    public final static String USER_INFO = "user_info";
 
 
     public static void login(final Activity activity, final LoginParams loginParams, OnLoginListener listener) {
@@ -57,6 +61,7 @@ public class AccountBusiness {
 
                     if (loginInfo != null) {
                         XiaojsConfig.mLoginUser = loginInfo.getUser();
+                        CacheUtil.saveLoginInfo(loginInfo.getUser());
                         XjsUtils.getSharedPreferences().edit().putLong(XiaojsConfig.KEY_LOGIN_USERNAME,
                                 loginParams.getMobile()).commit();
                         XjsUtils.getSharedPreferences().edit().putString(XiaojsConfig.KEY_LOGIN_PASSWORD,
@@ -104,4 +109,5 @@ public class AccountBusiness {
     public interface OnLoginListener {
         public void onLogin(boolean succ);
     }
+
 }

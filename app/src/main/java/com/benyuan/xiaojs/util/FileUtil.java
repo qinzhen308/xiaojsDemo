@@ -36,17 +36,6 @@ import java.util.StringTokenizer;
 public class FileUtil {
     private static final String TAG = "FileUtil";
 
-    private static final String APP_CACHE_DIR = "/xjs";
-    private static final String DATA_CACHE_DIR = "/cache/";// 存放数据缓存文件，如json数据等
-    private static final String IMAGE_CACHE_DIR = "/images";// 存放图片文件缓存文件
-    private static final String CRASH_CACHE_DIR = "/crash"; // 程序崩溃日志
-    private static final String DOWNLOAD_CACHE_DIR = "/download";// 存放下载的apk
-    private static final String FLASH_CACHE_DIR = "splashCache"; // 闪屏信息
-    private static final String LOGIN_FLASH_CACHE_DIR = "loginSplashCache"; // 闪屏信息
-    private static final String COOKIE_CACHE_DIR = "/cookie/";// cookie数据
-    private static final String LABEL_SEARCH_RECORD_DIR = "/label_record/";// 标签搜索记录
-
-    private static final String IMG_VERIFY_CACHE_DIR = "/verify_img/";// 验证码图片数据
     public static String SDCARD_PATH = Environment.getExternalStorageDirectory()
             .getAbsolutePath();
 

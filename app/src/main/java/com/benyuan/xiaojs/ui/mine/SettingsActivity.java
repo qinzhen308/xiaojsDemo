@@ -14,6 +14,7 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.ui.MainActivity;
 import com.benyuan.xiaojs.ui.account.LoginActivity;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+import com.benyuan.xiaojs.util.CacheUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -66,6 +67,7 @@ public class SettingsActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 Toast.makeText(mContext, R.string.logout_tips, Toast.LENGTH_SHORT).show();
                 XiaojsConfig.mLoginUser = null;
+                CacheUtil.saveLoginInfo(null);
 
                 //jump login page
                 Intent i = new Intent(mContext, LoginActivity.class);
