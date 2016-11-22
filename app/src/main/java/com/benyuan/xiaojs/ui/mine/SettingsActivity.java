@@ -70,7 +70,7 @@ public class SettingsActivity extends BaseActivity {
 
                 //jump login page
                 Intent i = new Intent(mContext, LoginActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
             }
 
