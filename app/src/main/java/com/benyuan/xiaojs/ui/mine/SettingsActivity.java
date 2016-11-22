@@ -61,7 +61,6 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void exitLogin() {
-        String sessionId = XiaojsConfig.mLoginUser.getSessionID();
         LoginDataManager.requestLogoutByAPI(this, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {

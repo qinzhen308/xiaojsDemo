@@ -17,6 +17,7 @@ public class Fee implements Serializable{
     private BigDecimal charge;
     private BigDecimal total;
     private Discounted discounted;
+    private Applied applied;
 
     public int getType() {
         return type;
@@ -58,6 +59,14 @@ public class Fee implements Serializable{
         this.discounted = discounted;
     }
 
+    public Applied getApplied() {
+        return applied;
+    }
+
+    public void setApplied(Applied applied) {
+        this.applied = applied;
+    }
+
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class Discounted implements Serializable{
@@ -87,6 +96,38 @@ public class Fee implements Serializable{
 
         public void setSaved(BigDecimal saved) {
             this.saved = saved;
+        }
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public class Applied implements Serializable {
+        private float discount;
+        private int quota;
+        private int before;
+
+        public float getDiscount() {
+            return discount;
+        }
+
+        public void setDiscount(float discount) {
+            this.discount = discount;
+        }
+
+        public int getQuota() {
+            return quota;
+        }
+
+        public void setQuota(int quota) {
+            this.quota = quota;
+        }
+
+        public int getBefore() {
+            return before;
+        }
+
+        public void setBefore(int before) {
+            this.before = before;
         }
     }
 }
