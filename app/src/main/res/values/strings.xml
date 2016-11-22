@@ -178,6 +178,7 @@
     <string name="promotion_attend_lesson_b">上课前</string>
     <string name="promotion_attend_lesson_m">天，享受</string>
     <string name="promotion_people_exceed">人数不能大于%1$d</string>
+    <string name="promotion_people_error">人数必须大于0</string>
     <string name="promotion_day_exceed">天数不能大于%1$d</string>
     <string name="promotion_info_error">请完整填写促销%1$d信息</string>
     <string name="promotion_discount_format_error">请填写正确的折扣值，如：9.7</string>
