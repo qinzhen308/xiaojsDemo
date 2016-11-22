@@ -93,9 +93,10 @@ public class LessonHomeActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_lession_detail);
-        setMiddleTitle(R.string.lession_detail);
-        setLeftImage(R.drawable.back_arrow);
+        //setMiddleTitle(R.string.lession_detail);
+        //setLeftImage(R.drawable.back_arrow);
 
+        needHeader(false);
         initTabBar();
 
         mLessonOriMoneyTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
@@ -103,11 +104,15 @@ public class LessonHomeActivity extends BaseActivity {
         loadData();
     }
 
-    @OnClick({R.id.left_image, R.id.report, R.id.apply_btn})
+    @OnClick({R.id.back_btn, R.id.favourite_btn, R.id.share_btn, R.id.report, R.id.apply_btn})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.left_image:
+            case R.id.back_btn:
                 finish();
+                break;
+            case R.id.favourite_btn:
+                break;
+            case R.id.share_btn:
                 break;
             case R.id.report:
                 break;
