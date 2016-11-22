@@ -109,9 +109,9 @@ public class LessonBusiness {
                 case 6:
                     return LessonState.REJECTED;
                 case 7:
-                    return LessonState.CANCELLED;
-                case 8:
                     return LessonState.STOPPED;
+                case 8:
+                    return LessonState.CANCELLED;
                 default:
                     return null;
             }

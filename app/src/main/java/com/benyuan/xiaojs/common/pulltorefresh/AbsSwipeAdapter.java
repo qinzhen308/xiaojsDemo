@@ -41,7 +41,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     protected final int PAGE_FIRST = 1;
     protected final int PAGE_SIZE = 10;
-    private AutoPullToRefreshListView mListView;
+    protected AutoPullToRefreshListView mListView;
     protected Context mContext;
     protected LayoutInflater mInflater;
     protected List<B> mBeanList = new ArrayList<>();
@@ -51,7 +51,6 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private View mFailedView;
     protected boolean mClearItems;
     private boolean mRefreshOnLoad = true;
-    private final int PLACE_HOLDER_ID = 0x12;
 
     public AbsSwipeAdapter(Context context, AutoPullToRefreshListView listView) {
         mContext = context;
@@ -273,6 +272,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     protected void onDataFailed(){
 
+    }
+
+    public List<B> getList(){
+        return mBeanList;
     }
 
     public void setPageNum(int pageNum) {

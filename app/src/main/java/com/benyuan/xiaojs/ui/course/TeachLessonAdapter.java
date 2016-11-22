@@ -113,8 +113,18 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.courseState.setText(R.string.pending_shelves);
             holder.courseState.setBackgroundResource(R.drawable.course_state_draft_bg);
         }else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)){
-            holder.error.setVisibility(View.VISIBLE);
-            holder.error.setText(R.string.course_examine_error_tip);
+//            holder.error.setVisibility(View.VISIBLE);
+//            holder.error.setText(R.string.course_examine_error_tip);
+            holder.clsFunction.setVisibility(View.VISIBLE);
+            holder.enter.setVisibility(View.GONE);
+            holder.funDivider.setVisibility(View.GONE);
+            holder.circle.setText(R.string.edit);
+            holder.circle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    edit(bean);
+                }
+            });
             holder.more.setVisibility(View.VISIBLE);
             holder.more.setOnClickListener(new View.OnClickListener() {//更多
                 @Override
@@ -135,8 +145,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.courseState.setText(R.string.course_state_cancel);
             holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
         }else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)){
-            holder.error.setVisibility(View.VISIBLE);
-            holder.error.setText(R.string.course_stop_error_tip);
+//            holder.error.setVisibility(View.VISIBLE);
+//            holder.error.setText(R.string.course_stop_error_tip);
             holder.more.setVisibility(View.VISIBLE);
             holder.more.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -505,7 +515,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 dialog.show();
             }else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)){
                 String[] items = new String[]{
-                        mContext.getString(R.string.edit),
                         mContext.getString(R.string.look_detail),
                         mContext.getString(R.string.delete)};
                 ListBottomDialog dialog = new ListBottomDialog(mContext);
@@ -514,13 +523,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     @Override
                     public void onItemClick(int position) {
                         switch (position){
-                            case 0://编辑
-                                edit(bean);
-                                break;
-                            case 1://查看详情
+                            case 0://查看详情
                                 detail(bean);
                                 break;
-                            case 2://删除
+                            case 1://删除
                                 delete(bean);
                                 break;
                         }
@@ -642,7 +648,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         mCriteria = criteria;
         mPagination.setPage(PAGE_FIRST);
         mClearItems = true;
-        doRequest();
+        mListView.setRefreshing();
     }
 
     static class Holder extends BaseHolder {
@@ -694,10 +700,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         View editLine;
         @BindView(R.id.course_item_fun_cancel_line)
         View cancelLine;
-
+        @BindView(R.id.fun_divider)
+        View funDivider;
 
         public void reset(){
             clsFunction.setVisibility(View.GONE);
+            enter.setVisibility(View.VISIBLE);
+            funDivider.setVisibility(View.VISIBLE);
             operaFunction.setVisibility(View.GONE);
             error.setVisibility(View.INVISIBLE);
             more.setVisibility(View.GONE);

@@ -22,11 +22,17 @@ import android.widget.AdapterView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.Duration;
+import com.benyuan.xiaojs.model.IgnoreNResponse;
+import com.benyuan.xiaojs.model.Notification;
+import com.benyuan.xiaojs.model.NotificationCriteria;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
 import com.benyuan.xiaojs.util.DeviceUtil;
 import com.benyuan.xiaojs.util.ToastUtil;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -105,7 +111,7 @@ public class NotificationCategoryListActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                ToastUtil.showToast(NotificationCategoryListActivity.this,"删除失败！");
+                ToastUtil.showToast(NotificationCategoryListActivity.this,errorMessage);
             }
         });
     }
@@ -114,8 +120,41 @@ public class NotificationCategoryListActivity extends BaseActivity {
     public void onClick(View view){
         switch (view.getId()){
             case R.id.left_image:
-                finish();
+                ignoreNotifications();
                 break;
         }
+    }
+
+    private void ignoreNotifications(){
+        if (adapter != null){
+            List<Notification> notifications = adapter.getList();
+            if (notifications != null && notifications.size() > 0){
+
+                NotificationCriteria criteria = new NotificationCriteria();
+                Duration duration = new Duration();
+                duration.setStart(notifications.get(notifications.size() - 1).createdOn);
+                duration.setEnd(notifications.get(0).createdOn);
+                criteria.category = categoryId;
+                criteria.duration = duration;
+                NotificationDataManager.ignoreNotifications(this, criteria, new APIServiceCallback<IgnoreNResponse>() {
+                    @Override
+                    public void onSuccess(IgnoreNResponse object) {
+
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+
+                    }
+                });
+            }
+        }
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        ignoreNotifications();
     }
 }

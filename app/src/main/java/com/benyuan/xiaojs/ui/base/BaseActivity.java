@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ public abstract class BaseActivity extends FragmentActivity {
     private ImageView mLeftImage;
     private ImageView mRightImage;
     private View mHeaderDivider;
+    private View mFailedView;
+    private Button mReload;
 
     private Unbinder mBinder;
     private ProgressHUD progress;
@@ -55,6 +58,8 @@ public abstract class BaseActivity extends FragmentActivity {
         mLeftImage = (ImageView) findViewById(R.id.left_image);
         mRightImage = (ImageView) findViewById(R.id.right_image);
         mHeaderDivider = findViewById(R.id.base_header_divider);
+        mFailedView = findViewById(R.id.base_failed);
+        mReload = (Button) findViewById(R.id.base_failed_click);
         addViewContent();
     }
 
@@ -165,6 +170,8 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     public void showProgress(boolean cancellable){
+        mFailedView.setVisibility(View.GONE);
+        mContent.setVisibility(View.VISIBLE);
         if (progress == null){
             progress = ProgressHUD.create(this);
         }
@@ -176,6 +183,16 @@ public abstract class BaseActivity extends FragmentActivity {
         if (progress != null && progress.isShowing()){
             progress.dismiss();
         }
+    }
+
+    public void showFailedView(View.OnClickListener listener){
+        mFailedView.setVisibility(View.VISIBLE);
+        mContent.setVisibility(View.GONE);
+        setOnFailedClick(listener);
+    }
+
+    public void setOnFailedClick(View.OnClickListener listener){
+        mReload.setOnClickListener(listener);
     }
 
     @Override

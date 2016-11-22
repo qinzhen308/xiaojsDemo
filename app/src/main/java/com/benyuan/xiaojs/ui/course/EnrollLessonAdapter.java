@@ -301,7 +301,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         mCriteria = criteria;
         mPagination.setPage(PAGE_FIRST);
         mClearItems = true;
-        doRequest();
+        mListView.setRefreshing();
     }
 
     static class Holder extends BaseHolder {

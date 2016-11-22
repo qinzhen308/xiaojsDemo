@@ -15,6 +15,12 @@ package com.benyuan.xiaojs.ui.message;
  * ======================================================================================== */
 
 public interface NotificationConstant {
+
+    /**
+     * 是否已读
+     */
+    public static final String READ = "Dispatched";
+
     public static final String KEY_NOTIFICATION_CATEGORY_ID = "notification_category_id";
     public static final String KEY_NOTIFICATION_TITLE = "notification_title";
 

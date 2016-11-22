@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.LiveLesson;
@@ -116,6 +115,7 @@ public class ModifyLessonActivity extends BaseActivity {
             LessonDataManager.requestEditLesson(this, bean.getId(), liveLesson, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
+                    cancelProgress();
                     ToastUtil.showToast(ModifyLessonActivity.this,"修改上课时间成功！");
                     setResult(RESULT_OK);
                     finish();
@@ -123,9 +123,12 @@ public class ModifyLessonActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
                     ToastUtil.showToast(ModifyLessonActivity.this,errorMessage);
                 }
             });
+
+            showProgress(false);
         }
     }
 }

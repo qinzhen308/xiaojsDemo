@@ -15,6 +15,7 @@ package com.benyuan.xiaojs.ui.message;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -53,8 +54,11 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
     @Override
     protected void setViewContent(Holder holder, Notification bean, int position) {
         holder.reset();
-        if (bean.read){
+        //已读
+        if (!TextUtils.isEmpty(bean.state) && bean.state.equalsIgnoreCase(NotificationConstant.READ)){
             holder.content.setTextColor(mContext.getResources().getColor(R.color.common_text));
+        }else {
+            holder.content.setTextColor(mContext.getResources().getColor(R.color.font_black));
         }
         holder.time.setText(TimeUtil.getTimeByNow(bean.createdOn));
         holder.content.setText(bean.body);
