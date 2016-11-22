@@ -17,7 +17,7 @@ public class Fee implements Serializable{
     private BigDecimal charge;
     private BigDecimal total;
     private Discounted discounted;
-    private Applied applied;
+    private Applied[] applied;
 
     public int getType() {
         return type;
@@ -59,11 +59,11 @@ public class Fee implements Serializable{
         this.discounted = discounted;
     }
 
-    public Applied getApplied() {
+    public Applied[] getApplied() {
         return applied;
     }
 
-    public void setApplied(Applied applied) {
+    public void setApplied(Applied[] applied) {
         this.applied = applied;
     }
 
