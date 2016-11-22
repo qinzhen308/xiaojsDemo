@@ -5,6 +5,7 @@ import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.CancelReason;
+import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -45,7 +46,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.4:3000/";
+    String BASE_URL = "http://192.168.100.78:3000/";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -88,6 +89,9 @@ public interface XiaojsService {
     @GET("/v1/lessons/up_resource_token")
     Call<TokenResponse> getCoverUpToken(@Header("SessionID") String sessionID);
 
+    //Get Center Data
+    @GET("/v1/accounts/center")
+    Call<CenterData> getCenterData(@Header("SessionID") String sessionID);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

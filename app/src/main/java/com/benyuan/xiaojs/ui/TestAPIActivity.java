@@ -25,6 +25,7 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLEResponse;
+import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -109,11 +110,28 @@ public class TestAPIActivity extends Activity {
                 //editPortrait();
                 //testEditLesson(this);
                 //confirmEnllor(this);
-                testHUB(this);
+//                testHUB(this);
+                testCenterData(this);
                 break;
             }
 
         }
+    }
+
+    private void testCenterData(Context context) {
+
+        AccountDataManager.requestCenterData(context, new APIServiceCallback<CenterData>() {
+            @Override
+            public void onSuccess(CenterData object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
     }
 
     private void testHUB2(Context context){

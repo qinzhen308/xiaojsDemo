@@ -13,6 +13,7 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.data.preference.AccountPref;
 import com.benyuan.xiaojs.model.Account;
+import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.HomeData;
@@ -281,6 +282,32 @@ public class AccountDataManager {
         QiniuRequest qiniuRequest = new QiniuRequest();
         qiniuRequest.uploadAvatar(context,session,filePath,qiniuService);
 
+
+    }
+
+    public static void requestCenterData(Context context,
+                                  @NonNull APIServiceCallback<CenterData> callback) {
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the  request");
+            }
+            return;
+        }
+        String session = getSessionID(context);
+
+        if (TextUtils.isEmpty(session)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.getCenterDataPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+        AccountRequest accountRequest = new AccountRequest();
+        accountRequest.getCenterData(context,session,callback);
 
     }
 
