@@ -207,7 +207,13 @@ public class LessonHomeActivity extends BaseActivity {
     }
 
     private void setSalePromotion(Fee fee) {
-        Fee.Applied applied = fee.getApplied();
+        Fee.Applied[] appliedArr = fee.getApplied();
+        if (appliedArr == null || appliedArr.length == 0) {
+            mPromotionInfoTv.setVisibility(View.GONE);
+            return;
+        }
+
+        Fee.Applied applied = appliedArr[0];
         if (applied == null) {
             mPromotionInfoTv.setVisibility(View.GONE);
             return;
