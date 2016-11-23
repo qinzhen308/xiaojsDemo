@@ -377,6 +377,17 @@
         <View
                 style="@style/DividerHorizontal"/>
 
+        <!--我的报名-->
+        <TextView
+                android:id="@+id/my_enrollment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/my_enrollment"
+                style="@style/MinePageItem"/>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
         <!--我的提问-->
         <TextView
                 android:id="@+id/my_ask_questions"

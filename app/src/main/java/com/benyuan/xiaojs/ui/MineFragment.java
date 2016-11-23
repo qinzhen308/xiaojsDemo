@@ -83,9 +83,9 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.settings, R.id.edit_profile, R.id.my_course, R.id.my_course_schedule, R.id.my_ask_questions,
-            R.id.recharge, R.id.withdrawals, R.id.teach_ability_layout, R.id.my_collections, R.id.eval_management,
-            R.id.feedback_help})
+    @OnClick({R.id.settings, R.id.edit_profile, R.id.my_course, R.id.my_course_schedule, R.id.my_enrollment,
+            R.id.my_ask_questions, R.id.recharge, R.id.withdrawals, R.id.teach_ability_layout, R.id.my_collections,
+            R.id.eval_management, R.id.feedback_help})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.edit_profile:
@@ -97,6 +97,8 @@ public class MineFragment extends BaseFragment {
                 startActivity(new Intent(mContext, MyLessonActivity.class));
                 break;
             case R.id.my_course_schedule:
+                break;
+            case R.id.my_enrollment:
                 break;
             case R.id.my_ask_questions:
                 break;
