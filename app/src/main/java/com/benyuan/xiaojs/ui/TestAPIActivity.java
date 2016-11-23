@@ -330,7 +330,7 @@ public class TestAPIActivity extends Activity {
     private void editProfile(Context context) {
         Account.Basic b = new Account.Basic();
         b.setBirthday(new Date(System.currentTimeMillis()));
-        b.setSex(false);
+        //b.setSex(false);
         b.setTitle("天下唯我独尊");
 
         AccountDataManager.requestEditProfile(context, b, new APIServiceCallback() {
