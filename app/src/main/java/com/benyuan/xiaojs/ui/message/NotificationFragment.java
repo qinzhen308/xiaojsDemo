@@ -177,7 +177,9 @@ public class NotificationFragment extends BaseFragment {
         switch (requestCode){
             case NotificationConstant.REQUEST_NOTIFICATION_CATEGORY_LIST:
                 if (resultCode == Activity.RESULT_OK){
-                    notificationAdapter.refresh();
+                    if (notificationAdapter != null){
+                        notificationAdapter.refresh();
+                    }
                 }
                 break;
         }
