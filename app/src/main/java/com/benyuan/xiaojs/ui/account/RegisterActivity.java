@@ -177,6 +177,7 @@ public class RegisterActivity extends BaseActivity {
             regInfo.setPassword(password);
             regInfo.setUsername(userName);
 
+            showProgress(true);
             RegisterDataManager.requestValidateCode(this, phone, verifyCode, new APIServiceCallback<APIEntity>() {
 
                 @Override
@@ -187,6 +188,7 @@ public class RegisterActivity extends BaseActivity {
                         @Override
                         public void onSuccess(Object object) {
                             //login immediately after successful registration
+                            cancelProgress();
                             final LoginParams loginParams = new LoginParams();
                             loginParams.setMobile(regInfo.getMobile());
                             loginParams.setPassword(regInfo.getPassword());
@@ -195,6 +197,13 @@ public class RegisterActivity extends BaseActivity {
                                 public void onLogin(boolean succ) {
                                     if (succ) {
                                         RegisterActivity.this.finish();
+                                    } else {
+                                        RegisterActivity.this.finish();
+                                        Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        i.putExtra(XiaojsConfig.KEY_LOGIN_USERNAME, regInfo.getMobile());
+                                        i.putExtra(XiaojsConfig.KEY_LOGIN_PASSWORD, regInfo.getPassword());
+                                        startActivity(i);
                                     }
                                 }
                             });
@@ -203,6 +212,7 @@ public class RegisterActivity extends BaseActivity {
                         @Override
                         public void onFailure(String errorCode, String errorMessage) {
                             //register error
+                            cancelProgress();
                             Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -211,7 +221,7 @@ public class RegisterActivity extends BaseActivity {
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
                     //verify code error
-
+                    cancelProgress();
                     Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });

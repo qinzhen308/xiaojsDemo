@@ -174,16 +174,18 @@ public class LessonCreationActivity extends BaseActivity {
         mType = data != null ? data.getInt(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_CREATE)
                 : CourseConstant.TYPE_LESSON_CREATE;
         if (!TextUtils.isEmpty(mLessonId)) {
+            showProgress(true);
             LessonDataManager.requestLessonData(mContext, mLessonId, new APIServiceCallback<LessonDetail>() {
                 @Override
                 public void onSuccess(LessonDetail lessonDetail) {
+                    cancelProgress();
                     initBaseInfo(lessonDetail);
                     initOptionalInfo(lessonDetail);
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
-
+                    cancelProgress();
                 }
             });
         }

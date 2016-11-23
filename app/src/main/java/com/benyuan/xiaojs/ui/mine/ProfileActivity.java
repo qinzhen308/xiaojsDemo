@@ -113,9 +113,11 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void loadData() {
+        showProgress(true);
         AccountDataManager.requestProfile(this, new APIServiceCallback<Account>() {
             @Override
             public void onSuccess(Account account) {
+                cancelProgress();
                 if (account != null) {
                     mAccount = account;
                     Account.Basic basic = account.getBasic();
@@ -142,7 +144,14 @@ public class ProfileActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
                 Toast.makeText(ProfileActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                showFailedView(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loadData();
+                    }
+                });
             }
         });
     }

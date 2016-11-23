@@ -137,14 +137,17 @@ public class LessonHomeActivity extends BaseActivity {
             return;
         }
 
+        showProgress(true);
         LessonDataManager.requestLessonDetails(this, lessonId, new APIServiceCallback<LessonDetail>() {
             @Override
             public void onSuccess(LessonDetail lessonDetail) {
+                cancelProgress();
                 setData(lessonDetail);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
                 Toast.makeText(LessonHomeActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
@@ -238,6 +241,8 @@ public class LessonHomeActivity extends BaseActivity {
 
         if (!TextUtils.isEmpty(s)) {
             mPromotionInfoTv.setText(Html.fromHtml(s).toString());
+        } else {
+            mPromotionInfoTv.setVisibility(View.GONE);
         }
     }
 

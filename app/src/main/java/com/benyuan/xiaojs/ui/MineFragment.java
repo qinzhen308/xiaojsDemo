@@ -26,7 +26,11 @@ import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.XiaojsConfig;
+import com.benyuan.xiaojs.data.AccountDataManager;
+import com.benyuan.xiaojs.data.api.AccountRequest;
+import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Account;
+import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.User;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.course.MyLessonActivity;
@@ -115,6 +119,20 @@ public class MineFragment extends BaseFragment {
             default:
                 break;
         }
+    }
+
+    private void loadData () {
+        AccountDataManager.requestCenterData(mContext, new APIServiceCallback<CenterData>() {
+            @Override
+            public void onSuccess(CenterData centerData) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 
     private void setPersonBaseInfo(Account account) {
