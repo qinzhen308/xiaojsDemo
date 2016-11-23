@@ -62,7 +62,7 @@ public class CommonDialog extends Dialog {
         mRightButton = (Button) findViewById(R.id.right_btn);
         WindowManager.LayoutParams params = dialogWindow.getAttributes();
         params.dimAmount = 0.5f;
-        int width = DeviceUtil.getScreenWidth(getContext()) - 2 * getContext().getResources().getDimensionPixelSize(R.dimen.px30);
+        int width = DeviceUtil.getScreenWidth(getContext()) - 2 * getContext().getResources().getDimensionPixelSize(R.dimen.px60);
         dialogWindow.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         dialogWindow.setAttributes(params);
         dialogWindow.setLayout(
