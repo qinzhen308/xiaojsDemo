@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.benyuan.xiaojs.R;
@@ -206,15 +207,18 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 finish();
             }
 
+            showProgress(true);
             LessonDataManager.requestLessonData(this, lessonId, new APIServiceCallback<LessonDetail>() {
                 @Override
                 public void onSuccess(LessonDetail lessonDetail) {
+                    cancelProgress();
                     setData(lessonDetail);
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
-
+                    cancelProgress();
+                    Toast.makeText(LiveLessonDetailActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
