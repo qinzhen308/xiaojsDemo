@@ -237,23 +237,23 @@ public class AccountRequest extends ServiceRequest {
 
     public void getProfile(Context context,
                            @NonNull String sessionID,
-                           @NonNull APIServiceCallback<Account> callback) {
-        final WeakReference<APIServiceCallback<Account>> callbackReference =
+                           @NonNull APIServiceCallback<Account.Basic> callback) {
+        final WeakReference<APIServiceCallback<Account.Basic>> callbackReference =
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getProfile(sessionID).enqueue(new Callback<Account>() {
+        xiaojsService.getProfile(sessionID).enqueue(new Callback<Account.Basic>() {
             @Override
-            public void onResponse(Call<Account> call, Response<Account> response) {
+            public void onResponse(Call<Account.Basic> call, Response<Account.Basic> response) {
                 int responseCode = response.code();
 
                 if (responseCode == SUCCESS_CODE) {
 
-                    Account account = response.body();
+                    Account.Basic basic = response.body();
 
-                    APIServiceCallback<Account> callback = callbackReference.get();
+                    APIServiceCallback<Account.Basic> callback = callbackReference.get();
                     if (callback != null) {
-                        callback.onSuccess(account);
+                        callback.onSuccess(basic);
                     }
 
                 } else {
@@ -269,7 +269,7 @@ public class AccountRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getProfilePrompt(errorCode);
 
-                    APIServiceCallback<Account> callback = callbackReference.get();
+                    APIServiceCallback<Account.Basic> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -279,7 +279,7 @@ public class AccountRequest extends ServiceRequest {
             }
 
             @Override
-            public void onFailure(Call<Account> call, Throwable t) {
+            public void onFailure(Call<Account.Basic> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("the getProfile has occur exception");
@@ -288,7 +288,7 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getProfilePrompt(errorCode);
 
-                APIServiceCallback<Account> callback = callbackReference.get();
+                APIServiceCallback<Account.Basic> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }

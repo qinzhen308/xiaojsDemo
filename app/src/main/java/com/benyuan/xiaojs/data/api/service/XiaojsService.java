@@ -79,14 +79,14 @@ public interface XiaojsService {
 
     //Get Profile
     @GET("/v1/accounts/profile")
-    Call<Account> getProfile(@Header("SessionID") String sessionID);
+    Call<Account.Basic> getProfile(@Header("SessionID") String sessionID);
 
     //Get upToken
     @GET("/v1/accounts/up_avatar_token")
     Call<TokenResponse> getAvatarUpToken(@Header("SessionID") String sessionID);
 
     //Get upToken
-    @GET("/v1/lessons/up_resource_token")
+    @GET("/v1/lessons/up_cover_token")
     Call<TokenResponse> getCoverUpToken(@Header("SessionID") String sessionID);
 
     //Get Center Data
@@ -105,7 +105,7 @@ public interface XiaojsService {
     Call<CLResponse> createLiveLesson(@Header("SessionID") String sessionID,
                                       @Body CreateLesson lesson);
 
-    //Get Lessonsgit
+    //Get Lessons
     @GET("/v1/ctl/lessons/{criteria}/{pagination}")
     Call<GetLessonsResponse> getLessons(@Header("SessionID") String sessionID,
                                         @Path("criteria") String criteria,
