@@ -302,9 +302,9 @@ public class TestAPIActivity extends Activity {
 
     private void getProfile(Context context) {
 
-        AccountDataManager.requestProfile(context, new APIServiceCallback<Account>() {
+        AccountDataManager.requestProfile(context, new APIServiceCallback<Account.Basic>() {
             @Override
-            public void onSuccess(Account object) {
+            public void onSuccess(Account.Basic object) {
 
             }
 

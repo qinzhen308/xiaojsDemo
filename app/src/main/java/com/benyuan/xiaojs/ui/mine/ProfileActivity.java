@@ -114,31 +114,28 @@ public class ProfileActivity extends BaseActivity {
 
     private void loadData() {
         showProgress(true);
-        AccountDataManager.requestProfile(this, new APIServiceCallback<Account>() {
+        AccountDataManager.requestProfile(this, new APIServiceCallback<Account.Basic>() {
             @Override
-            public void onSuccess(Account account) {
+            public void onSuccess(Account.Basic basic) {
                 cancelProgress();
-                if (account != null) {
-                    mAccount = account;
-                    Account.Basic basic = account.getBasic();
-                    if (basic != null) {
-                        //avatar
-                        Glide.with(ProfileActivity.this)
-                                .load(basic.getAvatar())
-                                .error(R.drawable.default_avatar)
-                                .into(mPortraitView);
+                if (basic != null) {
+                    //avatar
+                    mBasic = basic;
+                    Glide.with(ProfileActivity.this)
+                            .load(basic.getAvatar())
+                            .error(R.drawable.default_avatar)
+                            .into(mPortraitView);
 
-                        mName.setText(basic.getName());
-                        mSexView.setText(basic.isSex() ? R.string.male : R.string.female);
-                        //TODO to be optimized
-                        if (basic.getBirthday() != null && (basic.getBirthday().getTime()) > 0) {
-                            mOldTime = mBirthDayDate.getTime();
-                            mBirthDayDate.setTime(basic.getBirthday().getTime());
-                            mBirthdayView.setText(TimeUtil.format(mBirthDayDate, TimeUtil.TIME_YYYY_MM_DD));
-                        }
-
-                        mUserTitle.setText(basic.getTitle());
+                    mName.setText(basic.getName());
+                    mSexView.setText(basic.isSex() ? R.string.male : R.string.female);
+                    //TODO to be optimized
+                    if (basic.getBirthday() != null && (basic.getBirthday().getTime()) > 0) {
+                        mOldTime = mBirthDayDate.getTime();
+                        mBirthDayDate.setTime(basic.getBirthday().getTime());
+                        mBirthdayView.setText(TimeUtil.format(mBirthDayDate, TimeUtil.TIME_YYYY_MM_DD));
                     }
+
+                    mUserTitle.setText(basic.getTitle());
                 }
             }
 
@@ -157,16 +154,15 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private boolean checkSubmitEditInfo() {
-        if (mAccount == null || mAccount.getBasic() == null) {
-            return true;
-        }
-
-        Account.Basic basic = mAccount.getBasic();
+        Account.Basic basic = mBasic;
         if (!mName.getText().toString().equals(basic.getName())) {
             return true;
         }
 
-        if (!mUserTitle.getText().toString().equals(basic.getTitle())) {
+        String title = mUserTitle.getText().toString();
+        if ((TextUtils.isEmpty(title) && !TextUtils.isEmpty(basic.getTitle())) ||
+                (!TextUtils.isEmpty(title) && TextUtils.isEmpty(basic.getTitle())) ||
+                (!TextUtils.isEmpty(title) && TextUtils.isEmpty(basic.getTitle()) && title.equals(basic.getTitle()))) {
             return true;
         }
 
@@ -217,7 +213,7 @@ public class ProfileActivity extends BaseActivity {
         } else {
             basic.setSex(false);
         }
-        if (mBirthDayDate.getTime() !=  mOldTime) {
+        if (mBirthDayDate.getTime() != mOldTime) {
             basic.setBirthday(new Date(mBirthDayDate.getTime()));
         }
 
@@ -308,7 +304,7 @@ public class ProfileActivity extends BaseActivity {
                                     public void uploadFailure() {
                                         mImgUploading = false;
                                     }
-                                } );
+                                });
                     }
                 }
                 break;
