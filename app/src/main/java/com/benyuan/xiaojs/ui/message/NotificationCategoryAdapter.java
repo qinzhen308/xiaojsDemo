@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.common.xf_foundation.schemas.Platform;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.GENotificationsResponse;
@@ -49,13 +50,14 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
     protected void initParam() {
         criteria = new NotificationCriteria();
         criteria.before = new Date(System.currentTimeMillis());
+        criteria.state = Platform.NotificationState.NONE;
     }
 
     @Override
     protected void setViewContent(Holder holder, Notification bean, int position) {
         holder.reset();
         //已读
-        if (!TextUtils.isEmpty(bean.state) && bean.state.equalsIgnoreCase(NotificationConstant.READ)){
+        if (!TextUtils.isEmpty(bean.state) && bean.state.equalsIgnoreCase(Platform.NotificationState.DISMISSED)){
             holder.content.setTextColor(mContext.getResources().getColor(R.color.common_text));
         }else {
             holder.content.setTextColor(mContext.getResources().getColor(R.color.font_black));

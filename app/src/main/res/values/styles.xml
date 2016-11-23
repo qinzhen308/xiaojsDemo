@@ -168,7 +168,7 @@
         <item name="android:paddingBottom">@dimen/px16</item>
         <item name="android:textColor">@color/font_black</item>
         <item name="android:paddingLeft">@dimen/px14</item>
-        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
     </style>
     <style name="lesson_home_layout">
         <item name="android:paddingLeft">@dimen/px24</item>

@@ -81,7 +81,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         if (bean.getFee().isFree()){
             holder.price.setText(R.string.free);
         }else {
-            holder.price.setText(NumberUtil.getPrice(bean.getFee().getCharge().doubleValue()));
+            holder.price.setText(NumberUtil.getPrice(bean.getFee().getCharge()));
         }
         holder.desc.setText(mContext.getString(R.string.course_stu,bean.getEnroll().getCurrent(),bean.getEnroll().getMax()));
 

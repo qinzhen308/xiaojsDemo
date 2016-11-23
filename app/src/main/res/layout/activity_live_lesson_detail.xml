@@ -130,7 +130,18 @@
 
             <TextView
                     android:id="@+id/lesson_name"
-                    style="@style/LiveLessonDetailText"/>
+                    style="@style/LiveLessonDetailText"
+                    android:maxLines="2"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"/>
+
+            <TextView
+                    android:id="@+id/lesson_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_26px"
+                    android:layout_marginLeft="@dimen/px16"/>
         </LinearLayout>
 
         <!--学科类目-->
@@ -210,6 +221,23 @@
             <TextView
                     android:id="@+id/lesson_duration"
                     style="@style/LiveLessonDetailText"/>
+
+        </LinearLayout>
+
+        <!--失败原因-->
+        <LinearLayout
+                android:id="@+id/lesson_fail_reason_layout"
+                style="@style/LiveLessonItem"
+                android:visibility="gone">
+
+            <TextView
+                    style="@style/LiveLessonDetailTitle"
+                    android:text="@string/lesson_fail_reason"/>
+
+            <TextView
+                    android:id="@+id/lesson_fail_reason"
+                    style="@style/LiveLessonDetailText"
+                    android:textColor="@color/font_red"/>
 
         </LinearLayout>
 

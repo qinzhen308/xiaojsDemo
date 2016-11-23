@@ -1,8 +1,6 @@
 package com.benyuan.xiaojs.ui.course;
 
-import android.os.Bundle;
 import android.text.Html;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -30,7 +28,6 @@ import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.bumptech.glide.Glide;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -71,6 +68,12 @@ public class LiveLessonDetailActivity extends BaseActivity {
     TextView mLessonStartTimeTv;
     @BindView(R.id.lesson_duration)
     TextView mLessonDurationTv;
+    @BindView(R.id.lesson_status)
+    TextView mLessonStatusTv;
+    @BindView(R.id.lesson_fail_reason)
+    TextView mLessonFailReasonTv;
+    @BindView(R.id.lesson_fail_reason_layout)
+    TextView mLessonFailReasonLayout;
 
     //==============optional info==============
     //lesson cover
@@ -133,7 +136,6 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
         init();
         loadData();
-        //setData(getTestLesson());
     }
 
     @OnClick({R.id.left_image, R.id.audit_person_select_enter, R.id.audit_portrait, R.id.visible_to_stu,
@@ -286,7 +288,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
             if (fee == null || fee.isFree()) {
                 mLessonFeeTv.setText(R.string.free);
             } else {
-                double charge = fee.getCharge().doubleValue();
+                float charge = fee.getCharge();
                 if (fee.getType() == Finance.PricingType.TOTAL) {
                     String byTotalPrice = getString(R.string.by_live_total_price);
                     mLessonFeeTv.setText(byTotalPrice + BaseBusiness.formatPrice(charge, true));
@@ -303,6 +305,14 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 String m = getString(R.string.minute);
                 mLessonDurationTv.setText(String.valueOf(schedule.getDuration()) + m);
             }
+
+            //status
+            mLessonStatusTv.setText(BaseBusiness.getLessonStatusText(this, lesson.getState()));
+            mLessonStatusTv.setBackgroundResource(BaseBusiness.getLessonStatusDrawable(lesson.getState()));
+
+            //TODO set failure reason
+            //mLessonFailReasonLayout.setVisibility(View.VISIBLE);
+            //mLessonFailReasonTv.setText();
         }
     }
 
@@ -436,7 +446,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
         if (promotion.getQuota() > 0) {
             //enroll before promotion
             String price = fee == null ? String.valueOf("0") :
-                    BaseBusiness.formatPrice(fee.getTotal().doubleValue() * promotion.getDiscount(), true);
+                    BaseBusiness.formatPrice(fee.getTotal() * promotion.getDiscount(), true);
             String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
             String s = getString(R.string.enroll_before_promotion, promotion.getQuota(), discount, price);
             if (type == Finance.PricingType.PAY_PER_HOUR) {
@@ -446,7 +456,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
         } else if (promotion.getBefore() > 0) {
             //lesson before promotion
             String price = fee == null ? String.valueOf("0") :
-                    BaseBusiness.formatPrice(fee.getTotal().doubleValue() * promotion.getDiscount(), true);
+                    BaseBusiness.formatPrice(fee.getTotal() * promotion.getDiscount(), true);
             String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
             String s = getString(R.string.lesson_before_promotion, promotion.getBefore(), discount, price);
             if (type == Finance.PricingType.PAY_PER_HOUR) {
@@ -491,7 +501,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
         Fee fee = new Fee();
         fee.setFree(false);
         fee.setType(Finance.PricingType.PAY_PER_HOUR);
-        fee.setCharge(BigDecimal.valueOf(2.55));
+        fee.setCharge(2.5f);
 
         //schedule
         Schedule sch = new Schedule();
