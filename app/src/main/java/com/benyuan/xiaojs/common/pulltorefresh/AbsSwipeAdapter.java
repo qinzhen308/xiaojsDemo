@@ -18,6 +18,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -128,6 +129,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     @Override
     public int getCount() {
+        //当数据为空且不需要显示空view的时候，增加一个自定义view到列表确保header能够正常显示与操作
+        if (mBeanList.size() == 0 && patchedHeader() && !showEmptyView()){
+            return 1;
+        }
         return mBeanList.size() == 0 ? 0 : mBeanList.size();
     }
 
@@ -154,7 +159,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-//        if (mBeanList.size() > 0){
+        if (mBeanList.size() > 0){
             H holder = null;
             if (view == null) {
                 view = createContentView(i);
@@ -170,15 +175,13 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             }
             setViewContent(holder, getItem(i), i);
             return view;
-//        }
-
-//        else {//解决加了header后，header高度超过1屏无法下拉
-//            View v = new View(mContext);
-//            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,1);
-//            v.setBackgroundResource(android.R.color.transparent);
-//            v.setLayoutParams(lp);
-//            return v;
-//        }
+        } else {//解决加了header后，header高度超过1屏无法下拉
+            View v = new View(mContext);
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,1);
+            v.setBackgroundResource(android.R.color.transparent);
+            v.setLayoutParams(lp);
+            return v;
+        }
 
     }
 
@@ -288,5 +291,14 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     protected boolean showEmptyView(){
 
         return true;
+    }
+
+    /**
+     * 如果顶部有header,建议返回true,以避免header超过1屏且无list数据时，不能正常向上滑动
+     * @return
+     */
+    protected boolean patchedHeader(){
+
+        return false;
     }
 }
