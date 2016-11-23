@@ -584,16 +584,23 @@ public class LessonCreationActivity extends BaseActivity {
         enroll.setMandatory(mEnrollSwitcher.isChecked());
 
         Fee fee = new Fee();
-        fee.setFree(!mChargeWaySwitcher.isChecked());
-        int feeType = mByLiveTotalPriceTv.isSelected() ? Finance.PricingType.TOTAL : Finance.PricingType.PAY_PER_HOUR;
-        try {
-            float feePrice = mByLiveTotalPriceTv.isSelected() ? Float.parseFloat(mByLiveTotalPriceEdt.getText().toString()) :
-                    Float.parseFloat(mByLiveDurationEdt.getText().toString());
-            fee.setType(feeType);
-            fee.setCharge(BigDecimal.valueOf(feePrice));
-        } catch (Exception e) {
-            e.printStackTrace();
-            //do nothing
+        boolean isFree = !mChargeWaySwitcher.isChecked();
+        fee.setFree(isFree);
+        if (isFree) {
+            fee.setType(Finance.PricingType.TOTAL);
+        } else {
+            //charge
+            int feeType = mByLiveTotalPriceTv.isSelected() ? Finance.PricingType.TOTAL : Finance.PricingType.PAY_PER_HOUR;
+            try {
+                float feePrice = mByLiveTotalPriceTv.isSelected() ? Float.parseFloat(mByLiveTotalPriceEdt.getText().toString()) :
+                        Float.parseFloat(mByLiveDurationEdt.getText().toString());
+                fee.setType(feeType);
+                fee.setCharge(BigDecimal.valueOf(feePrice));
+            } catch (Exception e) {
+                e.printStackTrace();
+                fee.setType(Finance.PricingType.TOTAL);
+                fee.setCharge(BigDecimal.valueOf(0));
+            }
         }
 
         Schedule sch = new Schedule();
