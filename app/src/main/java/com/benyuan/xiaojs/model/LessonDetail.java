@@ -31,6 +31,7 @@ public class LessonDetail {
     private String id;
     private String cover;
     private Teacher teacher;
+    private String state;
 
 
     public Teacher getTeacher() {
@@ -183,5 +184,13 @@ public class LessonDetail {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

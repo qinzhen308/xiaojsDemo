@@ -149,6 +149,7 @@
     <string name="lesson_people_limit">学生人数</string>
     <string name="lesson_start_time">上课时间</string>
     <string name="lesson_duration">上课时长</string>
+    <string name="lesson_fail_reason">失败原因</string>
     <string name="optional_info">选填信息</string>
     <string name="optional_info_tips">封面、课程简介、老师结束等</string>
     <string name="on_shelves">立即上架</string>

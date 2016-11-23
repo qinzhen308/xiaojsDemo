@@ -71,6 +71,12 @@ public class LiveLessonDetailActivity extends BaseActivity {
     TextView mLessonStartTimeTv;
     @BindView(R.id.lesson_duration)
     TextView mLessonDurationTv;
+    @BindView(R.id.lesson_status)
+    TextView mLessonStatusTv;
+    @BindView(R.id.lesson_fail_reason)
+    TextView mLessonFailReasonTv;
+    @BindView(R.id.lesson_fail_reason_layout)
+    TextView mLessonFailReasonLayout;
 
     //==============optional info==============
     //lesson cover
@@ -133,7 +139,6 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
         init();
         loadData();
-        //setData(getTestLesson());
     }
 
     @OnClick({R.id.left_image, R.id.audit_person_select_enter, R.id.audit_portrait, R.id.visible_to_stu,
@@ -303,6 +308,14 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 String m = getString(R.string.minute);
                 mLessonDurationTv.setText(String.valueOf(schedule.getDuration()) + m);
             }
+
+            //status
+            mLessonStatusTv.setText(BaseBusiness.getLessonStatusText(this, lesson.getState()));
+            mLessonStatusTv.setBackgroundResource(BaseBusiness.getLessonStatusDrawable(lesson.getState()));
+
+            //TODO set failure reason
+            //mLessonFailReasonLayout.setVisibility(View.VISIBLE);
+            //mLessonFailReasonTv.setText();
         }
     }
 
