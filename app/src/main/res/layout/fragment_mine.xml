@@ -42,6 +42,7 @@
                     <LinearLayout
                             android:id="@+id/base_info"
                             android:orientation="vertical"
+                            android:gravity="center_horizontal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true">
@@ -177,7 +178,7 @@
                     android:paddingBottom="@dimen/px20">
 
                 <TextView
-                        android:id="@+id/follows"
+                        android:id="@+id/following"
                         android:gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -298,7 +299,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/enter_account"
-                            android:text="5000.0"
+                            android:text="0.00"
                             android:textSize="@dimen/font_38px"
                             android:textColor="@color/font_orange"
                             android:textStyle="bold"

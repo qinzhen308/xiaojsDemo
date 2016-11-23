@@ -68,6 +68,12 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.user_title)
     TextView mUserTitle;
 
+    //ugc
+    @BindView(R.id.fans)
+    TextView mFansTv;
+    @BindView(R.id.following)
+    TextView mFollowingTv;
+
     @Override
     protected View getContentView() {
         return mContext.getLayoutInflater().inflate(R.layout.fragment_mine, null);
@@ -75,12 +81,8 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        User u = XiaojsConfig.mLoginUser;
-        if (u != null && u.getAccount() != null) {
-            setPersonBaseInfo(u.getAccount());
-        } else {
-            setAvatar(null);
-        }
+        setDefaultPortrait();
+        loadData();
     }
 
     @OnClick({R.id.settings, R.id.edit_profile, R.id.my_course, R.id.my_course_schedule, R.id.my_enrollment,
@@ -124,11 +126,12 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    private void loadData () {
+    private void loadData() {
         AccountDataManager.requestCenterData(mContext, new APIServiceCallback<CenterData>() {
             @Override
             public void onSuccess(CenterData centerData) {
-
+                setPersonBaseInfo(centerData != null ? centerData.getBasic() : null);
+                setUgc(centerData);
             }
 
             @Override
@@ -138,25 +141,21 @@ public class MineFragment extends BaseFragment {
         });
     }
 
-    private void setPersonBaseInfo(Account account) {
-        if (account == null) {
-            return;
+    private void setUgc(CenterData centerData) {
+        if (centerData != null && centerData.getUgc() != null) {
+            CenterData.PersonUgc personUgc = centerData.getUgc();
+            mFansTv.setText(String.valueOf(personUgc.getLikedCount()));
+            mFollowingTv.setText(String.valueOf(personUgc.getFollowedCount()));
         }
+    }
 
-        Account.Basic basic = account.getBasic();
+    private void setPersonBaseInfo(Account.Basic basic) {
         //set avatar
         setAvatar(basic);
 
         //set name
-        //TODO base对象的name和login返回的name不同时存在
-        User u = XiaojsConfig.mLoginUser;
         if (basic != null && !TextUtils.isEmpty(basic.getName())) {
-            u.setName(basic.getName());
             mUserName.setText(basic.getName());
-        } else {
-            if (u != null && !TextUtils.isEmpty(u.getName())) {
-                mUserName.setText(u.getName());
-            }
         }
 
         //set title
@@ -186,7 +185,7 @@ public class MineFragment extends BaseFragment {
                         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                             super.onResourceReady(resource, animation);
                             if (resource instanceof GlideBitmapDrawable) {
-                                Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
+                                Bitmap bmp = ((GlideBitmapDrawable) resource).getBitmap();
                                 setupBlurPortraitView(bmp);
                             }
                         }
@@ -194,15 +193,12 @@ public class MineFragment extends BaseFragment {
                         @Override
                         public void onLoadFailed(Exception e, Drawable errorDrawable) {
                             super.onLoadFailed(e, errorDrawable);
-                            mProfileBgView.setBackgroundDrawable(null);
-                            mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+                            setDefaultPortrait();
                         }
                     });
         } else {
             //set default
-            mPortraitView.setImageResource(R.drawable.default_avatar);
-            mProfileBgView.setBackgroundDrawable(null);
-            mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+            setDefaultPortrait();
         }
 
         //test
@@ -226,6 +222,12 @@ public class MineFragment extends BaseFragment {
                 });*/
     }
 
+    private void setDefaultPortrait() {
+        mPortraitView.setImageResource(R.drawable.default_avatar);
+        mProfileBgView.setBackgroundDrawable(null);
+        mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+    }
+
     private void setupBlurPortraitView(Bitmap portrait) {
         Bitmap blurBitmap = FastBlur.smartBlur(portrait, 2, true);
         mBlurPortraitView.setImageBitmap(blurBitmap);
@@ -240,9 +242,9 @@ public class MineFragment extends BaseFragment {
         switch (requestCode) {
             case REQUEST_EDIT:
                 if (data != null) {
-                    Object obj = data.getSerializableExtra(ProfileActivity.KEY_ACCOUNT_BEAN);
-                    if (obj instanceof Account) {
-                        setPersonBaseInfo((Account) obj);
+                    Object obj = data.getSerializableExtra(ProfileActivity.KEY_BASE_BEAN);
+                    if (obj instanceof Account.Basic) {
+                        setPersonBaseInfo((Account.Basic) obj);
                     }
                 }
                 break;
