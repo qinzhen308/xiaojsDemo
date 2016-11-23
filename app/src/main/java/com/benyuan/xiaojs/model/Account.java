@@ -33,13 +33,13 @@ public class Account implements Serializable{
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-    @JsonIgnoreProperties(ignoreUnknown = true,value = "sex")
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Basic implements Serializable{
 
         private String title;
 
         // true means man, otherwise woman
-        private boolean sex;
+        private String sex;
 
         private String name;
 
@@ -55,11 +55,11 @@ public class Account implements Serializable{
             this.title = title;
         }
 
-        public boolean isSex() {
+        public String getSex() {
             return sex;
         }
 
-        public void setSex(boolean sex) {
+        public void setSex(String sex) {
             this.sex = sex;
         }
 

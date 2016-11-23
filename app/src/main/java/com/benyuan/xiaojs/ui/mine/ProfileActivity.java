@@ -126,8 +126,13 @@ public class ProfileActivity extends BaseActivity {
                             .into(mPortraitImg);
 
                     mNameEdt.setText(basic.getName());
-                    mSexTv.setText(basic.isSex() ? R.string.male : R.string.female);
-                    //TODO to be optimized
+                    //set sex
+                    if ("true".equals(basic.getSex())) {
+                        mSexTv.setText(R.string.male);
+                    } else if ("false".equals(basic.getSex())) {
+                        mSexTv.setText(R.string.female);
+                    }
+                    //set birthday
                     if (basic.getBirthday() != null && (basic.getBirthday().getTime()) > 0) {
                         mOldTime = mBirthDayDate.getTime();
                         mBirthDayDate.setTime(basic.getBirthday().getTime());
@@ -165,8 +170,10 @@ public class ProfileActivity extends BaseActivity {
             return true;
         }
 
-        if (!mSexTv.getText().toString().equals(getString(basic.isSex()
-                ? R.string.male : R.string.female))) {
+        String sex = mSexTv.getText().toString();
+        if ((TextUtils.isEmpty(sex) && !TextUtils.isEmpty(basic.getSex())) ||
+                (!TextUtils.isEmpty(sex) && TextUtils.isEmpty(basic.getSex())) ||
+                (!TextUtils.isEmpty(sex) && TextUtils.isEmpty(basic.getSex()) && sex.equals(basic.getSex()))) {
             return true;
         }
 
@@ -206,11 +213,11 @@ public class ProfileActivity extends BaseActivity {
         basic.setName(mNameEdt.getText().toString());
         basic.setTitle(mUserTitleEdt.getText().toString());
 
-        //TODO sex
-        if (getString(R.string.male).equals(mSexTv.getText().toString())) {
-            basic.setSex(true);
-        } else {
-            basic.setSex(false);
+        String sexTv = mSexTv.getText().toString();
+        if (getString(R.string.male).equals(sexTv)) {
+            basic.setSex("true");
+        } else if (getString(R.string.female).equals(sexTv)){
+            basic.setSex("false");
         }
         if (mBirthDayDate.getTime() != mOldTime) {
             basic.setBirthday(new Date(mBirthDayDate.getTime()));
