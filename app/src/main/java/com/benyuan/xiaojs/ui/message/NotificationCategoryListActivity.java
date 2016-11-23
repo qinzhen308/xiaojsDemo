@@ -19,77 +19,55 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.Notification;
 import com.benyuan.xiaojs.model.NotificationCriteria;
-import com.benyuan.xiaojs.ui.base.BaseActivity;
+import com.benyuan.xiaojs.ui.base.BaseListActivity;
 import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
 import com.benyuan.xiaojs.util.DeviceUtil;
 import com.benyuan.xiaojs.util.ToastUtil;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
-public class NotificationCategoryListActivity extends BaseActivity {
-
-    @BindView(R.id.message_list)
-    AutoPullToRefreshListView mList;
-
-
+public class NotificationCategoryListActivity extends BaseListActivity {
     private String categoryId;
 
     private NotificationCategoryAdapter adapter;
+
     @Override
-    protected void addViewContent() {
-        addView(R.layout.activity_message_list);
+    protected void initData() {
         Intent intent = getIntent();
-        if (intent != null){
+        if (intent != null) {
             categoryId = intent.getStringExtra(NotificationConstant.KEY_NOTIFICATION_CATEGORY_ID);
             String title = intent.getStringExtra(NotificationConstant.KEY_NOTIFICATION_TITLE);
             setMiddleTitle(title);
         }
 
-        if (!TextUtils.isEmpty(categoryId)){
-            adapter = new NotificationCategoryAdapter(this,mList,categoryId);
+        if (!TextUtils.isEmpty(categoryId)) {
+            adapter = new NotificationCategoryAdapter(this, mList, categoryId);
             mList.setAdapter(adapter);
             mList.getRefreshableView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     int index = position - mList.getRefreshableView().getHeaderViewsCount();
-                    showLongClickDialog(view,index);
+                    showLongClickDialog(view, index);
                     return true;
                 }
             });
-//            mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    if (adapter != null){
-//                        Notification notification = adapter.getItem(position);
-//                        if (notification != null){
-//                            notification.read = true;
-//                            adapter.notifyDataSetChanged();
-//                        }
-//                    }
-//                }
-//            });
         }
     }
 
-    private void showLongClickDialog(View view, final int position){
+    private void showLongClickDialog(View view, final int position) {
         CommonPopupMenu menu = new CommonPopupMenu(this);
         String[] items = new String[]{"删除"};
         menu.addTextItems(items);
         menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                switch (i){
+                switch (i) {
                     case 0:
                         delete(position);
                         break;
@@ -97,10 +75,10 @@ public class NotificationCategoryListActivity extends BaseActivity {
             }
         });
         int offset = DeviceUtil.getScreenWidth(this) / 2;
-        menu.show(view,offset);
+        menu.show(view, offset);
     }
 
-    private void delete(final int position){
+    private void delete(final int position) {
         String id = adapter.getItem(position).id;
         NotificationDataManager.requestDelNotification(this, id, new APIServiceCallback() {
             @Override
@@ -111,24 +89,15 @@ public class NotificationCategoryListActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                ToastUtil.showToast(NotificationCategoryListActivity.this,errorMessage);
+                ToastUtil.showToast(NotificationCategoryListActivity.this, errorMessage);
             }
         });
     }
 
-    @OnClick({R.id.left_image})
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.left_image:
-                ignoreNotifications();
-                break;
-        }
-    }
-
-    private void ignoreNotifications(){
-        if (adapter != null){
+    private void ignoreNotifications() {
+        if (adapter != null) {
             List<Notification> notifications = adapter.getList();
-            if (notifications != null && notifications.size() > 0){
+            if (notifications != null && notifications.size() > 0) {
 
                 NotificationCriteria criteria = new NotificationCriteria();
                 Duration duration = new Duration();

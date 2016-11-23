@@ -1,10 +1,4 @@
-package com.benyuan.xiaojs.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import java.util.Date;
-
+package com.benyuan.xiaojs.ui.mine;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -15,16 +9,19 @@ import java.util.Date;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/11/17
- * Desc:Get Notifications的请求参数
+ * Date:2016/11/23
+ * Desc:我的报名
  *
  * ======================================================================================== */
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class NotificationCriteria {
-    public String category;
-    public Date before;
-    public Duration duration;
-    public String state;//检索的状态
+import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.base.BaseListActivity;
+
+public class MyEnrollActivity extends BaseListActivity{
+
+    @Override
+    protected void initData() {
+        setMiddleTitle(R.string.my_enrollment);
+        mList.setAdapter(new MyEnrollAdapter(this,mList));
+    }
 }

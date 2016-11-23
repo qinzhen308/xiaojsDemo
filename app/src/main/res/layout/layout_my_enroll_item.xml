@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <View style="@style/DividerHorizontal"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/my_enroll_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_22px"
+                    android:textColor="@color/common_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"/>
+
+            <TextView
+                    android:id="@+id/my_enroll_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_orange"
+                    android:textSize="@dimen/font_28px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+        <TextView
+                android:id="@+id/my_enroll_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_orange"
+                android:textSize="@dimen/font_22px"
+                android:layout_marginTop="@dimen/px20"
+                android:background="@drawable/ic_course_category"
+                android:gravity="center"
+                android:text="直播课"/>
+
+        <RelativeLayout
+                android:layout_marginTop="@dimen/px12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:id="@+id/left"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/my_enroll_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_32px"/>
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/px20">
+
+                    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                            android:id="@+id/my_enroll_teacher_image"
+                            android:layout_width="@dimen/px40"
+                            android:layout_height="@dimen/px40"
+                            app:corner_radius="@dimen/px20"
+                            android:layout_gravity="center_vertical"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/default_portrait"/>
+
+                    <TextView
+                            android:id="@+id/my_enroll_teacher_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/font_26px"
+                            android:textColor="@color/common_text"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/px15"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_toRightOf="@id/left"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/my_enroll_real_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_32px"/>
+
+                <TextView
+                        android:id="@+id/my_enroll_origin_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/common_text"
+                        android:textSize="@dimen/font_24px"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="@dimen/px8"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px30"/>
+
+        <LinearLayout
+                android:id="@+id/my_enroll_opera_wrapper"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <View
+                    style="@style/DividerHorizontal2"/>
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px90">
+
+                <TextView
+                        android:id="@+id/my_enroll_common_opera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/common_text"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"/>
+
+                <TextView
+                        android:id="@+id/my_enroll_blue_opera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_blue"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_toLeftOf="@id/my_enroll_common_opera"
+                        android:layout_marginRight="@dimen/px60"
+                        android:layout_centerInParent="true"/>
+
+                <TextView
+                        android:id="@+id/my_enroll_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_26px"
+                        android:textColor="@color/common_text"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerInParent="true"
+                        android:layout_toLeftOf="@id/my_enroll_blue_opera"
+                        android:layout_marginRight="@dimen/px30"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View style="@style/DividerHorizontal"/>
+
+</LinearLayout>
