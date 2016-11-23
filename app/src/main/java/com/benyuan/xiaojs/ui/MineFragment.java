@@ -27,13 +27,13 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.data.AccountDataManager;
-import com.benyuan.xiaojs.data.api.AccountRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.User;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.course.MyLessonActivity;
+import com.benyuan.xiaojs.ui.mine.MyEnrollActivity;
 import com.benyuan.xiaojs.ui.mine.ProfileActivity;
 import com.benyuan.xiaojs.ui.mine.SettingsActivity;
 import com.benyuan.xiaojs.ui.mine.TeachingAbilityActivity;
@@ -99,6 +99,7 @@ public class MineFragment extends BaseFragment {
             case R.id.my_course_schedule:
                 break;
             case R.id.my_enrollment:
+                startActivity(new Intent(mContext, MyEnrollActivity.class));
                 break;
             case R.id.my_ask_questions:
                 break;
