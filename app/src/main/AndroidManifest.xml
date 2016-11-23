@@ -83,6 +83,9 @@
         <activity
                 android:name=".ui.message.NotificationCategoryListActivity"
                 android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.mine.MyEnrollActivity"
+                android:screenOrientation="portrait"/>
 
     </application>
 

@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.data.NotificationDataManager;
@@ -87,7 +86,7 @@ public class NotificationAdapter extends AbsSwipeAdapter<NotificationCategory,No
 
                 }
 
-                NotificationAdapter.this.onSuccess(null);
+                NotificationAdapter.this.onSuccess(object.categories);
             }
 
             @Override
