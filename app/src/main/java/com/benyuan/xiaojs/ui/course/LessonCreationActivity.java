@@ -645,30 +645,36 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void requestCreateLesson(CreateLesson cl) {
+        showProgress(true);
         LessonDataManager.requestCreateLiveLesson(mContext, cl, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
+                cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
                 setResultOnFinish();
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
                 Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void requestEditLesson(LiveLesson ls) {
+        showProgress(true);
         LessonDataManager.requestEditLesson(mContext, mLessonId, ls, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
+                cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
                 setResultOnFinish();
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
                 Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
