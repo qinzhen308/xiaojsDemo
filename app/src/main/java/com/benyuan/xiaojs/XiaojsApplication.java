@@ -30,7 +30,8 @@ public class XiaojsApplication extends Application {
             logSetting.logLevel(LogLevel.NONE);
 
             //发布Release版本时，需要引入crash report
-            CrashReport.initCrashReport(getApplicationContext(), "注册时申请的APPID", false);
+            String appid = "900060174";
+            CrashReport.initCrashReport(getApplicationContext(), appid, false);
         }
 
 

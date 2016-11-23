@@ -45,6 +45,7 @@ import com.benyuan.xiaojs.model.VerifyCode;
 import com.benyuan.xiaojs.ui.widget.progress.ProgressHUD;
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.Date;
 
@@ -87,7 +88,8 @@ public class TestAPIActivity extends Activity {
                 //testValidateCode(this);
                 //testRegister(this);
                 //testLogin(this);
-                testGetUpToken(this);
+                //testGetUpToken(this);
+                anr();
                 break;
             }
             case R.id.btn_q: {
@@ -110,7 +112,8 @@ public class TestAPIActivity extends Activity {
                 //testEditLesson(this);
                 //confirmEnllor(this);
 //                testHUB(this);
-                testCenterData(this);
+                //testCenterData(this);
+                crash();
                 break;
             }
 
@@ -133,8 +136,16 @@ public class TestAPIActivity extends Activity {
 
     }
 
-    private void testHUB2(Context context){
+    private void crash(){
 
+
+        CrashReport.testJavaCrash();
+    }
+
+    private void anr(){
+
+
+        CrashReport.testANRCrash();
     }
 
     private void testHUB(Context context) {
