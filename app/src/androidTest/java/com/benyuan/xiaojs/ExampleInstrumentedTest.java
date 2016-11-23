@@ -13,7 +13,6 @@ import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.APIEntity;
-import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -32,7 +31,6 @@ import com.orhanobut.logger.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -44,6 +42,7 @@ import java.util.Date;
 public class ExampleInstrumentedTest {
 
     String seesionId = "fqlt0Xmwcp16-m2Qt8LgmhWUMN9O6i5G";
+
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
@@ -51,7 +50,7 @@ public class ExampleInstrumentedTest {
         //assertEquals("com.benyuan.xiaojs", appContext.getPackageName());
 
 
-       // InterceptorTest.testCommonHeader();
+        // InterceptorTest.testCommonHeader();
 
         //testVersion(appContext);
 
@@ -70,10 +69,9 @@ public class ExampleInstrumentedTest {
     }
 
 
-
     private void testEditLesson(Context context) {
 
-        String lesson= "582d42b6ac3a72d80b14a2e6";
+        String lesson = "582d42b6ac3a72d80b14a2e6";
         LiveLesson liveLesson = new LiveLesson();
         liveLesson.setTitle("我是");
 
@@ -101,12 +99,11 @@ public class ExampleInstrumentedTest {
         Fee fee = new Fee();
         fee.setFree(true);
         fee.setType(Finance.PricingType.TOTAL);
-        fee.setCharge(BigDecimal.valueOf(100));
+        fee.setCharge(100);
 
         Schedule sch = new Schedule();
         sch.setStart(new Date(System.currentTimeMillis()));
         sch.setDuration(1000);
-
 
 
         LiveLesson ll = new LiveLesson();
@@ -128,7 +125,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode,String errorMessage) {
+            public void onFailure(String errorCode, String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
@@ -136,7 +133,7 @@ public class ExampleInstrumentedTest {
 
     }
 
-    private void testClaimCompetency(Context context){
+    private void testClaimCompetency(Context context) {
 
         String seesionId = "XdHK58sMYug_0lhhoYAVocNNLfjgjYs2";
         String subject = "582087dcb3072a5f0b147807";
@@ -152,7 +149,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode,String errorMessage) {
+            public void onFailure(String errorCode, String errorMessage) {
 
                 Logger.d("onFailure-----------");
             }
@@ -160,7 +157,7 @@ public class ExampleInstrumentedTest {
 
     }
 
-    private void testGetHomeData(Context context){
+    private void testGetHomeData(Context context) {
 
         String seesionId = "fqlt0Xmwcp16-m2Qt8LgmhWUMN9O6i5G";
 
@@ -171,24 +168,24 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode,String errorMessage) {
+            public void onFailure(String errorCode, String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
 
     }
 
-    private void testVersion(Context context ){
+    private void testVersion(Context context) {
         String fv = APPUtils.getAPPFullVersion(context);
         String name = APPUtils.getAPPVersionName(context);
         int code = APPUtils.getAPPVersionCode(context);
-        System.out.println("----------fversion:"+fv);
+        System.out.println("----------fversion:" + fv);
 
-        System.out.println("----------versionName:"+name);
-        System.out.println("----------versionCode:"+code);
+        System.out.println("----------versionName:" + name);
+        System.out.println("----------versionCode:" + code);
     }
 
-    private void testRegister(Context context){
+    private void testRegister(Context context) {
 
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setCode(4444);
@@ -205,14 +202,14 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode,String errorMessage) {
+            public void onFailure(String errorCode, String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
 
     }
 
-    private void testLogin(Context context){
+    private void testLogin(Context context) {
 
         LoginParams params = new LoginParams();
         params.setPassword("123456");
@@ -228,14 +225,14 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode,String errorMessage) {
+            public void onFailure(String errorCode, String errorMessage) {
 
                 Logger.d("onFailure-----------");
             }
         });
     }
 
-    private void testLogout(Context context){
+    private void testLogout(Context context) {
 
         String sessionID = "123444444rgdgdfgs";
 
@@ -247,14 +244,14 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode,String errorMessage) {
+            public void onFailure(String errorCode, String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
 
     }
 
-    private void testSendCode(Context context){
+    private void testSendCode(Context context) {
 
         RegisterDataManager.requestSendVerifyCode(context, 12222222222l, new APIServiceCallback<VerifyCode>() {
             @Override
@@ -263,7 +260,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode,String errorMessage) {
+            public void onFailure(String errorCode, String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });
@@ -271,7 +268,7 @@ public class ExampleInstrumentedTest {
     }
 
 
-    private void testValidateCode(Context context){
+    private void testValidateCode(Context context) {
         RegisterDataManager.requestValidateCode(context, 13888888888l, 4325, new APIServiceCallback<APIEntity>() {
             @Override
             public void onSuccess(APIEntity object) {
@@ -279,7 +276,7 @@ public class ExampleInstrumentedTest {
             }
 
             @Override
-            public void onFailure(String errorCode,String errorMessage) {
+            public void onFailure(String errorCode, String errorMessage) {
                 Logger.d("onFailure-----------");
             }
         });

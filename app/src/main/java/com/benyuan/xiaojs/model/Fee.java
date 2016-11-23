@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * Created by maxiaobao on 2016/11/8.
@@ -14,8 +13,8 @@ import java.math.BigDecimal;
 public class Fee implements Serializable{
     private boolean free;
     private int type;
-    private BigDecimal charge;
-    private BigDecimal total;
+    private float charge;
+    private float total;
     private Discounted discounted;
     private Applied[] applied;
 
@@ -31,11 +30,11 @@ public class Fee implements Serializable{
         return free;
     }
 
-    public BigDecimal getCharge() {
+    public float getCharge() {
         return charge;
     }
 
-    public void setCharge(BigDecimal charge) {
+    public void setCharge(float charge) {
         this.charge = charge;
     }
 
@@ -43,11 +42,11 @@ public class Fee implements Serializable{
         this.free = free;
     }
 
-    public BigDecimal getTotal() {
+    public float getTotal() {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
+    public void setTotal(float total) {
         this.total = total;
     }
 
@@ -70,15 +69,15 @@ public class Fee implements Serializable{
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class Discounted implements Serializable{
-        private BigDecimal subtotal;
+        private float subtotal;
         private float ratio;
-        private BigDecimal saved;
+        private float saved;
 
-        public BigDecimal getSubtotal() {
+        public float getSubtotal() {
             return subtotal;
         }
 
-        public void setSubtotal(BigDecimal subtotal) {
+        public void setSubtotal(float subtotal) {
             this.subtotal = subtotal;
         }
 
@@ -90,11 +89,11 @@ public class Fee implements Serializable{
             this.ratio = ratio;
         }
 
-        public BigDecimal getSaved() {
+        public float getSaved() {
             return saved;
         }
 
-        public void setSaved(BigDecimal saved) {
+        public void setSaved(float saved) {
             this.saved = saved;
         }
     }

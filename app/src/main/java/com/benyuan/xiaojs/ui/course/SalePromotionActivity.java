@@ -138,7 +138,7 @@ public class SalePromotionActivity extends BaseActivity {
 
         mUnitPriceStr = getString(R.string.per_hour);
         try {
-            mOriginalPrice = mLesson.getFee().getCharge().floatValue();
+            mOriginalPrice = mLesson.getFee().getCharge();
             mPricingType = mLesson.getFee().getType();
             mLessonStartTime = mLesson.getSchedule().getStart().getTime();
             mLimit = mLesson.getEnroll().getMax();

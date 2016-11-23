@@ -1,22 +1,10 @@
 package com.benyuan.xiaojs;
 
-import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
-import com.benyuan.xiaojs.data.api.ApiManager;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
-import com.benyuan.xiaojs.model.Criteria;
-import com.benyuan.xiaojs.model.Duration;
-import com.benyuan.xiaojs.model.Fee;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.orhanobut.logger.Logger;
 
 import org.junit.Test;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-
-import static org.junit.Assert.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).

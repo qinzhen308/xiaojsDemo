@@ -29,7 +29,6 @@ import com.benyuan.xiaojs.ui.widget.EditTextDel;
 import com.benyuan.xiaojs.util.DataPicker;
 import com.benyuan.xiaojs.util.TimeUtil;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -214,10 +213,10 @@ public class LessonCreationActivity extends BaseActivity {
 
             if (fee.getType() == Finance.PricingType.TOTAL) {
                 mByLiveTotalPriceTv.setSelected(true);
-                mByLiveTotalPriceEdt.setText(BaseBusiness.formatPrice(fee.getCharge().doubleValue()));
+                mByLiveTotalPriceEdt.setText(BaseBusiness.formatPrice(fee.getCharge()));
             } else if (fee.getType() == Finance.PricingType.PAY_PER_HOUR) {
                 mByLiveDurationTv.setSelected(true);
-                mByLiveDurationEdt.setText(BaseBusiness.formatPrice(fee.getCharge().doubleValue()));
+                mByLiveDurationEdt.setText(BaseBusiness.formatPrice(fee.getCharge()));
             }
 
             openOrCloseChargeWay(mChargeWaySwitcher);
@@ -486,7 +485,7 @@ public class LessonCreationActivity extends BaseActivity {
         sch.setStart(new Date(mLessonStartTime));
         Fee fee = new Fee();
         fee.setFree(!mChargeWaySwitcher.isChecked());
-        fee.setCharge(BigDecimal.valueOf(price));
+        fee.setCharge(price);
         fee.setType(pricingType);
         lesson.setEnroll(enroll);
         lesson.setSchedule(sch);
@@ -595,11 +594,11 @@ public class LessonCreationActivity extends BaseActivity {
                 float feePrice = mByLiveTotalPriceTv.isSelected() ? Float.parseFloat(mByLiveTotalPriceEdt.getText().toString()) :
                         Float.parseFloat(mByLiveDurationEdt.getText().toString());
                 fee.setType(feeType);
-                fee.setCharge(BigDecimal.valueOf(feePrice));
+                fee.setCharge(feePrice);
             } catch (Exception e) {
                 e.printStackTrace();
                 fee.setType(Finance.PricingType.TOTAL);
-                fee.setCharge(BigDecimal.valueOf(0));
+                fee.setCharge(0);
             }
         }
 

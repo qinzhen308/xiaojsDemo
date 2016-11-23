@@ -191,10 +191,10 @@ public class LessonHomeActivity extends BaseActivity {
                 mPromotionInfoTv.setVisibility(View.GONE);
             } else {
                 //mLessonOriMoneyTv.setVisibility(View.VISIBLE);
-                double originCharge = fee.getTotal() != null ? fee.getTotal().doubleValue() : 0;
+                float originCharge = fee.getTotal();
                 mLessonOriMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
                 if (fee.getDiscounted() != null) {
-                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(fee.getDiscounted().getSubtotal().doubleValue(), true));
+                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(fee.getDiscounted().getSubtotal(), true));
                 } else {
                     mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
                 }
@@ -228,7 +228,7 @@ public class LessonHomeActivity extends BaseActivity {
         }
 
         String s = null;
-        double discPrice = fee.getDiscounted() != null ? fee.getDiscounted().getSubtotal().doubleValue() : 0;
+        double discPrice = fee.getDiscounted() != null ? fee.getDiscounted().getSubtotal() : 0;
         if (applied.getQuota() > 0) {
             //enroll before promotion
             String discount = BaseBusiness.formatDiscount(applied.getDiscount());

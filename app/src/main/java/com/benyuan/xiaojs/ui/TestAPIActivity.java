@@ -25,6 +25,7 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLEResponse;
+import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
@@ -34,7 +35,6 @@ import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
-import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
@@ -46,7 +46,6 @@ import com.benyuan.xiaojs.ui.widget.progress.ProgressHUD;
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class TestAPIActivity extends Activity {
@@ -191,7 +190,7 @@ public class TestAPIActivity extends Activity {
         Fee fee = new Fee();
         fee.setFree(false);
         fee.setType(Finance.PricingType.TOTAL);
-        fee.setCharge(BigDecimal.valueOf(100));
+        fee.setCharge(100);
 
         Schedule sch = new Schedule();
         sch.setStart(new Date(System.currentTimeMillis()));
@@ -444,7 +443,7 @@ public class TestAPIActivity extends Activity {
         Fee fee = new Fee();
         fee.setFree(true);
         fee.setType(Finance.PricingType.TOTAL);
-        fee.setCharge(BigDecimal.valueOf(100));
+        fee.setCharge(100);
 
         Schedule sch = new Schedule();
         sch.setStart(new Date(System.currentTimeMillis()));
