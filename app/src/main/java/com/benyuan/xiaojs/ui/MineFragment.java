@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.XiaojsConfig;
@@ -81,7 +82,7 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        setDefaultPortrait();
+        initProfileBg();
         loadData();
     }
 
@@ -136,7 +137,7 @@ public class MineFragment extends BaseFragment {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-
+                setDefaultPortrait();
             }
         });
     }
@@ -222,10 +223,13 @@ public class MineFragment extends BaseFragment {
                 });*/
     }
 
-    private void setDefaultPortrait() {
-        mPortraitView.setImageResource(R.drawable.default_avatar);
+    private void initProfileBg() {
         mProfileBgView.setBackgroundDrawable(null);
         mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+    }
+
+    private void setDefaultPortrait() {
+        mPortraitView.setImageResource(R.drawable.default_avatar);
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
