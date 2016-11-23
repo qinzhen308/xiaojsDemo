@@ -73,7 +73,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
     @BindView(R.id.lesson_fail_reason)
     TextView mLessonFailReasonTv;
     @BindView(R.id.lesson_fail_reason_layout)
-    TextView mLessonFailReasonLayout;
+    LinearLayout mLessonFailReasonLayout;
 
     //==============optional info==============
     //lesson cover
