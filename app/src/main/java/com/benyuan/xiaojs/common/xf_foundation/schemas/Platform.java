@@ -32,4 +32,28 @@ public class Platform {
 
     }
 
+    //
+    // Defines the general notification states, which inherits those common MSP states.
+    //
+    public static class NotificationState {
+
+        public static final String DRAFT = "Draft";
+        // Pending for operation
+        public static final String DISPATCHED = "Dispatched";
+
+        // Hide notification but does not mean operation is not necessary
+        public static final String DISMISSED = "Dismissed";
+
+        // Operation done or operation is not necessary
+        public static final String ACK_NOW_LEDGED = "Acknowledged";
+        public static final String OBSOLETE = "Obsolete";
+        public static final String REMOVED = "Removed";
+
+        // ---------------------------------------------// DO NOT INHERIT FROM FROM MSPState
+
+        public static final String NONE = "none";
+        public static final String FAILED = "Failed";
+        public static final String DELETED = "Deleted";
+    }
+
 }
