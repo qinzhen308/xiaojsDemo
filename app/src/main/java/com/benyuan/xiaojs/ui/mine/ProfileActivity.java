@@ -14,7 +14,6 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
-import com.benyuan.xiaojs.ui.base.BaseBusiness;
 import com.benyuan.xiaojs.ui.widget.EditTextDel;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.util.DataPicker;
@@ -49,15 +48,15 @@ public class ProfileActivity extends BaseActivity {
     private final static int CROP_PORTRAIT = 100;
 
     @BindView(R.id.portrait)
-    RoundedImageView mPortraitView;
+    RoundedImageView mPortraitImg;
     @BindView(R.id.birthday)
-    TextView mBirthdayView;
+    TextView mBirthdayTv;
     @BindView(R.id.sex)
-    TextView mSexView;
+    TextView mSexTv;
     @BindView(R.id.name)
-    EditTextDel mName;
+    EditTextDel mNameEdt;
     @BindView(R.id.user_title)
-    EditTextDel mUserTitle;
+    EditTextDel mUserTitleEdt;
 
     private Date mBirthDayDate;
     private String mAvatarFileName;
@@ -124,18 +123,18 @@ public class ProfileActivity extends BaseActivity {
                     Glide.with(ProfileActivity.this)
                             .load(basic.getAvatar())
                             .error(R.drawable.default_avatar)
-                            .into(mPortraitView);
+                            .into(mPortraitImg);
 
-                    mName.setText(basic.getName());
-                    mSexView.setText(basic.isSex() ? R.string.male : R.string.female);
+                    mNameEdt.setText(basic.getName());
+                    mSexTv.setText(basic.isSex() ? R.string.male : R.string.female);
                     //TODO to be optimized
                     if (basic.getBirthday() != null && (basic.getBirthday().getTime()) > 0) {
                         mOldTime = mBirthDayDate.getTime();
                         mBirthDayDate.setTime(basic.getBirthday().getTime());
-                        mBirthdayView.setText(TimeUtil.format(mBirthDayDate, TimeUtil.TIME_YYYY_MM_DD));
+                        mBirthdayTv.setText(TimeUtil.format(mBirthDayDate, TimeUtil.TIME_YYYY_MM_DD));
                     }
 
-                    mUserTitle.setText(basic.getTitle());
+                    mUserTitleEdt.setText(basic.getTitle());
                 }
             }
 
@@ -155,29 +154,29 @@ public class ProfileActivity extends BaseActivity {
 
     private boolean checkSubmitEditInfo() {
         Account.Basic basic = mBasic;
-        if (!mName.getText().toString().equals(basic.getName())) {
+        if (!mNameEdt.getText().toString().equals(basic.getName())) {
             return true;
         }
 
-        String title = mUserTitle.getText().toString();
+        String title = mUserTitleEdt.getText().toString();
         if ((TextUtils.isEmpty(title) && !TextUtils.isEmpty(basic.getTitle())) ||
                 (!TextUtils.isEmpty(title) && TextUtils.isEmpty(basic.getTitle())) ||
                 (!TextUtils.isEmpty(title) && TextUtils.isEmpty(basic.getTitle()) && title.equals(basic.getTitle()))) {
             return true;
         }
 
-        if (!mSexView.getText().toString().equals(getString(basic.isSex()
+        if (!mSexTv.getText().toString().equals(getString(basic.isSex()
                 ? R.string.male : R.string.female))) {
             return true;
         }
 
         if (basic.getBirthday() != null) {
             String t = TimeUtil.format(basic.getBirthday(), TimeUtil.TIME_YYYY_MM_DD);
-            if (!mBirthdayView.getText().toString().equals(t)) {
+            if (!mBirthdayTv.getText().toString().equals(t)) {
                 return true;
             }
         } else {
-            if (!TextUtils.isEmpty(mBirthdayView.getText().toString())) {
+            if (!TextUtils.isEmpty(mBirthdayTv.getText().toString())) {
                 return true;
             }
         }
@@ -204,11 +203,11 @@ public class ProfileActivity extends BaseActivity {
             mBasic = new Account.Basic();
         }
         Account.Basic basic = mBasic;
-        basic.setName(mName.getText().toString());
-        basic.setTitle(mUserTitle.getText().toString());
+        basic.setName(mNameEdt.getText().toString());
+        basic.setTitle(mUserTitleEdt.getText().toString());
 
         //TODO sex
-        if (getString(R.string.male).equals(mSexView.getText().toString())) {
+        if (getString(R.string.male).equals(mSexTv.getText().toString())) {
             basic.setSex(true);
         } else {
             basic.setSex(false);
@@ -256,7 +255,7 @@ public class ProfileActivity extends BaseActivity {
                 calendar.set(year, month, day, 0, 0, 0);
                 mBirthDayDate.setTime(calendar.getTimeInMillis());
                 String dateStr = TimeUtil.formatDate(calendar.getTimeInMillis(), TimeUtil.TIME_YYYY_MM_DD);
-                mBirthdayView.setText(dateStr);
+                mBirthdayTv.setText(dateStr);
             }
         });
     }
@@ -269,7 +268,7 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onDataPicked(Object data) {
                 if (data instanceof String) {
-                    mSexView.setText((String) data);
+                    mSexTv.setText((String) data);
                 }
             }
         });
@@ -283,7 +282,7 @@ public class ProfileActivity extends BaseActivity {
                     String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
                     //Bitmap portrait = BitmapFactory.decodeFile(cropImgPath);
                     if (cropImgPath != null) {
-                        //mPortraitView.setImageBitmap(portrait);
+                        //mPortraitImg.setImageBitmap(portrait);
                         //TODO upload avatar and get filename
                         mImgUploading = true;
                         AccountDataManager.requestUploadAvatar(ProfileActivity.this,
@@ -294,7 +293,7 @@ public class ProfileActivity extends BaseActivity {
                                     public void uploadSuccess(String fileName, String fileUrl) {
                                         Glide.with(ProfileActivity.this)
                                                 .load(fileUrl)
-                                                .into(mPortraitView);
+                                                .into(mPortraitImg);
                                         mAvatarFileName = fileName;
 
                                         mImgUploading = false;
