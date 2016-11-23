@@ -101,6 +101,12 @@ public class NotificationAdapter extends AbsSwipeAdapter<NotificationCategory,No
         return false;
     }
 
+    @Override
+    protected boolean patchedHeader() {
+
+        return true;
+    }
+
     class Holder extends BaseHolder{
         @BindView(R.id.message_image)
         MessageImageView image;
