@@ -44,7 +44,7 @@ import butterknife.OnClick;
  * ======================================================================================== */
 
 public class ProfileActivity extends BaseActivity {
-    public final static String KEY_ACCOUNT_BEAN = "key_account_bean";
+    public final static String KEY_BASE_BEAN = "key_base_bean";
     private final static int CROP_PORTRAIT = 100;
 
     @BindView(R.id.portrait)
@@ -231,13 +231,9 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onSuccess(Account account) {
                 Toast.makeText(ProfileActivity.this, R.string.edit_profile_success, Toast.LENGTH_SHORT).show();
-                if (mAccount == null) {
-                    mAccount = new Account();
-                }
-                mAccount.setBasic(mBasic);
 
                 Intent i = new Intent();
-                i.putExtra(KEY_ACCOUNT_BEAN, mAccount);
+                i.putExtra(KEY_BASE_BEAN, mBasic);
                 setResult(RESULT_OK, i);
                 finish();
             }
