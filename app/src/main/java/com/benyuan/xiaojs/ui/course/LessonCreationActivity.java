@@ -174,7 +174,7 @@ public class LessonCreationActivity extends BaseActivity {
         mType = data != null ? data.getInt(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_CREATE)
                 : CourseConstant.TYPE_LESSON_CREATE;
         if (!TextUtils.isEmpty(mLessonId)) {
-            showProgress(true);
+            showProgress(false);
             LessonDataManager.requestLessonData(mContext, mLessonId, new APIServiceCallback<LessonDetail>() {
                 @Override
                 public void onSuccess(LessonDetail lessonDetail) {
@@ -645,7 +645,7 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void requestCreateLesson(CreateLesson cl) {
-        showProgress(true);
+        showProgress(false);
         LessonDataManager.requestCreateLiveLesson(mContext, cl, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
@@ -663,7 +663,7 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void requestEditLesson(LiveLesson ls) {
-        showProgress(true);
+        showProgress(false);
         LessonDataManager.requestEditLesson(mContext, mLessonId, ls, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
