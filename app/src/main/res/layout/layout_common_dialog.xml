@@ -11,7 +11,6 @@
             android:textSize="@dimen/font_36px"
             android:layout_marginTop="@dimen/px60"
             android:textStyle="bold"
-            android:text="title"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -20,7 +19,6 @@
             android:id="@+id/common_dialog_desc"
             android:textColor="@color/font_black"
             android:textSize="@dimen/font_28px"
-            android:text="desc"
             android:layout_marginTop="@dimen/px30"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"

@@ -62,7 +62,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     protected void initParam(){
         Duration duration = new Duration();
         duration.setStart(TimeUtil.original());
-        duration.setEnd(TimeUtil.now());
+        duration.setEnd(TimeUtil.yearAfter(1));
 
         mCriteria = new Criteria();
         mCriteria.setSource(Ctl.LessonSource.ALL);
@@ -205,11 +205,20 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         }
     }
 
+    private void showProgress(boolean cancelable){
+        ((BaseActivity)mContext).showProgress(cancelable);
+    }
+
+    private void cancelProgress(){
+        ((BaseActivity)mContext).cancelProgress();
+    }
     //上架
     private void shelves(final TeachLesson bean){
+        showProgress(false);
         LessonDataManager.requestPutLessonOnShelves(mContext, bean.getId(), new APIServiceCallback<GetLessonsResponse>() {
             @Override
             public void onSuccess(GetLessonsResponse object) {
+                cancelProgress();
                 bean.setState(LessonState.PENDING_FOR_APPROVAL);
                 notifyData(bean);
                 ToastUtil.showToast(mContext,R.string.shelves_need_examine);
@@ -217,6 +226,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
                 ToastUtil.showToast(mContext,errorMessage);
             }
         });
@@ -246,9 +256,11 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             @Override
             public void onClick() {
                 dialog.cancel();
+                showProgress(false);
                 LessonDataManager.requestCancelLessonOnShelves(mContext, bean.getId(), new APIServiceCallback() {
                     @Override
                     public void onSuccess(Object object) {
+                        cancelProgress();
                         bean.setState(LessonState.DRAFT);
                         notifyData(bean);
                         ToastUtil.showToast(mContext,R.string.off_shelves_success);
@@ -256,6 +268,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress();
                         ToastUtil.showToast(mContext,errorMessage);
                     }
                 });

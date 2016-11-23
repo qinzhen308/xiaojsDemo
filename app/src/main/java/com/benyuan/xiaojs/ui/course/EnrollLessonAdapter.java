@@ -66,7 +66,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     protected void initParam() {
         Duration duration = new Duration();
         duration.setStart(TimeUtil.original());
-        duration.setEnd(TimeUtil.now());
+        duration.setEnd(TimeUtil.yearAfter(1));
 
         mCriteria = new Criteria();
         mCriteria.setSource(Ctl.LessonSource.ALL);
