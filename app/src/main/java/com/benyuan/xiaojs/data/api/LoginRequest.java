@@ -87,8 +87,10 @@ public class LoginRequest extends ServiceRequest {
             public void onFailure(Call<LoginInfo> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the login has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.loginPrompt(errorCode);
@@ -147,11 +149,11 @@ public class LoginRequest extends ServiceRequest {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                String errorMsg = t.getMessage();
-
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the logout has occur exception:\n%s", errorMsg);
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
 
                 String errorCode = getExceptionErrorCode();

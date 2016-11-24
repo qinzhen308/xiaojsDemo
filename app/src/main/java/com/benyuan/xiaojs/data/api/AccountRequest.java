@@ -282,8 +282,10 @@ public class AccountRequest extends ServiceRequest {
             public void onFailure(Call<Account.Basic> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the getProfile has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getProfilePrompt(errorCode);
@@ -348,8 +350,10 @@ public class AccountRequest extends ServiceRequest {
             public void onFailure(Call<TokenResponse> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the getAvatarUpToken has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(errorCode);
@@ -415,8 +419,10 @@ public class AccountRequest extends ServiceRequest {
             public void onFailure(Call<TokenResponse> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the getCoverUpToken has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getCoverUpTokenPrompt(errorCode);
@@ -481,8 +487,10 @@ public class AccountRequest extends ServiceRequest {
             public void onFailure(Call<CenterData> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the getCenterData has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getCenterDataPrompt(errorCode);

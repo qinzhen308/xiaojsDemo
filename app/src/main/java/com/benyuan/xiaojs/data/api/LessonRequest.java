@@ -86,8 +86,10 @@ public class LessonRequest extends ServiceRequest {
             public void onFailure(Call<CLResponse> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the createLiveLession request has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.createLessonPrompt(errorCode);
@@ -163,9 +165,12 @@ public class LessonRequest extends ServiceRequest {
 
             @Override
             public void onFailure(Call<GetLessonsResponse> call, Throwable t) {
+
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the get lessons request has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getLessonPrompt(errorCode);
@@ -229,11 +234,11 @@ public class LessonRequest extends ServiceRequest {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                String errorMsg = t.getMessage();
-
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the put lession on shelves request has occur exception:%s", errorMsg);
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
 
                 String errorCode = getExceptionErrorCode();
@@ -295,11 +300,12 @@ public class LessonRequest extends ServiceRequest {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                String errorMsg = t.getMessage();
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the cancelLessonOnShelves request has occur exception:%s", errorMsg);
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
 
                 String errorCode = getExceptionErrorCode();
@@ -377,8 +383,10 @@ public class LessonRequest extends ServiceRequest {
                     public void onFailure(Call<GELessonsResponse> call, Throwable t) {
 
                         if (XiaojsConfig.DEBUG) {
-                            Logger.d("the getEnrolledLessons request has occur exception");
+                            String exception = t.getMessage();
+                            Logger.d("the request has occur exception:\n %s", exception);
                         }
+
 
                         String errorCode = getExceptionErrorCode();
                         String errorMessage = ErrorPrompts.getEnrolledLessonsPrompt(errorCode);
@@ -440,8 +448,10 @@ public class LessonRequest extends ServiceRequest {
             public void onFailure(Call<LessonDetail> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the getLessonDetails request has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getLessonDataPrompt(errorCode);
@@ -506,8 +516,10 @@ public class LessonRequest extends ServiceRequest {
             public void onFailure(Call<LessonDetail> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the getLessonHomepage request has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getLessonDetailsPrompt(errorCode);
@@ -572,8 +584,10 @@ public class LessonRequest extends ServiceRequest {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the editLesson request has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.editLessonPrompt(errorCode);
@@ -643,8 +657,10 @@ public class LessonRequest extends ServiceRequest {
                     public void onFailure(Call<ELResponse> call, Throwable t) {
 
                         if (XiaojsConfig.DEBUG) {
-                            Logger.d("the enrollLesson request has occur exception");
+                            String exception = t.getMessage();
+                            Logger.d("the request has occur exception:\n %s", exception);
                         }
+
 
                         String errorCode = getExceptionErrorCode();
                         String errorMessage = ErrorPrompts.enrollLessonPrompt(errorCode);
@@ -706,8 +722,10 @@ public class LessonRequest extends ServiceRequest {
             public void onFailure(Call<CLEResponse> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the confirmLessonEnrollment request has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
 
                 String errorCode = getExceptionErrorCode();
@@ -772,8 +790,10 @@ public class LessonRequest extends ServiceRequest {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the cancelLesson request has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
 
                 String errorCode = getExceptionErrorCode();

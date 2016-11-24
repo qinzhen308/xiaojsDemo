@@ -81,8 +81,10 @@ public class PlatformRequest extends ServiceRequest {
                     public void onFailure(Call<GNOResponse> call, Throwable t) {
 
                         if (XiaojsConfig.DEBUG) {
-                            Logger.d("the getNotificationsOverview request has occur exception");
+                            String exception = t.getMessage();
+                            Logger.d("the request has occur exception:\n %s", exception);
                         }
+
 
                         String errorCode = getExceptionErrorCode();
                         String errorMessage = ErrorPrompts.getNotificationsOverviewPrompt(errorCode);
@@ -161,8 +163,10 @@ public class PlatformRequest extends ServiceRequest {
                     public void onFailure(Call<GENotificationsResponse> call, Throwable t) {
 
                         if (XiaojsConfig.DEBUG) {
-                            Logger.d("the getNotificationsOverview request has occur exception");
+                            String exception = t.getMessage();
+                            Logger.d("the request has occur exception:\n %s", exception);
                         }
+
 
                         String errorCode = getExceptionErrorCode();
                         String errorMessage = ErrorPrompts.getNotificationsPrompt(errorCode);
@@ -224,11 +228,11 @@ public class PlatformRequest extends ServiceRequest {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                String errorMsg = t.getMessage();
-
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the deleteNotification request has occur exception:\n%s", errorMsg);
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
 
                 String errorCode = getExceptionErrorCode();
@@ -302,7 +306,8 @@ public class PlatformRequest extends ServiceRequest {
                     public void onFailure(Call<IgnoreNResponse> call, Throwable t) {
 
                         if (XiaojsConfig.DEBUG) {
-                            Logger.d("the ignoreNotifications request has occur exception");
+                            String exception = t.getMessage();
+                            Logger.d("the request has occur exception:\n %s", exception);
                         }
 
                         String errorCode = getExceptionErrorCode();

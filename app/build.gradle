@@ -13,15 +13,15 @@ android {
         minSdkVersion 15
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
         release_config {
-            //storeFile file(ksPro['storeFile'])
-            //storePassword  System.console().readLine("\nKeystore password: ")
-            //keyAlias ksPro['keyAlias']
-            //keyPassword  System.console().readLine("\nKeystore password: ")
+            storeFile file(ksPro['storeFile'])
+            storePassword  ksPro['storePwd']
+            keyAlias ksPro['keyAlias']
+            keyPassword  ksPro['keyPwd']
 
         }
     }
@@ -36,6 +36,11 @@ android {
     packagingOptions{
         exclude 'META-INF/LICENSE'
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 dependencies {
