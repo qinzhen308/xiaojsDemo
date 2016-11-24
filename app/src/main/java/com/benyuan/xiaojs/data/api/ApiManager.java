@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -33,7 +34,8 @@ public class ApiManager {
 
 
     private volatile static ApiManager apiManager;
-    private XiaojsService xiaojsService;
+    //private XiaojsService xiaojsService;
+    private OkHttpClient okHttpClient;
     private Context appContext;
 
 
@@ -59,15 +61,17 @@ public class ApiManager {
 
     public XiaojsService getXiaojsService() {
 
-        if (xiaojsService == null) {
-            xiaojsService = createXiaojsService();
-        }
+//        if (xiaojsService == null) {
+//            xiaojsService = createXiaojsService();
+//        }
+//
+//        return xiaojsService;
 
-        return xiaojsService;
+        return createXiaojsService();
 
     }
 
-    private XiaojsService createXiaojsService() {
+    private OkHttpClient createOkhttp() {
 
         HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
         if (XiaojsConfig.DEBUG) {
@@ -88,7 +92,41 @@ public class ApiManager {
                 .addInterceptor(logInterceptor)
                 .addNetworkInterceptor(logInterceptor)
                 .addInterceptor(headerInterceptor)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20,TimeUnit.SECONDS)
                 .build();
+
+        return okHttpClient;
+
+    }
+
+    private XiaojsService createXiaojsService() {
+
+//        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
+//        if (XiaojsConfig.DEBUG) {
+//            logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        } else {
+//
+//            logInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+//        }
+//
+//
+//        int appType = getAPPType();
+//        String appVerion = APPUtils.getAPPFullVersion(appContext);
+//
+//        CommonHeaderInterceptor headerInterceptor = new CommonHeaderInterceptor(appType, appVerion);
+//
+//
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//                .addInterceptor(logInterceptor)
+//                .addNetworkInterceptor(logInterceptor)
+//                .addInterceptor(headerInterceptor)
+//                .build();
+
+        if (okHttpClient == null) {
+            okHttpClient = createOkhttp();
+        }
+
 
         JacksonConverterFactory jacksonFactory = JacksonConverterFactory.create();
 

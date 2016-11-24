@@ -75,8 +75,10 @@ public class CategoriesRequest extends ServiceRequest {
             public void onFailure(Call<CSubject> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the getSubject has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.loginPrompt(errorCode);

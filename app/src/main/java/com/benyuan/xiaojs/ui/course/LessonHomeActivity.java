@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -312,6 +313,8 @@ public class LessonHomeActivity extends BaseActivity {
         textView.setTextColor(getResources().getColor(R.color.font_black));
 
         textView.setLineSpacing(2f, 1.5f);
+
+        textView.setMinHeight(getResources().getDimensionPixelSize(R.dimen.px400));
 
         return textView;
     }

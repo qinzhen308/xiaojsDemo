@@ -74,21 +74,21 @@ public class RegisterRequest extends ServiceRequest {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                String exception = t.getMessage();
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the register request has occur exception:\n %s",exception);
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
 
 
-                    String errorCode = getExceptionErrorCode();
-                    String errorMessage = ErrorPrompts.registerPrompt(errorCode);
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.registerPrompt(errorCode);
 
-                    APIServiceCallback callback = callbackReference.get();
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
+                APIServiceCallback callback = callbackReference.get();
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
                 }
+
+            }
 
         });
 
@@ -163,8 +163,10 @@ public class RegisterRequest extends ServiceRequest {
             public void onFailure(Call<APIEntity> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the validate code request has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
+
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.validateCodePrompt(errorCode);
@@ -227,7 +229,8 @@ public class RegisterRequest extends ServiceRequest {
             public void onFailure(Call<VerifyCode> call, Throwable t) {
 
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the send code has occur exception");
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
                 }
 
                 String errorCode = getExceptionErrorCode();
