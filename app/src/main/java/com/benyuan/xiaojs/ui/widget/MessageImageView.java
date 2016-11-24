@@ -142,9 +142,9 @@ public class MessageImageView extends RoundedImageView {
         if (mIsCircle){//是圆形图片的话要按圆形内部最大正方形的宽度计算，
             int r = drawableWidth / 2;
             int half = (int) Math.sqrt(r * r / 2) ;//2x*x = r*r
-            return getWidth() / 2 + half - mBackground.getWidth() / 2;
+            return getWidth() / 2 + half - getBg().getWidth() / 2;
         }else {
-            return getWidth() / 2 + drawableWidth / 2 - mBackground.getWidth() / 2;
+            return getWidth() / 2 + drawableWidth / 2 - getBg().getWidth() / 2;
         }
 
     }
@@ -155,9 +155,18 @@ public class MessageImageView extends RoundedImageView {
         if (mIsCircle){
             int r = drawableHeight / 2;
             int half = (int) Math.sqrt(r * r / 2) ;
-            return getHeight() / 2 - (half + mBackground.getHeight() / 2);
+            return getHeight() / 2 - (half + getBg().getHeight() / 2);
         }else {
-            return getHeight() / 2 - (drawableHeight / 2 + mBackground.getHeight() / 2);
+            return getHeight() / 2 - (drawableHeight / 2 + getBg().getHeight() / 2);
         }
+    }
+
+    private Bitmap getBg(){
+        if (mType == TYPE_NUM){
+            return mBackground;
+        }else if (mType == TYPE_MARK){
+            return mMark;
+        }
+        return mBackground;
     }
 }
