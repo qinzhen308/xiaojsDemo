@@ -50,6 +50,9 @@ public class LessonRequest extends ServiceRequest {
             @Override
             public void onResponse(Call<CLResponse> call, Response<CLResponse> response) {
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -130,6 +133,9 @@ public class LessonRequest extends ServiceRequest {
             public void onResponse(Call<GetLessonsResponse> call,
                                    Response<GetLessonsResponse> response) {
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -201,6 +207,10 @@ public class LessonRequest extends ServiceRequest {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
                 if (responseCode == SUCCESS_CODE) {
 
                     APIServiceCallback callback = callbackReference.get();
@@ -268,6 +278,10 @@ public class LessonRequest extends ServiceRequest {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
                 if (responseCode == SUCCESS_CODE) {
 
                     APIServiceCallback callback = callbackReference.get();
@@ -346,6 +360,9 @@ public class LessonRequest extends ServiceRequest {
                                            Response<GELessonsResponse> response) {
 
                         int responseCode = response.code();
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the request has onResponse, the code:%d", responseCode);
+                        }
 
                         if (responseCode == SUCCESS_CODE) {
 
@@ -400,18 +417,23 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void getLessonData(Context context,
-                                 @NonNull String lesson,
-                                 @NonNull APIServiceCallback<LessonDetail> callback) {
+                              @NonNull String sessionID,
+                              @NonNull String lesson,
+                              @NonNull APIServiceCallback<LessonDetail> callback) {
 
         final WeakReference<APIServiceCallback<LessonDetail>> callbackReference =
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getLessonData(lesson).enqueue(new Callback<LessonDetail>() {
+        xiaojsService.getLessonData(sessionID,lesson).enqueue(new Callback<LessonDetail>() {
             @Override
             public void onResponse(Call<LessonDetail> call, Response<LessonDetail> response) {
 
                 int responseCode = response.code();
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -478,6 +500,10 @@ public class LessonRequest extends ServiceRequest {
             public void onResponse(Call<LessonDetail> call, Response<LessonDetail> response) {
 
                 int responseCode = response.code();
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -548,6 +574,10 @@ public class LessonRequest extends ServiceRequest {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -620,6 +650,10 @@ public class LessonRequest extends ServiceRequest {
 
                         int responseCode = response.code();
 
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the request has onResponse, the code:%d", responseCode);
+                        }
+
                         if (responseCode == SUCCESS_CODE) {
 
                             ELResponse elResponse = response.body();
@@ -688,6 +722,11 @@ public class LessonRequest extends ServiceRequest {
             @Override
             public void onResponse(Call<CLEResponse> call, Response<CLEResponse> response) {
                 int responseCode = response.code();
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
                 if (responseCode == SUCCESS_CODE) {
 
                     APIServiceCallback<CLEResponse> callback = callbackReference.get();
@@ -755,6 +794,11 @@ public class LessonRequest extends ServiceRequest {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
                 if (responseCode == SUCCESS_CODE) {
 
                     APIServiceCallback callback = callbackReference.get();

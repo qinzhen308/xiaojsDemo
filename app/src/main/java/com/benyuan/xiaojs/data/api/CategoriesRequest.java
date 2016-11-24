@@ -38,6 +38,9 @@ public class CategoriesRequest extends ServiceRequest {
                                    Response<CSubject> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 

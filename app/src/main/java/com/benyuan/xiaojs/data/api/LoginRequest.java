@@ -47,6 +47,9 @@ public class LoginRequest extends ServiceRequest {
             public void onResponse(Call<LoginInfo> call, Response<LoginInfo> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -114,9 +117,13 @@ public class LoginRequest extends ServiceRequest {
         xiaojsService.logout(sessionID).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                int responseCode = response.code();
-                if (responseCode == SUCCESS_CODE) {
 
+                int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
+                if (responseCode == SUCCESS_CODE) {
 
                     AccountDataManager.clearUserInfo(appContext);
 

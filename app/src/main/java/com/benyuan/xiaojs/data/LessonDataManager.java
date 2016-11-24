@@ -103,7 +103,6 @@ public class LessonDataManager extends DataManager{
     /**
      * 上架直播课
      * @param context
-     * @param sessionID
      * @param lesson
      * @param callback
      */
@@ -149,7 +148,6 @@ public class LessonDataManager extends DataManager{
     /**
      * 取消上架课程
      * @param context
-     * @param sessionID
      * @param lesson
      * @param callback
      */
@@ -194,7 +192,6 @@ public class LessonDataManager extends DataManager{
     /**
      * 获取已报名的课程
      * @param context
-     * @param sessionID
      * @param criteria
      * @param pagination
      * @param callback
@@ -245,6 +242,21 @@ public class LessonDataManager extends DataManager{
             return;
         }
 
+        String session = AccountDataManager.getSessionID(context);
+
+        if (TextUtils.isEmpty(session)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.getLessonDataPrompt(Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+
+
         if (TextUtils.isEmpty(lesson)) {
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the lesson param is empty,so the requestGetLessonDetails request return failure");
@@ -256,7 +268,7 @@ public class LessonDataManager extends DataManager{
         }
 
         LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.getLessonData(context,lesson,callback);
+        lessonRequest.getLessonData(context,session,lesson,callback);
     }
 
 
