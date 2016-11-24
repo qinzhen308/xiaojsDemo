@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -103,7 +105,7 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
                     TagItem item = new TagItem();
                     item.label = tags[i];
                     item.view = buildLabelItem(item);
-                    mTags.add(item);
+                    mTags.add(0, item);
                     if (item.view != null) {
                         mAddLabelLayout.addView(item.view, 0);
                     }
@@ -133,11 +135,16 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
 
     private void setLabel() {
         List<String> tags = new ArrayList<String>();
-        for (int i = 0; i < mTags.size(); i++) {
-            TagItem tagItem = mTags.get(i);
-            tagItem.label = tagItem.labelEdt.getText().toString();
-            if (!TextUtils.isEmpty(tagItem.label)) {
-                tags.add(tagItem.label);
+        int count = mAddLabelLayout.getChildCount();
+        if (count > 1) {
+            int size = mAddLabelController.isShown() ? count - 1 : MAX_LABEL_COUNT;
+            for (int i = 0; i < size; i++) {
+                View v = mAddLabelLayout.getChildAt(i);
+                TextView lbTv = (TextView)v.findViewById(R.id.label_name);
+                String lb = lbTv.getText().toString();
+                if (!TextUtils.isEmpty(lb)) {
+                    tags.add(lb);
+                }
             }
         }
 

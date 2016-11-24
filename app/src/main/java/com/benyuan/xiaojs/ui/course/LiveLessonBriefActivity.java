@@ -34,7 +34,7 @@ import butterknife.OnClick;
  * ======================================================================================== */
 
 public class LiveLessonBriefActivity extends BaseActivity {
-    private final static int MAX_CHAR = 200;
+    private final static int MAX_CHAR = 500;
     @BindView(R.id.input_content)
     EditText mInputContentEdt;
     @BindView(R.id.input_tips)

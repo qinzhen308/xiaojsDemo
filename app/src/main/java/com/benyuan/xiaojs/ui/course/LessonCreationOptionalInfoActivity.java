@@ -58,6 +58,8 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     ImageView mCoverImgView;
     @BindView(R.id.live_lesson_brief)
     TextView mLessonBriefTv;
+    @BindView(R.id.live_lesson_label)
+    TextView mLessonLabel;
     @BindView(R.id.teacher_introduction)
     TextView mTeachIntroTv;
     @BindView(R.id.sit_in_on)
@@ -177,6 +179,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
 
                 initLessonBrief();
                 initTeacherIntro();
+                initLessonLabel();
                 initAudit();
                 initPromotion();
 
@@ -243,6 +246,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 break;
             case LESSON_LABEL:
                 updateLesson(data);
+                initLessonLabel();
                 break;
             case TEACHER_INTRODUCTION:
                 updateLesson(data);
@@ -267,6 +271,34 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 mLessonBriefTv.setTextColor(mBlackFont);
             } else {
                 mLessonBriefTv.setTextColor(mLightGrayFont);
+                mLessonBriefTv.setText(R.string.please_input);
+            }
+        } else {
+            mLessonBriefTv.setTextColor(mLightGrayFont);
+            mLessonBriefTv.setText(R.string.please_input);
+        }
+    }
+
+    private void initLessonLabel() {
+        if (mLesson != null) {
+            String[] labels = mLesson.getTags();
+            if (labels != null) {
+                StringBuilder sb = new StringBuilder();
+
+                for (String label : labels) {
+                    sb.append(label + ",");
+                }
+                String txt = sb.toString();
+                if (!TextUtils.isEmpty(txt)) {
+                    txt = txt.substring(0, txt.length() - 1);
+                }
+                if (!TextUtils.isEmpty(txt)) {
+                    mLessonLabel.setText(formatResult(txt));
+                    mLessonLabel.setTextColor(mBlackFont);
+                }
+            } else {
+                mLessonLabel.setText(R.string.live_lesson_label_hint);
+                mLessonLabel.setTextColor(mLightGrayFont);
             }
         }
     }
@@ -279,7 +311,11 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 mTeachIntroTv.setTextColor(mBlackFont);
             } else {
                 mTeachIntroTv.setTextColor(mLightGrayFont);
+                mTeachIntroTv.setText(R.string.please_input);
             }
+        } else {
+            mTeachIntroTv.setTextColor(mLightGrayFont);
+            mTeachIntroTv.setText(R.string.please_input);
         }
     }
 
@@ -288,13 +324,9 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
         if (mLesson != null && mLesson.getAudit() != null) {
             String[] sitInOnPersons = mLesson.getAudit().getGrantedTo();
             if (sitInOnPersons != null) {
-                int i = 0;
                 StringBuilder sb = new StringBuilder();
 
                 for (String per : sitInOnPersons) {
-                    if (++i > 2) {
-                        break;
-                    }
                     sb.append(per + ",");
                 }
                 String txt = sb.toString();
@@ -302,10 +334,16 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                     txt = txt.substring(0, txt.length() - 1);
                 }
                 if (!TextUtils.isEmpty(txt)) {
-                    mSitInOnv.setText(txt);
+                    mSitInOnv.setText(formatResult(txt));
                     mSitInOnv.setTextColor(mBlackFont);
+                } else {
+                    mSitInOnv.setText(R.string.please_set);
+                    mSitInOnv.setTextColor(mLightGrayFont);
                 }
             }
+        } else {
+            mSitInOnv.setText(R.string.please_set);
+            mSitInOnv.setTextColor(mLightGrayFont);
         }
     }
 
