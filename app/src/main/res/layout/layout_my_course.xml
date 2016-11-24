@@ -40,8 +40,8 @@
                         android:id="@+id/course_item_image"
                         android:layout_width="@dimen/px260"
                         android:layout_height="@dimen/px147"
-                        android:src="@mipmap/t_four"
-                        android:scaleType="fitXY"/>
+                        android:src="@drawable/default_lesson_cover"
+                        android:scaleType="centerCrop"/>
 
                 <TextView
                         android:id="@+id/course_xbs_state"
