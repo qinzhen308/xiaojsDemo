@@ -273,8 +273,7 @@
                 android:paddingTop="@dimen/px10"
                 android:paddingBottom="@dimen/px10"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
@@ -284,7 +283,8 @@
                     android:id="@+id/lesson_cover"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_lesson_cover"/>
 
             <View
                     style="@style/DividerHorizontal"

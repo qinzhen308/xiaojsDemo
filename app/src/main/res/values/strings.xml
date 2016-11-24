@@ -208,8 +208,8 @@
     <string name="time">时间</string>
     <string name="course_state">状态</string>
 
-    <string name="lession_detail">课程详情</string>
-    <string name="lession_apply">立即报名</string>
+    <string name="lesson_detail">课程详情</string>
+    <string name="lesson_apply">立即报名</string>
     <string name="consulting">咨询</string>
     <string name="pay_now">下单并付款</string>
 
