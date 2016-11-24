@@ -330,7 +330,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 int h = (int) ((CourseConstant.COURSE_COVER_HEIGHT / (float) CourseConstant.COURSE_COVER_WIDTH) * w);
                 params.height = h;
                 params.width = w;
-                Glide.with(this).load(lesson.getCover()).into(mLessonCover);
+                Glide.with(this).load(lesson.getCover()).error(R.drawable.default_lesson_cover).into(mLessonCover);
             } else {
                 //set gone
                 mLessonCoverLayout.setVisibility(View.GONE);

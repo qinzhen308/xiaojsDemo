@@ -158,17 +158,16 @@ public class LessonHomeActivity extends BaseActivity {
         if (lesson != null) {
             //set cover
             if (!TextUtils.isEmpty(lesson.getCover())) {
-                mLessonCoverImg.setVisibility(View.VISIBLE);
+                //mLessonCoverImg.setVisibility(View.VISIBLE);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLessonCoverImg.getLayoutParams();
-                int padding = getResources().getDimensionPixelOffset(R.dimen.px32);
-                int w = getResources().getDisplayMetrics().widthPixels - padding * 2;
+                int w = getResources().getDisplayMetrics().widthPixels;
                 int h = (int) ((CourseConstant.COURSE_COVER_HEIGHT / (float) CourseConstant.COURSE_COVER_WIDTH) * w);
                 params.height = h;
                 params.width = w;
-                Glide.with(this).load(lesson.getCover()).into(mLessonCoverImg);
+                Glide.with(this).load(lesson.getCover()).error(R.drawable.default_lesson_cover).into(mLessonCoverImg);
             } else {
                 //set gone
-                mLessonCoverImg.setVisibility(View.GONE);
+                //mLessonCoverImg.setVisibility(View.GONE);
             }
 
             //set title
@@ -255,7 +254,7 @@ public class LessonHomeActivity extends BaseActivity {
             Teacher tea = lesson.getTeacher();
             if (tea != null && tea.getBasic() != null) {
                 Glide.with(this).load(tea.getBasic().getAvatar())
-                        .error(new ColorDrawable(getResources().getColor(R.color.round_img_border_)))
+                        .error(R.drawable.default_avatar)
                         .into(mTeaAvatarImg);
                 mTeaNameTv.setText(tea.getBasic().getName());
 

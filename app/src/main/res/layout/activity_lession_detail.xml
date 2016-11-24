@@ -66,7 +66,9 @@
             <ImageView
                     android:id="@+id/lesson_img"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_lesson_cover"/>
 
             <RelativeLayout
                     android:layout_width="match_parent"
@@ -171,7 +173,7 @@
                         android:layout_width="@dimen/px120"
                         android:layout_height="@dimen/px120"
                         android:layout_marginRight="@dimen/px24"
-                        android:src="@drawable/default_portrait"/>
+                        android:src="@drawable/default_avatar"/>
 
                 <ImageView
                         android:id="@+id/nav_right"
@@ -269,7 +271,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1.0"
-                        android:text="@string/lession_apply"
+                        android:text="@string/lesson_apply"
                         android:textColor="@drawable/common_btn_white_text_selector"
                         android:background="@drawable/big_submit_btn_selector"
                         android:textSize="@dimen/font_32px"/>
