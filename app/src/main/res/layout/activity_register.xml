@@ -41,6 +41,8 @@
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
                 android:hint="@string/name_empty"
+                android:lines="1"
+                android:maxLength="16"
                 android:layout_toRightOf="@+id/reg_name_title"/>
 
         <View

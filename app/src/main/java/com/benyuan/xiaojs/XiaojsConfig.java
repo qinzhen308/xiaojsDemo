@@ -19,5 +19,4 @@ public class XiaojsConfig {
 
     public static final String XIAOJS_PREFERENCE_NAME = "xiaojs_preference";
     public static final String KEY_LOGIN_USERNAME = "key-login-username";
-    public static final String KEY_LOGIN_PASSWORD = "key-login-password";
 }

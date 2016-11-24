@@ -202,7 +202,6 @@ public class RegisterActivity extends BaseActivity {
                                         Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                                         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         i.putExtra(XiaojsConfig.KEY_LOGIN_USERNAME, regInfo.getMobile());
-                                        i.putExtra(XiaojsConfig.KEY_LOGIN_PASSWORD, regInfo.getPassword());
                                         startActivity(i);
                                     }
                                 }
@@ -242,7 +241,14 @@ public class RegisterActivity extends BaseActivity {
         if (TextUtils.isEmpty(userName)) {
             Toast.makeText(this, R.string.name_empty, Toast.LENGTH_SHORT).show();
             return false;
-        } else if (TextUtils.isEmpty(phoneNum)) {
+        } else if (!TextUtils.isEmpty(userName) && (userName.length() < 2 || userName.length() > 16)) {
+            if (userName.length() < 2) {
+                Toast.makeText(this, R.string.name_length_less_than_2, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.name_length_more_than_16, Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }else if (TextUtils.isEmpty(phoneNum)) {
             Toast.makeText(this, R.string.phone_empty, Toast.LENGTH_SHORT).show();
             return false;
         } else if (!VerifyUtils.checkPhoneNum(phoneNum)) {

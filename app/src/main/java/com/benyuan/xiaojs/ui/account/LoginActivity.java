@@ -123,11 +123,9 @@ public class LoginActivity extends BaseActivity {
 
     private void initLoginInfo() {
         long phoneNum = XjsUtils.getSharedPreferences().getLong(XiaojsConfig.KEY_LOGIN_USERNAME, 0);
-        String pwd = XjsUtils.getSharedPreferences().getString(XiaojsConfig.KEY_LOGIN_PASSWORD, "");
 
-        if (!TextUtils.isEmpty(pwd) && phoneNum != 0) {
+        if (phoneNum != 0) {
             mLoginNamedEdit.setText(String.valueOf(phoneNum));
-            mLoginPwdEdit.setText(pwd);
         }
     }
 

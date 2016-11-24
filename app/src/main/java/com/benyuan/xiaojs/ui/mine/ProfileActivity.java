@@ -157,7 +157,7 @@ public class ProfileActivity extends BaseActivity {
         });
     }
 
-    private boolean checkSubmitEditInfo() {
+    private boolean checkSubmitInfoChanged() {
         Account.Basic basic = mBasic;
         if (!mNameEdt.getText().toString().equals(basic.getName())) {
             return true;
@@ -166,14 +166,14 @@ public class ProfileActivity extends BaseActivity {
         String title = mUserTitleEdt.getText().toString();
         if ((TextUtils.isEmpty(title) && !TextUtils.isEmpty(basic.getTitle())) ||
                 (!TextUtils.isEmpty(title) && TextUtils.isEmpty(basic.getTitle())) ||
-                (!TextUtils.isEmpty(title) && TextUtils.isEmpty(basic.getTitle()) && title.equals(basic.getTitle()))) {
+                (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(basic.getTitle()) && !title.equals(basic.getTitle()))) {
             return true;
         }
 
         String sex = mSexTv.getText().toString();
         if ((TextUtils.isEmpty(sex) && !TextUtils.isEmpty(basic.getSex())) ||
                 (!TextUtils.isEmpty(sex) && TextUtils.isEmpty(basic.getSex())) ||
-                (!TextUtils.isEmpty(sex) && TextUtils.isEmpty(basic.getSex()) && sex.equals(basic.getSex()))) {
+                (!TextUtils.isEmpty(sex) && !TextUtils.isEmpty(basic.getSex()) && !sex.equals(basic.getSex()))) {
             return true;
         }
 
@@ -195,12 +195,41 @@ public class ProfileActivity extends BaseActivity {
         return false;
     }
 
+    private boolean checkSubmitInfoValid() {
+        String userName = mNameEdt.getText().toString();
+        if (!TextUtils.isEmpty(userName) && (userName.length() < 2 || userName.length() > 16)) {
+            if (userName.length() < 1) {
+                Toast.makeText(this, R.string.name_length_less_than_2, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.name_length_more_than_16, Toast.LENGTH_SHORT).show();
+            }
+
+            return false;
+        }
+
+        if (TextUtils.isEmpty(userName)) {
+            Toast.makeText(this, R.string.name_empty, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        String title = mUserTitleEdt.getText().toString();
+        if (!TextUtils.isEmpty(title) && title.length() > 20) {
+            return false;
+        }
+
+        return true;
+    }
+
     private void submitEditProfile() {
         if (mImgUploading) {
             return;
         }
 
-        if (!checkSubmitEditInfo()) {
+        if (!checkSubmitInfoValid()) {
+            return;
+        }
+
+        if (!checkSubmitInfoChanged()) {
             //not editing
             finish();
             return;
@@ -216,7 +245,7 @@ public class ProfileActivity extends BaseActivity {
         String sexTv = mSexTv.getText().toString();
         if (getString(R.string.male).equals(sexTv)) {
             basic.setSex("true");
-        } else if (getString(R.string.female).equals(sexTv)){
+        } else if (getString(R.string.female).equals(sexTv)) {
             basic.setSex("false");
         }
         if (mBirthDayDate.getTime() != mOldTime) {
