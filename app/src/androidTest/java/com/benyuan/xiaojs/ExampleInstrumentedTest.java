@@ -19,6 +19,7 @@ import com.benyuan.xiaojs.model.CreateLesson;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.HomeData;
+import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
@@ -66,6 +67,25 @@ public class ExampleInstrumentedTest {
         //testClaimCompetency(appContext);
         //testEditLesson(appContext);
         //testCenterData(appContext);
+        testGetData(appContext);
+    }
+
+    private void testGetData(Context context) {
+
+        String lesson = "5834f31eaf662a8111362161";
+
+        LessonDataManager.requestLessonData(context, lesson, new APIServiceCallback<LessonDetail>() {
+            @Override
+            public void onSuccess(LessonDetail object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
     }
 
 

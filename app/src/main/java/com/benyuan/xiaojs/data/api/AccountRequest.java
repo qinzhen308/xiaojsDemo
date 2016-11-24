@@ -47,7 +47,11 @@ public class AccountRequest extends ServiceRequest {
         xiaojsService.getHomeData(sessionID).enqueue(new Callback<HomeData>() {
             @Override
             public void onResponse(Call<HomeData> call, Response<HomeData> response) {
+
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -114,7 +118,11 @@ public class AccountRequest extends ServiceRequest {
         xiaojsService.claimCompetency(sessionID, competencyParams).enqueue(new Callback<ClaimCompetency>() {
             @Override
             public void onResponse(Call<ClaimCompetency> call, Response<ClaimCompetency> response) {
+
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -182,6 +190,10 @@ public class AccountRequest extends ServiceRequest {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
                 if (responseCode == SUCCESS_CODE) {
 
                     APIServiceCallback callback = callbackReference.get();
@@ -245,7 +257,11 @@ public class AccountRequest extends ServiceRequest {
         xiaojsService.getProfile(sessionID).enqueue(new Callback<Account.Basic>() {
             @Override
             public void onResponse(Call<Account.Basic> call, Response<Account.Basic> response) {
+
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -314,6 +330,9 @@ public class AccountRequest extends ServiceRequest {
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -380,6 +399,9 @@ public class AccountRequest extends ServiceRequest {
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
@@ -448,6 +470,9 @@ public class AccountRequest extends ServiceRequest {
             public void onResponse(Call<CenterData> call, Response<CenterData> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 

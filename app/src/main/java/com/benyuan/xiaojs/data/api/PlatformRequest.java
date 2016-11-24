@@ -44,7 +44,11 @@ public class PlatformRequest extends ServiceRequest {
                 new Callback<GNOResponse>() {
                     @Override
                     public void onResponse(Call<GNOResponse> call, Response<GNOResponse> response) {
+
                         int responseCode = response.code();
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the request has onResponse, the code:%d", responseCode);
+                        }
 
                         if (responseCode == SUCCESS_CODE) {
 
@@ -126,6 +130,9 @@ public class PlatformRequest extends ServiceRequest {
                                            Response<GENotificationsResponse> response) {
 
                         int responseCode = response.code();
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the request has onResponse, the code:%d", responseCode);
+                        }
 
                         if (responseCode == SUCCESS_CODE) {
 
@@ -195,6 +202,10 @@ public class PlatformRequest extends ServiceRequest {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
                 if (responseCode == SUCCESS_CODE) {
 
                     APIServiceCallback callback = callbackReference.get();
@@ -270,6 +281,9 @@ public class PlatformRequest extends ServiceRequest {
                     public void onResponse(Call<IgnoreNResponse> call, Response<IgnoreNResponse> response) {
 
                         int responseCode = response.code();
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the request has onResponse, the code:%d", responseCode);
+                        }
 
                         if (responseCode == SUCCESS_CODE) {
 

@@ -148,7 +148,6 @@ public class QiniuRequest {
                     }
                 }
 
-
             }
         },null);
     }

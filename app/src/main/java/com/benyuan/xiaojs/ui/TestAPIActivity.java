@@ -35,6 +35,7 @@ import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
+import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
@@ -72,7 +73,7 @@ public class TestAPIActivity extends Activity {
         imageView = (ImageView) findViewById(R.id.loading);
 
 
-        Glide.with(this).load(R.drawable.flickr).into(imageView);
+        //Glide.with(this).load(R.drawable.flickr).into(imageView);
 
     }
 
@@ -113,11 +114,30 @@ public class TestAPIActivity extends Activity {
                 //confirmEnllor(this);
 //                testHUB(this);
                 //testCenterData(this);
-                crash();
+                //crash();
+                testGetData(this);
                 break;
             }
 
         }
+    }
+
+    private void testGetData(Context context) {
+
+        String lesson = "5834f31eaf662a8111362161";
+
+        LessonDataManager.requestLessonData(context, lesson, new APIServiceCallback<LessonDetail>() {
+            @Override
+            public void onSuccess(LessonDetail object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
     }
 
     private void testCenterData(Context context) {

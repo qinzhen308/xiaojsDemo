@@ -129,7 +129,8 @@ public interface XiaojsService {
 
     //Get Lesson Data
     @GET("/v1/ctl/lessons/{lesson}")
-    Call<LessonDetail> getLessonData(@Path("lesson") String lesson);
+    Call<LessonDetail> getLessonData(@Header("SessionID") String sessionID,
+                                     @Path("lesson") String lesson);
 
     //Get Lesson Details
     @GET("/v1/ctl/lessons/{lesson}/home")

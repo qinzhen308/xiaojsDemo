@@ -43,6 +43,10 @@ public class RegisterRequest extends ServiceRequest {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
                 if (responseCode == SUCCESS_CODE) {
 
                     APIServiceCallback callback = callbackReference.get();
@@ -110,6 +114,10 @@ public class RegisterRequest extends ServiceRequest {
             public void onResponse(Call<APIEntity> call, Response<APIEntity> response) {
 
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
                 if (responseCode == SUCCESS_CODE) {
 
                     APIEntity apiEntity = response.body();
@@ -193,7 +201,11 @@ public class RegisterRequest extends ServiceRequest {
         xiaojsService.sendVerifyCode(method, mobile).enqueue(new Callback<VerifyCode>() {
             @Override
             public void onResponse(Call<VerifyCode> call, Response<VerifyCode> response) {
+
                 int responseCode = response.code();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
 
                 if (responseCode == SUCCESS_CODE) {
 
