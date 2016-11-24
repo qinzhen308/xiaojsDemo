@@ -545,6 +545,20 @@ public class LessonCreationActivity extends BaseActivity {
                     Toast.makeText(mContext, R.string.charge_must_be_checked, Toast.LENGTH_SHORT).show();
                     return false;
                 }
+
+                if (mByLiveTotalPriceTv.isSelected()) {
+                    if (TextUtils.isEmpty(mByLiveTotalPriceEdt.getText().toString())) {
+                        Toast.makeText(mContext, R.string.charge_empty, Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
+
+                if (mByLiveDurationTv.isSelected()) {
+                    if (TextUtils.isEmpty(mByLiveDurationEdt.getText().toString())) {
+                        Toast.makeText(mContext, R.string.charge_empty, Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
             }
 
             String startTime = mLessonStartTimeTv.getText().toString().trim();

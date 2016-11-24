@@ -62,7 +62,7 @@
     <!--login-->
     <string name="login">登录</string>
     <string name="register_guide">还没有账号，立即注册</string>
-    <string name="logout_tips">账户已经退出</string>
+    <string name="logout_tips">退出成功</string>
     <!--home-->
     <string name="block_cls_time_mark">距上课还有%1$d分钟</string>
     <string name="block_cls_course_num">第&#160;%1$d&#160;课</string>
