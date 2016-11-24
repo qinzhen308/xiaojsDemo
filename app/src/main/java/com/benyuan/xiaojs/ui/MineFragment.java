@@ -82,7 +82,7 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        initProfileBg();
+        //initProfileBg();
         loadData();
     }
 
@@ -230,6 +230,7 @@ public class MineFragment extends BaseFragment {
 
     private void setDefaultPortrait() {
         mPortraitView.setImageResource(R.drawable.default_avatar);
+        initProfileBg();
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {

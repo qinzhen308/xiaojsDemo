@@ -60,7 +60,7 @@ public class ProfileActivity extends BaseActivity {
 
     private Date mBirthDayDate;
     private String mAvatarFileName;
-    private Account mAccount;
+    private String mAvatarUrl;
     private long mOldTime;
     private Account.Basic mBasic;
     private boolean mImgUploading = false;
@@ -262,6 +262,8 @@ public class ProfileActivity extends BaseActivity {
                 Toast.makeText(ProfileActivity.this, R.string.edit_profile_success, Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent();
+                //update display url
+                mBasic.setAvatar(mAvatarUrl);
                 i.putExtra(KEY_BASE_BEAN, mBasic);
                 setResult(RESULT_OK, i);
                 finish();
@@ -326,6 +328,7 @@ public class ProfileActivity extends BaseActivity {
                                         Glide.with(ProfileActivity.this)
                                                 .load(fileUrl)
                                                 .into(mPortraitImg);
+                                        mAvatarUrl = fileUrl;
                                         mAvatarFileName = fileName;
 
                                         mImgUploading = false;
