@@ -172,6 +172,8 @@
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
                 android:paddingRight="@dimen/px32"
+                android:maxLines="2"
+                android:maxLength="20"
                 android:background="@null"/>
     </LinearLayout>
 

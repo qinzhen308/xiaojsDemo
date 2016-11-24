@@ -64,8 +64,6 @@ public class AccountBusiness {
                         CacheUtil.saveLoginInfo(loginInfo.getUser());
                         XjsUtils.getSharedPreferences().edit().putLong(XiaojsConfig.KEY_LOGIN_USERNAME,
                                 loginParams.getMobile()).commit();
-                        XjsUtils.getSharedPreferences().edit().putString(XiaojsConfig.KEY_LOGIN_PASSWORD,
-                                loginParams.getPassword()).commit();
 
                         if (listener != null) {
                             listener.onLogin(true);

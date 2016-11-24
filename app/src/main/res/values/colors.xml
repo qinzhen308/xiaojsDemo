@@ -14,7 +14,7 @@
 
     <!--app base color-->
     <color name="main_orange">#ff9833</color>
-    <color name="main_blue">#288cff</color>
+    <color name="main_blue">#0076ff</color>
     <color name="main_orange_pressed">#d27d2b</color>
     <color name="main_orange_disabled">#ffcc9b</color>
     <color name="main_blue_pressed">#0088FF</color>
