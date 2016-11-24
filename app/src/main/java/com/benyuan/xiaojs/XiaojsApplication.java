@@ -29,11 +29,11 @@ public class XiaojsApplication extends Application {
             //发布Release版本时，需要将loglevel设为NONE。
             logSetting.logLevel(LogLevel.NONE);
 
-            //发布Release版本时，需要引入crash report
-            String appid = "900060174";
-            CrashReport.initCrashReport(getApplicationContext(), appid, false);
         }
 
+        //发布Release版本时，需要引入crash report
+        String appid = "900060174";
+        CrashReport.initCrashReport(getApplicationContext(), appid, false);
 
         //init xiaojs utils
         XjsUtils.init(this);

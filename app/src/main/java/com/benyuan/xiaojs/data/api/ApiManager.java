@@ -92,6 +92,7 @@ public class ApiManager {
                 .addInterceptor(logInterceptor)
                 .addNetworkInterceptor(logInterceptor)
                 .addInterceptor(headerInterceptor)
+                .connectTimeout(20,TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20,TimeUnit.SECONDS)
                 .build();
