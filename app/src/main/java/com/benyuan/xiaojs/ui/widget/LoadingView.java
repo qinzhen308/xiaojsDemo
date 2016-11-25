@@ -51,7 +51,6 @@ public class LoadingView extends View {
     private int mCurrFrame;
 
     private Paint mPaint;
-    private long mStart;
 
     public LoadingView(Context context, int size) {
         super(context);
@@ -97,18 +96,7 @@ public class LoadingView extends View {
         mOrangeColor = getResources().getColor(R.color.main_orange);
         mBlueColor = getResources().getColor(R.color.main_blue);
 
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == MSG_ANIM) {
-                    mCurrFrame++;
-                    if (mCurrFrame > FRAME_COUNT) {
-                        mCurrFrame = 1;
-                    }
-                    postInvalidate();
-                }
-            }
-        };
+        createHandler();
     }
 
     @Override
@@ -138,7 +126,9 @@ public class LoadingView extends View {
         }
         canvas.restore();
 
-        mStart = System.currentTimeMillis();
+        if (mHandler == null) {
+            createHandler();
+        }
         mHandler.sendEmptyMessageDelayed(MSG_ANIM, REFRESH_INTERVAL);
     }
 
@@ -154,5 +144,20 @@ public class LoadingView extends View {
         float y = mSize / 2.0f;
         mPaint.setColor(color);
         canvas.drawCircle(offsetX, y, mRadius, mPaint);
+    }
+
+    private void createHandler() {
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == MSG_ANIM) {
+                    mCurrFrame++;
+                    if (mCurrFrame > FRAME_COUNT) {
+                        mCurrFrame = 1;
+                    }
+                    postInvalidate();
+                }
+            }
+        };
     }
 }
