@@ -170,10 +170,12 @@ public class ProfileActivity extends BaseActivity {
             return true;
         }
 
-        String sex = mSexTv.getText().toString();
-        if ((TextUtils.isEmpty(sex) && !TextUtils.isEmpty(basic.getSex())) ||
-                (!TextUtils.isEmpty(sex) && TextUtils.isEmpty(basic.getSex())) ||
-                (!TextUtils.isEmpty(sex) && !TextUtils.isEmpty(basic.getSex()) && !sex.equals(basic.getSex()))) {
+        String sexTxt = mSexTv.getText().toString();
+        String sex = TextUtils.isEmpty(basic.getSex()) ? "" :
+                getString("true".equals(basic.getSex()) ? R.string.male : R.string.female);
+        if ((TextUtils.isEmpty(sexTxt) && !TextUtils.isEmpty(sex)) ||
+                (!TextUtils.isEmpty(sexTxt) && TextUtils.isEmpty(sex)) ||
+                (!TextUtils.isEmpty(sexTxt) && !TextUtils.isEmpty(sex) && !sexTxt.equals(sex))) {
             return true;
         }
 
@@ -225,11 +227,13 @@ public class ProfileActivity extends BaseActivity {
             return;
         }
 
+
         if (!checkSubmitInfoValid()) {
             return;
         }
 
-        if (!checkSubmitInfoChanged()) {
+        boolean flag = checkSubmitInfoChanged();
+        if (!flag) {
             //not editing
             finish();
             return;
@@ -314,17 +318,16 @@ public class ProfileActivity extends BaseActivity {
             case RESULT_OK:
                 if (data != null) {
                     String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
-                    //Bitmap portrait = BitmapFactory.decodeFile(cropImgPath);
                     if (cropImgPath != null) {
-                        //mPortraitImg.setImageBitmap(portrait);
-                        //TODO upload avatar and get filename
                         mImgUploading = true;
+                        showProgress(true);
                         AccountDataManager.requestUploadAvatar(ProfileActivity.this,
                                 cropImgPath,
                                 new QiniuService() {
 
                                     @Override
                                     public void uploadSuccess(String fileName, String fileUrl) {
+                                        cancelProgress();
                                         Glide.with(ProfileActivity.this)
                                                 .load(fileUrl)
                                                 .into(mPortraitImg);
@@ -336,6 +339,8 @@ public class ProfileActivity extends BaseActivity {
 
                                     @Override
                                     public void uploadFailure() {
+                                        cancelProgress();
+                                        Toast.makeText(ProfileActivity.this, R.string.upload_portrait_fail, Toast.LENGTH_SHORT).show();
                                         mImgUploading = false;
                                     }
                                 });

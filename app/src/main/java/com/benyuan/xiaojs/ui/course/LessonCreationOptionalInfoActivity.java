@@ -1,8 +1,9 @@
 package com.benyuan.xiaojs.ui.course;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
 import com.benyuan.xiaojs.common.crop.CropImagePath;
+import com.benyuan.xiaojs.data.LessonDataManager;
+import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.bumptech.glide.Glide;
@@ -76,6 +79,10 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     private boolean mIsMandatory = true;
     private int mBlackFont;
     private int mLightGrayFont;
+    private Drawable mErrorDrawable;
+
+    private String mCoverFileName;
+    private String mCoverUrl;
 
     @Override
     protected void addViewContent() {
@@ -142,6 +149,8 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     }
 
     private void initData() {
+        mErrorDrawable = new ColorDrawable(Color.WHITE);
+
         mBlackFont = getResources().getColor(R.color.font_black);
         mLightGrayFont = getResources().getColor(R.color.font_light_gray);
 
@@ -161,8 +170,12 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 }
 
                 //set cover
-                if (TextUtils.isEmpty(mLesson.getCover())) {
-                    Glide.with(this).load(mLesson.getCover()).into(new GlideDrawableImageViewTarget(mCoverImgView) {
+                if (!TextUtils.isEmpty(mLesson.getCover())) {
+                    String cover = mLesson.getCover();
+                    if (!cover.startsWith("http")) {
+                        cover = QiniuService.COVER_BASE_URL + cover;
+                    }
+                    Glide.with(this).load(cover).into(new GlideDrawableImageViewTarget(mCoverImgView) {
                         @Override
                         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                             super.onResourceReady(resource, animation);
@@ -221,7 +234,6 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ADD_COVER:
-                //TODO
                 if (resultCode == CropImageMainActivity.RESULT_DELETE) {
                     mCoverImgView.setImageBitmap(null);
                     mCoverImgView.setVisibility(View.GONE);
@@ -230,11 +242,31 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                     //mLesson.setCover(coverUrl);
                     if (data != null) {
                         String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
-                        Bitmap portrait = BitmapFactory.decodeFile(cropImgPath);
-                        if (portrait != null) {
-                            mCoverImgView.setVisibility(View.VISIBLE);
-                            mCoverImgView.setImageBitmap(portrait);
-                        }
+                        final Context c = LessonCreationOptionalInfoActivity.this;
+                        showProgress(true);
+                        LessonDataManager.requestUploadCover(c, cropImgPath, new QiniuService() {
+                            @Override
+                            public void uploadSuccess(String fileName, String fileUrl) {
+                                cancelProgress();
+                                mCoverFileName = fileName;
+                                mCoverImgView.setVisibility(View.VISIBLE);
+                                Glide.with(c)
+                                        .load(fileUrl)
+                                        .error(mErrorDrawable)
+                                        .into(mCoverImgView);
+
+                                if (mLesson != null) {
+                                    mLesson.setCover(fileName);
+                                }
+                            }
+
+                            @Override
+                            public void uploadFailure() {
+                                cancelProgress();
+                                Toast.makeText(c, R.string.upload_cover_fail, Toast.LENGTH_SHORT).show();
+                                mCoverImgView.setVisibility(View.GONE);
+                            }
+                        });
                     } else {
                         mCoverImgView.setVisibility(View.GONE);
                     }
