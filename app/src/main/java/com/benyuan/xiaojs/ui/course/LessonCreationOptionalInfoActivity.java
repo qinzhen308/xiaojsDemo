@@ -71,6 +71,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     TextView mSalePromotionTv;
 
     private LiveLesson mLesson;
+    private String mLessonId;
     private float mPrice;
     private int mPricingType;
     private long mLessonStartTime;
@@ -154,6 +155,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
         mBlackFont = getResources().getColor(R.color.font_black);
         mLightGrayFont = getResources().getColor(R.color.font_light_gray);
 
+        mLessonId = getIntent().getStringExtra(KEY_LESSON_ID);
         Object object = getIntent().getSerializableExtra(KEY_LESSON_OPTIONAL_INFO);
         if (object instanceof LiveLesson) {
             mLesson = (LiveLesson) object;
@@ -244,7 +246,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                         String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
                         final Context c = LessonCreationOptionalInfoActivity.this;
                         showProgress(true);
-                        LessonDataManager.requestUploadCover(c, cropImgPath, new QiniuService() {
+                        LessonDataManager.requestUploadCover(c, mLessonId, cropImgPath, new QiniuService() {
                             @Override
                             public void uploadSuccess(String fileName, String fileUrl) {
                                 cancelProgress();
