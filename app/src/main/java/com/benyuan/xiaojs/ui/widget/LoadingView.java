@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.benyuan.xiaojs.R;
@@ -139,7 +138,6 @@ public class LoadingView extends View {
         }
         canvas.restore();
 
-        Log.i("aaa", "mCurrFrame="+mCurrFrame + "      "+(System.currentTimeMillis() - mStart));
         mStart = System.currentTimeMillis();
         mHandler.sendEmptyMessageDelayed(MSG_ANIM, REFRESH_INTERVAL);
     }
