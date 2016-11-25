@@ -17,6 +17,7 @@ package com.benyuan.xiaojs.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
@@ -75,6 +76,8 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.following)
     TextView mFollowingTv;
 
+    private Drawable mBlurFloatUpBg;
+
     @Override
     protected View getContentView() {
         return mContext.getLayoutInflater().inflate(R.layout.fragment_mine, null);
@@ -83,6 +86,8 @@ public class MineFragment extends BaseFragment {
     @Override
     protected void init() {
         //initProfileBg();
+
+        mBlurFloatUpBg = new ColorDrawable(getResources().getColor(R.color.blur_float_up_bg));
         loadData();
     }
 
@@ -201,26 +206,6 @@ public class MineFragment extends BaseFragment {
             //set default
             setDefaultPortrait();
         }
-
-        //test
-        /*Glide.with(mContext).load("http://cdn.duitang.com/uploads/item/201405/27/20140527165332_JJnWu.thumb.224_0.jpeg")
-                .error(R.drawable.default_avatar)
-                .into(new GlideDrawableImageViewTarget(mPortraitView) {
-                    @Override
-                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                        super.onResourceReady(resource, animation);
-                        if (resource instanceof GlideBitmapDrawable) {
-                            Bitmap bmp = ((GlideBitmapDrawable) resource).getBitmap();
-                            setupBlurPortraitView(bmp);
-                        }
-                    }
-
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        super.onLoadFailed(e, errorDrawable);
-                        mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
-                    }
-                });*/
     }
 
     private void initProfileBg() {
@@ -234,6 +219,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
+        mProfileBgView.setBackgroundDrawable(mBlurFloatUpBg);
         Bitmap blurBitmap = FastBlur.smartBlur(portrait, 2, true);
         mBlurPortraitView.setImageBitmap(blurBitmap);
     }
