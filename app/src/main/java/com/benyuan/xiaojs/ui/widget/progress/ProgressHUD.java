@@ -88,8 +88,8 @@ public class ProgressHUD {
 
         private void initProgressView() {
 
-            ImageView imageView = (ImageView) findViewById(R.id.img_progress);
-            Glide.with(getContext()).load(R.drawable.flickr).asGif().into(imageView);
+            //ImageView imageView = (ImageView) findViewById(R.id.img_progress);
+            //Glide.with(getContext()).load(R.drawable.flickr).asGif().into(imageView);
 
         }
     }
