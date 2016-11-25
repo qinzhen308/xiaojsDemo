@@ -193,10 +193,16 @@ public class LessonHomeActivity extends BaseActivity {
             } else {
                 //mLessonOriMoneyTv.setVisibility(View.VISIBLE);
                 float originCharge = fee.getTotal();
-                mLessonOriMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
-                if (fee.getDiscounted() != null) {
-                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(fee.getDiscounted().getSubtotal(), true));
+                Fee.Discounted discounted = fee.getDiscounted();
+                if (discounted != null) {
+                    if (discounted.getRatio() == 10.0f) {
+                        mLessonOriMoneyTv.setVisibility(View.GONE);
+                    } else {
+                        mLessonOriMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
+                    }
+                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(discounted.getSubtotal(), true));
                 } else {
+                    mLessonOriMoneyTv.setVisibility(View.GONE);
                     mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
                 }
                 setSalePromotion(fee);

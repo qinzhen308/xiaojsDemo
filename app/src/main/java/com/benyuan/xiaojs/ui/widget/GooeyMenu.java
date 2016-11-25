@@ -19,6 +19,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.NavUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -315,23 +316,7 @@ public class GooeyMenu extends View {
                 return false;
             case MotionEvent.ACTION_UP:
                 if (isGooeyMenuTouch(event)) {
-                    if (!canAnimation()){
-                        return true;
-                    }
-                    lastTouchTime = System.currentTimeMillis();
-                    cancelAllAnimation();
-                    if (isMenuVisible) {
-                        startHideAnimate();
-                        if (mGooeyMenuInterface != null) {
-                            mGooeyMenuInterface.menuClose();
-                        }
-                    } else {
-                        startShowAnimate();
-                        if (mGooeyMenuInterface != null) {
-                            mGooeyMenuInterface.menuOpen();
-                        }
-                    }
-                    isMenuVisible = !isMenuVisible;
+                    perform();
                     return true;
                 }
 
@@ -458,31 +443,72 @@ public class GooeyMenu extends View {
         }
     }
 
+    private void perform(){
+        if (!canAnimation())
+            return;
+        cancelAllAnimation();
+        if (isMenuVisible) {
+            startHideAnimate();
+            if (mGooeyMenuInterface != null) {
+                mGooeyMenuInterface.menuClose();
+            }
+        } else {
+            startShowAnimate();
+            if (mGooeyMenuInterface != null) {
+                mGooeyMenuInterface.menuOpen();
+            }
+        }
+        isMenuVisible = !isMenuVisible;
+    }
+
+    public void open(){
+        perform();
+    }
+
+    public void close(){
+        perform();
+    }
+
     private void startShowAnimate() {
-        mRotationAnimation.start();
-        mShowArcCakeAnim.start();
-        for (ObjectAnimator objectAnimator : mShowAnimation) {
-            objectAnimator.start();
+        lastTouchTime = System.currentTimeMillis();
+        if (mRotationAnimation != null && mShowArcCakeAnim != null){
+            mRotationAnimation.start();
+            mShowArcCakeAnim.start();
+            for (ObjectAnimator objectAnimator : mShowAnimation) {
+                objectAnimator.start();
+            }
         }
     }
 
     private void startHideAnimate() {
-        mRotationReverseAnimation.start();
-        mHideArcCakeAnim.start();
-        for (ObjectAnimator objectAnimator : mHideAnimation) {
-            objectAnimator.start();
+        lastTouchTime = System.currentTimeMillis();
+        if (mRotationReverseAnimation != null && mHideArcCakeAnim != null){
+            mRotationReverseAnimation.start();
+            mHideArcCakeAnim.start();
+            for (ObjectAnimator objectAnimator : mHideAnimation) {
+                objectAnimator.start();
+            }
         }
     }
 
     private void cancelAllAnimation() {
-        for (ObjectAnimator objectAnimator : mHideAnimation) {
-            objectAnimator.cancel();
+        if (!canAnimation()){
+            return;
         }
-        for (ObjectAnimator objectAnimator : mShowAnimation) {
-            objectAnimator.cancel();
+        if (mShowArcCakeAnim != null && mHideArcCakeAnim != null){
+            for (ObjectAnimator objectAnimator : mHideAnimation) {
+                objectAnimator.cancel();
+            }
+            for (ObjectAnimator objectAnimator : mShowAnimation) {
+                objectAnimator.cancel();
+            }
+            mShowArcCakeAnim.cancel();
+            mHideArcCakeAnim.cancel();
         }
-        mShowArcCakeAnim.cancel();
-        mHideArcCakeAnim.cancel();
+    }
+
+    public boolean opened(){
+        return isMenuVisible;
     }
 
     ValueAnimator.AnimatorUpdateListener mUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
