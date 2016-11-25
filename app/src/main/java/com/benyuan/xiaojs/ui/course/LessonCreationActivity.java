@@ -61,6 +61,8 @@ public class LessonCreationActivity extends BaseActivity {
     private final int MIN_LESSON_CHAR = 3;
     private final int MAX_LESSON_CHAR = 25;
 
+    private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
+
     @BindView(R.id.live_lesson_name)
     EditTextDel mLessonNameEdt;
     @BindView(R.id.lesson_subject)
@@ -96,6 +98,7 @@ public class LessonCreationActivity extends BaseActivity {
 
     private boolean mEnrollWayOpen = false;
     private long mLessonStartTime;
+    private Date mLessonsDate;
     private LiveLesson mLessonOptionalInfo;
 
     private String mSubjectId;
@@ -415,12 +418,16 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void selectLessonStartTime() {
-        DataPicker.pickFutureDate(mContext, new DataPicker.OnDatePickListener() {
+        if (mLessonsDate == null) {
+            mLessonsDate = new Date(System.currentTimeMillis() + HALF_HOUR);
+        }
+        DataPicker.pickFutureDate(mContext, mLessonsDate, new DataPicker.OnDatePickListener() {
             @Override
             public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day, hour, minute, second);
                 mLessonStartTime = calendar.getTimeInMillis();
+                mLessonsDate.setTime(mLessonStartTime);
                 String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
                 mLessonStartTimeTv.setText(dateStr);
                 mLessonStartTimeTv.setTextColor(mBlackFont);

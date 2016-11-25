@@ -29,4 +29,9 @@ public class TextWheelPickerAdapter extends TextBaseAdapter {
 	public String getItemText(int position) {
 		return  mData == null ? null : mData.get(position);
 	}
+
+	@Override
+	public Object getItem(int position) {
+		return getItemText(position);
+	}
 }

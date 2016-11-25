@@ -139,7 +139,7 @@ public class DataPicker {
 
     }
 
-    public static void pickFutureDate(Context context, final OnDatePickListener pickListener) {
+    public static void pickFutureDate(Context context, Date currentDate, final OnDatePickListener pickListener) {
         BottomSheet bottomSheet = new BottomSheet(context);
         FutureTimePicker picker = new FutureTimePicker(context);
 
@@ -164,6 +164,10 @@ public class DataPicker {
                 mSecond = second;
             }
         });
+
+        if (currentDate != null) {
+            picker.setPickedTime(currentDate.getTime());
+        }
 
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
