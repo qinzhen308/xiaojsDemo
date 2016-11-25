@@ -15,7 +15,6 @@
         <ImageView
                 android:id="@+id/function_area_item_image"
                 android:layout_width="wrap_content"
-                android:src="@mipmap/mine_selected"
                 android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content"/>
 

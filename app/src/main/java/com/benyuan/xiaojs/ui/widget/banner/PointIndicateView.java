@@ -80,7 +80,7 @@ public class PointIndicateView extends LinearLayout implements
 		ImageView img = new ImageView(getContext());
 		img.setScaleType(ScaleType.CENTER);
 		img.setImageDrawable(getResources()
-				.getDrawable(R.mipmap.point_normal));
+				.getDrawable(R.drawable.ic_point_normal));
 		img.setPadding(DeviceUtil.dip2px(getContext(),mInterval),
 				DeviceUtil.dip2px(getContext(),mInterval),
 				DeviceUtil.dip2px(getContext(),mInterval),
