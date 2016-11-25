@@ -498,6 +498,7 @@ public class LessonCreationActivity extends BaseActivity {
         lesson.setSchedule(sch);
         lesson.setFee(fee);
 
+        i.putExtra(CourseConstant.KEY_LESSON_ID, mLessonId);
         i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, lesson);
         startActivityForResult(i, REQUEST_CODE_OPTIONAL_INFO);
     }
