@@ -53,6 +53,8 @@ public class ModifyLessonActivity extends BaseActivity {
     @BindView(R.id.modify_lesson_reason)
     LimitInputBox mInput;
 
+    private Date mLessonsDate;
+
     private TeachLesson bean;
     private long newDate;
     @Override
@@ -64,6 +66,7 @@ public class ModifyLessonActivity extends BaseActivity {
             bean = (TeachLesson) intent.getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
             if (bean != null){
                 mOriginTime.setText(TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                mLessonsDate = new Date(bean.getSchedule().getStart().getTime());
                 mName.setText(bean.getTitle());
                 mDuration.setText(getString(R.string.lesson_duration_tip, bean.getSchedule().getDuration()));
             }
@@ -78,12 +81,13 @@ public class ModifyLessonActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.limit_select_time:
-                DataPicker.pickFutureDate(this, new DataPicker.OnDatePickListener() {
+                DataPicker.pickFutureDate(this, mLessonsDate, new DataPicker.OnDatePickListener() {
                     @Override
                     public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, month, day, hour, minute, second);
                         newDate = calendar.getTimeInMillis();
+                        mLessonsDate.setTime(newDate);
                         String dateStr = TimeUtil.formatDate(newDate, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
                         mNewTime.setText(dateStr);
                     }

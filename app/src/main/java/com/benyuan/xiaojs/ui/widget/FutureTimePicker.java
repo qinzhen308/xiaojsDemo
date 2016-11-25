@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 
-import com.benyuan.xiaojs.data.db.task.Priority;
 import com.wheelpicker.core.AbstractWheelPicker;
 import com.wheelpicker.core.OnWheelPickedListener;
 import com.wheelpicker.widget.TextWheelPicker;
@@ -36,6 +35,8 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     public final static int TYPE_DAY = 1 << 1;
     public final static int TYPE_HOUR = 1 << 2;
     public final static int TYPE_MINUTE = 1 << 3;
+    private final static long ONE_DAY = 24 * 60 * 60 * 1000;
+    private int DURATION = 365;
 
     private TextWheelPicker mDayWheelPicker;
     private TextWheelPicker mHourWheelPicker;
@@ -62,6 +63,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     private String mDayStr;
     private String mHourStr;
     private String mMinuteStr;
+    private long mStartDay;
 
     private Map<String, Long> mDayMap;
     private List<String> mDays;
@@ -124,7 +126,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         mMinutes = new ArrayList<String>();
 
         //default one year
-        updateDate(365);
+        updateDate(DURATION);
         updateMinHour(mCurrHour);
         updateMinMinute(mCurrMinute);
 
@@ -157,10 +159,17 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
 
     private void updateDate(int durationDays) {
         long today = System.currentTimeMillis();
-        long oneDay = 24 * 60 * 60 * 1000;
+        long oneDay = ONE_DAY;
 
         mDays.clear();
         Calendar calendar = Calendar.getInstance();
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DATE);
+        calendar.set(year, month, day, 0, 0, 0);
+        mStartDay = calendar.getTimeInMillis();
+
         for (int i = 0; i < durationDays; i++) {
             String str = "";
             switch (i) {
@@ -182,9 +191,9 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                 default:
                     //xx year xx month xx day
                     calendar.setTimeInMillis(today + i * oneDay);
-                    int year = calendar.get(Calendar.YEAR);
-                    int month = calendar.get(Calendar.MONTH) + 1;
-                    int day = calendar.get(Calendar.DATE);
+                    year = calendar.get(Calendar.YEAR);
+                    month = calendar.get(Calendar.MONTH) + 1;
+                    day = calendar.get(Calendar.DATE);
 
                     String m = String.valueOf(month);
                     if (month < 10) {
@@ -211,6 +220,55 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     public void setFutureDuration(int days) {
         if (days > 0) {
             updateDate(days);
+            DURATION = days;
+        }
+    }
+
+    public void setPickedTime(long currentTime) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(currentTime);
+
+        int y = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH) + 1;
+        int d = c.get(Calendar.DATE);
+        int h = c.get(Calendar.HOUR_OF_DAY);
+        int m = c.get(Calendar.MINUTE);
+        int s = c.get(Calendar.SECOND);
+
+        mSelectedYear = y;
+        mSelectedMonth = month;
+        mSelectedDay = d;
+        mSelectedHour = h;
+        mSelectedMinute = m;
+        mSelectedSecond = s;
+
+        c.set(y, month - 1, d, 0, 0, 0);
+        long pickedDay = c.getTimeInMillis();
+        int dayIndex = Math.max(0, (int)((pickedDay - mStartDay) / ONE_DAY));
+        dayIndex = Math.min(dayIndex, DURATION);
+
+        if (dayIndex > 0) {
+            updateMinHour(0);
+            mHourPickerAdapter.setData(mHours);
+        }
+        int hIndex = Math.max(0, mHours.indexOf(h + mHourStr));
+
+        if (hIndex > 0) {
+            updateMinMinute(0);
+            mMinutePickerAdapter.setData(mMinutes);
+        }
+        int mIndex = Math.max(0, mMinutes.indexOf(m + mMinuteStr));
+
+        mDayWheelPicker.setCurrentItem(dayIndex);
+        mHourWheelPicker.setCurrentItem(hIndex);
+        mMinuteWheelPicker.setCurrentItem(mIndex);
+
+        mSelectedHour = getCurrentDate(mHourPickerAdapter.getItem(hIndex), mHourStr);
+        mSelectedMinute = getCurrentDate(mMinutePickerAdapter.getItemText(mIndex), mMinuteStr);
+
+        if (mOnFutureDatePickListener != null) {
+            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth - 1, mSelectedDay,
+                    mSelectedHour, mSelectedMinute, 0);
         }
     }
 
@@ -285,6 +343,8 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     @Override
     public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, Object data) {
         Calendar calendar = Calendar.getInstance();
+        int hourIndex = 0;
+        int minuteIndex = 0;
         switch (wheelPicker.getId()) {
             case TYPE_DAY:
                 long day = mDayMap.get(data.toString());
@@ -294,18 +354,39 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                 mSelectedDay = calendar.get(Calendar.DATE);
 
                 if (mSelectedDay == mCurrDay) {
+                    hourIndex = 0;
+                    minuteIndex = 0;
                     updateMinHour(mCurrHour);
                     updateMinMinute(mCurrMinute);
                 } else {
+                    hourIndex = mHourWheelPicker.getCurrentItem();
+                    minuteIndex = mMinuteWheelPicker.getCurrentItem();
                     updateMinHour(0);
                     updateMinMinute(0);
                 }
 
+                mSelectedHour = getCurrentDate(mHourPickerAdapter.getItem(hourIndex), mHourStr);
+                mSelectedMinute = getCurrentDate(mMinutePickerAdapter.getItemText(minuteIndex), mMinuteStr);
+
+                mHourWheelPicker.setCurrentItem(hourIndex);
+                mMinuteWheelPicker.setCurrentItem(minuteIndex);
                 mHourPickerAdapter.setData(mHours);
                 mMinutePickerAdapter.setData(mMinutes);
+
                 break;
             case TYPE_HOUR:
                 mSelectedHour = getCurrentDate(data, mHourStr);
+                if (mSelectedHour == mCurrHour) {
+                    minuteIndex = 0;
+                    updateMinMinute(mCurrMinute);
+                } else {
+                    minuteIndex = mMinuteWheelPicker.getCurrentItem();
+                    updateMinMinute(0);
+                }
+
+                mSelectedMinute = getCurrentDate(mMinutePickerAdapter.getItemText(minuteIndex), mMinuteStr);
+                mMinuteWheelPicker.setCurrentItem(minuteIndex);
+                mMinutePickerAdapter.setData(mMinutes);
                 break;
             case TYPE_MINUTE:
                 mSelectedMinute = getCurrentDate(data, mMinuteStr);
