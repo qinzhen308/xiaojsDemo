@@ -115,11 +115,16 @@ public class TestAPIActivity extends Activity {
 //                testHUB(this);
                 //testCenterData(this);
                 //crash();
-                testGetData(this);
+               // testGetData(this);
+                testLoading();
                 break;
             }
 
         }
+    }
+
+    private void testLoading() {
+        ProgressHUD.create(this).show();
     }
 
     private void testGetData(Context context) {

@@ -8,9 +8,11 @@
         android:gravity="center"
         android:orientation="vertical">
 
-    <ImageView
-            android:id="@+id/img_progress"
-            android:layout_width="25dp"
-            android:layout_height="25dp"/>
+    <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/loading_progress"
+            android:indeterminateDuration="1000"
+            />
 
 </com.benyuan.xiaojs.ui.widget.progress.ProgressLayout>
