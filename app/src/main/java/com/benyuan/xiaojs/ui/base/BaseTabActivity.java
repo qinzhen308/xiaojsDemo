@@ -135,14 +135,14 @@ public abstract class BaseTabActivity extends BaseActivity {
         mGooeyMenu.setOnMenuListener(new GooeyMenu.GooeyMenuInterface() {
             @Override
             public void menuOpen() {
-                //mCover.setVisibility(View.VISIBLE);
+                mCover.setVisibility(View.VISIBLE);
                 mCenter.clearAnimation();
                 mCenter.startAnimation(mRotateRight);
             }
 
             @Override
             public void menuClose() {
-                //mCover.setVisibility(View.GONE);
+                mCover.setVisibility(View.GONE);
                 mCenter.clearAnimation();
                 mCenter.startAnimation(mRotateLeft);
             }
@@ -175,7 +175,9 @@ public abstract class BaseTabActivity extends BaseActivity {
     }
 
     protected void onTabClick(int position) {
-
+        if (mGooeyMenu.opened()){
+            mGooeyMenu.close();
+        }
     }
 
     protected final void setTip(int position, boolean enable) {
