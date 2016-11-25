@@ -86,8 +86,9 @@ public interface XiaojsService {
     Call<TokenResponse> getAvatarUpToken(@Header("SessionID") String sessionID);
 
     //Get upToken
-    @GET("/v1/lessons/up_cover_token")
-    Call<TokenResponse> getCoverUpToken(@Header("SessionID") String sessionID);
+    @GET("/v1/ctl/lessons/{lesson}/up_cover_token")
+    Call<TokenResponse> getCoverUpToken(@Header("SessionID") String sessionID,
+                                        @Path("lesson") String lesson);
 
     //Get Center Data
     @GET("/v1/accounts/center")

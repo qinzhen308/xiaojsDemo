@@ -22,6 +22,7 @@ import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLEResponse;
@@ -116,7 +117,8 @@ public class TestAPIActivity extends Activity {
                 //testCenterData(this);
                 //crash();
                // testGetData(this);
-                testLoading();
+                //testLoading();
+                editCover();
                 break;
             }
 
@@ -282,7 +284,7 @@ public class TestAPIActivity extends Activity {
     }
 
 
-    private void editPortrait() {
+    private void editCover() {
         Intent i = new Intent(this, CropImageMainActivity.class);
         startActivityForResult(i, CROP_PORTRAIT);
     }
@@ -296,21 +298,20 @@ public class TestAPIActivity extends Activity {
                     Bitmap portrait = BitmapFactory.decodeFile(cropImgPath);
                     if (portrait != null) {
 
-//                        LessonDataManager.requestUploadCover(TestAPIActivity.this, sessionid, "hello", cropImgPath, new QiniuService() {
-//                            @Override
-//                            public void uploadSuccess(String fileName, String fileUrl) {
-//
-//
-//
-//                            public void uploadSucess(String fileName, String fileUrl) {
-//
-//                            }
-//
-//                            @Override
-//                            public void uploadFailure() {
-//
-//                            }
-//                        });
+
+
+                        LessonDataManager.requestUploadCover(TestAPIActivity.this,"",cropImgPath,new QiniuService(){
+
+                            @Override
+                            public void uploadSuccess(String fileName, String fileUrl) {
+
+                            }
+
+                            @Override
+                            public void uploadFailure() {
+
+                            }
+                        });
 
 //                        AccountDataManager.requestUploadAvatar(TestAPIActivity.this, sessionid, id, cropImgPath, new QiniuService() {
 //                            @Override

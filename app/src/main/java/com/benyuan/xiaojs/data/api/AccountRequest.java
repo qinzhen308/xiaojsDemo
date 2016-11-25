@@ -388,13 +388,14 @@ public class AccountRequest extends ServiceRequest {
 
     protected void getCoverUpToken(Context context,
                                    @NonNull String sessionID,
+                                   @NonNull String lesson,
                                    @NonNull APIServiceCallback<TokenResponse> callback) {
 
         final WeakReference<APIServiceCallback<TokenResponse>> callbackReference =
                 new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.getCoverUpToken(sessionID).enqueue(new Callback<TokenResponse>() {
+        xiaojsService.getCoverUpToken(sessionID,lesson).enqueue(new Callback<TokenResponse>() {
             @Override
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
 

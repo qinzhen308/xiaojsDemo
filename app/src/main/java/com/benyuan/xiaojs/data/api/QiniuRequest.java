@@ -27,6 +27,7 @@ public class QiniuRequest {
 
     public void uploadCover(Context context,
                             @NonNull String sessionID,
+                            @NonNull String lesson,
                             @NonNull final String filePath,
                             @NonNull QiniuService qiniuService) {
 
@@ -35,7 +36,7 @@ public class QiniuRequest {
 
         AccountRequest accountRequest = new AccountRequest();
 
-        accountRequest.getCoverUpToken(context, sessionID, new APIServiceCallback<TokenResponse>() {
+        accountRequest.getCoverUpToken(context, sessionID,lesson, new APIServiceCallback<TokenResponse>() {
             @Override
             public void onSuccess(TokenResponse tokenResponse) {
 

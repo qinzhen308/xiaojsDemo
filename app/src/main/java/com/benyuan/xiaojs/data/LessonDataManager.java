@@ -272,9 +272,17 @@ public class LessonDataManager extends DataManager{
     }
 
 
+    /**
+     *
+     * @param context
+     * @param lesson 可为空
+     * @param filePath
+     * @param qiniuService
+     */
     public static void requestUploadCover(Context context,
-                                           @NonNull final String filePath,
-                                           @NonNull QiniuService qiniuService) {
+                                          @Nullable String lesson,
+                                          @NonNull final String filePath,
+                                          @NonNull QiniuService qiniuService) {
 
 
         if (qiniuService == null) {
@@ -297,9 +305,20 @@ public class LessonDataManager extends DataManager{
             return;
         }
 
+        if(TextUtils.isEmpty(lesson)){
+
+            lesson = DataManager.generateLessonKey();
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the lesson is empty,so auto generate lesson key=%s",lesson);
+            }
+
+
+        }
+
 
         QiniuRequest qiniuRequest = new QiniuRequest();
-        qiniuRequest.uploadCover(context,session,filePath,qiniuService);
+        qiniuRequest.uploadCover(context,session,lesson,filePath,qiniuService);
 
 
     }
