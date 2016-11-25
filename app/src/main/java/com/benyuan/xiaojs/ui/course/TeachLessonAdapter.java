@@ -40,6 +40,7 @@ import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 import com.benyuan.xiaojs.util.NumberUtil;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.benyuan.xiaojs.util.ToastUtil;
+import com.bumptech.glide.Glide;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
@@ -86,7 +87,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         holder.desc.setText(mContext.getString(R.string.course_stu,bean.getEnroll().getCurrent(),bean.getEnroll().getMax()));
 
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
-
+        Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
         if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)){
             holder.clsFunction.setVisibility(View.VISIBLE);
             holder.circle.setText(R.string.shelves);
