@@ -25,6 +25,15 @@ public class EnrolledLesson implements Serializable{
     private String state;
     private Teacher teacher;
     private Assistant[] assistants;
+    private String cover;
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
     public String getId() {
         return id;

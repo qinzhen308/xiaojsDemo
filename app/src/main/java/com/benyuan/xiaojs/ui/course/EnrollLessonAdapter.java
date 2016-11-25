@@ -40,6 +40,7 @@ import com.benyuan.xiaojs.ui.widget.RedTipTextView;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout;
 import com.benyuan.xiaojs.util.TimeUtil;
+import com.bumptech.glide.Glide;
 import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
@@ -78,19 +79,12 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         holder.reset();
         holder.name.setText(bean.getTitle());
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
-//        String state = LessonBusiness.getStateByPosition(position,false);
-//        if (!TextUtils.isEmpty(state)){
-//            bean.setState(state);
-//        }
         if(bean.getTeacher() != null){
             if (bean.getTeacher().getBasic() != null){
                 holder.desc.setText(bean.getTeacher().getBasic().getName());
             }
         }
 
-        //holder.desc.setText("老师");
-
-        //holder.teacherImage.setVisibility(View.VISIBLE);
         holder.clsFunction.setVisibility(View.VISIBLE);
         holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
             @Override
@@ -104,11 +98,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
                 enterClass(bean);
             }
         });
-
-//        List<Bitmap> bitmaps = new ArrayList<>();
-//        bitmaps.add(bitmap);
-//        bitmaps.add(bitmap);
-//        holder.imageFlow.showWithNum(bitmaps,mContext.getResources().getDimensionPixelSize(R.dimen.px20),122,mContext.getResources().getDimensionPixelSize(R.dimen.px5));
+        Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
         if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
             holder.databank.setVisibility(View.VISIBLE);
             holder.databank.setOnClickListener(new View.OnClickListener() {
