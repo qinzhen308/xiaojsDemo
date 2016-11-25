@@ -193,9 +193,9 @@
     </style>
 
     <!-- ProgressBar 样式 -->
-    <style name="loading_progress" parent="@android:style/Widget.ProgressBar.Large">
-        <item name="android:indeterminateDrawable">@drawable/progress_loading_rote</item>
-    </style>
+    <!--<style name="loading_progress" parent="@android:style/Widget.ProgressBar.Large">-->
+        <!--<item name="android:indeterminateDrawable">@drawable/progress_loading_rote</item>-->
+    <!--</style>-->
 
 
 </resources>

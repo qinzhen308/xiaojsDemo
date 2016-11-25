@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.widget.LoadingView;
 import com.bumptech.glide.Glide;
 
 /**
@@ -87,6 +88,14 @@ public class ProgressHUD {
         }
 
         private void initProgressView() {
+
+            ProgressLayout progressLayout = (ProgressLayout) findViewById(R.id.load_background);
+
+            LoadingView loadingView = new LoadingView(getContext(),
+                    getContext().getResources().getDimensionPixelSize(R.dimen.px50));
+
+            progressLayout.addView(loadingView);
+
 
             //ImageView imageView = (ImageView) findViewById(R.id.img_progress);
             //Glide.with(getContext()).load(R.drawable.flickr).asGif().into(imageView);
