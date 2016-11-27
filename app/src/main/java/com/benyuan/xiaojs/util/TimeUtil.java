@@ -69,9 +69,6 @@ public class TimeUtil {
     }
 
     public static String formatDate(long date, String formatStr) {
-        if (date <= 0) {
-            return "";
-        }
         DateFormat sdf = new SimpleDateFormat(formatStr, Locale.getDefault());
         try {
             Calendar calendar = Calendar.getInstance();
@@ -106,12 +103,11 @@ public class TimeUtil {
     }
 
     /**
-     * 时间为 昨天或今天时,不显示年月日改为显示"昨天"或"今天" 比如 "2014-01-01 12:10:26 --> 今天 12:10:26" ,
-     * "2015-12-23 18:51 --> 昨天 18:51"
+     * 时间为 昨天或今天时,不显示年月日改为显示"昨天"或"今天" 比如 "2014-01-01 12:10:26 --> 今天 12:10:26" , "2015-12-23 18:51
+     * --> 昨天 18:51"
      *
      * @param time 当天时间
      * @param f    时间格式
-     * @return
      */
     public static String formatDate2(String time, String f) {
         try {
@@ -147,7 +143,6 @@ public class TimeUtil {
      * 今天的消息显示“时分”、昨天的消息显示“昨天 时:分”，昨天之前的信息显示“年-月-日 时:分”
      *
      * @param time 当天时间
-     * @return
      */
     public static String formatDate3(long time) {
         try {
@@ -242,9 +237,7 @@ public class TimeUtil {
     /**
      * 字符时间转换成Date
      *
-     * @param value
      * @param format 需要的Date格式
-     * @return
      */
     public static Date strToDate(String value, String format) {
         if (TextUtils.isEmpty(value)) {
@@ -281,10 +274,6 @@ public class TimeUtil {
 
     /**
      * 计算两个时间之间的相差天数，第二个参数减第一个参数
-     *
-     * @param first
-     * @param second
-     * @return
      */
     public static int compareDifference(long first, long second) {
         try {
@@ -298,10 +287,6 @@ public class TimeUtil {
 
     /**
      * 比较两个日期大小，如果第一个小于第二个返回true，
-     *
-     * @param first
-     * @param second
-     * @return
      */
     public static boolean compareDate(String first, String second) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
@@ -318,10 +303,8 @@ public class TimeUtil {
     /**
      * 根据传入date获取前后多少天的日期
      *
-     * @param date
      * @param day         正数就是后几天 负数就是前几天
      * @param returnParse 返回时间的格式
-     * @return
      */
     public static String getDateByDay(String date, int day, String returnParse) {
         Calendar calendar = Calendar.getInstance();
@@ -332,10 +315,6 @@ public class TimeUtil {
 
     /**
      * 比较两个日期的大小（前者大 返回true,比较到分钟数）
-     *
-     * @param one
-     * @param two
-     * @return
      */
     public static boolean compareDate(Date one, Date two) {
         if (one.getYear() > two.getYear()) {
@@ -365,10 +344,6 @@ public class TimeUtil {
 
     /**
      * 比较两个日期的大小（前者大 返回true,比较到天）
-     *
-     * @param one
-     * @param two
-     * @return
      */
     public static boolean compareTwoDate(Date one, Date two) {
         if (one.getYear() > two.getYear()) {
@@ -430,9 +405,7 @@ public class TimeUtil {
     }
 
     /**
-     * @param date
      * @return 1天5小时20分
-     * @throws ParseException
      */
     @SuppressLint("SimpleDateFormat")
     public static String distanceDay(String date) {
@@ -490,9 +463,6 @@ public class TimeUtil {
      * 今天 hh:mm------除了刚刚，且在当天24:00内的
      * <p/>
      * yy-mm-dd hh:mm----除了以上的，就是它
-     *
-     * @param time
-     * @return
      */
     public static String getProductHistory(long time) {
         String result = null;
@@ -562,9 +532,6 @@ public class TimeUtil {
 
     /**
      * 截取格式 **年**月**日
-     *
-     * @param date
-     * @return
      */
     public static String formatDate(String date) {
         if (TextUtils.isEmpty(date)) {
@@ -583,7 +550,6 @@ public class TimeUtil {
      * 当前时间推迟一年加一天
      *
      * @param format 返回数据的时间格式
-     * @return
      */
     public static String getTheDayNextYear(String format) {
         String nextYear = "";
@@ -669,65 +635,64 @@ public class TimeUtil {
         return time;
     }
 
-    public static String getTimeFormat(Date date,int duration){
+    public static String getTimeFormat(Date date, int duration) {
 
         return duration + "分钟";
     }
 
-    public static Date original(){
+    public static Date original() {
         return new Date(0);
     }
 
-    public static Date now(){
+    public static Date now() {
         return new Date(System.currentTimeMillis());
     }
 
     /**
      * 获取凌晨0点时间
-     * @return
      */
-    public static Date beforeDawn(){
+    public static Date beforeDawn() {
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY,0);
-        cal.set(Calendar.SECOND,0);
-        cal.set(Calendar.MINUTE,0);
-        cal.set(Calendar.MILLISECOND,0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
 
         return new Date(cal.getTimeInMillis());
     }
 
-    public static Date middleNight(){
+    public static Date middleNight() {
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY,23);
-        cal.set(Calendar.SECOND,59);
-        cal.set(Calendar.MINUTE,59);
-        cal.set(Calendar.MILLISECOND,999);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.MILLISECOND, 999);
 
         return new Date(cal.getTimeInMillis());
     }
 
-    public static Date monthBefore(int before){
+    public static Date monthBefore(int before) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(cal.MONTH, -before);
         return new Date(cal.getTimeInMillis());
     }
 
-    public static Date monthAfter(int after){
+    public static Date monthAfter(int after) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(cal.MONTH, after);
         return new Date(cal.getTimeInMillis());
     }
 
-    public static Date yearBefore(int before){
+    public static Date yearBefore(int before) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(cal.YEAR, -before);
         return new Date(cal.getTimeInMillis());
     }
 
-    public static Date yearAfter(int after){
+    public static Date yearAfter(int after) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(cal.YEAR, after);
@@ -736,71 +701,69 @@ public class TimeUtil {
 
     /**
      * 根据传入的日期返回xx分钟之前/后,今天、明天、昨天或者具体时间
-     * @param date
-     * @return
      */
-    public static String getTimeByNow(Date date){
+    public static String getTimeByNow(Date date) {
         StringBuilder time = new StringBuilder();
         Date now = new Date(System.currentTimeMillis());
-        if (inOneHour(date,now)){
-            time.append(getTimeInOneHour(date,now));
-        }else if (isSameDay(date,now)){
+        if (inOneHour(date, now)) {
+            time.append(getTimeInOneHour(date, now));
+        } else if (isSameDay(date, now)) {
             time.append("今天 ");
-            time.append(format(date,TIME_HH_MM));
-        }else if (isYesterday(date,now)){
+            time.append(format(date, TIME_HH_MM));
+        } else if (isYesterday(date, now)) {
             time.append("昨天 ");
-            time.append(format(date,TIME_HH_MM));
-        }else if (isTomorrow(date,now)){
+            time.append(format(date, TIME_HH_MM));
+        } else if (isTomorrow(date, now)) {
             time.append("明天 ");
-            time.append(format(date,TIME_HH_MM));
-        }else if (getTime(date,Calendar.YEAR) == getTime(now,Calendar.YEAR)){//同一年
-            time.append(format(date,TIME_MM_DD_HH_MM));
-        }else {
-            time.append(format(date,TIME_YYYY_MM_DD_HH_MM));
+            time.append(format(date, TIME_HH_MM));
+        } else if (getTime(date, Calendar.YEAR) == getTime(now, Calendar.YEAR)) {//同一年
+            time.append(format(date, TIME_MM_DD_HH_MM));
+        } else {
+            time.append(format(date, TIME_YYYY_MM_DD_HH_MM));
         }
 
         return time.toString();
     }
 
-    private static boolean isSameDay(Date dayOne,Date dayTwo){
-        return  getTime(dayOne,Calendar.YEAR) == getTime(dayTwo,Calendar.YEAR)
-                && getTime(dayOne,Calendar.MONTH) == getTime(dayTwo,Calendar.MONTH)
-                && getTime(dayOne,Calendar.DAY_OF_MONTH) == getTime(dayTwo,Calendar.DAY_OF_MONTH);
+    private static boolean isSameDay(Date dayOne, Date dayTwo) {
+        return getTime(dayOne, Calendar.YEAR) == getTime(dayTwo, Calendar.YEAR)
+                && getTime(dayOne, Calendar.MONTH) == getTime(dayTwo, Calendar.MONTH)
+                && getTime(dayOne, Calendar.DAY_OF_MONTH) == getTime(dayTwo, Calendar.DAY_OF_MONTH);
     }
 
-    private static boolean inOneHour(Date target,Date now){
-        if (isSameDay(target,now)){
-            return getTime(target,Calendar.HOUR_OF_DAY) == getTime(now,Calendar.HOUR_OF_DAY);
+    private static boolean inOneHour(Date target, Date now) {
+        if (isSameDay(target, now)) {
+            return getTime(target, Calendar.HOUR_OF_DAY) == getTime(now, Calendar.HOUR_OF_DAY);
         }
         return false;
     }
 
-    private static boolean isYesterday(Date target,Date now){
+    private static boolean isYesterday(Date target, Date now) {
         long dis = now.getTime() - target.getTime();
-        if (dis > 1000 * 3600 * 24 && dis < 1000 * 3600 * 24 * 2){
+        if (dis > 1000 * 3600 * 24 && dis < 1000 * 3600 * 24 * 2) {
             return true;
         }
         return false;
     }
 
-    private static boolean isTomorrow(Date target,Date now){
+    private static boolean isTomorrow(Date target, Date now) {
         long dis = target.getTime() - now.getTime();
-        if (dis > 1000 * 3600 * 24 && dis < 1000 * 3600 * 24 * 2){
+        if (dis > 1000 * 3600 * 24 && dis < 1000 * 3600 * 24 * 2) {
             return true;
         }
         return false;
     }
 
 
-    private static String getTimeInOneHour(Date target,Date now){
+    private static String getTimeInOneHour(Date target, Date now) {
         StringBuilder time = new StringBuilder();
-        if (target.getTime() >= now.getTime()){//之后
-            int dis = getTime(target,Calendar.MINUTE) - getTime(now,Calendar.MINUTE);
+        if (target.getTime() >= now.getTime()) {//之后
+            int dis = getTime(target, Calendar.MINUTE) - getTime(now, Calendar.MINUTE);
             time.append(dis);
             time.append("分钟之后");
             return time.toString();
-        }else {//之前
-            int dis = getTime(now,Calendar.MINUTE) - getTime(target,Calendar.MINUTE);
+        } else {//之前
+            int dis = getTime(now, Calendar.MINUTE) - getTime(target, Calendar.MINUTE);
             time.append(dis);
             time.append("分钟之前");
             return time.toString();
@@ -808,21 +771,21 @@ public class TimeUtil {
 
     }
 
-    private static int getTime(Date date,int type){
+    private static int getTime(Date date, int type) {
         Calendar calendarTarget = Calendar.getInstance();
         calendarTarget.setTime(date);
 
         return calendarTarget.get(type);
     }
 
-    public static String format(Date date,String format) {
+    public static String format(Date date, String format) {
         SimpleDateFormat formatter = new SimpleDateFormat(format);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return formatter.format(cal.getTime());
     }
 
-    public static String format(long date,String format) {
+    public static String format(long date, String format) {
         SimpleDateFormat formatter = new SimpleDateFormat(format);
         return formatter.format(date);
     }
