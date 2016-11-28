@@ -16,7 +16,7 @@ public class TeachLesson implements Serializable{
 
     //private String createdBy;
     private String title;
-    private String subject;
+//    private String subject;
     private int mode;
     private Ugc ugc;
     //private Promotion promotion;
@@ -51,13 +51,13 @@ public class TeachLesson implements Serializable{
         this.title = title;
     }
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
+//    public String getSubject() {
+//        return subject;
+//    }
+//
+//    public void setSubject(String subject) {
+//        this.subject = subject;
+//    }
 
     public int getMode() {
         return mode;

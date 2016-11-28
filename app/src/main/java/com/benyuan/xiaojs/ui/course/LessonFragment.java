@@ -180,11 +180,13 @@ public class LessonFragment extends BaseFragment {
     }
 
     public void showTop() {
-        //mHover.setVisibility(View.VISIBLE);
+        mHover.setVisibility(View.VISIBLE);
+        mHeader.setVisibility(View.GONE);
     }
 
     public void hideTop() {
-        //mHover.setVisibility(View.GONE);
+        mHover.setVisibility(View.GONE);
+        mHeader.setVisibility(View.VISIBLE);
     }
 
     @Override
