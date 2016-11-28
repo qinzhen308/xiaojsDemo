@@ -22,9 +22,9 @@ import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -35,7 +35,7 @@ public class LessonSearchActivity extends BaseActivity {
     @BindView(R.id.my_course_search_ok)
     TextView mOk;
     @BindView(R.id.my_course_search_list)
-    AutoPullToRefreshListView mList;
+    PullToRefreshSwipeListView mList;
 
     private AbsSwipeAdapter adapter;
     @Override

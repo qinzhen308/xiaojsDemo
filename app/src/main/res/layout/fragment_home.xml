@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.handmark.pulltorefresh.AutoPullToRefreshListView
+    <com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView
             android:id="@+id/home_list"
             android:paddingBottom="@dimen/px100"
             android:scrollbars="none"

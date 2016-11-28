@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.common.xf_foundation.LessonState;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.data.LessonDataManager;
@@ -41,7 +42,6 @@ import com.benyuan.xiaojs.util.NumberUtil;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.benyuan.xiaojs.util.ToastUtil;
 import com.bumptech.glide.Glide;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
@@ -50,12 +50,12 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     private Criteria mCriteria;
     private LessonFragment mFragment;
 
-    public TeachLessonAdapter(Context context, AutoPullToRefreshListView listView, LessonFragment fragment) {
+    public TeachLessonAdapter(Context context, PullToRefreshSwipeListView listView, LessonFragment fragment) {
         super(context, listView);
         mFragment = fragment;
     }
 
-    public TeachLessonAdapter(Context context, AutoPullToRefreshListView listView) {
+    public TeachLessonAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
     }
 
@@ -661,7 +661,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     public void request(Criteria criteria){
         mCriteria = criteria;
         mPagination.setPage(PAGE_FIRST);
-        mClearItems = true;
         mListView.setRefreshing();
     }
 

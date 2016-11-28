@@ -22,6 +22,7 @@ import android.widget.AbsListView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.widget.BlockTabView;
 import com.benyuan.xiaojs.ui.widget.MessageImageView;
@@ -29,7 +30,6 @@ import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
 import com.benyuan.xiaojs.util.ToastUtil;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -57,12 +57,12 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.right_view)
     MessageImageView mRightImage;
 
-    AutoPullToRefreshListView mList;
+    PullToRefreshSwipeListView mList;
 
     @Override
     protected View getContentView() {
         View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
-        mList = (AutoPullToRefreshListView) v.findViewById(R.id.home_list);
+        mList = (PullToRefreshSwipeListView) v.findViewById(R.id.home_list);
         View header = mContext.getLayoutInflater().inflate(R.layout.layout_home_list_header,null);
         mList.getRefreshableView().addHeaderView(header);
         View view = new View(mContext);
@@ -123,7 +123,7 @@ public class HomeFragment extends BaseFragment {
         ps.add(p1);
         p1.setData();
         mPerson.setViews(mContext.getString(R.string.perhaps_interest),null,ps,mContext.getString(R.string.recommend_self));
-        mList.getRefreshableView().setOnScrollListener(new OnScrollYListener(mList.getRefreshableView()) {
+        mList.getRefreshableView().setOnScrollListener(new OnScrollYListener(mList.getRefreshableView().getWrappedList()) {
             @Override
             public void onScrollY(int y) {
                 handleScrollChanged(y);

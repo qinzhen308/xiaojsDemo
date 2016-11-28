@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.benyuan.xiaojs.common.xf_foundation.schemas.Platform;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Duration;
@@ -30,6 +31,7 @@ import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
 import com.benyuan.xiaojs.util.DeviceUtil;
 import com.benyuan.xiaojs.util.ToastUtil;
 
+import java.util.Date;
 import java.util.List;
 
 public class NotificationCategoryListActivity extends BaseListActivity {
@@ -47,16 +49,13 @@ public class NotificationCategoryListActivity extends BaseListActivity {
         }
 
         if (!TextUtils.isEmpty(categoryId)) {
-            adapter = new NotificationCategoryAdapter(this, mList, categoryId);
+            adapter = new NotificationCategoryAdapter(this, mList);
+            NotificationCriteria criteria = new NotificationCriteria();
+            criteria.before = new Date(System.currentTimeMillis());
+            criteria.state = Platform.NotificationState.NONE;
+            criteria.category = categoryId;
+            adapter.setCriteria(criteria);
             mList.setAdapter(adapter);
-            mList.getRefreshableView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    int index = position - mList.getRefreshableView().getHeaderViewsCount();
-                    showLongClickDialog(view, index);
-                    return true;
-                }
-            });
         }
     }
 

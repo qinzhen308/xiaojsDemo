@@ -24,6 +24,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Duration;
@@ -36,7 +37,6 @@ import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
 import com.benyuan.xiaojs.ui.widget.CanInScrollviewListView;
 import com.benyuan.xiaojs.util.DeviceUtil;
 import com.benyuan.xiaojs.util.TimeUtil;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.Date;
 import java.util.List;
@@ -47,7 +47,7 @@ import butterknife.OnClick;
 public class NotificationFragment extends BaseFragment {
 
     @BindView(R.id.listview)
-    AutoPullToRefreshListView mPullList;
+    PullToRefreshSwipeListView mPullList;
 
     View mHeader;
     CanInScrollviewListView mListView;

@@ -1,1 +1,1 @@
-include ':app', ':3d_wheelpicker', ':pulltorefresh'
+include ':app', ':3d_wheelpicker'

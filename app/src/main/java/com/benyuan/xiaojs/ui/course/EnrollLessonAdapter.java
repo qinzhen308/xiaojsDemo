@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.common.xf_foundation.LessonState;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.data.LessonDataManager;
@@ -41,7 +42,6 @@ import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout;
 import com.benyuan.xiaojs.util.TimeUtil;
 import com.bumptech.glide.Glide;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
@@ -52,14 +52,14 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     private Bitmap bitmap;
     private int radius;
 
-    public EnrollLessonAdapter(Context context, AutoPullToRefreshListView listView, LessonFragment fragment) {
+    public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView, LessonFragment fragment) {
         super(context, listView);
         mFragment = fragment;
         bitmap = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.default_portrait);
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
-    public EnrollLessonAdapter(Context context, AutoPullToRefreshListView listView) {
+    public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
     }
 
@@ -290,7 +290,6 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     public void request(Criteria criteria) {
         mCriteria = criteria;
         mPagination.setPage(PAGE_FIRST);
-        mClearItems = true;
         mListView.setRefreshing();
     }
 
