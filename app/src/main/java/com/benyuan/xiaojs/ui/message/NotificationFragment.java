@@ -21,24 +21,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
-import com.benyuan.xiaojs.data.NotificationDataManager;
-import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
-import com.benyuan.xiaojs.model.Duration;
-import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.NotificationCategory;
-import com.benyuan.xiaojs.model.NotificationCriteria;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
-import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
 import com.benyuan.xiaojs.ui.widget.CanInScrollviewListView;
-import com.benyuan.xiaojs.util.DeviceUtil;
-import com.benyuan.xiaojs.util.TimeUtil;
 
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -87,28 +77,6 @@ public class NotificationFragment extends BaseFragment {
                 ((BaseActivity)mContext).startActivityForResult(intent,NotificationConstant.REQUEST_NOTIFICATION_CATEGORY_LIST);
             }
         });
-        mListView.setOnItemLongClickListener(new CanInScrollviewListView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(View view,final int position) {
-                CommonPopupMenu menu = new CommonPopupMenu(mContext);
-                String[] items = new String[]{"标记为已读"};
-                menu.addTextItems(items);
-                menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        switch (i){
-                            case 0:
-                                NotificationCategory category = platformMessageAdapter.getItem(i);
-                                mark(category,0);
-                                break;
-                        }
-                    }
-                });
-                int offset = DeviceUtil.getScreenWidth(mContext) / 2;
-                menu.show(view,offset);
-                return true;
-            }
-        });
         mPullList.getRefreshableView().addHeaderView(mHeader);
         View view = new View(mContext);
         AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mContext.getResources().getDimensionPixelSize(R.dimen.px100));
@@ -116,45 +84,8 @@ public class NotificationFragment extends BaseFragment {
         mPullList.getRefreshableView().addFooterView(view);
         notificationAdapter = new NotificationAdapter(mContext,mPullList,this);
         mPullList.setAdapter(notificationAdapter);
-        mPullList.getRefreshableView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                int index = position - mPullList.getRefreshableView().getHeaderViewsCount();
-                NotificationCategory category = notificationAdapter.getItem(index);
-                mark(category,1);
-                return true;
-            }
-        });
     }
 
-
-    private void mark(final NotificationCategory notificationCategory,final int type){
-        NotificationCriteria criteria = new NotificationCriteria();
-        if (notificationCategory != null){
-            criteria.category = notificationCategory.id;
-        }
-        Duration duration = new Duration();
-        duration.setStart(TimeUtil.original());
-        duration.setEnd(new Date("2016-11-22T04:12:01.226Z"));
-        criteria.duration = duration;
-        NotificationDataManager.ignoreNotifications(mContext, criteria, new APIServiceCallback<IgnoreNResponse>() {
-            @Override
-            public void onSuccess(IgnoreNResponse object) {
-                notificationCategory.count = 0;
-                if (type == 0){
-                    platformMessageAdapter.notifyDataSetChanged();
-                }else {
-                    notificationAdapter.notifyDataSetChanged();
-                }
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
-    }
 
     public void notifyHeader(List<NotificationCategory> beans){
         if (platformMessageAdapter != null){
