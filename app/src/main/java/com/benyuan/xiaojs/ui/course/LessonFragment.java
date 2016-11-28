@@ -148,11 +148,11 @@ public class LessonFragment extends BaseFragment {
             });
             mDialog.setOnOkListener(new CourseFilterDialog.OnOkListener() {
                 @Override
-                public void onOk(int timePosition, int statePosition,int sourcePosition) {
+                public void onOk(int timePosition, int statePosition, int sourcePosition) {
                     LessonFragment.this.timePosition = timePosition;
                     LessonFragment.this.statePosition = statePosition;
                     LessonFragment.this.sourcePosition = sourcePosition;
-                    Criteria criteria = LessonBusiness.getFilter(timePosition, statePosition,sourcePosition,isTeacher);
+                    Criteria criteria = LessonBusiness.getFilter(timePosition, statePosition, sourcePosition, isTeacher);
                     request(criteria);
                 }
             });
@@ -195,11 +195,11 @@ public class LessonFragment extends BaseFragment {
             case CourseConstant.CODE_CANCEL_LESSON:
             case CourseConstant.CODE_EDIT_LESSON:
             case CourseConstant.CODE_LESSON_AGAIN:
-                if (resultCode == Activity.RESULT_OK){
-                    if (adapter != null && adapter instanceof TeachLessonAdapter){
-                        TeachLessonAdapter lessonAdapter = (TeachLessonAdapter)adapter;
-                        lessonAdapter.setPageNum(1);
-                        lessonAdapter.doRequest();
+            case CourseConstant.CODE_CREATE_LESSON:
+                if (resultCode == Activity.RESULT_OK) {
+                    if (adapter != null && adapter instanceof TeachLessonAdapter) {
+                        TeachLessonAdapter lessonAdapter = (TeachLessonAdapter) adapter;
+                        lessonAdapter.doRefresh();
                     }
                 }
                 break;

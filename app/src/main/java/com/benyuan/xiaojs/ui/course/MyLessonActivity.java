@@ -53,7 +53,6 @@ public class MyLessonActivity extends BaseTopTabActivity {
         ss.add(getString(R.string.course_of_learn));
         ss.add(getString(R.string.course_of_teach));
         addViews(ss,fs);
-        //addViews(fs.get(1));
     }
 
     @OnClick({R.id.left_image,R.id.right_image})
@@ -85,7 +84,7 @@ public class MyLessonActivity extends BaseTopTabActivity {
         switch (position){
             case 0://我要开课
                 Intent intent = new Intent(this,LessonCreationActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,CourseConstant.CODE_CREATE_LESSON);
                 break;
             case 1://加入私密课
                 break;

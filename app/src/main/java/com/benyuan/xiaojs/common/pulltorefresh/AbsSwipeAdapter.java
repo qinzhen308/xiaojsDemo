@@ -354,6 +354,13 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mCurrentState = STATE_NORMAL;
     }
 
+    /**
+     * 此方法模拟下拉刷新，回调onPullDownToRefresh的逻辑
+     */
+    public void doRefresh(){
+        changeRequestStatus(STATE_UP_REFRESH);
+    }
+
     protected void onDataItemClick(int position,B bean) {
 
     }

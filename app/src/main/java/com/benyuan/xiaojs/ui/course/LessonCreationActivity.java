@@ -702,7 +702,7 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void setResultOnFinish() {
-        if (mType == CourseConstant.TYPE_LESSON_EDIT || mType == CourseConstant.TYPE_LESSON_AGAIN) {
+        if (mType == CourseConstant.TYPE_LESSON_EDIT || mType == CourseConstant.TYPE_LESSON_AGAIN || mType == CourseConstant.TYPE_LESSON_CREATE) {
             setResult(RESULT_OK);
         }
 
