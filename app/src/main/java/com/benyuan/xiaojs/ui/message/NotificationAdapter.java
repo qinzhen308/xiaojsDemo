@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.GNOResponse;
@@ -29,7 +30,6 @@ import com.benyuan.xiaojs.model.Notification;
 import com.benyuan.xiaojs.model.NotificationCategory;
 import com.benyuan.xiaojs.ui.widget.MessageImageView;
 import com.benyuan.xiaojs.util.TimeUtil;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class NotificationAdapter extends AbsSwipeAdapter<NotificationCategory,No
 
     private NotificationFragment mFragment;
 
-    public NotificationAdapter(Context context, AutoPullToRefreshListView listView, NotificationFragment fragment) {
+    public NotificationAdapter(Context context, PullToRefreshSwipeListView listView, NotificationFragment fragment) {
         super(context, listView);
         mFragment = fragment;
     }

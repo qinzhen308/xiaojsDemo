@@ -15,6 +15,7 @@ package com.benyuan.xiaojs.common.pulltorefresh;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +23,22 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshBase;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import com.benyuan.xiaojs.common.pulltorefresh.stickylistheaders.StickyListHeadersAdapter;
+import com.benyuan.xiaojs.common.pulltorefresh.stickylistheaders.StickyListHeadersListView;
+import com.benyuan.xiaojs.common.pulltorefresh.swipelistview.BaseSwipeListViewListener;
+import com.benyuan.xiaojs.common.pulltorefresh.swipelistview.SwipeListView;
 import com.benyuan.xiaojs.model.Pagination;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
-import com.handmark.pulltorefresh.PullToRefreshBase;
+import com.benyuan.xiaojs.util.DeviceUtil;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,22 +47,63 @@ import java.util.List;
  * @param <B> bean对象
  * @param <H> item的holder
  */
-public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapter {
+public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapter implements StickyListHeadersAdapter {
+
+    /**
+     * 初始状态
+     */
+    private final int STATE_NORMAL = 110;
+    /**
+     * 下拉刷新
+     */
+    private final int STATE_UP_REFRESH = 100;
+    /**
+     * 上拉加载
+     */
+    private final int STATE_DOWN_REFRESH = 101;
+    /**
+     * 下拉加载数据异常
+     */
+    private final int STATE_UP_ERROR = 102;
+    /**
+     * 上拉加载数据异常
+     */
+    private final int STATE_DOWN_ERROR = 103;
+    /**
+     * 所有数据为空
+     */
+    private final int STATE_ALL_EMPTY = 104;
+    /**
+     * 单次加载数据为空
+     */
+    protected final int STATE_SINGLE_EMPTY = 105;
+    /**
+     * 获取数据参数错误
+     */
+    private final int STATE_PARAM_ERROR = 106;
+    /**
+     * 数据为空时加载数据
+     */
+    private final int STATE_LOADING = 107;
+    /**
+     * 数据为空时加载数据异常
+     */
+    private final int STATE_LOADING_ERROR = 108;
+
+    private int mCurrentState = STATE_NORMAL;
 
     protected final int PAGE_FIRST = 1;
     protected final int PAGE_SIZE = 10;
-    protected AutoPullToRefreshListView mListView;
+    protected PullToRefreshSwipeListView mListView;
     protected Context mContext;
     protected LayoutInflater mInflater;
     protected List<B> mBeanList = new ArrayList<>();
-    private boolean isDown;
     protected Pagination mPagination;
     private View mEmptyView;
     private View mFailedView;
-    protected boolean mClearItems;
     private boolean mRefreshOnLoad = true;
 
-    public AbsSwipeAdapter(Context context, AutoPullToRefreshListView listView) {
+    public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         initParam();
@@ -67,7 +117,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     }
 
-    private void initListView(AutoPullToRefreshListView listView) {
+    private void initListView(PullToRefreshSwipeListView listView) {
         if (mListView != null) {
             return;
         }
@@ -76,43 +126,236 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mPagination.setPage(PAGE_FIRST);
         mPagination.setMaxNumOfObjectsPerPage(getPageSize());
         mListView = listView;
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int headerCount = mListView.getRefreshableView().getHeaderViewsCount();//有header的话要减去header
-                int idx = i - headerCount;
-                if (idx >= 0 && idx < mBeanList.size()){
-                    onDataItemClick(idx,mBeanList.get(idx));
+        mListView.setMode(PullToRefreshBase.Mode.BOTH);
+        if (leftSwipe()){
+            mListView.enableLeftSwipe();
+        }
+        final SwipeListView list = mListView.getRefreshableView().getWrappedList();
+        if (list.isSwipeEnabled()){
+            list.setSwipeListViewListener(new BaseSwipeListViewListener(){
+                @Override
+                public void onClickFrontView(int position) {
+                    int idx = position;
+                    if (list.getHeaderViewsCount() > 0 || list.getFooterViewsCount() > 0){
+                        idx = position - list.getHeaderViewsCount();
+                        if (idx >= 0 && idx < mBeanList.size()){
+                            onDataItemClick(idx,mBeanList.get(idx));
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }else {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    int idx = i;
+                    if (list.getHeaderViewsCount() > 0 || list.getFooterViewsCount() > 0){
+                        idx = i - list.getHeaderViewsCount();
+                    }
+                    if (idx >= 0 && idx < mBeanList.size()){
+                        onDataItemClick(idx,mBeanList.get(idx));
+                    }
+                }
+            });
+        }
 
-        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<StickyListHeadersListView>() {
             @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                isDown = true;
+            public void onPullDownToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
                 mPagination.setPage(PAGE_FIRST);
-                doRequest();
+                mCurrentState = STATE_UP_REFRESH;
+                request();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
+                mPagination.setPage(mPagination.getPage() + 1);
+                if (mCurrentState != STATE_DOWN_REFRESH){
+                    mCurrentState = STATE_DOWN_REFRESH;
+                }
+                request();
             }
         });
 
-        mListView.setOnLoadMoreListener(new AutoPullToRefreshListView.OnLoadMoreListener() {
+        request();
+    }
+
+    Handler mHandler = new Handler(){
+
+    };
+
+    private void request(){
+        mHandler.postDelayed(new Runnable() {
             @Override
-            public void onLoadMore() {
-                mPagination.setPage(mPagination.getPage() + 1);
-                isDown = false;
+            public void run() {
+                if (mBeanList == null || mBeanList.size() == 0){
+                    changeRequestStatus(STATE_LOADING);
+                }
                 doRequest();
             }
-        });
-        mListView.setHeaderReadyListener(new PullToRefreshBase.OnHeaderReadyListener() {
-            @Override
-            public void onReady() {
-                if (refreshOnLoad()){
-                    mListView.setRefreshing();
+        },500);
+    }
+    /**
+     * 创建ListItem
+     */
+    protected View createItem(final int position) {
+        if (mListView != null
+                && mListView.getRefreshableView().isSwipeEnabled()) {
+            View templateView = LayoutInflater.from(mContext).inflate(
+                    R.layout.layout_list_swipe_row, null);
+            LinearLayout frontView = (LinearLayout) templateView
+                    .findViewById(R.id.swipe_front);
+            LinearLayout backView = (LinearLayout) templateView
+                    .findViewById(R.id.swipe_back);
+            FrameLayout contentFrame = (FrameLayout) frontView
+                    .findViewById(R.id.content);
+            // 滑动删除list item的自定义区域
+            View contentView = createContentView(position);
+            contentFrame.addView(contentView);
+            TextView delete = (TextView) templateView.findViewById(R.id.delete);
+            TextView mark = (TextView) templateView.findViewById(R.id.mark);
+            setMarkListener(mark,position);
+            setDeleteListener(delete, position);
+            onAttachSwipe(mark,delete);
+            return templateView;
+        } else {
+            return createContentView(position);
+        }
+    }
+
+    protected void onAttachSwipe(TextView mark,TextView del) {
+
+    }
+
+    protected final void setLeftOffset(float width){
+        SwipeListView swipe = mListView.getRefreshableView().getWrappedList();
+        swipe.setOffsetLeft(DeviceUtil.getScreenWidth(mContext) - width);
+    }
+
+    private void setDeleteListener(TextView delete, final int position) {
+        if (delete != null && position >= 0) {
+            // 有滑动删除时的公有逻辑
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteItem(position);
                 }
+            });
+        }
+    }
+
+    private void setMarkListener(TextView mark, final int position) {
+        if (mark != null && position >= 0) {
+            // 滑动标记为已读
+            mark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onSwipeMark(position);
+                }
+            });
+        }
+    }
+
+    public final void deleteItem(final int position) {
+        final SwipeListView list = mListView.getRefreshableView()
+                .getWrappedList();
+        list.closeOpenedItems();
+        list.dismiss(position, new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                onSwipeDelete(position);
             }
         });
+    }
+
+    public void onSwipeMark(int position){
+
+    }
+
+    protected void onSwipeDelete(int position){
+
+    }
+
+    /**
+     * 改变状态
+     *
+     * @param statusLoading
+     */
+    protected void changeRequestStatus(int statusLoading) {
+        mCurrentState = statusLoading;
+        switch (mCurrentState) {
+            case STATE_NORMAL :
+                mListView.onRefreshComplete();
+                mListView.removeEmptyView(mEmptyView);
+                if (mListView.getMode() == PullToRefreshBase.Mode.PULL_FROM_START){
+                    mListView.setMode(PullToRefreshBase.Mode.BOTH);
+                }
+                break;
+            case STATE_LOADING :
+                mListView.setFirstLoading(true);
+                mListView.setRefreshing();
+                break;
+            case STATE_LOADING_ERROR :
+                mListView.onRefreshComplete();
+                mCurrentState = STATE_NORMAL;
+                addFailedView();
+                break;
+            case STATE_PARAM_ERROR :
+                mListView.onRefreshComplete();
+                mCurrentState = STATE_NORMAL;
+                break;
+            case STATE_UP_REFRESH :
+                mListView.setRefreshing();
+                break;
+            case STATE_DOWN_REFRESH :
+
+                break;
+            case STATE_UP_ERROR :
+                mListView.onRefreshComplete();
+                mCurrentState = STATE_NORMAL;
+                break;
+            case STATE_DOWN_ERROR :
+                if (mPagination.getPage() < 1){
+                    mPagination.setPage(PAGE_FIRST);
+                }
+                mListView.onRefreshComplete();
+                mCurrentState = STATE_NORMAL;
+                break;
+            case STATE_ALL_EMPTY :
+                mListView.onRefreshComplete();
+                mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                addEmptyView();
+                mCurrentState = STATE_NORMAL;
+                break;
+            case STATE_SINGLE_EMPTY :
+                mListView.onRefreshComplete();
+                mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                if (mBeanList == null || mBeanList.size() == 0) {
+                    addEmptyView();
+                }
+                break;
+            default :
+                break;
+        }
+    }
+
+    public void reset(){
+        mBeanList.clear();
+        mPagination.setPage(PAGE_FIRST);
+        mCurrentState = STATE_NORMAL;
+    }
+
+    /**
+     *@param loading 是否是重置加载
+     */
+    protected void onChangeParam(boolean loading){
+        reset();
+        notifyDataSetChanged();
+        if (!loading){
+            changeRequestStatus(STATE_UP_REFRESH);
+        }else {
+            changeRequestStatus(STATE_LOADING);
+        }
     }
 
     protected void onDataItemClick(int position,B bean) {
@@ -138,7 +381,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     @Override
     public B getItem(int i) {
-        return mBeanList.get(i);
+        if (i >= 0 && mBeanList.size() > i){
+            return mBeanList.get(i);
+        }
+        return null;
     }
 
     @Override
@@ -162,14 +408,18 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         if (mBeanList.size() > 0){
             H holder = null;
             if (view == null) {
-                view = createContentView(i);
+                view = createItem(i);
                 holder = initHolder(view);
                 view.setTag(holder);
             } else {
                 holder = (H) view.getTag();
+                TextView delete = (TextView) view.findViewById(R.id.delete);
+                TextView mark = (TextView) view.findViewById(R.id.mark);
+                setMarkListener(mark,i);
+                setDeleteListener(delete, i);
             }
             if (holder == null){//view可能会传成下方的占位view
-                view = createContentView(i);
+                view = createItem(i);
                 holder = initHolder(view);
                 view.setTag(holder);
             }
@@ -210,22 +460,20 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
      */
     public void refresh(){
         mPagination.setPage(1);
-        isDown = true;
         doRequest();
     }
 
     protected final void onSuccess(List<B> data) {
-        mListView.onRefreshOrLoadComplete();
-        if (isDown || mClearItems) {//下拉刷新清空列表
+        if (STATE_UP_REFRESH == mCurrentState){
             mBeanList.clear();
-            if (mClearItems){//此次请求是否需要刷新
-                mClearItems = false;
-            }
+            notifyDataSetChanged();
         }
         if (data == null || data.size() == 0) {
             mPagination.setPage(mPagination.getPage() - 1);
-            if (mBeanList.isEmpty() && showEmptyView()) {//接口数据为空，本地数据也为空，则显示空视图
-                addEmptyView();
+            if (mBeanList.isEmpty()) {//接口数据为空，本地数据也为空，则显示空视图
+                changeRequestStatus(STATE_ALL_EMPTY);
+            }else {
+                changeRequestStatus(STATE_SINGLE_EMPTY);
             }
             return;
         }
@@ -233,16 +481,30 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             mBeanList.addAll(data);
             notifyDataSetChanged();
         }
+
+        if (mBeanList == null || mBeanList.size() == 0){
+            changeRequestStatus(STATE_ALL_EMPTY);
+        }else {
+            changeRequestStatus(STATE_NORMAL);
+        }
     }
 
     protected final void onFailure(String errorCode, String msg) {
-        mListView.onRefreshOrLoadComplete();
-        addFailedView();
+        mPagination.setPage(mPagination.getPage() - 1);
+        if (mCurrentState == STATE_DOWN_REFRESH){
+            changeRequestStatus(STATE_DOWN_ERROR);
+        }else if (mCurrentState == STATE_UP_REFRESH){
+            changeRequestStatus(STATE_UP_ERROR);
+        }else {
+            changeRequestStatus(STATE_LOADING_ERROR);
+        }
     }
 
     private void addEmptyView() {
-        mListView.setEmptyView(mEmptyView);
-        onDataEmpty();
+        if (showEmptyView()){
+            mListView.setEmptyView(mEmptyView);
+            onDataEmpty();
+        }
     }
 
     private void addFailedView(){
@@ -299,6 +561,31 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
      */
     protected boolean patchedHeader(){
 
+        return false;
+    }
+
+    @Override
+    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null){
+            convertView = new View(mContext);
+        }
+        return convertView;
+    }
+
+    @Override
+    public long getHeaderId(int position) {
+        return 0;
+    }
+
+    public boolean isChoiceMode() {
+        return false;
+    }
+
+    /**
+     * 是否支持左滑
+     * @return
+     */
+    protected boolean leftSwipe(){
         return false;
     }
 }

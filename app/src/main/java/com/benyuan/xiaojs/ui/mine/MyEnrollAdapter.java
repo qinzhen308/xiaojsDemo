@@ -21,12 +21,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 import com.benyuan.xiaojs.util.NumberUtil;
 import com.benyuan.xiaojs.util.TimeUtil;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import butterknife.BindView;
 public class MyEnrollAdapter extends AbsSwipeAdapter<MyEnrollAdapter.MyEnrollBean, MyEnrollAdapter.Holder> {
 
 
-    public MyEnrollAdapter(Context context, AutoPullToRefreshListView listView) {
+    public MyEnrollAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
     }
 

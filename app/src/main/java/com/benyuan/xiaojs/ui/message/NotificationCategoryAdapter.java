@@ -21,8 +21,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Platform;
 import com.benyuan.xiaojs.data.NotificationDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
@@ -30,27 +31,19 @@ import com.benyuan.xiaojs.model.GENotificationsResponse;
 import com.benyuan.xiaojs.model.Notification;
 import com.benyuan.xiaojs.model.NotificationCriteria;
 import com.benyuan.xiaojs.util.TimeUtil;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
-
-import java.util.Date;
 
 import butterknife.BindView;
 
-public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,NotificationCategoryAdapter.Holder>{
+public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,NotificationCategoryAdapter.Holder> {
 
     private NotificationCriteria criteria;
-    private String categoryId;
 
-    public NotificationCategoryAdapter(Context context, AutoPullToRefreshListView listView, String categoryId) {
+    public NotificationCategoryAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
-        this.categoryId = categoryId;
     }
 
-    @Override
-    protected void initParam() {
-        criteria = new NotificationCriteria();
-        criteria.before = new Date(System.currentTimeMillis());
-        criteria.state = Platform.NotificationState.NONE;
+    public void setCriteria(NotificationCriteria criteria){
+        this.criteria = criteria;
     }
 
     @Override
@@ -85,7 +78,6 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
 
     @Override
     protected void doRequest() {
-        criteria.category = categoryId;
         NotificationDataManager.requestNotifications(mContext, criteria, mPagination, new APIServiceCallback<GENotificationsResponse>() {
             @Override
             public void onSuccess(GENotificationsResponse response) {
@@ -105,6 +97,35 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
     protected void onDataItemClick(int position,Notification bean) {
         bean.read = true;
         notifyDataSetChanged();
+    }
+
+    @Override
+    protected boolean leftSwipe() {
+        return true;
+    }
+
+    @Override
+    protected void onAttachSwipe(TextView mark, TextView del) {
+        mark.setVisibility(View.GONE);
+        setLeftOffset(mContext.getResources().getDimension(R.dimen.px140));
+    }
+
+    @Override
+    protected void onSwipeDelete(final int position) {
+        Notification notification = getItem(position);
+        if (notification != null){
+            NotificationDataManager.requestDelNotification(mContext, notification.id, new APIServiceCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    removeItem(position);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+
+                }
+            });
+        }
     }
 
     class Holder extends BaseHolder{

@@ -23,8 +23,8 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.ui.widget.EvaluationStar;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import butterknife.BindView;
 
 public class CourseAdapter extends AbsSwipeAdapter<RecommendCourseBean,CourseAdapter.Holder> {
 
-    public CourseAdapter(Context context, AutoPullToRefreshListView listView) {
+    public CourseAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
     }
 

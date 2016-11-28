@@ -14,7 +14,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TeachLesson implements Serializable{
 
-    private String createdBy;
+    //private String createdBy;
     private String title;
     private String subject;
     private int mode;
@@ -35,13 +35,13 @@ public class TeachLesson implements Serializable{
     private String state;
     private String initiator;
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
+//    public String getCreatedBy() {
+//        return createdBy;
+//    }
+//
+//    public void setCreatedBy(String createdBy) {
+//        this.createdBy = createdBy;
+//    }
 
     public String getTitle() {
         return title;

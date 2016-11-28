@@ -33,6 +33,7 @@
     <string name="reload">重新加载</string>
     <string name="load_failed_tip">数据加载失败</string>
     <string name="load_failed_tip_2">请确保您的手机已连网</string>
+    <string name="mark">标记为已读</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_circle">小圈</string>

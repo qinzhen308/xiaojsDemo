@@ -25,15 +25,15 @@ import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import com.benyuan.xiaojs.model.Criteria;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
 
 import butterknife.BindView;
 
 public class LessonFragment extends BaseFragment {
     @BindView(R.id.listview)
-    AutoPullToRefreshListView mListView;
+    PullToRefreshSwipeListView mListView;
     TextView mSearch;
     TextView mFilter;
     @BindView(R.id.hover)
@@ -180,11 +180,11 @@ public class LessonFragment extends BaseFragment {
     }
 
     public void showTop() {
-        mHover.setVisibility(View.VISIBLE);
+        //mHover.setVisibility(View.VISIBLE);
     }
 
     public void hideTop() {
-        mHover.setVisibility(View.GONE);
+        //mHover.setVisibility(View.GONE);
     }
 
     @Override

@@ -17,7 +17,7 @@ package com.benyuan.xiaojs.ui.base;
 import android.view.View;
 
 import com.benyuan.xiaojs.R;
-import com.handmark.pulltorefresh.AutoPullToRefreshListView;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -25,7 +25,7 @@ import butterknife.OnClick;
 public abstract class BaseListActivity extends BaseActivity {
 
     @BindView(R.id.base_list)
-    protected AutoPullToRefreshListView mList;
+    protected PullToRefreshSwipeListView mList;
 
 
     @Override
