@@ -110,6 +110,14 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         initListView(listView);
     }
 
+    public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView,boolean autoLoad) {
+        mContext = context;
+        mInflater = LayoutInflater.from(context);
+        mRefreshOnLoad = autoLoad;
+        initParam();
+        initListView(listView);
+    }
+
     /**
      * 子类可初始化接口参数
      */
@@ -176,15 +184,16 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 request();
             }
         });
-
-        request();
+        if (refreshOnLoad()){
+            request();
+        }
     }
 
     Handler mHandler = new Handler(){
 
     };
 
-    private void request(){
+    protected final void request(){
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -345,25 +354,8 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mCurrentState = STATE_NORMAL;
     }
 
-    /**
-     *@param loading 是否是重置加载
-     */
-    protected void onChangeParam(boolean loading){
-        reset();
-        notifyDataSetChanged();
-        if (!loading){
-            changeRequestStatus(STATE_UP_REFRESH);
-        }else {
-            changeRequestStatus(STATE_LOADING);
-        }
-    }
-
     protected void onDataItemClick(int position,B bean) {
 
-    }
-
-    public void setRefreshOnLoad(boolean b){
-        mRefreshOnLoad = b;
     }
 
     public boolean refreshOnLoad(){

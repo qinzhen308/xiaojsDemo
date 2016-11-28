@@ -16,6 +16,7 @@ public class TeachLesson implements Serializable{
 
     //private String createdBy;
     private String title;
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
 //    private String subject;
     private int mode;
     private Ugc ugc;

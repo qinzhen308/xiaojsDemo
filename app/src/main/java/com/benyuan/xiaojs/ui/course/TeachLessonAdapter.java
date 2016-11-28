@@ -55,6 +55,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         mFragment = fragment;
     }
 
+    public TeachLessonAdapter(Context context, PullToRefreshSwipeListView listView,boolean autoLoad) {
+        super(context, listView,autoLoad);
+    }
+
     public TeachLessonAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
     }
@@ -63,7 +67,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     protected void initParam(){
         Duration duration = new Duration();
         duration.setStart(TimeUtil.original());
-        duration.setEnd(TimeUtil.yearAfter(1));
+        duration.setEnd(TimeUtil.yearAfter(10));
 
         mCriteria = new Criteria();
         mCriteria.setSource(Ctl.LessonSource.ALL);
@@ -660,8 +664,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     public void request(Criteria criteria){
         mCriteria = criteria;
-        mPagination.setPage(PAGE_FIRST);
-        mListView.setRefreshing();
+        reset();
+        notifyDataSetChanged();
+        request();
     }
 
     static class Holder extends BaseHolder {

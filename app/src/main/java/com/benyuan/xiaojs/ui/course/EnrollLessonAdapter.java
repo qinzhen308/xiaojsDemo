@@ -59,15 +59,17 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
-    public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView) {
-        super(context, listView);
+    public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView, boolean autoLoad) {
+        super(context, listView,autoLoad);
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.default_portrait);
+        radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
     @Override
     protected void initParam() {
         Duration duration = new Duration();
         duration.setStart(TimeUtil.original());
-        duration.setEnd(TimeUtil.yearAfter(1));
+        duration.setEnd(TimeUtil.yearAfter(10));
 
         mCriteria = new Criteria();
         mCriteria.setSource(Ctl.LessonSource.ALL);
@@ -253,24 +255,6 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             }
         });
 
-//        EnrolledLesson e1 = new EnrolledLesson();
-//        e1.setTitle("人力资源冲刺考试直播课");
-//        Schedule schedule = new Schedule();
-//        schedule.setDuration(123);
-//        schedule.setStart(TimeUtil.beforeDawn());
-//        e1.setSchedule(schedule);
-//        Fee fee = new Fee();
-//        fee.setCharge(BigDecimal.valueOf(5565666));
-//        fee.setFree(true);
-//        e1.setFee(fee);
-//        e1.setState("LIVE");
-//        List<EnrolledLesson> ls = new ArrayList<>();
-//        ls.add(e1);
-//        ls.add(e1);
-//        ls.add(e1);
-//        ls.add(e1);
-//        ls.add(e1);
-//        onSuccess(ls);
     }
 
     @Override

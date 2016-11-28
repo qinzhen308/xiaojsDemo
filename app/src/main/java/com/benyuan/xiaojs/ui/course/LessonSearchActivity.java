@@ -48,12 +48,10 @@ public class LessonSearchActivity extends BaseActivity {
             isTeacher = intent.getBooleanExtra(CourseConstant.KEY_IS_TEACHER,false);
         }
         if (isTeacher){
-            adapter = new TeachLessonAdapter(this,mList);
+            adapter = new TeachLessonAdapter(this,mList,false);
         }else {
-            adapter = new EnrollLessonAdapter(this,mList);
+            adapter = new EnrollLessonAdapter(this,mList,false);
         }
-        adapter.setRefreshOnLoad(false);
-
         mList.setAdapter(adapter);
     }
 

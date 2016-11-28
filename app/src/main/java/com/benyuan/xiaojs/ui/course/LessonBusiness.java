@@ -138,7 +138,7 @@ public class LessonBusiness {
 
         Duration duration = new Duration();
         duration.setStart(TimeUtil.original());
-        duration.setEnd(TimeUtil.yearAfter(1));
+        duration.setEnd(TimeUtil.yearAfter(10));
 
         criteria.setTitle(key);
         criteria.setDuration(duration);
