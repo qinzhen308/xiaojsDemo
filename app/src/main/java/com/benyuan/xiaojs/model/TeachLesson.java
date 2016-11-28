@@ -26,7 +26,7 @@ public class TeachLesson implements Serializable{
     private Enroll enroll;
     private String id;
     private String cover;
-    private String hp;
+//    private String hp;
     private Evt[] evts;
     private String outcome;
     private Date assignedOn;
@@ -125,13 +125,13 @@ public class TeachLesson implements Serializable{
         this.id = id;
     }
 
-    public String getHp() {
-        return hp;
-    }
-
-    public void setHp(String hp) {
-        this.hp = hp;
-    }
+//    public String getHp() {
+//        return hp;
+//    }
+//
+//    public void setHp(String hp) {
+//        this.hp = hp;
+//    }
 
     public Evt[] getEvts() {
         return evts;
