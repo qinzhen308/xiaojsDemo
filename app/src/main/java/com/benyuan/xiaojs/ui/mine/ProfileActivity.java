@@ -200,7 +200,7 @@ public class ProfileActivity extends BaseActivity {
     private boolean checkSubmitInfoValid() {
         String userName = mNameEdt.getText().toString();
         if (!TextUtils.isEmpty(userName) && (userName.length() < 2 || userName.length() > 16)) {
-            if (userName.length() < 1) {
+            if (userName.length() < 2) {
                 Toast.makeText(this, R.string.name_length_less_than_2, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, R.string.name_length_more_than_16, Toast.LENGTH_SHORT).show();
