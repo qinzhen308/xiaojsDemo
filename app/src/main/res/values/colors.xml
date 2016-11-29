@@ -13,6 +13,7 @@
     <!--app base color-->
     <color name="main_orange">#ff9833</color>
     <color name="main_blue">#0076ff</color>
+    <color name="main_gray">#f04e4e4e</color>
     <color name="main_orange_pressed">#d27d2b</color>
     <color name="main_orange_disabled">#ffcc9b</color>
     <color name="item_pressed">#f6f6f6</color>
@@ -37,6 +38,7 @@
     <color name="font_blue">#0076ff</color>
     <color name="font_orange">#ff9833</color>
     <color name="font_red">#cc0000</color>
+    <color name="font_white">#ffffff</color>
 
     <!-- 二维码 -->
     <color name="viewfinder_mask">#60000000</color>

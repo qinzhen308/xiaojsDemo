@@ -276,4 +276,23 @@
     <string name="cancel_examine_tip">撤销审核后，您可以重新编辑再提交审核</string>
     <string name="lesson_begin_time">开课时间：</string>
     <string name="enrolled_count">已报名%1$d/%2$d</string>
+
+
+    <!--class room-->
+    <string name="class_room_setting">教室设置</string>
+    <string name="camera">摄像头</string>
+    <string name="microphone">麦克风</string>
+    <string name="course_ware_mode">课件模式</string>
+    <string name="full_screen">全屏</string>
+    <string name="fix_screen">铺满</string>
+    <string name="class_room_chat">教室聊天</string>
+    <string name="video_resolution">视频分辨率</string>
+    <string name="fluent">流畅</string>
+    <string name="standard_definition">标清</string>
+    <string name="high_definition">高清</string>
+    <string name="all_class_room_msg">全部消息</string>
+    <string name="enter_class_room"><![CDATA[<font color="#ff9833">%1$s</font>]]>进入了教室</string>
+    <string name="leave_class_room"><![CDATA[<font color="#ff9833">%1$s</font>]]>离开了教室</string>
+    <string name="share_course_ware">分享了课件</string>
+    <string name="launch_apply">发起了申请</string>
 </resources>
