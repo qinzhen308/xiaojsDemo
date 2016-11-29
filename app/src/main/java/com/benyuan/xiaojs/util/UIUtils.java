@@ -47,7 +47,7 @@ public class UIUtils {
 
 
 
-    public static boolean hasDestoryed(final Activity activity) {
+    public static boolean activityDestoryed(final Activity activity) {
 
         if(activity == null) {
             return true;
