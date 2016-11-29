@@ -31,10 +31,8 @@ public class RegisterRequest extends ServiceRequest {
 
     public void register(@NonNull Context appContext,
                          @NonNull RegisterInfo registerInfo,
-                         @NonNull APIServiceCallback callback) {
+                         @NonNull final APIServiceCallback callback) {
 
-        final WeakReference<APIServiceCallback> callbackReference =
-                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
 
@@ -49,7 +47,6 @@ public class RegisterRequest extends ServiceRequest {
 
                 if (responseCode == SUCCESS_CODE) {
 
-                    APIServiceCallback callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(null);
                     }
@@ -67,7 +64,6 @@ public class RegisterRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.registerPrompt(errorCode);
 
-                    APIServiceCallback callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -87,7 +83,6 @@ public class RegisterRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.registerPrompt(errorCode);
 
-                APIServiceCallback callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }
@@ -103,10 +98,8 @@ public class RegisterRequest extends ServiceRequest {
                              int method,
                              long mobile,
                              int verifycode,
-                             @NonNull APIServiceCallback callback) {
+                             @NonNull final APIServiceCallback callback) {
 
-        final WeakReference<APIServiceCallback> callbackReference =
-                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
         xiaojsService.validateCode(method, mobile, verifycode).enqueue(new Callback<APIEntity>() {
@@ -126,7 +119,6 @@ public class RegisterRequest extends ServiceRequest {
                         boolean match = apiEntity.isMatch();
                         if (match) {
 
-                            APIServiceCallback callback = callbackReference.get();
                             if (callback != null) {
                                 callback.onSuccess(null);
                             }
@@ -139,7 +131,6 @@ public class RegisterRequest extends ServiceRequest {
                     String errorCode = getDefaultErrorCode();
                     String errorMessage = ErrorPrompts.validateCodePrompt(errorCode);
 
-                    APIServiceCallback callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -158,7 +149,6 @@ public class RegisterRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.validateCodePrompt(errorCode);
 
-                    APIServiceCallback callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -179,7 +169,6 @@ public class RegisterRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.validateCodePrompt(errorCode);
 
-                APIServiceCallback callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }
@@ -192,10 +181,8 @@ public class RegisterRequest extends ServiceRequest {
 
     public void sendVerifyCode(@NonNull Context appContext, int method,
                                long mobile,
-                               @NonNull APIServiceCallback<VerifyCode> callback) {
+                               @NonNull final APIServiceCallback<VerifyCode> callback) {
 
-        final WeakReference<APIServiceCallback<VerifyCode>> callbackReference =
-                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
         xiaojsService.sendVerifyCode(method, mobile).enqueue(new Callback<VerifyCode>() {
@@ -211,7 +198,6 @@ public class RegisterRequest extends ServiceRequest {
 
                     VerifyCode verifyCode = response.body();
 
-                    APIServiceCallback<VerifyCode> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(verifyCode);
                     }
@@ -228,7 +214,6 @@ public class RegisterRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.sendCodePrompt(errorCode);
 
-                    APIServiceCallback<VerifyCode> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -247,7 +232,6 @@ public class RegisterRequest extends ServiceRequest {
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.sendCodePrompt(errorCode);
-                APIServiceCallback<VerifyCode> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }

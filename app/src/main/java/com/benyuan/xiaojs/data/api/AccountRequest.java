@@ -37,11 +37,7 @@ public class AccountRequest extends ServiceRequest {
 
     public void getHomeData(Context context,
                             @NonNull String sessionID,
-                            @NonNull APIServiceCallback<HomeData> callback) {
-
-
-        final WeakReference<APIServiceCallback<HomeData>> callbackReference =
-                new WeakReference<>(callback);
+                            @NonNull final APIServiceCallback<HomeData> callback) {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.getHomeData(sessionID).enqueue(new Callback<HomeData>() {
@@ -57,7 +53,6 @@ public class AccountRequest extends ServiceRequest {
 
                     HomeData homeData = response.body();
 
-                    APIServiceCallback<HomeData> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(homeData);
                     }
@@ -76,7 +71,6 @@ public class AccountRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getHomeDataPrompt(errorCode);
 
-                    APIServiceCallback<HomeData> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -95,7 +89,6 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getHomeDataPrompt(errorCode);
 
-                APIServiceCallback<HomeData> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(Errors.NO_ERROR, errorMessage);
                 }
@@ -109,10 +102,7 @@ public class AccountRequest extends ServiceRequest {
     public void claimCompetency(Context context,
                                 String sessionID,
                                 CompetencyParams competencyParams,
-                                @NonNull APIServiceCallback<ClaimCompetency> callback) {
-
-        final WeakReference<APIServiceCallback<ClaimCompetency>> callbackReference =
-                new WeakReference<>(callback);
+                                @NonNull final APIServiceCallback<ClaimCompetency> callback) {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.claimCompetency(sessionID, competencyParams).enqueue(new Callback<ClaimCompetency>() {
@@ -128,7 +118,6 @@ public class AccountRequest extends ServiceRequest {
 
                     ClaimCompetency claimCompetency = response.body();
 
-                    APIServiceCallback<ClaimCompetency> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(claimCompetency);
                     }
@@ -146,7 +135,6 @@ public class AccountRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.claimCompetencyPrompt(errorCode);
 
-                    APIServiceCallback<ClaimCompetency> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -165,7 +153,6 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.claimCompetencyPrompt(errorCode);
 
-                APIServiceCallback<ClaimCompetency> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }
@@ -178,11 +165,9 @@ public class AccountRequest extends ServiceRequest {
     public void editProfile(Context context,
                             @NonNull String sessionID,
                             @NonNull Account.Basic basic,
-                            @NonNull APIServiceCallback callback) {
+                            @NonNull final APIServiceCallback callback) {
 
 
-        final WeakReference<APIServiceCallback> callbackReference =
-                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.editProfile(sessionID, basic).enqueue(new Callback<ResponseBody>() {
@@ -196,7 +181,6 @@ public class AccountRequest extends ServiceRequest {
 
                 if (responseCode == SUCCESS_CODE) {
 
-                    APIServiceCallback callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(null);
                     }
@@ -214,7 +198,6 @@ public class AccountRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.editProfilePrompt(errorCode);
 
-                    APIServiceCallback callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -236,7 +219,6 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.editProfilePrompt(errorCode);
 
-                APIServiceCallback callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }
@@ -249,9 +231,7 @@ public class AccountRequest extends ServiceRequest {
 
     public void getProfile(Context context,
                            @NonNull String sessionID,
-                           @NonNull APIServiceCallback<Account.Basic> callback) {
-        final WeakReference<APIServiceCallback<Account.Basic>> callbackReference =
-                new WeakReference<>(callback);
+                           @NonNull final APIServiceCallback<Account.Basic> callback) {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.getProfile(sessionID).enqueue(new Callback<Account.Basic>() {
@@ -267,7 +247,6 @@ public class AccountRequest extends ServiceRequest {
 
                     Account.Basic basic = response.body();
 
-                    APIServiceCallback<Account.Basic> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(basic);
                     }
@@ -285,7 +264,6 @@ public class AccountRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getProfilePrompt(errorCode);
 
-                    APIServiceCallback<Account.Basic> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -306,7 +284,6 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getProfilePrompt(errorCode);
 
-                APIServiceCallback<Account.Basic> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }
@@ -319,10 +296,8 @@ public class AccountRequest extends ServiceRequest {
 
     protected void getAvatarUpToken(Context context,
                                     @NonNull String sessionID,
-                                    @NonNull APIServiceCallback<TokenResponse> callback) {
+                                    @NonNull final APIServiceCallback<TokenResponse> callback) {
 
-        final WeakReference<APIServiceCallback<TokenResponse>> callbackReference =
-                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.getAvatarUpToken(sessionID).enqueue(new Callback<TokenResponse>() {
@@ -338,7 +313,6 @@ public class AccountRequest extends ServiceRequest {
 
                     TokenResponse tokenResponse = response.body();
 
-                    APIServiceCallback<TokenResponse> callback = callbackReference.get();
                     if (callback != null) {
 
                         callback.onSuccess(tokenResponse);
@@ -356,7 +330,6 @@ public class AccountRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(errorCode);
 
-                    APIServiceCallback<TokenResponse> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -377,7 +350,6 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getAvatarUpTokenPrompt(errorCode);
 
-                APIServiceCallback<TokenResponse> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }
@@ -389,10 +361,8 @@ public class AccountRequest extends ServiceRequest {
     protected void getCoverUpToken(Context context,
                                    @NonNull String sessionID,
                                    @NonNull String lesson,
-                                   @NonNull APIServiceCallback<TokenResponse> callback) {
+                                   @NonNull final APIServiceCallback<TokenResponse> callback) {
 
-        final WeakReference<APIServiceCallback<TokenResponse>> callbackReference =
-                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.getCoverUpToken(sessionID,lesson).enqueue(new Callback<TokenResponse>() {
@@ -408,7 +378,6 @@ public class AccountRequest extends ServiceRequest {
 
                     TokenResponse tokenResponse = response.body();
 
-                    APIServiceCallback<TokenResponse> callback = callbackReference.get();
                     if (callback != null) {
 
                         callback.onSuccess(tokenResponse);
@@ -428,7 +397,6 @@ public class AccountRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getCoverUpTokenPrompt(errorCode);
 
-                    APIServiceCallback<TokenResponse> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -450,7 +418,6 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getCoverUpTokenPrompt(errorCode);
 
-                APIServiceCallback<TokenResponse> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }
@@ -460,10 +427,7 @@ public class AccountRequest extends ServiceRequest {
 
     public void getCenterData(Context context,
                               @NonNull String sessionID,
-                              @NonNull APIServiceCallback<CenterData> callback) {
-
-        final WeakReference<APIServiceCallback<CenterData>> callbackReference =
-                new WeakReference<>(callback);
+                              @NonNull final APIServiceCallback<CenterData> callback) {
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
         xiaojsService.getCenterData(sessionID).enqueue(new Callback<CenterData>() {
@@ -479,7 +443,6 @@ public class AccountRequest extends ServiceRequest {
 
                     CenterData centerData = response.body();
 
-                    APIServiceCallback<CenterData> callback = callbackReference.get();
                     if (callback != null) {
 
                         callback.onSuccess(centerData);
@@ -499,7 +462,6 @@ public class AccountRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getCenterDataPrompt(errorCode);
 
-                    APIServiceCallback<CenterData> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -521,7 +483,6 @@ public class AccountRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.getCenterDataPrompt(errorCode);
 
-                APIServiceCallback<CenterData> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }

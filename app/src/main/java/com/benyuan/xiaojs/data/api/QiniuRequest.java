@@ -29,10 +29,8 @@ public class QiniuRequest {
                             @NonNull String sessionID,
                             @NonNull String lesson,
                             @NonNull final String filePath,
-                            @NonNull QiniuService qiniuService) {
+                            @NonNull final QiniuService callback) {
 
-        final WeakReference<QiniuService> callbackReference =
-                new WeakReference<>(qiniuService);
 
         AccountRequest accountRequest = new AccountRequest();
 
@@ -47,7 +45,7 @@ public class QiniuRequest {
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("get upload for token onSuccess token=%s,key=%s,domain=%s",token,key,domain);
                 }
-                uploadFile(domain,filePath,key,token,callbackReference);
+                uploadFile(domain,filePath,key,token,callback);
 
             }
 
@@ -58,7 +56,6 @@ public class QiniuRequest {
                     Logger.d("get upload for token onFailure ");
                 }
 
-                QiniuService callback = callbackReference.get();
                 if (callback!=null){
                     callback.uploadFailure();
                 }
@@ -69,11 +66,8 @@ public class QiniuRequest {
     public void uploadAvatar(Context context,
                              @NonNull String sessionID,
                              @NonNull final String filePath,
-                             @NonNull QiniuService qiniuService) {
+                             @NonNull final QiniuService callback) {
 
-
-        final WeakReference<QiniuService> callbackReference =
-                new WeakReference<>(qiniuService);
 
 
         AccountRequest accountRequest = new AccountRequest();
@@ -90,7 +84,7 @@ public class QiniuRequest {
                     Logger.d("get upload for token onSuccess token=%s,key=%s,domain=%s",token,key,domain);
                 }
 
-                uploadFile(domain,filePath,key,token,callbackReference);
+                uploadFile(domain,filePath,key,token,callback);
 
             }
 
@@ -101,7 +95,6 @@ public class QiniuRequest {
                     Logger.d("get upload for token onFailure ");
                 }
 
-                QiniuService callback = callbackReference.get();
                 if (callback!=null){
                     callback.uploadFailure();
                 }
@@ -118,7 +111,7 @@ public class QiniuRequest {
                             @NonNull final String filePath,
                             @NonNull String uploadKey,
                             @NonNull String uploadToken,
-                            @NonNull final WeakReference<QiniuService> callbackReference){
+                            @NonNull final QiniuService callback){
 
         Configuration configuration = createConfiguration();
 
@@ -132,7 +125,6 @@ public class QiniuRequest {
                 }
 
                 if (info.isOK()){
-                    QiniuService callback = callbackReference.get();
                     if (callback != null) {
 
                         StringBuilder fileUrl = new StringBuilder(domain)
@@ -143,7 +135,6 @@ public class QiniuRequest {
                         callback.uploadSuccess(key,fileUrl.toString());
                     }
                 }else{
-                    QiniuService callback = callbackReference.get();
                     if (callback != null) {
                         callback.uploadFailure();
                     }

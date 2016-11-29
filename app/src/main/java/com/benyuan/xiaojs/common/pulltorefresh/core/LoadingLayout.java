@@ -36,6 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.widget.LoadingView;
 
 
 @SuppressLint("ViewConstructor")
@@ -54,6 +55,7 @@ public abstract class LoadingLayout extends FrameLayout implements
 	private boolean mUseIntrinsicAnimation;
 
 	protected final TextView mHeaderText;
+	protected final LoadingView loadingView;
 	private final TextView mSubHeaderText;
 
 	protected final PullToRefreshBase.Mode mMode;
@@ -72,6 +74,7 @@ public abstract class LoadingLayout extends FrameLayout implements
 		mInnerLayout = (FrameLayout) findViewById(R.id.fl_inner);
 		mHeaderText = (TextView) mInnerLayout
 				.findViewById(R.id.pull_to_refresh_text);
+		loadingView = (LoadingView) findViewById(R.id.view_loading);
 		mHeaderProgress = (ProgressBar) mInnerLayout
 				.findViewById(R.id.pull_to_refresh_progress);
 		mSubHeaderText = (TextView) mInnerLayout
@@ -89,7 +92,7 @@ public abstract class LoadingLayout extends FrameLayout implements
 
 			// Load in labels
 			mPullLabel = "";
-			mRefreshingLabel = "正在加载";
+			mRefreshingLabel = "";
 			mReleaseLabel = "";
 			break;
 
@@ -232,16 +235,21 @@ public abstract class LoadingLayout extends FrameLayout implements
 
 	public final void hideAllViews() {
 		if (View.VISIBLE == mHeaderText.getVisibility()) {
-			mHeaderText.setVisibility(View.INVISIBLE);
+			mHeaderText.setVisibility(View.GONE);
 		}
+
+		if (View.VISIBLE == loadingView.getVisibility()) {
+			loadingView.setVisibility(View.GONE);
+		}
+
 		if (View.VISIBLE == mHeaderProgress.getVisibility()) {
-			mHeaderProgress.setVisibility(View.INVISIBLE);
+			mHeaderProgress.setVisibility(View.GONE);
 		}
 		if (View.VISIBLE == mHeaderImage.getVisibility()) {
-			mHeaderImage.setVisibility(View.INVISIBLE);
+			mHeaderImage.setVisibility(View.GONE);
 		}
 		if (View.VISIBLE == mSubHeaderText.getVisibility()) {
-			mSubHeaderText.setVisibility(View.INVISIBLE);
+			mSubHeaderText.setVisibility(View.GONE);
 		}
 	}
 
@@ -263,16 +271,23 @@ public abstract class LoadingLayout extends FrameLayout implements
 
 	public final void refreshing() {
 		if (null != mHeaderText) {
-			mHeaderText.setText(mRefreshingLabel);
+			mHeaderText.setVisibility(View.GONE);
+			//mHeaderText.setText(mRefreshingLabel);
+
+			loadingView.setVisibility(View.VISIBLE);
+
 			resetHeaderTextMinSize(mRefreshingLabel);
 		}
 
-		if (mUseIntrinsicAnimation) {
-			((AnimationDrawable) mHeaderImage.getDrawable()).start();
-		} else {
-			// Now call the callback
-			refreshingImpl();
-		}
+		mHeaderImage.setVisibility(View.GONE);
+
+
+//		if (mUseIntrinsicAnimation) {
+//			((AnimationDrawable) mHeaderImage.getDrawable()).start();
+//		} else {
+//			// Now call the callback
+//			refreshingImpl();
+//		}
 
 		if (null != mSubHeaderText) {
 			mSubHeaderText.setVisibility(View.GONE);
@@ -291,17 +306,25 @@ public abstract class LoadingLayout extends FrameLayout implements
 
 	public final void reset() {
 		if (null != mHeaderText) {
-			mHeaderText.setText(mPullLabel);
+			mHeaderText.setText("");
+			mHeaderText.setVisibility(View.VISIBLE);
 			resetHeaderTextMinSize(mPullLabel);
 		}
+
+		loadingView.setVisibility(View.GONE);
+
 		mHeaderImage.setVisibility(View.VISIBLE);
 
-		if (mUseIntrinsicAnimation) {
-			((AnimationDrawable) mHeaderImage.getDrawable()).stop();
-		} else {
-			// Now call the callback
-			resetImpl();
-		}
+		mHeaderImage.setImageDrawable(null);
+
+//		mHeaderImage.setVisibility(View.VISIBLE);
+
+//		if (mUseIntrinsicAnimation) {
+//			((AnimationDrawable) mHeaderImage.getDrawable()).stop();
+//		} else {
+//			// Now call the callback
+//			resetImpl();
+//		}
 
 		if (null != mSubHeaderText) {
 			if (TextUtils.isEmpty(mSubHeaderText.getText())) {

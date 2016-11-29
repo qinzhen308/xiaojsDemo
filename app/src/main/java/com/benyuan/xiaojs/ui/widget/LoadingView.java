@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.ui.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
@@ -59,18 +60,31 @@ public class LoadingView extends View {
 
     public LoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(0);
+
+        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.load_attr);
+        int lsize = a.getDimensionPixelSize(R.styleable.load_attr_lsize,-1);
+        a.recycle();
+
+        init(lsize);
     }
 
     public LoadingView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(0);
+        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.load_attr);
+        int lsize = a.getDimensionPixelSize(R.styleable.load_attr_lsize,-1);
+        a.recycle();
+
+        init(lsize);
     }
 
     @TargetApi(21)
     public LoadingView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(0);
+        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.load_attr);
+        int lsize = a.getDimensionPixelSize(R.styleable.load_attr_lsize,-1);
+        a.recycle();
+
+        init(lsize);
     }
 
     private void init (int size) {

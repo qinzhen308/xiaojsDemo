@@ -25,10 +25,7 @@ import retrofit2.Response;
 public class CategoriesRequest extends ServiceRequest {
 
     public void getSubject(@NonNull Context context,
-                           @NonNull APIServiceCallback<CSubject> callback) {
-
-        final WeakReference<APIServiceCallback<CSubject>> callbackReference =
-                new WeakReference<>(callback);
+                           @NonNull final APIServiceCallback<CSubject> callback) {
 
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
@@ -46,7 +43,6 @@ public class CategoriesRequest extends ServiceRequest {
 
                     CSubject info = response.body();
 
-                    APIServiceCallback<CSubject> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(info);
                     }
@@ -65,7 +61,6 @@ public class CategoriesRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.getSubjectPrompt(errorCode);
 
-                    APIServiceCallback<CSubject> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -86,7 +81,6 @@ public class CategoriesRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.loginPrompt(errorCode);
 
-                APIServiceCallback<CSubject> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }

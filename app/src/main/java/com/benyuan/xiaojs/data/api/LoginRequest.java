@@ -35,10 +35,8 @@ public class LoginRequest extends ServiceRequest {
 
     public void login(final Context appContext,
                       LoginParams params,
-                      @NonNull APIServiceCallback<LoginInfo> callback) {
+                      @NonNull final APIServiceCallback<LoginInfo> callback) {
 
-        final WeakReference<APIServiceCallback<LoginInfo>> callbackReference =
-                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
 
@@ -57,7 +55,6 @@ public class LoginRequest extends ServiceRequest {
 
                     AccountDataManager.saveUserInfo(appContext,info.getUser());
 
-                    APIServiceCallback<LoginInfo> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(info);
                     }
@@ -75,7 +72,6 @@ public class LoginRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.loginPrompt(errorCode);
 
-                    APIServiceCallback<LoginInfo> callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
 
@@ -98,7 +94,6 @@ public class LoginRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.loginPrompt(errorCode);
 
-                APIServiceCallback<LoginInfo> callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }
@@ -108,10 +103,8 @@ public class LoginRequest extends ServiceRequest {
     }
 
     public void logout(final Context appContext, String sessionID,
-                       @NonNull APIServiceCallback callback) {
+                       @NonNull final APIServiceCallback callback) {
 
-        final WeakReference<APIServiceCallback> callbackReference =
-                new WeakReference<>(callback);
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
         xiaojsService.logout(sessionID).enqueue(new Callback<ResponseBody>() {
@@ -127,7 +120,6 @@ public class LoginRequest extends ServiceRequest {
 
                     AccountDataManager.clearUserInfo(appContext);
 
-                    APIServiceCallback callback = callbackReference.get();
                     if (callback != null) {
                         callback.onSuccess(null);
                     }
@@ -144,7 +136,6 @@ public class LoginRequest extends ServiceRequest {
                     String errorCode = parseErrorBody(errorBody);
                     String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
 
-                    APIServiceCallback callback = callbackReference.get();
                     if (callback != null) {
                         callback.onFailure(errorCode, errorMessage);
                     }
@@ -166,7 +157,6 @@ public class LoginRequest extends ServiceRequest {
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
 
-                APIServiceCallback callback = callbackReference.get();
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);
                 }

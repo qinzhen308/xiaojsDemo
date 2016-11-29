@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:load="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:id="@+id/fl_inner"
@@ -46,6 +47,12 @@
                 android:textSize="14sp"
                 android:textColor="#8a8a8a"
                 />
+            <com.benyuan.xiaojs.ui.widget.LoadingView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/view_loading"
+                    load:lsize="@dimen/px50"
+                    android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/pull_to_refresh_sub_text"

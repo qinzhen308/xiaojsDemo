@@ -23,7 +23,9 @@
 
 package com.benyuan.xiaojs.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 
 /**
  * Created by maxiaobao on 2016/10/26.
@@ -41,5 +43,25 @@ public class UIUtils {
      */
     public static boolean isTablet(Context context) {
         return context.getResources().getConfiguration().smallestScreenWidthDp >= 600;
+    }
+
+
+
+    public static boolean hasDestoryed(final Activity activity) {
+
+        if(activity == null) {
+            return true;
+        }
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1){
+
+            return activity.isFinishing();
+
+        }else{
+            return activity.isDestroyed();
+        }
+
+
+
     }
 }
