@@ -273,8 +273,9 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     public void request(Criteria criteria) {
         mCriteria = criteria;
-        mPagination.setPage(PAGE_FIRST);
-        mListView.setRefreshing();
+        reset();
+        notifyDataSetChanged();
+        request();
     }
 
     static class Holder extends BaseHolder {

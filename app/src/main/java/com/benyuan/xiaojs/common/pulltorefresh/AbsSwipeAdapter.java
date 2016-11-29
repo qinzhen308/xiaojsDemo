@@ -308,6 +308,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 mListView.onRefreshComplete();
                 mCurrentState = STATE_NORMAL;
                 addFailedView();
+                mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                 break;
             case STATE_PARAM_ERROR :
                 mListView.onRefreshComplete();
