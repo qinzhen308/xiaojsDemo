@@ -136,8 +136,10 @@ public class LoadingView extends View {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mHandler.removeMessages(MSG_ANIM);
-        mHandler = null;
+        if (mHandler != null) {
+            mHandler.removeMessages(MSG_ANIM);
+            mHandler = null;
+        }
     }
 
     private void drawCircle(Canvas canvas, float offsetX, int color) {
