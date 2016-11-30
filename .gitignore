@@ -37,5 +37,8 @@ _sandbox
 # 3DWheelpicker
 /3d_wheelpicker/build
 
+#infer check
+/infer-out
+
 
 
