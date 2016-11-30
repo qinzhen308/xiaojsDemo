@@ -269,7 +269,7 @@
             android:layout_marginBottom="@dimen/px10">
 
         <ImageView
-                android:id="@+id/msg_btn"
+                android:id="@+id/chat_btn"
                 android:layout_width="@dimen/px60"
                 android:layout_height="@dimen/px60"
                 android:layout_centerInParent="true"

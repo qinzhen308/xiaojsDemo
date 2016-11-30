@@ -511,5 +511,6 @@
     <dimen name="px498">249.0dp</dimen>
     <dimen name="px499">249.5dp</dimen>
     <dimen name="px500">250.0dp</dimen>
+    <dimen name="px560">280.0dp</dimen>
 
 </resources>
