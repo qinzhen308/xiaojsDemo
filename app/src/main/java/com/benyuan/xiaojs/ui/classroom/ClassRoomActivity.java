@@ -78,7 +78,7 @@ public class ClassRoomActivity extends FragmentActivity {
     private CourseWarePanel mCourseWarePanel;
     private MessagePanel mMessagePanel;
     private SettingPanel mSettingPanel;
-    private ContactPanel mContactPanel;
+    private ChatPanel mChatPanel;
     private Dialog mQuestionAnswerPanel;
     private DialogFragment mWhiteBoardManagePanel;
 
@@ -142,7 +142,7 @@ public class ClassRoomActivity extends FragmentActivity {
     }
 
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.courese_ware_btn, R.id.setting_btn,
-            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn})
+            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -161,10 +161,13 @@ public class ClassRoomActivity extends FragmentActivity {
                 openAllMessage();
                 break;
             case R.id.contact_btn:
-                openContacts();
+                openChat(ChatPanel.MODE_CONTACT);
                 break;
             case R.id.qa_btn:
                 openQuestionAnswer();
+                break;
+            case R.id.chat_btn:
+                openChat(ChatPanel.MODE_CHAT);
                 break;
             default:
                 break;
@@ -192,11 +195,11 @@ public class ClassRoomActivity extends FragmentActivity {
         mSettingPanel.show(mDrawerLayout, mDrawerRightLayout);
     }
 
-    private void openContacts() {
-        if (mContactPanel == null) {
-            mContactPanel = new ContactPanel(this);
+    private void openChat(int mode) {
+        if (mChatPanel == null) {
+            mChatPanel = new ChatPanel(this);
         }
-        mContactPanel.show(mDrawerLayout, mDrawerRightLayout);
+        mChatPanel.with(mode).show(mDrawerLayout, mDrawerRightLayout);
     }
 
     private void openAllMessage() {
