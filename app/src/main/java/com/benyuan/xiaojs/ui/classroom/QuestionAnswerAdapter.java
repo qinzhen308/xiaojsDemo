@@ -1,4 +1,17 @@
 package com.benyuan.xiaojs.ui.classroom;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -14,28 +27,17 @@ package com.benyuan.xiaojs.ui.classroom;
  *
  * ======================================================================================== */
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.widget.RoundedImageView;
-
-public class ContactAdapter extends BaseAdapter {
+public class QuestionAnswerAdapter extends BaseAdapter {
     private Context mContext;
 
-    public ContactAdapter(Context context) {
+    public QuestionAnswerAdapter(Context context) {
         mContext = context;
     }
 
     @Override
     public int getCount() {
         //TODO test count
-        return 10;
+        return 20;
     }
 
     @Override
@@ -61,29 +63,20 @@ public class ContactAdapter extends BaseAdapter {
     }
 
     private View createContentView() {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_contact_item, null);
         Holder holder = new Holder();
-        holder.checkbox = (ImageView) v.findViewById(R.id.checkbox);
-        holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
-        holder.name = (TextView) v.findViewById(R.id.name);
-        holder.label = (TextView) v.findViewById(R.id.label);
-        holder.msg = (RoundedImageView) v.findViewById(R.id.portrait);
-        holder.video = (RoundedImageView) v.findViewById(R.id.portrait);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_raise_hand_item, null);
+        holder.portrait = (RoundedImageView)v.findViewById(R.id.portrait);
+
         v.setTag(holder);
         return v;
     }
 
     private void bindData(Holder holder) {
-
+        holder.portrait.setImageResource(R.drawable.default_portrait);
     }
 
 
     private class Holder {
-        ImageView checkbox;
         RoundedImageView portrait;
-        TextView name;
-        TextView label;
-        ImageView msg;
-        ImageView video;
     }
 }

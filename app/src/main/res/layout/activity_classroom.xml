@@ -5,17 +5,42 @@
         android:layout_height="match_parent">
 
     <FrameLayout
+            android:id="@+id/drawer_content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <!--白板-->
+        <com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard
+                android:id="@+id/white_board"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        <!--直播-->
+        <com.benyuan.xiaojs.ui.classroom.live.LiveView
+                android:id="@+id/live_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+        </com.benyuan.xiaojs.ui.classroom.live.LiveView>
+
+        <!--控制面板-->
+        <include
+                android:id="@+id/main_panel"
+                layout="@layout/layout_classroom_panel"/>
+
+    </FrameLayout>
+
+    <FrameLayout
             android:id="@+id/drawer_left_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:background="@color/white">
 
+        <include
+                android:id="@+id/course_ware"
+                layout="@layout/layout_classroom_course_ware"/>
     </FrameLayout>
-
-    <include
-            android:id="@+id/drawer_content_layout"
-            layout="@layout/layout_classroom_panel"/>
 
     <FrameLayout
             android:id="@+id/drawer_right_layout"

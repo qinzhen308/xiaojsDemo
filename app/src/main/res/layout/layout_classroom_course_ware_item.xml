@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/classroom_main_gray"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10">
+
+    <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_28px"
+            android:text="1.教案章节示例"
+            android:layout_marginLeft="@dimen/px30"/>
+
+    <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_24px"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/course_ware_duration_bg"
+            android:text="10分钟"
+            android:layout_marginLeft="@dimen/px10"
+            android:layout_marginRight="@dimen/px10"
+            android:padding="@dimen/px5"/>
+
+    <TextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_24px"
+            android:layout_below="@+id/title"
+            android:layout_marginLeft="@dimen/px30"
+            android:paddingTop="@dimen/px10"
+            android:paddingBottom="@dimen/px10"
+            android:text="发送方的说法的房间爱思考了房间爱上经济负担是会计看电视就分开打手机肯定是减肥看电视剧肯定就是看几点上课"
+            android:maxLines="4"/>
+
+    <ImageView
+            android:id="@+id/img1"
+            android:layout_width="@dimen/px200"
+            android:layout_height="@dimen/px135"
+            android:layout_below="@+id/content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_portrait"
+            android:layout_marginLeft="@dimen/px30"/>
+
+    <ImageView
+            android:id="@+id/img2"
+            android:layout_width="@dimen/px200"
+            android:layout_height="@dimen/px135"
+            android:layout_below="@+id/content"
+            android:layout_toRightOf="@+id/img1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_portrait"
+            android:layout_marginLeft="@dimen/px10"/>
+
+    <SeekBar
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px10"
+            android:layout_below="@+id/img1"/>
+
+</RelativeLayout>

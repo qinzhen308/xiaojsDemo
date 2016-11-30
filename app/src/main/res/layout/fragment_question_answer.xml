@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.benyuan.xiaojs.ui.widget.ClosableSlidingLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <RelativeLayout
+            android:id="@+id/slide_target"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/classroom_main_gray">
+
+        <TextView
+                android:id="@+id/raise_hands_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_white"
+                android:text="@string/raise_hands_stu"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:paddingLeft="@dimen/px40"
+                android:textSize="@dimen/font_26px"/>
+
+        <TextView
+                android:id="@+id/random_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/random_select_stu"
+                android:textColor="@color/font_blue"
+                android:padding="@dimen/px20"
+                android:layout_marginLeft="@dimen/px60"
+                android:layout_toRightOf="@+id/raise_hands_title"
+                android:textSize="@dimen/font_26px"/>
+
+        <com.benyuan.xiaojs.ui.widget.HorizontalListView
+                android:id="@+id/raise_hands_stu"
+                android:layout_below="@+id/raise_hands_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px90">
+
+        </com.benyuan.xiaojs.ui.widget.HorizontalListView>
+    </RelativeLayout>
+
+</com.benyuan.xiaojs.ui.widget.ClosableSlidingLayout>

@@ -13,7 +13,6 @@
     <!--app base color-->
     <color name="main_orange">#ff9833</color>
     <color name="main_blue">#0076ff</color>
-    <color name="main_gray">#f04e4e4e</color>
     <color name="main_orange_pressed">#d27d2b</color>
     <color name="main_orange_disabled">#ffcc9b</color>
     <color name="item_pressed">#f6f6f6</color>
@@ -22,6 +21,8 @@
     <color name="round_img_border_">#888888</color>
     <color name="blur_float_up_bg">#88000000</color>
     <color name="red_bg">#ff4d30</color>
+    <color name="classroom_main_gray">#f04e4e4e</color>
+    <color name="classroom_light_gray">#999999</color>
     <!--disable color, eg btn-->
     <color name="disable_btn">#999999</color>
     <!--horizontal divide line-->
