@@ -11,12 +11,13 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.classroom.drawer.DrawerLayout;
 import com.benyuan.xiaojs.ui.classroom.live.LiveView;
+import com.benyuan.xiaojs.ui.classroom.live.core.Config;
+import com.benyuan.xiaojs.ui.classroom.live.view.MediaContainerView;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
 import butterknife.BindView;
@@ -69,8 +70,8 @@ public class ClassRoomActivity extends FragmentActivity {
     WhiteBoard mWhiteBoard;
     @BindView(R.id.teacher_video)
     LiveView mTeacherVideo;
-    @BindView(R.id.stu_video)
-    FrameLayout mStuVideos;
+    @BindView(R.id.player_container)
+    MediaContainerView mContainer;
 
     private Unbinder mBinder;
 
@@ -97,6 +98,7 @@ public class ClassRoomActivity extends FragmentActivity {
         initDrawer();
         initLiveProgress();
         initGestureDetector();
+        mTeacherVideo.create();
     }
 
     private void initGestureDetector() {
@@ -139,8 +141,11 @@ public class ClassRoomActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mTeacherVideo.resume();
+        mContainer.resume();
     }
 
+    private boolean m = false;
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.courese_ware_btn, R.id.setting_btn,
             R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn})
     public void onClick(View v) {
@@ -152,7 +157,13 @@ public class ClassRoomActivity extends FragmentActivity {
                 openWhiteBoardManager();
                 break;
             case R.id.courese_ware_btn:
-                openCourseWarePanel();
+                //openCourseWarePanel();
+                if (!m){
+                    mContainer.addPlayer(Config.pathCfu);
+                    m = !m;
+                    break;
+                }
+                mContainer.addPlayer(Config.pathHK);
                 break;
             case R.id.setting_btn:
                 openSetting();
@@ -238,10 +249,14 @@ public class ClassRoomActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        mTeacherVideo.pause();
+        mContainer.pause();
     }
 
     @Override
     protected void onDestroy() {
+        mTeacherVideo.destroy();
+        mContainer.destroy();
         super.onDestroy();
 
         if (mBinder != null) {
@@ -258,15 +273,18 @@ public class ClassRoomActivity extends FragmentActivity {
             mCurrentState = STATE_WHITE_BOARD;
             hideTopPanel();
             hideBottomPanel();
+            //mTeacherVideo.setVisibility(View.VISIBLE);
         } else if (mCurrentState == STATE_WHITE_BOARD) {
             mCurrentState = STATE_MAIN_PANEL;
             showTopPanel();
             showBottomPanel();
+            //mTeacherVideo.setVisibility(View.INVISIBLE);
         } else {
             //default, restore state
             mCurrentState = STATE_MAIN_PANEL;
             showTopPanel();
             showBottomPanel();
+            //mTeacherVideo.setVisibility(View.INVISIBLE);
         }
     }
 

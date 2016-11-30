@@ -6,6 +6,7 @@ import com.benyuan.xiaojs.util.XjsUtils;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.Settings;
+import com.qiniu.pili.droid.streaming.StreamingEnv;
 import com.tencent.bugly.crashreport.CrashReport;
 
 /**
@@ -37,6 +38,9 @@ public class XiaojsApplication extends Application {
 
         //init xiaojs utils
         XjsUtils.init(this);
+
+        //初始化直播
+        StreamingEnv.init(getApplicationContext());
     }
 
 }
