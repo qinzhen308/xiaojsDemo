@@ -1,5 +1,6 @@
 package com.benyuan.xiaojs.ui.classroom;
 
+import android.animation.Animator;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -57,8 +58,8 @@ public class ClassRoomActivity extends FragmentActivity {
     MainPanel mMainPanel;
     @BindView(R.id.top_panel)
     View mTopPanel;
-    @BindView(R.id.live_progress_layout)
-    View mLiveProgressPanel;
+    @BindView(R.id.bottom_panel)
+    View mBottomPanel;
     @BindView(R.id.live_progress)
     SeekBar mLiveProgress;
 
@@ -252,18 +253,113 @@ public class ClassRoomActivity extends FragmentActivity {
     private void switchState() {
         if (mCurrentState == STATE_MAIN_PANEL) {
             mCurrentState = STATE_WHITE_BOARD;
-            mTopPanel.setVisibility(View.GONE);
-            mLiveProgressPanel.setVisibility(View.GONE);
+            hideTopPanel();
+            hideBottomPanel();
         } else if (mCurrentState == STATE_WHITE_BOARD) {
             mCurrentState = STATE_MAIN_PANEL;
-            mTopPanel.setVisibility(View.VISIBLE);
-            mLiveProgressPanel.setVisibility(View.VISIBLE);
+            showTopPanel();
+            showBottomPanel();
         } else {
             //default, restore state
             mCurrentState = STATE_MAIN_PANEL;
-            mTopPanel.setVisibility(View.VISIBLE);
-            mLiveProgressPanel.setVisibility(View.VISIBLE);
+            showTopPanel();
+            showBottomPanel();
         }
+    }
+
+
+    private void hideTopPanel() {
+        int y = mTopPanel.getBottom();
+        mTopPanel.animate().alpha(0.3f).translationY(-y).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mTopPanel.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                mTopPanel.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).start();
+    }
+
+    private void showTopPanel() {
+        mTopPanel.animate().alpha(1).translationY(0).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mTopPanel.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        }).start();
+    }
+
+    private void hideBottomPanel() {
+        int y = mBottomPanel.getTop();
+        mBottomPanel.animate().alpha(0.3f).translationY(y).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mBottomPanel.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                mBottomPanel.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).start();
+    }
+
+    private void showBottomPanel() {
+        int y = 0;
+        mBottomPanel.animate().alpha(1).translationY(y).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mBottomPanel.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).start();
     }
 
 }

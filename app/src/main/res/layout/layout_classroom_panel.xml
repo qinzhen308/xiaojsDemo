@@ -5,150 +5,163 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-    <RelativeLayout
+    <LinearLayout
             android:id="@+id/top_panel"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:paddingTop="@dimen/px16"
-            android:paddingBottom="@dimen/px16"
-            android:paddingLeft="@dimen/px20"
-            android:paddingRight="@dimen/px20"
-            android:background="@color/classroom_main_gray">
+            android:orientation="vertical">
 
-        <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_alignParentLeft="true"
-                android:paddingLeft="@dimen/px10"
-                android:paddingRight="@dimen/px10"
-                android:src="@drawable/back_arrow"/>
-
-        <ImageView
-                android:id="@+id/play_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:paddingLeft="@dimen/px10"
-                android:paddingRight="@dimen/px10"
-                android:layout_toRightOf="@+id/back_btn"
-                android:src="@drawable/ic_open_course"/>
-
-
-        <ImageView
-                android:id="@+id/pause_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:paddingLeft="@dimen/px10"
-                android:paddingRight="@dimen/px10"
-                android:layout_toRightOf="@+id/play_btn"
-                android:src="@drawable/ic_open_course"/>
-
-        <LinearLayout
+        <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_toRightOf="@+id/pause_btn"
-                android:layout_toLeftOf="@+id/contact_btn"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20"
+                android:background="@color/classroom_main_gray">
 
-            <TextView
-                    android:id="@+id/lesson_title"
+            <ImageView
+                    android:id="@+id/back_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="战略性积极管理"/>
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:src="@drawable/back_arrow"/>
 
-            <TextView
-                    android:id="@+id/lesson_duration"
+            <ImageView
+                    android:id="@+id/play_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="01:15:30"/>
+                    android:layout_centerInParent="true"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:layout_toRightOf="@+id/back_btn"
+                    android:src="@drawable/ic_open_course"/>
+
+
+            <ImageView
+                    android:id="@+id/pause_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:layout_toRightOf="@+id/play_btn"
+                    android:src="@drawable/ic_open_course"/>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toRightOf="@+id/pause_btn"
+                    android:layout_toLeftOf="@+id/contact_btn"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/lesson_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="战略性积极管理"/>
+
+                <TextView
+                        android:id="@+id/lesson_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="01:15:30"/>
+            </LinearLayout>
+
+            <ImageView
+                    android:id="@+id/contact_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:layout_toLeftOf="@+id/notify_msg_btn"
+                    android:src="@drawable/ic_open_course"/>
+
+            <ImageView
+                    android:id="@+id/notify_msg_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:layout_toLeftOf="@+id/setting_btn"
+                    android:src="@drawable/ic_open_course"/>
+
+
+            <ImageView
+                    android:id="@+id/setting_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_open_course"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+                android:id="@+id/live_progress_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/live_progress_bg">
+
+            <TextView
+                    android:id="@+id/play_time"
+                    android:textColor="@color/font_white"
+                    android:textSize="@dimen/font_24px"
+                    android:layout_width="wrap_content"
+                    android:text="00:15:00"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:paddingLeft="@dimen/px10"
+                    android:layout_height="wrap_content"/>
+
+            <SeekBar
+                    android:id="@+id/live_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/px10"
+                    android:layout_marginRight="@dimen/px10"
+                    android:maxHeight="@dimen/px4"
+                    android:thumbOffset="0dp"
+                    android:foregroundGravity="center_vertical"
+                    android:thumb="@drawable/live_progress_controller"
+                    android:progressDrawable="@drawable/live_progress_bar"/>
+
+            <TextView
+                    android:id="@+id/total_time"
+                    android:textColor="@color/font_white"
+                    android:textSize="@dimen/font_24px"
+                    android:layout_width="wrap_content"
+                    android:text="01:15:00"
+                    android:paddingRight="@dimen/px10"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <ImageView
-                android:id="@+id/contact_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:paddingLeft="@dimen/px10"
-                android:paddingRight="@dimen/px10"
-                android:layout_toLeftOf="@+id/notify_msg_btn"
-                android:src="@drawable/ic_open_course"/>
-
-        <ImageView
-                android:id="@+id/notify_msg_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:paddingLeft="@dimen/px10"
-                android:paddingRight="@dimen/px10"
-                android:layout_toLeftOf="@+id/setting_btn"
-                android:src="@drawable/ic_open_course"/>
-
-
-        <ImageView
-                android:id="@+id/setting_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:paddingLeft="@dimen/px10"
-                android:paddingRight="@dimen/px10"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_open_course"/>
-
-    </RelativeLayout>
-
-    <LinearLayout
-            android:id="@+id/live_progress_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/top_panel"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/px20"
-            android:layout_centerHorizontal="true"
-            android:gravity="center_vertical"
-            android:background="@drawable/live_progress_bg">
-
-        <TextView
-                android:id="@+id/play_time"
-                android:textColor="@color/font_white"
-                android:textSize="@dimen/font_24px"
-                android:layout_width="wrap_content"
-                android:text="00:15:00"
-                android:paddingTop="@dimen/px20"
-                android:paddingBottom="@dimen/px20"
-                android:paddingLeft="@dimen/px10"
-                android:layout_height="wrap_content"/>
-
-        <SeekBar
-                android:id="@+id/live_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px10"
-                android:layout_marginRight="@dimen/px10"
-                android:maxHeight="@dimen/px4"
-                android:thumbOffset="0dp"
-                android:foregroundGravity="center_vertical"
-                android:thumb="@drawable/live_progress_controller"
-                android:progressDrawable="@drawable/live_progress_bar"/>
-
-        <TextView
-                android:id="@+id/total_time"
-                android:textColor="@color/font_white"
-                android:textSize="@dimen/font_24px"
-                android:layout_width="wrap_content"
-                android:text="01:15:00"
-                android:paddingRight="@dimen/px10"
-                android:paddingTop="@dimen/px20"
-                android:paddingBottom="@dimen/px20"
-                android:layout_height="wrap_content"/>
     </LinearLayout>
+
+    <com.benyuan.xiaojs.ui.classroom.live.LiveView
+            android:id="@+id/teacher_video"
+            android:layout_width="@dimen/px160"
+            android:layout_height="@dimen/px90"
+            android:layout_below="@+id/top_panel"
+            android:background="#f00"/>
 
     <LinearLayout
             android:id="@+id/left_panel"
@@ -264,5 +277,14 @@
                 android:src="@drawable/cr_msg"/>
 
     </LinearLayout>
+
+    <ListView
+            android:id="@+id/stu_video"
+            android:layout_width="@dimen/px160"
+            android:layout_height="@dimen/px370"
+            android:background="#f00"
+            android:layout_alignParentRight="true"
+            android:layout_above="@+id/right_panel"
+            android:layout_marginBottom="@dimen/px10"></ListView>
 </com.benyuan.xiaojs.ui.classroom.MainPanel>
 

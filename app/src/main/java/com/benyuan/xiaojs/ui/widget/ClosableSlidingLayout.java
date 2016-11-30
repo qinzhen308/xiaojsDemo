@@ -234,7 +234,7 @@ public class ClosableSlidingLayout extends FrameLayout {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
                 invalidate();
             }
-            if (height - top < 2 && mListener != null) {
+            if (height - top < 1 && mListener != null) {
                 mDragHelper.cancel();
                 mListener.onClosed();
                 mDragHelper.smoothSlideViewTo(changedView, 0, top);
