@@ -113,7 +113,12 @@ Image Loader:
  - 性能检测
 
 > 内存占用、CPU消耗等：[ADT](https://developer.android.com/studio/intro/index.html)
-> 检测内存泄漏：[leakcanary](https://github.com/square/leakcanary) 
+
+> 检测内存泄漏：[leakcanary](https://github.com/square/leakcanary)
+
+> debug tools:[stetho](http://facebook.github.io/stetho/)
+
+> 静态代码分析:[infer](http://fbinfer.com/)
 
  - Crash捕获
 
@@ -140,6 +145,11 @@ APP端收集Crash并上报，使用第三方SDK：[Bugly](https://bugly.qq.com/v
 
 ----------
 
+参考（thx）
+-------------
+> http://littlerobots.nl/blog/
+
+> https://code.facebook.com/projects/
 
 
 

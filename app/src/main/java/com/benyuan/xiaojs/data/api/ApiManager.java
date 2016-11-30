@@ -11,6 +11,7 @@ import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.util.APPUtils;
 import com.benyuan.xiaojs.util.UIUtils;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -88,16 +89,19 @@ public class ApiManager {
         CommonHeaderInterceptor headerInterceptor = new CommonHeaderInterceptor(appType, appVerion);
 
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(logInterceptor)
-                .addNetworkInterceptor(logInterceptor)
                 .addInterceptor(headerInterceptor)
                 .connectTimeout(20,TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(20,TimeUnit.SECONDS)
-                .build();
+                .writeTimeout(20,TimeUnit.SECONDS);
 
-        return okHttpClient;
+
+        if (XiaojsConfig.DEBUG) {
+            builder.addNetworkInterceptor(new StethoInterceptor());
+        }
+
+        return builder.build();
 
     }
 

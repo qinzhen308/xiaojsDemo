@@ -299,4 +299,5 @@
     <string name="course_ware">教案</string>
     <string name="raise_hands_stu">举手的学生</string>
     <string name="random_select_stu">随机选择</string>
+    <string name="classroom_discussion">教室讨论</string>
 </resources>
