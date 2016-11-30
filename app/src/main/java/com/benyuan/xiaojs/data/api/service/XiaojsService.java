@@ -165,6 +165,14 @@ public interface XiaojsService {
                                   @Path("lesson") String lesson,
                                   @Body CancelReason reason);
 
+    //Toggle Access-To-Lesson
+    @PATCH("/v1/ctl/lessons/{lesson}/accessible")
+    Call<ResponseBody> toggleAccessLesson(@Header("SessionID") String sessionID,
+                                          @Path("lesson") String lesson,
+                                          @Body APIEntity apiEntity);
+
+
+
 
 
 

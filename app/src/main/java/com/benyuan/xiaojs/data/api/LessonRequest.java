@@ -9,6 +9,7 @@ import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
+import com.benyuan.xiaojs.model.APIEntity;
 import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.CancelReason;
@@ -784,6 +785,75 @@ public class LessonRequest extends ServiceRequest {
 
                 String errorCode = getExceptionErrorCode();
                 String errorMessage = ErrorPrompts.cancelLessonPrompt(errorCode);
+
+                if (callback != null) {
+                    callback.onFailure(errorCode, errorMessage);
+                }
+            }
+        });
+    }
+
+
+    public void toggleAccessLesson(Context context,
+                                   @NonNull String sessionID,
+                                   @NonNull String lesson,
+                                   final boolean accessible,
+                                   @NonNull final APIServiceCallback callback) {
+
+        APIEntity apiEntity = new APIEntity();
+        apiEntity.setAccessible(accessible);
+
+
+        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        xiaojsService.toggleAccessLesson(sessionID,lesson,apiEntity).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int responseCode = response.code();
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the request has onResponse, the code:%d", responseCode);
+                }
+
+                if (responseCode == SUCCESS_CODE) {
+
+                    if (callback != null) {
+                        callback.onSuccess(null);
+                    }
+
+
+                } else {
+
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    String errorCode = parseErrorBody(errorBody);
+                    String errorMessage = ErrorPrompts.toggleAccessLessonPrompt(accessible,errorCode);
+
+                    if (callback != null) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                if (XiaojsConfig.DEBUG) {
+                    String exception = t.getMessage();
+                    Logger.d("the request has occur exception:\n %s", exception);
+                }
+
+
+
+                String errorCode = getExceptionErrorCode();
+                String errorMessage = ErrorPrompts.toggleAccessLessonPrompt(accessible,errorCode);
 
                 if (callback != null) {
                     callback.onFailure(errorCode, errorMessage);

@@ -481,6 +481,37 @@ public class LessonDataManager extends DataManager{
 
     }
 
+    public static void requestToggleAccessLesson(Context context,
+                                                 @NonNull String lesson,
+                                                 boolean accessible,
+                                                 @NonNull APIServiceCallback callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (TextUtils.isEmpty(session)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.toggleAccessLessonPrompt(accessible,Errors.BAD_SESSION);
+            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+            return;
+        }
+
+        if (TextUtils.isEmpty(lesson)) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the lesson param is empty,so the request return failure");
+            }
+
+            String errorMessage = ErrorPrompts.toggleAccessLessonPrompt(accessible,Errors.BAD_PARAMETER);
+            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
+            return;
+        }
+
+        LessonRequest lessonRequest = new LessonRequest();
+        lessonRequest.toggleAccessLesson(context,session,lesson,accessible,callback);
+    }
+
 
 
 }
