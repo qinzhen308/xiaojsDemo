@@ -10,6 +10,7 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.AccessLesson;
 import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.CLResponse;
 import com.benyuan.xiaojs.model.CancelReason;
@@ -800,12 +801,12 @@ public class LessonRequest extends ServiceRequest {
                                    final boolean accessible,
                                    @NonNull final APIServiceCallback callback) {
 
-        APIEntity apiEntity = new APIEntity();
-        apiEntity.setAccessible(accessible);
+        AccessLesson accessLesson = new AccessLesson();
+        accessLesson.setAccessible(accessible);
 
 
         XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
-        xiaojsService.toggleAccessLesson(sessionID,lesson,apiEntity).enqueue(new Callback<ResponseBody>() {
+        xiaojsService.toggleAccessLesson(sessionID,lesson,accessLesson).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int responseCode = response.code();
