@@ -8,6 +8,28 @@ import android.text.TextUtils;
 
 public class ErrorPrompts {
 
+    public static String toggleAccessLessonPrompt(boolean toggle ,String errorCode) {
+
+        String errorMessage = "取消公开失败";
+        if(toggle){
+            errorMessage = "公开失败";
+        }
+
+        if (TextUtils.isEmpty(errorCode)
+                || errorCode.equals(Errors.NO_ERROR)
+                || errorCode.equals(Errors.SERVER_ERROR)
+                || errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.ILLEGAL_CALL)) {
+            return errorMessage;
+        } else if (errorCode.equals(Errors.BAD_SESSION)) {
+            errorMessage = "bad session";
+        } else if (errorCode.equals(Errors.BAD_PARAMETER)){
+            errorMessage = "参数错误";
+        }
+
+        return errorMessage;
+    }
+
     public static String getCenterDataPrompt(String errorCode) {
 
         String errorMessage = "获取个人中心数据失败";

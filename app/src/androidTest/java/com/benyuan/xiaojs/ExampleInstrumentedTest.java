@@ -67,7 +67,25 @@ public class ExampleInstrumentedTest {
         //testClaimCompetency(appContext);
         //testEditLesson(appContext);
         //testCenterData(appContext);
-        testGetData(appContext);
+        //testGetData(appContext);
+        testToggleLesson(appContext);
+    }
+
+    private void testToggleLesson(Context context) {
+        String lesson = "5834f31eaf662a8111362161";
+
+        LessonDataManager.requestToggleAccessLesson(context, lesson, true, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
     }
 
     private void testGetData(Context context) {

@@ -17,6 +17,16 @@ public class APIEntity {
 
     private boolean match;
 
+    private boolean accessible;
+
+    public boolean isAccessible() {
+        return accessible;
+    }
+
+    public void setAccessible(boolean accessible) {
+        this.accessible = accessible;
+    }
+
     /**
      *
      * @return

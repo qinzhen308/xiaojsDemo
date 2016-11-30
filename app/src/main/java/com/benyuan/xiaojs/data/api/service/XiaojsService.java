@@ -1,6 +1,7 @@
 package com.benyuan.xiaojs.data.api.service;
 
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.AccessLesson;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.CLResponse;
@@ -164,6 +165,14 @@ public interface XiaojsService {
     Call<ResponseBody> cancelLesson(@Header("SessionID") String sessionID,
                                   @Path("lesson") String lesson,
                                   @Body CancelReason reason);
+
+    //Toggle Access-To-Lesson
+    @PATCH("/v1/ctl/lessons/{lesson}/accessible")
+    Call<ResponseBody> toggleAccessLesson(@Header("SessionID") String sessionID,
+                                          @Path("lesson") String lesson,
+                                          @Body AccessLesson accessLesson);
+
+
 
 
 
