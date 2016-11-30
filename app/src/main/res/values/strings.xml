@@ -296,4 +296,7 @@
     <string name="leave_class_room"><![CDATA[<font color="#ff9833">%1$s</font>]]>离开了教室</string>
     <string name="share_course_ware">分享了课件</string>
     <string name="launch_apply">发起了申请</string>
+    <string name="course_ware">教案</string>
+    <string name="raise_hands_stu">举手的学生</string>
+    <string name="random_select_stu">随机选择</string>
 </resources>

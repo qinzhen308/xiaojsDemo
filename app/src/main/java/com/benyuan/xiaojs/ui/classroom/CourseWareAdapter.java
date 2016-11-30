@@ -1,4 +1,17 @@
 package com.benyuan.xiaojs.ui.classroom;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -14,28 +27,17 @@ package com.benyuan.xiaojs.ui.classroom;
  *
  * ======================================================================================== */
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.widget.RoundedImageView;
-
-public class ContactAdapter extends BaseAdapter {
+public class CourseWareAdapter extends BaseAdapter {
     private Context mContext;
 
-    public ContactAdapter(Context context) {
+    public CourseWareAdapter(Context context) {
         mContext = context;
     }
 
     @Override
     public int getCount() {
         //TODO test count
-        return 10;
+        return 5;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class ContactAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Holder holder;
+       Holder holder;
         if (convertView == null) {
             convertView = createContentView();
         }
@@ -61,14 +63,14 @@ public class ContactAdapter extends BaseAdapter {
     }
 
     private View createContentView() {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_contact_item, null);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_course_ware_item, null);
         Holder holder = new Holder();
-        holder.checkbox = (ImageView) v.findViewById(R.id.checkbox);
-        holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
-        holder.name = (TextView) v.findViewById(R.id.name);
-        holder.label = (TextView) v.findViewById(R.id.label);
-        holder.msg = (RoundedImageView) v.findViewById(R.id.portrait);
-        holder.video = (RoundedImageView) v.findViewById(R.id.portrait);
+        holder.title = (TextView) v.findViewById(R.id.title);
+        holder.duration = (TextView) v.findViewById(R.id.duration);
+        holder.content = (TextView) v.findViewById(R.id.content);
+        holder.img1 = (ImageView) v.findViewById(R.id.img1);
+        holder.img2 = (ImageView) v.findViewById(R.id.img2);
+        holder.progress = (SeekBar) v.findViewById(R.id.progress);
         v.setTag(holder);
         return v;
     }
@@ -79,11 +81,11 @@ public class ContactAdapter extends BaseAdapter {
 
 
     private class Holder {
-        ImageView checkbox;
-        RoundedImageView portrait;
-        TextView name;
-        TextView label;
-        ImageView msg;
-        ImageView video;
+        TextView title;
+        TextView duration;
+        TextView content;
+        ImageView img1;
+        ImageView img2;
+        SeekBar progress;
     }
 }
