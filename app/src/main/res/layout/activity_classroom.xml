@@ -15,15 +15,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-        <!--直播-->
-        <com.benyuan.xiaojs.ui.classroom.live.LiveView
-                android:id="@+id/live_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-        </com.benyuan.xiaojs.ui.classroom.live.LiveView>
-
-        <!--控制面板-->
+        <!--控制面板, 直播-->
         <include
                 android:id="@+id/main_panel"
                 layout="@layout/layout_classroom_panel"/>
