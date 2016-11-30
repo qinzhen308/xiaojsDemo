@@ -48,6 +48,7 @@ dependencies {
     //network & Rest api
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
     //image
@@ -76,4 +77,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile files('libs/nineoldanimatin.jar')
+
+    //debug only////////////////////////////////////////////////////////////////////////////////////
+    debugCompile 'com.facebook.stetho:stetho:1.4.1'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
 }
