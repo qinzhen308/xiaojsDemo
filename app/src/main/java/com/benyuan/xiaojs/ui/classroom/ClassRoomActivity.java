@@ -11,6 +11,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
 import com.benyuan.xiaojs.R;
@@ -66,8 +67,10 @@ public class ClassRoomActivity extends FragmentActivity {
     //live,whiteboard
     @BindView(R.id.white_board)
     WhiteBoard mWhiteBoard;
-    @BindView(R.id.live_view)
-    LiveView mLiveView;
+    @BindView(R.id.teacher_video)
+    LiveView mTeacherVideo;
+    @BindView(R.id.stu_video)
+    FrameLayout mStuVideos;
 
     private Unbinder mBinder;
 

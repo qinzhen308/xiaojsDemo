@@ -278,13 +278,14 @@
 
     </LinearLayout>
 
-    <ListView
+    <FrameLayout
             android:id="@+id/stu_video"
-            android:layout_width="@dimen/px160"
-            android:layout_height="@dimen/px370"
-            android:background="#f00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_above="@+id/right_panel"
-            android:layout_marginBottom="@dimen/px10"></ListView>
+            android:layout_marginBottom="@dimen/px10">
+
+    </FrameLayout>
 </com.benyuan.xiaojs.ui.classroom.MainPanel>
 
