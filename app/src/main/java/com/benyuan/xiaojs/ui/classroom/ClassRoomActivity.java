@@ -46,6 +46,9 @@ public class ClassRoomActivity extends FragmentActivity {
 
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.5F;
 
+    private final static int ANIM_SHOW = 1 << 1;
+    private final static int ANIM_HIDE = 1 << 2;
+
     //drawer
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -92,17 +95,27 @@ public class ClassRoomActivity extends FragmentActivity {
     private ClassRoomGestureDetector mMainPanelGestureDetector;
     private ClassRoomGestureDetector mWhiteBoardGestureDetector;
     private int mCurrentState = STATE_MAIN_PANEL;
+    private boolean mAnimating = false;
+    private PanelAnimListener mPanelAnimListener;
+    private boolean mNeedOpenWhiteBoardPanel = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classroom);
 
-        mBinder = ButterKnife.bind(this);
+        //init params
+        initParams();
 
         initDrawer();
         initLiveProgress();
         initGestureDetector();
+    }
+
+    private void initParams() {
+        mBinder = ButterKnife.bind(this);
+
+        mPanelAnimListener = new PanelAnimListener();
     }
 
     private void initGestureDetector() {
@@ -138,8 +151,7 @@ public class ClassRoomActivity extends FragmentActivity {
     private void initLiveProgress() {
         int w = getResources().getDisplayMetrics().widthPixels;
         ViewGroup.LayoutParams params = mLiveProgress.getLayoutParams();
-        params.width = (int)(w * LIVE_PROGRESS_WIDTH_FACTOR);
-
+        params.width = (int) (w * LIVE_PROGRESS_WIDTH_FACTOR);
     }
 
     @Override
@@ -176,13 +188,16 @@ public class ClassRoomActivity extends FragmentActivity {
                 openChat(ChatPanel.MODE_CHAT);
                 break;
             case R.id.more_btn:
-                openWhiteBoardPanel();
+                switchWhiteBoardPanel();
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * 打开白板管理
+     */
     private void openWhiteBoardManager() {
         if (mWhiteBoardManagePanel == null) {
             mWhiteBoardManagePanel = new WhiteBoardManagement();
@@ -190,6 +205,9 @@ public class ClassRoomActivity extends FragmentActivity {
         mWhiteBoardManagePanel.show(getSupportFragmentManager(), "white_board_management");
     }
 
+    /**
+     * 打开课件
+     */
     private void openCourseWarePanel() {
         if (mCourseWarePanel == null) {
             mCourseWarePanel = new CourseWarePanel(this);
@@ -197,6 +215,9 @@ public class ClassRoomActivity extends FragmentActivity {
         mCourseWarePanel.show(mDrawerLayout, mDrawerLeftLayout);
     }
 
+    /**
+     * 打开设置
+     */
     private void openSetting() {
         if (mSettingPanel == null) {
             mSettingPanel = new SettingPanel(this);
@@ -204,6 +225,9 @@ public class ClassRoomActivity extends FragmentActivity {
         mSettingPanel.show(mDrawerLayout, mDrawerRightLayout);
     }
 
+    /**
+     * 打开聊天
+     */
     private void openChat(int mode) {
         if (mChatPanel == null) {
             mChatPanel = new ChatPanel(this);
@@ -211,6 +235,9 @@ public class ClassRoomActivity extends FragmentActivity {
         mChatPanel.with(mode).show(mDrawerLayout, mDrawerRightLayout);
     }
 
+    /**
+     * 打开通知消息
+     */
     private void openAllMessage() {
         if (mMessagePanel == null) {
             mMessagePanel = new MessagePanel(this);
@@ -218,6 +245,9 @@ public class ClassRoomActivity extends FragmentActivity {
         mMessagePanel.show(mDrawerLayout, mDrawerRightLayout);
     }
 
+    /**
+     * 打开问答
+     */
     private void openQuestionAnswer() {
         if (mQuestionAnswerPanel == null) {
             mQuestionAnswerPanel = new QuestionAnswer(this);
@@ -225,79 +255,34 @@ public class ClassRoomActivity extends FragmentActivity {
         mQuestionAnswerPanel.show();
     }
 
-    private void openWhiteBoardPanel() {
-        if (mBottomPanel.getVisibility() == View.VISIBLE) {
-            hideTopPanel();
-            int y = mBottomPanel.getTop();
-            mBottomPanel.animate().alpha(0.3f).translationY(y).setListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
+    /**
+     * 打开关闭白板操作面板
+     * 若正在动画，直接返回
+     * 1.若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板
+     *   否则，直接隐藏或显示白板操作面板
+     */
+    private void switchWhiteBoardPanel() {
+        if (mAnimating) {
+            return;
+        }
 
+        if (mCurrentState == STATE_MAIN_PANEL) {
+            if (mBottomPanel.getVisibility() == View.VISIBLE) {
+                //若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板
+                mNeedOpenWhiteBoardPanel = true;
+                hideTopBottomPanel();
+            } else {
+                if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
+                    hideWhiteBoardPanel();
+                } else {
+                    showWhiteBoardPanel();
                 }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mBottomPanel.setVisibility(View.GONE);
-                    mWhiteBoardPanel.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    mBottomPanel.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            }).start();
+            }
         } else {
             if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
-                mWhiteBoardPanel.setAlpha(1.0f);
-                mWhiteBoardPanel.animate().alpha(0.3f).setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        mWhiteBoardPanel.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                }).start();
+                hideWhiteBoardPanel();
             } else {
-                mWhiteBoardPanel.animate().alpha(1.0f).setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        mWhiteBoardPanel.setAlpha(1.0F);
-                        mWhiteBoardPanel.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                }).start();
+                showWhiteBoardPanel();
             }
         }
     }
@@ -306,8 +291,15 @@ public class ClassRoomActivity extends FragmentActivity {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("aaa", "========MainPanelGestureListener====onSingleTapConfirmed=============");
-            switchState();
+            Log.i("aaa", "========MainPanelGestureListener====onSingleTapConfirmed============="+mCurrentState);
+            if (mCurrentState == STATE_MAIN_PANEL && !mAnimating) {
+                if (mBottomPanel.getVisibility() == View.VISIBLE) {
+                    mNeedOpenWhiteBoardPanel = false;
+                    hideTopBottomPanel();
+                } else {
+                    showTopBottomPanel();
+                }
+            }
             return super.onSingleTapConfirmed(e);
         }
 
@@ -317,8 +309,7 @@ public class ClassRoomActivity extends FragmentActivity {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("aaa", "=========WhiteBoardGestureListener===onSingleTapConfirmed=============");
-            switchState();
+            Log.i("aaa", "=========WhiteBoardGestureListener===onSingleTapConfirmed============="+mCurrentState);
             return super.onSingleTapConfirmed(e);
         }
 
@@ -336,128 +327,230 @@ public class ClassRoomActivity extends FragmentActivity {
         if (mBinder != null) {
             mBinder.unbind();
         }
+
+        cancelAllAnim();
     }
 
     public int getCurrentState() {
         return mCurrentState;
     }
 
-    private void switchState() {
-        if (mCurrentState == STATE_MAIN_PANEL) {
-            mCurrentState = STATE_WHITE_BOARD;
-            hideTopPanel();
-            hideBottomPanel();
-        } else if (mCurrentState == STATE_WHITE_BOARD) {
-            mCurrentState = STATE_MAIN_PANEL;
-            showTopPanel();
-            showBottomPanel();
-        } else {
-            //default, restore state
-            mCurrentState = STATE_MAIN_PANEL;
-            showTopPanel();
-            showBottomPanel();
+    /**
+     * 隐藏顶部和底部面板
+     */
+    private void hideTopBottomPanel() {
+        if (mAnimating) {
+            return;
+        }
+
+        hideTopPanel();
+        hideBottomPanel();
+    }
+
+    /**
+     * 显示顶部和底部面板
+     */
+    private void showTopBottomPanel() {
+        if (mAnimating) {
+            return;
+        }
+
+        showTopPanel();
+        showBottomPanel();
+    }
+
+    /**
+     * 显示底部面板
+     */
+    private void hideTopPanel() {
+        int y = mTitleBar.getBottom();
+        mTopPanel.animate()
+                .translationY(-y)
+                .setListener(mPanelAnimListener.with(mTopPanel).play(ANIM_HIDE))
+                .start();
+        mLiveProgressLayout.animate().alpha(0).start();
+    }
+
+    /**
+     * 显示顶部面板
+     */
+    private void showTopPanel() {
+        mTopPanel.animate()
+                .translationY(0)
+                .setListener(mPanelAnimListener.with(mTopPanel).play(ANIM_SHOW))
+                .start();
+        mLiveProgressLayout.animate().alpha(1).start();
+    }
+
+    /**
+     * 隐藏底部面板
+     */
+    private void hideBottomPanel() {
+        int y = mBottomPanel.getTop();
+        mBottomPanel.animate()
+                .alpha(0.3f)
+                .translationY(y)
+                .setListener(mPanelAnimListener.with(mBottomPanel).play(ANIM_HIDE))
+                .start();
+    }
+
+    /**
+     * 显示顶部面板
+     */
+    private void showBottomPanel() {
+        int y = 0;
+        mBottomPanel.animate()
+                .alpha(1)
+                .translationY(y)
+                .setListener(mPanelAnimListener.with(mBottomPanel).play(ANIM_SHOW))
+                .start();
+    }
+
+    /**
+     * 隐藏白板操作面板
+     */
+    private void hideWhiteBoardPanel() {
+        if (mAnimating) {
+            return;
+        }
+
+        mWhiteBoardPanel.animate()
+                .alpha(0.0f)
+                .setListener(mPanelAnimListener.with(mWhiteBoardPanel).play(ANIM_HIDE))
+                .start();
+    }
+
+    /**
+     * 显示白板操作面板
+     */
+    private void showWhiteBoardPanel() {
+        if (mAnimating) {
+            return;
+        }
+
+        mWhiteBoardPanel.animate()
+                .alpha(1.0f)
+                .setListener(mPanelAnimListener.with(mWhiteBoardPanel).play(ANIM_SHOW))
+                .start();
+    }
+
+    /**
+     * 取消所有动画
+     */
+    private void cancelAllAnim() {
+        if (mTopPanel != null) {
+            mTopPanel.animate().cancel();
+        }
+
+        if (mBottomPanel != null) {
+            mBottomPanel.animate().cancel();
+        }
+
+        if (mWhiteBoardPanel != null) {
+            mWhiteBoardPanel.animate().cancel();
         }
     }
 
 
-    private void hideTopPanel() {
-        int y = mTitleBar.getBottom();
-        mTopPanel.animate().translationY(-y).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+    /**
+     * 动画监听器
+     */
+    private class PanelAnimListener implements Animator.AnimatorListener {
+        private View mV;
+        private int mAnimType;
 
+        public PanelAnimListener with(View v) {
+            mV = v;
+            return this;
+        }
+
+        public PanelAnimListener play(int type) {
+            mAnimType = type;
+            return this;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+            mAnimating = true;
+            if (mV != null) {
+                if ((mAnimType & ANIM_SHOW) != 0) {
+                    switch (mV.getId()) {
+                        case R.id.bottom_panel:
+                            mV.setVisibility(View.VISIBLE);
+                            break;
+                        case R.id.white_board_panel:
+                            mV.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                } else if ((mAnimType & ANIM_HIDE) != 0) {
+                    //do nothing
+                }
             }
+        }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mTitleBar.setVisibility(View.INVISIBLE);
-                mLiveProgressLayout.setVisibility(View.INVISIBLE);
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            mAnimating = false;
+            if (mV != null) {
+                if ((mAnimType & ANIM_SHOW) != 0) {
+                    switch (mV.getId()) {
+                        case R.id.top_panel:
+                            if (mTopPanel != null && mTitleBar != null && mLiveProgressLayout != null) {
+                                mTopPanel.setVisibility(View.VISIBLE);
+                                mTitleBar.setVisibility(View.VISIBLE);
+                                mLiveProgressLayout.setVisibility(View.VISIBLE);
+                            }
+                            break;
+                        case R.id.white_board_panel:
+                            if (mWhiteBoardPanel != null) {
+                                mCurrentState = STATE_WHITE_BOARD;
+                                mWhiteBoardPanel.setAlpha(1.0f);
+                                mWhiteBoardPanel.setVisibility(View.VISIBLE);
+                            }
+                            break;
+                    }
+                } else if ((mAnimType & ANIM_HIDE) != 0) {
+                    switch (mV.getId()) {
+                        case R.id.top_panel:
+                            if (mTitleBar != null && mLiveProgressLayout != null) {
+                                mTitleBar.setVisibility(View.GONE);
+                                mLiveProgressLayout.setVisibility(View.GONE);
+                            }
+                            break;
+                        case R.id.bottom_panel:
+                            if (mBottomPanel != null && mWhiteBoardPanel != null) {
+                                mBottomPanel.setVisibility(View.GONE);
+                                if (mNeedOpenWhiteBoardPanel) {
+                                    mNeedOpenWhiteBoardPanel = false;
+                                    mCurrentState = STATE_WHITE_BOARD;
+                                    mWhiteBoardPanel.setAlpha(1.0f);
+                                    mWhiteBoardPanel.setVisibility(View.VISIBLE);
+                                }
+                            }
+                            break;
+                        case R.id.white_board_panel:
+                            if (mWhiteBoardPanel != null) {
+                                mCurrentState = STATE_MAIN_PANEL;
+                                mWhiteBoardPanel.setVisibility(View.GONE);
+                            }
+                            break;
+                    }
+                }
             }
+            mV = null;
+        }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                mTitleBar.setVisibility(View.INVISIBLE);
-                mLiveProgressLayout.setVisibility(View.INVISIBLE);
-            }
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            mAnimating = false;
+            mV = null;
+        }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+        @Override
+        public void onAnimationRepeat(Animator animation) {
 
-            }
-        }).start();
-        mLiveProgressLayout.animate().alpha(0).start();
-    }
+        }
 
-    private void showTopPanel() {
-        mTopPanel.animate().translationY(0).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mTopPanel.setVisibility(View.VISIBLE);
-                mTitleBar.setVisibility(View.VISIBLE);
-                mLiveProgressLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-        }).start();
-        mLiveProgressLayout.animate().alpha(1).start();
-    }
-
-    private void hideBottomPanel() {
-        int y = mBottomPanel.getTop();
-        mBottomPanel.animate().alpha(0.3f).translationY(y).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mBottomPanel.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                mBottomPanel.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        }).start();
-    }
-
-    private void showBottomPanel() {
-        int y = 0;
-        mBottomPanel.animate().alpha(1).translationY(y).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mBottomPanel.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        }).start();
     }
 
 }
