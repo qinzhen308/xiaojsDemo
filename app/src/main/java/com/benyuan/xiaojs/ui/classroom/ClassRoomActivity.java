@@ -59,8 +59,14 @@ public class ClassRoomActivity extends FragmentActivity {
     MainPanel mMainPanel;
     @BindView(R.id.top_panel)
     View mTopPanel;
+    @BindView(R.id.title_bar)
+    View mTitleBar;
     @BindView(R.id.bottom_panel)
     View mBottomPanel;
+    @BindView(R.id.white_board_panel)
+    View mWhiteBoardPanel;
+    @BindView(R.id.live_progress_layout)
+    View mLiveProgressLayout;
     @BindView(R.id.live_progress)
     SeekBar mLiveProgress;
 
@@ -142,7 +148,7 @@ public class ClassRoomActivity extends FragmentActivity {
     }
 
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.courese_ware_btn, R.id.setting_btn,
-            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn})
+            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -168,6 +174,9 @@ public class ClassRoomActivity extends FragmentActivity {
                 break;
             case R.id.chat_btn:
                 openChat(ChatPanel.MODE_CHAT);
+                break;
+            case R.id.more_btn:
+                openWhiteBoardPanel();
                 break;
             default:
                 break;
@@ -214,6 +223,83 @@ public class ClassRoomActivity extends FragmentActivity {
             mQuestionAnswerPanel = new QuestionAnswer(this);
         }
         mQuestionAnswerPanel.show();
+    }
+
+    private void openWhiteBoardPanel() {
+        if (mBottomPanel.getVisibility() == View.VISIBLE) {
+            hideTopPanel();
+            int y = mBottomPanel.getTop();
+            mBottomPanel.animate().alpha(0.3f).translationY(y).setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mBottomPanel.setVisibility(View.GONE);
+                    mWhiteBoardPanel.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    mBottomPanel.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            }).start();
+        } else {
+            if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
+                mWhiteBoardPanel.setAlpha(1.0f);
+                mWhiteBoardPanel.animate().alpha(0.3f).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mWhiteBoardPanel.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }).start();
+            } else {
+                mWhiteBoardPanel.animate().alpha(1.0f).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mWhiteBoardPanel.setAlpha(1.0F);
+                        mWhiteBoardPanel.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }).start();
+            }
+        }
     }
 
     private class MainPanelGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -275,8 +361,8 @@ public class ClassRoomActivity extends FragmentActivity {
 
 
     private void hideTopPanel() {
-        int y = mTopPanel.getBottom();
-        mTopPanel.animate().alpha(0.3f).translationY(-y).setListener(new Animator.AnimatorListener() {
+        int y = mTitleBar.getBottom();
+        mTopPanel.animate().translationY(-y).setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -284,12 +370,14 @@ public class ClassRoomActivity extends FragmentActivity {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                mTopPanel.setVisibility(View.GONE);
+                mTitleBar.setVisibility(View.INVISIBLE);
+                mLiveProgressLayout.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
-                mTopPanel.setVisibility(View.GONE);
+                mTitleBar.setVisibility(View.INVISIBLE);
+                mLiveProgressLayout.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -297,13 +385,16 @@ public class ClassRoomActivity extends FragmentActivity {
 
             }
         }).start();
+        mLiveProgressLayout.animate().alpha(0).start();
     }
 
     private void showTopPanel() {
-        mTopPanel.animate().alpha(1).translationY(0).setListener(new Animator.AnimatorListener() {
+        mTopPanel.animate().translationY(0).setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
                 mTopPanel.setVisibility(View.VISIBLE);
+                mTitleBar.setVisibility(View.VISIBLE);
+                mLiveProgressLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -318,6 +409,7 @@ public class ClassRoomActivity extends FragmentActivity {
             public void onAnimationRepeat(Animator animation) {
             }
         }).start();
+        mLiveProgressLayout.animate().alpha(1).start();
     }
 
     private void hideBottomPanel() {
