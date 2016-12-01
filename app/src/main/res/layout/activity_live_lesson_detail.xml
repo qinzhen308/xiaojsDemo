@@ -141,6 +141,8 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_26px"
+                    android:paddingLeft="@dimen/px5"
+                    android:paddingRight="@dimen/px5"
                     android:layout_marginLeft="@dimen/px16"/>
         </LinearLayout>
 

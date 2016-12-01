@@ -14,6 +14,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.xf_foundation.LessonState;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
@@ -63,6 +64,10 @@ public class LessonCreationActivity extends BaseActivity {
 
     private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
 
+    @BindView(R.id.status_fail_reason)
+    TextView mStatusFailReason;
+    @BindView(R.id.place_hold_area)
+    View mPlaceHoldArea;
     @BindView(R.id.live_lesson_name)
     EditTextDel mLessonNameEdt;
     @BindView(R.id.lesson_subject)
@@ -181,6 +186,7 @@ public class LessonCreationActivity extends BaseActivity {
                 @Override
                 public void onSuccess(LessonDetail lessonDetail) {
                     cancelProgress();
+                    setFailedReason(lessonDetail);
                     initBaseInfo(lessonDetail);
                     initOptionalInfo(lessonDetail);
                 }
@@ -190,6 +196,17 @@ public class LessonCreationActivity extends BaseActivity {
                     cancelProgress();
                 }
             });
+        }
+    }
+
+    private void setFailedReason(LessonDetail lessonDetail) {
+        if (lessonDetail != null) {
+            if (LessonState.REJECTED.equals(lessonDetail.getState())) {
+                //TODO
+                //mStatusFailReason.setText();
+                //mStatusFailReason.setVisibility(View.VISIBLE);
+                //mPlaceHoldArea.setVisibility(View.GONE);
+            }
         }
     }
 

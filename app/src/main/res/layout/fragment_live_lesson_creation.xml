@@ -13,9 +13,27 @@
             android:background="@color/main_bg"
             android:layout_above="@+id/sub_btn">
 
+        <TextView
+                android:id="@+id/status_fail_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px32"
+                android:paddingTop="@dimen/px40"
+                android:paddingBottom="@dimen/px40"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_state_fail_msg_tips"
+                android:drawablePadding="@dimen/px10"
+                android:textColor="@color/font_error_red"
+                android:visibility="gone"/>
+
+        <View
+                android:id="@+id/place_hold_area"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px32"/>
+
         <!--直播课-->
         <View
-                android:layout_marginTop="@dimen/px32"
                 style="@style/DividerHorizontal"/>
 
         <LinearLayout
