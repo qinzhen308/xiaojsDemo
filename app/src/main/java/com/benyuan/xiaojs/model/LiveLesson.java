@@ -25,15 +25,24 @@ public class LiveLesson implements Serializable {
     private TeachersIntro teachersIntro;
     private Audit audit;
     private String[] tags;
-    private Publish publish;
+    private boolean accessible;
+    //private Publish publish;
     private boolean autoOnShelves;
 
-    public Publish getPublish() {
-        return publish;
+//    public Publish getPublish() {
+//        return publish;
+//    }
+//
+//    public void setPublish(Publish publish) {
+//        this.publish = publish;
+//    }
+
+    public boolean isAccessible() {
+        return accessible;
     }
 
-    public void setPublish(Publish publish) {
-        this.publish = publish;
+    public void setAccessible(boolean accessible) {
+        this.accessible = accessible;
     }
 
     public boolean isAutoOnShelves() {

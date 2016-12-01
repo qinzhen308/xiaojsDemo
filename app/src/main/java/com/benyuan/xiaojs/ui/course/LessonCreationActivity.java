@@ -628,8 +628,7 @@ public class LessonCreationActivity extends BaseActivity {
         sch.setStart(new Date(mLessonStartTime));
         sch.setDuration(Integer.parseInt(mLessonDurationEdt.getText().toString()));
 
-        LiveLesson.Publish publish = new LiveLesson.Publish();
-        publish.setOnShelves(mPublicTv.isSelected());
+
 
         LiveLesson ll = new LiveLesson();
         String subject = mLessonSubjectTv.getText().toString();
@@ -639,7 +638,7 @@ public class LessonCreationActivity extends BaseActivity {
         ll.setMode(BaseBusiness.getTeachingMode(mContext, mTeachFormTv.getText().toString()));
         ll.setFee(fee);
         ll.setSchedule(sch);
-        ll.setPublish(publish);
+        ll.setAccessible(mPublicTv.isSelected());
 
         //add optional info
         if (mLessonOptionalInfo != null) {
