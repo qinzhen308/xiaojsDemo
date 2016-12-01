@@ -200,7 +200,10 @@ public class LessonCreationActivity extends BaseActivity {
 
         mLessonNameEdt.setText(lessonDetail.getTitle());
         //TODO need to get subject name by id
-        mLessonSubjectTv.setText(lessonDetail.getSubject());
+        //mLessonSubjectTv.setText(lessonDetail.getSubject());
+        //test data
+        mLessonSubjectTv.setText(TEST_SUBJECT);
+        mLessonSubjectTv.setTextColor(mBlackFont);
 
         Enroll enroll = lessonDetail.getEnroll();
         if (enroll != null) {
