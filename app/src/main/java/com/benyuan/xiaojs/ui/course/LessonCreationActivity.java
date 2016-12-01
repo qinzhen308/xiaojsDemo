@@ -272,8 +272,7 @@ public class LessonCreationActivity extends BaseActivity {
             mLessonOptionalInfo = new LiveLesson();
         }
 
-        //TODO cover not exist
-        //mLessonOptionalInfo.setCover(lessonDetail.get);
+        mLessonOptionalInfo.setCover(lessonDetail.getCover());
         mLessonOptionalInfo.setTags(lessonDetail.getTags());
         mLessonOptionalInfo.setTeachersIntro(lessonDetail.getTeachersIntro());
         mLessonOptionalInfo.setOverview(lessonDetail.getOverview());
