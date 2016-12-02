@@ -14,5 +14,14 @@ package com.benyuan.xiaojs.ui.classroom.live;
  *
  * ======================================================================================== */
 
-public class LiveScaleActivity {
+import com.benyuan.xiaojs.ui.base.BaseActivity;
+
+public class LiveScaleActivity extends BaseActivity {
+
+    @Override
+    protected void addViewContent() {
+
+    }
+
+
 }

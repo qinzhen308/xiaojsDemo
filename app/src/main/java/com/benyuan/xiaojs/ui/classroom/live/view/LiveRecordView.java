@@ -71,6 +71,7 @@ public class LiveRecordView extends BaseMediaView implements
     private static final int MSG_START_STREAMING = 0;
     private static final int MSG_STOP_STREAMING = 1;
     private static final int MSG_MUTE = 2;
+    private static final int MSG_SWITCH_CAMERA = 3;
     private static final int MSG_SHOW_LOADING = 6;
     private static final int MSG_HIDE_LOADING = 7;
 
@@ -90,6 +91,8 @@ public class LiveRecordView extends BaseMediaView implements
     protected Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
+            if (mMediaStreamingManager == null)
+                return;
             switch (msg.what) {
                 case MSG_START_STREAMING:
                     startStreamingInThread();
@@ -106,6 +109,9 @@ public class LiveRecordView extends BaseMediaView implements
                     break;
                 case MSG_SHOW_LOADING:
                     showLoading(true);
+                    break;
+                case MSG_SWITCH_CAMERA:
+                    mMediaStreamingManager.switchCamera();
                     break;
                 default:
                     Log.e(TAG, "Invalid message");
@@ -176,7 +182,7 @@ public class LiveRecordView extends BaseMediaView implements
                 .setBuiltInFaceBeautyEnabled(true)
                 .setResetTouchFocusDelayInMs(3000)
                 .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.SMALL)
-                .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9)
+                .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_4_3)
                 .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
                 .setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
         mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
@@ -212,6 +218,18 @@ public class LiveRecordView extends BaseMediaView implements
     public void destroy() {
         mHandler.removeCallbacksAndMessages(null);
         mMediaStreamingManager.destroy();
+    }
+
+    @Override
+    protected void mute() {
+        //本地静音
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_MUTE), 50);
+    }
+
+    @Override
+    protected void switchCamera() {
+        //切换摄像头
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SWITCH_CAMERA), 50);
     }
 
     @Override
@@ -513,13 +531,13 @@ public class LiveRecordView extends BaseMediaView implements
 
     }
 
-    @Override
-    protected void onClose() {
-        //stopStreaming();
-        pause();
-        destroy();
-        super.onClose();
-    }
+//    @Override
+//    protected void close() {
+//        //stopStreaming();
+//        pause();
+//        destroy();
+//        super.close();
+//    }
 
     @Override
     protected void onDraw(Canvas canvas) {

@@ -47,9 +47,9 @@ public class MediaContainerView extends ScrollView {
     private void init(){
         LayoutInflater.from(getContext()).inflate(R.layout.layout_media_container_view,this,true);
         mContainer = (LinearLayout) findViewById(R.id.media_container);
-        mWidth = getResources().getDimensionPixelSize(R.dimen.px208);
-        mHeight = getResources().getDimensionPixelSize(R.dimen.px117);
-        mPadding = getResources().getDimensionPixelSize(R.dimen.px10);
+        mWidth = getResources().getDimensionPixelSize(R.dimen.px180);
+        mHeight = getResources().getDimensionPixelSize(R.dimen.px135);
+        mPadding = getResources().getDimensionPixelSize(R.dimen.px5);
     }
 
     public void addPlayer(String playPath){

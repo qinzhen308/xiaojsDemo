@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:orientation="horizontal"
+              android:background="@drawable/ic_arrow_left_top_bg"
+              android:paddingBottom="@dimen/px15"
+              android:paddingTop="@dimen/px15"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
 
+    <ImageView
+            android:id="@+id/live_menu_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/circle_tab_selector"/>
+
+    <ImageView
+            android:id="@+id/live_menu_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/circle_tab_selector"/>
+
+    <ImageView
+            android:id="@+id/live_menu_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/circle_tab_selector"/>
+
+    <ImageView
+            android:id="@+id/live_menu_scale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/circle_tab_selector"/>
 </LinearLayout>

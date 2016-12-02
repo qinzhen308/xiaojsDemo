@@ -78,7 +78,7 @@ public class PlayerTextureView extends BaseMediaView {
 
         mPlayer.setOnCompletionListener(mOnCompletionListener);
         mPlayer.setOnErrorListener(mOnErrorListener);
-        mPlayer.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_16_9);
+        mPlayer.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_4_3);
         canClose(true);
 
     }
@@ -115,6 +115,11 @@ public class PlayerTextureView extends BaseMediaView {
     @Override
     public void destroy() {
         mPlayer.stopPlayback();
+    }
+
+    @Override
+    protected void mute() {
+        //远端静音
     }
 
     private PLMediaPlayer.OnCompletionListener mOnCompletionListener = new PLMediaPlayer.OnCompletionListener() {
@@ -225,9 +230,9 @@ public class PlayerTextureView extends BaseMediaView {
     };
 
     @Override
-    protected void onClose() {
+    protected void close() {
         pause();
         destroy();
-        super.onClose();
+        super.close();
     }
 }

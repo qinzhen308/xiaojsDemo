@@ -5,13 +5,6 @@
         android:layout_height="match_parent"
         android:background="@android:color/transparent">
 
-    <com.benyuan.xiaojs.ui.classroom.live.LiveView
-            android:id="@+id/teacher_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px10"
-            android:layout_marginLeft="@dimen/px10"/>
-
     <LinearLayout
             android:id="@+id/right_panel"
             android:layout_width="wrap_content"
@@ -23,7 +16,7 @@
             android:layout_marginBottom="@dimen/px10">
 
         <ImageView
-                android:id="@+id/msg_btn"
+                android:id="@+id/chat_btn"
                 android:layout_width="@dimen/px60"
                 android:layout_height="@dimen/px60"
                 android:layout_centerInParent="true"
@@ -146,6 +139,14 @@
                     android:src="@drawable/ic_open_course"/>
 
         </RelativeLayout>
+
+        <com.benyuan.xiaojs.ui.classroom.live.LiveView
+                android:id="@+id/teacher_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title_bar"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_marginLeft="@dimen/px10"/>
 
         <LinearLayout
                 android:id="@+id/live_progress_layout"
@@ -356,35 +357,5 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
-            android:id="@+id/right_panel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal"
-            android:layout_marginRight="@dimen/px10"
-            android:layout_marginBottom="@dimen/px10">
-
-        <ImageView
-                android:id="@+id/chat_btn"
-                android:layout_width="@dimen/px60"
-                android:layout_height="@dimen/px60"
-                android:layout_centerInParent="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/cr_msg"/>
-
-    </LinearLayout>
-
-    <FrameLayout
-            android:id="@+id/stu_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_above="@+id/right_panel"
-            android:layout_marginBottom="@dimen/px10">
-
-    </FrameLayout>
 </com.benyuan.xiaojs.ui.classroom.MainPanel>
 

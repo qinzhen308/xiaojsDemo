@@ -372,6 +372,8 @@ public class ClassRoomActivity extends FragmentActivity {
 
         showTopPanel();
         showBottomPanel();
+
+    }
     private void switchState() {
         if (mCurrentState == STATE_MAIN_PANEL) {
             mCurrentState = STATE_WHITE_BOARD;
