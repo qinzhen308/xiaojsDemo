@@ -165,7 +165,7 @@ public class ClassRoomActivity extends FragmentActivity {
 
     private boolean m = false;
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.courese_ware_btn, R.id.setting_btn,
-            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn})
+            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn, R.id.play_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -174,14 +174,16 @@ public class ClassRoomActivity extends FragmentActivity {
             case R.id.blackboard_switcher_btn:
                 openWhiteBoardManager();
                 break;
-            case R.id.courese_ware_btn:
-                //openCourseWarePanel();
+            case R.id.play_btn:
                 if (!m){
                     mContainer.addPlayer(Config.pathCfu);
                     m = !m;
                     break;
                 }
                 mContainer.addPlayer(Config.pathHK);
+                break;
+            case R.id.courese_ware_btn:
+                openCourseWarePanel();
                 break;
             case R.id.setting_btn:
                 openSetting();
@@ -373,25 +375,6 @@ public class ClassRoomActivity extends FragmentActivity {
         showTopPanel();
         showBottomPanel();
 
-    }
-    private void switchState() {
-        if (mCurrentState == STATE_MAIN_PANEL) {
-            mCurrentState = STATE_WHITE_BOARD;
-            hideTopPanel();
-            hideBottomPanel();
-            //mTeacherVideo.setVisibility(View.VISIBLE);
-        } else if (mCurrentState == STATE_WHITE_BOARD) {
-            mCurrentState = STATE_MAIN_PANEL;
-            showTopPanel();
-            showBottomPanel();
-            //mTeacherVideo.setVisibility(View.INVISIBLE);
-        } else {
-            //default, restore state
-            mCurrentState = STATE_MAIN_PANEL;
-            showTopPanel();
-            showBottomPanel();
-            //mTeacherVideo.setVisibility(View.INVISIBLE);
-        }
     }
 
     /**
