@@ -21,18 +21,16 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CenterData;
-import com.benyuan.xiaojs.model.User;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.classroom.ClassRoomActivity;
 import com.benyuan.xiaojs.ui.course.MyLessonActivity;
@@ -54,6 +52,8 @@ import butterknife.OnClick;
 public class MineFragment extends BaseFragment {
     private final static int REQUEST_EDIT = 1000;
 
+    @BindView(R.id.personal_info)
+    View mPersonalInfo;
     @BindView(R.id.portrait)
     RoundedImageView mPortraitView;
     @BindView(R.id.blur_portrait)
@@ -223,6 +223,11 @@ public class MineFragment extends BaseFragment {
     private void setupBlurPortraitView(Bitmap portrait) {
         mProfileBgView.setBackgroundDrawable(mBlurFloatUpBg);
         Bitmap blurBitmap = FastBlur.smartBlur(portrait, 2, true);
+        int h = mPersonalInfo.getHeight();
+        ViewGroup.LayoutParams params = mBlurPortraitView.getLayoutParams();
+        if (params != null) {
+            params.height = h;
+        }
         mBlurPortraitView.setImageBitmap(blurBitmap);
     }
 

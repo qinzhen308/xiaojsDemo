@@ -30,7 +30,6 @@ import android.support.v4.view.ViewGroupCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -1240,7 +1239,12 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
         final int childCount = getChildCount();
         float scrimOpacity = 0;
         for (int i = 0; i < childCount; i++) {
-            final float onscreen = ((LayoutParams) getChildAt(i).getLayoutParams()).onScreen;
+            float onscreen = ((LayoutParams) getChildAt(i).getLayoutParams()).onScreen;
+            //=============add by hy=============
+            if (Float.isNaN(onscreen)) {
+                onscreen = 0.0f;
+            }
+            //=============add by hy=============
             scrimOpacity = Math.max(scrimOpacity, onscreen);
         }
         mScrimOpacity = scrimOpacity;
@@ -1608,7 +1612,6 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                     drawerView.measure(0, 0);
                     drawWidth = drawerView.getMeasuredWidth();
                 }
-                Log.i("aaa", "drawWidth="+drawWidth);
                 mRightDragger.smoothSlideViewTo(drawerView, getWidth() - drawWidth,
                         drawerView.getTop());
             }

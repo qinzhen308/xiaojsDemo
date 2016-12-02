@@ -12,6 +12,8 @@ import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
+import com.benyuan.xiaojs.util.UIUtils;
+import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -63,6 +65,11 @@ public class TeachAbilityDemoActivity extends BaseActivity {
             @Override
             public void onSuccess(CSubject object) {
 
+                if (UIUtils.activityDestoryed(TeachAbilityDemoActivity.this)) {
+                    return;
+                }
+
+
                 if(object ==null){
 
                     Toast.makeText(TeachAbilityDemoActivity.this,"没有获取到教学能力",Toast.LENGTH_SHORT).show();
@@ -84,6 +91,10 @@ public class TeachAbilityDemoActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+
+                if (UIUtils.activityDestoryed(TeachAbilityDemoActivity.this)) {
+                    return;
+                }
 
                 Toast.makeText(TeachAbilityDemoActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
 
