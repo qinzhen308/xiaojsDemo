@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:id="@+id/contact"
+            android:layout_width="@dimen/px400"
+            android:layout_height="match_parent"
+            android:background="@color/classroom_main_gray"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+        <EditText
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px70"
+                android:textColorHint="@color/font_dark_gray"
+                android:textColor="@color/font_dark_gray"
+                android:hint="搜索"
+                android:textSize="@dimen/font_28px"
+                android:background="#88ffffff"
+                android:layout_margin="@dimen/px15"
+                android:drawableRight="@drawable/ic_search"
+                android:paddingLeft="@dimen/px5"
+                android:paddingRight="@dimen/px5"/>
+
+        <ListView
+                android:id="@+id/contact_book"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search"
+                android:layout_above="@+id/action_line">
+
+        </ListView>
+
+        <View
+                android:id="@+id/action_line"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px1"
+                android:background="#333333"
+                android:layout_above="@+id/contact_action_btn"/>
+
+        <LinearLayout
+                android:id="@+id/contact_action_btn"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+            <ImageView
+                    android:id="@+id/open_chat"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_message"/>
+
+            <ImageView
+                    android:id="@+id/add_contact"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_message"/>
+
+            <ImageView
+                    android:id="@+id/manage_contact"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_message"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:id="@+id/chat"
+            android:layout_width="@dimen/px560"
+            android:layout_height="match_parent"
+            android:background="@color/classroom_main_gray"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+        <RelativeLayout
+                android:layout_width="@dimen/px460"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                    android:id="@+id/chat_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:gravity="center_vertical"
+                        android:layout_height="@dimen/px80"
+                        android:text="@string/classroom_discussion"
+                        android:paddingLeft="@dimen/px10"
+                        android:paddingRight="@dimen/px15"
+                        android:textColor="@color/font_white"
+                        android:textSize="@dimen/font_30px"
+                        android:background="@color/classroom_chat_bg"
+                        android:drawableRight="@drawable/toggle_btn_selector"/>
+
+                <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/px80"
+                        android:gravity="center_vertical"
+                        android:text="龚婷"
+                        android:paddingLeft="@dimen/px10"
+                        android:paddingRight="@dimen/px15"
+                        android:textColor="@color/font_white"
+                        android:textSize="@dimen/font_30px"
+                        android:drawableRight="@drawable/ic_del_label"/>
+            </LinearLayout>
+
+            <ListView
+                    android:id="@+id/chat_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/chat_tab"
+                    android:background="@color/classroom_chat_bg"
+                    android:layout_above="@+id/input">
+
+            </ListView>
+
+            <EditText
+                    android:id="@+id/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px80"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/white"/>
+        </RelativeLayout>
+
+        <LinearLayout
+                android:layout_width="@dimen/px100"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <ListView
+                    android:id="@+id/chat_simple_contact"
+                    android:layout_weight="1"
+                    android:layout_marginTop="@dimen/px20"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            <ImageView
+                    android:id="@+id/open_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px80"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_message"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>
+

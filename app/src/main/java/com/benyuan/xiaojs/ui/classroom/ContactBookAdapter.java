@@ -25,10 +25,10 @@ import android.widget.TextView;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
 
-public class ContactAdapter extends BaseAdapter {
+public class ContactBookAdapter extends BaseAdapter {
     private Context mContext;
 
-    public ContactAdapter(Context context) {
+    public ContactBookAdapter(Context context) {
         mContext = context;
     }
 
@@ -74,7 +74,7 @@ public class ContactAdapter extends BaseAdapter {
     }
 
     private void bindData(Holder holder) {
-
+        holder.portrait.setImageResource(R.drawable.default_portrait);
     }
 
 

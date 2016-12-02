@@ -42,6 +42,8 @@ public abstract class Panel {
             } else {
                 container.addView(mContentView);
             }
+
+            initChildView(mContentView);
         }
 
         if (container != null) {
@@ -56,9 +58,18 @@ public abstract class Panel {
             }
         }
 
+        setChildViewStyle();
         drawerLayout.openDrawer(container);
 
         initData();
+    }
+
+    public void initChildView(View root) {
+
+    }
+
+    public void setChildViewStyle() {
+
     }
 
     public abstract void initData();
