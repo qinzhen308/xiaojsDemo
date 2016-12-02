@@ -2,6 +2,7 @@ package com.benyuan.xiaojs.ui.classroom.live.core;
 
 import android.content.pm.ActivityInfo;
 
+import com.benyuan.xiaojs.R;
 import com.qiniu.pili.droid.streaming.StreamingProfile;
 
 /**
@@ -14,6 +15,12 @@ public class Config {
     public static final int VIDEO_FPS = 24;
     public static final int VIDEO_BITRATE = 512 * 1024;
     public static final int VIDEO_MAX_KEY_FRAME_INTERVAL = 48;
+
+    public static final int NORMAL_WIDTH = R.dimen.px180;
+    public static final int NORMAL_HEIGHT = R.dimen.px135;
+    public static final int SCALED_WIDTH = R.dimen.px360;
+    public static final int SCALED_HEIGHT = R.dimen.px270;
+
 
     public static final int MAX_PLAYERS = 8;//老师端显示学生视频的最大数量
     public static final boolean DEBUG_MODE = false;

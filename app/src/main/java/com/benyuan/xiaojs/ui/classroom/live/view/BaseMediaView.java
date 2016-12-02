@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.classroom.live.core.Config;
 
 public abstract class BaseMediaView extends FrameLayout {
 
@@ -49,14 +50,14 @@ public abstract class BaseMediaView extends FrameLayout {
         init();
     }
 
-    private void init(){
+    private void init() {
         setKeepScreenOn(true);
-        LayoutInflater.from(getContext()).inflate(R.layout.layout_media_base_view,this,true);
+        LayoutInflater.from(getContext()).inflate(R.layout.layout_media_base_view, this, true);
         mContainer = (FrameLayout) findViewById(R.id.media_container);
         mLoadingView = (FrameLayout) findViewById(R.id.loading_view);
 
         mContainer.addView(initMediaView());
-        mGesture = new GestureDetector(getContext(),new CustomerOnGestureListener());
+        mGesture = new GestureDetector(getContext(), new CustomerOnGestureListener());
     }
 
     protected abstract View initMediaView();
@@ -66,10 +67,11 @@ public abstract class BaseMediaView extends FrameLayout {
         mGesture.onTouchEvent(event);
         return true;
     }
-    private class CustomerOnGestureListener extends GestureDetector.SimpleOnGestureListener{
+
+    private class CustomerOnGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            final LiveMenu menu = new LiveMenu(getContext(),BaseMediaView.this instanceof LiveRecordView);
+            final LiveMenu menu = new LiveMenu(getContext(), BaseMediaView.this instanceof LiveRecordView);
             menu.show(BaseMediaView.this);
             menu.setOnItemClickListener(new LiveMenu.OnItemClickListener() {
                 @Override
@@ -97,7 +99,7 @@ public abstract class BaseMediaView extends FrameLayout {
 
         @Override
         public void onLongPress(MotionEvent e) {
-            Toast.makeText(getContext(),"onLongPress", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "onLongPress", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -106,55 +108,69 @@ public abstract class BaseMediaView extends FrameLayout {
         }
     }
 
-    protected void canClose(boolean b){
+    protected void canClose(boolean b) {
         mCanClose = b;
     }
 
-    public void setPath(String path){
+    public void setPath(String path) {
         this.mPath = path;
     }
 
-    public String getPath(){
+    public String getPath() {
         return this.mPath;
     }
 
     public abstract void start();
+
     public abstract void resume();
+
     public abstract void pause();
+
     public abstract void destroy();
 
     protected abstract void mute();
 
-    protected void close(){
-        if (isPlayer()){
-            ((ViewGroup)getParent()).removeView(this);
-        }else {
+    protected void close() {
+        if (isPlayer()) {
+            ((ViewGroup) getParent()).removeView(this);
+        } else {
             setVisibility(INVISIBLE);
         }
 
     }
 
-    protected void share(){
+    protected void share() {
 
     }
 
-    protected void scale(){
+    private boolean normal = true;
+
+    protected void scale() {
+        ViewGroup.LayoutParams lp = getLayoutParams();
+        if (normal) {
+            lp.width = getResources().getDimensionPixelSize(Config.SCALED_WIDTH);
+            lp.height = getResources().getDimensionPixelSize(Config.SCALED_HEIGHT);
+        } else {
+            lp.width = getResources().getDimensionPixelSize(Config.NORMAL_WIDTH);
+            lp.height = getResources().getDimensionPixelSize(Config.NORMAL_HEIGHT);
+        }
+        setLayoutParams(lp);
+        normal = !normal;
+    }
+
+    protected void switchCamera() {
 
     }
 
-    protected void switchCamera(){
-
-    }
-
-    protected void showLoading(boolean b){
-        if (b){
+    protected void showLoading(boolean b) {
+        if (b) {
             mLoadingView.setVisibility(VISIBLE);
-        }else {
+        } else {
             mLoadingView.setVisibility(GONE);
         }
     }
 
-    private boolean isPlayer(){
+    private boolean isPlayer() {
         return this instanceof PlayerTextureView;
     }
 }

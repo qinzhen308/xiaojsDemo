@@ -15,8 +15,8 @@ import android.widget.SeekBar;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.classroom.drawer.DrawerLayout;
-import com.benyuan.xiaojs.ui.classroom.live.LiveView;
 import com.benyuan.xiaojs.ui.classroom.live.core.Config;
+import com.benyuan.xiaojs.ui.classroom.live.view.LiveRecordView;
 import com.benyuan.xiaojs.ui.classroom.live.view.MediaContainerView;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
@@ -78,7 +78,7 @@ public class ClassRoomActivity extends FragmentActivity {
     @BindView(R.id.white_board)
     WhiteBoard mWhiteBoard;
     @BindView(R.id.teacher_video)
-    LiveView mTeacherVideo;
+    LiveRecordView mTeacherVideo;
     @BindView(R.id.player_container)
     MediaContainerView mContainer;
 
@@ -111,7 +111,7 @@ public class ClassRoomActivity extends FragmentActivity {
         initDrawer();
         initLiveProgress();
         initGestureDetector();
-        mTeacherVideo.create();
+        mTeacherVideo.setPath(Config.pathPush);
     }
 
     private void initParams() {

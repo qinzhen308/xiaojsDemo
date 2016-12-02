@@ -217,7 +217,15 @@ public class LiveRecordView extends BaseMediaView implements
     @Override
     public void destroy() {
         mHandler.removeCallbacksAndMessages(null);
-        mMediaStreamingManager.destroy();
+        if (mThread != null){
+            mThread.interrupt();
+            mThread = null;
+        }
+
+        if (mMediaStreamingManager != null){
+            mMediaStreamingManager.destroy();
+            mMediaStreamingManager = null;
+        }
     }
 
     @Override
@@ -238,15 +246,17 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void startStreamingInThread(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (mMediaStreamingManager != null){
-                    mMediaStreamingManager.startStreaming();
-                }
-            }
-        }).start();
+        mThread.start();
     }
+
+    private Thread mThread = new Thread(){
+        @Override
+        public void run() {
+            if (mMediaStreamingManager != null){
+                mMediaStreamingManager.startStreaming();
+            }
+        }
+    };
 
     private boolean startStreamingSafely(){
         try {

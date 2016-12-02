@@ -140,10 +140,10 @@
 
         </RelativeLayout>
 
-        <com.benyuan.xiaojs.ui.classroom.live.LiveView
+        <com.benyuan.xiaojs.ui.classroom.live.view.LiveRecordView
                 android:id="@+id/teacher_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/px180"
+                android:layout_height="@dimen/px135"
                 android:layout_below="@+id/title_bar"
                 android:layout_marginTop="@dimen/px20"
                 android:layout_marginLeft="@dimen/px10"/>
