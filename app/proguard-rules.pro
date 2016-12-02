@@ -55,6 +55,13 @@
 -keep class com.qiniu.**{public <init>();}
 -ignorewarnings
 
+
+#-----------------live------------------------------------------------------------------------------
+-keep class com.qiniu.pili.droid.streaming.** { *; }
+-keep class com.pili.pldroid.player.** { *; }
+-keep class tv.danmaku.ijk.media.player.** {*;}
+
+
 #------------------bugly----------------------------------------------------------------------------
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}

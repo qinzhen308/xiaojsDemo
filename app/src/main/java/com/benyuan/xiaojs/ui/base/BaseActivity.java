@@ -197,7 +197,6 @@ public abstract class BaseActivity extends FragmentActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (mBinder != null){
             mBinder.unbind();
         }
@@ -205,5 +204,6 @@ public abstract class BaseActivity extends FragmentActivity {
             progress.dismiss();
             progress = null;
         }
+        super.onDestroy();
     }
 }
