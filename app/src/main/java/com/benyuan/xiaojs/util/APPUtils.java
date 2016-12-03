@@ -26,12 +26,22 @@ package com.benyuan.xiaojs.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Looper;
 
 /**
  * Created by maxiaobao on 2016/10/26.
  */
 
 public class APPUtils {
+
+    public static boolean isBackgroundThread(){
+
+        return !isMainThread();
+    }
+
+    public static boolean isMainThread() {
+        return Looper.myLooper() == Looper.getMainLooper();
+    }
 
     /**
      * 获取应用的全部版本号（versionName + versionCode）

@@ -6,10 +6,10 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
-import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
-import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.LessonRequest;
 import com.benyuan.xiaojs.data.api.QiniuRequest;
+import com.benyuan.xiaojs.data.api.service.ErrorPrompts;
+import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.model.CLEResponse;
@@ -48,19 +48,12 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the create live lession request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.createLessonPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.createLiveLesson(context, session, lesson, callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.createLiveLesson(session, lesson);
 
     }
 
@@ -84,19 +77,12 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the GetLessons request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.getLessons(context,session,criteria,pagination,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.getLessons(session,criteria,pagination);
 
     }
 
@@ -119,29 +105,12 @@ public class LessonDataManager extends DataManager{
 
         String session = AccountDataManager.getSessionID(context);
 
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the putLessonOnShelves request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        if (TextUtils.isEmpty(lesson)) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the lesson param is empty,so the putLessonOnShelves request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.putLessonOnShelvesPrompt(Errors.BAD_PARAMETER);
-            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
-            return;
-        }
-
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.putLessonOnShelves(context,session,lesson,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.putLessonOnShelves(session,lesson);
 
     }
 
@@ -164,29 +133,13 @@ public class LessonDataManager extends DataManager{
 
         String session = AccountDataManager.getSessionID(context);
 
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the requestCancelLessonOnShelves request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.cancelLessonOnShelvesPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        if (TextUtils.isEmpty(lesson)) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the lesson param is empty,so the requestCancelLessonOnShelves request return failure");
-            }
 
-            String errorMessage = ErrorPrompts.cancelLessonOnShelvesPrompt(Errors.BAD_PARAMETER);
-            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
-            return;
-        }
-
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.cancelLessonOnShelves(context,session,lesson,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.cancelLessonOnShelves(session,lesson);
     }
 
     /**
@@ -209,19 +162,12 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the GetEnrolledLessons request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.getEnrolledLessonsPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.getEnrolledLessons(context,session,criteria,pagination,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.getEnrolledLessons(session,criteria,pagination);
 
     }
 
@@ -244,31 +190,13 @@ public class LessonDataManager extends DataManager{
 
         String session = AccountDataManager.getSessionID(context);
 
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.getLessonDataPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
 
-
-        if (TextUtils.isEmpty(lesson)) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the lesson param is empty,so the requestGetLessonDetails request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.getLessonDetailsPrompt(Errors.BAD_PARAMETER);
-            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
-            return;
-        }
-
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.getLessonData(context,session,lesson,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.getLessonData(session,lesson);
     }
 
 
@@ -336,8 +264,8 @@ public class LessonDataManager extends DataManager{
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.getLessonDetails(context,lesson,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.getLessonDetails(lesson);
     }
 
 
@@ -355,19 +283,12 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.editLessonPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.editLesson(context,session,lesson,liveLesson,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.editLesson(session,lesson,liveLesson);
     }
 
 
@@ -385,19 +306,12 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.enrollLessonPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.enrollLesson(context,session,lesson,offlineRegistrant,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.enrollLesson(session,lesson,offlineRegistrant);
 
     }
 
@@ -415,30 +329,13 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.confirmLessonEnrollmentPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
 
-        if (TextUtils.isEmpty(lesson)) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the lesson param is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.confirmLessonEnrollmentPrompt(Errors.BAD_PARAMETER);
-            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
-            return;
-        }
-
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.confirmLessonEnrollment(context,session,lesson,registrant,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.confirmLessonEnrollment(session,lesson,registrant);
     }
 
 
@@ -455,29 +352,13 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.cancelLessonPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        if (TextUtils.isEmpty(lesson)) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the lesson param is empty,so the request return failure");
-            }
 
-            String errorMessage = ErrorPrompts.cancelLessonPrompt(Errors.BAD_PARAMETER);
-            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
-            return;
-        }
-
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.cancelLesson(context,session,lesson,reason,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.cancelLesson(session,lesson,reason);
 
     }
 
@@ -487,29 +368,12 @@ public class LessonDataManager extends DataManager{
                                                  @NonNull APIServiceCallback callback) {
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.toggleAccessLessonPrompt(accessible,Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        if (TextUtils.isEmpty(lesson)) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the lesson param is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.toggleAccessLessonPrompt(accessible,Errors.BAD_PARAMETER);
-            callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
-            return;
-        }
-
-        LessonRequest lessonRequest = new LessonRequest();
-        lessonRequest.toggleAccessLesson(context,session,lesson,accessible,callback);
+        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        lessonRequest.toggleAccessLesson(session,lesson,accessible);
     }
 
 

@@ -5,19 +5,16 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
-import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
-import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.PlatformRequest;
+import com.benyuan.xiaojs.data.api.service.ErrorPrompts;
+import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.GENotificationsResponse;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
-import com.benyuan.xiaojs.model.Notification;
 import com.benyuan.xiaojs.model.NotificationCriteria;
 import com.benyuan.xiaojs.model.Pagination;
 import com.orhanobut.logger.Logger;
-
-import java.util.ArrayList;
 
 /**
  * Created by maxiaobao on 2016/11/13.
@@ -38,20 +35,13 @@ public class NotificationDataManager extends DataManager {
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.getNotificationsOverviewPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
 
-        PlatformRequest platformRequest = new PlatformRequest();
-        platformRequest.getNotificationsOverview(context,session,pagination,callback);
+        PlatformRequest platformRequest = new PlatformRequest(context,callback);
+        platformRequest.getNotificationsOverview(session,pagination);
     }
 
     public static void requestNotifications(Context context,
@@ -68,20 +58,13 @@ public class NotificationDataManager extends DataManager {
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.getNotificationsPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
 
-        PlatformRequest platformRequest = new PlatformRequest();
-        platformRequest.getNotifications(context,session,criteria,pagination,callback);
+        PlatformRequest platformRequest = new PlatformRequest(context,callback);
+        platformRequest.getNotifications(session,criteria,pagination);
 
 
     }
@@ -98,19 +81,12 @@ public class NotificationDataManager extends DataManager {
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.deleteNotificationPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        PlatformRequest platformRequest = new PlatformRequest();
-        platformRequest.deleteNotification(context,session,notification,callback);
+        PlatformRequest platformRequest = new PlatformRequest(context,callback);
+        platformRequest.deleteNotification(session,notification);
 
     }
 
@@ -126,18 +102,11 @@ public class NotificationDataManager extends DataManager {
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.ignoreNotificationsPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        PlatformRequest platformRequest = new PlatformRequest();
-        platformRequest.ignoreNotifications(context,session,criteria,callback);
+        PlatformRequest platformRequest = new PlatformRequest(context,callback);
+        platformRequest.ignoreNotifications(session,criteria);
     }
 }

@@ -32,9 +32,7 @@ public class QiniuRequest {
                             @NonNull final QiniuService callback) {
 
 
-        AccountRequest accountRequest = new AccountRequest();
-
-        accountRequest.getCoverUpToken(context, sessionID,lesson, new APIServiceCallback<TokenResponse>() {
+        AccountRequest accountRequest = new AccountRequest(context,new APIServiceCallback<TokenResponse>() {
             @Override
             public void onSuccess(TokenResponse tokenResponse) {
 
@@ -61,6 +59,8 @@ public class QiniuRequest {
                 }
             }
         });
+
+        accountRequest.getCoverUpToken(sessionID,lesson);
     }
 
     public void uploadAvatar(Context context,
@@ -69,10 +69,8 @@ public class QiniuRequest {
                              @NonNull final QiniuService callback) {
 
 
-
-        AccountRequest accountRequest = new AccountRequest();
-
-        accountRequest.getAvatarUpToken(context, sessionID, new APIServiceCallback<TokenResponse>() {
+        // FIXME
+        AccountRequest accountRequest = new AccountRequest(context,new APIServiceCallback<TokenResponse>() {
             @Override
             public void onSuccess(TokenResponse tokenResponse) {
 
@@ -100,6 +98,8 @@ public class QiniuRequest {
                 }
             }
         });
+
+        accountRequest.getAvatarUpToken(sessionID);
 
 
 

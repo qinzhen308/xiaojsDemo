@@ -4,7 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.benyuan.xiaojs.XiaojsConfig;
-import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
+import com.benyuan.xiaojs.data.api.service.APIType;
+import com.benyuan.xiaojs.data.api.service.ErrorPrompts;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
@@ -12,7 +13,6 @@ import com.benyuan.xiaojs.model.CSubject;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,66 +24,28 @@ import retrofit2.Response;
 
 public class CategoriesRequest extends ServiceRequest {
 
-    public void getSubject(@NonNull Context context,
-                           @NonNull final APIServiceCallback<CSubject> callback) {
+    public CategoriesRequest(Context context,APIServiceCallback callback) {
+
+        super(context,callback);
+
+    }
+
+    public void getSubject() {
 
 
-        XiaojsService xiaojsService = ApiManager.getAPIManager(context).getXiaojsService();
+        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
         xiaojsService.getSubject().enqueue(new Callback<CSubject>() {
             @Override
             public void onResponse(Call<CSubject> call,
                                    Response<CSubject> response) {
 
-                int responseCode = response.code();
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the request has onResponse, the code:%d", responseCode);
-                }
-
-                if (responseCode == SUCCESS_CODE) {
-
-                    CSubject info = response.body();
-
-                    if (callback != null) {
-                        callback.onSuccess(info);
-                    }
-
-
-                } else {
-
-                    String errorBody = null;
-                    try {
-                        errorBody = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    String errorCode = parseErrorBody(errorBody);
-                    String errorMessage = ErrorPrompts.getSubjectPrompt(errorCode);
-
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
-
-                }
+                onRespones(APIType.GET_SUBJECT,response);
             }
 
             @Override
             public void onFailure(Call<CSubject> call, Throwable t) {
 
-                if (XiaojsConfig.DEBUG) {
-                    String exception = t.getMessage();
-                    Logger.d("the request has occur exception:\n %s", exception);
-                }
-
-
-                String errorCode = getExceptionErrorCode();
-                String errorMessage = ErrorPrompts.loginPrompt(errorCode);
-
-                if (callback != null) {
-                    callback.onFailure(errorCode, errorMessage);
-                }
+                onFailures(APIType.GET_SUBJECT,t);
             }
         });
 

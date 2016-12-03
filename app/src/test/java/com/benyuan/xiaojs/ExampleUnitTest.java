@@ -52,21 +52,21 @@ public class ExampleUnitTest {
         haha.setId("123456");
         haha.setT(h);
 
-        ServiceRequest serviceRequest = new ServiceRequest();
-
-        String jj = serviceRequest.objectToJsonString(haha);
-
-
-        System.out.println(jj);
-
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Haha.class, Haha.No.class);
-
-        Haha<Haha.No> haha1 = objectMapper.readValue(jj,javaType);
-
-        System.out.println(haha);
+//        ServiceRequest serviceRequest = new ServiceRequest();
+//
+//        String jj = serviceRequest.objectToJsonString(haha);
+//
+//
+//        System.out.println(jj);
+//
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//
+//        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Haha.class, Haha.No.class);
+//
+//        Haha<Haha.No> haha1 = objectMapper.readValue(jj,javaType);
+//
+//        System.out.println(haha);
 
 
     }

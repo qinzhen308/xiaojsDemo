@@ -20,11 +20,11 @@ public class RegisterDataManager {
 
     /**
      * 调用注册API，进行注册
-     * @param appContext
+     * @param
      * @param info  注册API中需要上传的参数
      * @param callback
      */
-    public static void requestRegisterByAPI(@NonNull Context appContext,
+    public static void requestRegisterByAPI(@NonNull Context context,
                                             @NonNull RegisterInfo info,
                                             @NonNull APIServiceCallback callback){
 
@@ -35,18 +35,18 @@ public class RegisterDataManager {
             return;
         }
 
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.register(appContext,info,callback);
+        RegisterRequest registerRequest = new RegisterRequest(context,callback);
+        registerRequest.register(info);
 
     }
 
     /**
      * 验证验证码
-     * @param appContext
+     * @param
      * @param mobile
      * @param callback
      */
-    public static void requestValidateCode(@NonNull Context appContext,
+    public static void requestValidateCode(@NonNull Context context,
                                          long mobile,
                                          int verifycode,
                                          @NonNull final APIServiceCallback callback) {
@@ -58,21 +58,17 @@ public class RegisterDataManager {
             return;
         }
 
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.validateCode(appContext,
-                Security.VerifyMethod.SMS_4_REGISTRATION,
-                mobile,
-                verifycode,
-                callback);
+        RegisterRequest registerRequest = new RegisterRequest(context,callback);
+        registerRequest.validateCode(Security.VerifyMethod.SMS_4_REGISTRATION, mobile, verifycode);
     }
 
     /**
      * 发送验证码
-     * @param appContext
+     * @param
      * @param mobile
      * @param callback
      */
-    public static void requestSendVerifyCode(@NonNull Context appContext,
+    public static void requestSendVerifyCode(@NonNull Context context,
                                            long mobile,
                                            @NonNull final APIServiceCallback<VerifyCode> callback) {
 
@@ -84,11 +80,8 @@ public class RegisterDataManager {
         }
 
 
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.sendVerifyCode(appContext,
-                Security.VerifyMethod.SMS_4_REGISTRATION,
-                mobile,
-                callback);
+        RegisterRequest registerRequest = new RegisterRequest(context,callback);
+        registerRequest.sendVerifyCode(Security.VerifyMethod.SMS_4_REGISTRATION, mobile);
     }
 
 }
