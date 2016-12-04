@@ -291,7 +291,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
             android:id="@+id/white_board_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -299,63 +299,61 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/px10"
             android:visibility="gone"
-            android:background="@color/classroom_main_gray"
-            android:orientation="horizontal">
+            android:padding="@dimen/px25"
+            android:background="@drawable/white_board_panel_bg">
 
         <ImageView
                 android:id="@+id/select_btn"
-                android:layout_width="@dimen/px60"
-                android:layout_height="@dimen/px60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/cr_qa"/>
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/wb_selection_selector"/>
 
         <ImageView
-                android:id="@+id/paint_btn"
-                android:layout_width="@dimen/px60"
-                android:layout_height="@dimen/px60"
+                android:id="@+id/handwriting_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/cr_qa"
-                android:layout_marginLeft="@dimen/px10"/>
+                android:src="@drawable/wb_brush_selector"
+                android:layout_toRightOf="@+id/select_btn"
+                android:layout_marginLeft="@dimen/px50"/>
 
         <ImageView
                 android:id="@+id/shape_btn"
-                android:layout_width="@dimen/px60"
-                android:layout_height="@dimen/px60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/cr_qa"
-                android:layout_marginLeft="@dimen/px10"/>
+                android:layout_toRightOf="@+id/handwriting_btn"
+                android:layout_marginLeft="@dimen/px50"/>
 
         <ImageView
                 android:id="@+id/eraser_btn"
-                android:layout_width="@dimen/px60"
-                android:layout_height="@dimen/px60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/cr_qa"
-                android:layout_marginLeft="@dimen/px10"/>
+                android:src="@drawable/wb_eraser_selector"
+                android:layout_toRightOf="@+id/shape_btn"
+                android:layout_marginLeft="@dimen/px50"/>
 
         <ImageView
                 android:id="@+id/text_btn"
-                android:layout_width="@dimen/px60"
-                android:layout_height="@dimen/px60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/cr_qa"
-                android:layout_marginLeft="@dimen/px10"/>
+                android:src="@drawable/wb_text_selector"
+                android:layout_toRightOf="@+id/eraser_btn"
+                android:layout_marginLeft="@dimen/px50"/>
 
-        <ImageView
+        <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView
                 android:id="@+id/color_picker_btn"
-                android:layout_width="@dimen/px60"
-                android:layout_height="@dimen/px60"
+                android:layout_width="@dimen/px40"
+                android:layout_height="@dimen/px40"
                 android:layout_centerInParent="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/cr_qa"
-                android:layout_marginLeft="@dimen/px10"/>
+                android:layout_toRightOf="@+id/text_btn"
+                android:layout_marginLeft="@dimen/px50"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </com.benyuan.xiaojs.ui.classroom.MainPanel>
 

@@ -197,4 +197,10 @@
     <declare-styleable name="load_attr">
         <attr name="lsize" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="WhiteBoardCircle">
+        <attr name="color" format="color" />
+        <attr name="circle_border_width" format="dimension" />
+        <attr name="circle_border_color" format="color" />
+    </declare-styleable>
 </resources>
