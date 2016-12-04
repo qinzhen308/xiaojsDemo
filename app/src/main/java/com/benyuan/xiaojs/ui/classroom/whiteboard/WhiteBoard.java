@@ -87,7 +87,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
     private int mCurrentMode = MODE_SELECTION;
 
-    private ViewGestureListener mGestureListener;
+    private ViewGestureListener mViewGestureListener;
     private InputMethodManager mInputMethodManager;
 
     private ArrayList<Doodle> mAllDoodles;
@@ -172,7 +172,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         if (mClasssRoomGestureDetector != null) {
             if (ClassRoomActivity.STATE_WHITE_BOARD == mClasssRoomGestureDetector.getState()) {
                 mClasssRoomGestureDetector.onTouchEvent(event);
-                mGestureListener.onTouchEvent(event);
+                mViewGestureListener.onTouchEvent(event);
                 return true;
             } else {
                 return false;
@@ -203,7 +203,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         mBlackboardRect.set(0, 0, mBlackboardWidth, mBlackboardHeight);
         mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
         mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
-        mGestureListener.onViewChanged(mViewWidth, mViewHeight, mBlackboardWidth, mBlackboardHeight);
+        mViewGestureListener.onViewChanged(mViewWidth, mViewHeight, mBlackboardWidth, mBlackboardHeight);
     }
 
     public void setEditText (EditText editText) {
@@ -253,7 +253,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         mBlackboardRect.set(0, 0, mSrcBmpWidth, mSrcBmpHeight);
         mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
         mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
-        mGestureListener.onViewChanged(mViewWidth, mViewHeight, mSrcBmpWidth, mSrcBmpHeight);
+        mViewGestureListener.onViewChanged(mViewWidth, mViewHeight, mSrcBmpWidth, mSrcBmpHeight);
 
         postInvalidate();
     }
@@ -281,7 +281,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         mScreenWidth = dm.widthPixels;
         mScreenHeight = dm.heightPixels;
 
-        mGestureListener = new ViewGestureListener(context, this, new TouchEventListener());
+        mViewGestureListener = new ViewGestureListener(context, this, new TouchEventListener());
         mInputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -293,7 +293,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        RectF destF = mGestureListener.getDestRect();
+        RectF destF = mViewGestureListener.getDestRect();
         mDoodleBounds.set(destF.left, destF.top, destF.right, destF.bottom);
 
         canvas.save();
@@ -445,7 +445,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             case MODE_TEXT:
                 doodle.drawSelf(canvas);
                 if (mTextWritingStatus == TEXT_INPUT_STATUS) {
-                    ((TextWriting)doodle).drawCursor(canvas, mGestureListener.getInverseScale() * mPaintScale);
+                    ((TextWriting)doodle).drawCursor(canvas, mViewGestureListener.getInverseScale() * mPaintScale);
                 }
                 break;
             case MODE_ERASER:
@@ -693,6 +693,12 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             mHandler.removeMessages(CURSOR_MSG);
             mHandler.removeMessages(SET_CURSOR_POS);
             mHandler = null;
+        }
+    }
+
+    public void transformation(MotionEvent event) {
+        if (mViewGestureListener != null) {
+            mViewGestureListener.onTouchEvent(event);
         }
     }
 

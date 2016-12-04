@@ -125,11 +125,17 @@ public class ClassRoomActivity extends FragmentActivity {
         mPanelAnimListener = new PanelAnimListener();
     }
 
+    /**
+     * 教室内容分为WhiteBord，(MainPanel:含视频) 2层，底层是WhiteBord
+     * 通过重写MainPanel和WhiteBord的OnTouchEvent来控制事件分发
+     */
     private void initGestureDetector() {
         mMainPanelGestureDetector = new ClassRoomGestureDetector(this, new MainPanelGestureListener());
         mWhiteBoardGestureDetector = new ClassRoomGestureDetector(this, new WhiteBoardGestureListener());
 
         mMainPanel.setGestureDetector(mMainPanelGestureDetector);
+        //为了控制面板模式也能缩放，移动画布操作
+        mMainPanel.setTransformationWhiteBoard(mWhiteBoard);
         mWhiteBoard.setGestureDetector(mWhiteBoardGestureDetector);
     }
 
