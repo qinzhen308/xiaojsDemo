@@ -15,7 +15,6 @@ package com.benyuan.xiaojs.ui.classroom.live.view;
  * ======================================================================================== */
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Looper;
@@ -43,7 +42,6 @@ import com.qiniu.pili.droid.streaming.AudioSourceCallback;
 import com.qiniu.pili.droid.streaming.CameraStreamingSetting;
 import com.qiniu.pili.droid.streaming.MediaStreamingManager;
 import com.qiniu.pili.droid.streaming.MicrophoneStreamingSetting;
-import com.qiniu.pili.droid.streaming.StreamStatusCallback;
 import com.qiniu.pili.droid.streaming.StreamingPreviewCallback;
 import com.qiniu.pili.droid.streaming.StreamingProfile;
 import com.qiniu.pili.droid.streaming.StreamingSessionListener;
@@ -64,8 +62,7 @@ public class LiveRecordView extends BaseMediaView implements
         StreamingPreviewCallback,
         SurfaceTextureCallback,
         AudioSourceCallback,
-        StreamingSessionListener,
-        StreamStatusCallback {
+        StreamingSessionListener{
 
     private static final String TAG = "LiveRecordView";
     private static final int MSG_START_STREAMING = 0;
@@ -197,7 +194,6 @@ public class LiveRecordView extends BaseMediaView implements
         mMediaStreamingManager.setStreamingStateListener(this);
         mMediaStreamingManager.setSurfaceTextureCallback(this);
         mMediaStreamingManager.setStreamingSessionListener(this);
-        mMediaStreamingManager.setStreamStatusCallback(this);
         mMediaStreamingManager.setStreamingPreviewCallback(this);
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
     }
@@ -221,8 +217,8 @@ public class LiveRecordView extends BaseMediaView implements
             mThread.interrupt();
             mThread = null;
         }
-
         if (mMediaStreamingManager != null){
+            mMediaStreamingManager.stopStreaming();
             mMediaStreamingManager.destroy();
             mMediaStreamingManager = null;
         }
@@ -246,17 +242,19 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void startStreamingInThread(){
+        mThread = new Streaming();
         mThread.start();
     }
 
-    private Thread mThread = new Thread(){
+    private class Streaming extends Thread{
         @Override
         public void run() {
             if (mMediaStreamingManager != null){
                 mMediaStreamingManager.startStreaming();
             }
         }
-    };
+    }
+    private Thread mThread;
 
     private boolean startStreamingSafely(){
         try {
@@ -536,26 +534,9 @@ public class LiveRecordView extends BaseMediaView implements
         return newTexId;
     }
 
-    @Override
-    public void notifyStreamStatusChanged(StreamingProfile.StreamStatus streamStatus) {
-
-    }
-
 //    @Override
-//    protected void close() {
-//        //stopStreaming();
-//        pause();
-//        destroy();
-//        super.close();
+//    public void notifyStreamStatusChanged(StreamingProfile.StreamStatus streamStatus) {
+//
 //    }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-//        Path p = new Path();
-//        RectF r = new RectF(getLeft(), getTop(), getRight(), getBottom());
-//        p.addRoundRect(r, 10, 10 , Path.Direction.CCW);
-//        canvas.clipPath(p);
-        //canvas.drawColor(Color.RED);
-    }
 }

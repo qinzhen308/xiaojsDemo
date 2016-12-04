@@ -296,6 +296,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             case STATE_NORMAL :
                 mListView.onRefreshComplete();
                 mListView.removeEmptyView(mEmptyView);
+                mListView.removeEmptyView(mFailedView);
                 if (mListView.getMode() == PullToRefreshBase.Mode.PULL_FROM_START){
                     mListView.setMode(PullToRefreshBase.Mode.BOTH);
                 }
@@ -502,6 +503,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     private void addEmptyView() {
         if (showEmptyView()){
+            mListView.removeEmptyView(mFailedView);
             mListView.setEmptyView(mEmptyView);
             onDataEmpty();
         }
@@ -525,7 +527,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 }
             });
         }
-
+        mListView.removeEmptyView(mEmptyView);
         mListView.setEmptyView(mFailedView);
         onDataFailed();
     }
