@@ -5,9 +5,10 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
-import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
-import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.AccountRequest;
+import com.benyuan.xiaojs.data.api.service.APIType;
+import com.benyuan.xiaojs.data.api.service.ErrorPrompts;
+import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.data.api.QiniuRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.QiniuService;
@@ -24,7 +25,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/4.
  */
 
-public class AccountDataManager {
+public class AccountDataManager extends DataManager{
 
     /**
      * 获取session
@@ -103,26 +104,18 @@ public class AccountDataManager {
         }
 
         String session = getSessionID(context);
-
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the get home data request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.getHomeDataPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.getHomeData(context,session,callback);
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.getHomeData(session);
     }
 
     /**
      * 声明教学能力API
      * @param context
-     * @param sessionID
+     * @param
      * @param competencyParams
      * @param callback
      */
@@ -139,14 +132,7 @@ public class AccountDataManager {
 
         String session = getSessionID(context);
 
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the claim competency request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
@@ -156,14 +142,14 @@ public class AccountDataManager {
                 Logger.d("the params is null,so the claim competency request return failure");
             }
 
-            String errorMessage = ErrorPrompts.claimCompetencyPrompt(Errors.BAD_PARAMETER);
+            String errorMessage = ErrorPrompts.getErrorMessage(-1,Errors.BAD_PARAMETER);
             callback.onFailure(Errors.BAD_PARAMETER,errorMessage);
             return;
         }
 
 
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.claimCompetency(context,session,competencyParams,callback);
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.claimCompetency(session,competencyParams);
     }
 
 
@@ -180,19 +166,12 @@ public class AccountDataManager {
 
         String session = getSessionID(context);
 
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.editProfilePrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.editProfile(context,session,basic,callback);
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.editProfile(session,basic);
 
     }
 
@@ -207,19 +186,12 @@ public class AccountDataManager {
         }
         String session = getSessionID(context);
 
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.getProfilePrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.getProfile(context,session,callback);
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.getProfile(session);
 
     }
 
@@ -293,21 +265,15 @@ public class AccountDataManager {
             }
             return;
         }
+
         String session = getSessionID(context);
 
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            String errorMessage = ErrorPrompts.getCenterDataPrompt(Errors.BAD_SESSION);
-            callback.onFailure(Errors.BAD_SESSION,errorMessage);
+        if (checkSession(session,callback)) {
             return;
         }
 
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.getCenterData(context,session,callback);
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.getCenterData(session);
 
     }
 

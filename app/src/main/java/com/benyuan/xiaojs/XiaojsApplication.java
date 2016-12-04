@@ -22,9 +22,9 @@ public class XiaojsApplication extends Application {
 
         //日志，注意：所有日志都需要使用Logger，不得使用Log。
         Settings logSetting = Logger.init(XiaojsConfig.LOG_TAG)
-                .methodCount(3)
+                .methodCount(1)
+                .hideThreadInfo()
                 .methodOffset(0);
-
 
         if (!XiaojsConfig.DEBUG) {
             //发布Release版本时，需要将loglevel设为NONE。

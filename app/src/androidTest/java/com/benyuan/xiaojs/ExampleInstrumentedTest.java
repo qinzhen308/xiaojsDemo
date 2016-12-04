@@ -11,8 +11,10 @@ import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
+import com.benyuan.xiaojs.data.api.AccountRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.APIEntity;
+import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -68,8 +70,31 @@ public class ExampleInstrumentedTest {
         //testEditLesson(appContext);
         //testCenterData(appContext);
         //testGetData(appContext);
-        testToggleLesson(appContext);
+        //testToggleLesson(appContext);
+        testT(appContext);
     }
+
+
+    private void testT(Context context){
+
+
+        AccountRequest accountRequest = new AccountRequest(context, new APIServiceCallback<HomeData>() {
+            @Override
+            public void onSuccess(HomeData object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
+
+    }
+
+
+
 
     private void testToggleLesson(Context context) {
         String lesson = "5834f31eaf662a8111362161";

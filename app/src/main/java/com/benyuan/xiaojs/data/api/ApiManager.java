@@ -59,6 +59,10 @@ public class ApiManager {
         this.appContext = appContext.getApplicationContext();
     }
 
+    public Context getAppContext() {
+        return appContext;
+    }
+
 
     public XiaojsService getXiaojsService() {
 

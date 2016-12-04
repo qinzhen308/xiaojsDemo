@@ -21,6 +21,8 @@ import com.benyuan.xiaojs.data.CategoriesDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
+import com.benyuan.xiaojs.data.api.AccountRequest;
+import com.benyuan.xiaojs.data.api.LoginRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.QiniuService;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
@@ -36,6 +38,7 @@ import com.benyuan.xiaojs.model.Duration;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
+import com.benyuan.xiaojs.model.HomeData;
 import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
@@ -118,12 +121,51 @@ public class TestAPIActivity extends Activity {
                 //crash();
                // testGetData(this);
                 //testLoading();
-                editCover();
+                testT(this);
                 break;
             }
 
         }
     }
+
+
+    private void testT(Context context){
+
+        LoginRequest loginP = new LoginRequest(context,new APIServiceCallback<LoginInfo>(){
+            @Override
+            public void onSuccess(LoginInfo object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
+        LoginParams loginParams = new LoginParams();
+        loginParams.setMobile(18701686973l);
+        loginParams.setPassword("123456");
+
+        //loginP.login(context,loginParams,null);
+
+//        AccountRequest<HomeData> accountRequest = new AccountRequest<>(context, new APIServiceCallback<HomeData>() {
+//            @Override
+//            public void onSuccess(HomeData object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+//
+//        accountRequest.getHomeData("TG_yZafXu5EvI9BeOGCfeDcVK-4b65wP");
+
+
+    }
+
 
     private void testLoading() {
         ProgressHUD.create(this).show();
@@ -413,10 +455,10 @@ public class TestAPIActivity extends Activity {
         criteria.setSource(Ctl.LessonSource.ALL);
         criteria.setDuration(duration);
 
-        ServiceRequest serviceRequest = new ServiceRequest();
-
-        String jsonstr = serviceRequest.objectToJsonString(criteria);
-        Logger.json(jsonstr);
+//        ServiceRequest serviceRequest = new ServiceRequest();
+//
+//        String jsonstr = serviceRequest.objectToJsonString(criteria);
+//        Logger.json(jsonstr);
     }
 
     private void testPutLessonOnShelves(Context context) {

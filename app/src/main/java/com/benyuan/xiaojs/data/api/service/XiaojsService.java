@@ -44,7 +44,7 @@ import retrofit2.http.Path;
  * Created by maxiaobao on 2016/10/25.
  */
 
-public interface XiaojsService {
+public interface XiaojsService<T> {
 
     //Xiaojs rest api 中接口公共URL
     String BASE_URL = "http://192.168.100.191:3000/";

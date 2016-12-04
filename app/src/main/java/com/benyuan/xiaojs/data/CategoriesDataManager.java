@@ -25,8 +25,8 @@ public class CategoriesDataManager extends DataManager {
             return;
         }
 
-        CategoriesRequest categoriesRequest = new CategoriesRequest();
-        categoriesRequest.getSubject(context,callback);
+        CategoriesRequest categoriesRequest = new CategoriesRequest(context,callback);
+        categoriesRequest.getSubject();
     }
 
 }

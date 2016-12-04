@@ -2,24 +2,19 @@ package com.benyuan.xiaojs.data.api;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
-import com.benyuan.xiaojs.common.xf_foundation.ErrorPrompts;
-import com.benyuan.xiaojs.common.xf_foundation.Errors;
+import com.benyuan.xiaojs.data.api.service.APIType;
+import com.benyuan.xiaojs.data.api.service.ErrorPrompts;
 import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.data.api.service.ServiceRequest;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
-import com.benyuan.xiaojs.model.APIEntity;
-import com.benyuan.xiaojs.model.CLResponse;
-import com.benyuan.xiaojs.model.Empty;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -32,135 +27,49 @@ import retrofit2.Response;
 
 public class LoginRequest extends ServiceRequest {
 
+    public LoginRequest(Context context,APIServiceCallback callback) {
 
-    public void login(final Context appContext,
-                      LoginParams params,
-                      @NonNull final APIServiceCallback<LoginInfo> callback) {
+        super(context,callback);
+
+    }
+
+    public void login(LoginParams params) {
 
 
-        XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
+        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
 
         xiaojsService.login(params).enqueue(new Callback<LoginInfo>() {
             @Override
             public void onResponse(Call<LoginInfo> call, Response<LoginInfo> response) {
 
-                int responseCode = response.code();
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the request has onResponse, the code:%d", responseCode);
-                }
-
-                if (responseCode == SUCCESS_CODE) {
-
-                    LoginInfo info = response.body();
-
-                    AccountDataManager.saveUserInfo(appContext,info.getUser());
-
-                    if (callback != null) {
-                        callback.onSuccess(info);
-                    }
-
-
-                } else {
-
-                    String errorBody = null;
-                    try {
-                        errorBody = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    String errorCode = parseErrorBody(errorBody);
-                    String errorMessage = ErrorPrompts.loginPrompt(errorCode);
-
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-
-                    }
-
-
-                }
+                onRespones(APIType.LOGIN,response);
 
             }
 
             @Override
             public void onFailure(Call<LoginInfo> call, Throwable t) {
 
-                if (XiaojsConfig.DEBUG) {
-                    String exception = t.getMessage();
-                    Logger.d("the request has occur exception:\n %s", exception);
-                }
-
-
-                String errorCode = getExceptionErrorCode();
-                String errorMessage = ErrorPrompts.loginPrompt(errorCode);
-
-                if (callback != null) {
-                    callback.onFailure(errorCode, errorMessage);
-                }
+                onFailures(APIType.LOGIN,t);
             }
         });
 
     }
 
-    public void logout(final Context appContext, String sessionID,
-                       @NonNull final APIServiceCallback callback) {
+    public void logout(String sessionID) {
 
 
-        XiaojsService xiaojsService = ApiManager.getAPIManager(appContext).getXiaojsService();
+        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
         xiaojsService.logout(sessionID).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                int responseCode = response.code();
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the request has onResponse, the code:%d", responseCode);
-                }
-
-                if (responseCode == SUCCESS_CODE) {
-
-                    AccountDataManager.clearUserInfo(appContext);
-
-                    if (callback != null) {
-                        callback.onSuccess(null);
-                    }
-
-                } else {
-
-                    String errorBody = null;
-                    try {
-                        errorBody = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    String errorCode = parseErrorBody(errorBody);
-                    String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
-
-                    if (callback != null) {
-                        callback.onFailure(errorCode, errorMessage);
-                    }
-
-
-                }
+                onRespones(APIType.LOGOUT,response);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                if (XiaojsConfig.DEBUG) {
-                    String exception = t.getMessage();
-                    Logger.d("the request has occur exception:\n %s", exception);
-                }
-
-
-
-                String errorCode = getExceptionErrorCode();
-                String errorMessage = ErrorPrompts.logoutPrompt(errorCode);
-
-                if (callback != null) {
-                    callback.onFailure(errorCode, errorMessage);
-                }
-
+                onFailures(APIType.LOGOUT,t);
             }
         });
 
