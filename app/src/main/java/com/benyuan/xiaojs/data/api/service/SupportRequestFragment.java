@@ -30,9 +30,9 @@ public final class SupportRequestFragment extends Fragment {
 
     public final void removeLifecycle(ContextLifecycle lifecycle) {
         boolean remove = lifecycles.remove(lifecycle);
-        if (XiaojsConfig.DEBUG) {
-            Logger.d("SupportRequestFragment remove lifecycle is :%s",remove);
-        }
+//        if (XiaojsConfig.DEBUG) {
+//            Logger.d("SupportRequestFragment remove lifecycle is :%s",remove);
+//        }
     }
 
     @Override

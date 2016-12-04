@@ -38,11 +38,11 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
     private ApiManager apiManager;
 
-    private APIServiceCallback<T>  serviceCallback;
+    private APIServiceCallback<T> serviceCallback;
 
     private Object requestObj;
 
-    public ServiceRequest(Context context,APIServiceCallback<T> callback) {
+    public ServiceRequest(Context context, APIServiceCallback<T> callback) {
 
         this.serviceCallback = callback;
         apiManager = ApiManager.getAPIManager(context);
@@ -63,7 +63,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
             } else if (context instanceof Activity) {
                 get((Activity) context);
             } //else if (context instanceof ContextWrapper) {
-              //  return configContext(((ContextWrapper) context).getBaseContext());
+            //  return configContext(((ContextWrapper) context).getBaseContext());
             //}
         }
     }
@@ -140,18 +140,25 @@ public class ServiceRequest<T> implements ContextLifecycle {
         if (requestObj == null)
             return;
 
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("delete reference from fragment");
+        }
+
         if (requestObj instanceof RequestFragment) {
 
             RequestFragment requestFragment = (RequestFragment) requestObj;
             requestFragment.removeLifecycle(this);
 
-        }else if (requestObj instanceof SupportRequestFragment){
+        } else if (requestObj instanceof SupportRequestFragment) {
 
             SupportRequestFragment supportRequestFragment = (SupportRequestFragment) requestObj;
             supportRequestFragment.removeLifecycle(this);
-
         }
+
+
+
     }
+
 
     private void resetNull() {
         serviceCallback = null;
@@ -162,7 +169,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public final void onRespones(int apiType,Response<T> response) {
+    public final void onRespones(int apiType, Response<T> response) {
 
         int responseCode = response.code();
         if (XiaojsConfig.DEBUG) {
@@ -173,10 +180,10 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
             T object = response.body();
 
-            if(apiType == APIType.LOGIN) {
+            if (apiType == APIType.LOGIN) {
                 LoginInfo info = (LoginInfo) object;
 
-                AccountDataManager.saveUserInfo(apiManager.getAppContext(),info.getUser());
+                AccountDataManager.saveUserInfo(apiManager.getAppContext(), info.getUser());
             }
 
 
@@ -196,7 +203,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
 
             String errorCode = parseErrorBody(errorBody);
-            String errorMessage = ErrorPrompts.getErrorMessage(apiType,errorCode);
+            String errorMessage = ErrorPrompts.getErrorMessage(apiType, errorCode);
 
             if (serviceCallback != null) {
                 serviceCallback.onFailure(errorCode, errorMessage);
@@ -207,7 +214,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
         delRefrence();
     }
 
-    public final void onFailures(int apiType,Throwable t) {
+    public final void onFailures(int apiType, Throwable t) {
         if (XiaojsConfig.DEBUG) {
             String exception = t.getMessage();
             Logger.d("the request has occur exception:\n %s", exception);
@@ -215,7 +222,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
 
         String errorCode = getExceptionErrorCode();
-        String errorMessage = ErrorPrompts.getErrorMessage(apiType,errorCode);
+        String errorMessage = ErrorPrompts.getErrorMessage(apiType, errorCode);
 
         if (serviceCallback != null) {
             serviceCallback.onFailure(errorCode, errorMessage);
@@ -239,7 +246,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
     @Override
     public void onDestroy() {
 
-        if(XiaojsConfig.DEBUG) {
+        if (XiaojsConfig.DEBUG) {
             Logger.d("the current activity is onDestroy,so reaset refrence null");
         }
 
