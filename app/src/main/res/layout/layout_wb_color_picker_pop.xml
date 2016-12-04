@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:circle="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/px20"
+        android:background="@color/classroom_main_gray">
+
+    <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView
+            android:id="@+id/btn_color_1"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            circle:color="@color/wb_color_1"/>
+
+    <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView
+            android:id="@+id/btn_color_2"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px15"
+            circle:color="@color/wb_color_2"/>
+
+    <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView
+            android:id="@+id/btn_color_3"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px15"
+            circle:color="@color/wb_color_3"/>
+
+    <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView
+            android:id="@+id/btn_color_4"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px15"
+            circle:color="@color/wb_color_4"/>
+
+    <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView
+            android:id="@+id/btn_color_5"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px15"
+            circle:color="@color/wb_color_5"/>
+
+    <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView
+            android:id="@+id/btn_color_6"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px15"
+            circle:color="@color/wb_color_6"/>
+
+    <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView
+            android:id="@+id/btn_color_7"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px15"
+            circle:color="@color/wb_color_7"/>
+</LinearLayout>
+

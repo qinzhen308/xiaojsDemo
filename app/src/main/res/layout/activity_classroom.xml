@@ -9,10 +9,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+        <EditText
+                android:id="@+id/blackboard_edit"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:visibility="invisible"/>
+
         <!--白板-->
         <com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard
                 android:id="@+id/white_board"
-                android:background="#ffffff"
+                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

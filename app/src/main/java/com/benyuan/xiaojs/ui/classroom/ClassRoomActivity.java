@@ -19,6 +19,7 @@ import com.benyuan.xiaojs.ui.classroom.live.core.Config;
 import com.benyuan.xiaojs.ui.classroom.live.view.LiveRecordView;
 import com.benyuan.xiaojs.ui.classroom.live.view.MediaContainerView;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoardController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +60,8 @@ public class ClassRoomActivity extends FragmentActivity {
     ViewGroup mDrawerRightLayout;
 
     //panel
+    @BindView(R.id.drawer_content_layout)
+    View mContentRoot;
     @BindView(R.id.main_panel)
     MainPanel mMainPanel;
     @BindView(R.id.top_panel)
@@ -99,6 +102,8 @@ public class ClassRoomActivity extends FragmentActivity {
     private boolean mAnimating = false;
     private PanelAnimListener mPanelAnimListener;
     private boolean mNeedOpenWhiteBoardPanel = false;
+
+    private WhiteBoardController mWhiteBoardController;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -164,9 +169,11 @@ public class ClassRoomActivity extends FragmentActivity {
     }
 
     private boolean m = false;
+
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.courese_ware_btn, R.id.setting_btn,
-            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn, R.id.play_btn})
-    public void onClick(View v) {
+            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn, R.id.play_btn,
+            R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.color_picker_btn})
+    public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
                 finish();
@@ -175,7 +182,7 @@ public class ClassRoomActivity extends FragmentActivity {
                 openWhiteBoardManager();
                 break;
             case R.id.play_btn:
-                if (!m){
+                if (!m) {
                     mContainer.addPlayer(Config.pathCfu);
                     m = !m;
                     break;
@@ -202,6 +209,14 @@ public class ClassRoomActivity extends FragmentActivity {
                 break;
             case R.id.more_btn:
                 switchWhiteBoardPanel();
+                break;
+            case R.id.select_btn:
+            case R.id.handwriting_btn:
+            case R.id.shape_btn:
+            case R.id.eraser_btn:
+            case R.id.text_btn:
+            case R.id.color_picker_btn:
+                handleWhitePanelClick(v);
                 break;
             default:
                 break;
@@ -269,10 +284,7 @@ public class ClassRoomActivity extends FragmentActivity {
     }
 
     /**
-     * 打开关闭白板操作面板
-     * 若正在动画，直接返回
-     * 1.若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板
-     *   否则，直接隐藏或显示白板操作面板
+     * 打开关闭白板操作面板 若正在动画，直接返回 1.若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板 否则，直接隐藏或显示白板操作面板
      */
     private void switchWhiteBoardPanel() {
         if (mAnimating) {
@@ -288,14 +300,14 @@ public class ClassRoomActivity extends FragmentActivity {
                 if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
                     hideWhiteBoardPanel();
                 } else {
-                    showWhiteBoardPanel();
+                    showWhiteBoardPanel(true);
                 }
             }
         } else {
             if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
                 hideWhiteBoardPanel();
             } else {
-                showWhiteBoardPanel();
+                showWhiteBoardPanel(true);
             }
         }
     }
@@ -304,7 +316,7 @@ public class ClassRoomActivity extends FragmentActivity {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("aaa", "========MainPanelGestureListener====onSingleTapConfirmed============="+mCurrentState);
+            Log.i("aaa", "========MainPanelGestureListener====onSingleTapConfirmed=============" + mCurrentState);
             if (mCurrentState == STATE_MAIN_PANEL && !mAnimating) {
                 if (mBottomPanel.getVisibility() == View.VISIBLE) {
                     mNeedOpenWhiteBoardPanel = false;
@@ -322,7 +334,7 @@ public class ClassRoomActivity extends FragmentActivity {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("aaa", "=========WhiteBoardGestureListener===onSingleTapConfirmed============="+mCurrentState);
+            Log.i("aaa", "=========WhiteBoardGestureListener===onSingleTapConfirmed=============" + mCurrentState);
             return super.onSingleTapConfirmed(e);
         }
 
@@ -343,6 +355,10 @@ public class ClassRoomActivity extends FragmentActivity {
 
         if (mBinder != null) {
             mBinder.unbind();
+        }
+
+        if (mWhiteBoardController != null) {
+            mWhiteBoardController.release();
         }
 
         cancelAllAnim();
@@ -441,15 +457,24 @@ public class ClassRoomActivity extends FragmentActivity {
     /**
      * 显示白板操作面板
      */
-    private void showWhiteBoardPanel() {
+    private void showWhiteBoardPanel(boolean needAnim) {
         if (mAnimating) {
             return;
         }
 
-        mWhiteBoardPanel.animate()
-                .alpha(1.0f)
-                .setListener(mPanelAnimListener.with(mWhiteBoardPanel).play(ANIM_SHOW))
-                .start();
+        if (mWhiteBoardController == null) {
+            mWhiteBoardController = new WhiteBoardController(this, mContentRoot);
+        }
+
+        if (needAnim) {
+            mWhiteBoardPanel.animate()
+                    .alpha(1.0f)
+                    .setListener(mPanelAnimListener.with(mWhiteBoardPanel).play(ANIM_SHOW))
+                    .start();
+        } else {
+            mWhiteBoardPanel.setAlpha(1.0f);
+            mWhiteBoardPanel.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -522,8 +547,7 @@ public class ClassRoomActivity extends FragmentActivity {
                         case R.id.white_board_panel:
                             if (mWhiteBoardPanel != null) {
                                 mCurrentState = STATE_WHITE_BOARD;
-                                mWhiteBoardPanel.setAlpha(1.0f);
-                                mWhiteBoardPanel.setVisibility(View.VISIBLE);
+                                showWhiteBoardPanel(false);
                             }
                             break;
                     }
@@ -541,8 +565,7 @@ public class ClassRoomActivity extends FragmentActivity {
                                 if (mNeedOpenWhiteBoardPanel) {
                                     mNeedOpenWhiteBoardPanel = false;
                                     mCurrentState = STATE_WHITE_BOARD;
-                                    mWhiteBoardPanel.setAlpha(1.0f);
-                                    mWhiteBoardPanel.setVisibility(View.VISIBLE);
+                                    showWhiteBoardPanel(false);
                                 }
                             }
                             break;
@@ -569,6 +592,12 @@ public class ClassRoomActivity extends FragmentActivity {
 
         }
 
+    }
+
+    private void handleWhitePanelClick(View v) {
+        if (mWhiteBoardController != null) {
+            mWhiteBoardController.handlePanelItemClick(v);
+        }
     }
 
 }

@@ -300,4 +300,7 @@
     <string name="raise_hands_stu">举手的学生</string>
     <string name="random_select_stu">随机选择</string>
     <string name="classroom_discussion">教室讨论</string>
+    <!--whiteboard-->
+    <string name="clear_all_doodle">清除全部</string>
+    <string name="paint_size">粗细</string>
 </resources>
