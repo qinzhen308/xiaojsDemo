@@ -11,6 +11,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.benyuan.xiaojs.R;
@@ -50,6 +51,10 @@ public class ClassRoomActivity extends FragmentActivity {
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
+
+    private final static int STATE_PLAY = 1;
+    private final static int STATE_PAUSE = 2;
+    private final static int STATE_STOP = 3;
 
     //drawer
     @BindView(R.id.drawer_layout)
@@ -102,6 +107,7 @@ public class ClassRoomActivity extends FragmentActivity {
     private boolean mAnimating = false;
     private PanelAnimListener mPanelAnimListener;
     private boolean mNeedOpenWhiteBoardPanel = false;
+    private int mPlayState = STATE_PLAY;
 
     private WhiteBoardController mWhiteBoardController;
 
@@ -177,7 +183,7 @@ public class ClassRoomActivity extends FragmentActivity {
     private boolean m = false;
 
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.courese_ware_btn, R.id.setting_btn,
-            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn, R.id.play_btn,
+            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn, R.id.play_pause_btn,
             R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.color_picker_btn})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
@@ -187,7 +193,16 @@ public class ClassRoomActivity extends FragmentActivity {
             case R.id.blackboard_switcher_btn:
                 openWhiteBoardManager();
                 break;
-            case R.id.play_btn:
+            case R.id.play_pause_btn:
+                if (mPlayState == STATE_PLAY) {
+                    mPlayState = STATE_STOP;
+                    ((ImageView)v).setImageResource(R.drawable.ic_cr_stop);
+                } else {
+                    mPlayState = STATE_PLAY;
+                    ((ImageView)v).setImageResource(R.drawable.ic_cr_start);
+                }
+
+                //live
                 if (!m) {
                     mContainer.addPlayer(Config.pathCfu);
                     m = !m;
