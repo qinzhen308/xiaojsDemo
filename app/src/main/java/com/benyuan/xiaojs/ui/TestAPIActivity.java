@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.crop.CropImageMainActivity;
 import com.benyuan.xiaojs.common.crop.CropImagePath;
+import com.benyuan.xiaojs.common.xf_foundation.Su;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Security;
@@ -21,6 +22,7 @@ import com.benyuan.xiaojs.data.CategoriesDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
+import com.benyuan.xiaojs.data.SecurityManager;
 import com.benyuan.xiaojs.data.api.AccountRequest;
 import com.benyuan.xiaojs.data.api.LoginRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
@@ -44,6 +46,7 @@ import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.benyuan.xiaojs.model.Pagination;
+import com.benyuan.xiaojs.model.Privilege;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
@@ -94,7 +97,8 @@ public class TestAPIActivity extends Activity {
                 //testRegister(this);
                 //testLogin(this);
                 //testGetUpToken(this);
-                anr();
+                testCenterData(this);
+
                 break;
             }
             case R.id.btn_q: {
@@ -131,21 +135,20 @@ public class TestAPIActivity extends Activity {
 
     private void testT(Context context){
 
-        LoginRequest loginP = new LoginRequest(context,new APIServiceCallback<LoginInfo>(){
-            @Override
-            public void onSuccess(LoginInfo object) {
 
-            }
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
+            SecurityManager.requestHavePrivilege(context, new APIServiceCallback<Privilege[]>() {
+                @Override
+                public void onSuccess(Privilege[] object) {
 
-            }
-        });
+                }
 
-        LoginParams loginParams = new LoginParams();
-        loginParams.setMobile(18701686973l);
-        loginParams.setPassword("123456");
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+
+                }
+            }, Su.Permission.COURSE_OPEN_CREATE);
+
 
         //loginP.login(context,loginParams,null);
 

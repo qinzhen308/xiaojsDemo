@@ -180,13 +180,6 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
             T object = response.body();
 
-            if (apiType == APIType.LOGIN) {
-                LoginInfo info = (LoginInfo) object;
-
-                AccountDataManager.saveUserInfo(apiManager.getAppContext(), info.getUser());
-            }
-
-
             if (serviceCallback != null) {
                 serviceCallback.onSuccess(object);
             }
@@ -255,6 +248,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     protected final String getExceptionErrorCode() {
         return getDefaultErrorCode();

@@ -13,7 +13,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/21.
  */
 
-public class AccountPref {
+public class AccountPref{
 
     private static final String PREF_AUTH_TOKEN = "auth_token";
 
@@ -23,35 +23,33 @@ public class AccountPref {
 
 
 
-    private static SharedPreferences getSharedPreferences(final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context);
-    }
+
 
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
 
     public static void setAccountID(final Context context,String id) {
-        SharedPreferences sp = getSharedPreferences(context);
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
         sp.edit().putString(PREF_ID, id).apply();
 
     }
 
     public static String getAccountID(final Context context) {
-        SharedPreferences sp = getSharedPreferences(context);
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
         return sp.getString(PREF_ID,"");
     }
 
     public static void setPhone(final Context context, final String phone) {
 
-        SharedPreferences sp = getSharedPreferences(context);
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
         sp.edit().putString(PREF_PHONE, phone).apply();
 
     }
 
     public static String getPhone(final Context context) {
 
-        SharedPreferences sp = getSharedPreferences(context);
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
         return sp.getString(PREF_PHONE,"");
     }
 
@@ -63,7 +61,7 @@ public class AccountPref {
                     + (TextUtils.isEmpty(authToken) ? 0 : authToken.length()));
         }
 
-        SharedPreferences sp = getSharedPreferences(context);
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
         sp.edit().putString(PREF_AUTH_TOKEN, authToken).apply();
 
         if (XiaojsConfig.DEBUG){
@@ -73,7 +71,7 @@ public class AccountPref {
     }
 
     public static String getAuthToken(final Context context) {
-        SharedPreferences sp = getSharedPreferences(context);
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
         return sp.getString(PREF_AUTH_TOKEN,"");
     }
 

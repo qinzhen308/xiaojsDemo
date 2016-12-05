@@ -30,6 +30,9 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.HAVE_PROVILEGES:
+                errorMessage = "查询特权失败";
+                break;
             case APIType.CLAIM_COMPETENCY:
 
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {

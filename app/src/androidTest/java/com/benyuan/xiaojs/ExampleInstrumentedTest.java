@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.benyuan.xiaojs.common.xf_foundation.Su;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Ctl;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Security;
@@ -11,6 +12,7 @@ import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.RegisterDataManager;
+import com.benyuan.xiaojs.data.SecurityManager;
 import com.benyuan.xiaojs.data.api.AccountRequest;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.APIEntity;
@@ -25,6 +27,7 @@ import com.benyuan.xiaojs.model.LessonDetail;
 import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
+import com.benyuan.xiaojs.model.Privilege;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
@@ -78,9 +81,9 @@ public class ExampleInstrumentedTest {
     private void testT(Context context){
 
 
-        AccountRequest accountRequest = new AccountRequest(context, new APIServiceCallback<HomeData>() {
+        SecurityManager.requestHavePrivilege(context, new APIServiceCallback<Privilege[]>() {
             @Override
-            public void onSuccess(HomeData object) {
+            public void onSuccess(Privilege[] object) {
 
             }
 
@@ -88,8 +91,7 @@ public class ExampleInstrumentedTest {
             public void onFailure(String errorCode, String errorMessage) {
 
             }
-        });
-
+        }, Su.Permission.COURSE_OPEN_CREATE);
 
     }
 

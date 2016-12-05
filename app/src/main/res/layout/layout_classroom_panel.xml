@@ -58,36 +58,25 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentLeft="true"
-                    android:paddingLeft="@dimen/px10"
-                    android:paddingRight="@dimen/px10"
-                    android:src="@drawable/back_arrow"/>
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
+                    android:src="@drawable/ic_back_pressed"/>
 
             <ImageView
-                    android:id="@+id/play_btn"
+                    android:id="@+id/play_pause_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px10"
-                    android:paddingRight="@dimen/px10"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
                     android:layout_toRightOf="@+id/back_btn"
-                    android:src="@drawable/ic_open_course"/>
-
-
-            <ImageView
-                    android:id="@+id/pause_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px10"
-                    android:paddingRight="@dimen/px10"
-                    android:layout_toRightOf="@+id/play_btn"
-                    android:src="@drawable/ic_open_course"/>
+                    android:src="@drawable/ic_cr_start"/>
 
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_toRightOf="@+id/pause_btn"
+                    android:layout_toRightOf="@+id/play_pause_btn"
                     android:layout_toLeftOf="@+id/contact_btn"
                     android:gravity="center"
                     android:orientation="vertical">
@@ -112,20 +101,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px10"
-                    android:paddingRight="@dimen/px10"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
                     android:layout_toLeftOf="@+id/notify_msg_btn"
-                    android:src="@drawable/ic_open_course"/>
+                    android:src="@drawable/ic_cr_contact_book"/>
 
             <ImageView
                     android:id="@+id/notify_msg_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px10"
-                    android:paddingRight="@dimen/px10"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
                     android:layout_toLeftOf="@+id/setting_btn"
-                    android:src="@drawable/ic_open_course"/>
+                    android:src="@drawable/ic_cr_notice"/>
 
 
             <ImageView
@@ -133,10 +122,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px10"
-                    android:paddingRight="@dimen/px10"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_open_course"/>
+                    android:src="@drawable/ic_cr_setting"/>
 
         </RelativeLayout>
 
