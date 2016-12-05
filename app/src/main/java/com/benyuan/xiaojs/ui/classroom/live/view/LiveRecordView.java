@@ -213,15 +213,7 @@ public class LiveRecordView extends BaseMediaView implements
     @Override
     public void destroy() {
         mHandler.removeCallbacksAndMessages(null);
-        if (mThread != null){
-            mThread.interrupt();
-            mThread = null;
-        }
-        if (mMediaStreamingManager != null){
-            mMediaStreamingManager.stopStreaming();
-            mMediaStreamingManager.destroy();
-            mMediaStreamingManager = null;
-        }
+        stopStreamingInternal();
     }
 
     @Override
@@ -244,6 +236,14 @@ public class LiveRecordView extends BaseMediaView implements
     private void startStreamingInThread(){
         mThread = new Streaming();
         mThread.start();
+    }
+
+    private void stopStreamingInternal(){
+        if (mMediaStreamingManager != null){
+            mMediaStreamingManager.stopStreaming();
+            mMediaStreamingManager.destroy();
+            mMediaStreamingManager = null;
+        }
     }
 
     private class Streaming extends Thread{
@@ -285,16 +285,6 @@ public class LiveRecordView extends BaseMediaView implements
         } else {
             return CameraStreamingSetting.CAMERA_FACING_ID.CAMERA_FACING_BACK;
         }
-    }
-
-    private void startStreaming() {
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
-    }
-
-    private void stopStreaming() {
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_STOP_STREAMING), 50);
     }
 
     @Override

@@ -118,7 +118,8 @@ public class PlayerTextureView extends BaseMediaView{
 
     @Override
     public void destroy() {
-        mPlayer.stopPlayback();
+        //mPlayer.stopPlayback();
+        stopInternal();
     }
 
     @Override
@@ -246,6 +247,18 @@ public class PlayerTextureView extends BaseMediaView{
 
         }else {
 
+        }
+    }
+
+    private void stopInternal(){
+        //关闭播放器有点耗时，放在线程里处理
+        if (mPlayer != null){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mPlayer.stopPlayback();
+                }
+            }).start();
         }
     }
 
