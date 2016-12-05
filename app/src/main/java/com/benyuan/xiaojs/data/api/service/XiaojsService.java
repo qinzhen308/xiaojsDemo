@@ -23,6 +23,7 @@ import com.benyuan.xiaojs.model.LiveLesson;
 import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.model.LoginParams;
 import com.benyuan.xiaojs.model.OfflineRegistrant;
+import com.benyuan.xiaojs.model.Privilege;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.TokenResponse;
 import com.benyuan.xiaojs.model.VerifyCode;
@@ -31,6 +32,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -44,10 +46,10 @@ import retrofit2.http.Path;
  * Created by maxiaobao on 2016/10/25.
  */
 
-public interface XiaojsService<T> {
+public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.191:3000/";
+    String BASE_URL = "http://192.168.100.115:3000";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -239,6 +241,12 @@ public interface XiaojsService<T> {
     //Verify Mobile
     @GET("/v1/security/verify/{method}/{mobile}")
     Call<VerifyCode> sendVerifyCode(@Path("method") int method, @Path("mobile") long mobile);
+
+    //Does User Have Privileges
+
+    @GET("/v1/security/privileges/{privileges}")
+    Call<Privilege[]>havePrivileges(@Header("SessionID") String sessionID,
+                                    @Path(value="privileges") String privileges);
 
 
 }
