@@ -3,10 +3,10 @@ package com.benyuan.xiaojs.ui.classroom;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
+
+import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -25,6 +25,8 @@ import android.widget.RelativeLayout;
 
 public class MainPanel extends RelativeLayout {
     private ClassRoomGestureDetector mGestureDetector;
+    private WhiteBoard mWhiteBoard;
+    private boolean mWhiteBoardTransformation = false;
 
     public MainPanel(Context context) {
         super(context);
@@ -44,19 +46,40 @@ public class MainPanel extends RelativeLayout {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        return super.onInterceptTouchEvent(event);
     }
 
     public void setGestureDetector(ClassRoomGestureDetector gestureDetector) {
         mGestureDetector = gestureDetector;
     }
 
+    public void setTransformationWhiteBoard(WhiteBoard whiteBoard) {
+        mWhiteBoard = whiteBoard;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mGestureDetector != null) {
             if (ClassRoomActivity.STATE_MAIN_PANEL == mGestureDetector.getState()) {
-                mGestureDetector.onTouchEvent(event);
+                int action = event.getActionMasked();
+                int pointCnt = event.getPointerCount();
+                if (pointCnt > 1) {
+                    mWhiteBoardTransformation = true;
+                } else {
+                    mGestureDetector.onTouchEvent(event);
+                }
+
+                if (mWhiteBoardTransformation && mWhiteBoard != null) {
+                    mWhiteBoard.transformation(event);
+                    switch (action) {
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            mWhiteBoardTransformation = false;
+                            break;
+                    }
+                }
+
                 return true;
             } else {
                 return false;

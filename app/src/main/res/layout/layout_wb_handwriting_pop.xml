@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:paddingLeft="@dimen/px20"
+              android:paddingRight="@dimen/px20"
+              android:paddingBottom="@dimen/px20"
+              android:orientation="vertical"
+              android:background="@color/classroom_main_gray">
+
+    <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.PaintPathPreview
+            android:id="@+id/doodle_paint_preview"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px100"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"/>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:ellipsize="end"
+                android:gravity="right"
+                android:text="@string/paint_size"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"/>
+
+        <SeekBar
+                android:id="@+id/paint_thickness"
+                android:layout_width="@dimen/px200"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px10"
+                android:layout_gravity="center_vertical"
+                android:max="30"/>
+    </LinearLayout>
+
+</LinearLayout>

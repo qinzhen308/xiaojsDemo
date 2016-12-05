@@ -73,4 +73,13 @@
     <color name="common_btn_white_bg_press">#ffd7d7db</color>
 
     <color name="progresshud_default_color">#b1000000</color>
+
+    <!--whiteboard-->
+    <color name="wb_color_1">#44DB5E</color>
+    <color name="wb_color_2">#54C7FC</color>
+    <color name="wb_color_3">#FFCD00</color>
+    <color name="wb_color_4">#FF0031</color>
+    <color name="wb_color_5">#FFFFFF</color>
+    <color name="wb_color_6">#CCCCCC</color>
+    <color name="wb_color_7">#000000</color>
 </resources>
