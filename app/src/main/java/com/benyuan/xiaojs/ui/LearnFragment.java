@@ -23,7 +23,7 @@ import com.benyuan.xiaojs.ui.base.BaseFragment;
 public class LearnFragment extends BaseFragment {
     @Override
     protected View getContentView() {
-        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
+        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_moment      , null);
         return v;
     }
 

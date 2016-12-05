@@ -15,6 +15,7 @@ package com.benyuan.xiaojs.ui.classroom.live.view;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,5 +101,36 @@ public class MediaContainerView extends ScrollView {
                 ((BaseMediaView) v).pause();
             }
         }
+    }
+
+    @Override
+    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+        changePlayerState();
+    }
+
+    private void changePlayerState(){
+        if (mContainer == null)
+            return;
+        for (int i = 0; i < mContainer.getChildCount(); i++){
+            View  player = mContainer.getChildAt(i);
+            if (player != null){
+                if (inScreen(player)){
+                    if (player instanceof PlayerTextureView){
+                        ((PlayerTextureView)player).resume();
+                    }
+                }else {
+                    if (player instanceof PlayerTextureView){
+                        ((PlayerTextureView)player).pause();
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean inScreen(View view){
+        Rect rect = new Rect();
+        getHitRect(rect);
+        return view.getLocalVisibleRect(rect);
     }
 }

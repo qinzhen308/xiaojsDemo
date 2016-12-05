@@ -29,9 +29,9 @@ import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
-public class PlayerTextureView extends BaseMediaView {
+public class PlayerTextureView extends BaseMediaView{
     private PLVideoTextureView mPlayer;
-    private static final String TAG = "CfuTextureView";
+    private static final String TAG = "PlayerTextureView";
 
     public PlayerTextureView(Context context) {
         super(context);
@@ -80,7 +80,7 @@ public class PlayerTextureView extends BaseMediaView {
         mPlayer.setOnErrorListener(mOnErrorListener);
         mPlayer.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_4_3);
         canClose(true);
-
+        setBackgroundResource(R.drawable.common_white_bg_corner);
     }
 
     @Override
@@ -104,12 +104,16 @@ public class PlayerTextureView extends BaseMediaView {
 
     @Override
     public void resume() {
-        mPlayer.start();
+        if (mPlayer != null && !mPlayer.isPlaying()){
+            mPlayer.start();
+        }
     }
 
     @Override
     public void pause() {
-        mPlayer.pause();
+        if (mPlayer != null && mPlayer.isPlaying()){
+            mPlayer.pause();
+        }
     }
 
     @Override
@@ -235,4 +239,14 @@ public class PlayerTextureView extends BaseMediaView {
         destroy();
         super.close();
     }
+
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        if (visibility == VISIBLE){
+
+        }else {
+
+        }
+    }
+
 }
