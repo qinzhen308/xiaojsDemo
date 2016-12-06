@@ -10,9 +10,6 @@ import com.benyuan.xiaojs.data.api.service.XiaojsService;
 import com.benyuan.xiaojs.model.Privilege;
 import com.orhanobut.logger.Logger;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
