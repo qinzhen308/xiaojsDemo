@@ -131,8 +131,8 @@
 
         <com.benyuan.xiaojs.ui.classroom.live.view.LiveRecordView
                 android:id="@+id/teacher_video"
-                android:layout_width="@dimen/px133"
-                android:layout_height="@dimen/px100"
+                android:layout_width="@dimen/px160"
+                android:layout_height="@dimen/px90"
                 android:layout_below="@+id/title_bar"
                 android:layout_marginTop="@dimen/px20"
                 android:layout_marginLeft="@dimen/px10"/>

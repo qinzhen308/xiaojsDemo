@@ -16,6 +16,7 @@ package com.benyuan.xiaojs.ui.classroom.live.view;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.classroom.ClassroomPopupWindowLayout;
 
 public class LiveMenu extends PopupWindow {
 
@@ -51,12 +53,15 @@ public class LiveMenu extends PopupWindow {
         mScale = (ImageView) mRootView.findViewById(R.id.live_menu_scale);
         mMute = (ImageView) mRootView.findViewById(R.id.live_menu_audio);
         mClose = (ImageView) mRootView.findViewById(R.id.live_menu_video);
-        mPopupWindow = new PopupWindow(mRootView, ViewGroup.LayoutParams.WRAP_CONTENT,
+        ClassroomPopupWindowLayout layout = new ClassroomPopupWindowLayout(mContext);
+        int gravity = Gravity.TOP;
+        if (!mIsTeacher)
+            gravity = Gravity.LEFT;
+
+        layout.addContent(mRootView, gravity);
+        mPopupWindow = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        if (!mIsTeacher){
-            mRootView.setBackgroundResource(R.drawable.ic_arrow_right_bg);
-        }
 
         mSwitchCamera.setOnClickListener(new View.OnClickListener() {
             @Override
