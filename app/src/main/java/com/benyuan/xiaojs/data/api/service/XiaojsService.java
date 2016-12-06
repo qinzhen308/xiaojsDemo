@@ -243,10 +243,9 @@ public interface XiaojsService {
     Call<VerifyCode> sendVerifyCode(@Path("method") int method, @Path("mobile") long mobile);
 
     //Does User Have Privileges
-
     @GET("/v1/security/privileges/{privileges}")
     Call<Privilege[]>havePrivileges(@Header("SessionID") String sessionID,
-                                    @Path(value="privileges") String privileges);
+                                    @Path("privileges") String privileges);
 
 
 }

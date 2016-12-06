@@ -22,90 +22,34 @@ import java.lang.ref.WeakReference;
  * Created by maxiaobao on 2016/11/15.
  */
 
-public class QiniuRequest {
+public class QiniuRequest implements APIServiceCallback<TokenResponse>{
+
+    private AccountRequest accountRequest;
+    private String filePath;
+    private QiniuService qiniuService;
 
 
-    public void uploadCover(Context context,
-                            @NonNull String sessionID,
-                            @NonNull String lesson,
-                            @NonNull final String filePath,
-                            @NonNull final QiniuService callback) {
+    public QiniuRequest(Context context,String filePath,QiniuService service) {
+        this.filePath = filePath;
+        this.qiniuService = service;
+        this.accountRequest = new AccountRequest(context,this);
+    }
 
 
-        AccountRequest accountRequest = new AccountRequest(context,new APIServiceCallback<TokenResponse>() {
-            @Override
-            public void onSuccess(TokenResponse tokenResponse) {
-
-                String token = tokenResponse.getToken();
-                String key = tokenResponse.getKey();
-                String domain = tokenResponse.getDomain();
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("get upload for token onSuccess token=%s,key=%s,domain=%s",token,key,domain);
-                }
-                uploadFile(domain,filePath,key,token,callback);
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("get upload for token onFailure ");
-                }
-
-                if (callback!=null){
-                    callback.uploadFailure();
-                }
-            }
-        });
+    public void uploadCover(@NonNull String sessionID, @NonNull String lesson) {
 
         accountRequest.getCoverUpToken(sessionID,lesson);
     }
 
-    public void uploadAvatar(Context context,
-                             @NonNull String sessionID,
-                             @NonNull final String filePath,
-                             @NonNull final QiniuService callback) {
-
-
-        // FIXME
-        AccountRequest accountRequest = new AccountRequest(context,new APIServiceCallback<TokenResponse>() {
-            @Override
-            public void onSuccess(TokenResponse tokenResponse) {
-
-                String token = tokenResponse.getToken();
-                String key = tokenResponse.getKey();
-                String domain = tokenResponse.getDomain();
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("get upload for token onSuccess token=%s,key=%s,domain=%s",token,key,domain);
-                }
-
-                uploadFile(domain,filePath,key,token,callback);
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("get upload for token onFailure ");
-                }
-
-                if (callback!=null){
-                    callback.uploadFailure();
-                }
-            }
-        });
+    public void uploadAvatar(@NonNull String sessionID) {
 
         accountRequest.getAvatarUpToken(sessionID);
 
-
-
-
-
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Connect qiniu server and upload file
+    //
 
     private void uploadFile(final String domain,
                             @NonNull final String filePath,
@@ -123,6 +67,16 @@ public class QiniuRequest {
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("qiniu:%s", key + ",\r\n " + info + ",\r\n " + response);
                 }
+
+                if (accountRequest.getServiceCallback() == null) {
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("the API service callback is now null, so don't send callback and return");
+                    }
+
+                    return;
+                }
+
 
                 if (info.isOK()){
                     if (callback != null) {
@@ -163,5 +117,39 @@ public class QiniuRequest {
         Configuration con = new Configuration.Builder().zone(zone).build();
 
         return con;
+    }
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Xiaojs API service callback
+    //
+
+    @Override
+    public void onSuccess(TokenResponse tokenResponse) {
+
+        String token = tokenResponse.getToken();
+        String key = tokenResponse.getKey();
+        String domain = tokenResponse.getDomain();
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("get upload for token onSuccess token=%s,key=%s,domain=%s",token,key,domain);
+        }
+        uploadFile(domain,filePath,key,token,qiniuService);
+
+    }
+
+    @Override
+    public void onFailure(String errorCode, String errorMessage) {
+
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("get upload for token onFailure ");
+        }
+
+        if (qiniuService!=null){
+            qiniuService.uploadFailure();
+        }
+
     }
 }

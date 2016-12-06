@@ -30,7 +30,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/4.
  */
 
-public class LessonDataManager extends DataManager{
+public class LessonDataManager extends DataManager {
 
 
     /**
@@ -48,21 +48,17 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.createLiveLesson(session, lesson);
 
     }
 
     /**
      * 获取开的课程
-     * @param context
-     * @param criteria
-     * @param pagination
-     * @param callback
      */
     public static void requestGetLessons(Context context,
                                          @NonNull Criteria criteria,
@@ -77,20 +73,17 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.getLessons(session,criteria,pagination);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getLessons(session, criteria, pagination);
 
     }
 
     /**
      * 上架直播课
-     * @param context
-     * @param lesson
-     * @param callback
      */
     public static void requestPutLessonOnShelves(Context context,
                                                  @NonNull String lesson,
@@ -105,20 +98,17 @@ public class LessonDataManager extends DataManager{
 
         String session = AccountDataManager.getSessionID(context);
 
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.putLessonOnShelves(session,lesson);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.putLessonOnShelves(session, lesson);
 
     }
 
     /**
      * 取消上架课程
-     * @param context
-     * @param lesson
-     * @param callback
      */
     public static void requestCancelLessonOnShelves(Context context,
                                                     @NonNull String lesson,
@@ -133,26 +123,22 @@ public class LessonDataManager extends DataManager{
 
         String session = AccountDataManager.getSessionID(context);
 
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.cancelLessonOnShelves(session,lesson);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.cancelLessonOnShelves(session, lesson);
     }
 
     /**
      * 获取已报名的课程
-     * @param context
-     * @param criteria
-     * @param pagination
-     * @param callback
      */
     public static void requestGetEnrolledLessons(Context context,
-                                         @NonNull Criteria criteria,
-                                         @NonNull Pagination pagination,
-                                         @NonNull APIServiceCallback<GELessonsResponse> callback) {
+                                                 @NonNull Criteria criteria,
+                                                 @NonNull Pagination pagination,
+                                                 @NonNull APIServiceCallback<GELessonsResponse> callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
@@ -162,24 +148,21 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.getEnrolledLessons(session,criteria,pagination);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getEnrolledLessons(session, criteria, pagination);
 
     }
 
     /**
      * 获取直播课详情
-     * @param context
-     * @param lesson
-     * @param callback
      */
     public static void requestLessonData(Context context,
-                                               @NonNull String lesson,
-                                               @NonNull APIServiceCallback<LessonDetail> callback) {
+                                         @NonNull String lesson,
+                                         @NonNull APIServiceCallback<LessonDetail> callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
@@ -190,28 +173,23 @@ public class LessonDataManager extends DataManager{
 
         String session = AccountDataManager.getSessionID(context);
 
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.getLessonData(session,lesson);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getLessonData(session, lesson);
     }
 
 
     /**
-     *
-     * @param context
      * @param lesson 可为空
-     * @param filePath
-     * @param qiniuService
      */
     public static void requestUploadCover(Context context,
                                           @Nullable String lesson,
                                           @NonNull final String filePath,
                                           @NonNull QiniuService qiniuService) {
-
 
         if (qiniuService == null) {
             if (XiaojsConfig.DEBUG) {
@@ -233,28 +211,26 @@ public class LessonDataManager extends DataManager{
             return;
         }
 
-        if(TextUtils.isEmpty(lesson)){
+        if (TextUtils.isEmpty(lesson)) {
 
             lesson = DataManager.generateLessonKey();
 
             if (XiaojsConfig.DEBUG) {
-                Logger.d("the lesson is empty,so auto generate lesson key=%s",lesson);
+                Logger.d("the lesson is empty,so auto generate lesson key=%s", lesson);
             }
 
 
         }
 
-
-        QiniuRequest qiniuRequest = new QiniuRequest();
-        qiniuRequest.uploadCover(context,session,lesson,filePath,qiniuService);
-
+        QiniuRequest qiniuRequest = new QiniuRequest(context, filePath, qiniuService);
+        qiniuRequest.uploadCover(session, lesson);
 
     }
 
 
     public static void requestLessonDetails(Context context,
-                                             @NonNull String lesson,
-                                             @NonNull APIServiceCallback<LessonDetail> callback) {
+                                            @NonNull String lesson,
+                                            @NonNull APIServiceCallback<LessonDetail> callback) {
 
 
         if (callback == null) {
@@ -264,15 +240,15 @@ public class LessonDataManager extends DataManager{
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLessonDetails(lesson);
     }
 
 
     public static void requestEditLesson(Context context,
-                                  @NonNull String lesson,
-                                  @NonNull LiveLesson liveLesson,
-                                  @NonNull APIServiceCallback callback) {
+                                         @NonNull String lesson,
+                                         @NonNull LiveLesson liveLesson,
+                                         @NonNull APIServiceCallback callback) {
 
 
         if (callback == null) {
@@ -283,12 +259,12 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.editLesson(session,lesson,liveLesson);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.editLesson(session, lesson, liveLesson);
     }
 
 
@@ -306,19 +282,19 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.enrollLesson(session,lesson,offlineRegistrant);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.enrollLesson(session, lesson, offlineRegistrant);
 
     }
 
     public static void requestLessonEnrollment(Context context,
-                                        @NonNull String lesson,
-                                        @NonNull String registrant,
-                                        @NonNull APIServiceCallback<CLEResponse> callback) {
+                                               @NonNull String lesson,
+                                               @NonNull String registrant,
+                                               @NonNull APIServiceCallback<CLEResponse> callback) {
 
 
         if (callback == null) {
@@ -329,13 +305,13 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.confirmLessonEnrollment(session,lesson,registrant);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.confirmLessonEnrollment(session, lesson, registrant);
     }
 
 
@@ -352,13 +328,13 @@ public class LessonDataManager extends DataManager{
         }
 
         String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.cancelLesson(session,lesson,reason);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.cancelLesson(session, lesson, reason);
 
     }
 
@@ -368,14 +344,13 @@ public class LessonDataManager extends DataManager{
                                                  @NonNull APIServiceCallback callback) {
 
         String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
+        if (checkSession(session, callback)) {
             return;
         }
 
-        LessonRequest lessonRequest = new LessonRequest(context,callback);
-        lessonRequest.toggleAccessLesson(session,lesson,accessible);
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.toggleAccessLesson(session, lesson, accessible);
     }
-
 
 
 }
