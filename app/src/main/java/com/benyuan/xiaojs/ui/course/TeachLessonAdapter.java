@@ -220,9 +220,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     //上架
     private void shelves(final TeachLesson bean){
         showProgress(false);
-        LessonDataManager.requestPutLessonOnShelves(mContext, bean.getId(), new APIServiceCallback<GetLessonsResponse>() {
+        LessonDataManager.requestPutLessonOnShelves(mContext, bean.getId(), new APIServiceCallback() {
             @Override
-            public void onSuccess(GetLessonsResponse object) {
+            public void onSuccess(Object object) {
                 cancelProgress();
                 bean.setState(LessonState.PENDING_FOR_APPROVAL);
                 notifyData(bean);

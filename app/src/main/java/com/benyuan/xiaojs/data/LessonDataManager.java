@@ -87,7 +87,7 @@ public class LessonDataManager extends DataManager {
      */
     public static void requestPutLessonOnShelves(Context context,
                                                  @NonNull String lesson,
-                                                 @NonNull APIServiceCallback<GetLessonsResponse> callback) {
+                                                 @NonNull APIServiceCallback callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
