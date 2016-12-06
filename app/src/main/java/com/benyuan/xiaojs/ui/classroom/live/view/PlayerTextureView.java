@@ -79,8 +79,7 @@ public class PlayerTextureView extends BaseMediaView{
         mPlayer.setOnCompletionListener(mOnCompletionListener);
         mPlayer.setOnErrorListener(mOnErrorListener);
         mPlayer.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_4_3);
-        canClose(true);
-        setBackgroundResource(R.drawable.common_white_bg_corner);
+        //setBackgroundResource(R.drawable.common_white_bg_corner);
     }
 
     @Override

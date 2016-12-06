@@ -33,7 +33,6 @@ public abstract class BaseMediaView extends FrameLayout {
     protected FrameLayout mLoadingView;
     private GestureDetector mGesture;
     private String mPath;
-    private boolean mCanClose;
 
     public BaseMediaView(Context context) {
         super(context);
@@ -106,10 +105,6 @@ public abstract class BaseMediaView extends FrameLayout {
         public boolean onDown(MotionEvent e) {
             return true;
         }
-    }
-
-    protected void canClose(boolean b) {
-        mCanClose = b;
     }
 
     public void setPath(String path) {
