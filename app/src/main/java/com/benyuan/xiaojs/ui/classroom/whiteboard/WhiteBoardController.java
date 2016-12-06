@@ -35,34 +35,34 @@ public class WhiteBoardController implements
         ColorPickerPop.ColorChangeListener,
         TextPop.TextChangeListener {
 
-    private ImageView mSelection;
-    private ImageView mHandWriting;
-    private ImageView mGeoShape;
-    private ImageView mTextWriting;
-    private ImageView mEraser;
-    private CircleView mColorPicker;
+    ImageView mSelection;
+    ImageView mHandWriting;
+    ImageView mGeoShape;
+    ImageView mTextWriting;
+    ImageView mEraser;
+    CircleView mColorPicker;
 
-    private HandwritingPop mPaintSetting;
-    private EraserPop mEraserSetting;
-    private GeometryPop mShapeSetting;
-    private ColorPickerPop mColorSetting;
-    private TextPop mTextSetting;
+    HandwritingPop mPaintSetting;
+    EraserPop mEraserSetting;
+    GeometryPop mShapeSetting;
+    ColorPickerPop mColorSetting;
+    TextPop mTextSetting;
 
-    private WhiteBoard mWhiteboard;
-    private EditText mWhiteboardEdit;
+    WhiteBoard mWhiteboard;
+    EditText mWhiteboardEdit;
+    View mPanel;
 
     private Context mContext;
-    private View mAnchorView;
     private int mScreenWidth;
 
     private int mGeometryId;
-    private int mAnchorViewHeight;
+    private int mPanelWidth;
 
     public WhiteBoardController(Context context, View root) {
         mContext = context;
         mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
-        mAnchorView = root.findViewById(R.id.white_board_panel);
+        mPanel = root.findViewById(R.id.white_board_panel);
         mSelection = (ImageView) root.findViewById(R.id.select_btn);
         mHandWriting = (ImageView) root.findViewById(R.id.handwriting_btn);
         mGeoShape = (ImageView) root.findViewById(R.id.shape_btn);
@@ -77,8 +77,8 @@ public class WhiteBoardController implements
         mWhiteboard.setEditText(mWhiteboardEdit);
         mWhiteboard.setGeometryShapeId(GeometryShape.OVAL);
         mColorPicker.setPaintColor(mWhiteboard.getColor());
-        mAnchorView.measure(0, 0);
-        mAnchorViewHeight = mAnchorView.getMeasuredHeight();
+        mPanel.measure(0, 0);
+        mPanelWidth = mPanel.getMeasuredWidth();
     }
 
     public void handlePanelItemClick(View v) {
@@ -124,7 +124,7 @@ public class WhiteBoardController implements
                 mTextSetting = new TextPop(mContext);
                 mTextSetting.setTextChangeListener(this);
             }
-            mTextSetting.show(mAnchorView, mAnchorViewHeight);
+            mTextSetting.show(mTextWriting, mPanelWidth);
         }
         enterMode(WhiteBoard.MODE_TEXT);
     }
@@ -135,7 +135,7 @@ public class WhiteBoardController implements
                 mPaintSetting = new HandwritingPop(mContext);
                 mPaintSetting.setOnDoodlePaintParamsListener(this);
             }
-            mPaintSetting.show(mAnchorView, mAnchorViewHeight);
+            mPaintSetting.show(mHandWriting, mPanelWidth);
         }
         enterMode(WhiteBoard.MODE_HAND_WRITING);
     }
@@ -145,7 +145,7 @@ public class WhiteBoardController implements
             mEraserSetting = new EraserPop(mContext);
             mEraserSetting.setOnEraserParamsListener(this);
         }
-        mEraserSetting.show(mAnchorView, mAnchorViewHeight);
+        mEraserSetting.show(mEraser, mPanelWidth);
         enterMode(WhiteBoard.MODE_ERASER);
     }
 
@@ -157,7 +157,7 @@ public class WhiteBoardController implements
                 mShapeSetting.setShapeParams(mWhiteboard.getColor(), mGeometryId);
             }
             mShapeSetting.updateShapeSelectedState(mGeometryId);
-            mShapeSetting.show(mAnchorView, mAnchorViewHeight);
+            mShapeSetting.show(mGeoShape, mPanelWidth);
         }
         enterMode(WhiteBoard.MODE_GEOMETRY);
     }
@@ -167,7 +167,7 @@ public class WhiteBoardController implements
             mColorSetting = new ColorPickerPop(mContext);
             mColorSetting.setOnColorChangeListener(this);
         }
-        mColorSetting.show(mAnchorView, mAnchorViewHeight);
+        mColorSetting.show(mColorPicker, mPanelWidth);
     }
 
     private void updateGeometryStyle(int geometryId) {

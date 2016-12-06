@@ -5,8 +5,7 @@
               android:paddingLeft="@dimen/px20"
               android:paddingRight="@dimen/px20"
               android:paddingBottom="@dimen/px20"
-              android:orientation="vertical"
-              android:background="@color/classroom_main_gray">
+              android:orientation="vertical">
 
     <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.PaintPathPreview
             android:id="@+id/doodle_paint_preview"

@@ -32,14 +32,7 @@ public class HandwritingPop extends SettingsPopupWindow {
     public final int DEFAULT_PAINT_ALPHA = 152;
     public final int MIN_PAINT_ALPHA = 50;
 
-    private final int mOffsetX;
-    private final int mOffsetY;
-    private final int mWindowOffset;
-
     private PaintChangeListener mListener;
-
-    private View mAnchorView;
-    private View mWindowContentView;
 
     private SeekBar mPaintSizeBar;
     private PaintPathPreview mPaintPathPreView;
@@ -56,30 +49,25 @@ public class HandwritingPop extends SettingsPopupWindow {
 
     public HandwritingPop(Context context) {
         super(context);
-        LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mWindowContentView = inflate.inflate(R.layout.layout_wb_handwriting_pop, null);
-        mPopupWindow.setContentView(mWindowContentView);
 
-        mWindowOffset = getDimensionPixelSize(context, R.dimen.px1);
-        mWindowContentView.measure(0, 0);
-        mOffsetX = -mPadding.left + mWindowOffset;
-        mOffsetY = mWindowContentView.getMeasuredHeight() + mPadding.top;
         initViews(context);
     }
 
+    @Override
+    public View createView(LayoutInflater inflate) {
+        return inflate.inflate(R.layout.layout_wb_handwriting_pop, null);
+    }
+
     private void initViews(Context context) {
-        mPaintSizeBar = (SeekBar) mWindowContentView.findViewById(R.id.paint_thickness);
+        mPaintSizeBar = (SeekBar) mPopWindowLayout.findViewById(R.id.paint_thickness);
         mPaintSizeBar.setOnSeekBarChangeListener(mSeekBarListener);
-        mPaintPathPreView = (PaintPathPreview) mWindowContentView.findViewById(R.id.doodle_paint_preview);
+        mPaintPathPreView = (PaintPathPreview) mPopWindowLayout.findViewById(R.id.doodle_paint_preview);
         mPaintPathPreView.setPreviewMode(PaintPathPreview.PAINT_PREVIEW_MODE);
     }
 
 
-    public void show(View anchor, int anchorHeight) {
-        if (mAnchorView == null) {
-            mAnchorView = anchor;
-        }
-        showAsAnchorLocation(anchor, 0, -(mOffsetY + anchorHeight));
+    public void show(View anchor, int panelWidth) {
+        super.showAsAnchorTop(anchor);
     }
 
     public void setOnDoodlePaintParamsListener(PaintChangeListener listener) {

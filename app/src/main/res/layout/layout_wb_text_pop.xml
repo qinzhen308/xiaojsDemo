@@ -4,8 +4,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/px20"
-        android:background="@color/classroom_main_gray">
+        android:padding="@dimen/px20">
 
     <RelativeLayout
             android:id="@+id/layout_left"

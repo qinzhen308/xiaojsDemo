@@ -196,10 +196,10 @@ public class ClassRoomActivity extends FragmentActivity {
             case R.id.play_pause_btn:
                 if (mPlayState == STATE_PLAY) {
                     mPlayState = STATE_STOP;
-                    ((ImageView)v).setImageResource(R.drawable.ic_cr_stop);
+                    ((ImageView) v).setImageResource(R.drawable.ic_cr_stop);
                 } else {
                     mPlayState = STATE_PLAY;
-                    ((ImageView)v).setImageResource(R.drawable.ic_cr_start);
+                    ((ImageView) v).setImageResource(R.drawable.ic_cr_start);
                 }
 
                 //live

@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.PopupWindow;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.widget.ClosableSlidingLayout;
@@ -35,6 +37,12 @@ import com.benyuan.xiaojs.ui.widget.HorizontalListView;
 public class QuestionAnswer extends Dialog {
     private HorizontalListView mListView;
     private QuestionAnswerAdapter mAdapter;
+    private PopupWindow mPopupWindow;
+
+    private int mContentW;
+    private int mContentH;
+    private int mOffsetX;
+    private int mOffsetY;
 
     public QuestionAnswer(Context context) {
         super(context, R.style.CommonDialog);
@@ -91,7 +99,42 @@ public class QuestionAnswer extends Dialog {
             }
         });
 
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showInfo(view);
+            }
+        });
+
         return mDialogView;
+    }
+
+    private void showInfo(View anchor) {
+        if (mPopupWindow == null) {
+            Context context = getContext();
+            mPopupWindow = new PopupWindow(context);
+            mPopupWindow.setBackgroundDrawable(new ColorDrawable());
+            mPopupWindow.setTouchable(true);
+            mPopupWindow.setFocusable(true);
+            mPopupWindow.setOutsideTouchable(true);
+            mPopupWindow.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT);
+            mPopupWindow.setClippingEnabled(false);
+
+            LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View v = inflate.inflate(R.layout.layout_classroom_raise_hand_pop, null);
+            ClassroomPopupWindowLayout windowContentView = new ClassroomPopupWindowLayout(context);
+            windowContentView.addContent(v, Gravity.BOTTOM);
+            windowContentView.measure(0, 0);
+            mContentW = windowContentView.getMeasuredWidth();
+            mContentH = windowContentView.getMeasuredHeight();
+            mPopupWindow.setContentView(windowContentView);
+        }
+
+        mOffsetY = -(anchor.getHeight() + mContentH);
+        mOffsetX = -mContentW / 2 + anchor.getWidth() / 2;
+
+        mPopupWindow.showAsDropDown(anchor, mOffsetX, mOffsetY);
     }
 
 }

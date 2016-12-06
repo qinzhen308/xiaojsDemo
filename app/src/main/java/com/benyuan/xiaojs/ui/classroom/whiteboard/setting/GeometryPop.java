@@ -24,13 +24,8 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 
 public class GeometryPop extends SettingsPopupWindow implements View.OnClickListener {
     private int mSelectedShape = GeometryShape.BEELINE;
-    public GeometryChangeListener mListener;
 
-    private View mWindowContentView;
-    private View mAnchorView;
-    private final int mOffsetX;
-    private final int mOffsetY;
-    private final int mWindowOffset;
+    public GeometryChangeListener mListener;
 
     //private ColorPickerView mColorPicker;
     private ImageView mShapeView[];
@@ -41,35 +36,29 @@ public class GeometryPop extends SettingsPopupWindow implements View.OnClickList
 
     public GeometryPop(Context context) {
         super(context);
-        LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mWindowContentView = inflate.inflate(R.layout.layout_wb_geometry_pop, null);
-        mPopupWindow.setContentView(mWindowContentView);
 
-        mWindowOffset = getDimensionPixelSize(context, R.dimen.px1);
-        mWindowContentView.measure(0, 0);
-        mOffsetX = -mPadding.left + mWindowOffset;
-        mOffsetY = mWindowContentView.getMeasuredHeight() + mPadding.top;
-
-        init();
+        initViews();
     }
 
-    private void init() {
+    @Override
+    public View createView(LayoutInflater inflate) {
+        return inflate.inflate(R.layout.layout_wb_geometry_pop, null);
+    }
+
+    private void initViews() {
         mShapeView = new ImageView[]{
-                (ImageView) mWindowContentView.findViewById(R.id.shape_rectangle),
-                (ImageView) mWindowContentView.findViewById(R.id.shape_oval),
-                (ImageView) mWindowContentView.findViewById(R.id.shape_beeline),
-                (ImageView) mWindowContentView.findViewById(R.id.shape_triangle),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_rectangle),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_oval),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_beeline),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_triangle),
         };
         for (int i = 0; i < mShapeView.length; i++) {
             mShapeView[i].setOnClickListener(this);
         }
     }
 
-    public void show(View anchor, int anchorHeight) {
-        if (mAnchorView == null) {
-            mAnchorView = anchor;
-        }
-        showAsAnchorLocation(anchor, 0, -(mOffsetY + anchorHeight));
+    public void show(View anchor, int panelWidth) {
+        super.showAsAnchorTop(anchor);
     }
 
     public int getCurrentShape() {

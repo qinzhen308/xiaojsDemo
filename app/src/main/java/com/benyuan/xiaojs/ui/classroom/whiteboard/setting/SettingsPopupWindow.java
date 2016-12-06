@@ -16,36 +16,81 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.setting;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
-public class SettingsPopupWindow {
+import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.classroom.ClassroomPopupWindowLayout;
+
+public abstract class SettingsPopupWindow {
     protected final PopupWindow mPopupWindow;
     protected final Rect mPadding = new Rect();
+    protected final int mAnchorPaddingTop;
+    protected ClassroomPopupWindowLayout mPopWindowLayout;
+    protected int mAnchorWidth;
+    protected int mAnchorHeight;
+    protected Context mContext;
 
-    private View mAnchor;
+    protected int mOffsetX;
+    protected int mOffsetY;
+
+    protected int mContentW;
+    protected int mContentH;
+
+    protected View mAnchorView;
 
     public SettingsPopupWindow(Context context) {
+        mContext = context;
         mPopupWindow = new PopupWindow(context);
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable());
         mPopupWindow.setTouchable(true);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setClippingEnabled(false);
 
         if (mPopupWindow.getBackground() != null) {
             mPopupWindow.getBackground().getPadding(mPadding);
         }
+
+        mAnchorPaddingTop = getDimensionPixelSize(context, R.dimen.px25);
+
+        addContent(context);
+    }
+
+
+    private void addContent(Context context) {
+        LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = createView(inflate);
+        mPopWindowLayout = new ClassroomPopupWindowLayout(context);
+        mPopWindowLayout.addContent(v, Gravity.BOTTOM);
+        mPopupWindow.setContentView(mPopWindowLayout);
+
+        mPopWindowLayout.measure(0, 0);
+        mContentW = mPopWindowLayout.getMeasuredWidth();
+        mContentH = mPopWindowLayout.getMeasuredHeight() + mPadding.bottom;
     }
 
     public boolean isShowing() {
         return mPopupWindow.isShowing();
     }
 
-    public void showAsAnchorLocation(View anchor, int xOff, int yOff) {
-        mAnchor = anchor;
-        mPopupWindow.showAsDropDown(mAnchor, xOff, yOff);
+    public void showAsAnchorTop(View anchor) {
+        if (mAnchorView == null) {
+            mAnchorView = anchor;
+
+            mAnchorHeight = mAnchorView.getMeasuredHeight();
+            mAnchorWidth = mAnchorView.getMeasuredWidth();
+            mOffsetY = -(mAnchorHeight + mAnchorPaddingTop + mContentH);
+            mOffsetX = -mContentW / 2 + mAnchorWidth / 2;
+        }
+
+        mPopupWindow.showAsDropDown(anchor, mOffsetX, mOffsetY);
     }
 
     public void dismiss() {
@@ -59,4 +104,6 @@ public class SettingsPopupWindow {
     public int getDimensionPixelSize(Context context, int resId) {
         return context.getResources().getDimensionPixelSize(resId);
     }
+
+    public abstract View createView(LayoutInflater inflate);
 }

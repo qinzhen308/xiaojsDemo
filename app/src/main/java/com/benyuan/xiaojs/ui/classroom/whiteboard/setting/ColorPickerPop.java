@@ -18,8 +18,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView;
@@ -30,13 +28,6 @@ public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickL
     private static int[] COLORS;
 
     public ColorChangeListener mListener;
-    private Context mContext;
-
-    private View mWindowContentView;
-    private View mAnchorView;
-    private final int mOffsetX;
-    private final int mOffsetY;
-    private final int mWindowOffset;
 
     private CircleView mColorButtons[];
     //private ImageView mColorPickerBtn;
@@ -49,28 +40,24 @@ public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickL
 
     public ColorPickerPop(Context context) {
         super(context);
-        mContext = context;
-        LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mWindowContentView = inflate.inflate(R.layout.layout_wb_color_picker_pop, null);
-        mPopupWindow.setContentView(mWindowContentView);
-
-        mWindowOffset = getDimensionPixelSize(context, R.dimen.px1);
-        mWindowContentView.measure(0, 0);
-        mOffsetX = mWindowContentView.getMeasuredWidth() + mPadding.left + mWindowOffset;
-        mOffsetY = mWindowContentView.getMeasuredHeight();
 
         initViews();
     }
 
+    @Override
+    public View createView(LayoutInflater inflate) {
+        return inflate.inflate(R.layout.layout_wb_color_picker_pop, null);
+    }
+
     private void initViews() {
         mColorButtons = new CircleView[]{
-                (CircleView) mWindowContentView.findViewById(R.id.btn_color_1),
-                (CircleView) mWindowContentView.findViewById(R.id.btn_color_2),
-                (CircleView) mWindowContentView.findViewById(R.id.btn_color_3),
-                (CircleView) mWindowContentView.findViewById(R.id.btn_color_4),
-                (CircleView) mWindowContentView.findViewById(R.id.btn_color_5),
-                (CircleView) mWindowContentView.findViewById(R.id.btn_color_6),
-                (CircleView) mWindowContentView.findViewById(R.id.btn_color_7),
+                (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_1),
+                (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_2),
+                (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_3),
+                (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_4),
+                (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_5),
+                (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_6),
+                (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_7),
         };
 
         initColor(mColorButtons.length);
@@ -106,11 +93,8 @@ public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickL
         COLORS[6] = rs.getColor(R.color.wb_color_7);
     }
 
-    public void show(View anchor, int anchorHeight) {
-        if (mAnchorView == null) {
-            mAnchorView = anchor;
-        }
-        showAsAnchorLocation(anchor, 0, -(mOffsetY + anchorHeight));
+    public void show(View anchor, int panelWidth) {
+        super.showAsAnchorTop(anchor);
     }
 
     public void setOnColorChangeListener(ColorChangeListener listener) {

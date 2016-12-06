@@ -27,14 +27,7 @@ public class EraserPop extends SettingsPopupWindow implements View.OnClickListen
     public static final int MAX_ERASER_SIZE = 60;
     public static final int DEFAULT_ERASER_SIZE = (MAX_ERASER_SIZE + MIN_ERASER_SIZE) / 2;
 
-    private final int mOffsetX;
-    private final int mOffsetY;
-    private final int mWindowOffset;
-
     private EraserChangeListener mParamsChangeListener;
-
-    private View mAnchorView;
-    private View mWindowContentView;
 
     private TextView mClearDoodleButton;
     private PaintPathPreview mEraserSizeView;
@@ -48,20 +41,17 @@ public class EraserPop extends SettingsPopupWindow implements View.OnClickListen
 
     public EraserPop(Context context) {
         super(context);
-        LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mWindowContentView = inflate.inflate(R.layout.layout_wb_eraser_pop, null);
-        mPopupWindow.setContentView(mWindowContentView);
-
-        mWindowOffset = getDimensionPixelSize(context, R.dimen.px1);
-        mWindowContentView.measure(0, 0);
-        mOffsetX = mWindowContentView.getMeasuredWidth() + mPadding.left + mWindowOffset;
-        mOffsetY = mWindowContentView.getMeasuredHeight() + mPadding.top;
 
         initViews(context);
     }
 
+    @Override
+    public View createView(LayoutInflater inflate) {
+        return inflate.inflate(R.layout.layout_wb_eraser_pop, null);
+    }
+
     private void initViews(Context context) {
-        mClearDoodleButton = (TextView) mWindowContentView.findViewById(R.id.clear_all);
+        mClearDoodleButton = (TextView) mPopWindowLayout.findViewById(R.id.clear_all);
         mClearDoodleButton.setOnClickListener(this);
     }
 
@@ -69,11 +59,8 @@ public class EraserPop extends SettingsPopupWindow implements View.OnClickListen
         mParamsChangeListener = listener;
     }
 
-    public void show(View anchor, int anchorHeight) {
-        if (mAnchorView == null) {
-            mAnchorView = anchor;
-        }
-        showAsAnchorLocation(anchor, 0, -(mOffsetY + anchorHeight));
+    public void show(View anchor, int panelWidth) {
+        super.showAsAnchorTop(anchor);
     }
 
     @Override

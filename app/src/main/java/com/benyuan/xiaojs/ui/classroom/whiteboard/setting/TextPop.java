@@ -26,13 +26,6 @@ public class TextPop extends SettingsPopupWindow implements View.OnClickListener
     public final static int TEXT_VERTICAL = 2;
     public final static int MIN_TEXT_SIZE = 10;
 
-    private final int mOffsetX;
-    private final int mOffsetY;
-    private final int mWindowOffset;
-
-    private View mAnchorView;
-    private View mWindowContentView;
-
     private TextChangeListener mListener;
 
     public interface TextChangeListener {
@@ -45,16 +38,13 @@ public class TextPop extends SettingsPopupWindow implements View.OnClickListener
 
     public TextPop(Context context) {
         super(context);
-        LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mWindowContentView = inflate.inflate(R.layout.layout_wb_text_pop, null);
-        mPopupWindow.setContentView(mWindowContentView);
 
-        mWindowOffset = getDimensionPixelSize(context, R.dimen.px1);
-        mWindowContentView.measure(0, 0);
-        mOffsetX = mWindowContentView.getMeasuredWidth() + mPadding.left + mWindowOffset;
-        mOffsetY = mWindowContentView.getMeasuredHeight() + mPadding.top;
+        setListener(mPopWindowLayout);
+    }
 
-        setListener(mWindowContentView);
+    @Override
+    public View createView(LayoutInflater inflate) {
+        return inflate.inflate(R.layout.layout_wb_text_pop, null);
     }
 
     private void setListener(View root) {
@@ -64,11 +54,8 @@ public class TextPop extends SettingsPopupWindow implements View.OnClickListener
         ((SeekBar)root.findViewById(R.id.text_size)).setOnSeekBarChangeListener(this);
     }
 
-    public void show(View anchor, int anchorHeight) {
-        if (mAnchorView == null) {
-            mAnchorView = anchor;
-        }
-        showAsAnchorLocation(anchor, 0, -(mOffsetY + anchorHeight));
+    public void show(View anchor, int panelWidth) {
+        super.showAsAnchorTop(anchor);
     }
 
     public void setTextChangeListener(TextChangeListener listener) {
