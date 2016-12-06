@@ -17,6 +17,7 @@ package com.benyuan.xiaojs.ui.classroom.live.view;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -48,8 +49,8 @@ public class MediaContainerView extends ScrollView {
     private void init(){
         LayoutInflater.from(getContext()).inflate(R.layout.layout_media_container_view,this,true);
         mContainer = (LinearLayout) findViewById(R.id.media_container);
-        mWidth = getResources().getDimensionPixelSize(R.dimen.px180);
-        mHeight = getResources().getDimensionPixelSize(R.dimen.px135);
+        mWidth = getResources().getDimensionPixelSize(Config.NORMAL_WIDTH);
+        mHeight = getResources().getDimensionPixelSize(Config.NORMAL_HEIGHT);
         mPadding = getResources().getDimensionPixelSize(R.dimen.px5);
     }
 
@@ -62,6 +63,7 @@ public class MediaContainerView extends ScrollView {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mWidth,mHeight);
         lp.topMargin = mPadding;
         lp.bottomMargin = mPadding;
+        lp.gravity = Gravity.RIGHT;
         view.setLayoutParams(lp);
         view.setPath(playPath);
         mContainer.addView(view,0);

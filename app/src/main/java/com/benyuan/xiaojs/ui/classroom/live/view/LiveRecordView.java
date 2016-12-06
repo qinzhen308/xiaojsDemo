@@ -68,7 +68,6 @@ public class LiveRecordView extends BaseMediaView implements
     private static final int MSG_START_STREAMING = 0;
     private static final int MSG_STOP_STREAMING = 1;
     private static final int MSG_MUTE = 2;
-    private static final int MSG_SWITCH_CAMERA = 3;
     private static final int MSG_SHOW_LOADING = 6;
     private static final int MSG_HIDE_LOADING = 7;
 
@@ -84,7 +83,8 @@ public class LiveRecordView extends BaseMediaView implements
 
     private int mCurrentCamFacingIndex;
     private boolean mIsReady;
-
+    private boolean mIsStreaming;
+    private Switcher mCameraSwitcher = new Switcher();
     protected Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -106,9 +106,6 @@ public class LiveRecordView extends BaseMediaView implements
                     break;
                 case MSG_SHOW_LOADING:
                     showLoading(true);
-                    break;
-                case MSG_SWITCH_CAMERA:
-                    mMediaStreamingManager.switchCamera();
                     break;
                 default:
                     Log.e(TAG, "Invalid message");
@@ -164,7 +161,7 @@ public class LiveRecordView extends BaseMediaView implements
                 .setDnsManager(getMyDnsManager())
                 //若注册了 mCameraStreamingManager.setStreamStatusCallback ，每隔 3 秒回调 StreamStatus 信息
                 .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
-                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.PORT)
+                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.LAND)
                 .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
 
 
@@ -179,7 +176,7 @@ public class LiveRecordView extends BaseMediaView implements
                 .setBuiltInFaceBeautyEnabled(true)
                 .setResetTouchFocusDelayInMs(3000)
                 .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.SMALL)
-                .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_4_3)
+                .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9)
                 .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
                 .setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
         mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
@@ -212,7 +209,6 @@ public class LiveRecordView extends BaseMediaView implements
 
     @Override
     public void destroy() {
-        mHandler.removeCallbacksAndMessages(null);
         stopStreamingInternal();
     }
 
@@ -225,7 +221,8 @@ public class LiveRecordView extends BaseMediaView implements
     @Override
     protected void switchCamera() {
         //切换摄像头
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SWITCH_CAMERA), 50);
+        mHandler.removeCallbacks(mCameraSwitcher);
+        mHandler.postDelayed(mCameraSwitcher,100);
     }
 
     @Override
@@ -234,35 +231,26 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void startStreamingInThread(){
-        mThread = new Streaming();
-        mThread.start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mMediaStreamingManager != null){
+                    mIsStreaming = mMediaStreamingManager.startStreaming();
+                }
+            }
+        }).start();
     }
 
     private void stopStreamingInternal(){
-        if (mMediaStreamingManager != null){
-            mMediaStreamingManager.stopStreaming();
-            mMediaStreamingManager.destroy();
-            mMediaStreamingManager = null;
-        }
-    }
-
-    private class Streaming extends Thread{
-        @Override
-        public void run() {
-            if (mMediaStreamingManager != null){
-                mMediaStreamingManager.startStreaming();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mMediaStreamingManager != null){
+                    mMediaStreamingManager.destroy();
+                    mMediaStreamingManager = null;
+                }
             }
-        }
-    }
-    private Thread mThread;
-
-    private boolean startStreamingSafely(){
-        try {
-            return mMediaStreamingManager.startStreaming();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return false;
+        }).start();
     }
 
     private static DnsManager getMyDnsManager() {
@@ -311,7 +299,7 @@ public class LiveRecordView extends BaseMediaView implements
                 // start streaming when READY
                 mIsReady = true;
                 id = MSG_SHOW_LOADING;
-                startStreamingInThread();
+                start();
                 break;
             /**
              * Being connecting.
@@ -482,7 +470,7 @@ public class LiveRecordView extends BaseMediaView implements
     @Override
     public boolean onRestartStreamingHandled(int i) {
         Log.i(TAG, "onRestartStreamingHandled");
-        return startStreamingSafely();
+        return mMediaStreamingManager.startStreaming();
     }
 
     @Override
@@ -524,9 +512,11 @@ public class LiveRecordView extends BaseMediaView implements
         return newTexId;
     }
 
-//    @Override
-//    public void notifyStreamStatusChanged(StreamingProfile.StreamStatus streamStatus) {
-//
-//    }
+    private class Switcher implements Runnable {
+        @Override
+        public void run() {
+            mMediaStreamingManager.switchCamera();
+        }
+    }
 
 }

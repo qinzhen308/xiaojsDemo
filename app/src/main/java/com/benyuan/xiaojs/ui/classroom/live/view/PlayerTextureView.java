@@ -25,6 +25,7 @@ import android.view.View;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.classroom.live.utils.Utils;
+import com.orhanobut.logger.Logger;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
@@ -32,6 +33,7 @@ import com.pili.pldroid.player.widget.PLVideoTextureView;
 public class PlayerTextureView extends BaseMediaView{
     private PLVideoTextureView mPlayer;
     private static final String TAG = "PlayerTextureView";
+    private boolean mIsPause;
 
     public PlayerTextureView(Context context) {
         super(context);
@@ -78,9 +80,8 @@ public class PlayerTextureView extends BaseMediaView{
 
         mPlayer.setOnCompletionListener(mOnCompletionListener);
         mPlayer.setOnErrorListener(mOnErrorListener);
-        mPlayer.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_4_3);
-        canClose(true);
-        setBackgroundResource(R.drawable.common_white_bg_corner);
+        mPlayer.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_16_9);
+        //setBackgroundResource(R.drawable.common_white_bg_corner);
     }
 
     @Override
@@ -107,6 +108,7 @@ public class PlayerTextureView extends BaseMediaView{
         if (mPlayer != null && !mPlayer.isPlaying()){
             mPlayer.start();
         }
+        mIsPause = false;
     }
 
     @Override
@@ -114,6 +116,7 @@ public class PlayerTextureView extends BaseMediaView{
         if (mPlayer != null && mPlayer.isPlaying()){
             mPlayer.pause();
         }
+        mIsPause = true;
     }
 
     @Override
@@ -131,8 +134,6 @@ public class PlayerTextureView extends BaseMediaView{
         @Override
         public void onCompletion(PLMediaPlayer plMediaPlayer) {
             Log.e(TAG,"Play Completed !");
-            //showToastTips("Play Completed !");
-            //finish();
         }
     };
 
@@ -208,9 +209,8 @@ public class PlayerTextureView extends BaseMediaView{
     private static final int MESSAGE_ID_RECONNECTING = 0x01;
 
     private void sendReconnectMessage() {
-        //showToastTips("正在重连...");
-        Log.e(TAG,"正在重连...");
-        //mLoadingView.setVisibility(View.VISIBLE);
+        Logger.e(TAG,"正在重连...");
+        showLoading(true);
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_ID_RECONNECTING), 500);
     }
@@ -225,12 +225,14 @@ public class PlayerTextureView extends BaseMediaView{
                 //finish();
                 return;
             }
-            if (!Utils.isNetworkAvailable(getContext())) {
+            if (mIsPause || !Utils.isNetworkAvailable(getContext())) {
                 sendReconnectMessage();
                 return;
             }
-            mPlayer.setVideoPath(getPath());
-            mPlayer.start();
+            if (mPlayer != null){
+                mPlayer.setVideoPath(getPath());
+                mPlayer.start();
+            }
         }
     };
 
@@ -239,15 +241,6 @@ public class PlayerTextureView extends BaseMediaView{
         pause();
         destroy();
         super.close();
-    }
-
-    @Override
-    protected void onWindowVisibilityChanged(int visibility) {
-        if (visibility == VISIBLE){
-
-        }else {
-
-        }
     }
 
     private void stopInternal(){

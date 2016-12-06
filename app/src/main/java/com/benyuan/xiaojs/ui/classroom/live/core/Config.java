@@ -16,10 +16,10 @@ public class Config {
     public static final int VIDEO_BITRATE = 512 * 1024;
     public static final int VIDEO_MAX_KEY_FRAME_INTERVAL = 48;
 
-    public static final int NORMAL_WIDTH = R.dimen.px180;
-    public static final int NORMAL_HEIGHT = R.dimen.px135;
-    public static final int SCALED_WIDTH = R.dimen.px360;
-    public static final int SCALED_HEIGHT = R.dimen.px270;
+    public static final int NORMAL_WIDTH = R.dimen.px160;
+    public static final int NORMAL_HEIGHT = R.dimen.px90;
+    public static final int SCALED_WIDTH = R.dimen.px266;
+    public static final int SCALED_HEIGHT = R.dimen.px200;
 
 
     public static final int MAX_PLAYERS = 8;//老师端显示学生视频的最大数量
