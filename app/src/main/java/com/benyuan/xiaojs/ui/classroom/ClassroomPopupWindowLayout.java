@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -32,6 +31,7 @@ import com.benyuan.xiaojs.util.BitmapUtils;
 public class ClassroomPopupWindowLayout extends LinearLayout {
     public final static int DARK_GRAY = 1;
     public final static int LIGHT_GRAY = 2;
+    private int mGravity;
 
     private ImageView mIndicator;
 
@@ -61,6 +61,7 @@ public class ClassroomPopupWindowLayout extends LinearLayout {
         content.setBackgroundResource(R.drawable.wb_conner_bg);
         //content.setBackgroundColor(Color.RED);
         mIndicator = buildIndicator(gravity, style);
+        mGravity = gravity;
         switch (gravity) {
             case Gravity.TOP:
                 setOrientation(LinearLayout.VERTICAL);
@@ -110,14 +111,18 @@ public class ClassroomPopupWindowLayout extends LinearLayout {
         }
 
         img.setImageBitmap(bmp);
-
         return img;
     }
 
     public void setIndicatorOffsetX(int offsetX) {
         if (mIndicator != null) {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)mIndicator.getLayoutParams();
-            params.leftMargin = offsetX;
+            if (mGravity == Gravity.TOP || mGravity == Gravity.BOTTOM){
+                params.leftMargin = offsetX;
+            }else {
+                params.topMargin = offsetX;
+            }
+            mIndicator.setLayoutParams(params);
         }
     }
 

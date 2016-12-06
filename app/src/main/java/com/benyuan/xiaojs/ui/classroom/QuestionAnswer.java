@@ -3,10 +3,7 @@ package com.benyuan.xiaojs.ui.classroom;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +15,7 @@ import android.widget.PopupWindow;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.widget.ClosableSlidingLayout;
 import com.benyuan.xiaojs.ui.widget.HorizontalListView;
+import com.benyuan.xiaojs.util.DeviceUtil;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -123,18 +121,41 @@ public class QuestionAnswer extends Dialog {
 
             LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View v = inflate.inflate(R.layout.layout_classroom_raise_hand_pop, null);
-            ClassroomPopupWindowLayout windowContentView = new ClassroomPopupWindowLayout(context);
+            windowContentView = new ClassroomPopupWindowLayout(context);
             windowContentView.addContent(v, Gravity.BOTTOM);
             windowContentView.measure(0, 0);
             mContentW = windowContentView.getMeasuredWidth();
             mContentH = windowContentView.getMeasuredHeight();
             mPopupWindow.setContentView(windowContentView);
         }
+        //重置arrow
+        windowContentView.setIndicatorOffsetX(0);
 
+        //获取anchor在屏幕中的位置
+        int[] location = new int[2];
+        anchor.getLocationOnScreen(location);
+
+        //计算正常情况下的偏移
         mOffsetY = -(anchor.getHeight() + mContentH);
         mOffsetX = -mContentW / 2 + anchor.getWidth() / 2;
 
+        //防止弹出框弹出左边界
+        if (location[0] - mContentW / 2 + anchor.getWidth() / 2  < 0 ){
+            mOffsetX = -location[0];
+            int margin = - mContentW / 2 + location[0] + anchor.getWidth() / 2;
+            windowContentView.setIndicatorOffsetX(margin);
+        }
+
+        //防止弹出框弹出右边界
+        if (location[0] + anchor.getWidth() / 2 + mContentW / 2 > DeviceUtil.getScreenWidth(getContext())){
+            mOffsetX = DeviceUtil.getScreenWidth(getContext()) - mContentW - location[0];
+            int margin = location[0] + anchor.getWidth() / 2 - (DeviceUtil.getScreenWidth(getContext()) - mContentW / 2);
+            windowContentView.setIndicatorOffsetX(margin);
+        }
+
         mPopupWindow.showAsDropDown(anchor, mOffsetX, mOffsetY);
     }
+
+    private ClassroomPopupWindowLayout windowContentView;
 
 }

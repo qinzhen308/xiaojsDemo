@@ -40,6 +40,8 @@ public class LiveMenu extends PopupWindow {
 
     private OnItemClickListener mListener;
 
+    private ClassroomPopupWindowLayout mLayout;
+
     public LiveMenu(Context context,boolean isTeacher){
         super(context);
         mIsTeacher = isTeacher;
@@ -53,13 +55,13 @@ public class LiveMenu extends PopupWindow {
         mScale = (ImageView) mRootView.findViewById(R.id.live_menu_scale);
         mMute = (ImageView) mRootView.findViewById(R.id.live_menu_audio);
         mClose = (ImageView) mRootView.findViewById(R.id.live_menu_video);
-        ClassroomPopupWindowLayout layout = new ClassroomPopupWindowLayout(mContext);
+        mLayout = new ClassroomPopupWindowLayout(mContext);
         int gravity = Gravity.TOP;
         if (!mIsTeacher)
             gravity = Gravity.LEFT;
 
-        layout.addContent(mRootView, gravity);
-        mPopupWindow = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT,
+        mLayout.addContent(mRootView, gravity);
+        mPopupWindow = new PopupWindow(mLayout, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 
@@ -107,10 +109,14 @@ public class LiveMenu extends PopupWindow {
     public void show(View anchor){
         mRootView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         if (mIsTeacher){
+            int margin = mContext.getResources().getDimensionPixelSize(R.dimen.px30) - mRootView.getMeasuredWidth() / 2;
+            mLayout.setIndicatorOffsetX(margin);
             showAsDropDown(anchor);
         }else {
-            int leftOffset = mRootView.getMeasuredWidth();
+            int leftOffset = mRootView.getMeasuredWidth() + mContext.getResources().getDimensionPixelSize(R.dimen.px13);
             int topOffset = anchor.getMeasuredHeight() - (anchor.getMeasuredHeight() - mRootView.getMeasuredHeight()) / 2;
+            int margin= (mRootView.getMeasuredHeight() - mContext.getResources().getDimensionPixelSize(R.dimen.px22)) / 2;
+            mLayout.setIndicatorOffsetX(margin);
             showAsDropDown(anchor,-leftOffset,-topOffset);
         }
 
