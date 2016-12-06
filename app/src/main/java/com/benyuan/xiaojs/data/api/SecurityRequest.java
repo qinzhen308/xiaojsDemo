@@ -30,28 +30,16 @@ public class SecurityRequest extends ServiceRequest {
 
     public void havePrivileges(String session,Privilege[] privileges) {
 
-
         String privilegesPath = objectToJsonString(privileges);
-        try {
-            privilegesPath = URLEncoder.encode(privilegesPath,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        privilegesPath = "[{\"permission\":1301}]";
-
         if (XiaojsConfig.DEBUG) {
             Logger.d("privilegesPath: %s",privilegesPath);
         }
-
 
         XiaojsService xiaojsService = getAPIManager().getXiaojsService();
         xiaojsService.havePrivileges(session,privilegesPath).enqueue(new Callback<Privilege[]>() {
             @Override
             public void onResponse(Call<Privilege[]> call, Response<Privilege[]> response) {
-
                 onRespones(APIType.HAVE_PROVILEGES,response);
-
             }
 
             @Override
