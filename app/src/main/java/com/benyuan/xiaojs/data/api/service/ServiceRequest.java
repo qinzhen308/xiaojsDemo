@@ -54,6 +54,14 @@ public class ServiceRequest<T> implements ContextLifecycle {
         return apiManager;
     }
 
+    public APIServiceCallback<T> getServiceCallback() {
+        return serviceCallback;
+    }
+
+
+
+
+
     private void configContext(Context context) {
         if (context == null) {
             throw new IllegalArgumentException("You cannot start a load on a null Context");
@@ -68,7 +76,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
         }
     }
 
-    public void get(FragmentActivity activity) {
+    private void get(FragmentActivity activity) {
         if (APPUtils.isBackgroundThread()) {
             configContext(activity.getApplicationContext());
         } else {
@@ -79,9 +87,9 @@ public class ServiceRequest<T> implements ContextLifecycle {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void get(Activity activity) {
+    private void get(Activity activity) {
         if (APPUtils.isMainThread() || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            //return configContext(activity.getApplicationContext());
+            configContext(activity.getApplicationContext());
         } else {
             assertNotDestroyed(activity);
             android.app.FragmentManager fm = activity.getFragmentManager();
@@ -167,7 +175,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    //Resolve the Xiaojs API callback
+    //
 
     public final void onRespones(int apiType, Response<T> response) {
 
@@ -225,6 +234,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Response the context cyclelife
+    //
 
     @Override
     public void onStart() {

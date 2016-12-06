@@ -251,8 +251,8 @@ public class AccountDataManager extends DataManager{
         }
 
 
-        QiniuRequest qiniuRequest = new QiniuRequest();
-        qiniuRequest.uploadAvatar(context,session,filePath,qiniuService);
+        QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
+        qiniuRequest.uploadAvatar(session);
 
 
     }

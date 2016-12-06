@@ -49,7 +49,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.115:3000";
+    String BASE_URL = "http://192.168.100.3:3000";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -243,10 +243,9 @@ public interface XiaojsService {
     Call<VerifyCode> sendVerifyCode(@Path("method") int method, @Path("mobile") long mobile);
 
     //Does User Have Privileges
-
     @GET("/v1/security/privileges/{privileges}")
     Call<Privilege[]>havePrivileges(@Header("SessionID") String sessionID,
-                                    @Path(value="privileges") String privileges);
+                                    @Path("privileges") String privileges);
 
 
 }

@@ -260,9 +260,9 @@ public class ProfileActivity extends BaseActivity {
             basic.setAvatar(mAvatarFileName);
         }
 
-        AccountDataManager.requestEditProfile(this, basic, new APIServiceCallback<Account>() {
+        AccountDataManager.requestEditProfile(this, basic, new APIServiceCallback() {
             @Override
-            public void onSuccess(Account account) {
+            public void onSuccess(Object object) {
                 Toast.makeText(ProfileActivity.this, R.string.edit_profile_success, Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent();
