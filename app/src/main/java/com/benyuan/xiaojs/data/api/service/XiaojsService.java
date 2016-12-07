@@ -5,6 +5,7 @@ import com.benyuan.xiaojs.model.AccessLesson;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CLEResponse;
 import com.benyuan.xiaojs.model.CLResponse;
+import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.model.CancelReason;
 import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.model.ClaimCompetency;
@@ -15,7 +16,6 @@ import com.benyuan.xiaojs.model.GELessonsResponse;
 import com.benyuan.xiaojs.model.GENotificationsResponse;
 import com.benyuan.xiaojs.model.GNOResponse;
 import com.benyuan.xiaojs.model.GetLessonsResponse;
-import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.model.HomeData;
 import com.benyuan.xiaojs.model.IgnoreNResponse;
 import com.benyuan.xiaojs.model.LessonDetail;
@@ -32,7 +32,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -49,7 +48,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.3:3000";
+    String BASE_URL = "http://192.168.100.191:3000";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";

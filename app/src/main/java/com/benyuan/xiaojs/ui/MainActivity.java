@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.xf_foundation.Su;
+import com.benyuan.xiaojs.data.SecurityManager;
 import com.benyuan.xiaojs.ui.base.BaseTabActivity;
+import com.benyuan.xiaojs.ui.course.CourseConstant;
 import com.benyuan.xiaojs.ui.course.LessonCreationActivity;
 import com.benyuan.xiaojs.ui.home.HomeFragment;
 import com.benyuan.xiaojs.ui.message.NotificationFragment;
+import com.benyuan.xiaojs.ui.mine.TeachAbilityDemoActivity;
+import com.benyuan.xiaojs.ui.widget.CommonDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +40,32 @@ public class MainActivity extends BaseTabActivity {
     @Override
     protected void onGooeyMenuClick(int position) {
         switch (position){
-            case 1:
-                Intent lessonIntent = new Intent(this, LessonCreationActivity.class);
-                startActivity(lessonIntent);
+            case 1://开课
+                if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)){
+                    //老师可以开课
+                    Intent intent = new Intent(this,LessonCreationActivity.class);
+                    startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
+                }else {
+                    //提示申明教学能力
+                    final CommonDialog dialog = new CommonDialog(this);
+                    dialog.setTitle(R.string.declare_teaching_ability);
+                    dialog.setDesc(R.string.declare_teaching_ability_tip);
+                    dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                        @Override
+                        public void onClick() {
+                            dialog.dismiss();
+                            Intent intent = new Intent(MainActivity.this, TeachAbilityDemoActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                        @Override
+                        public void onClick() {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
                 break;
         }
     }

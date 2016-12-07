@@ -5,15 +5,16 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.xf_foundation.Su;
 import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.CategoriesDataManager;
+import com.benyuan.xiaojs.data.SecurityManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
+import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.model.ClaimCompetency;
 import com.benyuan.xiaojs.model.CompetencyParams;
-import com.benyuan.xiaojs.model.CSubject;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
 import com.benyuan.xiaojs.util.UIUtils;
-import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -118,7 +119,7 @@ public class TeachAbilityDemoActivity extends BaseActivity {
             @Override
             public void onSuccess(ClaimCompetency object) {
                 Toast.makeText(TeachAbilityDemoActivity.this,"声明成功",Toast.LENGTH_SHORT).show();
-
+                SecurityManager.updatePermission(TeachAbilityDemoActivity.this, Su.Permission.COURSE_OPEN_CREATE,true);
             }
 
             @Override

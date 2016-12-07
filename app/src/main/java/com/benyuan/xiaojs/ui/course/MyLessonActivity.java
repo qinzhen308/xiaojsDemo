@@ -21,8 +21,12 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.xf_foundation.Su;
+import com.benyuan.xiaojs.data.SecurityManager;
 import com.benyuan.xiaojs.ui.base.BaseTopTabActivity;
+import com.benyuan.xiaojs.ui.mine.TeachAbilityDemoActivity;
 import com.benyuan.xiaojs.ui.view.CommonPopupMenu;
+import com.benyuan.xiaojs.ui.widget.CommonDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +45,20 @@ public class MyLessonActivity extends BaseTopTabActivity {
         List<Fragment> fs = new ArrayList<>();
         Bundle b1 = new Bundle();
         b1.putBoolean(CourseConstant.KEY_IS_TEACHER,false);
-        Bundle b2 = new Bundle();
-        b2.putBoolean(CourseConstant.KEY_IS_TEACHER,true);
         Fragment f1 = new LessonFragment();
         f1.setArguments(b1);
         fs.add(f1);
-        Fragment f2 = new LessonFragment();
-        f2.setArguments(b2);
-        fs.add(f2);
         List<String> ss = new ArrayList<>();
         ss.add(getString(R.string.course_of_learn));
-        ss.add(getString(R.string.course_of_teach));
+
+        if (SecurityManager.checkPermission(this,Su.Permission.COURSE_OPEN_CREATE)){
+            Bundle b2 = new Bundle();
+            b2.putBoolean(CourseConstant.KEY_IS_TEACHER,true);
+            Fragment f2 = new LessonFragment();
+            f2.setArguments(b2);
+            fs.add(f2);
+            ss.add(getString(R.string.course_of_teach));
+        }
         addViews(ss,fs);
     }
 
@@ -83,8 +90,31 @@ public class MyLessonActivity extends BaseTopTabActivity {
     private void handleRightClick(int position){
         switch (position){
             case 0://我要开课
-                Intent intent = new Intent(this,LessonCreationActivity.class);
-                startActivityForResult(intent,CourseConstant.CODE_CREATE_LESSON);
+                if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)){
+                    //老师可以开课
+                    Intent intent = new Intent(this,LessonCreationActivity.class);
+                    startActivityForResult(intent,CourseConstant.CODE_CREATE_LESSON);
+                }else {
+                    //提示申明教学能力
+                    final CommonDialog dialog = new CommonDialog(this);
+                    dialog.setTitle(R.string.declare_teaching_ability);
+                    dialog.setDesc(R.string.declare_teaching_ability_tip);
+                    dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                        @Override
+                        public void onClick() {
+                            dialog.dismiss();
+                            Intent intent = new Intent(MyLessonActivity.this, TeachAbilityDemoActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                        @Override
+                        public void onClick() {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
                 break;
             case 1://加入私密课
                 break;

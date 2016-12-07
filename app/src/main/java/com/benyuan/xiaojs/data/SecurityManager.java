@@ -23,6 +23,10 @@ public class SecurityManager extends DataManager {
 
     }
 
+    public static void updatePermission(Context context,int permission,boolean granted){
+        SecurityPref.setPermission(context,permission,granted);
+    }
+
     public static void savePermission(Context context,Privilege[] privileges) {
 
         if (privileges == null || privileges.length==0){

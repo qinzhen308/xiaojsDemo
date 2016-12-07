@@ -149,6 +149,9 @@ public abstract class BaseTopTabActivity extends BaseActivity implements View.On
 
             }
         });
+        if (fragments.size() == 1){
+            mTabIndicator.setVisibility(View.GONE);
+        }
     }
 
     protected void addViews(Fragment fragment) {
