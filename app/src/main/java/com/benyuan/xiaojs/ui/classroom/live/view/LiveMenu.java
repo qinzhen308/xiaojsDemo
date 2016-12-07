@@ -41,10 +41,12 @@ public class LiveMenu extends PopupWindow {
     private OnItemClickListener mListener;
 
     private ClassroomPopupWindowLayout mLayout;
+    private boolean mIsMute;
 
-    public LiveMenu(Context context,boolean isTeacher){
+    public LiveMenu(Context context,boolean isTeacher,boolean isMute){
         super(context);
         mIsTeacher = isTeacher;
+        mIsMute = isMute;
         init(context);
     }
 
@@ -56,11 +58,16 @@ public class LiveMenu extends PopupWindow {
         mMute = (ImageView) mRootView.findViewById(R.id.live_menu_audio);
         mClose = (ImageView) mRootView.findViewById(R.id.live_menu_video);
         mLayout = new ClassroomPopupWindowLayout(mContext);
+        if (mIsMute){
+            mMute.setImageResource(R.drawable.mic_on_selector);
+        }
         int gravity = Gravity.TOP;
-        if (!mIsTeacher)
+        if (!mIsTeacher){
             gravity = Gravity.LEFT;
+            mClose.setImageResource(R.drawable.ic_video_pressed);
+        }
 
-        mLayout.addContent(mRootView, gravity);
+        mLayout.addContent(mRootView, gravity,ClassroomPopupWindowLayout.DARK_GRAY);
         mPopupWindow = new PopupWindow(mLayout, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());

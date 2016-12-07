@@ -58,7 +58,12 @@ public class ClassroomPopupWindowLayout extends LinearLayout {
     }
 
     public void addContent(View content, int gravity, int style) {
-        content.setBackgroundResource(R.drawable.wb_conner_bg);
+        if (style == DARK_GRAY){
+            content.setBackgroundResource(R.drawable.wb_black_conner_bg);
+        }else if (style == LIGHT_GRAY){
+            content.setBackgroundResource(R.drawable.wb_conner_bg);
+        }
+        //content.setBackgroundResource(R.drawable.wb_conner_bg);
         //content.setBackgroundColor(Color.RED);
         mIndicator = buildIndicator(gravity, style);
         mGravity = gravity;

@@ -70,7 +70,7 @@ public abstract class BaseMediaView extends FrameLayout {
     private class CustomerOnGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            final LiveMenu menu = new LiveMenu(getContext(), BaseMediaView.this instanceof LiveRecordView);
+            final LiveMenu menu = new LiveMenu(getContext(), BaseMediaView.this instanceof LiveRecordView,isMute());
             menu.show(BaseMediaView.this);
             menu.setOnItemClickListener(new LiveMenu.OnItemClickListener() {
                 @Override
@@ -167,5 +167,9 @@ public abstract class BaseMediaView extends FrameLayout {
 
     private boolean isPlayer() {
         return this instanceof PlayerTextureView;
+    }
+
+    protected boolean isMute(){
+        return false;
     }
 }

@@ -24,6 +24,7 @@
     <color name="classroom_main_gray">#f04e4e4e</color>
     <color name="classroom_light_gray">#999999</color>
     <color name="classroom_chat_bg">#bb999999</color>
+    <color name="classroom_black_bg">#191919</color>
     <!--disable color, eg btn-->
     <color name="disable_btn">#999999</color>
     <!--horizontal divide line-->

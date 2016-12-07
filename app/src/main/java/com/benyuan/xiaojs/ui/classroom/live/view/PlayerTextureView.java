@@ -34,6 +34,7 @@ public class PlayerTextureView extends BaseMediaView{
     private PLVideoTextureView mPlayer;
     private static final String TAG = "PlayerTextureView";
     private boolean mIsPause;
+    private boolean mIsMute;
 
     public PlayerTextureView(Context context) {
         super(context);
@@ -127,7 +128,12 @@ public class PlayerTextureView extends BaseMediaView{
 
     @Override
     protected void mute() {
-        //远端静音
+        if (mIsMute){
+            mPlayer.setVolume(1f,1f);
+        }else {
+            mPlayer.setVolume(0f,0f);
+        }
+        mIsMute = !mIsMute;
     }
 
     private PLMediaPlayer.OnCompletionListener mOnCompletionListener = new PLMediaPlayer.OnCompletionListener() {
@@ -255,4 +261,8 @@ public class PlayerTextureView extends BaseMediaView{
         }
     }
 
+    @Override
+    protected boolean isMute() {
+        return mIsMute;
+    }
 }

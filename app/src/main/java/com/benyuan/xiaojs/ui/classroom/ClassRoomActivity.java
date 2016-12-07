@@ -176,8 +176,8 @@ public class ClassRoomActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        mTeacherVideo.resume();
-//        mContainer.resume();
+        mTeacherVideo.resume();
+        mContainer.resume();
     }
 
     private boolean m = false;

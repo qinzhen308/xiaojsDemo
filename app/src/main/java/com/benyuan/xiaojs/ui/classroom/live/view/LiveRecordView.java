@@ -242,15 +242,10 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void stopStreamingInternal(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (mMediaStreamingManager != null){
-                    mMediaStreamingManager.destroy();
-                    mMediaStreamingManager = null;
-                }
-            }
-        }).start();
+        if (mMediaStreamingManager != null){
+            mMediaStreamingManager.destroy();
+            mMediaStreamingManager = null;
+        }
     }
 
     private static DnsManager getMyDnsManager() {
@@ -519,4 +514,8 @@ public class LiveRecordView extends BaseMediaView implements
         }
     }
 
+    @Override
+    protected boolean isMute() {
+        return mMute;
+    }
 }
