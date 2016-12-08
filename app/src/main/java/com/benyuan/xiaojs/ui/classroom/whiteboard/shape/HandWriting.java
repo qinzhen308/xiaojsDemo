@@ -138,13 +138,13 @@ public class HandWriting extends Doodle {
     }
 
     @Override
-    public boolean isSelectedOnEditState(float x, float y) {
+    public int checkRegionPressedArea(float x, float y) {
         if (getState() == STATE_EDIT) {
             mOriginalPath.computeBounds(mRect, true);
             return Utils.checkRectPressed(x, y, mRect.left, mRect.top, mRect.right, mRect.bottom);
         }
 
-        return false;
+        return 0;
     }
 
     @Override

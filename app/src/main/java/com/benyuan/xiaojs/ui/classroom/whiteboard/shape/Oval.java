@@ -153,15 +153,8 @@ public class Oval extends TwoDimensionalShape {
     }
 
     @Override
-    public boolean isSelectedOnEditState(float x, float y) {
-        if (getState() == STATE_EDIT) {
-            WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-            PointF dp = mPoints.get(0);
-            PointF up = mPoints.get(1);
-            return Utils.checkRectPressed(x, y, dp, up, params.drawingBounds);
-        }
-
-        return false;
+    public int checkRegionPressedArea(float x, float y) {
+        return super.checkRegionPressedArea(x, y);
     }
 
     @Override

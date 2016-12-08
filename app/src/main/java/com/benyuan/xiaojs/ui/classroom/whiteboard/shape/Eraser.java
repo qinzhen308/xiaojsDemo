@@ -39,11 +39,6 @@ public class Eraser extends Doodle {
     }
 
     @Override
-    public boolean isSelectedOnEditState(float x, float y) {
-        return false;
-    }
-
-    @Override
     public boolean isSelected(float x, float y) {
         return false;
     }

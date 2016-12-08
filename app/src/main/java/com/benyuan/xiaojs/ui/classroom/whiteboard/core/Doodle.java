@@ -75,6 +75,7 @@ public abstract class Doodle implements Action {
 
     private void initParams() {
         mRect = new RectF();
+        mMatrix = new Matrix();
 
         mNormalizedPath = new Path();
         mOriginalPath = new Path();
@@ -161,7 +162,11 @@ public abstract class Doodle implements Action {
     }
 
     public void setDrawingMatrix(Matrix matrix) {
-        mMatrix = matrix;
+        if (mMatrix != null) {
+            mMatrix.set(matrix);
+        } else {
+            mMatrix = matrix;
+        }
     }
 
 
@@ -172,7 +177,21 @@ public abstract class Doodle implements Action {
 
     public abstract void drawBorder(Canvas canvas);
 
-    public abstract boolean isSelectedOnEditState(float x, float y);
+    public int checkRegionPressedArea(float x, float y) {
+        if (getState() == STATE_EDIT && mPoints.size() > 1) {
+            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+            PointF dp = mPoints.get(0);
+            PointF up = mPoints.get(1);
+            int corner = Utils.isPressedCorner(x, y, dp, up, params.drawingBounds);
+            if (corner != Utils.RECT_NO_SELECTED) {
+                return corner;
+            } else {
+                return Utils.checkRectPressed(x, y, dp, up, params.drawingBounds);
+            }
+        }
+
+        return Utils.RECT_NO_SELECTED;
+    }
 
     public abstract boolean isSelected(float x, float y);
 
@@ -182,7 +201,7 @@ public abstract class Doodle implements Action {
     }
 
     @Override
-    public void scale(float downX, float downY, float scale) {
+    public void scale(float oldX, float oldY, float x, float y) {
 
     }
 

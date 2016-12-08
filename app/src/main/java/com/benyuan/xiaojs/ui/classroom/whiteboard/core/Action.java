@@ -26,7 +26,7 @@ public interface Action {
 
     public void move(float deltaX, float deltaY);
 
-    public void scale(float downX, float downY, float scale);
+    public void scale(float oldX, float oldY, float x, float y);
 
     public void rotate(float degree);
 }

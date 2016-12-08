@@ -196,15 +196,8 @@ public class TextWriting extends Doodle {
     }
 
     @Override
-    public boolean isSelectedOnEditState(float x, float y) {
-        if (getState() == STATE_EDIT) {
-            WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-            PointF dp = mPoints.get(0);
-            PointF up = mPoints.get(1);
-            return Utils.checkRectPressed(x, y, dp, up, params.drawingBounds);
-        }
-
-        return false;
+    public int checkRegionPressedArea(float x, float y) {
+        return super.checkRegionPressedArea(x, y);
     }
 
     @Override
@@ -212,8 +205,8 @@ public class TextWriting extends Doodle {
         WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
         PointF dp = mPoints.get(0);
         PointF up = mPoints.get(1);
-        return Utils.checkRectPressed(x, y, dp, up, params.drawingBounds);
-
+        int flag = Utils.checkRectPressed(x, y, dp, up, params.drawingBounds);
+        return flag != Utils.RECT_NO_SELECTED ? true : false;
     }
 
 }

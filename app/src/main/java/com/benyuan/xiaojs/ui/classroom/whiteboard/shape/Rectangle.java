@@ -1,10 +1,12 @@
 package com.benyuan.xiaojs.ui.classroom.whiteboard.shape;
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.DrawingHelper;
@@ -29,10 +31,18 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
  * ======================================================================================== */
 
 public class Rectangle extends TwoDimensionalShape {
+    private float mDeltaScale = 1.0f;
+    private PointF mTextRotationCenter;
+    private Matrix mTransMatrix = new Matrix();
 
     public Rectangle(WhiteBoard whiteBoard, Paint paint) {
         super(whiteBoard, GeometryShape.RECTANGLE);
         setPaint(paint);
+        init();
+    }
+
+    private void init() {
+        mTextRotationCenter = new PointF();
     }
 
     @Override
@@ -150,15 +160,8 @@ public class Rectangle extends TwoDimensionalShape {
     }
 
     @Override
-    public boolean isSelectedOnEditState(float x, float y) {
-        if (getState() == STATE_EDIT) {
-            WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-            PointF dp = mPoints.get(0);
-            PointF up = mPoints.get(1);
-            return Utils.checkRectPressed(x, y, dp, up, params.drawingBounds);
-        }
-
-        return false;
+    public int checkRegionPressedArea(float x, float y) {
+        return super.checkRegionPressedArea(x, y);
     }
 
     @Override
@@ -167,5 +170,39 @@ public class Rectangle extends TwoDimensionalShape {
         PointF dp = mPoints.get(0);
         PointF up = mPoints.get(1);
         return Utils.checkRectFramePressed(x, y, dp, up, params.drawingBounds);
+    }
+
+    @Override
+    public void scale(float oldX, float oldY, float x, float y) {
+        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        PointF dp = mPoints.get(0);
+        PointF up = mPoints.get(1);
+        float scale = Utils.calcRectScale(oldX, oldY, x, y, dp, up, params.drawingBounds);
+        computeCenterPoint(dp, up);
+        mDeltaScale = scale;
+        mTotalScale = mTotalScale * scale;
+        mTransMatrix.reset();
+        //mTransMatrix.postConcat(mDisplayMatrix);
+        mTransMatrix.postScale(mTotalScale, mTotalScale, mTextRotationCenter.x, mTextRotationCenter.y);
+        Log.i("aaa", "scale="+scale+"    mTotalScale="+mTotalScale);
+    }
+
+    public PointF computeCenterPoint (PointF rectP1, PointF rectP2) {
+        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        PointF p = Utils.mapDoodlePointToScreen(rectP1.x, rectP1.y, params.drawingBounds);
+        float dpx = p.x;
+        float dpy = p.y;
+
+        p = Utils.mapDoodlePointToScreen(rectP2.x ,rectP2.y, params.drawingBounds);
+        float upx = p.x;
+        float upy = p.y;
+
+        float centerX = (dpx + upx) / 2.0f;
+        float centerY = (dpy + upy) / 2.0f;
+
+        /*float centerX = (rectP1.x + rectP2.x) / 2.0f;
+        float centerY = (rectP1.y + rectP1.y) / 2.0f;*/
+        mTextRotationCenter.set(centerX , centerY );
+        return mTextRotationCenter;
     }
 }

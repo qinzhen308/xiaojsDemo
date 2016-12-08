@@ -139,8 +139,8 @@ public class Selector extends Doodle {
     }
 
     @Override
-    public boolean isSelectedOnEditState(float x, float y) {
-        return false;
+    public int checkRegionPressedArea(float x, float y) {
+        return 0;
     }
 
     @Override
@@ -180,7 +180,7 @@ public class Selector extends Doodle {
                     LineSegment beeLineSeg = ((Beeline)d).getLineSegment(true);
                     intersect = Utils.intersect(mRect, beeLineSeg);
                     Log.i("aaa", "======================intersect="+intersect);
-                } if (d instanceof Triangle) {
+                } else if (d instanceof Triangle) {
                     LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments(true);
                     for (LineSegment lineSegment : beeLineSeg) {
                         intersect = Utils.intersect(mRect, lineSegment);
