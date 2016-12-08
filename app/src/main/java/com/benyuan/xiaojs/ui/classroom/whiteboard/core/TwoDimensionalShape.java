@@ -18,7 +18,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
 public abstract class TwoDimensionalShape extends GeometryShape {
 
-    protected TwoDimensionalShape(WhiteBoard whiteBoard) {
-        super(whiteBoard, Doodle.STYLE_GEOMETRY);
+    protected TwoDimensionalShape(WhiteBoard whiteBoard, int geometryId) {
+        super(whiteBoard, Doodle.STYLE_GEOMETRY, geometryId);
     }
 }

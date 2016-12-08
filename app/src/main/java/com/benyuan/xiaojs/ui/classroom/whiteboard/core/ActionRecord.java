@@ -9,17 +9,15 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2016/10/18
+ * Date:2016/12/6
  * Desc:
  *
  * ======================================================================================== */
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+public class ActionRecord {
+    public float translateX;
+    public float translateY;
 
-public abstract class ThreeDimensionalShape extends GeometryShape {
-    protected ThreeDimensionalShape(WhiteBoard whiteBoard, int style, int geometryId) {
-        super(whiteBoard, style, geometryId);
-    }
-
-    protected abstract double computeVolume();
+    public float scale;
+    public float rotate;
 }

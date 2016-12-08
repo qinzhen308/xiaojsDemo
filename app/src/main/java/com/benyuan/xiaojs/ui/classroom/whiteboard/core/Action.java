@@ -9,17 +9,24 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2016/10/18
+ * Date:2016/12/6
  * Desc:
  *
  * ======================================================================================== */
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+public interface Action {
+    public static final int NO_ACTION = 0;
+    public static final int MOVE_ACTION = 1;
+    public static final int SCALE_ACTION = 2;
+    public static final int ROTATE_ACTION = 3;
+    public static final int CHANGE_AREA_ACTION = 4;
+    public static final int DELETE_ACTION = 5;
 
-public abstract class ThreeDimensionalShape extends GeometryShape {
-    protected ThreeDimensionalShape(WhiteBoard whiteBoard, int style, int geometryId) {
-        super(whiteBoard, style, geometryId);
-    }
+    public void changeArea(float downX, float downY);
 
-    protected abstract double computeVolume();
+    public void move(float deltaX, float deltaY);
+
+    public void scale(float downX, float downY, float scale);
+
+    public void rotate(float degree);
 }

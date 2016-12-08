@@ -4,8 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.DrawingHelper;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
@@ -28,7 +31,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 public class Rectangle extends TwoDimensionalShape {
 
     public Rectangle(WhiteBoard whiteBoard, Paint paint) {
-        super(whiteBoard);
+        super(whiteBoard, GeometryShape.RECTANGLE);
         setPaint(paint);
     }
 
@@ -121,5 +124,48 @@ public class Rectangle extends TwoDimensionalShape {
         canvas.drawPath(mNormalizedPath, getPaint());
 
         canvas.restore();
+    }
+
+    @Override
+    public void drawBorder(Canvas canvas) {
+        if (mPoints.size() > 1) {
+            DrawingHelper.drawBorder(canvas,  getWhiteboard().getBlackParams(),
+                    mPoints.get(0), mPoints.get(1), mPaint.getStrokeWidth());
+        }
+    }
+
+    @Override
+    public void changeArea(float downX, float downY) {
+    }
+
+    @Override
+    public void move(float deltaX, float deltaY) {
+        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        PointF p = Utils.normalizeScreenPoint(deltaX, deltaY, params.drawingBounds);
+
+        PointF dp = mPoints.get(0);
+        PointF up = mPoints.get(1);
+        dp.set(dp.x + p.x, dp.y + p.y);
+        up.set(up.x + p.x, up.y + p.y);
+    }
+
+    @Override
+    public boolean isSelectedOnEditState(float x, float y) {
+        if (getState() == STATE_EDIT) {
+            WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+            PointF dp = mPoints.get(0);
+            PointF up = mPoints.get(1);
+            return Utils.checkRectPressed(x, y, dp, up, params.drawingBounds);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isSelected(float x, float y) {
+        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        PointF dp = mPoints.get(0);
+        PointF up = mPoints.get(1);
+        return Utils.checkRectFramePressed(x, y, dp, up, params.drawingBounds);
     }
 }

@@ -16,6 +16,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Beeline;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Triangle;
 
 import java.util.ArrayList;
 
@@ -133,6 +134,21 @@ public class Selector extends Doodle {
     }
 
     @Override
+    public void drawBorder(Canvas canvas) {
+
+    }
+
+    @Override
+    public boolean isSelectedOnEditState(float x, float y) {
+        return false;
+    }
+
+    @Override
+    public boolean isSelected(float x, float y) {
+        return false;
+    }
+
+    @Override
     public void move(float x, float y) {
 
     }
@@ -161,21 +177,26 @@ public class Selector extends Doodle {
         if (allDoodles != null) {
             for (Doodle d : allDoodles) {
                 if (d instanceof Beeline) {
-                    d.getOriginalPath();
                     LineSegment beeLineSeg = ((Beeline)d).getLineSegment(true);
-                    //Log.i("aaa", "selector="+mRect + "   beeline="+beeLineSeg);
-
                     intersect = Utils.intersect(mRect, beeLineSeg);
                     Log.i("aaa", "======================intersect="+intersect);
+                } if (d instanceof Triangle) {
+                    LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments(true);
+                    for (LineSegment lineSegment : beeLineSeg) {
+                        intersect = Utils.intersect(mRect, lineSegment);
+                        if (intersect) {
+                            d.setState(Doodle.STATE_EDIT);
+                        }
+                    }
                 } else {
                     Path originalPath = d.getOriginalPath();
                     if (originalPath == null) {
-                        return false;
+                        continue;
                     }
 
                     intersect = mRegion.setPath(originalPath, mSelectorRegion);
                     if (intersect) {
-                        d.setSelected(true);
+                        d.setState(Doodle.STATE_EDIT);
                     }
 
                     Log.i("aaa", "======================intersect="+intersect);
@@ -186,5 +207,4 @@ public class Selector extends Doodle {
         return intersect;
 
     }
-
 }

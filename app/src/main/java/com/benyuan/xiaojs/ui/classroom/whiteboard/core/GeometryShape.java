@@ -17,7 +17,7 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
 
-public abstract class GeometryShape extends Doodle {
+public abstract class GeometryShape extends Doodle{
     public final static int BEELINE = 0;
     public final static int RECTANGLE = 1;
     public final static int OVAL = 2;
@@ -25,10 +25,11 @@ public abstract class GeometryShape extends Doodle {
     public final static int ARROW = 4;
     public final static int DOUBLE_ARROW = 5;
 
-    protected int mType;
+    protected int mGeometryId;
 
-    protected GeometryShape(WhiteBoard whiteBoard, int style) {
+    protected GeometryShape(WhiteBoard whiteBoard, int style, int geometryId) {
         super(whiteBoard, style);
+        mGeometryId = geometryId;
     }
 
     @Override
@@ -53,6 +54,10 @@ public abstract class GeometryShape extends Doodle {
         }
 
         return false;
+    }
+
+    public int getGeometryId() {
+        return mGeometryId;
     }
 
 }
