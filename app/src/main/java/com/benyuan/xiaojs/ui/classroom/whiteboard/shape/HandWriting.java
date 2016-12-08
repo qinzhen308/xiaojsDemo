@@ -23,6 +23,7 @@ import android.graphics.RectF;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.DrawingHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 
@@ -107,8 +108,9 @@ public class HandWriting extends Doodle {
     }
 
     @Override
-    public void move(float x, float y) {
-
+    public void drawBorder(Canvas canvas) {
+        mNormalizedPath.computeBounds(mRect, true);
+        DrawingHelper.drawBorder(canvas, getWhiteboard().getBlackParams(), mRect, mPaint.getStrokeWidth());
     }
 
     @Override
@@ -116,4 +118,63 @@ public class HandWriting extends Doodle {
         return mOriginalPath;
     }
 
+    @Override
+    public void changeArea(float downX, float downY) {
+    }
+
+    @Override
+    public void move(float deltaX, float deltaY) {
+        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        PointF normP = Utils.normalizeScreenPoint(deltaX, deltaY, params.drawingBounds);
+
+        //update all points
+        if (mPoints != null && !mPoints.isEmpty()) {
+            for (PointF p : mPoints) {
+                p.set(p.x + normP.x, p.y + normP.y);
+            }
+        }
+
+        updatePath();
+    }
+
+    @Override
+    public boolean isSelectedOnEditState(float x, float y) {
+        if (getState() == STATE_EDIT) {
+            mOriginalPath.computeBounds(mRect, true);
+            return Utils.checkRectPressed(x, y, mRect.left, mRect.top, mRect.right, mRect.bottom);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isSelected(float x, float y) {
+        return Utils.intersect(x, y , this);
+    }
+
+    private void updatePath() {
+        if (mPoints.size() > 1) {
+            mNormalizedPath.reset();
+            mOriginalPath.reset();
+            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+
+            PointF last = mPoints.firstElement();
+
+            mNormalizedPath.moveTo(last.x, last.y);
+            PointF p = Utils.mapDoodlePointToScreen(last.x, last.y, getWhiteboard().getBlackParams().drawingBounds);
+            mOriginalPath.moveTo(p.x, p.y);
+
+            for (int i = 1; i < mPoints.size(); i++) {
+                PointF point = mPoints.get(i);
+
+                mNormalizedPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);
+
+                PointF lastP = Utils.mapDoodlePointToScreen(last.x, last.y, params.drawingBounds);
+                PointF currP = Utils.mapDoodlePointToScreen(point.x, point.y, params.drawingBounds);
+                mOriginalPath.quadTo(lastP.x, lastP.y, (lastP.x + currP.x) / 2, (lastP.y + currP.y) / 2);
+
+                last = point;
+            }
+        }
+    }
 }

@@ -101,8 +101,8 @@ public class TextHelper {
     }
 
     public PointF getTextRotateCenterPoint(TextWriting textWriting) {
-        PointF dp = textWriting.getDownPoint();
-        PointF up = textWriting.getUpPoint();
+        PointF dp = textWriting.getFirstPoint();
+        PointF up = textWriting.getLastPoint();
         WhiteBoard.BlackParams params = textWriting.getWhiteboard().getBlackParams();
         float centerX = (dp.x + up.x) / 2.0f * params.originalWidth;
         float centerY = (dp.y + up.y) / 2.0f * params.originalHeight;
