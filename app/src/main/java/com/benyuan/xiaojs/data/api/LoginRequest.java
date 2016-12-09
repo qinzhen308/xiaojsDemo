@@ -38,60 +38,25 @@ public class LoginRequest extends ServiceRequest {
 
     public void login(LoginParams params) {
 
-
-        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
-
-        xiaojsService.login(params).enqueue(new Callback<LoginInfo>() {
-            @Override
-            public void onResponse(Call<LoginInfo> call, Response<LoginInfo> response) {
-
-                onRespones(APIType.LOGIN, response);
-
-                if (response.code() == SUCCESS_CODE) {
-                    LoginInfo info = response.body();
-                    AccountDataManager.saveUserInfo(getAPIManager().getAppContext(), info.getUser());
-
-                    initPermission();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<LoginInfo> call, Throwable t) {
-
-                onFailures(APIType.LOGIN, t);
-            }
-        });
+        Call<LoginInfo> call = getService().login(params);
+        enqueueRequest(APIType.LOGIN, call);
 
     }
 
     public void logout(String sessionID) {
 
-
-        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
-        xiaojsService.logout(sessionID).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                onRespones(APIType.LOGOUT, response);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                onFailures(APIType.LOGOUT, t);
-            }
-        });
+        Call<ResponseBody> call = getService().logout(sessionID);
+        enqueueRequest(APIType.LOGOUT, call);
 
     }
 
     private void initPermission() {
 
-        SecurityManager.requestHavePrivilege(getAPIManager().getAppContext(), new APIServiceCallback<Privilege[]>() {
+        SecurityManager.requestHavePrivilege(getApiManager().getAppContext(), new APIServiceCallback<Privilege[]>() {
             @Override
             public void onSuccess(Privilege[] privileges) {
 
-                SecurityManager.savePermission(getAPIManager().getAppContext(),privileges);
+                SecurityManager.savePermission(getApiManager().getAppContext(), privileges);
 
             }
 
@@ -104,4 +69,13 @@ public class LoginRequest extends ServiceRequest {
     }
 
 
+    @Override
+    public void doTask(int apiType, Object responseBody) {
+        if (apiType == APIType.LOGIN) {
+            LoginInfo info = (LoginInfo) responseBody;
+            AccountDataManager.saveUserInfo(getApiManager().getAppContext(), info.getUser());
+
+            initPermission();
+        }
+    }
 }

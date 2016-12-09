@@ -4,9 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.DrawingHelper;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
@@ -29,7 +32,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 public class Oval extends TwoDimensionalShape {
 
     public Oval(WhiteBoard whiteBoard, Paint paint) {
-        super(whiteBoard);
+        super(whiteBoard, GeometryShape.OVAL);
         setPaint(paint);
     }
 
@@ -111,6 +114,14 @@ public class Oval extends TwoDimensionalShape {
     }
 
     @Override
+    public void drawBorder(Canvas canvas) {
+        if (mPoints.size() >  1) {
+            DrawingHelper.drawBorder(canvas,  getWhiteboard().getBlackParams(),
+                    mPoints.get(0), mPoints.get(1), mPaint.getStrokeWidth());
+        }
+    }
+
+    @Override
     public Path getOriginalPath() {
         WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
         PointF p = Utils.mapDoodlePointToScreen(mRect.left, mRect.top, params.drawingBounds);
@@ -126,4 +137,32 @@ public class Oval extends TwoDimensionalShape {
         return mOriginalPath;
     }
 
+    @Override
+    public void changeArea(float downX, float downY) {
+    }
+
+    @Override
+    public void move(float deltaX, float deltaY) {
+        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        PointF p = Utils.normalizeScreenPoint(deltaX, deltaY, params.drawingBounds);
+
+        PointF dp = mPoints.get(0);
+        PointF up = mPoints.get(1);
+        dp.set(dp.x + p.x, dp.y + p.y);
+        up.set(up.x + p.x, up.y + p.y);
+    }
+
+    @Override
+    public int checkRegionPressedArea(float x, float y) {
+        return super.checkRegionPressedArea(x, y);
+    }
+
+    @Override
+    public boolean isSelected(float x, float y) {
+        //return Utils.intersect(x, y , this);
+        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        PointF dp = mPoints.get(0);
+        PointF up = mPoints.get(1);
+        return Utils.checkOvalFramePress(x, y, dp, up, params.drawingBounds);
+    }
 }

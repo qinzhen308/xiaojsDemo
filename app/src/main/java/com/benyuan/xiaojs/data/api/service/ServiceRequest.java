@@ -11,9 +11,7 @@ import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
-import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.api.ApiManager;
-import com.benyuan.xiaojs.model.LoginInfo;
 import com.benyuan.xiaojs.util.APPUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +24,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -39,6 +39,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
     private ApiManager apiManager;
 
     private APIServiceCallback<T> serviceCallback;
+    private Call<T> serviceCall;
 
     private Object requestObj;
 
@@ -47,19 +48,64 @@ public class ServiceRequest<T> implements ContextLifecycle {
         this.serviceCallback = callback;
         apiManager = ApiManager.getAPIManager(context);
         configContext(context);
+
     }
 
-
-    public ApiManager getAPIManager() {
+    public ApiManager getApiManager() {
         return apiManager;
+    }
+
+    public XiaojsService getService() {
+        return apiManager.getXiaojsService();
     }
 
     public APIServiceCallback<T> getServiceCallback() {
         return serviceCallback;
     }
 
+    public void doTask(int apiType,T responseBody) {
+
+    }
+
+    //Convert object to JSON string
+    public String objectToJsonString(Object object) {
+
+        String jsonStr = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setDateFormat(new SimpleDateFormat(XiaojsService.DATE_FORMAT));
+            mapper.setTimeZone(TimeZone.getTimeZone(XiaojsService.TIME_ZONE_ID));
+            jsonStr = mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return jsonStr;
+
+    }
 
 
+    //解析error body json
+    public String parseErrorBody(String errorBody) {
+
+        String errorCode = getDefaultErrorCode();
+
+        if (TextUtils.isEmpty(errorBody)) {
+            return errorCode;
+        }
+
+        try {
+            JSONObject jobject = new JSONObject(errorBody);
+
+            errorCode = jobject.getString("ec");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return errorCode;
+
+    }
 
 
     private void configContext(Context context) {
@@ -168,17 +214,53 @@ public class ServiceRequest<T> implements ContextLifecycle {
     }
 
 
-    private void resetNull() {
+    private void cancelAndResetnull() {
+
+        if(serviceCall != null) {
+            serviceCall.cancel();
+        }
+
         serviceCallback = null;
         requestObj = null;
     }
 
+    private final String getExceptionErrorCode() {
+        return getDefaultErrorCode();
+    }
+
+    private final String getDefaultErrorCode() {
+        return Errors.NO_ERROR;
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Resolve the Xiaojs API callback
+    //Resolve the Xiaojs service callback
     //
 
-    public final void onRespones(int apiType, Response<T> response) {
+    public final void enqueueRequest(final int apiType, Call<T> call) {
+
+        if (call ==null) {
+            return;
+        }
+
+        serviceCall = call;
+
+        serviceCall.enqueue(new Callback<T>(){
+            @Override
+            public void onResponse(Call<T> call, Response<T> response) {
+                onRespones(apiType, response);
+            }
+
+            @Override
+            public void onFailure(Call<T> call, Throwable t) {
+
+                onFailures(apiType, t);
+            }
+        });
+
+    }
+
+    private void onRespones(int apiType, Response<T> response) {
 
         int responseCode = response.code();
         if (XiaojsConfig.DEBUG) {
@@ -193,6 +275,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 serviceCallback.onSuccess(object);
             }
 
+            doTask(apiType,object);
 
         } else {
 
@@ -216,7 +299,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
         delRefrence();
     }
 
-    public final void onFailures(int apiType, Throwable t) {
+    private void onFailures(int apiType, Throwable t) {
         if (XiaojsConfig.DEBUG) {
             String exception = t.getMessage();
             Logger.d("the request has occur exception:\n %s", exception);
@@ -251,64 +334,11 @@ public class ServiceRequest<T> implements ContextLifecycle {
     public void onDestroy() {
 
         if (XiaojsConfig.DEBUG) {
-            Logger.d("the current activity is onDestroy,so reaset refrence null");
+            Logger.d("the current activity is onDestroy,so cancel request and reaset refrence null");
         }
 
-        resetNull();
+        cancelAndResetnull();
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    protected final String getExceptionErrorCode() {
-        return getDefaultErrorCode();
-    }
-
-    protected final String getDefaultErrorCode() {
-        return Errors.NO_ERROR;
-    }
-
-    /**
-     * Convert object to JSON string
-     */
-    public String objectToJsonString(Object object) {
-
-        String jsonStr = null;
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.setDateFormat(new SimpleDateFormat(XiaojsService.DATE_FORMAT));
-            mapper.setTimeZone(TimeZone.getTimeZone(XiaojsService.TIME_ZONE_ID));
-            jsonStr = mapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return jsonStr;
-
-    }
-
-    /**
-     * 解析error body json
-     */
-    public String parseErrorBody(String errorBody) {
-
-        String errorCode = getDefaultErrorCode();
-
-        if (TextUtils.isEmpty(errorBody)) {
-            return errorCode;
-        }
-
-        try {
-            JSONObject jobject = new JSONObject(errorBody);
-
-            errorCode = jobject.getString("ec");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return errorCode;
-
-    }
 }

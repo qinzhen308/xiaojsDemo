@@ -32,20 +32,9 @@ public class SecurityRequest extends ServiceRequest {
             Logger.d("privilegesPath: %s",privilegesPath);
         }
 
-        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
-        xiaojsService.havePrivileges(session,privilegesPath).enqueue(new Callback<Privilege[]>() {
-            @Override
-            public void onResponse(Call<Privilege[]> call, Response<Privilege[]> response) {
-                onRespones(APIType.HAVE_PROVILEGES,response);
-            }
+        Call<Privilege[]> call = getService().havePrivileges(session,privilegesPath);
+        enqueueRequest(APIType.HAVE_PROVILEGES,call);
 
-            @Override
-            public void onFailure(Call<Privilege[]> call, Throwable t) {
-
-                onFailures(APIType.HAVE_PROVILEGES,t);
-
-            }
-        });
     }
 
 }

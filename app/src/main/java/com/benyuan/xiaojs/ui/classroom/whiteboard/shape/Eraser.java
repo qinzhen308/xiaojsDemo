@@ -19,6 +19,7 @@ import android.graphics.Path;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 
 public class Eraser extends Doodle {
@@ -33,8 +34,13 @@ public class Eraser extends Doodle {
     }
 
     @Override
-    public void move(float x, float y) {
+    public void drawBorder(Canvas canvas) {
 
+    }
+
+    @Override
+    public boolean isSelected(float x, float y) {
+        return false;
     }
 
     @Override

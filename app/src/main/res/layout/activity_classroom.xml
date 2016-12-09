@@ -7,7 +7,8 @@
     <FrameLayout
             android:id="@+id/drawer_content_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
         <EditText
                 android:id="@+id/blackboard_edit"
@@ -20,7 +21,8 @@
                 android:id="@+id/white_board"
                 android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_gravity="center"/>
 
         <!--控制面板, 直播-->
         <include

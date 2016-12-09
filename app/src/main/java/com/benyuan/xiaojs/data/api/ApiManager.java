@@ -1,25 +1,16 @@
 package com.benyuan.xiaojs.data.api;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.benyuan.xiaojs.XiaojsConfig;
-import com.benyuan.xiaojs.common.xf_foundation.Errors;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Platform;
 import com.benyuan.xiaojs.data.api.interceptor.CommonHeaderInterceptor;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
-import com.benyuan.xiaojs.model.APIEntity;
+
 import com.benyuan.xiaojs.util.APPUtils;
 import com.benyuan.xiaojs.util.UIUtils;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -137,11 +128,9 @@ public class ApiManager {
         }
 
 
-        JacksonConverterFactory jacksonFactory = JacksonConverterFactory.create();
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(XiaojsService.BASE_URL)
-                .addConverterFactory(jacksonFactory)
+                .addConverterFactory(JacksonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
 

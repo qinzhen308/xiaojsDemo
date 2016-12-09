@@ -24,30 +24,16 @@ import retrofit2.Response;
 
 public class CategoriesRequest extends ServiceRequest {
 
-    public CategoriesRequest(Context context,APIServiceCallback callback) {
+    public CategoriesRequest(Context context, APIServiceCallback callback) {
 
-        super(context,callback);
+        super(context, callback);
 
     }
 
     public void getSubject() {
 
-
-        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
-        xiaojsService.getSubject().enqueue(new Callback<CSubject>() {
-            @Override
-            public void onResponse(Call<CSubject> call,
-                                   Response<CSubject> response) {
-
-                onRespones(APIType.GET_SUBJECT,response);
-            }
-
-            @Override
-            public void onFailure(Call<CSubject> call, Throwable t) {
-
-                onFailures(APIType.GET_SUBJECT,t);
-            }
-        });
+        Call<CSubject> call = getService().getSubject();
+        enqueueRequest(APIType.GET_SUBJECT,call);
 
     }
 

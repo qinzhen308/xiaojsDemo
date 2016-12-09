@@ -25,12 +25,16 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
 import java.util.Vector;
 
-public abstract class Doodle {
+public abstract class Doodle implements Action {
     public final static int SELECTION = 0;
     public final static int STYLE_HAND_WRITING = 1;
     public final static int STYLE_GEOMETRY = 2;
     public final static int STYLE_ERASER = 3;
     public final static int STYLE_TEXT = 4;
+
+    public final static int STATE_IDLE = 0;
+    public final static int STATE_DRAWING = 1;
+    public final static int STATE_EDIT = 2;
 
     protected WhiteBoard mWhiteboard;
     protected Vector<Doodle> mDoodlePaths = new Vector<Doodle>();
@@ -48,12 +52,16 @@ public abstract class Doodle {
     protected RectF mRect;
     protected Path mOriginalPath;
     protected Matrix mMatrix;
+    protected int mState = STATE_IDLE;
 
-    private boolean mSelected = false;
+    protected float mOffsetX;
+    protected float mOffsetY;
 
     protected Doodle(WhiteBoard whiteBoard, int style) {
         mWhiteboard = whiteBoard;
         mStyle = style;
+        mState = STATE_IDLE;
+
         int capacity = initialCapacity();
         if (capacity <= 0) {
             mPoints = new Vector<PointF>();
@@ -65,8 +73,9 @@ public abstract class Doodle {
         initParams();
     }
 
-    private void initParams () {
+    private void initParams() {
         mRect = new RectF();
+        mMatrix = new Matrix();
 
         mNormalizedPath = new Path();
         mOriginalPath = new Path();
@@ -114,7 +123,15 @@ public abstract class Doodle {
         return mRect;
     }
 
-    //==========================getter and setter==========================================
+    public int getState() {
+        return mState;
+    }
+
+    public void setState(int state) {
+        mState = state;
+    }
+
+//==========================getter and setter==========================================
 
     public void merge(Doodle d) {
         if (d != this) {
@@ -136,60 +153,66 @@ public abstract class Doodle {
         addControlPoint(new PointF(x, y));
     }
 
-    public PointF getDownPoint() {
+    public PointF getFirstPoint() {
         return mPoints.firstElement();
     }
 
-    public PointF getUpPoint() {
+    public PointF getLastPoint() {
         return mPoints.lastElement();
     }
 
-    /**change the first point */
-    public void changeDownPoint(PointF point) {
-        if (mPoints != null && !mPoints.isEmpty()) {
-            mPoints.firstElement().set(point.x, point.y);
-        }
-    }
-
-    public void changeDownPoint(float x, float y) {
-        if (mPoints != null && !mPoints.isEmpty()) {
-            mPoints.firstElement().set(x, y);
-        }
-    }
-
-    /**change the last point */
-    public void changeUpPoint(PointF point) {
-        if (mPoints != null && !mPoints.isEmpty()) {
-            mPoints.lastElement().set(point.x, point.y);
-        }
-    }
-
-    public void changeUpPoint(float x, float y) {
-        if (mPoints != null && !mPoints.isEmpty()) {
-            mPoints.lastElement().set(x, y);
-        }
-    }
-
     public void setDrawingMatrix(Matrix matrix) {
-        mMatrix = matrix;
+        if (mMatrix != null) {
+            mMatrix.set(matrix);
+        } else {
+            mMatrix = matrix;
+        }
     }
 
-    public abstract void move(float x, float y);
 
-    public void rotate(float degree) {
-        mDegree += degree;
-    }
-
-    public void setSelected(boolean selected) {
-        mSelected = selected;
-    }
-
-    public boolean isSelected() {
-        return mSelected;
-    }
-
+    //==============================
     public abstract Path getOriginalPath();
 
     public abstract void drawSelf(Canvas canvas);
+
+    public abstract void drawBorder(Canvas canvas);
+
+    public int checkRegionPressedArea(float x, float y) {
+        if (getState() == STATE_EDIT && mPoints.size() > 1) {
+            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+            PointF dp = mPoints.get(0);
+            PointF up = mPoints.get(1);
+            int corner = Utils.isPressedCorner(x, y, dp, up, params.drawingBounds);
+            if (corner != Utils.RECT_NO_SELECTED) {
+                return corner;
+            } else {
+                return Utils.checkRectPressed(x, y, dp, up, params.drawingBounds);
+            }
+        }
+
+        return Utils.RECT_NO_SELECTED;
+    }
+
+    public abstract boolean isSelected(float x, float y);
+
+    @Override
+    public void move(float x, float y) {
+
+    }
+
+    @Override
+    public void scale(float oldX, float oldY, float x, float y) {
+
+    }
+
+    @Override
+    public void rotate(float degree) {
+
+    }
+
+    @Override
+    public void changeArea(float downX, float downY) {
+
+    }
 
 }

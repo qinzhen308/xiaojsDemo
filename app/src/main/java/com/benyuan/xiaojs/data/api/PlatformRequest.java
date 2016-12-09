@@ -29,33 +29,18 @@ import retrofit2.Response;
 
 public class PlatformRequest extends ServiceRequest {
 
-    public PlatformRequest(Context context,APIServiceCallback callback) {
+    public PlatformRequest(Context context, APIServiceCallback callback) {
 
-        super(context,callback);
+        super(context, callback);
 
     }
 
     public void getNotificationsOverview(@NonNull String sessionID, @NonNull Pagination pagination) {
 
-
         String paginationJson = objectToJsonString(pagination);
 
-        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
-        xiaojsService.getNotificationsOverview(sessionID, paginationJson).enqueue(
-                new Callback<GNOResponse>() {
-                    @Override
-                    public void onResponse(Call<GNOResponse> call, Response<GNOResponse> response) {
-
-                        onRespones(APIType.GET_NOTIFICATIONS_OVERVIEW,response);
-                    }
-
-                    @Override
-                    public void onFailure(Call<GNOResponse> call, Throwable t) {
-
-                        onFailures(APIType.GET_NOTIFICATIONS_OVERVIEW,t);
-
-                    }
-                });
+        Call<GNOResponse> call = getService().getNotificationsOverview(sessionID, paginationJson);
+        enqueueRequest(APIType.GET_NOTIFICATIONS_OVERVIEW, call);
 
     }
 
@@ -63,7 +48,6 @@ public class PlatformRequest extends ServiceRequest {
     public void getNotifications(@NonNull String sessionID,
                                  @NonNull NotificationCriteria criteria,
                                  @NonNull Pagination pagination) {
-
 
         String criteriaJson = objectToJsonString(criteria);
         String paginationJson = objectToJsonString(pagination);
@@ -73,53 +57,23 @@ public class PlatformRequest extends ServiceRequest {
             Logger.json(paginationJson);
         }
 
-        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
-        xiaojsService.getNotifications(sessionID, criteriaJson, paginationJson).enqueue(
-                new Callback<GENotificationsResponse>() {
+        Call<GENotificationsResponse> call = getService().getNotifications(sessionID,
+                criteriaJson,
+                paginationJson);
 
-                    @Override
-                    public void onResponse(Call<GENotificationsResponse> call,
-                                           Response<GENotificationsResponse> response) {
-
-                        onRespones(APIType.GET_NOTIFICATIONS,response);
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<GENotificationsResponse> call, Throwable t) {
-
-                        onFailures(APIType.GET_NOTIFICATIONS,t);
-                    }
-                });
-
+        enqueueRequest(APIType.GET_NOTIFICATIONS, call);
 
     }
 
     public void deleteNotification(@NonNull String sessionID, @NonNull String notification) {
 
+        Call<ResponseBody> call = getService().deleteNotification(sessionID, notification);
+        enqueueRequest(APIType.DELETE_NOTIFICATION, call);
 
-        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
-        xiaojsService.deleteNotification(sessionID, notification).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                onRespones(APIType.DELETE_NOTIFICATION,response);
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                onFailures(APIType.DELETE_NOTIFICATION,t);
-
-
-            }
-        });
     }
 
     public void ignoreNotifications(@NonNull String sessionID,
                                     @NonNull NotificationCriteria criteria) {
-
 
         String criteriaJson = objectToJsonString(criteria);
 
@@ -127,21 +81,7 @@ public class PlatformRequest extends ServiceRequest {
             Logger.json(criteriaJson);
         }
 
-        XiaojsService xiaojsService = getAPIManager().getXiaojsService();
-        xiaojsService.ignoreNotifications(sessionID, criteriaJson).enqueue(
-                new Callback<IgnoreNResponse>() {
-
-                    @Override
-                    public void onResponse(Call<IgnoreNResponse> call, Response<IgnoreNResponse> response) {
-
-                        onRespones(APIType.IGNORE_NOTIFICATIONS,response);
-                    }
-
-                    @Override
-                    public void onFailure(Call<IgnoreNResponse> call, Throwable t) {
-
-                        onFailures(APIType.IGNORE_NOTIFICATIONS,t);
-                    }
-                });
+        Call<IgnoreNResponse> call = getService().ignoreNotifications(sessionID, criteriaJson);
+        enqueueRequest(APIType.IGNORE_NOTIFICATIONS, call);
     }
 }
