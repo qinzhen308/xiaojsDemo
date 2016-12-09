@@ -212,12 +212,12 @@ public class GooeyMenu extends View {
             ObjectAnimator animShow = ObjectAnimator.ofFloat(mMenuPoints.get(i), "Radius", 0f, mGab);
             animShow.setDuration(ANIMATION_DURATION);
             animShow.setInterpolator(new AnticipateOvershootInterpolator());
-            animShow.setStartDelay((ANIMATION_DURATION * (mNumberOfMenu - i)) / 10);
+            //animShow.setStartDelay((ANIMATION_DURATION * (mNumberOfMenu - i)) / 10);
             animShow.addUpdateListener(mUpdateListener);
             mShowAnimation.add(animShow);
             ObjectAnimator animHide = animShow.clone();
             animHide.setFloatValues(mGab, 0f);
-            animHide.setStartDelay((ANIMATION_DURATION * i) / 10);
+            //animHide.setStartDelay((ANIMATION_DURATION * i) / 10);
             mHideAnimation.add(animHide);
 
             if (mDrawableArray != null) {
@@ -525,7 +525,7 @@ public class GooeyMenu extends View {
     };
 
     public boolean canAnimation(){
-        return System.currentTimeMillis() - lastTouchTime > (mNumberOfMenu/10 + 1.5) * ANIMATION_DURATION;
+        return System.currentTimeMillis() - lastTouchTime > ANIMATION_DURATION;
     }
 
     public interface GooeyMenuInterface {

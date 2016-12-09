@@ -210,7 +210,6 @@ public abstract class BaseTabActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (mRotateRight != null){
             mRotateRight.cancel();
             mRotateRight = null;
@@ -219,5 +218,6 @@ public abstract class BaseTabActivity extends BaseActivity {
             mRotateLeft.cancel();
             mRotateLeft = null;
         }
+        super.onDestroy();
     }
 }

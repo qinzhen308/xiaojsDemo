@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_bolder_bg">
+
+    <LinearLayout
+
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:src="@drawable/default_portrait"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px147"/>
+
+        <TextView
+                android:text="title"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:maxLines="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+                android:layout_marginTop="@dimen/px20"
+                android:layout_marginBottom="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/home_live_item_price"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:text="price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/home_live_item_num"
+                    android:text="name"
+                    android:layout_toLeftOf="@id/home_live_item_price"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </LinearLayout>
+</FrameLayout>

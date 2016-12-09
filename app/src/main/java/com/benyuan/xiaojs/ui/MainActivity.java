@@ -10,6 +10,7 @@ import com.benyuan.xiaojs.ui.base.BaseTabActivity;
 import com.benyuan.xiaojs.ui.course.CourseConstant;
 import com.benyuan.xiaojs.ui.course.LessonCreationActivity;
 import com.benyuan.xiaojs.ui.home.HomeFragment;
+import com.benyuan.xiaojs.ui.live.LiveFragment;
 import com.benyuan.xiaojs.ui.message.NotificationFragment;
 import com.benyuan.xiaojs.ui.mine.TeachAbilityDemoActivity;
 import com.benyuan.xiaojs.ui.widget.CommonDialog;
@@ -28,7 +29,7 @@ public class MainActivity extends BaseTabActivity {
         List<Fragment> fs = new ArrayList<>();
         fs.add(new HomeFragment());
         fs.add(new NotificationFragment());
-        fs.add(new LearnFragment());
+        fs.add(new LiveFragment());
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);
         addViews(new int[]{R.string.home_tab_index, R.string.home_tab_message, R.string.home_tab_circle, R.string.home_tab_mine},
@@ -78,5 +79,12 @@ public class MainActivity extends BaseTabActivity {
         }
 
         super.onActivityResult(requestCode,resultCode,data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        System.exit(1);
     }
 }

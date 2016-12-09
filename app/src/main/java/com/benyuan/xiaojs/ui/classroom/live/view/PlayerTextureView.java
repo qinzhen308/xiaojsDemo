@@ -122,8 +122,8 @@ public class PlayerTextureView extends BaseMediaView{
 
     @Override
     public void destroy() {
-        //mPlayer.stopPlayback();
         stopInternal();
+        mHandler = null;
     }
 
     @Override
@@ -215,7 +215,9 @@ public class PlayerTextureView extends BaseMediaView{
     private static final int MESSAGE_ID_RECONNECTING = 0x01;
 
     private void sendReconnectMessage() {
-        Logger.e(TAG,"正在重连...");
+        if (mHandler == null)
+            return;
+        Logger.i(TAG,"正在重连...");
         showLoading(true);
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_ID_RECONNECTING), 500);
@@ -256,6 +258,7 @@ public class PlayerTextureView extends BaseMediaView{
                 @Override
                 public void run() {
                     mPlayer.stopPlayback();
+                    mPlayer = null;
                 }
             }).start();
         }

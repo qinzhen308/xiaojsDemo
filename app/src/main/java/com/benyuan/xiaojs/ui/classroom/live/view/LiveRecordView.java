@@ -15,14 +15,12 @@ package com.benyuan.xiaojs.ui.classroom.live.view;
  * ======================================================================================== */
 
 import android.content.Context;
-import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.benyuan.xiaojs.R;
@@ -42,9 +40,7 @@ import com.qiniu.pili.droid.streaming.AudioSourceCallback;
 import com.qiniu.pili.droid.streaming.CameraStreamingSetting;
 import com.qiniu.pili.droid.streaming.MediaStreamingManager;
 import com.qiniu.pili.droid.streaming.MicrophoneStreamingSetting;
-import com.qiniu.pili.droid.streaming.StreamingPreviewCallback;
 import com.qiniu.pili.droid.streaming.StreamingProfile;
-import com.qiniu.pili.droid.streaming.StreamingSessionListener;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 import com.qiniu.pili.droid.streaming.SurfaceTextureCallback;
@@ -54,15 +50,10 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
-import java.util.List;
 
 public class LiveRecordView extends BaseMediaView implements
-        CameraPreviewFrameView.Listener,
-        StreamingStateChangedListener,
-        StreamingPreviewCallback,
         SurfaceTextureCallback,
-        AudioSourceCallback,
-        StreamingSessionListener{
+        AudioSourceCallback{
 
     private static final String TAG = "LiveRecordView";
     private static final int MSG_START_STREAMING = 0;
@@ -83,7 +74,6 @@ public class LiveRecordView extends BaseMediaView implements
 
     private int mCurrentCamFacingIndex;
     private boolean mIsReady;
-    private boolean mIsStreaming;
     private Switcher mCameraSwitcher = new Switcher();
     protected Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -187,12 +177,172 @@ public class LiveRecordView extends BaseMediaView implements
 
         mMediaStreamingManager.prepare(mCameraStreamingSetting, mMicrophoneStreamingSetting, mProfile);
 
-        mPreviewFrameView.setListener(this);
-        mMediaStreamingManager.setStreamingStateListener(this);
+        mMediaStreamingManager.setStreamingStateListener(new OnStreamingState());
         mMediaStreamingManager.setSurfaceTextureCallback(this);
-        mMediaStreamingManager.setStreamingSessionListener(this);
-        mMediaStreamingManager.setStreamingPreviewCallback(this);
+        //mMediaStreamingManager.setStreamingSessionListener(this);
+        //mMediaStreamingManager.setStreamingPreviewCallback(this);
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
+    }
+
+    private class OnStreamingState implements StreamingStateChangedListener{
+
+        @Override
+        public void onStateChanged(StreamingState streamingState, Object extra) {
+            Log.i(TAG, "StreamingState streamingState:" + streamingState + ",extra:" + extra);
+            int id = MSG_HIDE_LOADING;
+            switch (streamingState) {
+                /**
+                 * Preparing the environment for network connection.
+                 * <p>
+                 * The first state after calling {@link #startStreaming()}
+                 *
+                 * */
+                case PREPARING:
+                    id = MSG_SHOW_LOADING;
+                    break;
+                /**
+                 * <ol>
+                 *     <li>{@link #resume()} done in pure audio streaming</li>
+                 *     <li>{@link #resume()} done and camera be activated in AV streaming.</li>
+                 * </ol>
+                 * */
+                case READY:
+                    // start streaming when READY
+                    mIsReady = true;
+                    id = MSG_SHOW_LOADING;
+                    start();
+                    break;
+                /**
+                 * Being connecting.
+                 *
+                 * */
+                case CONNECTING:
+                    id = MSG_SHOW_LOADING;
+                    break;
+                /**
+                 * The av datas start sending successfully.
+                 *
+                 * */
+                case STREAMING:
+                    break;
+                /**
+                 * Streaming has been finished, and you can {@link #startStreaming()} again.
+                 *
+                 * */
+                case SHUTDOWN:
+                    Logger.i("Recorder Shutdown!");
+                    break;
+                /**
+                 * Connect error.
+                 *
+                 * The following is the possible case:
+                 *
+                 * <ol>
+                 *     <li>Stream is invalid</li>
+                 *     <li>Network is unreachable</li>
+                 * </ol>
+                 * 连接失败，重连也失败，无法通过网络和服务端建立链接
+                 * */
+                case IOERROR:
+                    break;
+                /**
+                 * The initial state.
+                 *
+                 * */
+                case UNKNOWN:
+                    break;
+                /**
+                 * Sending buffer is empty.
+                 *
+                 * */
+                case SENDING_BUFFER_EMPTY:
+                    break;
+                /**
+                 * Sending buffer have been full.
+                 *
+                 * */
+                case SENDING_BUFFER_FULL:
+                    break;
+                /**
+                 * {@link AudioRecord#startRecording()} failed.
+                 *
+                 * */
+                case AUDIO_RECORDING_FAIL:
+                    break;
+                /**
+                 * camera open failed.
+                 * 摄像机打开失败，需要提示
+                 * */
+                case OPEN_CAMERA_FAIL:
+                    Log.e(TAG, "Open Camera Fail. id:" + extra);
+
+                    break;
+                /**
+                 * The network connection has been broken.
+                 *  网络连接断开，需要提示
+                 * */
+                case DISCONNECTED:
+                    break;
+                /**
+                 * Invalid streaming url.
+                 *
+                 * Gets the message after call {@link #setStreamingProfile(StreamingProfile)} if streaming
+                 * url is invalid. Also gets the url as the extra info.
+                 * */
+                case INVALID_STREAMING_URL:
+                    Log.e(TAG, "Invalid streaming url:" + extra);
+                    break;
+                /**
+                 * Invalid streaming url.
+                 *
+                 * Gets the message after call {@link #setStreamingProfile(StreamingProfile)} if streaming
+                 * url is invalid. Also gets the url as the extra info.
+                 * */
+                case UNAUTHORIZED_STREAMING_URL:
+                    Log.e(TAG, "Unauthorized streaming url:" + extra);
+                    break;
+                /**
+                 * Notify the camera switched.
+                 * <p>
+                 * extra will including the info the new camera id.
+                 *
+                 * <ol>
+                 *     <li>Camera.CameraInfo.CAMERA_FACING_FRONT</li>
+                 *     <li>Camera.CameraInfo.CAMERA_FACING_BACK</li>
+                 * </ol>
+                 *
+                 * <pre>
+                 *     <code>
+                 *         Log.i(TAG, "current camera id:" + (Integer)extra);
+                 *     </code>
+                 * </pre>
+                 *  摄像机切换镜头
+                 * */
+                case CAMERA_SWITCHED:
+                    break;
+                /**
+                 * Notify the torch info after camera be active.
+                 * <p>
+                 * extra will including the info if the device support the Torch.
+                 *
+                 * <ol>
+                 *     <li>true, supported</li>
+                 *     <li>false, unsupported</li>
+                 * </ol>
+                 *
+                 * <pre>
+                 *     <code>
+                 *         final boolean isSupportedTorch = (Boolean) extra;
+                 *     </code>
+                 * </pre>
+                 *
+                 * */
+                case TORCH_INFO:
+                    break;
+            }
+            mHandler.sendMessage(mHandler.obtainMessage(id));
+        }
+
     }
 
     @Override
@@ -231,14 +381,17 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void startStreamingInThread(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (mMediaStreamingManager != null){
-                    mIsStreaming = mMediaStreamingManager.startStreaming();
-                }
+       Thread t = new T();
+        t.start();
+    }
+
+    private class T extends Thread{
+        @Override
+        public void run() {
+            if (mMediaStreamingManager != null){
+                mMediaStreamingManager.startStreaming();
             }
-        }).start();
+        }
     }
 
     private void stopStreamingInternal(){
@@ -246,6 +399,8 @@ public class LiveRecordView extends BaseMediaView implements
             mMediaStreamingManager.destroy();
             mMediaStreamingManager = null;
         }
+        mAspect = null;
+        mPreviewFrameView = null;
     }
 
     private static DnsManager getMyDnsManager() {
@@ -271,216 +426,8 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     @Override
-    public void onStateChanged(StreamingState streamingState, Object extra) {
-        Log.i(TAG, "StreamingState streamingState:" + streamingState + ",extra:" + extra);
-        int id = MSG_HIDE_LOADING;
-        switch (streamingState) {
-            /**
-             * Preparing the environment for network connection.
-             * <p>
-             * The first state after calling {@link #startStreaming()}
-             *
-             * */
-            case PREPARING:
-                id = MSG_SHOW_LOADING;
-                break;
-            /**
-             * <ol>
-             *     <li>{@link #resume()} done in pure audio streaming</li>
-             *     <li>{@link #resume()} done and camera be activated in AV streaming.</li>
-             * </ol>
-             * */
-            case READY:
-                // start streaming when READY
-                mIsReady = true;
-                id = MSG_SHOW_LOADING;
-                start();
-                break;
-            /**
-             * Being connecting.
-             *
-             * */
-            case CONNECTING:
-                id = MSG_SHOW_LOADING;
-                break;
-            /**
-             * The av datas start sending successfully.
-             *
-             * */
-            case STREAMING:
-                break;
-            /**
-             * Streaming has been finished, and you can {@link #startStreaming()} again.
-             *
-             * */
-            case SHUTDOWN:
-                Logger.i("Recorder Shutdown!");
-                break;
-            /**
-             * Connect error.
-             *
-             * The following is the possible case:
-             *
-             * <ol>
-             *     <li>Stream is invalid</li>
-             *     <li>Network is unreachable</li>
-             * </ol>
-             * 连接失败，重连也失败，无法通过网络和服务端建立链接
-             * */
-            case IOERROR:
-                break;
-            /**
-             * The initial state.
-             *
-             * */
-            case UNKNOWN:
-                break;
-            /**
-             * Sending buffer is empty.
-             *
-             * */
-            case SENDING_BUFFER_EMPTY:
-                break;
-            /**
-             * Sending buffer have been full.
-             *
-             * */
-            case SENDING_BUFFER_FULL:
-                break;
-            /**
-             * {@link AudioRecord#startRecording()} failed.
-             *
-             * */
-            case AUDIO_RECORDING_FAIL:
-                break;
-            /**
-             * camera open failed.
-             * 摄像机打开失败，需要提示
-             * */
-            case OPEN_CAMERA_FAIL:
-                Log.e(TAG, "Open Camera Fail. id:" + extra);
-
-                break;
-            /**
-             * The network connection has been broken.
-             *  网络连接断开，需要提示
-             * */
-            case DISCONNECTED:
-                break;
-            /**
-             * Invalid streaming url.
-             *
-             * Gets the message after call {@link #setStreamingProfile(StreamingProfile)} if streaming
-             * url is invalid. Also gets the url as the extra info.
-             * */
-            case INVALID_STREAMING_URL:
-                Log.e(TAG, "Invalid streaming url:" + extra);
-                break;
-            /**
-             * Invalid streaming url.
-             *
-             * Gets the message after call {@link #setStreamingProfile(StreamingProfile)} if streaming
-             * url is invalid. Also gets the url as the extra info.
-             * */
-            case UNAUTHORIZED_STREAMING_URL:
-                Log.e(TAG, "Unauthorized streaming url:" + extra);
-                break;
-            /**
-             * Notify the camera switched.
-             * <p>
-             * extra will including the info the new camera id.
-             *
-             * <ol>
-             *     <li>Camera.CameraInfo.CAMERA_FACING_FRONT</li>
-             *     <li>Camera.CameraInfo.CAMERA_FACING_BACK</li>
-             * </ol>
-             *
-             * <pre>
-             *     <code>
-             *         Log.i(TAG, "current camera id:" + (Integer)extra);
-             *     </code>
-             * </pre>
-             *  摄像机切换镜头
-             * */
-            case CAMERA_SWITCHED:
-                break;
-            /**
-             * Notify the torch info after camera be active.
-             * <p>
-             * extra will including the info if the device support the Torch.
-             *
-             * <ol>
-             *     <li>true, supported</li>
-             *     <li>false, unsupported</li>
-             * </ol>
-             *
-             * <pre>
-             *     <code>
-             *         final boolean isSupportedTorch = (Boolean) extra;
-             *     </code>
-             * </pre>
-             *
-             * */
-            case TORCH_INFO:
-                break;
-        }
-        mHandler.sendMessage(mHandler.obtainMessage(id));
-    }
-
-    @Override
-    public boolean onPreviewFrame(byte[] bytes, int i, int i1) {
-        return true;
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        Log.i(TAG, "onSingleTapUp X:" + e.getX() + ",Y:" + e.getY());
-        if (mIsReady) {
-            mMediaStreamingManager.doSingleTapUp((int) getX(), (int) getY());
-        }
-        return false;
-    }
-
-    @Override
     public void onAudioSourceAvailable(ByteBuffer byteBuffer, int i, long l, boolean b) {
 
-    }
-
-    /**
-     * Invoked when audio recording failed.
-     * <p>
-     *
-     * @param code error code. <b>Unspecified now</b>.
-     *
-     * @return true means you handled the event; otherwise, given up.
-     *
-     * */
-    @Override
-    public boolean onRecordAudioFailedHandled(int code) {
-        mMediaStreamingManager.updateEncodingType(AVCodecType.SW_VIDEO_CODEC);
-        startStreamingInThread();
-        return true;
-    }
-
-    @Override
-    public boolean onRestartStreamingHandled(int i) {
-        Log.i(TAG, "onRestartStreamingHandled");
-        return mMediaStreamingManager.startStreaming();
-    }
-
-    @Override
-    public Camera.Size onPreviewSizeSelected(List<Camera.Size> list) {
-        Camera.Size size = null;
-        if (list != null) {
-            for (Camera.Size s : list) {
-                if (s.height >= 480) {
-                    size = s;
-                    Log.e(TAG, "selected size :" + size.width + "x" + size.height);
-                    break;
-                }
-            }
-        }
-        return size;
     }
 
     @Override

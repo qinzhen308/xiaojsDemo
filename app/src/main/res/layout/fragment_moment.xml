@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:background="@color/main_bg"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <View
-            android:background="@drawable/common_white_bg_corner"
-            android:layout_width="@dimen/px100"
-            android:layout_height="@dimen/px80"/>
-</LinearLayout>
+<com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshGridView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/live_grid"
+        android:scrollbars="none"
+        android:paddingBottom="@dimen/px100"
+        android:divider="@android:color/transparent"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+</com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshGridView>
