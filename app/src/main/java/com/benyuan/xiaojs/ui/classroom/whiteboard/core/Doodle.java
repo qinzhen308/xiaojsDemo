@@ -51,7 +51,7 @@ public abstract class Doodle implements Action {
     protected Path mNormalizedPath;
     protected RectF mRect;
     protected Path mOriginalPath;
-    protected Matrix mMatrix;
+    protected Matrix mDrawingMatrix;
     protected int mState = STATE_IDLE;
 
     protected float mOffsetX;
@@ -75,7 +75,7 @@ public abstract class Doodle implements Action {
 
     private void initParams() {
         mRect = new RectF();
-        mMatrix = new Matrix();
+        mDrawingMatrix = new Matrix();
 
         mNormalizedPath = new Path();
         mOriginalPath = new Path();
@@ -162,10 +162,10 @@ public abstract class Doodle implements Action {
     }
 
     public void setDrawingMatrix(Matrix matrix) {
-        if (mMatrix != null) {
-            mMatrix.set(matrix);
+        if (mDrawingMatrix != null) {
+            mDrawingMatrix.set(matrix);
         } else {
-            mMatrix = matrix;
+            mDrawingMatrix = matrix;
         }
     }
 

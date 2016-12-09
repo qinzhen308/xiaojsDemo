@@ -103,7 +103,7 @@ public class Triangle extends TwoDimensionalShape {
             mNormalizedPath.lineTo(mTriangleCoordinates.get(1).x, mTriangleCoordinates.get(1).y);
             mNormalizedPath.lineTo(mTriangleCoordinates.get(2).x, mTriangleCoordinates.get(2).y);
             mNormalizedPath.lineTo(mTriangleCoordinates.get(0).x, mTriangleCoordinates.get(0).y);
-            mNormalizedPath.transform(mMatrix);
+            mNormalizedPath.transform(mDrawingMatrix);
 
             canvas.drawPath(mNormalizedPath, getPaint());
         }

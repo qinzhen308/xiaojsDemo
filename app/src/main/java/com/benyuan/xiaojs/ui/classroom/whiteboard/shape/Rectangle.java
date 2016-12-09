@@ -5,7 +5,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.RectF;
 import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
@@ -130,7 +129,7 @@ public class Rectangle extends TwoDimensionalShape {
 
         mNormalizedPath.reset();
         mNormalizedPath.addRect(mRect, Path.Direction.CCW);
-        mNormalizedPath.transform(mMatrix);
+        mNormalizedPath.transform(mDrawingMatrix);
         canvas.drawPath(mNormalizedPath, getPaint());
 
         canvas.restore();
