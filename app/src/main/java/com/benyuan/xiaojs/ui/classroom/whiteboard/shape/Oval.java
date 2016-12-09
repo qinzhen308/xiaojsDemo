@@ -4,8 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.RectF;
-import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.DrawingHelper;
@@ -107,7 +105,7 @@ public class Oval extends TwoDimensionalShape {
 
         mNormalizedPath.reset();
         mNormalizedPath.addOval(mRect, Path.Direction.CCW);
-        mNormalizedPath.transform(mMatrix);
+        mNormalizedPath.transform(mDrawingMatrix);
         canvas.drawPath(mNormalizedPath, getPaint());
 
         canvas.restore();
