@@ -73,28 +73,6 @@ public class Oval extends TwoDimensionalShape {
 
         canvas.save();
 
-        //map point
-        /*PointF p = Utils.setBlackboardToScreen(mStartX, mStartY, mWhiteboard.getBlackParams());
-        float x1 = p.x;
-        float y1 = p.y;
-        p = Utils.setBlackboardToScreen(mEndX, mEndY, mWhiteboard.getBlackParams());
-        float x2 = p.x;
-        float y2 = p.y;
-
-        float temp1 = Math.min(x1, x2);
-        float temp2 = Math.max(x1, x2);
-        x1 = temp1;
-        x2 = temp2;
-
-        temp1 = Math.min(y1, y2);
-        temp2 = Math.max(y1, y2);
-        y1 = temp1;
-        y2 = temp2;
-
-        mRect.set(x1, y1, x2, y2);
-        //draw oval
-        canvas.drawOval(mRect, getPaint());*/
-
         float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
         float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
 
@@ -105,6 +83,7 @@ public class Oval extends TwoDimensionalShape {
 
         mNormalizedPath.reset();
         mNormalizedPath.addOval(mRect, Path.Direction.CCW);
+        mDrawingMatrix.postConcat(mTransformMatrix);
         mNormalizedPath.transform(mDrawingMatrix);
         canvas.drawPath(mNormalizedPath, getPaint());
 
@@ -113,25 +92,15 @@ public class Oval extends TwoDimensionalShape {
 
     @Override
     public void drawBorder(Canvas canvas) {
-        if (mPoints.size() >  1) {
-            DrawingHelper.drawBorder(canvas,  getWhiteboard().getBlackParams(),
-                    mPoints.get(0), mPoints.get(1), mPaint.getStrokeWidth());
-        }
+        super.drawBorder(canvas);
     }
 
     @Override
     public Path getOriginalPath() {
-        WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
-        PointF p = Utils.mapDoodlePointToScreen(mRect.left, mRect.top, params.drawingBounds);
-        int x1 = (int)p.x;
-        int y1 = (int)p.y;
-
-        p = Utils.mapDoodlePointToScreen(mRect.right, mRect.bottom, params.drawingBounds);
-        int x2 = (int)p.x;
-        int y2 = (int)p.y;
-
-        mRect.set(x1, y1, x2, y2);
-        mOriginalPath.addOval(mRect, Path.Direction.CCW);
+        mOriginalPath.reset();
+        mOriginalPath.set(mNormalizedPath);
+        mOriginalPath.transform(mDrawingMatrix);
+        mOriginalPath.transform(mDisplayMatrix);
         return mOriginalPath;
     }
 
@@ -151,16 +120,23 @@ public class Oval extends TwoDimensionalShape {
     }
 
     @Override
+    public void scale(float oldX, float oldY, float x, float y) {
+        super.scale(oldX, oldY, x, y);
+    }
+
+    @Override
     public int checkRegionPressedArea(float x, float y) {
         return super.checkRegionPressedArea(x, y);
     }
 
     @Override
     public boolean isSelected(float x, float y) {
-        //return Utils.intersect(x, y , this);
-        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-        PointF dp = mPoints.get(0);
-        PointF up = mPoints.get(1);
-        return Utils.checkOvalFramePress(x, y, dp, up, params.drawingBounds);
+        if (mPoints.size() > 1) {
+            PointF dp = mPoints.get(0);
+            PointF up = mPoints.get(1);
+            return Utils.checkOvalFramePress(x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
+        }
+
+        return false;
     }
 }

@@ -16,13 +16,16 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
@@ -30,19 +33,28 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Beeline;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Triangle;
 
 public class Utils {
+    /**
+     * 矩形没有被选中
+     */
     public static final int RECT_NO_SELECTED = 0;
-
+    /**
+     * 矩形body
+     */
     public static final int RECT_BODY = 100;
-
+    /**
+     * 矩形的角
+     */
     public static final int LEFT_TOP_CORNER = 200;
     public static final int RIGHT_TOP_CORNER = 201;
     public static final int LEFT_BOTTOM_CORNER = 202;
     public static final int RIGHT_BOTTOM_CORNER = 203;
-
+    /**
+     * 矩形的边
+     */
     public static final int TOP_EDGE = 300;
-    public static final int BOTTOM_EDGE = 301;
-    public static final int LEFT_EDGE = 302;
-    public static final int RIGHT_EDGE = 303;
+    public static final int RIGHT_EDGE = 301;
+    public static final int BOTTOM_EDGE = 302;
+    public static final int LEFT_EDGE = 303;
 
     private static final int OVAL_FOCUS_ON_X_AXLE = 1024;
     private static final int OVAL_FOCUS_ON_Y_AXLE = 2048;
@@ -57,7 +69,12 @@ public class Utils {
     public final static float DEFAULT_STROKE_WIDTH = 20;
     public final static float DEFAULT_TEXT_SIZE = 60;
 
+    public static int DEFAULT_BORDER_WIDTH = 5;
+    public static int DEFAULT_DASH_WIDTH = 20;
+    private static int DEFAULT_BORDER_COLOR = 0XFF0076FF;
+
     private final static RectF mRect = new RectF();
+    private final static RectF mTransRect = new RectF();
     private final static Region mRegion = new Region();
     private final static Region mSelectorRegion = new Region();
 
@@ -65,6 +82,7 @@ public class Utils {
     private final static LineSegment[] mDiagonal = new LineSegment[2];
 
     private final static Matrix mMapMatrix = new Matrix();
+    private final static float[] mPointArr = new float[2];
 
     /**
      * map the point of specified canvas to screen point
@@ -139,15 +157,6 @@ public class Utils {
     /**
      * Creates hand writing paint for blackboard.
      */
-    public static Paint createHandWritingPaint() {
-        Paint paint = new Paint(Paint.DITHER_FLAG | Paint.ANTI_ALIAS_FLAG);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setStrokeWidth(DEFAULT_STROKE_WIDTH);
-        return paint;
-    }
-
     public static Paint createPaint(int color, float strokeWidth, Paint.Style style) {
         Paint paint = new Paint(Paint.DITHER_FLAG | Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(style);
@@ -156,6 +165,16 @@ public class Utils {
         paint.setStrokeWidth(strokeWidth < 0 ? DEFAULT_STROKE_WIDTH : strokeWidth);
         paint.setColor(color);
         return paint;
+    }
+
+    public static Paint buildDashPaint() {
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(DEFAULT_BORDER_WIDTH);
+        p.setColor(DEFAULT_BORDER_COLOR);
+        PathEffect blackEffects = new DashPathEffect(new float[]{DEFAULT_DASH_WIDTH, DEFAULT_DASH_WIDTH}, 0);
+        p.setPathEffect(blackEffects);
+        return p;
     }
 
     /**
@@ -221,30 +240,40 @@ public class Utils {
         return mDiagonal;
     }
 
-    public static LineSegment getLineSegment(float stx, float sty, float edx, float edy, boolean original, RectF drawingBounds) {
-        return getLineSegment(stx, sty, edx, edy, original, null);
+    public static LineSegment getLineSegment(PointF p1, PointF p2, Matrix drawingMatrix, Matrix displayMatrix) {
+        return getLineSegment(p1, p2, drawingMatrix, displayMatrix, null);
     }
 
-    public static LineSegment getLineSegment(float stx, float sty, float edx, float edy, boolean original,
-                                      RectF drawingBounds, LineSegment lineSegment) {
+    /**
+     * 根据2个点获取线段
+     */
+    public static LineSegment getLineSegment(PointF p1, PointF p2,
+                                             Matrix drawingMatrix, Matrix displayMatrix, LineSegment lineSegment) {
         if (lineSegment == null) {
             lineSegment = new LineSegment();
         }
-        if (original) {
-            PointF p = Utils.mapDoodlePointToScreen(stx, sty, drawingBounds);
-            int x1 = (int)p.x;
-            int y1 = (int)p.y;
 
-            p = Utils.mapDoodlePointToScreen(edx, edy, drawingBounds);
-            int x2 = (int)p.x;
-            int y2 = (int)p.y;
+        PointF p = transformToScreenPoint(p1, drawingMatrix, displayMatrix);
+        lineSegment.point1.set(p.x, p.y);
+        p = transformToScreenPoint(p2, drawingMatrix, displayMatrix);
+        lineSegment.point2.set(p.x, p.y);
 
-            lineSegment.point1.set(x1, y1);
-            lineSegment.point2.set(x2, y2);
-        } else {
-            lineSegment.point1.set(stx, sty);
-            lineSegment.point2.set(edx, edy);
+        return lineSegment;
+    }
+
+    /**
+     * 根据2个点的坐标获取线段
+     */
+    public static LineSegment getLineSegment(float p1x, float p1y, float p2x, float p2y,
+                                             Matrix drawingMatrix, Matrix displayMatrix, LineSegment lineSegment) {
+        if (lineSegment == null) {
+            lineSegment = new LineSegment();
         }
+
+        PointF p = transformToScreenPoint(p1x, p1y, drawingMatrix, displayMatrix);
+        lineSegment.point1.set(p.x, p.y);
+        p = transformToScreenPoint(p2x, p2y, drawingMatrix, displayMatrix);
+        lineSegment.point2.set(p.x, p.y);
 
         return lineSegment;
     }
@@ -308,157 +337,18 @@ public class Utils {
         return vectorA.x * vectorB.y - vectorB.x * vectorA.y;
     }
 
-    //如果两个向量点积的值大于0，他们的夹角是锐角，反之是钝角。
-    private float dotProduct(float x, float y, PointF rectP1, PointF rectP2, float degree, RectF drawingBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
-        float dpx = p.x;
-        float dpy = p.y;
-
-        p = mapDoodlePointToScreen(rectP2.x ,rectP2.y, drawingBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        float centerX = (dpx + upx) / 2.0f;
-        float centerY = (dpy + upy) / 2.0f;
-
-        //文本框水平中线向量 horizontalVector,因为是水平向量，y值为0
-        float horizontalVector[] = {upx - centerX, 0};
-
-        //映射到旋转前
-        float[] pressedP = {x, y};
-        mMapMatrix.reset();
-        mMapMatrix.setRotate(-degree, centerX, centerY);
-        mMapMatrix.mapPoints(pressedP);
-
-        //文本框中心(起点)与手势按下点(终点)所成的向量
-        float[] pressedVector = {pressedP[0] - centerX, pressedP[1] - centerY};
-
-        //2个向量的点积
-        return horizontalVector[0] * pressedVector[0] + horizontalVector[1] * pressedVector[1];
-    }
-
-    public static float calcRectRotation(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2, RectF drawingBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
-        float dpx = p.x;
-        float dpy = p.y;
-
-        p = mapDoodlePointToScreen(rectP2.x ,rectP2.y, drawingBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        dpx = dpx - WhiteBoard.TEXT_BORDER_PADDING;
-        dpy = dpy - WhiteBoard.TEXT_BORDER_PADDING;
-        upx = upx + WhiteBoard.TEXT_BORDER_PADDING;
-        upy = upy + WhiteBoard.TEXT_BORDER_PADDING;
-
-        float centerX = (dpx + upx) / 2.0f;
-        float centerY = (dpy + upy) / 2.0f;
-
-        //屏幕坐标系和标准坐标系的Y轴方向相反
-        float preDeltaX = oldX - centerX;
-        float preDeltaY = -(oldY - centerY);
-        float deltaX = x - centerX;
-        float deltaY = -(y - centerY);
-
-        double previousAngle = Math.atan2(preDeltaY, preDeltaX);
-        double angle = Math.atan2(deltaY, deltaX);
-
-        double degrees = angle - previousAngle;
-        return (float) (-degrees * (180 / Math.PI));
-    }
-
-    public static float calcRectScale(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2
-                              , RectF drawingBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
-        float dpx = p.x;
-        float dpy = p.y;
-
-        p = mapDoodlePointToScreen(rectP2.x ,rectP2.y, drawingBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        //dpx = dpx - WhiteBoard.TEXT_BORDER_PADDING;
-        //dpy = dpy - WhiteBoard.TEXT_BORDER_PADDING;
-        //upx = upx + WhiteBoard.TEXT_BORDER_PADDING;
-        //upy = upy + WhiteBoard.TEXT_BORDER_PADDING;
-
-        float centerX = (dpx + upx) / 2.0f;
-        float centerY = (dpy + upy) / 2.0f;
-
-        //屏幕坐标系和标准坐标系的Y轴方向相反
-        float preDeltaX = oldX - centerX;
-        float preDeltaY = -(oldY - centerY);
-        float deltaX = x - centerX;
-        float deltaY = -(y - centerY);
-
-        double preDistance = Math.sqrt(preDeltaX * preDeltaX + preDeltaY * preDeltaY);
-        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        float deltaScale = (float)(distance / preDistance);
-
-        return deltaScale;
-    }
-
-    public void calcRectRotationAndScale(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2, float degree,
-                                         float totalScale, RectF drawingBounds){
-        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
-        float dpx = p.x;
-        float dpy = p.y;
-
-        p = mapDoodlePointToScreen(rectP2.x ,rectP2.y, drawingBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        dpx = dpx - WhiteBoard.TEXT_BORDER_PADDING;
-        dpy = dpy - WhiteBoard.TEXT_BORDER_PADDING;
-        upx = upx + WhiteBoard.TEXT_BORDER_PADDING;
-        upy = upy + WhiteBoard.TEXT_BORDER_PADDING;
-
-        float centerX = (dpx + upx) / 2.0f;
-        float centerY = (dpy + upy) / 2.0f;
-
-        //屏幕坐标系和标准坐标系的Y轴方向相反
-        float preDeltaX = oldX - centerX;
-        float preDeltaY = -(oldY - centerY);
-        float deltaX = x - centerX;
-        float deltaY = -(y - centerY);
-
-        double preDistance = Math.sqrt(preDeltaX * preDeltaX + preDeltaY * preDeltaY);
-        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        float tempScale = totalScale;
-        float deltaScale = (float)(distance / preDistance);
-        totalScale = totalScale * deltaScale;
-
-        if (totalScale > MAX_SCALE) {
-            totalScale = MAX_SCALE;
-            deltaScale = totalScale / tempScale;
-        }
-        if (totalScale < MIN_SCALE) {
-            totalScale = MIN_SCALE;
-            deltaScale = totalScale / tempScale;
-        }
-
-        double previousAngle = Math.atan2(preDeltaY, preDeltaX);
-        double angle = Math.atan2(deltaY, deltaX);
-
-        double degrees = angle - previousAngle;
-        degree = (float) (-degrees * (180 / Math.PI));
-    }
-
     public static boolean intersect(float x, float y, Doodle d) {
-        float x1 = x - WhiteBoard.PRESSED_SCOPE;
-        float y1 = y - WhiteBoard.PRESSED_SCOPE;
-        float x2 = x + WhiteBoard.PRESSED_SCOPE;
-        float y2 = y + WhiteBoard.PRESSED_SCOPE;
+        int scope = WhiteBoard.PRESSED_SCOPE;
+        buildRect(mRect, x, y, scope);
 
-        mRect.set(x1, y1, x2, y2);
-        mSelectorRegion.set((int) x1, (int) y1, (int) x2, (int) y2);
+        mSelectorRegion.set((int) mRect.left, (int) mRect.top, (int) mRect.right, (int) mRect.bottom);
 
         boolean intersect = false;
         if (d instanceof Beeline) {
-            LineSegment beeLineSeg = ((Beeline) d).getLineSegment(true);
+            LineSegment beeLineSeg = ((Beeline) d).getLineSegment();
             intersect = Utils.intersect(mRect, beeLineSeg);
         } else if (d instanceof Triangle) {
-            LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments(true);
+            LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments();
             for (LineSegment lineSegment : beeLineSeg) {
                 intersect = Utils.intersect(mRect, lineSegment);
                 if (intersect) {
@@ -477,106 +367,236 @@ public class Utils {
         }
 
         return intersect;
-
     }
 
     /**
-     * 判断某个点是否在矩形范围内
-     * @param x 按下点的x
-     * @param y 按下点的y
-     * @param rectP1 矩形的其中的一个角对应的点
-     * @param rectP2 相对于rectP1的对角点
-     * @param doodleBounds
-     * @return
+     * @param x             按下点的x
+     * @param y             按下点的y
+     * @param rectP1        矩形的其中的一个角对应的点
+     * @param rectP2        相对于rectP1的对角点
+     * @param drawingMatrix 绘制矩阵
+     * @param displayMatrix 显示矩阵
      */
-    public static int checkRectPressed(float x, float y, PointF rectP1, PointF rectP2, RectF doodleBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, doodleBounds);
-        float dpx = p.x;
-        float dpy = p.y;
-
-        p = mapDoodlePointToScreen(rectP2.x ,rectP2.y, doodleBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        return checkRectPressed(x, y, dpx, dpy, upx, upy);
-    }
-
-    /**
-     * 判断某个点是否在矩形范围内
-     * @param x 按下点的x
-     * @param y 按下点的y
-     * @return
-     */
-    public static int checkRectPressed(float x, float y, float dpx, float dpy, float upx, float upy) {
-        float x1 = Math.min(dpx, upx);
-        float x2 = Math.max(dpx, upx);
-        float y1 = Math.min(dpy, upy);
-        float y2 = Math.max(dpy, upy);
-
-        x1 = x1 - WhiteBoard.PRESSED_SCOPE;
-        y1 = y1 - WhiteBoard.PRESSED_SCOPE;
-        x2 = x2 + WhiteBoard.PRESSED_SCOPE;
-        y2 = y2 + WhiteBoard.PRESSED_SCOPE;
-
-        mRect.set(x1, y1, x2, y2);
-
-        return mRect.contains(x, y) ? RECT_BODY : RECT_NO_SELECTED;
-    }
-
-    /**
-     * 判断某个点是否按下矩形边框
-     * @param x 按下点的x
-     * @param y 按下点的y
-     * @param rectP1 矩形的其中的一个角对应的点
-     * @param rectP2 相对于rectP1的对角点
-     * @return
-     */
-    public static boolean checkRectFramePressed(float x, float y, PointF rectP1, PointF rectP2, RectF doodleBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, doodleBounds);
-        float dpx = p.x;
-        float dpy = p.y;
-
-        p = mapDoodlePointToScreen(rectP2.x ,rectP2.y, doodleBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        return checkRectFramePressed(x, y, dpx, dpy, upx, upy);
-    }
-
-    /**
-     * 判断某个点是否按下矩形边框
-     * @param x 按下点的x
-     * @param y 按下点的y
-     * @return
-     */
-    public static boolean checkRectFramePressed(float x, float y, float dpx, float dpy, float upx, float upy) {
-        float minX = Math.min(dpx, upx);
-        float maxX = Math.max(dpx, upx);
-        float minY = Math.min(dpy, upy);
-        float maxY = Math.max(dpy, upy);
+    public static int checkRectPressed(float x, float y, PointF rectP1, PointF rectP2, Matrix drawingMatrix, Matrix displayMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
         int scope = WhiteBoard.PRESSED_SCOPE;
-
-        if (Math.abs(upx - dpx) < scope || Math.abs(upy - dpy) < scope) {
-            if (y > (maxY + scope) || y < (minY - scope) ||
-                    x > (maxX + scope) || x < (minX - scope)) {
-                return false;
-            }
-        } else {
-            if (y > (maxY + scope) || y < (minY - scope) ||
-                    x > (maxX + scope) || x < (minX - scope) ||
-                    (x > (minX + scope) && x < (maxX - scope) &&
-                            y > (minY + scope) && y < (maxY - scope))) {
-                return false;
-            }
-        }
-        return true;
+        rect.set(rect.left - scope, rect.top - scope, rect.right + scope, rect.bottom + scope);
+        return rect.contains(x, y) ? RECT_BODY : RECT_NO_SELECTED;
     }
 
-    public static boolean checkOvalFramePress(float x, float y, PointF rectP1, PointF rectP2, RectF doodleBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x ,rectP1.y, doodleBounds);
+    /**
+     * @param x             按下点的x
+     * @param y             按下点的y
+     * @param rect          变换前的矩形
+     * @param drawingMatrix 绘制矩阵
+     * @param displayMatrix 显示矩阵
+     */
+    public static int checkRectPressed(float x, float y, RectF rect, Matrix drawingMatrix, Matrix displayMatrix) {
+        RectF transRect = transformToScreenRect(rect, drawingMatrix, displayMatrix);
+        int scope = WhiteBoard.PRESSED_SCOPE;
+        transRect.set(rect.left - scope, rect.top - scope, rect.right + scope, rect.bottom + scope);
+        return transRect.contains(x, y) ? RECT_BODY : RECT_NO_SELECTED;
+    }
+
+
+    /**
+     * 判断某个点是否按下矩形边框
+     *
+     * @param x      按下点的x
+     * @param y      按下点的y
+     * @param rectP1 矩形的其中的一个角对应的点
+     * @param rectP2 相对于rectP1的对角点
+     */
+    public static boolean isRectFramePressed(float x, float y, PointF rectP1, PointF rectP2,
+                                           Matrix drawingMatrix, Matrix displayMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
+        int edge = whichEdgePressed(x, y, rect.left, rect.top, rect.right, rect.bottom);
+        Log.i("aaa", "edge="+edge);
+        return edge != RECT_NO_SELECTED;
+    }
+
+    public static int whichEdgePressed(float x, float y, PointF rectP1, PointF rectP2,
+                                       Matrix drawingMatrix, Matrix displayMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
+        return whichEdgePressed(x, y, rect.left, rect.top, rect.right, rect.bottom);
+    }
+
+    /**
+     * 判断是按下矩形的哪一条边
+     *
+     * @param x 按下点的x
+     * @param y 按下点的y
+     */
+    public static int whichEdgePressed(float x, float y, float left, float top, float right, float bottom) {
+        int scope = WhiteBoard.PRESSED_SCOPE;
+        //top edge
+        mTransRect.set(left, top - scope, right, top + scope);
+        if (mTransRect.contains(x, y)){
+            return TOP_EDGE;
+        }
+
+        //bottom edge
+        mTransRect.set(left, bottom - scope, right, bottom + scope);
+        if (mTransRect.contains(x, y)){
+            return BOTTOM_EDGE;
+        }
+
+        //left edge
+        mTransRect.set(left- scope, top, left + scope, bottom);
+        if (mTransRect.contains(x, y)){
+            return LEFT_EDGE;
+        }
+
+        //right edge
+        mTransRect.set(right - scope, top, right + scope, bottom);
+        if (mTransRect.contains(x, y)){
+            return RIGHT_EDGE;
+        }
+
+        return RECT_NO_SELECTED;
+    }
+
+
+    /**
+     * 判断按下的某个点是否在rectP1，rectP1构成矩形的某个角上
+     *
+     * @param x 按下点x
+     * @param y 按下点y
+     */
+    public static int isPressedCorner(float x, float y, PointF rectP1, PointF rectP2, Matrix drawingMatrix, Matrix displayMatrix) {
+        transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
+        return whichCornerPressed(x, y, mRect);
+    }
+
+    /**
+     * 判断按下的某个点是否在矩形的某个角上
+     *
+     * @param x 按下点x
+     * @param y 按下点y
+     */
+    public static int isPressedCorner(float x, float y, RectF rectF, Matrix drawingMatrix, Matrix displayMatrix) {
+        transformToScreenRect(rectF, drawingMatrix, displayMatrix);
+        return whichCornerPressed(x, y, mRect);
+    }
+
+    public static PointF transformToScreenPoint(PointF p, Matrix drawingMatrix, Matrix displayMatrix) {
+        return transformToScreenPoint(p.x, p.y, drawingMatrix, displayMatrix);
+    }
+
+    public static PointF transformToScreenPoint(float x, float y, Matrix drawingMatrix, Matrix displayMatrix) {
+        mPointArr[0] = x;
+        mPointArr[1] = y;
+        drawingMatrix.mapPoints(mPointArr);
+        displayMatrix.mapPoints(mPointArr);
+        mPoint.set(mPointArr[0], mPointArr[1]);
+        return mPoint;
+    }
+
+    /**
+     * 变换doodle坐标到屏幕坐标
+     */
+    public static RectF transformToScreenRect(PointF rectP1, PointF rectP2, Matrix drawingMatrix, Matrix displayMatrix) {
+        float minX = Math.min(rectP1.x, rectP2.x);
+        float minY = Math.min(rectP1.y, rectP2.y);
+        float maxX = Math.max(rectP1.x, rectP2.x);
+        float maxY = Math.max(rectP1.y, rectP2.y);
+        mRect.set(minX, minY, maxX, maxY);
+
+        mPointArr[0] = mRect.left;
+        mPointArr[1] = mRect.top;
+        drawingMatrix.mapPoints(mPointArr);
+        displayMatrix.mapPoints(mPointArr);
+        float left = mPointArr[0];
+        float top = mPointArr[1];
+
+        mPointArr[0] = mRect.right;
+        mPointArr[1] = mRect.bottom;
+        drawingMatrix.mapPoints(mPointArr);
+        displayMatrix.mapPoints(mPointArr);
+        float right = mPointArr[0];
+        float bottom = mPointArr[1];
+        mRect.set(left, top, right, bottom);
+
+        return mRect;
+    }
+
+    /**
+     * 变换doodle rect对应的坐标到屏幕坐标
+     */
+    public static RectF transformToScreenRect(RectF rect, Matrix drawingMatrix, Matrix displayMatrix) {
+        mRect.set(rect);
+
+        mPointArr[0] = mRect.left;
+        mPointArr[1] = mRect.top;
+        drawingMatrix.mapPoints(mPointArr);
+        displayMatrix.mapPoints(mPointArr);
+        float left = mPointArr[0];
+        float top = mPointArr[1];
+
+        mPointArr[0] = mRect.right;
+        mPointArr[1] = mRect.bottom;
+        drawingMatrix.mapPoints(mPointArr);
+        displayMatrix.mapPoints(mPointArr);
+        float right = mPointArr[0];
+        float bottom = mPointArr[1];
+        mRect.set(left, top, right, bottom);
+
+        return mRect;
+    }
+
+    /**
+     * 判断哪个矩形的哪个角被按下了
+     */
+    private static int whichCornerPressed(float x, float y, RectF rect) {
+        float scope = WhiteBoard.CORNER_EDGE_SIZE;
+        //left top corner
+        buildRect(mTransRect, rect.left, rect.top, scope);
+        if (mTransRect.contains(x, y)) {
+            return LEFT_TOP_CORNER;
+        }
+
+        //right top corner
+        buildRect(mTransRect, rect.right, rect.top, scope);
+        if (mTransRect.contains(x, y)) {
+            return RIGHT_TOP_CORNER;
+        }
+
+        //left bottom corner
+        buildRect(mTransRect, rect.left, rect.bottom, scope);
+        if (mTransRect.contains(x, y)) {
+            return LEFT_BOTTOM_CORNER;
+        }
+
+        //right bottom corner
+        buildRect(mTransRect, rect.right, rect.bottom, scope);
+        if (mTransRect.contains(x, y)) {
+            return RIGHT_BOTTOM_CORNER;
+        }
+
+        return RECT_NO_SELECTED;
+    }
+
+    /**
+     * 通过某一个点和scope构造一个新的rect
+     */
+    private static RectF buildRect(RectF rectF, float x, float y, float scope) {
+        if (rectF == null) {
+            rectF = new RectF();
+        }
+
+        if (scope <= 0) {
+            return rectF;
+        }
+
+        rectF.set(x - scope, y - scope, x + scope, y + scope);
+        return rectF;
+    }
+
+    public static boolean checkOvalFramePress(float x, float y, PointF rectP1, PointF rectP2,  Matrix drawingMatrix, Matrix displayMatrix) {
+        PointF p = transformToScreenPoint(rectP1.x, rectP1.y, drawingMatrix, displayMatrix);
         float dpx = p.x;
         float dpy = p.y;
-        p = mapDoodlePointToScreen(rectP2.x ,rectP2.y, doodleBounds);
+        p = transformToScreenPoint(rectP2.x, rectP2.y, drawingMatrix, displayMatrix);
         float upx = p.x;
         float upy = p.y;
 
@@ -594,7 +614,16 @@ public class Utils {
         return checkOvalFramePress(x, y, dpx, dpy, upx, upy);
     }
 
-
+    /**
+     * 判断某个点是否在以rect产生的椭圆（椭圆的圆心在0,0）
+     * @param x
+     * @param y
+     * @param rectP1x
+     * @param rectP1y
+     * @param rectP2x
+     * @param rectP2y
+     * @return
+     */
     public static boolean checkOvalFramePress(float x, float y, float rectP1x, float rectP1y, float rectP2x, float rectP2y) {
         //oval equations:
         /**
@@ -669,57 +698,6 @@ public class Utils {
         return true;
     }
 
-    public static int isPressedCorner(float x, float y, PointF rectP1, PointF rectP2, RectF doodleBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x ,rectP1.y, doodleBounds);
-        float dpx = p.x;
-        float dpy = p.y;
-        p = mapDoodlePointToScreen(rectP2.x ,rectP2.y, doodleBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        return isPressedCorner(x, y, dpx, dpy, upx, upy);
-    }
-
-    public static int isPressedCorner(float x, float y, float rectP1x, float rectP1y, float rectP2x, float rectP2y) {
-        int mWitchCornerPressed = Utils.RECT_NO_SELECTED;
-        int scope = WhiteBoard.CORNER_EDGE_SIZE;
-
-        float minX = Math.min(rectP1x, rectP2x) - scope / 2.0f;
-        float maxX = Math.max(rectP1x, rectP2x) + scope / 2.0f;
-        float minY = Math.min(rectP1y, rectP2y) - scope / 2.0f;
-        float maxY = Math.max(rectP1y, rectP2y) + scope / 2.0f;
-
-        float horizontalEdgeSize = scope;
-        float verticalEdgeSize = scope;
-
-        float shapeWidth = maxX - minX;
-        float shapeHeight = maxY - minY;
-
-        if (shapeWidth / 2.0f < scope) {
-            horizontalEdgeSize = shapeWidth / 2.0f;
-        }
-        if (shapeHeight / 2.0f < scope) {
-            verticalEdgeSize = shapeHeight / 2.0f;
-        }
-
-        if (x > minX && x < (minX + horizontalEdgeSize) && y > minY && y < (minY + verticalEdgeSize)) {
-            mWitchCornerPressed = LEFT_TOP_CORNER;
-        }
-
-        if (x > (maxX - horizontalEdgeSize) && x < maxX && y > minY && y < (minY + verticalEdgeSize)) {
-            mWitchCornerPressed = RIGHT_TOP_CORNER;
-        }
-
-        if (x > minX && x < (minX + horizontalEdgeSize) && y > (maxY - verticalEdgeSize) && y < maxY) {
-            mWitchCornerPressed = LEFT_BOTTOM_CORNER;
-        }
-
-        if (x > (maxX - horizontalEdgeSize) && x < maxX && y > (maxY - verticalEdgeSize) && y < maxY) {
-            mWitchCornerPressed = RIGHT_BOTTOM_CORNER;
-        }
-
-        return mWitchCornerPressed;
-    }
 
     //线性形状按下事件范围
     public static boolean checkShapeLinePress(float x, float y, PointF doodleDownPoint, PointF doodleUpPoint) {
@@ -1197,6 +1175,144 @@ public class Utils {
                 }
                 break;
         }
+    }
+
+
+
+    //如果两个向量点积的值大于0，他们的夹角是锐角，反之是钝角。
+    private float dotProduct(float x, float y, PointF rectP1, PointF rectP2, float degree, RectF drawingBounds) {
+        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
+        float dpx = p.x;
+        float dpy = p.y;
+
+        p = mapDoodlePointToScreen(rectP2.x, rectP2.y, drawingBounds);
+        float upx = p.x;
+        float upy = p.y;
+
+        float centerX = (dpx + upx) / 2.0f;
+        float centerY = (dpy + upy) / 2.0f;
+
+        //文本框水平中线向量 horizontalVector,因为是水平向量，y值为0
+        float horizontalVector[] = {upx - centerX, 0};
+
+        //映射到旋转前
+        float[] pressedP = {x, y};
+        mMapMatrix.reset();
+        mMapMatrix.setRotate(-degree, centerX, centerY);
+        mMapMatrix.mapPoints(pressedP);
+
+        //文本框中心(起点)与手势按下点(终点)所成的向量
+        float[] pressedVector = {pressedP[0] - centerX, pressedP[1] - centerY};
+
+        //2个向量的点积
+        return horizontalVector[0] * pressedVector[0] + horizontalVector[1] * pressedVector[1];
+    }
+
+    public static float calcRectRotation(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2, RectF drawingBounds) {
+        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
+        float dpx = p.x;
+        float dpy = p.y;
+
+        p = mapDoodlePointToScreen(rectP2.x, rectP2.y, drawingBounds);
+        float upx = p.x;
+        float upy = p.y;
+
+        dpx = dpx - WhiteBoard.TEXT_BORDER_PADDING;
+        dpy = dpy - WhiteBoard.TEXT_BORDER_PADDING;
+        upx = upx + WhiteBoard.TEXT_BORDER_PADDING;
+        upy = upy + WhiteBoard.TEXT_BORDER_PADDING;
+
+        float centerX = (dpx + upx) / 2.0f;
+        float centerY = (dpy + upy) / 2.0f;
+
+        //屏幕坐标系和标准坐标系的Y轴方向相反
+        float preDeltaX = oldX - centerX;
+        float preDeltaY = -(oldY - centerY);
+        float deltaX = x - centerX;
+        float deltaY = -(y - centerY);
+
+        double previousAngle = Math.atan2(preDeltaY, preDeltaX);
+        double angle = Math.atan2(deltaY, deltaX);
+
+        double degrees = angle - previousAngle;
+        return (float) (-degrees * (180 / Math.PI));
+    }
+
+    public static float calcRectScale(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2
+            , RectF drawingBounds) {
+        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
+        float dpx = p.x;
+        float dpy = p.y;
+
+        p = mapDoodlePointToScreen(rectP2.x, rectP2.y, drawingBounds);
+        float upx = p.x;
+        float upy = p.y;
+
+        //dpx = dpx - WhiteBoard.TEXT_BORDER_PADDING;
+        //dpy = dpy - WhiteBoard.TEXT_BORDER_PADDING;
+        //upx = upx + WhiteBoard.TEXT_BORDER_PADDING;
+        //upy = upy + WhiteBoard.TEXT_BORDER_PADDING;
+
+        float centerX = (dpx + upx) / 2.0f;
+        float centerY = (dpy + upy) / 2.0f;
+
+        //屏幕坐标系和标准坐标系的Y轴方向相反
+        float preDeltaX = oldX - centerX;
+        float preDeltaY = -(oldY - centerY);
+        float deltaX = x - centerX;
+        float deltaY = -(y - centerY);
+
+        double preDistance = Math.sqrt(preDeltaX * preDeltaX + preDeltaY * preDeltaY);
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        float deltaScale = (float) (distance / preDistance);
+
+        return deltaScale;
+    }
+
+    public void calcRectRotationAndScale(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2, float degree,
+                                         float totalScale, RectF drawingBounds) {
+        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
+        float dpx = p.x;
+        float dpy = p.y;
+
+        p = mapDoodlePointToScreen(rectP2.x, rectP2.y, drawingBounds);
+        float upx = p.x;
+        float upy = p.y;
+
+        dpx = dpx - WhiteBoard.TEXT_BORDER_PADDING;
+        dpy = dpy - WhiteBoard.TEXT_BORDER_PADDING;
+        upx = upx + WhiteBoard.TEXT_BORDER_PADDING;
+        upy = upy + WhiteBoard.TEXT_BORDER_PADDING;
+
+        float centerX = (dpx + upx) / 2.0f;
+        float centerY = (dpy + upy) / 2.0f;
+
+        //屏幕坐标系和标准坐标系的Y轴方向相反
+        float preDeltaX = oldX - centerX;
+        float preDeltaY = -(oldY - centerY);
+        float deltaX = x - centerX;
+        float deltaY = -(y - centerY);
+
+        double preDistance = Math.sqrt(preDeltaX * preDeltaX + preDeltaY * preDeltaY);
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        float tempScale = totalScale;
+        float deltaScale = (float) (distance / preDistance);
+        totalScale = totalScale * deltaScale;
+
+        if (totalScale > MAX_SCALE) {
+            totalScale = MAX_SCALE;
+            deltaScale = totalScale / tempScale;
+        }
+        if (totalScale < MIN_SCALE) {
+            totalScale = MIN_SCALE;
+            deltaScale = totalScale / tempScale;
+        }
+
+        double previousAngle = Math.atan2(preDeltaY, preDeltaX);
+        double angle = Math.atan2(deltaY, deltaX);
+
+        double degrees = angle - previousAngle;
+        degree = (float) (-degrees * (180 / Math.PI));
     }
 
 }

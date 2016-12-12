@@ -19,7 +19,6 @@ import android.graphics.Path;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 
 public class Eraser extends Doodle {

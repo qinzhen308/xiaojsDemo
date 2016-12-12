@@ -17,7 +17,7 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
 
-public abstract class GeometryShape extends Doodle{
+public abstract class GeometryShape extends Doodle {
     public final static int BEELINE = 0;
     public final static int RECTANGLE = 1;
     public final static int OVAL = 2;

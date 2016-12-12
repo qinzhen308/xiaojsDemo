@@ -24,7 +24,8 @@ import android.graphics.RectF;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
 public class DrawingHelper {
-    private static int DEFAULT_DASH_WIDTH = 5;
+    private static int DEFAULT_BORDER_WIDTH = 5;
+    private static int DEFAULT_DASH_WIDTH = 20;
     private static int DEFAULT_COLOR = 0XFF0076FF;
     private static Paint mDashPaint;
 
@@ -33,7 +34,7 @@ public class DrawingHelper {
             mDashPaint = buildDashPaint();
         }
 
-        float padding = Math.max(0 ,doodleWidth * params.scale / 2 + DEFAULT_DASH_WIDTH / 2);
+        float padding = Math.max(0 ,doodleWidth * params.scale / 2 + DEFAULT_BORDER_WIDTH / 2);
 
         PointF p = Utils.mapDoodlePointToScreen(p1.x, p1.y, params.drawingBounds);
         float x1 = p.x;
@@ -60,7 +61,7 @@ public class DrawingHelper {
             mDashPaint = buildDashPaint();
         }
 
-        float padding = Math.max(0 ,doodleWidth * params.scale / 2 + DEFAULT_DASH_WIDTH / 2);
+        float padding = Math.max(0 ,doodleWidth * params.scale / 2 + DEFAULT_BORDER_WIDTH / 2);
 
         PointF p = Utils.mapDoodlePointToScreen(rectF.left, rectF.top, params.drawingBounds);
         float x1 = p.x;
@@ -87,7 +88,7 @@ public class DrawingHelper {
             mDashPaint = buildDashPaint();
         }
 
-        float padding = Math.max(0 ,doodleWidth * params.scale / 2 + DEFAULT_DASH_WIDTH / 2);
+        float padding = Math.max(0 ,doodleWidth * params.scale / 2 + DEFAULT_BORDER_WIDTH / 2);
         padding += WhiteBoard.TEXT_BORDER_PADDING;
 
         PointF p = Utils.mapDoodlePointToScreen(p1.x, p1.y, params.drawingBounds);
@@ -113,9 +114,9 @@ public class DrawingHelper {
     private static Paint buildDashPaint() {
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(DEFAULT_DASH_WIDTH);
+        p.setStrokeWidth(DEFAULT_BORDER_WIDTH);
         p.setColor(DEFAULT_COLOR);
-        PathEffect blackEffects = new DashPathEffect(new float[] { 20, 20}, 0);
+        PathEffect blackEffects = new DashPathEffect(new float[] { DEFAULT_DASH_WIDTH, DEFAULT_DASH_WIDTH}, 0);
         p.setPathEffect(blackEffects);
         return p;
     }

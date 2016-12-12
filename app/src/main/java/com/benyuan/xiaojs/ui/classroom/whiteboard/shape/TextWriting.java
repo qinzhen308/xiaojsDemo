@@ -175,8 +175,14 @@ public class TextWriting extends Doodle {
     @Override
     public void drawBorder(Canvas canvas) {
         if (mPoints.size() > 1 && !TextUtils.isEmpty(getTextString())) {
-            DrawingHelper.drawTextBorder(canvas, getWhiteboard().getBlackParams(),
-                    mPoints.get(0), mPoints.get(1), mPaint.getStrokeWidth());
+            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
+            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
+
+            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
+            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+
+            mRect.set(x1, y1, x2, y2);
+            super.drawBorder(canvas);
         }
     }
 
@@ -202,11 +208,14 @@ public class TextWriting extends Doodle {
 
     @Override
     public boolean isSelected(float x, float y) {
-        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-        PointF dp = mPoints.get(0);
-        PointF up = mPoints.get(1);
-        int flag = Utils.checkRectPressed(x, y, dp, up, params.drawingBounds);
-        return flag != Utils.RECT_NO_SELECTED ? true : false;
+        if (mPoints.size() > 1) {
+            PointF dp = mPoints.get(0);
+            PointF up = mPoints.get(1);
+            int flag = Utils.checkRectPressed(x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
+            return flag != Utils.RECT_NO_SELECTED ? true : false;
+        }
+
+        return false;
     }
 
 }
