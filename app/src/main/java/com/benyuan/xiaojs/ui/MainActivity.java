@@ -68,6 +68,8 @@ public class MainActivity extends BaseTabActivity {
                     dialog.show();
                 }
                 break;
+            case 2:
+                break;
         }
     }
 
