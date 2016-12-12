@@ -10,7 +10,7 @@ import com.benyuan.xiaojs.ui.base.BaseTabActivity;
 import com.benyuan.xiaojs.ui.course.CourseConstant;
 import com.benyuan.xiaojs.ui.course.LessonCreationActivity;
 import com.benyuan.xiaojs.ui.home.HomeFragment;
-import com.benyuan.xiaojs.ui.live.LiveFragment;
+import com.benyuan.xiaojs.ui.live.LiveForeFragment;
 import com.benyuan.xiaojs.ui.message.NotificationFragment;
 import com.benyuan.xiaojs.ui.mine.TeachAbilityDemoActivity;
 import com.benyuan.xiaojs.ui.widget.CommonDialog;
@@ -28,12 +28,12 @@ public class MainActivity extends BaseTabActivity {
         needHeader(false);
         List<Fragment> fs = new ArrayList<>();
         fs.add(new HomeFragment());
+        fs.add(new LiveForeFragment());
         fs.add(new NotificationFragment());
-        fs.add(new LiveFragment());
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);
-        addViews(new int[]{R.string.home_tab_index, R.string.home_tab_message, R.string.home_tab_circle, R.string.home_tab_mine},
-                new int[]{R.drawable.home_tab_selector, R.drawable.query_tab_selector, R.drawable.circle_tab_selector, R.drawable.mine_tab_selector},
+        addViews(new int[]{R.string.home_tab_index,R.string.home_tab_live ,R.string.home_tab_message , R.string.home_tab_mine},
+                new int[]{R.drawable.home_tab_selector, R.drawable.circle_tab_selector, R.drawable.query_tab_selector, R.drawable.mine_tab_selector},
                 fs);
         new OkHttpClient();
     }
@@ -67,6 +67,8 @@ public class MainActivity extends BaseTabActivity {
                     });
                     dialog.show();
                 }
+                break;
+            case 2:
                 break;
         }
     }

@@ -103,6 +103,7 @@ public class Triangle extends TwoDimensionalShape {
             mNormalizedPath.lineTo(mTriangleCoordinates.get(1).x, mTriangleCoordinates.get(1).y);
             mNormalizedPath.lineTo(mTriangleCoordinates.get(2).x, mTriangleCoordinates.get(2).y);
             mNormalizedPath.lineTo(mTriangleCoordinates.get(0).x, mTriangleCoordinates.get(0).y);
+            mDrawingMatrix.postConcat(mTransformMatrix);
             mNormalizedPath.transform(mDrawingMatrix);
 
             canvas.drawPath(mNormalizedPath, getPaint());
@@ -111,10 +112,7 @@ public class Triangle extends TwoDimensionalShape {
 
     @Override
     public void drawBorder(Canvas canvas) {
-        if (mPoints.size() > 1) {
-            DrawingHelper.drawBorder(canvas,  getWhiteboard().getBlackParams(),
-                    mPoints.get(0), mPoints.get(1), mPaint.getStrokeWidth());
-        }
+        super.drawBorder(canvas);
     }
 
     @Override
@@ -124,7 +122,11 @@ public class Triangle extends TwoDimensionalShape {
 
     @Override
     public boolean isSelected(float x, float y) {
-        return Utils.intersect(x, y, this);
+        if (mPoints.size() > 1) {
+            return Utils.intersect(x, y, this);
+        }
+
+        return false;
     }
 
     @Override
@@ -157,13 +159,12 @@ public class Triangle extends TwoDimensionalShape {
         }
     }
 
-    public LineSegment[] getLineSegments(boolean original) {
+    public LineSegment[] getLineSegments() {
         float stx;
         float sty;
         float edx;
         float edy;
 
-        RectF drawingBounds = mWhiteboard.getBlackParams().drawingBounds;
         int size = mTriangleCoordinates.size();
         for (int i = 0; i < size; i++) {
             stx = mTriangleCoordinates.get(i).x;
@@ -176,7 +177,7 @@ public class Triangle extends TwoDimensionalShape {
                 edx = mTriangleCoordinates.get(i + 1).x;
                 edy = mTriangleCoordinates.get(i + 1).y;
             }
-            Utils.getLineSegment(stx, sty, edx, edy, original, drawingBounds, mLineSegments[i]);
+            Utils.getLineSegment(stx, sty, edx, edy, mDrawingMatrix, mDisplayMatrix, mLineSegments[i]);
         }
 
         return mLineSegments;

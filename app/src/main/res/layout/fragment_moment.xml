@@ -5,7 +5,13 @@
         android:scrollbars="none"
         android:paddingBottom="@dimen/px100"
         android:divider="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:horizontalSpacing="0dp"
+        android:verticalSpacing="@dimen/px30"
+        android:numColumns="2"
+        android:clipToPadding="true"
         android:background="@color/white"
+        android:stretchMode="columnWidth"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 </com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshGridView>

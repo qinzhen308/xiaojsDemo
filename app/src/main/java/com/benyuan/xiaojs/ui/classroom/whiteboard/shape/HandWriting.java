@@ -94,15 +94,14 @@ public class HandWriting extends Doodle {
     @Override
     public void setDrawingMatrix(Matrix matrix) {
         super.setDrawingMatrix(matrix);
-        mDrawingPath.set(mNormalizedPath);
-        if (matrix != null) {
-            mDrawingPath.transform(matrix);
-        }
     }
 
     @Override
     public void drawSelf(Canvas canvas) {
         canvas.save();
+        mDrawingPath.set(mNormalizedPath);
+        mDrawingMatrix.postConcat(mTransformMatrix);
+        mDrawingPath.transform(mDrawingMatrix);
         canvas.drawPath(mDrawingPath, getPaint());
         canvas.restore();
     }
@@ -110,16 +109,21 @@ public class HandWriting extends Doodle {
     @Override
     public void drawBorder(Canvas canvas) {
         mNormalizedPath.computeBounds(mRect, true);
-        DrawingHelper.drawBorder(canvas, getWhiteboard().getBlackParams(), mRect, mPaint.getStrokeWidth());
+        super.drawBorder(canvas);
     }
 
     @Override
     public Path getOriginalPath() {
+        mOriginalPath.reset();
+        mOriginalPath.set(mNormalizedPath);
+        mOriginalPath.transform(mDrawingMatrix);
+        mOriginalPath.transform(mDisplayMatrix);
         return mOriginalPath;
     }
 
     @Override
     public void changeArea(float downX, float downY) {
+
     }
 
     @Override
@@ -140,8 +144,14 @@ public class HandWriting extends Doodle {
     @Override
     public int checkRegionPressedArea(float x, float y) {
         if (getState() == STATE_EDIT) {
-            mOriginalPath.computeBounds(mRect, true);
-            return Utils.checkRectPressed(x, y, mRect.left, mRect.top, mRect.right, mRect.bottom);
+
+            mNormalizedPath.computeBounds(mRect, true);
+            int corner = Utils.isPressedCorner(x, y, mRect, mDrawingMatrix, mDisplayMatrix);
+            if (corner != Utils.RECT_NO_SELECTED) {
+                return corner;
+            } else {
+                return Utils.checkRectPressed(x, y, mRect, mDrawingMatrix, mDisplayMatrix);
+            }
         }
 
         return 0;
@@ -149,7 +159,11 @@ public class HandWriting extends Doodle {
 
     @Override
     public boolean isSelected(float x, float y) {
-        return Utils.intersect(x, y , this);
+        if (mPoints.size() > 1) {
+            return Utils.intersect(x, y , this);
+        }
+
+        return false;
     }
 
     private void updatePath() {
@@ -176,5 +190,15 @@ public class HandWriting extends Doodle {
                 last = point;
             }
         }
+    }
+
+    @Override
+    protected void computeCenterPoint(PointF rectP1, PointF rectP2) {
+        mNormalizedPath.computeBounds(mRect, true);
+        float centerX = (mRect.left + mRect.right) / 2.0f;
+        float centerY = (mRect.top + mRect.bottom) / 2.0f;
+        mRectCenter[0] = centerX;
+        mRectCenter[1] = centerY;
+        mDrawingMatrix.mapPoints(mRectCenter);
     }
 }

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_margin="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/home_live_lesson_item_home"
+                    android:text="班级主页"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@id/home_live_lesson_item_home"
+                    android:layout_marginRight="@dimen/px30"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="心理咨询师取证课程-基础知识"
+                    android:id="@+id/home_live_lesson_item_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                <RelativeLayout
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                            android:id="@+id/home_live_lesson_item_pro1"
+                            app:corner_radius="@dimen/px60"
+                            app:oval="true"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/default_portrait"
+                            android:layout_width="@dimen/px100"
+                            android:layout_height="@dimen/px100"/>
+
+                    <LinearLayout
+                            android:layout_toRightOf="@id/home_live_lesson_item_pro1"
+                            android:orientation="vertical"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        <TextView
+                                android:id="@+id/home_live_lesson_name1"
+                                android:text="胡一文"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        <TextView
+                                android:id="@+id/home_live_lesson_des1"
+                                android:text="主讲"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                <RelativeLayout
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                            android:id="@+id/home_live_lesson_item_pro2"
+                            app:corner_radius="@dimen/px60"
+                            app:oval="true"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/default_portrait"
+                            android:layout_width="@dimen/px100"
+                            android:layout_height="@dimen/px100"/>
+
+                    <LinearLayout
+                            android:layout_toRightOf="@id/home_live_lesson_item_pro2"
+                            android:orientation="vertical"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        <TextView
+                                android:id="@+id/home_live_lesson_name2"
+                                android:text="胡一文"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        <TextView
+                                android:id="@+id/home_live_lesson_des2"
+                                android:text="主讲"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                <RelativeLayout
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                            android:id="@+id/home_live_lesson_item_pro3"
+                            app:corner_radius="@dimen/px60"
+                            app:oval="true"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/default_portrait"
+                            android:layout_width="@dimen/px100"
+                            android:layout_height="@dimen/px100"/>
+
+                    <LinearLayout
+                            android:layout_toRightOf="@id/home_live_lesson_item_pro3"
+                            android:orientation="vertical"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        <TextView
+                                android:id="@+id/home_live_lesson_name3"
+                                android:text="胡一文"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        <TextView
+                                android:id="@+id/home_live_lesson_des3"
+                                android:text="主讲"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_marginTop="@dimen/px30"
+                android:background="@drawable/wb_conner_bg"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_marginLeft="@dimen/px30"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="@dimen/px30"
+                    android:id="@+id/home_live_lesson_item_name"
+                    android:text="上课中:心理咨询师取证课程-基础知识"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/px30"
+                    android:layout_marginBottom="@dimen/px30"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout
+                        android:id="@+id/image_flow"
+                        android:layout_marginTop="@dimen/px5"
+                        android:layout_marginBottom="@dimen/px5"
+                        android:layout_marginLeft="@dimen/px10"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:text="进入教室"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/px10"
+                        android:layout_marginRight="@dimen/px30"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

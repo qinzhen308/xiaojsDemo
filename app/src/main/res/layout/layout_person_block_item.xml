@@ -1,48 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:background="@drawable/white_grey_selector"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <LinearLayout
+            android:id="@+id/person_item_wrapper"
             android:orientation="vertical"
-            android:layout_marginRight="@dimen/px22"
-            android:layout_marginLeft="@dimen/px22"
-            android:layout_width="wrap_content"
+            android:background="@drawable/light_grey_stoke_bg"
+            android:layout_marginLeft="@dimen/px15"
+            android:layout_marginRight="@dimen/px15"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <com.benyuan.xiaojs.ui.widget.RoundedImageView
-                android:id="@+id/person_block_image"
-                android:layout_width="@dimen/px110"
-                android:layout_height="@dimen/px110"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/px20"
-                android:scaleType="fitXY"
-                app:corner_radius="@dimen/px55"/>
+        <RelativeLayout
+                android:layout_margin="@dimen/px30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-                android:id="@+id/person_block_name"
-                android:textSize="@dimen/font_26px"
-                android:textColor="@color/font_black"
-                android:layout_marginTop="@dimen/px15"
-                android:maxLines="1"
-                android:maxEms="4"
-                android:textStyle="bold"
-                android:ellipsize="end"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    android:id="@+id/person_item_image"
+                    android:layout_width="@dimen/px120"
+                    android:layout_height="@dimen/px120"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/default_portrait"
+                    android:scaleType="fitXY"
+                    app:oval="true"/>
 
-        <TextView
-                android:id="@+id/person_block_desc"
-                android:textSize="@dimen/font_22px"
-                android:layout_marginTop="@dimen/px15"
-                android:textColor="@color/common_text"
-                android:layout_gravity="center_horizontal"
-                android:maxLines="1"
-                android:maxEms="4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <ImageView
+                    android:id="@+id/person_item_close"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/ic_del_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_toRightOf="@id/person_item_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/person_item_name"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_32px"
+                        android:text="博洋"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/person_item_teach"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_28px"
+                        android:text="人力资源"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <com.benyuan.xiaojs.ui.widget.EvaluationStar
+                        android:id="@+id/person_item_star"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/person_item_desc"
+                        android:textColor="@color/common_text"
+                        android:textSize="@dimen/font_28px"
+                        android:text="1123次授课,123次回答"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_marginBottom="@dimen/px30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/person_item_focus"
+                    android:textColor="@color/font_orange"
+                    android:padding="@dimen/px5"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:minWidth="@dimen/px120"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center"
+                    android:background="@drawable/ic_course_category"
+                    android:text="@string/follows"
+                    android:textSize="@dimen/font_30px"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/person_item_distance"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="@dimen/px30"
+                    android:textSize="@dimen/font_24px"
+                    android:textColor="@color/common_text"
+                    android:text="5km"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </RelativeLayout>
     </LinearLayout>
-</FrameLayout>
+
+</LinearLayout>

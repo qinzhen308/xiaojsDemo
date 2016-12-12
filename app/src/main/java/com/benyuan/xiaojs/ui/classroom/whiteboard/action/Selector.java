@@ -10,7 +10,6 @@ import android.graphics.PointF;
 import android.graphics.Region;
 import android.util.Log;
 
-
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
@@ -177,11 +176,11 @@ public class Selector extends Doodle {
         if (allDoodles != null) {
             for (Doodle d : allDoodles) {
                 if (d instanceof Beeline) {
-                    LineSegment beeLineSeg = ((Beeline)d).getLineSegment(true);
+                    LineSegment beeLineSeg = ((Beeline)d).getLineSegment();
                     intersect = Utils.intersect(mRect, beeLineSeg);
                     Log.i("aaa", "======================intersect="+intersect);
                 } else if (d instanceof Triangle) {
-                    LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments(true);
+                    LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments();
                     for (LineSegment lineSegment : beeLineSeg) {
                         intersect = Utils.intersect(mRect, lineSegment);
                         if (intersect) {

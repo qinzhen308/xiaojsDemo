@@ -7,7 +7,10 @@
             android:id="@+id/home_list"
             android:paddingBottom="@dimen/px100"
             android:scrollbars="none"
-            android:divider="@android:color/transparent"
+            android:divider="@color/main_bg"
+            android:listSelector="@android:color/transparent"
+            android:background="@color/main_bg"
+            android:dividerHeight="@dimen/px30"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
@@ -18,19 +21,10 @@
             android:background="@drawable/ic_home_title_bg"
             android:orientation="horizontal">
 
-        <ImageView
-                android:id="@+id/left_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/home_message_selector"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_marginLeft="@dimen/px30"
-                android:visibility="invisible"
-                android:layout_gravity="center_vertical"/>
-
         <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
                 android:background="@drawable/ic_home_search"
                 android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content">
@@ -48,18 +42,14 @@
                     android:layout_height="wrap_content"/>
         </RelativeLayout>
 
-
-        <com.benyuan.xiaojs.ui.widget.MessageImageView
-                android:id="@+id/right_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/home_message_selector"
-                android:clickable="true"
-                android:padding="@dimen/px20"
-                android:layout_marginRight="@dimen/px10"
-                android:layout_marginLeft="@dimen/px10"
-                android:visibility="visible"/>
     </LinearLayout>
 
+    <TextView
+            android:id="@+id/home_moment_tip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/px200"
+            android:text="123"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 </RelativeLayout>

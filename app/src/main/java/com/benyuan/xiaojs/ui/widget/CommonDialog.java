@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
@@ -30,6 +31,7 @@ public class CommonDialog extends Dialog {
 
     private TextView mTitle;
     private TextView mDesc;
+    private FrameLayout mContainer;
     private Button mLeftButton;
     private Button mRightButton;
     private OnClickListener leftListener;
@@ -58,6 +60,7 @@ public class CommonDialog extends Dialog {
         setContentView(R.layout.layout_common_dialog);
         mTitle = (TextView) findViewById(R.id.common_dialog_title);
         mDesc = (TextView) findViewById(R.id.common_dialog_desc);
+        mContainer = (FrameLayout) findViewById(R.id.common_dialog_container);
         mLeftButton = (Button) findViewById(R.id.left_btn);
         mRightButton = (Button) findViewById(R.id.right_btn);
         WindowManager.LayoutParams params = dialogWindow.getAttributes();
@@ -85,6 +88,19 @@ public class CommonDialog extends Dialog {
                 }
             }
         });
+
+        View view = initCustomerView();
+        if (view != null){
+            mTitle.setVisibility(View.GONE);
+            mDesc.setVisibility(View.GONE);
+            mContainer.addView(view);
+        }else {
+            mContainer.setVisibility(View.GONE);
+        }
+    }
+
+    protected View initCustomerView(){
+        return null;
     }
 
     @Override
