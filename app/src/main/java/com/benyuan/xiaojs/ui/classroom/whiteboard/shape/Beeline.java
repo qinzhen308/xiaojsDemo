@@ -88,32 +88,8 @@ public class Beeline extends TwoDimensionalShape {
         return mOriginalPath;
     }
 
-    public LineSegment getLineSegment(boolean original) {
-        float stx = mPoints.get(0).x;
-        float sty = mPoints.get(0).y;
-        float edx = mPoints.get(1).x;
-        float edy = mPoints.get(1).y;
-
-        /*if (original) {
-            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
-            PointF p = Utils.mapDoodlePointToScreen(stx, sty, params.drawingBounds);
-            int x1 = (int)p.x;
-            int y1 = (int)p.y;
-
-            p = Utils.mapDoodlePointToScreen(edx, edy, params.drawingBounds);
-            int x2 = (int)p.x;
-            int y2 = (int)p.y;
-
-            mLineSegment.point1.set(x1, y1);
-            mLineSegment.point2.set(x2, y2);
-        } else {
-            mLineSegment.point1.set(stx, sty);
-            mLineSegment.point2.set(edx, edy);
-        }
-        return mLineSegment;*/
-
-        RectF drawingBounds = mWhiteboard.getBlackParams().drawingBounds;
-        return Utils.getLineSegment(stx, sty, edx, edy, original, drawingBounds, mLineSegment);
+    public LineSegment getLineSegment() {
+        return Utils.getLineSegment(mPoints.get(0), mPoints.get(1), mDrawingMatrix, mDisplayMatrix, mLineSegment);
     }
 
     @Override
@@ -124,23 +100,11 @@ public class Beeline extends TwoDimensionalShape {
 
         canvas.save();
 
-        //method 1:not need to call setDrawingMatrix()
-        /*PointF p = Utils.setBlackboardToScreen(mStartX, mStartY, mWhiteboard.getBlackParams());
-        float x1 = p.x;
-        float y1 = p.y;
-        p = Utils.setBlackboardToScreen(mEndX, mEndY, mWhiteboard.getBlackParams());
-        float x2 = p.x;
-        float y2 = p.y;
-
-        //draw line
-        canvas.drawLine(x1, y1, x2, y2, getPaint());*/
-
-        //method 2:need to call setDrawingMatrix()
-        //mRect.set(mStartX, mStartY, mEndX, mEndY);
         mNormalizedPath.reset();
 
         mNormalizedPath.moveTo(mPoints.get(0).x, mPoints.get(0).y);
         mNormalizedPath.lineTo(mPoints.get(1).x, mPoints.get(1).y);
+        mDrawingMatrix.postConcat(mTransformMatrix);
         mNormalizedPath.transform(mDrawingMatrix);
 
         canvas.drawPath(mNormalizedPath, getPaint());
@@ -151,11 +115,16 @@ public class Beeline extends TwoDimensionalShape {
     @Override
     public void drawBorder(Canvas canvas) {
         if (mPoints.size() > 1) {
-            DrawingHelper.drawBorder(canvas, getWhiteboard().getBlackParams(),
-                    mPoints.get(0), mPoints.get(1), mPaint.getStrokeWidth());
+            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
+            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
+
+            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
+            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+
+            mRect.set(x1, y1, x2, y2);
+            super.drawBorder(canvas);
         }
     }
-
 
     @Override
     protected void changeShape(float touchX, float touchY) {
@@ -196,6 +165,11 @@ public class Beeline extends TwoDimensionalShape {
 
     @Override
     public boolean isSelected(float x, float y) {
-        return Utils.intersect(x, y , this);
+        if (mPoints.size() > 1) {
+            return Utils.intersect(x, y , this);
+        }
+
+        return false;
+
     }
 }

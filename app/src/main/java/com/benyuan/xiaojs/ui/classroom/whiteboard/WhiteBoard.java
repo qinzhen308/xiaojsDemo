@@ -332,15 +332,15 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         RectF destF = mViewGestureListener.getDestRect();
         mDoodleBounds.set(destF.left, destF.top, destF.right, destF.bottom);
 
+        //map matrix
+        mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
+
         canvas.save();
         //clip
         canvas.clipRect(mDoodleBounds);
         //draw background
         canvas.drawColor(Color.argb(255, 230, 230, 230));
-        //canvas.drawColor(Color.argb(255, 255, 80, 80));
 
-        //map matrix
-        mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
         canvas.concat(mDisplayMatrix);
         if (mDoodleBitmap != null) {
             canvas.drawBitmap(mDoodleBitmap, 0, 0, null);
@@ -348,10 +348,10 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
         //draw doodle
         drawDoodle(canvas, mDoodle);
-        canvas.restore();
+        //canvas.restore();
 
         //draw doodle border
-        canvas.save();
+        //canvas.save();
         drawDoodleBorder(canvas, mDoodle);
         canvas.restore();
 
@@ -575,6 +575,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         }
 
         doodle.setDrawingMatrix(mDrawingMatrix);
+        doodle.setDisplayMatrix(mDisplayMatrix);
         switch (mCurrentMode) {
             case MODE_HAND_WRITING:
                 doodle.drawSelf(canvas);
