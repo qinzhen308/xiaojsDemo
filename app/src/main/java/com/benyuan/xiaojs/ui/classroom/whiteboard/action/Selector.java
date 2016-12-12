@@ -120,7 +120,7 @@ public class Selector extends Doodle {
         mRect.set(x1, y1, x2, y2);
         mNormalizedPath.reset();
         mNormalizedPath.addRect(mRect, Path.Direction.CCW);
-        mNormalizedPath.transform(mMatrix);
+        mNormalizedPath.transform(mDrawingMatrix);
         if (mSelectStatus == SELECTING) {
             canvas.drawPath(mNormalizedPath, mSelectingBgPaint);
             canvas.drawPath(mNormalizedPath, mSelectingDashPaint);
