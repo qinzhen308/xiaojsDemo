@@ -63,9 +63,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
         return serviceCallback;
     }
 
-    public void doTask(int apiType,T responseBody) {
-
-    }
+    public void doTask(int apiType,T responseBody) { }
 
     //Convert object to JSON string
     public String objectToJsonString(Object object) {

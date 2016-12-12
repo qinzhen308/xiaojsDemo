@@ -305,4 +305,10 @@
     <!--whiteboard-->
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>
+
+    <string name="contact">联系人</string>
+    <string name="post_dyn">发动态</string>
+    <string name="post">发布</string>
+    <string name="input_dyn_hint">分享你的新鲜事儿</string>
+    <string name="publish">公开</string>
 </resources>
