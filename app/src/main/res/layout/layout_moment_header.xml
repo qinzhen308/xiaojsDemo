@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content">
+
+    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+            android:id="@+id/moment_header_image"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/default_portrait"
+            app:corner_radius="@dimen/px50"
+            android:layout_width="@dimen/px100"
+            android:layout_height="@dimen/px100"/>
+
+    <TextView
+            android:id="@+id/moment_header_focus"
+            android:text="关注"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/moment_header_image"
+            android:layout_toLeftOf="@id/moment_header_focus"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/moment_header_name"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_28px"
+                    android:text="谢一名"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/moment_header_time"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_24px"
+                    android:text="2012-22-22"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/home_header_desc_wrapper"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/moment_header_role"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_24px"
+                    android:text="同学"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/moment_header_desc"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:text="2022考研政治高分补习培优班"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_24px"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</merge>

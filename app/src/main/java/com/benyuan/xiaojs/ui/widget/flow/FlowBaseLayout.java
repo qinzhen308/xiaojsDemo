@@ -25,6 +25,9 @@ public class FlowBaseLayout extends ViewGroup {
 	private int mMaxChild = -1;
 	private int mMaxInIine = -1;
 
+	private boolean mIsOverlay;
+	private int mOverlayWidth;//重叠区域宽度
+
 	public FlowBaseLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
@@ -69,6 +72,14 @@ public class FlowBaseLayout extends ViewGroup {
 	 */
 	public void setMaxInLine(int maxInLine) {
 		this.mMaxInIine = maxInLine;
+	}
+
+	public void isOverlay(boolean b){
+		mIsOverlay = b;
+	}
+
+	public void setOverlayWidth(int width){
+		mOverlayWidth = width;
 	}
 
 	/**
@@ -170,7 +181,9 @@ public class FlowBaseLayout extends ViewGroup {
 			int childHeight = child.getMeasuredHeight();
 
 			// 如果已经需要换行
-			if ((childWidth + lp.leftMargin + lp.rightMargin + lineWidth > width) || ((mMaxInIine > 0) && lineCount >= mMaxInIine)) {
+			if (	(mIsOverlay && childWidth + lp.leftMargin + lp.rightMargin + lineWidth - i * mOverlayWidth > width) ||
+					(!mIsOverlay && childWidth + lp.leftMargin + lp.rightMargin + lineWidth > width) ||
+					((mMaxInIine > 0) && lineCount >= mMaxInIine)) {
 				lineCount = 0;
 				row++;
 				if (isMaxLine(row)) {
@@ -186,7 +199,12 @@ public class FlowBaseLayout extends ViewGroup {
 			/**
 			 * 如果不需要换行，则累加
 			 */
-			lineWidth += childWidth + lp.leftMargin + lp.rightMargin;
+			if (mIsOverlay){
+				lineWidth += childWidth + lp.leftMargin + lp.rightMargin - i * mOverlayWidth;
+			}else {
+				lineWidth += childWidth + lp.leftMargin + lp.rightMargin;
+			}
+
 			lineHeight = Math.max(lineHeight, childHeight + lp.topMargin + lp.bottomMargin);
 			lineViews.add(child);
 			quantity++;
@@ -201,6 +219,10 @@ public class FlowBaseLayout extends ViewGroup {
 		mLineHeight.add(lineHeight);
 		mAllViews.add(lineViews);
 
+		if (showLast()){
+			mAllViews.get(0).remove(mAllViews.get(0).size() - 1);
+			mAllViews.get(0).add(lastView(getTotal() - mAllViews.get(0).size()));
+		}
 		int left = 0;
 		int top = 0;
 		// 得到总行数
@@ -215,25 +237,55 @@ public class FlowBaseLayout extends ViewGroup {
 			//Log.e(TAG, "第" + i + "行， ：" + lineHeight);
 
 			// 遍历当前行所有的View
-			for (int j = 0; j < lineViews.size(); j++) {
-				View child = lineViews.get(j);
-				if (child.getVisibility() == View.GONE) {
-					continue;
+			if (mIsOverlay){//有覆盖形式
+				left = width ;
+				for (int j = 0,k =0; j <lineViews.size(); j++,k++) {
+					View child = lineViews.get(j);
+					if (child.getVisibility() == View.GONE) {
+						continue;
+					}
+					MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+
+					// 计算childView的left,top,right,bottom
+					int lc = left - lp.leftMargin - child.getMeasuredWidth() -lp.rightMargin + j * mOverlayWidth;
+					int tc = top + lp.topMargin;
+					int rc = lc + child.getMeasuredWidth();
+					int bc = tc + child.getMeasuredHeight();
+
+					//Log.e(TAG, child + " , l = " + lc + " , t = " + t + " , r =" + rc + " , b = " + bc);
+
+					child.layout(lc, tc, rc, bc);
+
+					left -= child.getMeasuredWidth() + lp.rightMargin + lp.leftMargin;
 				}
-				MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+			}else {//普通形式
+				for (int j = 0; j < lineViews.size(); j++) {
+					View child = lineViews.get(j);
+					if (child.getVisibility() == View.GONE) {
+						continue;
+					}
+					MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
 
-				// 计算childView的left,top,right,bottom
-				int lc = left + lp.leftMargin;
-				int tc = top + lp.topMargin;
-				int rc = lc + child.getMeasuredWidth();
-				int bc = tc + child.getMeasuredHeight();
+					// 计算childView的left,top,right,bottom
+					int lc = 0;
+//				if (mIsOverlay){
+//					lc = left + lp.leftMargin - j * mOverlayWidth;
+//				}else {
+					lc = left + lp.leftMargin;
+					//}
 
-				//Log.e(TAG, child + " , l = " + lc + " , t = " + t + " , r =" + rc + " , b = " + bc);
+					int tc = top + lp.topMargin;
+					int rc = lc + child.getMeasuredWidth();
+					int bc = tc + child.getMeasuredHeight();
 
-				child.layout(lc, tc, rc, bc);
+					//Log.e(TAG, child + " , l = " + lc + " , t = " + t + " , r =" + rc + " , b = " + bc);
 
-				left += child.getMeasuredWidth() + lp.rightMargin + lp.leftMargin;
+					child.layout(lc, tc, rc, bc);
+
+					left += child.getMeasuredWidth() + lp.rightMargin + lp.leftMargin;
+				}
 			}
+
 			left = 0;
 			top += lineHeight;
 		}
@@ -254,5 +306,17 @@ public class FlowBaseLayout extends ViewGroup {
 		}
 
 		return false;
+	}
+
+	protected boolean showLast(){
+		return false;
+	}
+
+	protected View lastView(int num){
+		return null;
+	}
+
+	protected int getTotal(){
+		return 0;
 	}
 }

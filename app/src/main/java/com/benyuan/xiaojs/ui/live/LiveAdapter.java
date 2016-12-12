@@ -17,29 +17,78 @@ package com.benyuan.xiaojs.ui.live;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsGridViewAdapter;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshGridView;
+import com.benyuan.xiaojs.ui.widget.EvaluationStar;
+import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+import com.benyuan.xiaojs.util.DeviceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 public class LiveAdapter extends AbsGridViewAdapter<LiveBean,LiveAdapter.Holder> {
+
+    private final float SCALE = 2f / 3;
+    private int margin;
 
 
     public LiveAdapter(Context context, PullToRefreshGridView gridview) {
         super(context, gridview);
+        init();
     }
 
     public LiveAdapter(Context context, PullToRefreshGridView gridview, boolean autoLoad) {
         super(context, gridview, autoLoad);
+        init();
+    }
+
+    private void init(){
+        margin = mContext.getResources().getDimensionPixelSize(R.dimen.px30);
     }
 
     @Override
     protected void setViewContent(Holder holder, LiveBean bean, int position) {
+        ViewGroup.LayoutParams lp = holder.imageWrapper.getLayoutParams();
+        lp.height = getImageHeight();
+        holder.imageWrapper.setLayoutParams(lp);
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) holder.item.getLayoutParams();
+        if (position % 2 == 0){
+            mlp.leftMargin = margin;
+            mlp.rightMargin = margin / 2;
+        }else {
+            mlp.leftMargin = margin / 2;
+            mlp.rightMargin = margin;
+        }
 
+        holder.item.setLayoutParams(mlp);
+
+
+//        ViewGroup.LayoutParams itemLp = holder.item.getLayoutParams();
+//        itemLp.width = getItemWidth();
+//        holder.item.setLayoutParams(itemLp);
+
+        holder.portrait.setImageResource(R.drawable.default_portrait);
+        holder.teacher.setText("冰冰");
+
+    }
+
+    private int getImageHeight(){
+        int height = (int) ( getItemWidth() * SCALE);
+        return height;
+    }
+
+    private int getItemWidth(){
+        int width = (DeviceUtil.getScreenWidth(mContext) - 3 * margin) / 2;
+        return width;
     }
 
     @Override
@@ -69,6 +118,29 @@ public class LiveAdapter extends AbsGridViewAdapter<LiveBean,LiveAdapter.Holder>
     }
 
     class Holder extends BaseHolder {
+
+        @BindView(R.id.home_live_image)
+        ImageView image;
+        @BindView(R.id.home_live_title)
+        TextView title;
+        @BindView(R.id.home_live_item_num)
+        TextView enroll;
+        @BindView(R.id.home_live_item_price)
+        TextView price;
+        @BindView(R.id.home_live_item_portrait)
+        RoundedImageView portrait;
+        @BindView(R.id.home_live_item_teacher)
+        TextView teacher;
+        @BindView(R.id.home_live_item_star)
+        EvaluationStar star;
+        @BindView(R.id.home_live_item_wrapper)
+        RelativeLayout imageWrapper;
+        @BindView(R.id.home_live_item_mark)
+        ImageView mark;
+        @BindView(R.id.home_live_item_level)
+        TextView level;
+        @BindView(R.id.home_live_item)
+        View item;
         public Holder(View view) {
             super(view);
         }

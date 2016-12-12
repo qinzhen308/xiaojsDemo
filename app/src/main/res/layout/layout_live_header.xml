@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <com.benyuan.xiaojs.ui.widget.BottomLineTextView
+                android:id="@+id/home_lesson_tab_teach"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/course_of_teach"
+                android:paddingBottom="@dimen/px30"
+                android:paddingTop="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"
+                android:textColor="@drawable/orange_common_selector"
+                android:textSize="@dimen/font_32px"/>
+
+        <com.benyuan.xiaojs.ui.widget.BottomLineTextView
+                android:id="@+id/home_lesson_tab_learn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/course_of_learn"
+                android:paddingBottom="@dimen/px30"
+                android:paddingTop="@dimen/px30"
+                android:layout_marginLeft="@dimen/px50"
+                android:textColor="@drawable/orange_common_selector"
+                android:textSize="@dimen/font_32px"/>
+
+        <TextView
+                android:id="@+id/home_lesson_whole"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_blue"
+                android:layout_gravity="right|center_vertical"
+                android:text="@string/whole"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <View style="@style/DividerHorizontal2"/>
+
+    <com.benyuan.xiaojs.ui.widget.CanInScrollviewListView
+            android:id="@+id/home_live_list"
+            android:divider="@color/main_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_height="@dimen/px30"
+            android:background="@color/main_bg"/>
+
+    <TextView
+            android:text="@string/brilliant_clazz"
+            android:layout_marginBottom="@dimen/px10"
+            android:layout_marginLeft="@dimen/px10"
+            android:layout_marginTop="@dimen/px20"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_32px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <com.benyuan.xiaojs.ui.live.LiveScrollView
+            android:id="@+id/home_live_brilliant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_height="@dimen/px30"
+            android:background="@color/main_bg"/>
+
+    <TextView
+            android:text="@string/lesson_of_choiceness"
+            android:layout_marginBottom="@dimen/px10"
+            android:layout_marginLeft="@dimen/px10"
+            android:layout_marginTop="@dimen/px20"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_32px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+</LinearLayout>

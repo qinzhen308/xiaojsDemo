@@ -33,13 +33,20 @@ public class ImageFlowLayout extends FlowBaseLayout{
 
     private OnItemClickListener l;
     private int defaultMargin = getResources().getDimensionPixelSize(R.dimen.px10);
+    private int mImageCount;
 
+    private int mMargin;
+    private int mRadius;
     public ImageFlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     public void show(List<Bitmap> bitmaps){
         show(bitmaps,getResources().getDimensionPixelSize(R.dimen.px30),defaultMargin);
+    }
+
+    public void show(List<Bitmap> bitmaps,int margin){
+        show(bitmaps,getResources().getDimensionPixelSize(R.dimen.px30),margin);
     }
 
     public void setOnItemClickListener(OnItemClickListener l){
@@ -65,6 +72,9 @@ public class ImageFlowLayout extends FlowBaseLayout{
     public void show(List<Bitmap> bitmaps,int radius,int margin){
         if (bitmaps == null || bitmaps.size() == 0)
             return;
+        mImageCount = bitmaps.size();
+        mMargin = margin;
+        mRadius = radius;
         removeAllViews();
         setMaxLines(1);
         for (int i = 0;i<bitmaps.size();i++){
@@ -82,12 +92,28 @@ public class ImageFlowLayout extends FlowBaseLayout{
         }
     }
 
-    public void showWithNum(List<Bitmap> bitmaps,int radius,int num,int margin){
+    public void showWithNum(List<Bitmap> bitmaps,int radius,int margin){
         show(bitmaps,radius,margin);
+        showLast = true;
+    }
+
+    public void showWithNum(List<Bitmap> bitmaps,int margin){
+        showWithNum(bitmaps,getResources().getDimensionPixelSize(R.dimen.px30),margin);
+    }
+
+    private boolean showLast;
+
+    @Override
+    protected boolean showLast() {
+        return showLast;
+    }
+
+    @Override
+    protected View lastView(int num) {
         if (num > 0){
             TextView textView = new TextView(getContext());
-            ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(radius * 2,radius * 2);
-            lp.leftMargin = margin;
+            ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(mRadius * 2,mRadius * 2);
+            lp.leftMargin = mMargin;
             textView.setLayoutParams(lp);
             textView.setGravity(Gravity.CENTER);
             textView.setTextColor(getResources().getColor(R.color.common_text));
@@ -109,6 +135,13 @@ public class ImageFlowLayout extends FlowBaseLayout{
                     }
                 }
             });
+            return textView;
         }
+        return null;
+    }
+
+    @Override
+    protected int getTotal() {
+        return mImageCount;
     }
 }

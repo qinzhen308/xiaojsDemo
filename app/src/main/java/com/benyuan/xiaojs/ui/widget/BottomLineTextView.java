@@ -64,6 +64,7 @@ public class BottomLineTextView extends TextView {
                 getResources().getDimensionPixelSize(R.dimen.px20),
                 getResources().getDimensionPixelSize(R.dimen.px5),
                 getResources().getDimensionPixelSize(R.dimen.px20));
+        setClickable(true);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);

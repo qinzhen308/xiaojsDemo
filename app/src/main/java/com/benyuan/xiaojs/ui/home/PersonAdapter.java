@@ -15,65 +15,64 @@ package com.benyuan.xiaojs.ui.home;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class PersonAdapter extends BaseAdapter {
+public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.Holder> {
 
     private Context mContext;
-    public PersonAdapter(Context context){
+    private final int SPACE;
+
+    public PersonAdapter(Context context) {
         mContext = context;
+        SPACE = mContext.getResources().getDimensionPixelSize(R.dimen.px30);
     }
+
     @Override
-    public int getCount() {
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_person_block_item, parent, false);
+        Holder holder = new Holder(view);
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(Holder holder, int position) {
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) holder.itemWrapper.getLayoutParams();
+        if (position == 0) {
+            mlp.leftMargin = SPACE;
+            mlp.rightMargin = SPACE / 2;
+        } else if (position == getItemCount() - 1) {
+            mlp.leftMargin = SPACE / 2;
+            mlp.rightMargin = SPACE;
+        } else {
+            mlp.leftMargin = SPACE / 2;
+            mlp.rightMargin = SPACE / 2;
+        }
+
+        holder.itemWrapper.setLayoutParams(mlp);
+    }
+
+    @Override
+    public int getItemCount() {
         return 10;
     }
 
-    @Override
-    public Object getItem(int i) {
-        return null;
-    }
+    class Holder extends RecyclerView.ViewHolder {
 
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
+        @BindView(R.id.person_item_wrapper)
+        LinearLayout itemWrapper;
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        Holder holder = null;
-        if (view == null){
-            view = LayoutInflater.from(mContext).inflate(R.layout.layout_person_block_item,null);
-            holder = new Holder(view);
-            view.setTag(holder);
-        }else {
-            holder = (Holder) view.getTag();
-        }
-        holder.image.setImageResource(R.drawable.default_portrait);
-        holder.name.setText("Davie");
-        holder.desc.setText("高级讲师");
-        return view;
-    }
-
-    class Holder extends BaseHolder{
-        @BindView(R.id.person_block_image)
-        ImageView image;
-        @BindView(R.id.person_block_name)
-        TextView name;
-        @BindView(R.id.person_block_desc)
-        TextView desc;
-        public Holder(View view) {
-            super(view);
+        public Holder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
         }
     }
-
 }

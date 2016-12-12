@@ -1,4 +1,4 @@
-package com.benyuan.xiaojs.ui.home;
+package com.benyuan.xiaojs.ui.live;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,66 +9,54 @@ package com.benyuan.xiaojs.ui.home;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/11/8
+ * Date:2016/12/9
  * Desc:
  *
  * ======================================================================================== */
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class LiveAdapter extends BaseAdapter {
+public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdapter.Holder> {
 
     private Context mContext;
 
-    public LiveAdapter(Context context) {
+    public LiveBrilliantAdapter(Context context){
         mContext = context;
     }
 
+
     @Override
-    public int getCount() {
-        return 10;
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_live_block_item, parent,false);
+        Holder holder = new Holder(view);
+        return holder;
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        Holder holder = null;
-        if (view == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.layout_live_block_item, null);
-            holder = new Holder(view);
-            view.setTag(holder);
-        } else {
-            holder = (Holder) view.getTag();
-        }
+    public void onBindViewHolder(Holder holder, int position) {
         holder.time.setText("12:00");
         holder.image.setImageResource(R.drawable.default_portrait);
         holder.title.setText("titletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitle");
         holder.stuNum.setText("111人学过");
-        return view;
     }
 
-    class Holder extends BaseHolder {
+    @Override
+    public int getItemCount() {
+        return 10;
+    }
 
+    class Holder extends RecyclerView.ViewHolder {
         @BindView(R.id.live_block_time)
         TextView time;
         @BindView(R.id.live_block_image)
@@ -78,8 +66,9 @@ public class LiveAdapter extends BaseAdapter {
         @BindView(R.id.live_block_stu_num)
         TextView stuNum;
 
-        public Holder(View view) {
-            super(view);
+        public Holder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
         }
     }
 }
