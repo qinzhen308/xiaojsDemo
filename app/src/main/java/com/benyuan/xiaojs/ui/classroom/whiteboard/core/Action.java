@@ -28,5 +28,5 @@ public interface Action {
 
     public void scale(float oldX, float oldY, float x, float y);
 
-    public void rotate(float degree);
+    public void rotate(float oldX, float oldY, float x, float y);
 }

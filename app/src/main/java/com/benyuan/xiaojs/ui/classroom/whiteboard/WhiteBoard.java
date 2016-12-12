@@ -441,19 +441,24 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                         }
 
                         if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
-                            if (mSelectionRectRegion == Utils.RIGHT_TOP_CORNER) {
-                                //scale
-                                mDoodle.scale(mPreviousPoint.x, mPreviousPoint.y, x, y);
-                                mPreviousPoint.x = x;
-                                mPreviousPoint.y = y;
-                                postInvalidate();
-                            } else {
-                                //move
-                                mDoodle.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
-                                mPreviousPoint.x = x;
-                                mPreviousPoint.y = y;
-                                postInvalidate();
+                            switch (mSelectionRectRegion) {
+                                case Utils.RIGHT_TOP_CORNER:
+                                    //scale
+                                    mDoodle.scale(mPreviousPoint.x, mPreviousPoint.y, x, y);
+                                    postInvalidate();
+                                    break;
+                                case Utils.RIGHT_BOTTOM_CORNER:
+                                    mDoodle.rotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
+                                    postInvalidate();
+                                    break;
+                                case Utils.RECT_BODY:
+                                    mDoodle.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
+                                    postInvalidate();
+                                    break;
                             }
+
+                            mPreviousPoint.x = x;
+                            mPreviousPoint.y = y;
                         } else {
                             //save previous shape
                             if (mDoodle != null && mDoodle.getState() == Doodle.STATE_EDIT) {

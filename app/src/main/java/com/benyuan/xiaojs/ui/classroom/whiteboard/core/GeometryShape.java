@@ -32,11 +32,6 @@ public abstract class GeometryShape extends Doodle {
         mGeometryId = geometryId;
     }
 
-    @Override
-    public void move(float x, float y) {
-
-    }
-
     protected abstract void changeShape(float touchX, float touchY);
 
     protected abstract double computeArea();

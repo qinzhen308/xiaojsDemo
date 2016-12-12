@@ -146,18 +146,6 @@ public class Beeline extends TwoDimensionalShape {
     public void changeArea(float downX, float downY) {
     }
 
-
-    @Override
-    public void move(float deltaX, float deltaY) {
-        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-        PointF p = Utils.normalizeScreenPoint(deltaX, deltaY, params.drawingBounds);
-
-        PointF dp = mPoints.get(0);
-        PointF up = mPoints.get(1);
-        dp.set(dp.x + p.x, dp.y + p.y);
-        up.set(up.x + p.x, up.y + p.y);
-    }
-
     @Override
     public int checkRegionPressedArea(float x, float y) {
         return super.checkRegionPressedArea(x, y);

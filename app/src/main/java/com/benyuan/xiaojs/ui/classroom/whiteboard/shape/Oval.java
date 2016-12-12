@@ -109,17 +109,6 @@ public class Oval extends TwoDimensionalShape {
     }
 
     @Override
-    public void move(float deltaX, float deltaY) {
-        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-        PointF p = Utils.normalizeScreenPoint(deltaX, deltaY, params.drawingBounds);
-
-        PointF dp = mPoints.get(0);
-        PointF up = mPoints.get(1);
-        dp.set(dp.x + p.x, dp.y + p.y);
-        up.set(up.x + p.x, up.y + p.y);
-    }
-
-    @Override
     public void scale(float oldX, float oldY, float x, float y) {
         super.scale(oldX, oldY, x, y);
     }

@@ -78,7 +78,7 @@ public class TextWriting extends Doodle {
         canvas.save();
 
         PointF centerP = mTextRotateCenter;
-        canvas.rotate(mDegree, centerP.x, centerP.y);
+        canvas.rotate(mTotalDegree, centerP.x, centerP.y);
         PointF p = getFirstPoint();
         float x = p.x;
         float y = p.y;
@@ -150,7 +150,7 @@ public class TextWriting extends Doodle {
         canvas.save();
 
         PointF centerP = mTextRotateCenter;
-        canvas.rotate(mDegree, centerP.x, centerP.y);
+        canvas.rotate(mTotalDegree, centerP.x, centerP.y);
         mCursorPaint.setStrokeWidth(TEXT_CURSOR_WIDTH * invertScale);
         if (mCursorCount % 2 == 0) {
             mCursorPaint.setColor(CURSOR_COLOR);
@@ -188,17 +188,6 @@ public class TextWriting extends Doodle {
 
     @Override
     public void changeArea(float downX, float downY) {
-    }
-
-    @Override
-    public void move(float deltaX, float deltaY) {
-        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-        PointF p = Utils.normalizeScreenPoint(deltaX, deltaY, params.drawingBounds);
-
-        PointF dp = mPoints.get(0);
-        PointF up = mPoints.get(1);
-        dp.set(dp.x + p.x, dp.y + p.y);
-        up.set(up.x + p.x, up.y + p.y);
     }
 
     @Override

@@ -129,19 +129,6 @@ public class Triangle extends TwoDimensionalShape {
         return false;
     }
 
-    @Override
-    public void move(float deltaX, float deltaY) {
-        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-        PointF p = Utils.normalizeScreenPoint(deltaX, deltaY, params.drawingBounds);
-
-        PointF dp = mPoints.get(0);
-        PointF up = mPoints.get(1);
-        dp.set(dp.x + p.x, dp.y + p.y);
-        up.set(up.x + p.x, up.y + p.y);
-
-        updateTriangleCoordinates();
-    }
-
     private void updateTriangleCoordinates() {
         if (mPoints.size() == 2) {
             float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);

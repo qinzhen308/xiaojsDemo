@@ -46,7 +46,7 @@ public abstract class Doodle implements Action {
     protected Paint mPaint;
     protected Paint mBorderPaint;
 
-    protected float mDegree = 0;
+    protected float mTotalDegree = 0;
     protected float mTotalScale = 1.0f;
 
     protected int mStyle;
@@ -135,7 +135,7 @@ public abstract class Doodle implements Action {
     }
 
     public float getDegree() {
-        return mDegree;
+        return mTotalDegree;
     }
 
     public RectF getRect() {
@@ -245,17 +245,17 @@ public abstract class Doodle implements Action {
     public abstract boolean isSelected(float x, float y);
 
     @Override
-    public void move(float x, float y) {
-
+    public void move(float deltaX, float deltaY) {
+        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        mTransformMatrix.postTranslate(deltaX / params.scale, deltaY / params.scale);
     }
 
     @Override
     public void scale(float oldX, float oldY, float x, float y) {
         if (mPoints.size() > 0) {
-            WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
             PointF dp = mPoints.get(0);
             PointF up = mPoints.get(1);
-            float scale = Utils.calcRectScale(oldX, oldY, x, y, dp, up, params.drawingBounds);
+            float scale = Utils.calcRectScale(oldX, oldY, x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
             computeCenterPoint(dp, up);
 
             mTotalScale = mTotalScale * scale;
@@ -265,7 +265,18 @@ public abstract class Doodle implements Action {
     }
 
     @Override
-    public void rotate(float degree) {
+    public void rotate(float oldX, float oldY, float x, float y) {
+        if (mPoints.size() > 0) {
+            PointF dp = mPoints.get(0);
+            PointF up = mPoints.get(1);
+            float degree = Utils.calcRectDegrees(oldX, oldY, x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
+            Log.i("aaa", "degree="+degree);
+            computeCenterPoint(dp, up);
+
+            mTotalDegree += degree;
+            //mTransformMatrix.reset();
+            mTransformMatrix.postRotate(degree, mRectCenter[0], mRectCenter[1]);
+        }
     }
 
     @Override

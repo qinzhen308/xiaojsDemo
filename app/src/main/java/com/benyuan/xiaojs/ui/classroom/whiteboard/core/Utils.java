@@ -394,7 +394,8 @@ public class Utils {
     public static int checkRectPressed(float x, float y, RectF rect, Matrix drawingMatrix, Matrix displayMatrix) {
         RectF transRect = transformToScreenRect(rect, drawingMatrix, displayMatrix);
         int scope = WhiteBoard.PRESSED_SCOPE;
-        transRect.set(rect.left - scope, rect.top - scope, rect.right + scope, rect.bottom + scope);
+
+        transRect.set(transRect.left - scope, transRect.top - scope, transRect.right + scope, transRect.bottom + scope);
         return transRect.contains(x, y) ? RECT_BODY : RECT_NO_SELECTED;
     }
 
@@ -408,10 +409,10 @@ public class Utils {
      * @param rectP2 相对于rectP1的对角点
      */
     public static boolean isRectFramePressed(float x, float y, PointF rectP1, PointF rectP2,
-                                           Matrix drawingMatrix, Matrix displayMatrix) {
+                                             Matrix drawingMatrix, Matrix displayMatrix) {
         RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
         int edge = whichEdgePressed(x, y, rect.left, rect.top, rect.right, rect.bottom);
-        Log.i("aaa", "edge="+edge);
+        Log.i("aaa", "edge=" + edge);
         return edge != RECT_NO_SELECTED;
     }
 
@@ -431,25 +432,25 @@ public class Utils {
         int scope = WhiteBoard.PRESSED_SCOPE;
         //top edge
         mTransRect.set(left, top - scope, right, top + scope);
-        if (mTransRect.contains(x, y)){
+        if (mTransRect.contains(x, y)) {
             return TOP_EDGE;
         }
 
         //bottom edge
         mTransRect.set(left, bottom - scope, right, bottom + scope);
-        if (mTransRect.contains(x, y)){
+        if (mTransRect.contains(x, y)) {
             return BOTTOM_EDGE;
         }
 
         //left edge
-        mTransRect.set(left- scope, top, left + scope, bottom);
-        if (mTransRect.contains(x, y)){
+        mTransRect.set(left - scope, top, left + scope, bottom);
+        if (mTransRect.contains(x, y)) {
             return LEFT_EDGE;
         }
 
         //right edge
         mTransRect.set(right - scope, top, right + scope, bottom);
-        if (mTransRect.contains(x, y)){
+        if (mTransRect.contains(x, y)) {
             return RIGHT_EDGE;
         }
 
@@ -592,7 +593,7 @@ public class Utils {
         return rectF;
     }
 
-    public static boolean checkOvalFramePress(float x, float y, PointF rectP1, PointF rectP2,  Matrix drawingMatrix, Matrix displayMatrix) {
+    public static boolean checkOvalFramePress(float x, float y, PointF rectP1, PointF rectP2, Matrix drawingMatrix, Matrix displayMatrix) {
         PointF p = transformToScreenPoint(rectP1.x, rectP1.y, drawingMatrix, displayMatrix);
         float dpx = p.x;
         float dpy = p.y;
@@ -1208,22 +1209,12 @@ public class Utils {
         return horizontalVector[0] * pressedVector[0] + horizontalVector[1] * pressedVector[1];
     }
 
-    public static float calcRectRotation(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2, RectF drawingBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
-        float dpx = p.x;
-        float dpy = p.y;
+    public static float calcRectDegrees(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2,
+                                        Matrix drawingMatrix, Matrix displayMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
 
-        p = mapDoodlePointToScreen(rectP2.x, rectP2.y, drawingBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        dpx = dpx - WhiteBoard.TEXT_BORDER_PADDING;
-        dpy = dpy - WhiteBoard.TEXT_BORDER_PADDING;
-        upx = upx + WhiteBoard.TEXT_BORDER_PADDING;
-        upy = upy + WhiteBoard.TEXT_BORDER_PADDING;
-
-        float centerX = (dpx + upx) / 2.0f;
-        float centerY = (dpy + upy) / 2.0f;
+        float centerX = (rect.left + rect.right) / 2.0f;
+        float centerY = (rect.top + rect.bottom) / 2.0f;
 
         //屏幕坐标系和标准坐标系的Y轴方向相反
         float preDeltaX = oldX - centerX;
@@ -1238,23 +1229,12 @@ public class Utils {
         return (float) (-degrees * (180 / Math.PI));
     }
 
-    public static float calcRectScale(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2
-            , RectF drawingBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
-        float dpx = p.x;
-        float dpy = p.y;
+    public static float calcRectScale(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2,
+                                      Matrix drawingMatrix, Matrix displayMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
 
-        p = mapDoodlePointToScreen(rectP2.x, rectP2.y, drawingBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        //dpx = dpx - WhiteBoard.TEXT_BORDER_PADDING;
-        //dpy = dpy - WhiteBoard.TEXT_BORDER_PADDING;
-        //upx = upx + WhiteBoard.TEXT_BORDER_PADDING;
-        //upy = upy + WhiteBoard.TEXT_BORDER_PADDING;
-
-        float centerX = (dpx + upx) / 2.0f;
-        float centerY = (dpy + upy) / 2.0f;
+        float centerX = (rect.left + rect.right) / 2.0f;
+        float centerY = (rect.top + rect.bottom) / 2.0f;
 
         //屏幕坐标系和标准坐标系的Y轴方向相反
         float preDeltaX = oldX - centerX;
@@ -1269,7 +1249,27 @@ public class Utils {
         return deltaScale;
     }
 
-    public void calcRectRotationAndScale(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2, float degree,
+    public static float calcRectScale(float oldX, float oldY, float x, float y, RectF rect,
+                                      Matrix drawingMatrix, Matrix displayMatrix) {
+        RectF transRect = transformToScreenRect(rect, drawingMatrix, displayMatrix);
+
+        float centerX = (transRect.left + transRect.right) / 2.0f;
+        float centerY = (transRect.top + transRect.bottom) / 2.0f;
+
+        //屏幕坐标系和标准坐标系的Y轴方向相反
+        float preDeltaX = oldX - centerX;
+        float preDeltaY = -(oldY - centerY);
+        float deltaX = x - centerX;
+        float deltaY = -(y - centerY);
+
+        double preDistance = Math.sqrt(preDeltaX * preDeltaX + preDeltaY * preDeltaY);
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        float deltaScale = (float) (distance / preDistance);
+
+        return deltaScale;
+    }
+
+    public void calcRectDegreesAndScales(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2, float degree,
                                          float totalScale, RectF drawingBounds) {
         PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
         float dpx = p.x;

@@ -127,21 +127,6 @@ public class HandWriting extends Doodle {
     }
 
     @Override
-    public void move(float deltaX, float deltaY) {
-        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-        PointF normP = Utils.normalizeScreenPoint(deltaX, deltaY, params.drawingBounds);
-
-        //update all points
-        if (mPoints != null && !mPoints.isEmpty()) {
-            for (PointF p : mPoints) {
-                p.set(p.x + normP.x, p.y + normP.y);
-            }
-        }
-
-        updatePath();
-    }
-
-    @Override
     public int checkRegionPressedArea(float x, float y) {
         if (getState() == STATE_EDIT) {
 
@@ -166,29 +151,15 @@ public class HandWriting extends Doodle {
         return false;
     }
 
-    private void updatePath() {
-        if (mPoints.size() > 1) {
-            mNormalizedPath.reset();
-            mOriginalPath.reset();
-            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+    @Override
+    public void scale(float oldX, float oldY, float x, float y) {
+        if (mPoints.size() > 0) {
+            mNormalizedPath.computeBounds(mRect, true);
+            float scale = Utils.calcRectScale(oldX, oldY, x, y, mRect, mDrawingMatrix, mDisplayMatrix);
+            computeCenterPoint(null, null);
 
-            PointF last = mPoints.firstElement();
-
-            mNormalizedPath.moveTo(last.x, last.y);
-            PointF p = Utils.mapDoodlePointToScreen(last.x, last.y, getWhiteboard().getBlackParams().drawingBounds);
-            mOriginalPath.moveTo(p.x, p.y);
-
-            for (int i = 1; i < mPoints.size(); i++) {
-                PointF point = mPoints.get(i);
-
-                mNormalizedPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);
-
-                PointF lastP = Utils.mapDoodlePointToScreen(last.x, last.y, params.drawingBounds);
-                PointF currP = Utils.mapDoodlePointToScreen(point.x, point.y, params.drawingBounds);
-                mOriginalPath.quadTo(lastP.x, lastP.y, (lastP.x + currP.x) / 2, (lastP.y + currP.y) / 2);
-
-                last = point;
-            }
+            mTotalScale = mTotalScale * scale;
+            mTransformMatrix.postScale(scale, scale, mRectCenter[0], mRectCenter[1]);
         }
     }
 
