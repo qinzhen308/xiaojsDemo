@@ -25,6 +25,7 @@ import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
+import java.util.UUID;
 import java.util.Vector;
 
 public abstract class Doodle implements Action {
@@ -65,7 +66,10 @@ public abstract class Doodle implements Action {
     protected Matrix mDisplayMatrix;
     protected int mState = STATE_IDLE;
 
+    private String mDoodleId;
+
     protected Doodle(WhiteBoard whiteBoard, int style) {
+        mDoodleId = UUID.randomUUID().toString();
         mWhiteboard = whiteBoard;
         mStyle = style;
         mState = STATE_IDLE;
@@ -150,7 +154,15 @@ public abstract class Doodle implements Action {
         mState = state;
     }
 
-//==========================getter and setter==========================================
+    public String getDoodleId() {
+        return mDoodleId;
+    }
+
+    public void setDoodleId(String doodleId) {
+        mDoodleId = doodleId;
+    }
+
+    //==========================getter and setter==========================================
 
     public void merge(Doodle d) {
         if (d != this) {
@@ -202,6 +214,10 @@ public abstract class Doodle implements Action {
     public abstract Path getOriginalPath();
 
     public abstract void drawSelf(Canvas canvas);
+
+    public void reset() {
+
+    }
 
     public void drawBorder(Canvas canvas) {
         if (mPoints.size() > 1) {
@@ -291,6 +307,20 @@ public abstract class Doodle implements Action {
         mRectCenter[0] = centerX;
         mRectCenter[1] = centerY;
         mDrawingMatrix.mapPoints(mRectCenter);
+    }
+
+    public RectF getDoodleRect() {
+        if (mPoints.size() > 1) {
+            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
+            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
+
+            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
+            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+
+            mRect.set(x1, y1, x2, y2);
+        }
+
+        return mRect;
     }
 
 }

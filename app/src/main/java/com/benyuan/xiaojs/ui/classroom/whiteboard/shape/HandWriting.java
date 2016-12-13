@@ -20,6 +20,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.provider.Settings;
+import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
@@ -146,7 +148,10 @@ public class HandWriting extends Doodle {
     @Override
     public boolean isSelected(float x, float y) {
         if (mPoints.size() > 1) {
-            return Utils.intersect(x, y , this);
+            long s = System.currentTimeMillis();
+            boolean intersect = Utils.intersect(x, y , this);
+            Log.i("aaa", "take=" + (System.currentTimeMillis() - s)+"   intersect="+intersect);
+            return intersect;
         }
 
         return false;
@@ -174,7 +179,6 @@ public class HandWriting extends Doodle {
             computeCenterPoint(null, null);
 
             mTotalDegree += degree;
-            //mTransformMatrix.reset();
             mTransformMatrix.postRotate(degree, mRectCenter[0], mRectCenter[1]);
         }
     }
@@ -187,5 +191,11 @@ public class HandWriting extends Doodle {
         mRectCenter[0] = centerX;
         mRectCenter[1] = centerY;
         mDrawingMatrix.mapPoints(mRectCenter);
+    }
+
+    @Override
+    public RectF getDoodleRect() {
+        mNormalizedPath.computeBounds(mRect, true);
+        return mRect;
     }
 }

@@ -75,7 +75,8 @@ public class WhiteBoardController implements
         mGeoShape.setImageResource(R.drawable.wb_oval_selector);
 
         mWhiteboard.setEditText(mWhiteboardEdit);
-        mWhiteboard.setGeometryShapeId(GeometryShape.OVAL);
+        mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
+        mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
         mColorPicker.setPaintColor(mWhiteboard.getColor());
         mPanel.measure(0, 0);
         mPanelWidth = mPanel.getMeasuredWidth();

@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.Log;
 
@@ -35,17 +36,12 @@ import java.util.ArrayList;
  * ======================================================================================== */
 
 public class Selector extends Doodle {
-    public final static int SELECTING = 0;
-    public final static int SELECTED = 1;
-
     private final static int DEFAULT_DASH_WIDTH = 5;
 
     private final static int DEFAULT_COLOR = Color.BLACK;
 
     private Paint mSelectingBgPaint;
     private Paint mSelectingDashPaint;
-    private Paint mSelectedPaint;
-    private int mSelectStatus = SELECTING;
 
     private Region mRegion;
     private Region mSelectorRegion;
@@ -68,7 +64,7 @@ public class Selector extends Doodle {
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(DEFAULT_DASH_WIDTH);
         p.setColor(Color.WHITE);
-        PathEffect blackEffects = new DashPathEffect(new float[] { 10, 10}, 0);
+        PathEffect blackEffects = new DashPathEffect(new float[]{10, 10}, 0);
         p.setPathEffect(blackEffects);
         return p;
     }
@@ -90,16 +86,24 @@ public class Selector extends Doodle {
     public void addControlPoint(PointF point) {
         //clamp to [0, 1]
         point.set(Utils.clamp(point.x, 0, 1), Utils.clamp(point.y, 0, 1));
-        if (mPoints.size() < 2) {
+        if (mPoints.isEmpty()) {
             mPoints.add(point);
-        } else {
+        } else if (mPoints.size() == 1) {
+            mPoints.add(point);
+        } else if (mPoints.size() >= 2) {
             mPoints.set(1, point);
         }
     }
 
     @Override
-    public void addControlPoint(float x, float y) {
-        addControlPoint(new PointF(x, y));
+    public void reset() {
+        if (mPoints != null) {
+            mPoints.clear();
+        }
+
+        mRect.set(0, 0, 0, 0);
+
+        setState(Doodle.STATE_IDLE);
     }
 
     @Override
@@ -108,38 +112,23 @@ public class Selector extends Doodle {
             return;
         }
 
-        canvas.save();
+        if (mState == STATE_DRAWING) {
+            canvas.save();
+            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
+            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
 
-        float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
-        float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
+            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
+            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+            mRect.set(x1, y1, x2, y2);
+            mNormalizedPath.reset();
+            mNormalizedPath.addRect(mRect, Path.Direction.CCW);
+            mNormalizedPath.transform(mDrawingMatrix);
 
-        float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
-        float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
-
-        mRect.set(x1, y1, x2, y2);
-        mNormalizedPath.reset();
-        mNormalizedPath.addRect(mRect, Path.Direction.CCW);
-        mNormalizedPath.transform(mDrawingMatrix);
-        if (mSelectStatus == SELECTING) {
             canvas.drawPath(mNormalizedPath, mSelectingBgPaint);
             canvas.drawPath(mNormalizedPath, mSelectingDashPaint);
-        } else {
-            canvas.drawPath(mNormalizedPath, mSelectedPaint);
+
+            canvas.restore();
         }
-
-
-        intersect(x1, y1, x2, y2);
-        canvas.restore();
-    }
-
-    @Override
-    public void drawBorder(Canvas canvas) {
-
-    }
-
-    @Override
-    public int checkRegionPressedArea(float x, float y) {
-        return 0;
     }
 
     @Override
@@ -148,15 +137,31 @@ public class Selector extends Doodle {
     }
 
     @Override
-    public void move(float x, float y) {
-
-    }
-
-    @Override
     public Path getOriginalPath() {
         return null;
     }
 
+    public boolean checkIntersect() {
+        if (mPoints.size() > 1) {
+            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
+            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
+
+            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
+            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+            return intersect(x1, y1, x2, y2);
+        }
+
+        return false;
+    }
+
+    /**
+     * 
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return
+     */
     public boolean intersect(float x1, float y1, float x2, float y2) {
         //map points
         WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
@@ -169,22 +174,29 @@ public class Selector extends Doodle {
         y2 = p.y;
 
         mRect.set(x1, y1, x2, y2);
-        mSelectorRegion.set((int)x1, (int)y1, (int)x2, (int)y2);
+        mSelectorRegion.set((int) x1, (int) y1, (int) x2, (int) y2);
 
         boolean intersect = false;
+        boolean hasIntersect = false;
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+        long s = System.currentTimeMillis();
         if (allDoodles != null) {
             for (Doodle d : allDoodles) {
                 if (d instanceof Beeline) {
-                    LineSegment beeLineSeg = ((Beeline)d).getLineSegment();
+                    LineSegment beeLineSeg = ((Beeline) d).getLineSegment();
                     intersect = Utils.intersect(mRect, beeLineSeg);
-                    Log.i("aaa", "======================intersect="+intersect);
+                    if (intersect) {
+                        hasIntersect = true;
+                        d.setState(Doodle.STATE_EDIT);
+                    }
                 } else if (d instanceof Triangle) {
                     LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments();
                     for (LineSegment lineSegment : beeLineSeg) {
                         intersect = Utils.intersect(mRect, lineSegment);
                         if (intersect) {
+                            hasIntersect = true;
                             d.setState(Doodle.STATE_EDIT);
+                            break;
                         }
                     }
                 } else {
@@ -195,15 +207,47 @@ public class Selector extends Doodle {
 
                     intersect = mRegion.setPath(originalPath, mSelectorRegion);
                     if (intersect) {
+                        hasIntersect = true;
                         d.setState(Doodle.STATE_EDIT);
                     }
-
-                    Log.i("aaa", "======================intersect="+intersect);
                 }
             }
         }
 
-        return intersect;
+        Log.i("aaa", "intersect take="+(System.currentTimeMillis() - s)+"   doodle size="+ allDoodles.size());
+        if (hasIntersect) {
+            for (Doodle d : allDoodles) {
+                if (d.getState() == STATE_EDIT) {
+                    RectF rect =  d.getDoodleRect();
+                    updateRect(rect);
+                }
+            }
+            setState(STATE_EDIT);
+        }
+
+        return hasIntersect;
+    }
+
+    public void updateRect(RectF rect) {
+        if (mRect.isEmpty()) {
+            mRect.set(rect);
+        } else {
+            if (rect.left < mRect.left) {
+                mRect.set(rect.left, mRect.top, mRect.right, mRect.bottom);
+            }
+
+            if (rect.top < mRect.top) {
+                mRect.set(mRect.left, rect.top, mRect.right, mRect.bottom);
+            }
+
+            if (rect.right > mRect.right) {
+                mRect.set(mRect.left, mRect.top, rect.right, mRect.bottom);
+            }
+
+            if (rect.bottom > mRect.bottom) {
+                mRect.set(mRect.left, mRect.top, mRect.right, rect.bottom);
+            }
+        }
 
     }
 }
