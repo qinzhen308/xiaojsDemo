@@ -81,7 +81,8 @@ public class Utils {
     private static PointF mPoint = new PointF();
     private final static LineSegment[] mDiagonal = new LineSegment[2];
 
-    private final static Matrix mMapMatrix = new Matrix();
+    private final static Matrix mMapRectMatrix = new Matrix();
+    private final static Matrix mMapPointMatrix = new Matrix();
     private final static float[] mPointArr = new float[2];
 
     /**
@@ -240,22 +241,22 @@ public class Utils {
         return mDiagonal;
     }
 
-    public static LineSegment getLineSegment(PointF p1, PointF p2, Matrix drawingMatrix, Matrix displayMatrix) {
-        return getLineSegment(p1, p2, drawingMatrix, displayMatrix, null);
+    public static LineSegment getLineSegment(PointF p1, PointF p2, Matrix mapMatrix) {
+        return getLineSegment(p1, p2, mapMatrix, null);
     }
 
     /**
      * 根据2个点获取线段
      */
     public static LineSegment getLineSegment(PointF p1, PointF p2,
-                                             Matrix drawingMatrix, Matrix displayMatrix, LineSegment lineSegment) {
+                                             Matrix mapMatrix, LineSegment lineSegment) {
         if (lineSegment == null) {
             lineSegment = new LineSegment();
         }
 
-        PointF p = transformToScreenPoint(p1, drawingMatrix, displayMatrix);
+        PointF p = transformToScreenPoint(p1, mapMatrix);
         lineSegment.point1.set(p.x, p.y);
-        p = transformToScreenPoint(p2, drawingMatrix, displayMatrix);
+        p = transformToScreenPoint(p2, mapMatrix);
         lineSegment.point2.set(p.x, p.y);
 
         return lineSegment;
@@ -265,14 +266,14 @@ public class Utils {
      * 根据2个点的坐标获取线段
      */
     public static LineSegment getLineSegment(float p1x, float p1y, float p2x, float p2y,
-                                             Matrix drawingMatrix, Matrix displayMatrix, LineSegment lineSegment) {
+                                             Matrix mapMatrix, LineSegment lineSegment) {
         if (lineSegment == null) {
             lineSegment = new LineSegment();
         }
 
-        PointF p = transformToScreenPoint(p1x, p1y, drawingMatrix, displayMatrix);
+        PointF p = transformToScreenPoint(p1x, p1y, mapMatrix);
         lineSegment.point1.set(p.x, p.y);
-        p = transformToScreenPoint(p2x, p2y, drawingMatrix, displayMatrix);
+        p = transformToScreenPoint(p2x, p2y, mapMatrix);
         lineSegment.point2.set(p.x, p.y);
 
         return lineSegment;
@@ -369,16 +370,75 @@ public class Utils {
         return intersect;
     }
 
+
+    /**
+     * 计算变换矩阵，该矩阵用来变换图形所在区域矩形
+     * 事件相交取值范围:
+     *      RECT_BODY 按下矩形体
+     *
+     *      LEFT_TOP_CORNER 矩形左上角
+     *      RIGHT_TOP_CORNER 矩形右上角
+     *      LEFT_BOTTOM_CORNER 矩形左下角
+     *      RIGHT_BOTTOM_CORNER 矩形右下角
+     *
+     *      TOP_EDGE 矩形上条边
+     *      RIGHT_EDGE 矩形右条边
+     *      BOTTOM_EDGE 矩形底条边
+     *      LEFT_EDGE 矩形左条边
+     *
+     * @param drawingMatrix
+     * @param displayMatrix
+     * @param center
+     * @param degrees
+     * @return
+     */
+    public static Matrix transformMatrix(Matrix drawingMatrix, Matrix displayMatrix, float[] center, float degrees) {
+        mMapRectMatrix.reset();
+        mMapRectMatrix.postConcat(drawingMatrix);
+        mMapRectMatrix.postConcat(displayMatrix);
+
+        if (degrees != 0) {
+            //映射到旋转前, 把矩形置为水平，便于判断点是否和矩阵是否有相交事件
+            mMapRectMatrix.postRotate(-degrees, center[0], center[1]);
+        }
+
+        return mMapRectMatrix;
+    }
+
+    /**
+     * 为了判断某个点是否在矩形内，需要把矩形置为水平，并且把点知映射到旋转前
+     * @param x
+     * @param y
+     * @param center
+     * @param degrees
+     * @return
+     */
+    public static PointF transformPoint(float x, float y, float[] center, float degrees) {
+        if (degrees == 0) {
+            mPoint.set(x, y);
+            return mPoint;
+        }
+
+        mMapPointMatrix.reset();
+        //映射到旋转前, 把点置为初始状态
+        mMapPointMatrix.postRotate(-degrees, center[0], center[1]);
+        mPointArr[0] = x;
+        mPointArr[1] = y;
+        mMapPointMatrix.mapPoints(mPointArr);
+        mPoint.set(mPointArr[0], mPointArr[1]);
+
+        return mPoint;
+    }
+
     /**
      * @param x             按下点的x
      * @param y             按下点的y
      * @param rectP1        矩形的其中的一个角对应的点
      * @param rectP2        相对于rectP1的对角点
-     * @param drawingMatrix 绘制矩阵
-     * @param displayMatrix 显示矩阵
+     * @param mapMatrix     映射矩阵
      */
-    public static int checkRectPressed(float x, float y, PointF rectP1, PointF rectP2, Matrix drawingMatrix, Matrix displayMatrix) {
-        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
+    public static int checkRectPressed(float x, float y, PointF rectP1, PointF rectP2, Matrix mapMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, mapMatrix);
         int scope = WhiteBoard.PRESSED_SCOPE;
         rect.set(rect.left - scope, rect.top - scope, rect.right + scope, rect.bottom + scope);
         return rect.contains(x, y) ? RECT_BODY : RECT_NO_SELECTED;
@@ -388,11 +448,10 @@ public class Utils {
      * @param x             按下点的x
      * @param y             按下点的y
      * @param rect          变换前的矩形
-     * @param drawingMatrix 绘制矩阵
-     * @param displayMatrix 显示矩阵
+     * @param mapMatrix     映射矩阵
      */
-    public static int checkRectPressed(float x, float y, RectF rect, Matrix drawingMatrix, Matrix displayMatrix) {
-        RectF transRect = transformToScreenRect(rect, drawingMatrix, displayMatrix);
+    public static int checkRectPressed(float x, float y, RectF rect, Matrix mapMatrix) {
+        RectF transRect = transformToScreenRect(rect, mapMatrix);
         int scope = WhiteBoard.PRESSED_SCOPE;
 
         transRect.set(transRect.left - scope, transRect.top - scope, transRect.right + scope, transRect.bottom + scope);
@@ -409,16 +468,15 @@ public class Utils {
      * @param rectP2 相对于rectP1的对角点
      */
     public static boolean isRectFramePressed(float x, float y, PointF rectP1, PointF rectP2,
-                                             Matrix drawingMatrix, Matrix displayMatrix) {
-        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
+                                             Matrix mapMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, mapMatrix);
         int edge = whichEdgePressed(x, y, rect.left, rect.top, rect.right, rect.bottom);
-        Log.i("aaa", "edge=" + edge);
         return edge != RECT_NO_SELECTED;
     }
 
     public static int whichEdgePressed(float x, float y, PointF rectP1, PointF rectP2,
-                                       Matrix drawingMatrix, Matrix displayMatrix) {
-        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
+                                       Matrix mapMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, mapMatrix);
         return whichEdgePressed(x, y, rect.left, rect.top, rect.right, rect.bottom);
     }
 
@@ -464,8 +522,8 @@ public class Utils {
      * @param x 按下点x
      * @param y 按下点y
      */
-    public static int isPressedCorner(float x, float y, PointF rectP1, PointF rectP2, Matrix drawingMatrix, Matrix displayMatrix) {
-        transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
+    public static int isPressedCorner(float x, float y, PointF rectP1, PointF rectP2, Matrix mapMatrix) {
+        transformToScreenRect(rectP1, rectP2, mapMatrix);
         return whichCornerPressed(x, y, mRect);
     }
 
@@ -475,20 +533,19 @@ public class Utils {
      * @param x 按下点x
      * @param y 按下点y
      */
-    public static int isPressedCorner(float x, float y, RectF rectF, Matrix drawingMatrix, Matrix displayMatrix) {
-        transformToScreenRect(rectF, drawingMatrix, displayMatrix);
+    public static int isPressedCorner(float x, float y, RectF rectF, Matrix mapMatrix) {
+        transformToScreenRect(rectF, mapMatrix);
         return whichCornerPressed(x, y, mRect);
     }
 
-    public static PointF transformToScreenPoint(PointF p, Matrix drawingMatrix, Matrix displayMatrix) {
-        return transformToScreenPoint(p.x, p.y, drawingMatrix, displayMatrix);
+    public static PointF transformToScreenPoint(PointF p, Matrix mapMatrix) {
+        return transformToScreenPoint(p.x, p.y, mapMatrix);
     }
 
-    public static PointF transformToScreenPoint(float x, float y, Matrix drawingMatrix, Matrix displayMatrix) {
+    public static PointF transformToScreenPoint(float x, float y, Matrix mapMatrix) {
         mPointArr[0] = x;
         mPointArr[1] = y;
-        drawingMatrix.mapPoints(mPointArr);
-        displayMatrix.mapPoints(mPointArr);
+        mapMatrix.mapPoints(mPointArr);
         mPoint.set(mPointArr[0], mPointArr[1]);
         return mPoint;
     }
@@ -496,7 +553,7 @@ public class Utils {
     /**
      * 变换doodle坐标到屏幕坐标
      */
-    public static RectF transformToScreenRect(PointF rectP1, PointF rectP2, Matrix drawingMatrix, Matrix displayMatrix) {
+    public static RectF transformToScreenRect(PointF rectP1, PointF rectP2, Matrix mapMatrix) {
         float minX = Math.min(rectP1.x, rectP2.x);
         float minY = Math.min(rectP1.y, rectP2.y);
         float maxX = Math.max(rectP1.x, rectP2.x);
@@ -505,15 +562,13 @@ public class Utils {
 
         mPointArr[0] = mRect.left;
         mPointArr[1] = mRect.top;
-        drawingMatrix.mapPoints(mPointArr);
-        displayMatrix.mapPoints(mPointArr);
+        mapMatrix.mapPoints(mPointArr);
         float left = mPointArr[0];
         float top = mPointArr[1];
 
         mPointArr[0] = mRect.right;
         mPointArr[1] = mRect.bottom;
-        drawingMatrix.mapPoints(mPointArr);
-        displayMatrix.mapPoints(mPointArr);
+        mapMatrix.mapPoints(mPointArr);
         float right = mPointArr[0];
         float bottom = mPointArr[1];
         mRect.set(left, top, right, bottom);
@@ -524,20 +579,18 @@ public class Utils {
     /**
      * 变换doodle rect对应的坐标到屏幕坐标
      */
-    public static RectF transformToScreenRect(RectF rect, Matrix drawingMatrix, Matrix displayMatrix) {
+    public static RectF transformToScreenRect(RectF rect, Matrix mapMatrix) {
         mRect.set(rect);
 
         mPointArr[0] = mRect.left;
         mPointArr[1] = mRect.top;
-        drawingMatrix.mapPoints(mPointArr);
-        displayMatrix.mapPoints(mPointArr);
+        mapMatrix.mapPoints(mPointArr);
         float left = mPointArr[0];
         float top = mPointArr[1];
 
         mPointArr[0] = mRect.right;
         mPointArr[1] = mRect.bottom;
-        drawingMatrix.mapPoints(mPointArr);
-        displayMatrix.mapPoints(mPointArr);
+        mapMatrix.mapPoints(mPointArr);
         float right = mPointArr[0];
         float bottom = mPointArr[1];
         mRect.set(left, top, right, bottom);
@@ -593,11 +646,11 @@ public class Utils {
         return rectF;
     }
 
-    public static boolean checkOvalFramePress(float x, float y, PointF rectP1, PointF rectP2, Matrix drawingMatrix, Matrix displayMatrix) {
-        PointF p = transformToScreenPoint(rectP1.x, rectP1.y, drawingMatrix, displayMatrix);
+    public static boolean checkOvalFramePress(float x, float y, PointF rectP1, PointF rectP2, Matrix mapMatrix) {
+        PointF p = transformToScreenPoint(rectP1.x, rectP1.y, mapMatrix);
         float dpx = p.x;
         float dpy = p.y;
-        p = transformToScreenPoint(rectP2.x, rectP2.y, drawingMatrix, displayMatrix);
+        p = transformToScreenPoint(rectP2.x, rectP2.y, mapMatrix);
         float upx = p.x;
         float upy = p.y;
 
@@ -697,53 +750,6 @@ public class Utils {
             }
         }
         return true;
-    }
-
-
-    //线性形状按下事件范围
-    public static boolean checkShapeLinePress(float x, float y, PointF doodleDownPoint, PointF doodleUpPoint) {
-        float mLineDistanceY = doodleUpPoint.y - doodleDownPoint.y;
-        float mLineDistanceX = doodleUpPoint.x - doodleDownPoint.x;
-
-        float mLineLength = (float) Math.sqrt(mLineDistanceX * mLineDistanceX + mLineDistanceY * mLineDistanceY);
-        double lineAngle = 0;
-
-        float centerX = (doodleDownPoint.x + doodleUpPoint.x) / 2.0f;
-        float centerY = (doodleDownPoint.y + doodleUpPoint.y) / 2.0f;
-        double actionAngle = 0;
-
-        try {
-            //屏幕坐标系和标准坐标系的Y轴方向相反
-            float lineK = -mLineDistanceY / mLineDistanceX;
-            lineAngle = Math.atan(lineK);
-        } catch (ArithmeticException e) {
-            //除数为0异常
-            lineAngle = Math.PI / 2;
-        }
-
-        try {
-            float actionK = -(y - centerY) / (x - centerX);
-            actionAngle = Math.atan(actionK);
-        } catch (ArithmeticException e) {
-            //除数为0异常
-            actionAngle = Math.PI / 2;
-        }
-
-        double radius = Math.sqrt((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY));
-        double deltaAngle = actionAngle - lineAngle;
-
-        double newX = centerX + radius * Math.cos(deltaAngle);
-        double newY = centerY + radius * Math.sin(deltaAngle);
-
-        float minX = centerX - mLineLength / 2.0f;
-        float maxX = centerX + mLineLength / 2.0f;
-        float minY = centerY - WhiteBoard.PRESSED_SCOPE;
-        float maxY = centerY + WhiteBoard.PRESSED_SCOPE;
-
-        if (newX > minX && newX < maxX && newY > minY && newY < maxY) {
-            return true;
-        }
-        return false;
     }
 
     public static boolean checkShapeOvalPress(float x, float y, PointF doodleDownPoint, PointF doodleUpPoint) {
@@ -1198,9 +1204,9 @@ public class Utils {
 
         //映射到旋转前
         float[] pressedP = {x, y};
-        mMapMatrix.reset();
-        mMapMatrix.setRotate(-degree, centerX, centerY);
-        mMapMatrix.mapPoints(pressedP);
+        mMapRectMatrix.reset();
+        mMapRectMatrix.setRotate(-degree, centerX, centerY);
+        mMapRectMatrix.mapPoints(pressedP);
 
         //文本框中心(起点)与手势按下点(终点)所成的向量
         float[] pressedVector = {pressedP[0] - centerX, pressedP[1] - centerY};
@@ -1210,8 +1216,8 @@ public class Utils {
     }
 
     public static float calcRectDegrees(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2,
-                                        Matrix drawingMatrix, Matrix displayMatrix) {
-        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
+                                        Matrix mapMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, mapMatrix);
 
         float centerX = (rect.left + rect.right) / 2.0f;
         float centerY = (rect.top + rect.bottom) / 2.0f;
@@ -1229,9 +1235,28 @@ public class Utils {
         return (float) (-degrees * (180 / Math.PI));
     }
 
+    public static float calcRectDegrees(float oldX, float oldY, float x, float y, RectF rect, Matrix mapMatrix) {
+        RectF transRect = transformToScreenRect(rect, mapMatrix);
+
+        float centerX = (transRect.left + transRect.right) / 2.0f;
+        float centerY = (transRect.top + transRect.bottom) / 2.0f;
+
+        //屏幕坐标系和标准坐标系的Y轴方向相反
+        float preDeltaX = oldX - centerX;
+        float preDeltaY = -(oldY - centerY);
+        float deltaX = x - centerX;
+        float deltaY = -(y - centerY);
+
+        double previousAngle = Math.atan2(preDeltaY, preDeltaX);
+        double angle = Math.atan2(deltaY, deltaX);
+
+        double degrees = angle - previousAngle;
+        return (float) (-degrees * (180 / Math.PI));
+    }
+
     public static float calcRectScale(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2,
-                                      Matrix drawingMatrix, Matrix displayMatrix) {
-        RectF rect = transformToScreenRect(rectP1, rectP2, drawingMatrix, displayMatrix);
+                                      Matrix mapMatrix) {
+        RectF rect = transformToScreenRect(rectP1, rectP2, mapMatrix);
 
         float centerX = (rect.left + rect.right) / 2.0f;
         float centerY = (rect.top + rect.bottom) / 2.0f;
@@ -1250,8 +1275,8 @@ public class Utils {
     }
 
     public static float calcRectScale(float oldX, float oldY, float x, float y, RectF rect,
-                                      Matrix drawingMatrix, Matrix displayMatrix) {
-        RectF transRect = transformToScreenRect(rect, drawingMatrix, displayMatrix);
+                                      Matrix mapMatrix) {
+        RectF transRect = transformToScreenRect(rect, mapMatrix);
 
         float centerX = (transRect.left + transRect.right) / 2.0f;
         float centerY = (transRect.top + transRect.bottom) / 2.0f;

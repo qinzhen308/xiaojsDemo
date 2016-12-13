@@ -1,6 +1,7 @@
 package com.benyuan.xiaojs.ui.classroom.whiteboard.shape;
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -164,7 +165,8 @@ public class Triangle extends TwoDimensionalShape {
                 edx = mTriangleCoordinates.get(i + 1).x;
                 edy = mTriangleCoordinates.get(i + 1).y;
             }
-            Utils.getLineSegment(stx, sty, edx, edy, mDrawingMatrix, mDisplayMatrix, mLineSegments[i]);
+            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
+            Utils.getLineSegment(stx, sty, edx, edy, matrix, mLineSegments[i]);
         }
 
         return mLineSegments;

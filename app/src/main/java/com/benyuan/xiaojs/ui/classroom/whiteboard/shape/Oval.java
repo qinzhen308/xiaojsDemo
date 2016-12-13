@@ -1,6 +1,7 @@
 package com.benyuan.xiaojs.ui.classroom.whiteboard.shape;
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -123,7 +124,9 @@ public class Oval extends TwoDimensionalShape {
         if (mPoints.size() > 1) {
             PointF dp = mPoints.get(0);
             PointF up = mPoints.get(1);
-            return Utils.checkOvalFramePress(x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
+            PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
+            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
+            return Utils.checkOvalFramePress(p.x, p.y, dp, up, matrix);
         }
 
         return false;

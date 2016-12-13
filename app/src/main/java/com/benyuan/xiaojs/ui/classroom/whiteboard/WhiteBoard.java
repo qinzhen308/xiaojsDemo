@@ -448,10 +448,12 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                                     postInvalidate();
                                     break;
                                 case Utils.RIGHT_BOTTOM_CORNER:
+                                    //rotate
                                     mDoodle.rotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
                                     postInvalidate();
                                     break;
                                 case Utils.RECT_BODY:
+                                    //move
                                     mDoodle.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
                                     postInvalidate();
                                     break;

@@ -129,13 +129,14 @@ public class HandWriting extends Doodle {
     @Override
     public int checkRegionPressedArea(float x, float y) {
         if (getState() == STATE_EDIT) {
-
+            PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
+            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
             mNormalizedPath.computeBounds(mRect, true);
-            int corner = Utils.isPressedCorner(x, y, mRect, mDrawingMatrix, mDisplayMatrix);
+            int corner = Utils.isPressedCorner(p.x, p.y, mRect, matrix);
             if (corner != Utils.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                return Utils.checkRectPressed(x, y, mRect, mDrawingMatrix, mDisplayMatrix);
+                return Utils.checkRectPressed(p.x, p.y, mRect, matrix);
             }
         }
 
@@ -153,13 +154,28 @@ public class HandWriting extends Doodle {
 
     @Override
     public void scale(float oldX, float oldY, float x, float y) {
-        if (mPoints.size() > 0) {
+        if (mPoints.size() > 1) {
             mNormalizedPath.computeBounds(mRect, true);
-            float scale = Utils.calcRectScale(oldX, oldY, x, y, mRect, mDrawingMatrix, mDisplayMatrix);
+            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
+            float scale = Utils.calcRectScale(oldX, oldY, x, y, mRect, matrix);
             computeCenterPoint(null, null);
 
             mTotalScale = mTotalScale * scale;
             mTransformMatrix.postScale(scale, scale, mRectCenter[0], mRectCenter[1]);
+        }
+    }
+
+    @Override
+    public void rotate(float oldX, float oldY, float x, float y) {
+        if (mPoints.size() > 1) {
+            mNormalizedPath.computeBounds(mRect, true);
+            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
+            float degree = Utils.calcRectDegrees(oldX, oldY, x, y, mRect, matrix);
+            computeCenterPoint(null, null);
+
+            mTotalDegree += degree;
+            //mTransformMatrix.reset();
+            mTransformMatrix.postRotate(degree, mRectCenter[0], mRectCenter[1]);
         }
     }
 

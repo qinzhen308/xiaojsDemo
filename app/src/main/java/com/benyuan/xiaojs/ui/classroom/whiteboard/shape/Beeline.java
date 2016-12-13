@@ -1,6 +1,7 @@
 package com.benyuan.xiaojs.ui.classroom.whiteboard.shape;
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -89,7 +90,8 @@ public class Beeline extends TwoDimensionalShape {
     }
 
     public LineSegment getLineSegment() {
-        return Utils.getLineSegment(mPoints.get(0), mPoints.get(1), mDrawingMatrix, mDisplayMatrix, mLineSegment);
+        Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
+        return Utils.getLineSegment(mPoints.get(0), mPoints.get(1), matrix, mLineSegment);
     }
 
     @Override

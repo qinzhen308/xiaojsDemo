@@ -227,15 +227,16 @@ public abstract class Doodle implements Action {
 
     public int checkRegionPressedArea(float x, float y) {
         if (getState() == STATE_EDIT && mPoints.size() > 1) {
-            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
             PointF dp = mPoints.get(0);
             PointF up = mPoints.get(1);
-            int corner = Utils.isPressedCorner(x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
+            PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
+            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
+            int corner = Utils.isPressedCorner(p.x, p.y, dp, up, matrix);
             Log.i("aaa", "corner="+corner);
             if (corner != Utils.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                return Utils.checkRectPressed(x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
+                return Utils.checkRectPressed(p.x, p.y, dp, up, matrix);
             }
         }
 
@@ -252,10 +253,11 @@ public abstract class Doodle implements Action {
 
     @Override
     public void scale(float oldX, float oldY, float x, float y) {
-        if (mPoints.size() > 0) {
+        if (mPoints.size() > 1) {
             PointF dp = mPoints.get(0);
             PointF up = mPoints.get(1);
-            float scale = Utils.calcRectScale(oldX, oldY, x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
+            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
+            float scale = Utils.calcRectScale(oldX, oldY, x, y, dp, up, matrix);
             computeCenterPoint(dp, up);
 
             mTotalScale = mTotalScale * scale;
@@ -266,11 +268,11 @@ public abstract class Doodle implements Action {
 
     @Override
     public void rotate(float oldX, float oldY, float x, float y) {
-        if (mPoints.size() > 0) {
+        if (mPoints.size() > 1) {
             PointF dp = mPoints.get(0);
             PointF up = mPoints.get(1);
-            float degree = Utils.calcRectDegrees(oldX, oldY, x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
-            Log.i("aaa", "degree="+degree);
+            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
+            float degree = Utils.calcRectDegrees(oldX, oldY, x, y, dp, up, matrix);
             computeCenterPoint(dp, up);
 
             mTotalDegree += degree;

@@ -1,6 +1,7 @@
 package com.benyuan.xiaojs.ui.classroom.whiteboard.shape;
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -124,7 +125,9 @@ public class Rectangle extends TwoDimensionalShape {
         if (mPoints.size() > 1) {
             PointF dp = mPoints.get(0);
             PointF up = mPoints.get(1);
-            return Utils.isRectFramePressed(x, y, dp, up, mDrawingMatrix, mDisplayMatrix);
+            PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
+            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
+            return Utils.isRectFramePressed(p.x, p.y, dp, up, matrix);
         }
 
         return false;
