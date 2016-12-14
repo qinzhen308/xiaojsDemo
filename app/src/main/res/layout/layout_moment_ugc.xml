@@ -6,7 +6,7 @@
     <TextView
             android:id="@+id/ugc_praise"
             android:gravity="center"
-            android:drawableLeft="@drawable/ic_edit_text_del"
+            android:drawableLeft="@drawable/ic_praise_off"
             android:text="11"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
@@ -24,7 +24,7 @@
             android:layout_toRightOf="@id/ugc_praise"
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/px30"
-            android:drawableLeft="@drawable/ic_edit_text_del"
+            android:drawableLeft="@drawable/comment_selector"
             android:textSize="@dimen/font_24px"
             android:textColor="@color/common_text"
             android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
 
     <TextView
             android:id="@+id/ugc_share"
-            android:drawableLeft="@drawable/ic_edit_text_del"
+            android:drawableLeft="@drawable/share_selector"
             android:gravity="center"
             android:text="11"
             android:layout_toRightOf="@id/ugc_comment"

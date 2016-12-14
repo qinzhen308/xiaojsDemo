@@ -261,7 +261,7 @@ public class FlowBaseLayout extends ViewGroup {
 			}else {//普通形式
 				for (int j = 0; j < lineViews.size(); j++) {
 					View child = lineViews.get(j);
-					if (child.getVisibility() == View.GONE) {
+					if (child == null || child.getVisibility() == View.GONE) {
 						continue;
 					}
 					MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();

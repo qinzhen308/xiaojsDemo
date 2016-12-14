@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="horizontal"
+              android:background="@color/moment_comment_bg"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+            android:id="@+id/moment_detail_footer_image"
+            app:oval="true"
+            app:border_width="@dimen/px1"
+            app:border_color="@color/white"
+            android:layout_marginBottom="@dimen/px15"
+            android:layout_marginTop="@dimen/px15"
+            android:layout_marginLeft="@dimen/px30"
+            android:src="@drawable/default_portrait"
+            android:layout_width="@dimen/px62"
+            android:layout_height="@dimen/px62"/>
+
+    <TextView
+            android:id="@+id/moment_detail_footer_click"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_28px"
+            android:text="说说你的评论"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/white_corner_bg"
+            android:paddingTop="@dimen/px15"
+            android:paddingLeft="@dimen/px20"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_marginRight="@dimen/px30"
+            android:paddingBottom="@dimen/px15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</LinearLayout>

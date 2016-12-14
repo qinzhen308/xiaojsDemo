@@ -16,15 +16,24 @@ package com.benyuan.xiaojs.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import com.benyuan.xiaojs.ui.widget.IconTextView;
+import com.benyuan.xiaojs.util.BitmapUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MomentHeader extends RelativeLayout {
+
+    @BindView(R.id.moment_header_desc)
+    IconTextView mDesc;
     public MomentHeader(Context context) {
         super(context);
         init();
+        PullToRefreshSwipeListView list = new PullToRefreshSwipeListView(getContext());
     }
 
     public MomentHeader(Context context, AttributeSet attrs) {
@@ -44,5 +53,10 @@ public class MomentHeader extends RelativeLayout {
 
     private void init() {
         inflate(getContext(), R.layout.layout_moment_header, this);
+        ButterKnife.bind(this);
+    }
+
+    public void setData(){
+        mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(),BitmapUtils.getBitmap(getContext(),R.drawable.ic_clz_remain),"22",R.color.white,R.dimen.font_20px));
     }
 }

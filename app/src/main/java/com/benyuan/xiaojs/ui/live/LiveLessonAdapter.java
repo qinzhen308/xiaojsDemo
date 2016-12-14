@@ -88,7 +88,7 @@ public class LiveLessonAdapter extends CanInScrollviewListView.Adapter {
         list.add(b8);
         list.add(b9);
         list.add(b10);
-        holder.imageFlow.showWithNum(list,mContext.getResources().getDimensionPixelSize(R.dimen.px5));
+        holder.imageFlow.showWithNum(list,mContext.getResources().getDimensionPixelSize(R.dimen.px20),mContext.getResources().getDimensionPixelSize(R.dimen.px2));
         return convertView;
     }
 

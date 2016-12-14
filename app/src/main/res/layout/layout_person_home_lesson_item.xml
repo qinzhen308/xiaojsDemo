@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:layout_margin="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/lesson_adapter_image"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/default_portrait"
+                android:scaleType="fitXY"
+                android:layout_width="@dimen/px260"
+                android:layout_height="@dimen/px147"/>
+
+        <LinearLayout
+                android:layout_toRightOf="@id/lesson_adapter_image"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/lesson_adapter_name"
+                    android:textSize="@dimen/font_30px"
+                    android:textColor="@color/font_black"
+                    android:text="重要的化妆防晒手册"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/lesson_adapter_time"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/common_text"
+                    android:text="2016-12-12 18:00 90min"
+                    android:layout_marginTop="@dimen/px5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                    android:layout_marginTop="@dimen/px5"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/lesson_adapter_enroll"
+                        android:textSize="@dimen/font_26px"
+                        android:textColor="@color/common_text"
+                        android:text="222人报名"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/lesson_adapter_charge"
+                        android:textSize="@dimen/font_30px"
+                        android:textColor="@color/font_red"
+                        android:text="￥199"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginTop="@dimen/px5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
