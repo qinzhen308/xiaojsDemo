@@ -9,27 +9,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <com.benyuan.xiaojs.ui.widget.BottomLineTextView
-                android:id="@+id/home_lesson_tab_teach"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/course_of_teach"
-                android:paddingBottom="@dimen/px30"
-                android:paddingTop="@dimen/px30"
+        <TextView
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/font_black"
+                android:text="我的班"
                 android:layout_marginLeft="@dimen/px30"
-                android:textColor="@drawable/orange_common_selector"
-                android:textSize="@dimen/font_32px"/>
-
-        <com.benyuan.xiaojs.ui.widget.BottomLineTextView
-                android:id="@+id/home_lesson_tab_learn"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_marginBottom="@dimen/px30"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/course_of_learn"
-                android:paddingBottom="@dimen/px30"
-                android:paddingTop="@dimen/px30"
-                android:layout_marginLeft="@dimen/px50"
-                android:textColor="@drawable/orange_common_selector"
-                android:textSize="@dimen/font_32px"/>
+                android:layout_height="wrap_content"/>
 
         <TextView
                 android:id="@+id/home_lesson_whole"
@@ -59,9 +47,9 @@
 
     <TextView
             android:text="@string/brilliant_clazz"
-            android:layout_marginBottom="@dimen/px10"
-            android:layout_marginLeft="@dimen/px10"
-            android:layout_marginTop="@dimen/px20"
+            android:layout_marginBottom="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
             android:textColor="@color/font_black"
             android:textSize="@dimen/font_32px"
             android:layout_width="wrap_content"
@@ -79,9 +67,8 @@
 
     <TextView
             android:text="@string/lesson_of_choiceness"
-            android:layout_marginBottom="@dimen/px10"
-            android:layout_marginLeft="@dimen/px10"
-            android:layout_marginTop="@dimen/px20"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
             android:textColor="@color/font_black"
             android:textSize="@dimen/font_32px"
             android:layout_width="wrap_content"

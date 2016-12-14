@@ -27,7 +27,6 @@ import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +75,10 @@ public class HomeFragment extends BaseFragment {
         BannerBean b2 = new BannerBean();
         BannerBean b3 = new BannerBean();
         BannerBean b4 = new BannerBean();
-        b1.resId = R.mipmap.t_one;
-        b2.resId = R.mipmap.t_two;
-        b3.resId = R.mipmap.t_three;
-        b4.resId = R.mipmap.t_four;
+        b1.resId = R.drawable.ic_ad;
+        b2.resId = R.drawable.ic_ad;
+        b3.resId = R.drawable.ic_ad;
+        b4.resId = R.drawable.ic_ad;
 
         List<BannerBean> beanList = new ArrayList<>();
         beanList.add(b1);
@@ -129,18 +128,15 @@ public class HomeFragment extends BaseFragment {
     private void handleScrollChanged(int offsetY) {
         if (offsetY >= 0) {
             int bannerHeight = mBanner.getMeasuredHeight();
-            int bgColor = 0;
-            if (offsetY >= bannerHeight && offsetY <= 2 * bannerHeight) {
-                int alpha = (int)((float)(offsetY - bannerHeight) / bannerHeight * 255);
-                Logger.d("alpha = " + alpha);
-                bgColor = Color.argb(alpha,0xf5,0xf5,0xf5);
+            if (offsetY >= 0 && offsetY <= bannerHeight) {
+//                int alpha = (int)((float)(offsetY - bannerHeight) / bannerHeight * 255);
+//                Logger.d("alpha = " + alpha);
+//                bgColor = Color.argb(alpha,0xf5,0xf5,0xf5);
+                mTitle.setBackgroundResource(R.drawable.ic_home_title_bg);
+                //mTitle.setBackgroundColor(bgColor);
+            }else if (offsetY > bannerHeight){
+                int bgColor = Color.argb(255,0xf5,0xf5,0xf5);
                 mTitle.setBackgroundColor(bgColor);
-            }else if (offsetY > 2 * bannerHeight){
-                bgColor = Color.argb(255,0xf5,0xf5,0xf5);
-                mTitle.setBackgroundColor(bgColor);
-//                mRightImage.setImageResource(R.drawable.home_message_selector2);
-            }else if (offsetY < bannerHeight){
-//                mRightImage.setImageResource(R.drawable.home_message_selector);
             }
         }
     }

@@ -572,6 +572,27 @@ public class BitmapUtils {
 		return new BitmapDrawable(context.getResources(),icon);
 	}
 
+	public static Drawable getDrawableWithText(Context context, Bitmap icon, String text,int resColor,int resSize) {
+		// 初始化画布
+		Canvas canvas = new Canvas(icon);
+		// 拷贝图片
+		Paint iconPaint = new Paint();
+		iconPaint.setDither(true);// 防抖动
+		iconPaint.setFilterBitmap(true);// 用来对Bitmap进行滤波处理
+		Rect src = new Rect(0, 0, icon.getWidth(), icon.getHeight());
+		Rect dst = new Rect(0, 0, icon.getWidth(), icon.getHeight());
+		canvas.drawBitmap(icon, src, dst, iconPaint);
+
+		Paint textPaint = new Paint();
+		textPaint.setColor(context.getResources().getColor(resColor));
+		textPaint.setTextSize(context.getResources().getDimension(resSize));
+		int len = (int) textPaint.measureText(text);
+		Paint.FontMetricsInt fontMetrics = textPaint.getFontMetricsInt();
+		int baseline = (dst.height() - fontMetrics.bottom - fontMetrics.top) / 2;
+		canvas.drawText(text, icon.getWidth() / 2 - len / 2, baseline, textPaint);
+		return new BitmapDrawable(context.getResources(),icon);
+	}
+
 	public static Drawable getTabDrawable(Context context, Bitmap background,Bitmap mark,String text) {
 		// 初始化画布
 		Canvas canvas = new Canvas(background);
@@ -603,4 +624,11 @@ public class BitmapUtils {
 		return new BitmapDrawable(context.getResources(),background);
 	}
 
+	public static Bitmap getBitmap(Context context,int resId){
+		if (resId > 0){
+			Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),resId);
+			return bitmap.copy(Bitmap.Config.ARGB_8888,true);
+		}
+		return null;
+	}
 }

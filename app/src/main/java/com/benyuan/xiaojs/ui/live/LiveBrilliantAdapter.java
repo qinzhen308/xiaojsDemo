@@ -19,8 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import com.benyuan.xiaojs.R;
 
@@ -30,25 +29,35 @@ import butterknife.ButterKnife;
 public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdapter.Holder> {
 
     private Context mContext;
+    private final int SPACE;
 
     public LiveBrilliantAdapter(Context context){
         mContext = context;
+        SPACE = mContext.getResources().getDimensionPixelSize(R.dimen.px30);
     }
 
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_live_block_item, parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_live_brilliant_item, parent,false);
         Holder holder = new Holder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        holder.time.setText("12:00");
-        holder.image.setImageResource(R.drawable.default_portrait);
-        holder.title.setText("titletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitle");
-        holder.stuNum.setText("111人学过");
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) holder.wrapper.getLayoutParams();
+        if (position == 0) {
+            mlp.leftMargin = SPACE;
+            mlp.rightMargin = SPACE / 2;
+        } else if (position == getItemCount() - 1) {
+            mlp.leftMargin = SPACE / 2;
+            mlp.rightMargin = SPACE;
+        } else {
+            mlp.leftMargin = SPACE / 2;
+            mlp.rightMargin = SPACE / 2;
+        }
+        holder.wrapper.setLayoutParams(mlp);
     }
 
     @Override
@@ -57,14 +66,9 @@ public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdap
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        @BindView(R.id.live_block_time)
-        TextView time;
-        @BindView(R.id.live_block_image)
-        ImageView image;
-        @BindView(R.id.live_block_title)
-        TextView title;
-        @BindView(R.id.live_block_stu_num)
-        TextView stuNum;
+
+        @BindView(R.id.live_brilliant_wrapper)
+        LinearLayout wrapper;
 
         public Holder(View itemView) {
             super(itemView);

@@ -76,10 +76,11 @@
 
             <TextView
                     android:id="@+id/moment_content_lesson_duration"
-                    android:background="@color/translucent_30"
+                    android:background="@drawable/ic_time_base"
                     android:text="50分钟"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
+                    android:gravity="center"
                     android:padding="@dimen/px10"
                     android:textSize="@dimen/font_24px"
                     android:textColor="@color/white"
@@ -97,6 +98,8 @@
                 <TextView
                         android:id="@+id/moment_content_lesson_type"
                         android:text="直播课"
+                        android:background="@drawable/orange_stoke_bg"
+                        android:padding="@dimen/px5"
                         android:textColor="@color/font_orange"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>

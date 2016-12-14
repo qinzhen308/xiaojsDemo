@@ -76,6 +76,7 @@
     <color name="progresshud_default_color">#b1000000</color>
 
     <color name="light_grey">#fcfcfc</color>
+    <color name="moment_comment_bg">#eaecef</color>
     <!--whiteboard-->
     <color name="wb_color_1">#44DB5E</color>
     <color name="wb_color_2">#54C7FC</color>

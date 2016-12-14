@@ -15,6 +15,7 @@ package com.benyuan.xiaojs.ui.home;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,8 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<RecommendCourseBean, Home
             holder.content.show();
         }
 
+        holder.header.setData();
+
     }
 
     @Override
@@ -83,6 +86,11 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<RecommendCourseBean, Home
         beans.add(b);
         beans.add(b);
         onSuccess(beans);
+    }
+
+    @Override
+    protected void onDataItemClick(int position, RecommendCourseBean bean) {
+        mContext.startActivity(new Intent(mContext,MomentDetailActivity.class));
     }
 
     class Holder extends BaseHolder {

@@ -33,12 +33,13 @@ import butterknife.Unbinder;
 public abstract class BaseActivity extends FragmentActivity {
 
     protected View mHeader;
-    private FrameLayout mContent;
+    protected FrameLayout mContent;
     private TextView mLeftText;
     protected TextView mRightText;
     private TextView mMiddleText;
     private ImageView mLeftImage;
     private ImageView mRightImage;
+    private ImageView mRightImage2;
     private View mHeaderDivider;
     private View mFailedView;
     private Button mReload;
@@ -57,6 +58,7 @@ public abstract class BaseActivity extends FragmentActivity {
         mMiddleText = (TextView) findViewById(R.id.middle_view);
         mLeftImage = (ImageView) findViewById(R.id.left_image);
         mRightImage = (ImageView) findViewById(R.id.right_image);
+        mRightImage2 = (ImageView) findViewById(R.id.right_image2);
         mHeaderDivider = findViewById(R.id.base_header_divider);
         mFailedView = findViewById(R.id.base_failed);
         mReload = (Button) findViewById(R.id.base_failed_click);
@@ -87,7 +89,9 @@ public abstract class BaseActivity extends FragmentActivity {
         if (layoutId > 0){
             mContent.removeAllViews();
             View view = getLayoutInflater().inflate(layoutId, mContent);
-            mBinder = ButterKnife.bind(this);
+            if (!delayBindView()){
+                mBinder = ButterKnife.bind(this);
+            }
             return view;
         }else {
             try {
@@ -103,7 +107,9 @@ public abstract class BaseActivity extends FragmentActivity {
         if (view != null){
             mContent.removeAllViews();
             mContent.addView(view);
-            mBinder = ButterKnife.bind(this);
+            if (!delayBindView()){
+                mBinder = ButterKnife.bind(this);
+            }
             return view;
         }else {
             try {
@@ -169,6 +175,15 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
+    protected final void setRightImage2(int resId){
+        if (resId > 0){
+            mRightImage2.setVisibility(View.VISIBLE);
+            mRightImage2.setImageResource(resId);
+        }else {
+            mRightImage2.setVisibility(View.GONE);
+        }
+    }
+
     public void showProgress(boolean cancellable){
         mFailedView.setVisibility(View.GONE);
         mContent.setVisibility(View.VISIBLE);
@@ -193,6 +208,14 @@ public abstract class BaseActivity extends FragmentActivity {
 
     public void setOnFailedClick(View.OnClickListener listener){
         mReload.setOnClickListener(listener);
+    }
+
+    /**
+     * 是否延迟调用bindview,如果延迟，则需在子类自行调用ButterKnife.bind对view进行注解
+     * @return
+     */
+    protected boolean delayBindView(){
+        return false;
     }
 
     @Override
