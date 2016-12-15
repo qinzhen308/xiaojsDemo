@@ -28,8 +28,6 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
  * ======================================================================================== */
 
 public class Beeline extends TwoDimensionalShape {
-    private PointF mStartP;
-    private PointF mEndP;
     private LineSegment mLineSegment;
 
     public Beeline(WhiteBoard whiteBoard) {
@@ -44,8 +42,6 @@ public class Beeline extends TwoDimensionalShape {
     }
 
     private void init() {
-        mStartP = new PointF();
-        mEndP = new PointF();
         mLineSegment = new LineSegment();
     }
 
@@ -62,6 +58,12 @@ public class Beeline extends TwoDimensionalShape {
             mPoints.add(point);
         } else if(mPoints.size() >= 2){
             mPoints.set(1, point);
+
+            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
+            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
+            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
+            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+            mDoodleRect.set(x1, y1, x2, y2);
         }
     }
 
@@ -88,7 +90,7 @@ public class Beeline extends TwoDimensionalShape {
     }
 
     public LineSegment getLineSegment() {
-        Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
+        Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
         return Utils.getLineSegment(mPoints.get(0), mPoints.get(1), matrix, mLineSegment);
     }
 
@@ -110,20 +112,6 @@ public class Beeline extends TwoDimensionalShape {
         canvas.drawPath(mDrawingPath, getPaint());
 
         canvas.restore();
-    }
-
-    @Override
-    public void drawBorder(Canvas canvas) {
-        if (mPoints.size() > 1) {
-            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
-            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
-
-            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
-            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
-
-            mRect.set(x1, y1, x2, y2);
-            super.drawBorder(canvas);
-        }
     }
 
     @Override

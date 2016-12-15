@@ -684,6 +684,28 @@ public class Utils {
         return checkOvalFramePress(x, y, dpx, dpy, upx, upy);
     }
 
+    public static boolean checkOvalFramePress(float x, float y, RectF rect, Matrix mapMatrix) {
+        PointF p = transformToScreenPoint(rect.left, rect.top, mapMatrix);
+        float dpx = p.x;
+        float dpy = p.y;
+        p = transformToScreenPoint(rect.right, rect.bottom, mapMatrix);
+        float upx = p.x;
+        float upy = p.y;
+
+        //transform the device coordinate to mathematical coordinate
+        float centerOffsetX = (dpx + upx) / 2.0f;
+        float centerOffsetY = (dpy + upy) / 2.0f;
+        x = x - centerOffsetX;
+        y = (centerOffsetY - y);
+
+        dpx = dpx - centerOffsetX;
+        dpy = (centerOffsetY - dpy);
+        upx = upx - centerOffsetX;
+        upy = (centerOffsetY - upy);
+
+        return checkOvalFramePress(x, y, dpx, dpy, upx, upy);
+    }
+
     /**
      * 判断某个点是否在以rect产生的椭圆（椭圆的圆心在0,0）
      * @param x

@@ -226,7 +226,6 @@ public class Selector extends Doodle {
     }
 
     /**
-     * 返回是否有相交
 	 * @param x1
      * @param y1
      * @param x2

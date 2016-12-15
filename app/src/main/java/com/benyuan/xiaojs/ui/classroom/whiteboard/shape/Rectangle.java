@@ -47,6 +47,12 @@ public class Rectangle extends TwoDimensionalShape {
             mPoints.add(point);
         } else if (mPoints.size() >= 2) {
             mPoints.set(1, point);
+
+            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
+            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
+            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
+            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+            mDoodleRect.set(x1, y1, x2, y2);
         }
     }
 
@@ -68,11 +74,11 @@ public class Rectangle extends TwoDimensionalShape {
     @Override
     public Path getOriginalPath() {
         WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
-        PointF p = Utils.mapDoodlePointToScreen(mRect.left, mRect.top, params.drawingBounds);
+        PointF p = Utils.mapDoodlePointToScreen(mDoodleRect.left, mDoodleRect.top, params.drawingBounds);
         int x1 = (int) p.x;
         int y1 = (int) p.y;
 
-        p = Utils.mapDoodlePointToScreen(mRect.right, mRect.bottom, params.drawingBounds);
+        p = Utils.mapDoodlePointToScreen(mDoodleRect.right, mDoodleRect.bottom, params.drawingBounds);
         int x2 = (int) p.x;
         int y2 = (int) p.y;
 
@@ -89,14 +95,7 @@ public class Rectangle extends TwoDimensionalShape {
 
         canvas.save();
 
-        float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
-        float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
-
-        float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
-        float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
-
-        mRect.set(x1, y1, x2, y2);
-
+        mRect.set(mDoodleRect);
         mDrawingPath.reset();
         mDrawingPath.addRect(mRect, Path.Direction.CCW);
         mDrawingMatrix.postConcat(mTransformMatrix);
@@ -104,11 +103,6 @@ public class Rectangle extends TwoDimensionalShape {
         canvas.drawPath(mDrawingPath, getPaint());
 
         canvas.restore();
-    }
-
-    @Override
-    public void drawBorder(Canvas canvas) {
-        super.drawBorder(canvas);
     }
 
     @Override

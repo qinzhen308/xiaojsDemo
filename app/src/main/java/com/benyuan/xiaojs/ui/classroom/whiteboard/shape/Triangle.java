@@ -68,6 +68,12 @@ public class Triangle extends TwoDimensionalShape {
 
         } else if(mPoints.size() >= 2){
             mPoints.set(1, point);
+
+            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
+            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
+            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
+            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+            mDoodleRect.set(x1, y1, x2, y2);
         }
 
         updateTriangleCoordinates();
@@ -110,16 +116,6 @@ public class Triangle extends TwoDimensionalShape {
     }
 
     @Override
-    public void drawBorder(Canvas canvas) {
-        super.drawBorder(canvas);
-    }
-
-    @Override
-    public int checkRegionPressedArea(float x, float y) {
-        return super.checkRegionPressedArea(x, y);
-    }
-
-    @Override
     public boolean isSelected(float x, float y) {
         if (mPoints.size() > 1) {
             return Utils.intersect(x, y, this);
@@ -136,7 +132,7 @@ public class Triangle extends TwoDimensionalShape {
             float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
             float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
 
-            mRect.set(x1, y1, x2, y2);
+            mDoodleRect.set(x1, y1, x2, y2);
 
             mTriangleCoordinates.clear();
             mTriangleCoordinates.add(new PointF((x1 + x2) / 2.0F, y1));
@@ -163,7 +159,7 @@ public class Triangle extends TwoDimensionalShape {
                 edx = mTriangleCoordinates.get(i + 1).x;
                 edy = mTriangleCoordinates.get(i + 1).y;
             }
-            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
+            Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
             Utils.getLineSegment(stx, sty, edx, edy, matrix, mLineSegments[i]);
         }
 

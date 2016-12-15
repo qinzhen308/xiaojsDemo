@@ -64,6 +64,7 @@ public class HandWriting extends Doodle {
         if (!mPoints.isEmpty()) {
             PointF last = mPoints.lastElement();
             mDrawingPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);
+            mDrawingPath.computeBounds(mDoodleRect, true);
         }
         mPoints.add(point);
     }
@@ -81,12 +82,6 @@ public class HandWriting extends Doodle {
         mTransformPath.transform(mDrawingMatrix);
         canvas.drawPath(mTransformPath, getPaint());
         canvas.restore();
-    }
-
-    @Override
-    public void drawBorder(Canvas canvas) {
-        mDrawingPath.computeBounds(mRect, true);
-        super.drawBorder(canvas);
     }
 
     @Override
@@ -108,7 +103,7 @@ public class HandWriting extends Doodle {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            mDrawingPath.computeBounds(mRect, true);
+            mRect.set(mDoodleRect);
             int corner = Utils.isPressedCorner(p.x, p.y, mRect, matrix);
             if (corner != Utils.RECT_NO_SELECTED) {
                 return corner;
@@ -130,62 +125,6 @@ public class HandWriting extends Doodle {
         }
 
         return false;
-    }
-
-    @Override
-    public void scale(float oldX, float oldY, float x, float y) {
-        if (mPoints.size() > 1) {
-            mDrawingPath.computeBounds(mRect, true);
-            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
-            float scale = Utils.calcRectScale(oldX, oldY, x, y, mRect, matrix);
-            computeCenterPoint(null, null);
-
-            mXTotalScale = mXTotalScale * scale;
-            mYTotalScale = mYTotalScale * scale;
-            mTransformMatrix.postScale(scale, scale, mRectCenter[0], mRectCenter[1]);
-        }
-    }
-
-    @Override
-    public void rotate(float oldX, float oldY, float x, float y) {
-        if (mPoints.size() > 1) {
-            mDrawingPath.computeBounds(mRect, true);
-            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
-            float degree = Utils.calcRectDegrees(oldX, oldY, x, y, mRect, matrix);
-            computeCenterPoint(null, null);
-
-            mTotalDegree += degree;
-            mTransformMatrix.postRotate(degree, mRectCenter[0], mRectCenter[1]);
-        }
-    }
-
-    public void scaleAndRotate(float oldX, float oldY, float x, float y) {
-        if (mPoints.size() > 1) {
-            mDrawingPath.computeBounds(mRect, true);
-            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
-            float[] arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mRect, matrix);
-            float scale = arr[0];
-            float degree = arr[1];
-
-            computeCenterPoint(null, null);
-
-            mTotalDegree += degree;
-            mXTotalScale = mXTotalScale * scale;
-            mYTotalScale = mYTotalScale * scale;
-
-            mTransformMatrix.postScale(scale, scale, mRectCenter[0], mRectCenter[1]);
-            mTransformMatrix.postRotate(degree, mRectCenter[0], mRectCenter[1]);
-        }
-    }
-
-    @Override
-    protected void computeCenterPoint(PointF rectP1, PointF rectP2) {
-        mDrawingPath.computeBounds(mRect, true);
-        float centerX = (mRect.left + mRect.right) / 2.0f;
-        float centerY = (mRect.top + mRect.bottom) / 2.0f;
-        mRectCenter[0] = centerX;
-        mRectCenter[1] = centerY;
-        mDrawingMatrix.mapPoints(mRectCenter);
     }
 
     @Override

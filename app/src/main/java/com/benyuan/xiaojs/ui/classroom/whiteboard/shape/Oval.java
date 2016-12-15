@@ -47,6 +47,12 @@ public class Oval extends TwoDimensionalShape {
             mPoints.add(point);
         } else if(mPoints.size() >= 2){
             mPoints.set(1, point);
+
+            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
+            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
+            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
+            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+            mDoodleRect.set(x1, y1, x2, y2);
         }
     }
 
@@ -73,13 +79,7 @@ public class Oval extends TwoDimensionalShape {
 
         canvas.save();
 
-        float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
-        float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
-
-        float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
-        float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
-
-        mRect.set(x1, y1, x2, y2);
+        mRect.set(mDoodleRect);
 
         mDrawingPath.reset();
         mDrawingPath.addOval(mRect, Path.Direction.CCW);
@@ -88,11 +88,6 @@ public class Oval extends TwoDimensionalShape {
         canvas.drawPath(mDrawingPath, getPaint());
 
         canvas.restore();
-    }
-
-    @Override
-    public void drawBorder(Canvas canvas) {
-        super.drawBorder(canvas);
     }
 
     @Override
@@ -121,11 +116,10 @@ public class Oval extends TwoDimensionalShape {
     @Override
     public boolean isSelected(float x, float y) {
         if (mPoints.size() > 1) {
-            PointF dp = mPoints.get(0);
-            PointF up = mPoints.get(1);
+            mRect.set(mDoodleRect);
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            return Utils.checkOvalFramePress(p.x, p.y, dp, up, matrix);
+            return Utils.checkOvalFramePress(p.x, p.y, mRect, matrix);
         }
 
         return false;
