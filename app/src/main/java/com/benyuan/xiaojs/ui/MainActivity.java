@@ -13,6 +13,7 @@ import com.benyuan.xiaojs.ui.home.HomeFragment;
 import com.benyuan.xiaojs.ui.home.MomentDetailActivity;
 import com.benyuan.xiaojs.ui.live.LiveFragment;
 import com.benyuan.xiaojs.ui.message.NotificationFragment;
+import com.benyuan.xiaojs.ui.message.PostDynamicActivity;
 import com.benyuan.xiaojs.ui.mine.PersonHomeActivity;
 import com.benyuan.xiaojs.ui.mine.TeachAbilityDemoActivity;
 import com.benyuan.xiaojs.ui.widget.CommonDialog;
@@ -78,6 +79,9 @@ public class MainActivity extends BaseTabActivity {
                 break;
             case 4:
                 startActivity(new Intent(this,PersonHomeActivity.class));
+                break;
+            case 5:
+                startActivity(new Intent(this, PostDynamicActivity.class));
                 break;
         }
     }

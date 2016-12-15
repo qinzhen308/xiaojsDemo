@@ -85,4 +85,10 @@
     <color name="wb_color_5">#FFFFFF</color>
     <color name="wb_color_6">#CCCCCC</color>
     <color name="wb_color_7">#000000</color>
+
+    <!-- 社交 -->
+    <color name="cancel_fllow_btn_color">#DEDEDE</color>
+    <color name="expandable_list_child_divider">#E9EBEE</color>
+    <color name="expandable_list_group_divider">#E9EBEE</color>
+
 </resources>

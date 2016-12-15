@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/activity_post_dynamic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+
+    <RelativeLayout
+            android:id="@+id/bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_alignParentBottom="true"
+            android:background="#EAECEE"
+            android:padding="10dp">
+
+        <ImageButton
+                android:id="@+id/chose_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_post_img"
+                android:layout_marginLeft="10dp"
+                android:background="@android:color/transparent"/>
+
+        <ImageButton
+                android:id="@+id/chose_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_at"
+                android:layout_toRightOf="@id/chose_pic"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/transparent"/>
+
+        <Button
+                android:id="@+id/btn_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/publish"
+                android:drawableLeft="@drawable/ic_unlock"
+                android:drawablePadding="8dp"
+                android:layout_gravity="right"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/common_text"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"/>
+    </RelativeLayout>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottom_bar"
+            android:layout_alignParentTop="true"
+            android:background="@color/white">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/input_dyn_hint"
+                    android:minHeight="100dp"
+                    >
+                <requestFocus/>
+            </EditText>
+            <ImageView
+                    android:id="@+id/pic_thumbnail"
+                    android:layout_width="@dimen/dyn_thumbnail_size"
+                    android:layout_height="@dimen/dyn_thumbnail_size"
+                    android:layout_marginTop="20dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

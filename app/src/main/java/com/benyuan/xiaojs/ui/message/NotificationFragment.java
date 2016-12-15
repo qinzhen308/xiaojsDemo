@@ -99,6 +99,7 @@ public class NotificationFragment extends BaseFragment {
             case R.id.right_image:
                 break;
             case R.id.people_image:
+                startActivity(new Intent(getActivity(),ContactActivity.class));
                 break;
         }
     }
