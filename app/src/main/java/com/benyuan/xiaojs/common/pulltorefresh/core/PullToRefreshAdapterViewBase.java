@@ -34,6 +34,7 @@ import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.benyuan.xiaojs.R;
 
@@ -165,6 +166,11 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		((ExpandableListView) mRefreshableView).setGroupIndicator(drawable);
 	}
 
+	public void setIndicatorBounds(int left,int right) {
+		((ExpandableListView) mRefreshableView).setIndicatorBounds(8,8);
+	}
+
+
 
 	public void setChildDivider(Drawable childDivider) {
 		((ExpandableListView) mRefreshableView).setChildDivider(childDivider);
@@ -172,6 +178,22 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
 	public void setDivider(Drawable childDivider) {
 		((ExpandableListView) mRefreshableView).setDivider(childDivider);
+	}
+
+	public void setChoiceMode(int mode) {
+		((ExpandableListView) mRefreshableView).setChoiceMode(mode);
+	}
+
+	public void setOnChildClickListener(ExpandableListView.OnChildClickListener listener) {
+		((ExpandableListView) mRefreshableView).setOnChildClickListener(listener);
+	}
+
+	public int getCount() {
+		return ((ExpandableListView) mRefreshableView).getCount();
+	}
+
+	public void expandGroup(int groupPos,boolean animated) {
+		((ExpandableListView) mRefreshableView).expandGroup(groupPos,animated);
 	}
 
 	/**

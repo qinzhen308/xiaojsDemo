@@ -99,7 +99,10 @@ public class TestAPIActivity extends Activity {
                 //testRegister(this);
                 //testLogin(this);
                 //testGetUpToken(this);
-                testCenterData(this);
+                //testCenterData(this);
+
+                Intent i = new Intent(this,ContactActivity.class);
+                startActivity(i);
 
                 break;
             }

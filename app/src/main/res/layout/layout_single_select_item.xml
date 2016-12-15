@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.benyuan.xiaojs.ui.widget.CheckableLinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/px90"
+              android:orientation="horizontal"
+              android:gravity="center_vertical"
+        android:paddingLeft="15dp">
+
+    <CheckedTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkMark="@drawable/single_check_selector"
+            android:gravity="center_vertical"
+            android:drawablePadding="@dimen/px24"
+            android:textSize="18sp"
+            />
+
+    <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_34px"
+            android:textColor="@color/font_black"
+            android:layout_marginLeft="12dp"/>
+
+</com.benyuan.xiaojs.ui.widget.CheckableLinearLayout>
+
+
+
+

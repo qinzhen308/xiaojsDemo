@@ -89,19 +89,31 @@ public class CommonDialog extends Dialog {
             }
         });
 
-        View view = initCustomerView();
-        if (view != null){
-            mTitle.setVisibility(View.GONE);
-            mDesc.setVisibility(View.GONE);
-            mContainer.addView(view);
-        }else {
-            mContainer.setVisibility(View.GONE);
-        }
+//        View view = initCustomerView();
+//        if (view != null){
+//            mTitle.setVisibility(View.GONE);
+//            mDesc.setVisibility(View.GONE);
+//            mContainer.addView(view);
+//        }else {
+//            mContainer.setVisibility(View.GONE);
+//        }
+
+
+
     }
 
-    protected View initCustomerView(){
-        return null;
+    public void setCustomView(View customView) {
+
+        if (mContainer != null) {
+            mContainer.addView(customView);
+        }
+
+        mDesc.setVisibility(View.GONE);
     }
+
+//    protected View initCustomerView(){
+//        return null;
+//    }
 
     @Override
     public void show() {

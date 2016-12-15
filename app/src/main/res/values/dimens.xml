@@ -10,6 +10,8 @@
     <dimen name="indicator_internal_padding">4dp</dimen>
     <dimen name="header_footer_left_right_padding">24dp</dimen>
     <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+    <dimen name="dyn_thumbnail_size">68dp</dimen>
+    <dimen name="contact_thumbnail_size">@dimen/px60</dimen>
 
     <dimen name="px1">0.5dp</dimen>
     <dimen name="px2">1.0dp</dimen>

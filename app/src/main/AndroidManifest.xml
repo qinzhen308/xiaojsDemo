@@ -35,6 +35,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".ui.account.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
                 android:name=".ui.MainActivity"
@@ -65,11 +70,7 @@
         <activity android:name=".ui.course.LessonHomeActivity">
         </activity>
         <activity android:name=".ui.TestAPIActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".ui.course.LiveLessonBriefActivity"/>
         <activity android:name=".ui.course.SalePromotionActivity"/>
@@ -95,10 +96,22 @@
                 android:name=".ui.classroom.ClassRoomActivity"
                 android:screenOrientation="landscape"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
-        <activity android:name=".ui.message.ContactActivity">
+        <activity
+                android:name=".ui.message.ContactActivity"
+                android:windowSoftInputMode="stateAlwaysHidden"
+                >
         </activity>
-
-        <activity android:name=".ui.message.PostDynamicActivity">
+        <activity
+                android:name=".ui.message.PostDynamicActivity"
+                android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
+        </activity>
+        <activity
+                android:name=".ui.message.SecurityLevelActivity"
+                >
+        </activity>
+        <activity
+                android:name=".ui.message.ChoiceContactActivity"
+                android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
     </application>
 
