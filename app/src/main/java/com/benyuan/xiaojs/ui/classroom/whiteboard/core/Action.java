@@ -22,7 +22,7 @@ public interface Action {
     public static final int CHANGE_AREA_ACTION = 4;
     public static final int DELETE_ACTION = 5;
 
-    public void changeArea(float downX, float downY);
+    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge);
 
     public void move(float deltaX, float deltaY);
 

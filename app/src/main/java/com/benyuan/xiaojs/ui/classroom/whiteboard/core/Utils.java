@@ -483,17 +483,26 @@ public class Utils {
      * @param rectP1 矩形的其中的一个角对应的点
      * @param rectP2 相对于rectP1的对角点
      */
-    public static boolean isRectFramePressed(float x, float y, PointF rectP1, PointF rectP2,
-                                             Matrix mapMatrix) {
+    public static boolean isRectFramePressed(float x, float y, PointF rectP1, PointF rectP2, Matrix mapMatrix) {
         RectF rect = transformToScreenRect(rectP1, rectP2, mapMatrix);
         int edge = whichEdgePressed(x, y, rect.left, rect.top, rect.right, rect.bottom);
         return edge != RECT_NO_SELECTED;
     }
 
-    public static int whichEdgePressed(float x, float y, PointF rectP1, PointF rectP2,
-                                       Matrix mapMatrix) {
+    public static boolean isRectFramePressed(float x, float y, RectF rect, Matrix mapMatrix) {
+        RectF transRect = transformToScreenRect(rect, mapMatrix);
+        int edge = whichEdgePressed(x, y, transRect.left, transRect.top, transRect.right, transRect.bottom);
+        return edge != RECT_NO_SELECTED;
+    }
+
+    public static int whichEdgePressed(float x, float y, PointF rectP1, PointF rectP2, Matrix mapMatrix) {
         RectF rect = transformToScreenRect(rectP1, rectP2, mapMatrix);
         return whichEdgePressed(x, y, rect.left, rect.top, rect.right, rect.bottom);
+    }
+
+    public static int whichEdgePressed(float x, float y, RectF rect, Matrix mapMatrix) {
+        RectF transRect = transformToScreenRect(rect, mapMatrix);
+        return whichEdgePressed(x, y, transRect.left, transRect.top, transRect.right, transRect.bottom);
     }
 
     /**
@@ -619,26 +628,27 @@ public class Utils {
      */
     private static int whichCornerPressed(float x, float y, RectF rect) {
         float scope = WhiteBoard.CORNER_EDGE_SIZE;
+        float offset = scope * 0.6f;
         //left top corner
-        buildRect(mTransRect, rect.left, rect.top, scope);
+        buildRect(mTransRect, rect.left, rect.top, scope, -offset, -offset);
         if (mTransRect.contains(x, y)) {
             return LEFT_TOP_CORNER;
         }
 
         //right top corner
-        buildRect(mTransRect, rect.right, rect.top, scope);
+        buildRect(mTransRect, rect.right, rect.top, scope, offset, -offset);
         if (mTransRect.contains(x, y)) {
             return RIGHT_TOP_CORNER;
         }
 
         //left bottom corner
-        buildRect(mTransRect, rect.left, rect.bottom, scope);
+        buildRect(mTransRect, rect.left, rect.bottom, scope, -offset, offset);
         if (mTransRect.contains(x, y)) {
             return LEFT_BOTTOM_CORNER;
         }
 
         //right bottom corner
-        buildRect(mTransRect, rect.right, rect.bottom, scope);
+        buildRect(mTransRect, rect.right, rect.bottom, scope, offset, offset);
         if (mTransRect.contains(x, y)) {
             return RIGHT_BOTTOM_CORNER;
         }
@@ -649,7 +659,11 @@ public class Utils {
     /**
      * 通过某一个点和scope构造一个新的rect
      */
-    public static RectF buildRect(RectF rectF, float x, float y, float scope) {
+    private static RectF buildRect(RectF rectF, float x, float y, float scope) {
+        return buildRect(rectF, x, y, scope, 0, 0);
+    }
+
+    private static RectF buildRect(RectF rectF, float x, float y, float scope, float offsetX, float offsetY) {
         if (rectF == null) {
             rectF = new RectF();
         }
@@ -659,6 +673,7 @@ public class Utils {
         }
 
         rectF.set(x - scope, y - scope, x + scope, y + scope);
+        rectF.offset(offsetX, offsetY);
         return rectF;
     }
 
@@ -828,401 +843,6 @@ public class Utils {
 
         return true;
     }
-
-    public static boolean checkRectWithinPhotoDisplayArea(PointF doodleDownPoint, PointF doodleUpPoint, RectF mDisplayBounds) {
-
-        float minX = Math.min(doodleDownPoint.x, doodleUpPoint.x);
-        float maxX = Math.max(doodleDownPoint.x, doodleUpPoint.x);
-        float minY = Math.min(doodleDownPoint.y, doodleUpPoint.y);
-        float maxY = Math.max(doodleDownPoint.y, doodleUpPoint.y);
-
-        if (maxX < mDisplayBounds.left ||
-                minX > mDisplayBounds.right ||
-                maxY < mDisplayBounds.top ||
-                minY > mDisplayBounds.bottom) {
-            //there are no points falls within the image display area
-            return false;
-        }
-        return true;
-    }
-
-    public static int getShapeUpPointCorner(PointF doodleDownPoint, PointF doodleUpPoint) {
-        int shapeUpPointCorner = -1;
-
-        if (doodleUpPoint.x < doodleDownPoint.x && doodleUpPoint.y < doodleDownPoint.y) {
-            shapeUpPointCorner = LEFT_TOP_CORNER;
-        }
-        if (doodleUpPoint.x > doodleDownPoint.x && doodleUpPoint.y < doodleDownPoint.y) {
-            shapeUpPointCorner = RIGHT_TOP_CORNER;
-        }
-        if (doodleUpPoint.x < doodleDownPoint.x && doodleUpPoint.y > doodleDownPoint.y) {
-            shapeUpPointCorner = LEFT_BOTTOM_CORNER;
-        }
-        if (doodleUpPoint.x > doodleDownPoint.x && doodleUpPoint.y > doodleDownPoint.y) {
-            shapeUpPointCorner = RIGHT_BOTTOM_CORNER;
-        }
-
-        return shapeUpPointCorner;
-    }
-
-
-    public static void getDiagonalPoint(int pressedCorner, int shapeUpPointCorner,
-                                        PointF doodleDownPoint, PointF doodleUpPoint, PointF diagonalPoint) {
-        float shapeWidth = Math.abs(doodleUpPoint.x - doodleDownPoint.x);
-        float shapeHeight = Math.abs(doodleUpPoint.y - doodleDownPoint.y);
-
-        switch (pressedCorner) {
-            case LEFT_TOP_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x;
-                        diagonalPoint.y = doodleDownPoint.y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x + shapeWidth;
-                        diagonalPoint.y = doodleDownPoint.y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x;
-                        diagonalPoint.y = doodleDownPoint.y + shapeHeight;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        diagonalPoint.x = doodleUpPoint.x;
-                        diagonalPoint.y = doodleUpPoint.y;
-                        break;
-                }
-                break;
-            case RIGHT_TOP_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x - shapeWidth;
-                        diagonalPoint.y = doodleDownPoint.y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x;
-                        diagonalPoint.y = doodleDownPoint.y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        diagonalPoint.x = doodleUpPoint.x;
-                        diagonalPoint.y = doodleUpPoint.y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x;
-                        diagonalPoint.y = doodleDownPoint.y + shapeHeight;
-                        break;
-                }
-                break;
-            case LEFT_BOTTOM_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x;
-                        diagonalPoint.y = doodleDownPoint.y - shapeHeight;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        diagonalPoint.x = doodleUpPoint.x;
-                        diagonalPoint.y = doodleUpPoint.y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x;
-                        diagonalPoint.y = doodleDownPoint.y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x + shapeWidth;
-                        diagonalPoint.y = doodleDownPoint.y;
-                        break;
-                }
-                break;
-            case RIGHT_BOTTOM_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        diagonalPoint.x = doodleUpPoint.x;
-                        diagonalPoint.y = doodleUpPoint.y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x;
-                        diagonalPoint.y = doodleDownPoint.y - shapeHeight;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x - shapeWidth;
-                        diagonalPoint.y = doodleDownPoint.y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        diagonalPoint.x = doodleDownPoint.x;
-                        diagonalPoint.y = doodleDownPoint.y;
-                        break;
-                }
-                break;
-        }
-    }
-
-    public static void changeLineDownUpPoint(float x, float y, int pressedCorner, int shapeUpPointCorner,
-                                             PointF doodleDownPoint, PointF doodleUpPoint, PointF diagonalPoint) {
-        switch (pressedCorner) {
-            case LEFT_TOP_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = diagonalPoint.y;
-                        doodleUpPoint.x = diagonalPoint.x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleDownPoint.x = diagonalPoint.x;
-                        doodleDownPoint.y = y;
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = diagonalPoint.y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = y;
-                        break;
-                }
-                break;
-            case RIGHT_TOP_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = diagonalPoint.y;
-                        doodleUpPoint.x = diagonalPoint.x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleDownPoint.x = diagonalPoint.x;
-                        doodleDownPoint.y = y;
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = diagonalPoint.y;
-                        break;
-                }
-                break;
-            case LEFT_BOTTOM_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleDownPoint.x = diagonalPoint.x;
-                        doodleDownPoint.y = y;
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = diagonalPoint.y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = diagonalPoint.y;
-                        doodleUpPoint.x = diagonalPoint.x;
-                        doodleUpPoint.y = y;
-                        break;
-                }
-                break;
-            case RIGHT_BOTTOM_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleDownPoint.x = diagonalPoint.x;
-                        doodleDownPoint.y = y;
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = diagonalPoint.y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = diagonalPoint.y;
-                        doodleUpPoint.x = diagonalPoint.x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = y;
-                        break;
-                }
-                break;
-        }
-    }
-
-    public static void changeLineDownUpPoint(int pressedCorner, int shapeUpPointCorner, float x, float y,
-                                             PointF doodleDownPoint, PointF doodleUpPoint, PointF diagonalPoint) {
-        switch (pressedCorner) {
-            case LEFT_TOP_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = diagonalPoint.y;
-                        doodleUpPoint.x = diagonalPoint.x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleDownPoint.x = diagonalPoint.x;
-                        doodleDownPoint.y = y;
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = diagonalPoint.y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = y;
-                        break;
-                }
-                break;
-            case RIGHT_TOP_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = diagonalPoint.y;
-                        doodleUpPoint.x = diagonalPoint.x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleDownPoint.x = diagonalPoint.x;
-                        doodleDownPoint.y = y;
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = diagonalPoint.y;
-                        break;
-                }
-                break;
-            case LEFT_BOTTOM_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleDownPoint.x = diagonalPoint.x;
-                        doodleDownPoint.y = y;
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = diagonalPoint.y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = diagonalPoint.y;
-                        doodleUpPoint.x = diagonalPoint.x;
-                        doodleUpPoint.y = y;
-                        break;
-                }
-                break;
-            case RIGHT_BOTTOM_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = y;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleDownPoint.x = diagonalPoint.x;
-                        doodleDownPoint.y = y;
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = diagonalPoint.y;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleDownPoint.x = x;
-                        doodleDownPoint.y = diagonalPoint.y;
-                        doodleUpPoint.x = diagonalPoint.x;
-                        doodleUpPoint.y = y;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleUpPoint.x = x;
-                        doodleUpPoint.y = y;
-                        break;
-                }
-                break;
-        }
-    }
-
-    public static void changeRectDownPoint(int pressedCorner, int shapeUpPointCorner, PointF doodleDownPoint, PointF doodleUpPoint) {
-        float shapeWidth = Math.abs(doodleUpPoint.x - doodleDownPoint.x);
-        float shapeHeight = Math.abs(doodleUpPoint.y - doodleDownPoint.y);
-        switch (pressedCorner) {
-            case LEFT_TOP_CORNER:
-                switch (shapeUpPointCorner) {
-                    case RIGHT_TOP_CORNER:
-                        doodleDownPoint.x = doodleDownPoint.x + shapeWidth;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleDownPoint.y = doodleDownPoint.y + shapeHeight;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleDownPoint.x = doodleDownPoint.x + shapeWidth;
-                        doodleDownPoint.y = doodleDownPoint.y + shapeHeight;
-                        break;
-                }
-                break;
-            case RIGHT_TOP_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleDownPoint.x = doodleDownPoint.x - shapeWidth;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleDownPoint.x = doodleDownPoint.x - shapeWidth;
-                        doodleDownPoint.y = doodleDownPoint.y + shapeHeight;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleDownPoint.y = doodleDownPoint.y + shapeHeight;
-                        break;
-                }
-                break;
-            case LEFT_BOTTOM_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleDownPoint.y = doodleDownPoint.y - shapeHeight;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleDownPoint.x = doodleDownPoint.x + shapeWidth;
-                        doodleDownPoint.y = doodleDownPoint.y - shapeHeight;
-                        break;
-                    case RIGHT_BOTTOM_CORNER:
-                        doodleDownPoint.x = doodleDownPoint.x + shapeWidth;
-                        break;
-                }
-                break;
-            case RIGHT_BOTTOM_CORNER:
-                switch (shapeUpPointCorner) {
-                    case LEFT_TOP_CORNER:
-                        doodleDownPoint.x = doodleDownPoint.x - shapeWidth;
-                        doodleDownPoint.y = doodleDownPoint.y - shapeHeight;
-                        break;
-                    case RIGHT_TOP_CORNER:
-                        doodleDownPoint.y = doodleDownPoint.y - shapeHeight;
-                        break;
-                    case LEFT_BOTTOM_CORNER:
-                        doodleDownPoint.x = doodleDownPoint.x - shapeWidth;
-                        break;
-                }
-                break;
-        }
-    }
-
-
 
     //如果两个向量点积的值大于0，他们的夹角是锐角，反之是钝角。
     private float dotProduct(float x, float y, PointF rectP1, PointF rectP2, float degree, RectF drawingBounds) {

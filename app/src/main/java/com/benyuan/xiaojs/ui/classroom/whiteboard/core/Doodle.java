@@ -49,8 +49,7 @@ public abstract class Doodle implements Action {
     protected Paint mControllerPaint;
 
     protected float mTotalDegree = 0;
-    protected float mYTotalScale = 1.0f;
-    protected float mXTotalScale = 1.0f;
+    protected float mTotalScale = 1.0f;
 
     protected int mStyle;
 
@@ -136,11 +135,11 @@ public abstract class Doodle implements Action {
     }
 
     public float getTotalScale() {
-        return mYTotalScale;
+        return mTotalScale;
     }
 
     public void setTotalScale(float totalScale) {
-        mYTotalScale = totalScale;
+        mTotalScale = totalScale;
     }
 
     public float getDegree() {
@@ -235,8 +234,8 @@ public abstract class Doodle implements Action {
             float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
             float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2;
             PointF p = Utils.normalizeScreenPoint(padding, padding, mWhiteboard.getBlackParams().drawingBounds);
-            float hPadding = p.x / mYTotalScale * params.scale;
-            float vPadding = p.y / mYTotalScale * params.scale;
+            float hPadding = p.x / mTotalScale * params.scale;
+            float vPadding = p.y / mTotalScale * params.scale;
             mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding, mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
 
             mBorderNormalizedPath.reset();
@@ -245,7 +244,7 @@ public abstract class Doodle implements Action {
             canvas.drawPath(mBorderNormalizedPath, mBorderPaint);
 
             //draw controller
-            float radius = mControllerPaint.getStrokeWidth() / mYTotalScale;
+            float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
             p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
             mBorderRect.set(mDoodleRect.right - p.x, mDoodleRect.top - p.y, mDoodleRect.right + p.x, mDoodleRect.top + p.y);
             mBorderNormalizedPath.reset();
@@ -265,6 +264,11 @@ public abstract class Doodle implements Action {
             if (corner != Utils.RECT_NO_SELECTED) {
                 return corner;
             } else {
+                int edge = Utils.whichEdgePressed(p.x, p.y, mRect, matrix);
+                if (edge != Utils.RECT_NO_SELECTED) {
+                    return edge;
+                }
+
                 return Utils.checkRectPressed(p.x, p.y, mRect, matrix);
             }
         }
@@ -288,8 +292,7 @@ public abstract class Doodle implements Action {
             float scale = Utils.calcRectScale(oldX, oldY, x, y, mRect, matrix);
             computeCenterPoint(mRect);
 
-            mXTotalScale = mXTotalScale * scale;
-            mYTotalScale = mYTotalScale * scale;
+            mTotalScale = mTotalScale * scale;
             //mTransformMatrix.reset();
             mTransformMatrix.postScale(scale, scale, mRectCenter[0], mRectCenter[1]);
         }
@@ -320,8 +323,7 @@ public abstract class Doodle implements Action {
             computeCenterPoint(mRect);
 
             mTotalDegree += degree;
-            mXTotalScale = mXTotalScale * scale;
-            mYTotalScale = mYTotalScale * scale;
+            mTotalScale = mTotalScale * scale;
 
             mTransformMatrix.postRotate(degree, mRectCenter[0], mRectCenter[1]);
             mTransformMatrix.postScale(scale, scale, mRectCenter[0], mRectCenter[1]);
@@ -329,7 +331,8 @@ public abstract class Doodle implements Action {
     }
 
     @Override
-    public void changeArea(float downX, float downY) {
+    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
+
     }
 
     protected void computeCenterPoint(PointF rectP1, PointF rectP2) {
@@ -353,10 +356,6 @@ public abstract class Doodle implements Action {
 
         mDisplayMatrix.mapRect(mRect);
         return mRect;
-    }
-
-    public Matrix getMapScreenMatrix() {
-        return Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
     }
 
 }

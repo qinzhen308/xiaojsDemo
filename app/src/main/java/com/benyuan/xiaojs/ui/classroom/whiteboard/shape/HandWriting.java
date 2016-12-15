@@ -94,11 +94,6 @@ public class HandWriting extends Doodle {
     }
 
     @Override
-    public void changeArea(float downX, float downY) {
-
-    }
-
-    @Override
     public int checkRegionPressedArea(float x, float y) {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);

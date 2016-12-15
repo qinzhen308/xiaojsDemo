@@ -14,6 +14,9 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
  *
  * ======================================================================================== */
 
+import android.graphics.PointF;
+import android.graphics.RectF;
+
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
 
@@ -53,6 +56,52 @@ public abstract class GeometryShape extends Doodle {
 
     public int getGeometryId() {
         return mGeometryId;
+    }
+
+    @Override
+    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
+        updateRectOnChangeAreaByEdge(oldX, oldY, x, y, edge);
+
+        //update control points
+        if (mPoints.size() >= 2) {
+            mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);
+            mPoints.get(1).set(mDoodleRect.right, mDoodleRect.bottom);
+        }
+    }
+
+    protected RectF updateRectOnChangeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
+        RectF drawingBounds = getWhiteboard().getBlackParams().drawingBounds;
+        PointF p = Utils.normalizeScreenPoint(x - oldX, y - oldY, drawingBounds);
+        float deltaX = p.x / mTotalScale;
+        float deltaY = p.y / mTotalScale;
+        switch (edge) {
+            case Utils.TOP_EDGE:
+                float top = mDoodleRect.top + deltaY;
+                if (top < mDoodleRect.bottom) {
+                    mDoodleRect.set(mDoodleRect.left, top, mDoodleRect.right, mDoodleRect.bottom);
+                }
+                break;
+            case Utils.RIGHT_EDGE:
+                float right = mDoodleRect.right + deltaX;
+                if (right > mDoodleRect.left) {
+                    mDoodleRect.set(mDoodleRect.left, mDoodleRect.top , right, mDoodleRect.bottom);
+                }
+                break;
+            case Utils.BOTTOM_EDGE:
+                float bottom = mDoodleRect.bottom + deltaY;
+                if (bottom > mDoodleRect.top) {
+                    mDoodleRect.set(mDoodleRect.left, mDoodleRect.top, mDoodleRect.right, bottom);
+                }
+                break;
+            case Utils.LEFT_EDGE:
+                float left = mDoodleRect.left + deltaX;
+                if (left < mDoodleRect.right) {
+                    mDoodleRect.set(left, mDoodleRect.top, mDoodleRect.right, mDoodleRect.bottom);
+                }
+                break;
+        }
+
+        return mDoodleRect;
     }
 
 }

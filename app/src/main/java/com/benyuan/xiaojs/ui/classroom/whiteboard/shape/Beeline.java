@@ -28,7 +28,14 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
  * ======================================================================================== */
 
 public class Beeline extends TwoDimensionalShape {
+    /**
+     * 如果直线的第一个控制点坐标值比第二个控制点坐标值小，则表示该直线是正向
+     */
+    private static final int FORWARD = 0;
+    private static final int REVERSE = 1;
+
     private LineSegment mLineSegment;
+    private int mOrientation = FORWARD;
 
     public Beeline(WhiteBoard whiteBoard) {
         super(whiteBoard, GeometryShape.BEELINE);
@@ -63,6 +70,7 @@ public class Beeline extends TwoDimensionalShape {
             float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
             float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
             float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
+            mOrientation = mPoints.get(1).x >=  mPoints.get(0).x && mPoints.get(1).y >=  mPoints.get(0).y ? FORWARD : REVERSE;
             mDoodleRect.set(x1, y1, x2, y2);
         }
     }
@@ -129,11 +137,6 @@ public class Beeline extends TwoDimensionalShape {
         return 0;
     }
 
-
-    @Override
-    public void changeArea(float downX, float downY) {
-    }
-
     @Override
     public int checkRegionPressedArea(float x, float y) {
         return super.checkRegionPressedArea(x, y);
@@ -148,4 +151,22 @@ public class Beeline extends TwoDimensionalShape {
         return false;
 
     }
+
+    @Override
+    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
+        updateRectOnChangeAreaByEdge(oldX, oldY, x, y, edge);
+        ////update control points
+        if (isForward()) {
+            mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);
+            mPoints.get(1).set(mDoodleRect.right, mDoodleRect.bottom);
+        } else {
+            mPoints.get(0).set(mDoodleRect.right, mDoodleRect.top);
+            mPoints.get(1).set(mDoodleRect.left, mDoodleRect.bottom);
+        }
+    }
+
+    public boolean isForward() {
+        return mOrientation == FORWARD;
+    }
+
 }
