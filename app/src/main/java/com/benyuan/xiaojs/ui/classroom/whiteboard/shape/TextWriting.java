@@ -174,20 +174,6 @@ public class TextWriting extends Doodle {
     }
 
     @Override
-    public void drawBorder(Canvas canvas) {
-        if (mPoints.size() > 1 && !TextUtils.isEmpty(getTextString())) {
-            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
-            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
-
-            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
-            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
-
-            mRect.set(x1, y1, x2, y2);
-            super.drawBorder(canvas);
-        }
-    }
-
-    @Override
     public void changeArea(float downX, float downY) {
     }
 

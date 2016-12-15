@@ -33,11 +33,6 @@ public class Eraser extends Doodle {
     }
 
     @Override
-    public void drawBorder(Canvas canvas) {
-
-    }
-
-    @Override
     public boolean isSelected(float x, float y) {
         return false;
     }
