@@ -208,4 +208,14 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <!-- ExpandableListView的样式 -->
+    <style name="ex_listview_group">
+        <item name="android:dividerHeight">1dp</item>
+        <!--<item name="android:listSelector">@drawable/comon_list_selector</item>-->
+        <item name="android:divider">@color/expandable_list_group_divider</item>
+        <item name="android:childDivider">@color/expandable_list_child_divider</item>
+        <!--<item name="android:cacheColorHint">#00000000</item>-->
+        <item name="android:fastScrollEnabled">true</item>
+    </style>
+
 </resources>

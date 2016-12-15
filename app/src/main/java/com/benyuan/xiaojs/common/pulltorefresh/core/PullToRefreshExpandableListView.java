@@ -21,7 +21,9 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ListAdapter;
 
 
 public class PullToRefreshExpandableListView extends PullToRefreshAdapterViewBase<ExpandableListView> {
@@ -40,6 +42,11 @@ public class PullToRefreshExpandableListView extends PullToRefreshAdapterViewBas
 
 	public PullToRefreshExpandableListView(Context context, Mode mode, AnimationStyle style) {
 		super(context, mode, style);
+	}
+
+
+	public void setAdapter(ExpandableListAdapter adapter) {
+		super.setExAdapter(adapter);
 	}
 
 	@Override

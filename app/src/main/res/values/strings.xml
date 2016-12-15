@@ -306,7 +306,24 @@
     <!--whiteboard-->
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>
-    
+
+
+    <!-- 社交-->
+    <string name="contact">联系人</string>
+    <string name="post_dyn">发动态</string>
+    <string name="post">发布</string>
+    <string name="input_dyn_hint">分享你的新鲜事儿</string>
+    <string name="publish">公开</string>
+    <string name="who_can_see_me">谁能看见</string>
+    <string name="choice_contact">选择联系人</string>
+    <string name="move_contact">移动联系人</string>
+    <string name="cancel_fllow">取消关注</string>
+    <string name="create_new_group">添加分组</string>
+    <string name="group_name">组名称</string>
+    <string name="move_contact_to">移动联系人至</string>
+    <string name="group_count">(%1$d)</string>
+    <string name="group_select_count">(%1$d/%2$d)</string>
+
     <!-- live tab -->
     <string name="lesson_of_choiceness">精选课</string>
     <string name="brilliant_clazz">精彩小教室</string>

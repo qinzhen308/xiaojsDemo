@@ -50,6 +50,8 @@ import com.benyuan.xiaojs.model.Privilege;
 import com.benyuan.xiaojs.model.RegisterInfo;
 import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.VerifyCode;
+import com.benyuan.xiaojs.ui.message.ContactActivity;
+import com.benyuan.xiaojs.ui.message.PostDynamicActivity;
 import com.benyuan.xiaojs.ui.widget.progress.ProgressHUD;
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
@@ -97,7 +99,10 @@ public class TestAPIActivity extends Activity {
                 //testRegister(this);
                 //testLogin(this);
                 //testGetUpToken(this);
-                testCenterData(this);
+                //testCenterData(this);
+
+                Intent i = new Intent(this,ContactActivity.class);
+                startActivity(i);
 
                 break;
             }
@@ -126,6 +131,7 @@ public class TestAPIActivity extends Activity {
                // testGetData(this);
                 //testLoading();
                 testT(this);
+
                 break;
             }
 
@@ -136,18 +142,24 @@ public class TestAPIActivity extends Activity {
     private void testT(Context context){
 
 
+         Intent i = new Intent(this,PostDynamicActivity.class);
+        startActivity(i);
 
-            SecurityManager.requestHavePrivilege(context, new APIServiceCallback<Privilege[]>() {
-                @Override
-                public void onSuccess(Privilege[] object) {
 
-                }
 
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
 
-                }
-            }, Su.Permission.COURSE_OPEN_CREATE);
+
+//            SecurityManager.requestHavePrivilege(context, new APIServiceCallback<Privilege[]>() {
+//                @Override
+//                public void onSuccess(Privilege[] object) {
+//
+//                }
+//
+//                @Override
+//                public void onFailure(String errorCode, String errorMessage) {
+//
+//                }
+//            }, Su.Permission.COURSE_OPEN_CREATE);
 
 
         //loginP.login(context,loginParams,null);
