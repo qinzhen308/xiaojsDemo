@@ -97,11 +97,11 @@ public class Rectangle extends TwoDimensionalShape {
 
         mRect.set(x1, y1, x2, y2);
 
-        mNormalizedPath.reset();
-        mNormalizedPath.addRect(mRect, Path.Direction.CCW);
+        mDrawingPath.reset();
+        mDrawingPath.addRect(mRect, Path.Direction.CCW);
         mDrawingMatrix.postConcat(mTransformMatrix);
-        mNormalizedPath.transform(mDrawingMatrix);
-        canvas.drawPath(mNormalizedPath, getPaint());
+        mDrawingPath.transform(mDrawingMatrix);
+        canvas.drawPath(mDrawingPath, getPaint());
 
         canvas.restore();
     }

@@ -5,10 +5,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.RectF;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.DrawingHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
@@ -102,14 +100,14 @@ public class Beeline extends TwoDimensionalShape {
 
         canvas.save();
 
-        mNormalizedPath.reset();
+        mDrawingPath.reset();
 
-        mNormalizedPath.moveTo(mPoints.get(0).x, mPoints.get(0).y);
-        mNormalizedPath.lineTo(mPoints.get(1).x, mPoints.get(1).y);
+        mDrawingPath.moveTo(mPoints.get(0).x, mPoints.get(0).y);
+        mDrawingPath.lineTo(mPoints.get(1).x, mPoints.get(1).y);
         mDrawingMatrix.postConcat(mTransformMatrix);
-        mNormalizedPath.transform(mDrawingMatrix);
+        mDrawingPath.transform(mDrawingMatrix);
 
-        canvas.drawPath(mNormalizedPath, getPaint());
+        canvas.drawPath(mDrawingPath, getPaint());
 
         canvas.restore();
     }

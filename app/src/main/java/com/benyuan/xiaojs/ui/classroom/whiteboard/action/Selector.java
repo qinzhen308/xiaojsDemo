@@ -45,6 +45,7 @@ public class Selector extends Doodle {
 
     private Region mRegion;
     private Region mSelectorRegion;
+    private int mSelectCount;
 
     public Selector(WhiteBoard whiteBoard) {
         super(whiteBoard, SELECTION);
@@ -101,7 +102,15 @@ public class Selector extends Doodle {
             mPoints.clear();
         }
 
+        mSelectCount = 0;
+
         mRect.set(0, 0, 0, 0);
+        ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+        if (allDoodles != null) {
+            for (Doodle d : allDoodles) {
+                d.setState(Doodle.STATE_IDLE);
+            }
+        }
 
         setState(Doodle.STATE_IDLE);
     }
@@ -120,14 +129,47 @@ public class Selector extends Doodle {
             float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
             float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
             mRect.set(x1, y1, x2, y2);
-            mNormalizedPath.reset();
-            mNormalizedPath.addRect(mRect, Path.Direction.CCW);
-            mNormalizedPath.transform(mDrawingMatrix);
+            mDrawingPath.reset();
+            mDrawingPath.addRect(mRect, Path.Direction.CCW);
+            mDrawingPath.transform(mDrawingMatrix);
 
-            canvas.drawPath(mNormalizedPath, mSelectingBgPaint);
-            canvas.drawPath(mNormalizedPath, mSelectingDashPaint);
+            canvas.drawPath(mDrawingPath, mSelectingBgPaint);
+            canvas.drawPath(mDrawingPath, mSelectingDashPaint);
 
             canvas.restore();
+        }
+    }
+
+    @Override
+    public void drawBorder(Canvas canvas) {
+        try {
+            float padding = getWhiteboard().getBlackParams().paintStrokeWidth / 2.0f;
+            mBorderRect.set(mRect.left - padding, mRect.top - padding, mRect.right + padding, mRect.bottom + padding);
+            Log.i("aaa", "draw border="+mRect);
+            mBorderNormalizedPath.reset();
+            mBorderNormalizedPath.addRect(mBorderRect, Path.Direction.CCW);
+            mBorderNormalizedPath.transform(mTransformMatrix);
+            canvas.drawPath(mBorderNormalizedPath, mBorderPaint);
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    public void move(float deltaX, float deltaY) {
+        ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+        if (allDoodles != null) {
+            int count = 0;
+            for (Doodle d : allDoodles) {
+                if (d.getState() == Doodle.STATE_EDIT) {
+                    count++;
+                    d.move(deltaX, deltaY);
+                }
+            }
+
+            if (count > 0) {
+                mRect.offset(deltaX, deltaY);
+            }
         }
     }
 
@@ -137,32 +179,61 @@ public class Selector extends Doodle {
     }
 
     @Override
+    public int checkRegionPressedArea(float x, float y) {
+        return mRect.contains(x, y) ? Utils.RECT_BODY : Utils.RECT_NO_SELECTED;
+    }
+
+    @Override
     public Path getOriginalPath() {
         return null;
     }
 
-    public boolean checkIntersect() {
+    public int checkIntersect() {
+        int intersectCount = 0;
         if (mPoints.size() > 1) {
             float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
             float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
 
             float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
             float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
-            return intersect(x1, y1, x2, y2);
+            intersectCount = intersect(x1, y1, x2, y2);
         }
 
-        return false;
+        mSelectCount = intersectCount;
+        return mSelectCount;
+    }
+
+    public int checkIntersect(float x, float y) {
+        ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+        int intersectCount = 0;
+        if (allDoodles != null) {
+            for (Doodle d : allDoodles) {
+                if (Utils.intersect(x, y, d)) {
+                    intersectCount++;
+                    d.setState(STATE_EDIT);
+                    mRect.set(0, 0, 0, 0);
+                    updateRect(d);
+                    break;
+                }
+            }
+        }
+
+        if (intersectCount > 0) {
+            setState(STATE_EDIT);
+        }
+        mSelectCount = intersectCount;
+        return mSelectCount;
     }
 
     /**
-     * 
-     * @param x1
+     * 返回是否有相交
+	 * @param x1
      * @param y1
      * @param x2
      * @param y2
      * @return
      */
-    public boolean intersect(float x1, float y1, float x2, float y2) {
+    public int intersect(float x1, float y1, float x2, float y2) {
         //map points
         WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
         PointF p = Utils.mapDoodlePointToScreen(x1, y1, params.drawingBounds);
@@ -177,7 +248,7 @@ public class Selector extends Doodle {
         mSelectorRegion.set((int) x1, (int) y1, (int) x2, (int) y2);
 
         boolean intersect = false;
-        boolean hasIntersect = false;
+        int intersectCount = 0;
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
         long s = System.currentTimeMillis();
         if (allDoodles != null) {
@@ -186,7 +257,7 @@ public class Selector extends Doodle {
                     LineSegment beeLineSeg = ((Beeline) d).getLineSegment();
                     intersect = Utils.intersect(mRect, beeLineSeg);
                     if (intersect) {
-                        hasIntersect = true;
+                        intersectCount++;
                         d.setState(Doodle.STATE_EDIT);
                     }
                 } else if (d instanceof Triangle) {
@@ -194,7 +265,7 @@ public class Selector extends Doodle {
                     for (LineSegment lineSegment : beeLineSeg) {
                         intersect = Utils.intersect(mRect, lineSegment);
                         if (intersect) {
-                            hasIntersect = true;
+                            intersectCount++;
                             d.setState(Doodle.STATE_EDIT);
                             break;
                         }
@@ -207,7 +278,7 @@ public class Selector extends Doodle {
 
                     intersect = mRegion.setPath(originalPath, mSelectorRegion);
                     if (intersect) {
-                        hasIntersect = true;
+                        intersectCount++;
                         d.setState(Doodle.STATE_EDIT);
                     }
                 }
@@ -215,20 +286,21 @@ public class Selector extends Doodle {
         }
 
         Log.i("aaa", "intersect take="+(System.currentTimeMillis() - s)+"   doodle size="+ allDoodles.size());
-        if (hasIntersect) {
+        if (intersectCount > 0) {
+            mRect.set(0, 0, 0, 0);
             for (Doodle d : allDoodles) {
                 if (d.getState() == STATE_EDIT) {
-                    RectF rect =  d.getDoodleRect();
-                    updateRect(rect);
+                    updateRect(d);
                 }
             }
             setState(STATE_EDIT);
         }
 
-        return hasIntersect;
+        return intersectCount;
     }
 
-    public void updateRect(RectF rect) {
+    public void updateRect(Doodle doodle) {
+        RectF rect = doodle.getDoodleTransformRect();
         if (mRect.isEmpty()) {
             mRect.set(rect);
         } else {
@@ -249,5 +321,33 @@ public class Selector extends Doodle {
             }
         }
 
+        computeCenterPoint(null, null);
+        Log.i("aaa", "updateRect Rect="+mRect);
+
     }
+
+    @Override
+    protected void computeCenterPoint(PointF rectP1, PointF rectP2) {
+        float centerX = (mRect.left + mRect.right) / 2.0f;
+        float centerY = (mRect.top + mRect.bottom) / 2.0f;
+        mRectCenter[0] = centerX;
+        mRectCenter[1] = centerY;
+        mDrawingMatrix.mapPoints(mRectCenter);
+    }
+
+    public int getSelectCount() {
+        return mSelectCount;
+    }
+
+    public void updateDoodleColor(int color) {
+        ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+        if (allDoodles != null) {
+            for (Doodle d : allDoodles) {
+                if (d.getState() == STATE_EDIT) {
+                    d.getPaint().setColor(color);
+                }
+            }
+        }
+    }
+
 }

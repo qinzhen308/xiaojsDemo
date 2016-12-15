@@ -71,6 +71,7 @@ public class Utils {
 
     public static int DEFAULT_BORDER_WIDTH = 5;
     public static int DEFAULT_DASH_WIDTH = 20;
+    public static int DEFAULT_CONTROLLER_RADIUS = 50;
     private static int DEFAULT_BORDER_COLOR = 0XFF0076FF;
 
     private final static RectF mRect = new RectF();
@@ -175,6 +176,14 @@ public class Utils {
         p.setColor(DEFAULT_BORDER_COLOR);
         PathEffect blackEffects = new DashPathEffect(new float[]{DEFAULT_DASH_WIDTH, DEFAULT_DASH_WIDTH}, 0);
         p.setPathEffect(blackEffects);
+        return p;
+    }
+
+    public static Paint buildControllerPaint() {
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setStyle(Paint.Style.FILL);
+        p.setStrokeWidth(DEFAULT_CONTROLLER_RADIUS);
+        p.setColor(Color.RED);
         return p;
     }
 
@@ -368,6 +377,13 @@ public class Utils {
         }
 
         return intersect;
+    }
+
+    public static Matrix transformScreenMatrix(Matrix drawingMatrix, Matrix displayMatrix) {
+        mMapRectMatrix.reset();
+        mMapRectMatrix.postConcat(drawingMatrix);
+        mMapRectMatrix.postConcat(displayMatrix);
+        return mMapRectMatrix;
     }
 
 
@@ -633,7 +649,7 @@ public class Utils {
     /**
      * 通过某一个点和scope构造一个新的rect
      */
-    private static RectF buildRect(RectF rectF, float x, float y, float scope) {
+    public static RectF buildRect(RectF rectF, float x, float y, float scope) {
         if (rectF == null) {
             rectF = new RectF();
         }
@@ -1294,23 +1310,12 @@ public class Utils {
         return deltaScale;
     }
 
-    public void calcRectDegreesAndScales(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2, float degree,
-                                         float totalScale, RectF drawingBounds) {
-        PointF p = mapDoodlePointToScreen(rectP1.x, rectP1.y, drawingBounds);
-        float dpx = p.x;
-        float dpy = p.y;
+    public static float[] calcRectDegreesAndScales(float oldX, float oldY, float x, float y, PointF rectP1, PointF rectP2,
+                                         Matrix mapMatrix) {
+        RectF transRect = transformToScreenRect(rectP1, rectP2, mapMatrix);
 
-        p = mapDoodlePointToScreen(rectP2.x, rectP2.y, drawingBounds);
-        float upx = p.x;
-        float upy = p.y;
-
-        dpx = dpx - WhiteBoard.TEXT_BORDER_PADDING;
-        dpy = dpy - WhiteBoard.TEXT_BORDER_PADDING;
-        upx = upx + WhiteBoard.TEXT_BORDER_PADDING;
-        upy = upy + WhiteBoard.TEXT_BORDER_PADDING;
-
-        float centerX = (dpx + upx) / 2.0f;
-        float centerY = (dpy + upy) / 2.0f;
+        float centerX = (transRect.left + transRect.right) / 2.0f;
+        float centerY = (transRect.top + transRect.bottom) / 2.0f;
 
         //屏幕坐标系和标准坐标系的Y轴方向相反
         float preDeltaX = oldX - centerX;
@@ -1320,24 +1325,47 @@ public class Utils {
 
         double preDistance = Math.sqrt(preDeltaX * preDeltaX + preDeltaY * preDeltaY);
         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        float tempScale = totalScale;
         float deltaScale = (float) (distance / preDistance);
-        totalScale = totalScale * deltaScale;
-
-        if (totalScale > MAX_SCALE) {
-            totalScale = MAX_SCALE;
-            deltaScale = totalScale / tempScale;
-        }
-        if (totalScale < MIN_SCALE) {
-            totalScale = MIN_SCALE;
-            deltaScale = totalScale / tempScale;
-        }
 
         double previousAngle = Math.atan2(preDeltaY, preDeltaX);
         double angle = Math.atan2(deltaY, deltaX);
 
         double degrees = angle - previousAngle;
-        degree = (float) (-degrees * (180 / Math.PI));
+        float radian = (float) (-degrees * (180 / Math.PI));
+
+        mPointArr[0] = deltaScale;
+        mPointArr[1] = radian;
+
+        return mPointArr;
+    }
+
+    public static float[] calcRectDegreesAndScales(float oldX, float oldY, float x, float y, RectF rect,
+                                            Matrix mapMatrix) {
+        RectF transRect = transformToScreenRect(rect, mapMatrix);
+
+        float centerX = (transRect.left + transRect.right) / 2.0f;
+        float centerY = (transRect.top + transRect.bottom) / 2.0f;
+
+        //屏幕坐标系和标准坐标系的Y轴方向相反
+        float preDeltaX = oldX - centerX;
+        float preDeltaY = -(oldY - centerY);
+        float deltaX = x - centerX;
+        float deltaY = -(y - centerY);
+
+        double preDistance = Math.sqrt(preDeltaX * preDeltaX + preDeltaY * preDeltaY);
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        float deltaScale = (float) (distance / preDistance);
+
+        double previousAngle = Math.atan2(preDeltaY, preDeltaX);
+        double angle = Math.atan2(deltaY, deltaX);
+
+        double degrees = angle - previousAngle;
+        float radian = (float) (-degrees * (180 / Math.PI));
+
+        mPointArr[0] = deltaScale;
+        mPointArr[1] = radian;
+
+        return mPointArr;
     }
 
 }

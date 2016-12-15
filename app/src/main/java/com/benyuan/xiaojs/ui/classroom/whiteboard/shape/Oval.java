@@ -7,7 +7,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.DrawingHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
@@ -82,11 +81,11 @@ public class Oval extends TwoDimensionalShape {
 
         mRect.set(x1, y1, x2, y2);
 
-        mNormalizedPath.reset();
-        mNormalizedPath.addOval(mRect, Path.Direction.CCW);
+        mDrawingPath.reset();
+        mDrawingPath.addOval(mRect, Path.Direction.CCW);
         mDrawingMatrix.postConcat(mTransformMatrix);
-        mNormalizedPath.transform(mDrawingMatrix);
-        canvas.drawPath(mNormalizedPath, getPaint());
+        mDrawingPath.transform(mDrawingMatrix);
+        canvas.drawPath(mDrawingPath, getPaint());
 
         canvas.restore();
     }
@@ -99,7 +98,7 @@ public class Oval extends TwoDimensionalShape {
     @Override
     public Path getOriginalPath() {
         mOriginalPath.reset();
-        mOriginalPath.set(mNormalizedPath);
+        mOriginalPath.set(mDrawingPath);
         mOriginalPath.transform(mDrawingMatrix);
         mOriginalPath.transform(mDisplayMatrix);
         return mOriginalPath;

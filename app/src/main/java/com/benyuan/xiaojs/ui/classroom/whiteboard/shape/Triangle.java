@@ -5,10 +5,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.RectF;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.DrawingHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
@@ -98,16 +96,16 @@ public class Triangle extends TwoDimensionalShape {
     @Override
     public void drawSelf(Canvas canvas) {
         if (mTriangleCoordinates.size() == 3) {
-            mNormalizedPath.reset();
+            mDrawingPath.reset();
 
-            mNormalizedPath.moveTo(mTriangleCoordinates.get(0).x, mTriangleCoordinates.get(0).y);
-            mNormalizedPath.lineTo(mTriangleCoordinates.get(1).x, mTriangleCoordinates.get(1).y);
-            mNormalizedPath.lineTo(mTriangleCoordinates.get(2).x, mTriangleCoordinates.get(2).y);
-            mNormalizedPath.lineTo(mTriangleCoordinates.get(0).x, mTriangleCoordinates.get(0).y);
+            mDrawingPath.moveTo(mTriangleCoordinates.get(0).x, mTriangleCoordinates.get(0).y);
+            mDrawingPath.lineTo(mTriangleCoordinates.get(1).x, mTriangleCoordinates.get(1).y);
+            mDrawingPath.lineTo(mTriangleCoordinates.get(2).x, mTriangleCoordinates.get(2).y);
+            mDrawingPath.lineTo(mTriangleCoordinates.get(0).x, mTriangleCoordinates.get(0).y);
             mDrawingMatrix.postConcat(mTransformMatrix);
-            mNormalizedPath.transform(mDrawingMatrix);
+            mDrawingPath.transform(mDrawingMatrix);
 
-            canvas.drawPath(mNormalizedPath, getPaint());
+            canvas.drawPath(mDrawingPath, getPaint());
         }
     }
 
