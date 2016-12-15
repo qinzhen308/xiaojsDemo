@@ -16,19 +16,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
+            <ImageView
                     android:id="@+id/home_live_lesson_item_home"
-                    android:text="班级主页"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
+                    android:src="@drawable/ic_entrance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             <TextView
+                    android:id="@+id/home_live_lesson_item_lesson_type"
+                    android:textColor="@color/font_orange"
+                    android:textSize="@dimen/font_22px"
                     android:layout_alignParentLeft="true"
                     android:layout_centerInParent="true"
+                    android:background="@drawable/orange_stoke_bg"
+                    android:text="直播课"
+                    android:paddingTop="@dimen/px3"
+                    android:paddingBottom="@dimen/px3"
+                    android:paddingLeft="@dimen/px5"
+                    android:paddingRight="@dimen/px5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:layout_centerInParent="true"
+                    android:layout_toRightOf="@id/home_live_lesson_item_lesson_type"
+                    android:layout_marginLeft="@dimen/px10"
                     android:layout_toLeftOf="@id/home_live_lesson_item_home"
                     android:layout_marginRight="@dimen/px30"
+                    android:textSize="@dimen/font_30px"
+                    android:textColor="@color/font_black"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:text="心理咨询师取证课程-基础知识"
@@ -197,7 +215,7 @@
                         android:id="@+id/image_flow"
                         android:layout_marginTop="@dimen/px5"
                         android:layout_marginBottom="@dimen/px5"
-                        android:layout_marginLeft="@dimen/px10"
+                        android:layout_marginLeft="@dimen/px25"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"/>
@@ -207,6 +225,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/px10"
                         android:layout_marginRight="@dimen/px30"
+                        android:drawableRight="@drawable/ic_enter_double"
+                        android:drawablePadding="@dimen/px2"
                         android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>

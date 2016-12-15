@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <com.benyuan.xiaojs.ui.view.MomentHeader
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <com.benyuan.xiaojs.ui.view.MomentContent
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <View
+            android:layout_marginTop="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px30"
+            android:background="@color/main_bg"/>
+
+    <TextView
+            android:id="@+id/moment_detail_comment_summary"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_28px"
+            android:text="222条评论"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+</LinearLayout>

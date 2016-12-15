@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/live_brilliant_wrapper"
+            android:orientation="vertical"
+            android:layout_marginRight="@dimen/px15"
+            android:layout_marginLeft="@dimen/px15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:id="@+id/live_brilliant_image"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_portrait"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px220"/>
+
+            <ImageView
+                    android:id="@+id/live_brilliant_living"
+                    android:scaleType="fitXY"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_direct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <TextView
+                android:id="@+id/live_brilliant_name"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="这是一大串标题文字"
+                android:layout_marginTop="@dimen/px10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/live_brilliant_time"
+                android:textSize="@dimen/font_24px"
+                android:textColor="@color/common_text"
+                android:text="今天 18:00"
+                android:layout_marginTop="@dimen/px5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/live_brilliant_listen"
+                android:textSize="@dimen/font_24px"
+                android:textColor="@color/common_text"
+                android:text="234人在听课"
+                android:layout_marginTop="@dimen/px10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+</FrameLayout>

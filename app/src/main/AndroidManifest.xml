@@ -101,7 +101,11 @@
                 android:name=".ui.classroom.ClassRoomActivity"
                 android:screenOrientation="landscape"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
-
+        <activity
+                android:name=".ui.GlobalSearchActivity"
+                android:screenOrientation="portrait"/>
+        <activity android:name=".ui.home.MomentDetailActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.mine.PersonHomeActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>

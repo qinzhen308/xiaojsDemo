@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/top_tab_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/txt_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px90"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/tab_scroll_img"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_marginTop="-2dip"
+        android:background="@color/main_orange"
+        android:contentDescription="@null" />
+
+    <View
+        style="@style/DividerHorizontal"
+        android:layout_width="match_parent" />
+
+</LinearLayout>

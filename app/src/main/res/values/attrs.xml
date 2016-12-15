@@ -203,4 +203,28 @@
         <attr name="circle_border_width" format="dimension" />
         <attr name="circle_border_color" format="color" />
     </declare-styleable>
+
+    <!-- 文字末尾带图标的控件 -->
+    <declare-styleable name="IconTextView">
+
+        <!-- 字体颜色 -->
+        <attr name="android:textColor" />
+        <!-- 字体大小 -->
+        <attr name="android:textSize" />
+        <!-- 文字内容 -->
+        <attr name="android:text" />
+        <!-- 图标 -->
+        <attr name="icon" format="reference"></attr>
+        <!-- 文字行间距 -->
+        <attr name="lineSpacing" format="reference|dimension"></attr>
+        <!-- 文字最大行数 -->
+        <attr name="maxLine" format="integer"></attr>
+        <!-- 图标与文字的间距 -->
+        <attr name="iconSpacing" format="reference|dimension"></attr>
+        <!-- 文字显示位置 -->
+        <attr name="gravity">
+            <flag name="left" value="0" />
+            <flag name="center" value="1" />
+        </attr>
+    </declare-styleable>
 </resources>
