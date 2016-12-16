@@ -125,19 +125,11 @@ public class Triangle extends TwoDimensionalShape {
     }
 
     private void updateTriangleCoordinates() {
-        if (mPoints.size() == 2) {
-            float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
-            float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
-
-            float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
-            float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
-
-            mDoodleRect.set(x1, y1, x2, y2);
-
+        if (mPoints.size() >= 2) {
             mTriangleCoordinates.clear();
-            mTriangleCoordinates.add(new PointF((x1 + x2) / 2.0F, y1));
-            mTriangleCoordinates.add(new PointF(x1, y2));
-            mTriangleCoordinates.add(new PointF(x2, y2));
+            mTriangleCoordinates.add(new PointF((mDoodleRect.left + mDoodleRect.right) / 2.0F, mDoodleRect.top));
+            mTriangleCoordinates.add(new PointF(mDoodleRect.left, mDoodleRect.bottom));
+            mTriangleCoordinates.add(new PointF(mDoodleRect.right, mDoodleRect.bottom));
         }
     }
 
@@ -164,5 +156,13 @@ public class Triangle extends TwoDimensionalShape {
         }
 
         return mLineSegments;
+    }
+
+    @Override
+    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
+        super.changeAreaByEdge(oldX, oldY, x, y, edge);
+
+        //update triangle points
+        updateTriangleCoordinates();
     }
 }

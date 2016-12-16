@@ -100,10 +100,6 @@ public class Oval extends TwoDimensionalShape {
     }
 
     @Override
-    public void changeArea(float downX, float downY) {
-    }
-
-    @Override
     public void scale(float oldX, float oldY, float x, float y) {
         super.scale(oldX, oldY, x, y);
     }

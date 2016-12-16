@@ -106,10 +106,6 @@ public class Rectangle extends TwoDimensionalShape {
     }
 
     @Override
-    public void changeArea(float downX, float downY) {
-    }
-
-    @Override
     public int checkRegionPressedArea(float x, float y) {
         return super.checkRegionPressedArea(x, y);
     }
@@ -117,11 +113,10 @@ public class Rectangle extends TwoDimensionalShape {
     @Override
     public boolean isSelected(float x, float y) {
         if (mPoints.size() > 1) {
-            PointF dp = mPoints.get(0);
-            PointF up = mPoints.get(1);
+            mRect.set(mDoodleRect);
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            return Utils.isRectFramePressed(p.x, p.y, dp, up, matrix);
+            return Utils.isRectFramePressed(p.x, p.y, mRect, matrix);
         }
 
         return false;

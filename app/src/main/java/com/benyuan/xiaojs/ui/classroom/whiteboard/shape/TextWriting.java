@@ -174,7 +174,8 @@ public class TextWriting extends Doodle {
     }
 
     @Override
-    public void changeArea(float downX, float downY) {
+    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
+        //do nothing
     }
 
     @Override

@@ -399,7 +399,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                     if (mDoodle != null) {
                         if (mDoodle.getState() == Doodle.STATE_EDIT) {
                             mSelectionRectRegion = mDoodle.checkRegionPressedArea(mDownPoint.x ,mDownPoint.y);
-                            Log.i("aaa", "==========mSelectionRectRegion====="+ mSelectionRectRegion);
                             //do nothing
                             //在手指弹起的时候才更新才状态，即在onActionUP函数调用时候
                         }
@@ -438,8 +437,12 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                         if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
                             switch (mSelectionRectRegion) {
                                 case Utils.RIGHT_TOP_CORNER:
-                                    //scale
+                                    //only scale
                                     /*mDoodle.scale(mPreviousPoint.x, mPreviousPoint.y, x, y);
+                                    drawAllDoodlesCanvas();
+                                    postInvalidate();*/
+                                    //only rotate
+                                    /*mDoodle.rotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
                                     drawAllDoodlesCanvas();
                                     postInvalidate();*/
 
@@ -449,17 +452,23 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                                     postInvalidate();
                                     break;
                                 case Utils.RIGHT_BOTTOM_CORNER:
-                                    //rotate
-                                    /*mDoodle.rotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
-                                    drawAllDoodlesCanvas();
-                                    postInvalidate();*/
-                                    break;
                                 case Utils.RECT_BODY:
+                                case Utils.LEFT_TOP_CORNER:
+                                case Utils.LEFT_BOTTOM_CORNER:
                                     //move
                                     mDoodle.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
+                                case Utils.TOP_EDGE:
+                                case Utils.RIGHT_EDGE:
+                                case Utils.BOTTOM_EDGE:
+                                case Utils.LEFT_EDGE:
+                                    mDoodle.changeAreaByEdge(mPreviousPoint.x, mPreviousPoint.y, x, y, mSelectionRectRegion);
+                                    drawAllDoodlesCanvas();
+                                    postInvalidate();
+                                    break;
+
                             }
 
                             mPreviousPoint.x = x;
@@ -487,7 +496,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                         }
                         if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
                             //transform
-                            Log.i("aaa","=============transform==================");
                             mSelector.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
                             drawAllDoodlesCanvas();
                             postInvalidate();
@@ -495,7 +503,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                             mPreviousPoint.x = x;
                             mPreviousPoint.y = y;
                         } else {
-                            Log.i("aaa","=============no selection==================");
                             mSelector.setState(Doodle.STATE_DRAWING);
                             mSelector.addControlPoint(mLastPoint.x, mLastPoint.y);
                         }
@@ -522,12 +529,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                         if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
                             if (mTransform) {
                                 //mSelector.setState(Doodle.STATE_EDIT);
-                            } else {
-                                /*intersectCount = ((Selector)mSelector).checkIntersect(event.getX(), event.getY());
-                                if (intersectCount <= 0) {
-                                    mSelector.reset();
-                                }
-                                postInvalidate();*/
                             }
                         } else {
                             intersectCount = mCanMovable ? ((Selector)mSelector).checkIntersect() :
@@ -641,13 +642,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                 }
             }
         }
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        getWindowVisibleDisplayFrame(mBlackboardVisibleRect);
-        Log.i("aaa", "====w="+mBlackboardVisibleRect.width()+"   h="+mBlackboardVisibleRect.height());
     }
 
     private void drawDoodle(Canvas canvas, Doodle doodle) {
@@ -789,16 +783,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         }
 
         for (int i = 0; i < mAllDoodles.size() - 1; i++) {
-            drawDoodle(mDoodleCanvas, mAllDoodles.get(i));
-        }
-    }
-
-    private void eraserBottomLayerDoodle(int index) {
-        if (mDoodleBitmap != null) {
-            mDoodleBitmap.eraseColor(0);
-        }
-
-        for (int i = 0; i < index; i++) {
             drawDoodle(mDoodleCanvas, mAllDoodles.get(i));
         }
     }
