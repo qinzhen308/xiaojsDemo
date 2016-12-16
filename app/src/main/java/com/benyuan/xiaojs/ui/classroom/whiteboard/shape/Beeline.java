@@ -29,7 +29,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 public class Beeline extends TwoDimensionalShape {
     /**
-     * 如果直线的第一个控制点坐标值比第二个控制点坐标值小，则表示该直线是正向
+     * 濡傛灉鐩寸嚎鐨勭涓�涓帶鍒剁偣鍧愭爣鍊兼瘮绗簩涓帶鍒剁偣鍧愭爣鍊煎皬锛屽垯琛ㄧず璇ョ洿绾挎槸姝ｅ悜
      */
     private static final int FORWARD = 0;
     private static final int REVERSE = 1;

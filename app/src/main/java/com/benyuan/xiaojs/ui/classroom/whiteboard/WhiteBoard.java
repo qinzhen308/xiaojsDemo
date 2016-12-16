@@ -11,8 +11,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -31,7 +29,6 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.action.Selector;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.SimpleTouchEventListener;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TextHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.ViewGestureListener;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Beeline;
@@ -76,10 +73,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
     public static int CORNER_EDGE_SIZE = 60;
     public static int TOUCH_SLOPE = 20;
     public static int TEXT_BORDER_PADDING  =20;
-
-    private static final int TEXT_IDLE_STATE = 0;
-    private static final int TEXT_INPUT_STATE = 1;
-    private static final int TEXT_SELECTED_STATE = 2;
 
     private static final int CURSOR_MSG = 0;
     private static final int SET_CURSOR_POS = 1;
@@ -146,7 +139,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
      * edit text
      */
     private float mCursorVisibleBottom;
-    private int mTextWritingStatus = TEXT_IDLE_STATE;
     private EditText mEditText;
 
     private Path mDrawingPath;
@@ -256,6 +248,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                         ((TextWriting)mDoodle).onTextChanged(text);
                     }
 
+                    drawAllDoodlesCanvas();
                     WhiteBoard.this.invalidate();
                 }
             }
@@ -313,7 +306,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
         TOUCH_SLOPE = getResources().getDimensionPixelOffset(R.dimen.px20);
         PRESSED_SCOPE = getResources().getDimensionPixelOffset(R.dimen.px20);
-        CORNER_EDGE_SIZE = getResources().getDimensionPixelOffset(R.dimen.px60);
+        CORNER_EDGE_SIZE = getResources().getDimensionPixelOffset(R.dimen.px30);
         TEXT_BORDER_PADDING = getResources().getDimensionPixelOffset(R.dimen.px12);
         mPreviousPoint = new PointF();
     }
@@ -387,9 +380,14 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                     }
                     break;
                 case MODE_TEXT:
-                    if (mDoodle instanceof TextWriting && TextUtils.isEmpty(((TextWriting)mDoodle).getTextString())) {
-                        mAllDoodles.remove(mDoodle);
-                        mDoodle = null;
+                    if (mDoodle instanceof TextWriting) {
+                        if (TextUtils.isEmpty(((TextWriting)mDoodle).getTextString())) {
+                            mAllDoodles.remove(mDoodle);
+                            mDoodle = null;
+                        } else if (mDoodle.getState() == Doodle.STATE_EDIT){
+                            mSelectionRectRegion = mDoodle.checkRegionPressedArea(mDownPoint.x ,mDownPoint.y);
+                            Log.i("aaa", "mSelectionRectRegion="+mSelectionRectRegion);
+                        }
                     }
                     break;
                 case MODE_COLOR_PICKER:
@@ -590,6 +588,9 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                     }
                     break;
                 case MODE_TEXT:
+                    if (mDoodle != null && mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
+                        hideInputMethod();
+                    }
                     break;
                 case MODE_COLOR_PICKER:
                     break;
@@ -605,9 +606,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         @Override
         public void onDoubleTap(MotionEvent event) {
             if (mDoodle instanceof TextWriting && mDoodle.getState() == Doodle.STATE_EDIT) {
-                eraserLastDoodle();
-                invalidate();
-
                 mEditText.requestFocus();
                 showInputMethod(mEditText);
                 mEditText.setText(((TextWriting)mDoodle).getTextString());
@@ -618,12 +616,13 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         public void onSingleTapUp(MotionEvent event) {
             //对于文本绘制手指弹起逻辑
             if (mCurrentMode == MODE_TEXT) {
-                drawToDoodleCanvas();
                 if (mDoodle != null) {
                     if (mDoodle.getState() == Doodle.STATE_EDIT || mDoodle.getState() == Doodle.STATE_DRAWING) {
                         if (mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
                             mDoodle.setState(Doodle.STATE_IDLE);
                             mDoodle = null;
+                            hideInputMethod();
+                            postInvalidate();
                         }
                     }
 
@@ -633,12 +632,31 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                         if (!mSelectedOnPressed) {
                             mDoodle.setState(Doodle.STATE_IDLE);
                             mDoodle = null;
+                            hideInputMethod();
                             postInvalidate();
                         }
                     }
                 } else {
-                    buildDoodle();
-                    addEditText(event.getX(), event.getY(), false);
+                    if (mAllDoodles != null && !mAllDoodles.isEmpty()) {
+                        for (int i = mAllDoodles.size() - 1; i >= 0; i--) {
+                            Doodle d = mAllDoodles.get(i);
+                            d.setState(Doodle.STATE_IDLE);
+                            mSelectedOnPressed = d.isSelected(mDownPoint.x ,mDownPoint.y);
+                            if (mSelectedOnPressed) {
+                                mSelectionRectRegion = Utils.RECT_BODY;
+                                mDoodle = d;
+                                mDoodle.setState(Doodle.STATE_EDIT);
+                                postInvalidate();
+                            } else {
+                                buildDoodle();
+                                addEditText(event.getX(), event.getY(), false);
+                            }
+                        }
+                    } else {
+                        buildDoodle();
+                        addEditText(event.getX(), event.getY(), false);
+                    }
+
                 }
             }
         }
@@ -807,7 +825,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             return;
         }
 
-        mTextWritingStatus = TEXT_INPUT_STATE;
         //TextWriting.clearCursorCount();
         //isAddDoodle = true;
         mEditText.requestFocus();
@@ -816,7 +833,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         float padding = TextWriting.TEXT_BORDER_PADDING;
 
         float defaultW = TextWriting.MIN_EDIT_TEXT_WIDTH;
-        float defaultH = TextHelper.getDefaultTextHeight(mDoodle);
+        float defaultH = Utils.getDefaultTextHeight(mDoodle);
 
         x = center ? x - defaultW / 2.0f : x;
         y = y - defaultH / 2.0f;
@@ -854,56 +871,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         //startDrawCursorTask();
     }
 
-    private void startDrawCursorTask() {
-        TextWriting.clearCursorCount();
-        mHandler.removeMessages(CURSOR_MSG);
-        mHandler.sendEmptyMessageDelayed(CURSOR_MSG, 450);
-    }
-
-    private void setCursorPosition(int index) {
-        //set selection
-        Message msg = Message.obtain();
-        msg.what = SET_CURSOR_POS;
-        msg.arg1 = index;
-        mHandler.sendMessage(msg);
-    }
-
-    private void drawCursorTask () {
-        mHandler.sendEmptyMessageDelayed(CURSOR_MSG, 450);
-    }
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case CURSOR_MSG:
-                    TextWriting.increaseCursorCount();
-                    invalidate();
-                    drawCursorTask();
-                    break;
-
-                case SET_CURSOR_POS:
-                    if (msg.arg1 > -1 && msg.arg1 <= mEditText.getEditableText().length()) {
-                        mEditText.setSelection(msg.arg1);
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-
-        }
-    };
-
-    private void stopDrawCursorTask () {
-        mHandler.removeCallbacksAndMessages(null);
-    }
-
     public void switchMode(int mode) {
-        if (mCurrentMode == MODE_TEXT && mode != MODE_TEXT) {
-            stopDrawCursorTask();
-        }
         mCurrentMode = mode;
 
         if (mode == MODE_SELECTION) {
@@ -1005,10 +973,9 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
     }
 
     public void release() {
-        if (mHandler != null) {
-            mHandler.removeMessages(CURSOR_MSG);
-            mHandler.removeMessages(SET_CURSOR_POS);
-            mHandler = null;
+        //do something
+        if (mDoodleBitmap != null && !mDoodleBitmap.isRecycled()) {
+
         }
     }
 
