@@ -20,6 +20,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
@@ -355,6 +356,25 @@ public abstract class Doodle implements Action {
 
         mDisplayMatrix.mapRect(mRect);
         return mRect;
+    }
+
+    public RectF getDoodleRect() {
+        return mDoodleRect;
+    }
+
+    public void scale(float scale, float px, float py) {
+        mTotalScale = mTotalScale * scale;
+        mTransformMatrix.postScale(scale, scale, px, py);
+    }
+
+    public void rotate(float degree, float px, float py) {
+        mTotalDegree += degree;
+        mTransformMatrix.postRotate(degree, px, py);
+    }
+
+    public void scaleRotateByPoint(float scale, float degree, float px, float py) {
+        scale(scale, px, py);
+        rotate(degree, px, py);
     }
 
 }
