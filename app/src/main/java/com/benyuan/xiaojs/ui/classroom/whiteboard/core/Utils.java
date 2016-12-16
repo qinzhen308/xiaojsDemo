@@ -30,6 +30,7 @@ import android.view.WindowManager;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Beeline;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.TextWriting;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Triangle;
 
 public class Utils {
@@ -410,8 +411,12 @@ public class Utils {
      */
     public static Matrix transformMatrix(Matrix drawingMatrix, Matrix displayMatrix, float[] center, float degrees) {
         mMapRectMatrix.reset();
-        mMapRectMatrix.postConcat(drawingMatrix);
-        mMapRectMatrix.postConcat(displayMatrix);
+        if (drawingMatrix != null) {
+            mMapRectMatrix.postConcat(drawingMatrix);
+        }
+        if (displayMatrix != null) {
+            mMapRectMatrix.postConcat(displayMatrix);
+        }
 
         if (degrees != 0) {
             //映射到旋转前, 把矩形置为水平，便于判断点是否和矩阵是否有相交事件
@@ -558,8 +563,8 @@ public class Utils {
      * @param x 按下点x
      * @param y 按下点y
      */
-    public static int isPressedCorner(float x, float y, RectF rectF, Matrix mapMatrix) {
-        transformToScreenRect(rectF, mapMatrix);
+    public static int isPressedCorner(float x, float y, RectF rect, Matrix mapMatrix) {
+        transformToScreenRect(rect, mapMatrix);
         return whichCornerPressed(x, y, mRect);
     }
 
@@ -568,6 +573,11 @@ public class Utils {
     }
 
     public static PointF transformToScreenPoint(float x, float y, Matrix mapMatrix) {
+        if (mapMatrix == null) {
+            mPoint.set(x, y);
+            return mPoint;
+        }
+
         mPointArr[0] = x;
         mPointArr[1] = y;
         mapMatrix.mapPoints(mPointArr);
@@ -584,6 +594,10 @@ public class Utils {
         float maxX = Math.max(rectP1.x, rectP2.x);
         float maxY = Math.max(rectP1.y, rectP2.y);
         mRect.set(minX, minY, maxX, maxY);
+
+        if (mapMatrix == null) {
+            return mRect;
+        }
 
         mPointArr[0] = mRect.left;
         mPointArr[1] = mRect.top;
@@ -606,6 +620,10 @@ public class Utils {
      */
     public static RectF transformToScreenRect(RectF rect, Matrix mapMatrix) {
         mRect.set(rect);
+
+        if (mapMatrix == null) {
+            return mRect;
+        }
 
         mPointArr[0] = mRect.left;
         mPointArr[1] = mRect.top;
@@ -1008,6 +1026,19 @@ public class Utils {
         mPointArr[1] = radian;
 
         return mPointArr;
+    }
+
+    public static float getDefaultTextHeight(Doodle doodle) {
+        Paint paint = doodle.getPaint();
+        WhiteBoard.BlackParams params = doodle.getWhiteboard().getBlackParams();
+        Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+
+        float textHeight = fontMetrics.descent - fontMetrics.ascent;
+        textHeight = (textHeight / params.paintScale) * params.scale;
+        if (textHeight < TextWriting.MIN_EDIT_TEXT_HEIGHT) {
+            textHeight = TextWriting.MIN_EDIT_TEXT_HEIGHT;
+        }
+        return textHeight;
     }
 
 }

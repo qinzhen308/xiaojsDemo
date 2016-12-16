@@ -233,7 +233,7 @@ public abstract class Doodle implements Action {
 
             float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
             float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2;
-            PointF p = Utils.normalizeScreenPoint(padding, padding, mWhiteboard.getBlackParams().drawingBounds);
+            PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
             float hPadding = p.x / mTotalScale * params.scale;
             float vPadding = p.y / mTotalScale * params.scale;
             mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding, mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
@@ -260,7 +260,6 @@ public abstract class Doodle implements Action {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
             int corner = Utils.isPressedCorner(p.x, p.y, mRect, matrix);
-            Log.i("aaa", "corner="+corner);
             if (corner != Utils.RECT_NO_SELECTED) {
                 return corner;
             } else {
