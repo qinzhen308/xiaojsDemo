@@ -372,11 +372,8 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
             switch (mCurrentMode) {
                 case MODE_SELECTION:
-                    if (mSelector != null) {
+                    if (mSelector != null && mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
                         mSelectionRectRegion = mSelector.checkRegionPressedArea(mDownPoint.x ,mDownPoint.y);
-                        if (mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
-                            mSelector.reset();
-                        }
                     }
                     break;
                 case MODE_TEXT:
@@ -493,10 +490,20 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                             }
                         }
                         if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
-                            //transform
-                            mSelector.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
-                            drawAllDoodlesCanvas();
-                            postInvalidate();
+                            switch (mSelectionRectRegion) {
+                                case Utils.RIGHT_TOP_CORNER:
+                                    //scale and rotate
+                                    mSelector.scaleAndRotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
+                                    drawAllDoodlesCanvas();
+                                    postInvalidate();
+                                    break;
+                                default:
+                                    //move
+                                    mSelector.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
+                                    drawAllDoodlesCanvas();
+                                    postInvalidate();
+                                    break;
+                            }
 
                             mPreviousPoint.x = x;
                             mPreviousPoint.y = y;
@@ -533,6 +540,8 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                                     ((Selector)mSelector).checkIntersect(event.getX(), event.getY());
                             if (intersectCount <= 0) {
                                 mSelector.reset();
+                            } else {
+                                mSelectionRectRegion = Utils.RECT_BODY;
                             }
                             postInvalidate();
                         }
@@ -722,6 +731,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
     private void buildDoodle() {
         Paint paint = null;
+        mDoodle = null;
         switch (mCurrentMode) {
             case MODE_SELECTION:
                 //mSelector = new Selector(this);
@@ -967,6 +977,9 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                 mDoodleBitmap.eraseColor(0);
             }
 
+            if (mSelector != null) {
+                mSelector.reset();
+            }
             mDoodle = null;
             postInvalidate();
         }

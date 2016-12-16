@@ -37,9 +37,9 @@ public class HandWriting extends Doodle {
     public HandWriting(WhiteBoard whiteBoard, Paint paint, float x, float y) {
         this(whiteBoard);
         setPaint(paint);
-        setFirstPoint(x, y);
-
         init();
+
+        setFirstPoint(x, y);
     }
 
     private void init() {
@@ -48,10 +48,7 @@ public class HandWriting extends Doodle {
 
     private void setFirstPoint(float x, float y) {
         addControlPoint(x, y);
-        mDrawingPath.moveTo(x, y);
-
-        PointF p = Utils.mapDoodlePointToScreen(x, y, getWhiteboard().getBlackParams().drawingBounds);
-        mOriginalPath.moveTo(p.x, p.y);
+        mTransformPath.moveTo(x, y);
     }
 
     /**
@@ -63,8 +60,8 @@ public class HandWriting extends Doodle {
     public void addControlPoint(PointF point) {
         if (!mPoints.isEmpty()) {
             PointF last = mPoints.lastElement();
-            mDrawingPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);
-            mDrawingPath.computeBounds(mDoodleRect, true);
+            mTransformPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);
+            mTransformPath.computeBounds(mDoodleRect, true);
         }
         mPoints.add(point);
     }
@@ -77,17 +74,17 @@ public class HandWriting extends Doodle {
     @Override
     public void drawSelf(Canvas canvas) {
         canvas.save();
-        mTransformPath.set(mDrawingPath);
+        mDrawingPath.set(mTransformPath);
         mDrawingMatrix.postConcat(mTransformMatrix);
-        mTransformPath.transform(mDrawingMatrix);
-        canvas.drawPath(mTransformPath, getPaint());
+        mDrawingPath.transform(mDrawingMatrix);
+        canvas.drawPath(mDrawingPath, getPaint());
         canvas.restore();
     }
 
     @Override
     public Path getOriginalPath() {
         mOriginalPath.reset();
-        mOriginalPath.set(mDrawingPath);
+        mOriginalPath.set(mTransformPath);
         mOriginalPath.transform(mDrawingMatrix);
         mOriginalPath.transform(mDisplayMatrix);
         return mOriginalPath;
@@ -107,7 +104,7 @@ public class HandWriting extends Doodle {
             }
         }
 
-        return 0;
+        return Utils.RECT_NO_SELECTED;
     }
 
     @Override
@@ -124,7 +121,7 @@ public class HandWriting extends Doodle {
 
     @Override
     public RectF getDoodleTransformRect() {
-        mTransformPath.computeBounds(mRect, true);
+        mDrawingPath.computeBounds(mRect, true);
         mDisplayMatrix.mapRect(mRect);
         return mRect;
     }

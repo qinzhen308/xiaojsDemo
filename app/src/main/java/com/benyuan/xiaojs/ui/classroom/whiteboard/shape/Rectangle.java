@@ -73,17 +73,11 @@ public class Rectangle extends TwoDimensionalShape {
 
     @Override
     public Path getOriginalPath() {
-        WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
-        PointF p = Utils.mapDoodlePointToScreen(mDoodleRect.left, mDoodleRect.top, params.drawingBounds);
-        int x1 = (int) p.x;
-        int y1 = (int) p.y;
-
-        p = Utils.mapDoodlePointToScreen(mDoodleRect.right, mDoodleRect.bottom, params.drawingBounds);
-        int x2 = (int) p.x;
-        int y2 = (int) p.y;
-
-        mRect.set(x1, y1, x2, y2);
-        mOriginalPath.addRect(mRect, Path.Direction.CCW);
+        mOriginalPath.reset();
+        mRect.set(mDoodleRect);
+        mDrawingMatrix.mapRect(mRect);
+        mDisplayMatrix.mapRect(mRect);
+        mOriginalPath.addOval(mRect, Path.Direction.CCW);
         return mOriginalPath;
     }
 

@@ -3,6 +3,7 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.action;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
@@ -46,6 +47,7 @@ public class Selector extends Doodle {
     private Region mRegion;
     private Region mSelectorRegion;
     private int mSelectCount;
+    private float[] mDoodleRectCenter;
 
     public Selector(WhiteBoard whiteBoard) {
         super(whiteBoard, SELECTION);
@@ -58,6 +60,7 @@ public class Selector extends Doodle {
         mSelectingBgPaint = buildDefaultPaint();
         mRegion = new Region();
         mSelectorRegion = new Region();
+        mDoodleRectCenter = new float[2];
     }
 
     private Paint buildDashPaint() {
@@ -104,7 +107,10 @@ public class Selector extends Doodle {
 
         mSelectCount = 0;
 
-        mRect.set(0, 0, 0, 0);
+        mDoodleRect.set(0, 0, 0, 0);
+        mTotalScale = 1.0f;
+        mTotalDegree = 0;
+        mTransformMatrix.reset();
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
         if (allDoodles != null) {
             for (Doodle d : allDoodles) {
@@ -143,13 +149,26 @@ public class Selector extends Doodle {
     @Override
     public void drawBorder(Canvas canvas) {
         try {
-            float padding = getWhiteboard().getBlackParams().paintStrokeWidth / 2.0f;
-            mBorderRect.set(mRect.left - padding, mRect.top - padding, mRect.right + padding, mRect.bottom + padding);
-            Log.i("aaa", "draw border="+mRect);
+            if (mDoodleRect.isEmpty()) {
+                return;
+            }
+
+            Log.i("aaa", "mDoodleRect="+mDoodleRect);
+            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+            float padding = params.paintStrokeWidth / 2.0f;
+            mBorderRect.set(mDoodleRect.left - padding, mDoodleRect.top - padding, mDoodleRect.right + padding, mDoodleRect.bottom + padding);
             mBorderNormalizedPath.reset();
             mBorderNormalizedPath.addRect(mBorderRect, Path.Direction.CCW);
             mBorderNormalizedPath.transform(mTransformMatrix);
             canvas.drawPath(mBorderNormalizedPath, mBorderPaint);
+
+            //draw controller
+            float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
+            mBorderRect.set(mDoodleRect.right - radius, mDoodleRect.top - radius, mDoodleRect.right + radius, mDoodleRect.top + radius);
+            mBorderNormalizedPath.reset();
+            mBorderNormalizedPath.addOval(mBorderRect, Path.Direction.CCW);
+            mBorderNormalizedPath.transform(mTransformMatrix);
+            canvas.drawPath(mBorderNormalizedPath, mControllerPaint);
         } catch (Exception e) {
 
         }
@@ -168,7 +187,56 @@ public class Selector extends Doodle {
             }
 
             if (count > 0) {
-                mRect.offset(deltaX, deltaY);
+                mDoodleRect.offset(deltaX, deltaY);
+            }
+        }
+    }
+
+    @Override
+    public void scaleAndRotate(float oldX, float oldY, float x, float y) {
+        ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+        if (allDoodles != null) {
+            int count = 0;
+            for (Doodle d : allDoodles) {
+                if (d.getState() == Doodle.STATE_EDIT) {
+                    count++;
+                    break;
+                }
+            }
+
+            if (count > 0) {
+                //Log.i("aaa", "mDoodleRect="+mDoodleRect);
+                WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+                PointF p = Utils.mapScreenToDoodlePoint(mDoodleRect.left, mDoodleRect.top, params.drawingBounds);
+                float left = p.x;
+                float top = p.y;
+                p = Utils.mapScreenToDoodlePoint(mDoodleRect.right, mDoodleRect.bottom, params.drawingBounds);
+                float right = p.x;
+                float bottom = p.y;
+
+                mRect.set(left, top, right, bottom);
+                Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
+                float[] arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mRect, matrix);
+                float scale = arr[0];
+                float degree = arr[1];
+
+                computeDoodleCenterPoint(mRect);
+
+                for (Doodle d : allDoodles) {
+                    if (d.getState() == Doodle.STATE_EDIT) {
+                        d.scaleRotateByPoint(scale, degree, mDoodleRectCenter[0], mDoodleRectCenter[1]);
+                    }
+                }
+
+
+                arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mDoodleRect, null);
+                scale = arr[0];
+                degree = arr[1];
+                computeCenterPoint(mDoodleRect);
+
+                Log.i("aaa", "scale="+scale+"  degree="+degree+  " center="+mRectCenter[0]+", "+mRectCenter[1]);
+                scaleRotateByPoint(scale, degree, mRectCenter[0], mRectCenter[1]);
+
             }
         }
     }
@@ -180,7 +248,17 @@ public class Selector extends Doodle {
 
     @Override
     public int checkRegionPressedArea(float x, float y) {
-        return mRect.contains(x, y) ? Utils.RECT_BODY : Utils.RECT_NO_SELECTED;
+        //return mRect.contains(x, y) ? Utils.RECT_BODY : Utils.RECT_NO_SELECTED;
+        if (getState() == STATE_EDIT && mPoints.size() > 1) {
+            int corner = Utils.isPressedCorner(x, y, mDoodleRect, null);
+            if (corner != Utils.RECT_NO_SELECTED) {
+                return corner;
+            } else {
+                return Utils.checkRectPressed(x, y, mDoodleRect, null);
+            }
+        }
+
+        return Utils.RECT_NO_SELECTED;
     }
 
     @Override
@@ -211,7 +289,7 @@ public class Selector extends Doodle {
                 if (Utils.intersect(x, y, d)) {
                     intersectCount++;
                     d.setState(STATE_EDIT);
-                    mRect.set(0, 0, 0, 0);
+                    mDoodleRect.set(0, 0, 0, 0);
                     updateRect(d);
                     break;
                 }
@@ -243,7 +321,7 @@ public class Selector extends Doodle {
         x2 = p.x;
         y2 = p.y;
 
-        mRect.set(x1, y1, x2, y2);
+        mDoodleRect.set(x1, y1, x2, y2);
         mSelectorRegion.set((int) x1, (int) y1, (int) x2, (int) y2);
 
         boolean intersect = false;
@@ -254,7 +332,7 @@ public class Selector extends Doodle {
             for (Doodle d : allDoodles) {
                 if (d instanceof Beeline) {
                     LineSegment beeLineSeg = ((Beeline) d).getLineSegment();
-                    intersect = Utils.intersect(mRect, beeLineSeg);
+                    intersect = Utils.intersect(mDoodleRect, beeLineSeg);
                     if (intersect) {
                         intersectCount++;
                         d.setState(Doodle.STATE_EDIT);
@@ -262,7 +340,7 @@ public class Selector extends Doodle {
                 } else if (d instanceof Triangle) {
                     LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments();
                     for (LineSegment lineSegment : beeLineSeg) {
-                        intersect = Utils.intersect(mRect, lineSegment);
+                        intersect = Utils.intersect(mDoodleRect, lineSegment);
                         if (intersect) {
                             intersectCount++;
                             d.setState(Doodle.STATE_EDIT);
@@ -286,7 +364,7 @@ public class Selector extends Doodle {
 
         Log.i("aaa", "intersect take="+(System.currentTimeMillis() - s)+"   doodle size="+ allDoodles.size());
         if (intersectCount > 0) {
-            mRect.set(0, 0, 0, 0);
+            mDoodleRect.set(0, 0, 0, 0);
             for (Doodle d : allDoodles) {
                 if (d.getState() == STATE_EDIT) {
                     updateRect(d);
@@ -300,39 +378,43 @@ public class Selector extends Doodle {
 
     public void updateRect(Doodle doodle) {
         RectF rect = doodle.getDoodleTransformRect();
-        if (mRect.isEmpty()) {
-            mRect.set(rect);
+        if (mDoodleRect.isEmpty()) {
+            mDoodleRect.set(rect);
         } else {
-            if (rect.left < mRect.left) {
-                mRect.set(rect.left, mRect.top, mRect.right, mRect.bottom);
+            if (rect.left < mDoodleRect.left) {
+                mDoodleRect.set(rect.left, mDoodleRect.top, mDoodleRect.right, mDoodleRect.bottom);
             }
 
-            if (rect.top < mRect.top) {
-                mRect.set(mRect.left, rect.top, mRect.right, mRect.bottom);
+            if (rect.top < mDoodleRect.top) {
+                mDoodleRect.set(mDoodleRect.left, rect.top, mDoodleRect.right, mDoodleRect.bottom);
             }
 
-            if (rect.right > mRect.right) {
-                mRect.set(mRect.left, mRect.top, rect.right, mRect.bottom);
+            if (rect.right > mDoodleRect.right) {
+                mDoodleRect.set(mDoodleRect.left, mDoodleRect.top, rect.right, mDoodleRect.bottom);
             }
 
-            if (rect.bottom > mRect.bottom) {
-                mRect.set(mRect.left, mRect.top, mRect.right, rect.bottom);
+            if (rect.bottom > mDoodleRect.bottom) {
+                mDoodleRect.set(mDoodleRect.left, mDoodleRect.top, mDoodleRect.right, rect.bottom);
             }
         }
 
-        computeCenterPoint(null, null);
-        Log.i("aaa", "updateRect Rect="+mRect);
+        computeCenterPoint(mDoodleRect);
+        Log.i("aaa", "updateRect mDoodleRect="+mDoodleRect);
 
     }
 
     @Override
-    protected void computeCenterPoint(PointF rectP1, PointF rectP2) {
-        float centerX = (mRect.left + mRect.right) / 2.0f;
-        float centerY = (mRect.top + mRect.bottom) / 2.0f;
-        mRectCenter[0] = centerX;
-        mRectCenter[1] = centerY;
-        mDrawingMatrix.mapPoints(mRectCenter);
+    protected void computeCenterPoint(RectF rect) {
+        mRectCenter[0] = rect.centerX();
+        mRectCenter[1] = rect.centerY();
     }
+
+    private void computeDoodleCenterPoint(RectF rect) {
+        mDoodleRectCenter[0] = rect.centerX();
+        mDoodleRectCenter[1] = rect.centerY();
+        mDrawingMatrix.mapPoints(mDoodleRectCenter);
+    }
+
 
     public int getSelectCount() {
         return mSelectCount;
