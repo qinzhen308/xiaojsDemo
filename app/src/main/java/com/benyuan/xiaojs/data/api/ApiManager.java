@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Platform;
+import com.benyuan.xiaojs.data.api.interceptor.CacheInterceptor;
 import com.benyuan.xiaojs.data.api.interceptor.CommonHeaderInterceptor;
 import com.benyuan.xiaojs.data.api.service.XiaojsService;
 
@@ -11,8 +12,10 @@ import com.benyuan.xiaojs.util.APPUtils;
 import com.benyuan.xiaojs.util.UIUtils;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -87,6 +90,8 @@ public class ApiManager {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(logInterceptor)
                 .addInterceptor(headerInterceptor)
+                //.addInterceptor(new CacheInterceptor())
+                .cache(createCache(appContext))
                 .connectTimeout(20,TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20,TimeUnit.SECONDS);
@@ -98,6 +103,17 @@ public class ApiManager {
 
         return builder.build();
 
+    }
+
+    private Cache createCache(Context context) {
+
+        File cacheDirectory = context.getCacheDir();
+        if (cacheDirectory == null) {
+            return null;
+        }
+        File realDir = new File(cacheDirectory,XiaojsConfig.HTTP_CACHE_DIR);
+
+        return new Cache(realDir,XiaojsConfig.HTTP_CACHE_SIZE);
     }
 
     private XiaojsService createXiaojsService() {

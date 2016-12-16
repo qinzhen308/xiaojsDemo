@@ -184,6 +184,7 @@ public interface XiaojsService {
     //
 
     //Get Subject (Demo)
+    //@Headers("Cache-Control: max-age=60")
     @GET("/v1/categories/subjects/demo")
     Call<CSubject> getSubject();
 

@@ -54,6 +54,8 @@ import com.benyuan.xiaojs.ui.message.ContactActivity;
 import com.benyuan.xiaojs.ui.message.PostDynamicActivity;
 import com.benyuan.xiaojs.ui.widget.progress.ProgressHUD;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.cache.ExternalCacheDiskCacheFactory;
+import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import com.orhanobut.logger.Logger;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -82,7 +84,9 @@ public class TestAPIActivity extends Activity {
         imageView = (ImageView) findViewById(R.id.loading);
 
 
-        //Glide.with(this).load(R.drawable.flickr).into(imageView);
+        Glide.with(this).load(R.drawable.login_logo).into(imageView);
+        //InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
+        //ExternalCacheDiskCacheFactory
 
     }
 
