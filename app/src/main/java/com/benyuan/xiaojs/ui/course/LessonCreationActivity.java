@@ -16,6 +16,7 @@ import android.widget.ToggleButton;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.xf_foundation.LessonState;
 import com.benyuan.xiaojs.common.xf_foundation.schemas.Finance;
+import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.LessonDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.CreateLesson;
@@ -652,7 +653,7 @@ public class LessonCreationActivity extends BaseActivity {
         LiveLesson ll = new LiveLesson();
         String subject = mLessonSubjectTv.getText().toString();
         ll.setTitle(mLessonNameEdt.getText().toString());
-        ll.setSubject(TEST_SUBJECT_ID);
+        ll.setSubject(AccountDataManager.getSubject(this));
         ll.setEnroll(enroll);
         ll.setMode(BaseBusiness.getTeachingMode(mContext, mTeachFormTv.getText().toString()));
         ll.setFee(fee);

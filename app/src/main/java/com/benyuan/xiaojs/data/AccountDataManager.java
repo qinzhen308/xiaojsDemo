@@ -27,6 +27,16 @@ import com.orhanobut.logger.Logger;
 
 public class AccountDataManager extends DataManager{
 
+    //保存已声明的能力
+    public static void saveSubject(Context context,String subject) {
+        AccountPref.setSubject(context,subject);
+    }
+
+    //获取已声明的教学能力subject
+    public static String getSubject(Context context) {
+        return AccountPref.getSubject(context);
+    }
+
     /**
      * 获取session
      * @param context

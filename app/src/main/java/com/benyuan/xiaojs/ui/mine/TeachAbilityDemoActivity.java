@@ -83,6 +83,8 @@ public class TeachAbilityDemoActivity extends BaseActivity {
 
                     claimBtn.setVisibility(View.VISIBLE);
 
+                    AccountDataManager.saveSubject(TeachAbilityDemoActivity.this,object.getId());
+
 
                 }
 
@@ -120,6 +122,9 @@ public class TeachAbilityDemoActivity extends BaseActivity {
             public void onSuccess(ClaimCompetency object) {
                 Toast.makeText(TeachAbilityDemoActivity.this,"声明成功",Toast.LENGTH_SHORT).show();
                 SecurityManager.updatePermission(TeachAbilityDemoActivity.this, Su.Permission.COURSE_OPEN_CREATE,true);
+
+                AccountDataManager.saveSubject(TeachAbilityDemoActivity.this,object.getCompetency().getSubject());
+
             }
 
             @Override

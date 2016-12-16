@@ -19,6 +19,8 @@ public class AccountPref{
 
     private static final String PREF_PHONE = "active_phone";
     private static final String PREF_ID = "active_id";
+
+    private static final String PREF_SUBJECT = "acc_subject";
     //private static final String PREF_NAME = "active_name";
 
 
@@ -28,6 +30,18 @@ public class AccountPref{
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
+
+
+    public static void setSubject(final Context context,String subject) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_SUBJECT, subject).apply();
+
+    }
+
+    public static String getSubject(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_SUBJECT,"");
+    }
 
     public static void setAccountID(final Context context,String id) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
