@@ -382,8 +382,13 @@ public class Utils {
 
     public static Matrix transformScreenMatrix(Matrix drawingMatrix, Matrix displayMatrix) {
         mMapRectMatrix.reset();
-        mMapRectMatrix.postConcat(drawingMatrix);
-        mMapRectMatrix.postConcat(displayMatrix);
+        if (drawingMatrix != null) {
+            mMapRectMatrix.postConcat(drawingMatrix);
+        }
+        if (displayMatrix != null) {
+            mMapRectMatrix.postConcat(displayMatrix);
+        }
+
         return mMapRectMatrix;
     }
 

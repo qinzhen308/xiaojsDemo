@@ -369,10 +369,11 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             mSelectionRectRegion = Utils.RECT_NO_SELECTED;
             mTransform = false;
             mCanMovable = false;
+            Log.i("aaa", "             ");
 
             switch (mCurrentMode) {
                 case MODE_SELECTION:
-                    if (mSelector != null && mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
+                    if (mSelector != null && mSelector.getState() == Doodle.STATE_EDIT) {
                         mSelectionRectRegion = mSelector.checkRegionPressedArea(mDownPoint.x ,mDownPoint.y);
                     }
                     break;
@@ -487,6 +488,8 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                             mPreviousPoint.y = y;
                             if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
                                 mTransform = true;
+                            } else {
+                                mSelector.reset();
                             }
                         }
                         if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
@@ -530,17 +533,13 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             switch (mCurrentMode) {
                 case MODE_SELECTION:
                     if (mSelector != null) {
-                        int intersectCount = 0;
-                        if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
-                            if (mTransform) {
-                                //mSelector.setState(Doodle.STATE_EDIT);
-                            }
-                        } else {
-                            intersectCount = mCanMovable ? ((Selector)mSelector).checkIntersect() :
+                        if (mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
+                            int intersectCount = mCanMovable ? ((Selector)mSelector).checkIntersect() :
                                     ((Selector)mSelector).checkIntersect(event.getX(), event.getY());
                             if (intersectCount <= 0) {
                                 mSelector.reset();
                             } else {
+                                mSelector.setState(Doodle.STATE_EDIT);
                                 mSelectionRectRegion = Utils.RECT_BODY;
                             }
                             postInvalidate();
