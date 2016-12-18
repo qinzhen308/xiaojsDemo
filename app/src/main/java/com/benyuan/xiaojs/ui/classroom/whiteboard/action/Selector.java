@@ -9,15 +9,13 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.graphics.Region;
 import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Beeline;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Triangle;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.WhiteboardConfigs;
 
 import java.util.ArrayList;
 
@@ -37,15 +35,9 @@ import java.util.ArrayList;
  * ======================================================================================== */
 
 public class Selector extends Doodle {
-    private final static int DEFAULT_DASH_WIDTH = 5;
-
-    private final static int DEFAULT_COLOR = Color.BLACK;
-
     private Paint mSelectingBgPaint;
     private Paint mSelectingDashPaint;
 
-    private Region mRegion;
-    private Region mSelectorRegion;
     private float[] mDoodleRectCenter;
 
     public Selector(WhiteBoard whiteBoard) {
@@ -57,17 +49,16 @@ public class Selector extends Doodle {
     private void init() {
         mSelectingDashPaint = buildDashPaint();
         mSelectingBgPaint = buildDefaultPaint();
-        mRegion = new Region();
-        mSelectorRegion = new Region();
         mDoodleRectCenter = new float[2];
     }
 
     private Paint buildDashPaint() {
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(DEFAULT_DASH_WIDTH);
+        p.setStrokeWidth(WhiteboardConfigs.SELECTOR_STROKE_WIDTH);
         p.setColor(Color.WHITE);
-        PathEffect blackEffects = new DashPathEffect(new float[]{10, 10}, 0);
+        float dw = WhiteboardConfigs.SELECTOR_DASH_WIDTH;
+        PathEffect blackEffects = new DashPathEffect(new float[]{dw, dw}, 0);
         p.setPathEffect(blackEffects);
         return p;
     }
@@ -76,7 +67,7 @@ public class Selector extends Doodle {
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setStyle(Paint.Style.STROKE);
         p.setColor(Color.BLACK);
-        p.setStrokeWidth(DEFAULT_DASH_WIDTH);
+        p.setStrokeWidth(WhiteboardConfigs.SELECTOR_STROKE_WIDTH);
         return p;
     }
 
@@ -150,7 +141,6 @@ public class Selector extends Doodle {
                 return;
             }
 
-            Log.i("aaa", "mDoodleRect="+mDoodleRect +"   mTransformMatrix="+mTransformMatrix);
             WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
             float padding = params.paintStrokeWidth / 2.0f;
             mBorderRect.set(mDoodleRect.left - padding, mDoodleRect.top - padding, mDoodleRect.right + padding, mDoodleRect.bottom + padding);
@@ -202,7 +192,6 @@ public class Selector extends Doodle {
             }
 
             if (count > 0) {
-                //Log.i("aaa", "mDoodleRect="+mDoodleRect);
                 WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
                 mRect.set(mDoodleRect);
                 mTransformMatrix.mapRect(mRect);
@@ -250,15 +239,15 @@ public class Selector extends Doodle {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mTransformMatrix, null, mRectCenter, mTotalDegree);
-            int corner = Utils.isPressedCorner(p.x, p.y, mDoodleRect, matrix);
-            if (corner != Utils.RECT_NO_SELECTED) {
+            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mDoodleRect, matrix);
+            if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                return Utils.checkRectPressed(p.x, p.y, mDoodleRect, matrix);
+                return IntersectionHelper.checkRectPressed(p.x, p.y, mDoodleRect, matrix);
             }
         }
 
-        return Utils.RECT_NO_SELECTED;
+        return IntersectionHelper.RECT_NO_SELECTED;
     }
 
     @Override
@@ -280,14 +269,13 @@ public class Selector extends Doodle {
         return intersectCount;
     }
 
-    public int checkIntersect(float x, float y) {
+    public int checkSingleIntersect(float x, float y) {
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
         int intersectCount = 0;
         if (allDoodles != null) {
             for (Doodle d : allDoodles) {
-                if (Utils.intersect(x, y, d)) {
+                if (IntersectionHelper.intersect(x, y, d)) {
                     intersectCount++;
-                    d.setState(STATE_EDIT);
                     mDoodleRect.set(0, 0, 0, 0);
                     updateRect(d);
                     break;
@@ -320,47 +308,9 @@ public class Selector extends Doodle {
         y2 = p.y;
 
         mDoodleRect.set(x1, y1, x2, y2);
-        mSelectorRegion.set((int) x1, (int) y1, (int) x2, (int) y2);
 
-        boolean intersect = false;
-        int intersectCount = 0;
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
-        long s = System.currentTimeMillis();
-        if (allDoodles != null) {
-            for (Doodle d : allDoodles) {
-                if (d instanceof Beeline) {
-                    LineSegment beeLineSeg = ((Beeline) d).getLineSegment();
-                    intersect = Utils.intersect(mDoodleRect, beeLineSeg);
-                    if (intersect) {
-                        intersectCount++;
-                        d.setState(Doodle.STATE_EDIT);
-                    }
-                } else if (d instanceof Triangle) {
-                    LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments();
-                    for (LineSegment lineSegment : beeLineSeg) {
-                        intersect = Utils.intersect(mDoodleRect, lineSegment);
-                        if (intersect) {
-                            intersectCount++;
-                            d.setState(Doodle.STATE_EDIT);
-                            break;
-                        }
-                    }
-                } else {
-                    Path originalPath = d.getOriginalPath();
-                    if (originalPath == null) {
-                        continue;
-                    }
-
-                    intersect = mRegion.setPath(originalPath, mSelectorRegion);
-                    if (intersect) {
-                        intersectCount++;
-                        d.setState(Doodle.STATE_EDIT);
-                    }
-                }
-            }
-        }
-
-        //Log.i("aaa", "intersect take="+(System.currentTimeMillis() - s)+"   doodle size="+ allDoodles.size());
+        int intersectCount = IntersectionHelper.intersect(allDoodles, mDoodleRect);
         if (intersectCount > 0) {
             mDoodleRect.set(0, 0, 0, 0);
             for (Doodle d : allDoodles) {

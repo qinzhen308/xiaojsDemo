@@ -9,7 +9,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,15 +21,16 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.classroom.ClassRoomActivity;
 import com.benyuan.xiaojs.ui.classroom.ClassRoomGestureDetector;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.action.Selector;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.SimpleTouchEventListener;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.ViewGestureListener;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Beeline;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.HandWriting;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Oval;
@@ -68,14 +68,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
     public final static int MODE_COLOR_PICKER = 5;
 
     private static final float DOODLE_CANVAS_RATIO = 4 / 3.0F; // w:h = 4:3
-    private static int STATUS_BAR_HEIGHT;
-    public static int PRESSED_SCOPE = 20;
-    public static int CORNER_EDGE_SIZE = 60;
-    public static int TOUCH_SLOPE = 20;
-    public static int TEXT_BORDER_PADDING  =20;
-
-    private static final int CURSOR_MSG = 0;
-    private static final int SET_CURSOR_POS = 1;
 
     private Context mContext;
     private Doodle mDoodle;
@@ -132,18 +124,13 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
     private Matrix mDisplayMatrix = new Matrix();
     private RectF mBlackboardRect = new RectF();
 
-    private Rect mBlackboardVisibleRect = new Rect();
-    private int mBlackboardOffsetY;
-
     /**
      * edit text
      */
-    private float mCursorVisibleBottom;
     private EditText mEditText;
 
     private Path mDrawingPath;
     private int mSelectionRectRegion;
-    private int mSelectedDoodleIndex;
     private boolean mSelectedOnPressed;
     private boolean mTransform;
     private boolean mCanMovable;
@@ -304,11 +291,9 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         mViewGestureListener = new ViewGestureListener(context, this, new TouchEventListener());
         mInputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        TOUCH_SLOPE = getResources().getDimensionPixelOffset(R.dimen.px20);
-        PRESSED_SCOPE = getResources().getDimensionPixelOffset(R.dimen.px20);
-        CORNER_EDGE_SIZE = getResources().getDimensionPixelOffset(R.dimen.px30);
-        TEXT_BORDER_PADDING = getResources().getDimensionPixelOffset(R.dimen.px12);
         mPreviousPoint = new PointF();
+
+        WhiteboardConfigs.init(getContext());
     }
 
     @Override
@@ -366,7 +351,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             //reset status
             mDoodleStarted = false;
             mIsRecordedParams = false;
-            mSelectionRectRegion = Utils.RECT_NO_SELECTED;
+            mSelectionRectRegion = IntersectionHelper.RECT_NO_SELECTED;
             mTransform = false;
             mCanMovable = false;
             Log.i("aaa", "             ");
@@ -413,7 +398,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
             Utils.mapScreenToDoodlePoint(x, y, mDoodleBounds, mLastPoint);
             if (!mCanMovable) {
-                mCanMovable = Utils.isMovable(mDownPoint.x, mDownPoint.y, x, y, TOUCH_SLOPE);
+                mCanMovable = Utils.isMovable(mDownPoint.x, mDownPoint.y, x, y, WhiteboardConfigs.TOUCH_SLOPE);
             }
 
             switch (mCurrentMode) {
@@ -425,14 +410,14 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                             mIsRecordedParams = true;
                             mPreviousPoint.x = x;
                             mPreviousPoint.y = y;
-                            if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
+                            if (mSelectionRectRegion != IntersectionHelper.RECT_NO_SELECTED) {
                                 mTransform = true;
                             }
                         }
 
-                        if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
+                        if (mSelectionRectRegion != IntersectionHelper.RECT_NO_SELECTED) {
                             switch (mSelectionRectRegion) {
-                                case Utils.RIGHT_TOP_CORNER:
+                                case IntersectionHelper.RIGHT_TOP_CORNER:
                                     //only scale
                                     /*mDoodle.scale(mPreviousPoint.x, mPreviousPoint.y, x, y);
                                     drawAllDoodlesCanvas();
@@ -447,19 +432,19 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
-                                case Utils.RIGHT_BOTTOM_CORNER:
-                                case Utils.RECT_BODY:
-                                case Utils.LEFT_TOP_CORNER:
-                                case Utils.LEFT_BOTTOM_CORNER:
+                                case IntersectionHelper.RIGHT_BOTTOM_CORNER:
+                                case IntersectionHelper.RECT_BODY:
+                                case IntersectionHelper.LEFT_TOP_CORNER:
+                                case IntersectionHelper.LEFT_BOTTOM_CORNER:
                                     //move
                                     mDoodle.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
-                                case Utils.TOP_EDGE:
-                                case Utils.RIGHT_EDGE:
-                                case Utils.BOTTOM_EDGE:
-                                case Utils.LEFT_EDGE:
+                                case IntersectionHelper.TOP_EDGE:
+                                case IntersectionHelper.RIGHT_EDGE:
+                                case IntersectionHelper.BOTTOM_EDGE:
+                                case IntersectionHelper.LEFT_EDGE:
                                     mDoodle.changeAreaByEdge(mPreviousPoint.x, mPreviousPoint.y, x, y, mSelectionRectRegion);
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
@@ -486,15 +471,15 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                             mIsRecordedParams = true;
                             mPreviousPoint.x = x;
                             mPreviousPoint.y = y;
-                            if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
+                            if (mSelectionRectRegion != IntersectionHelper.RECT_NO_SELECTED) {
                                 mTransform = true;
                             } else {
                                 mSelector.reset();
                             }
                         }
-                        if (mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
+                        if (mSelectionRectRegion != IntersectionHelper.RECT_NO_SELECTED) {
                             switch (mSelectionRectRegion) {
-                                case Utils.RIGHT_TOP_CORNER:
+                                case IntersectionHelper.RIGHT_TOP_CORNER:
                                     //scale and rotate
                                     mSelector.scaleAndRotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
                                     drawAllDoodlesCanvas();
@@ -533,14 +518,14 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             switch (mCurrentMode) {
                 case MODE_SELECTION:
                     if (mSelector != null) {
-                        if (mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
+                        if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
                             int intersectCount = mCanMovable ? ((Selector)mSelector).checkIntersect() :
-                                    ((Selector)mSelector).checkIntersect(event.getX(), event.getY());
+                                    ((Selector)mSelector).checkSingleIntersect(event.getX(), event.getY());
                             if (intersectCount <= 0) {
                                 mSelector.reset();
                             } else {
                                 mSelector.setState(Doodle.STATE_EDIT);
-                                mSelectionRectRegion = Utils.RECT_BODY;
+                                mSelectionRectRegion = IntersectionHelper.RECT_BODY;
                             }
                             postInvalidate();
                         }
@@ -561,7 +546,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                                     postInvalidate();
                                 }
                             } else if (mDoodle.getState() == Doodle.STATE_EDIT) {
-                                if (mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
+                                if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
                                     mDoodle.setState(Doodle.STATE_IDLE);
                                     mDoodle = null;
                                     postInvalidate();
@@ -569,7 +554,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                             }
 
                             //如果当前在选择模式下，但是是没有变换（如拖动，缩放，平移操作），重新检测该图形是否被选中
-                            if (!mTransform && mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
+                            if (!mTransform && mSelectionRectRegion != IntersectionHelper.RECT_NO_SELECTED) {
                                 mSelectedOnPressed = mDoodle.isSelected(mDownPoint.x ,mDownPoint.y);
                                 if (!mSelectedOnPressed) {
                                     mDoodle.setState(Doodle.STATE_IDLE);
@@ -581,12 +566,11 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                     } else {
                         if (mAllDoodles != null && !mAllDoodles.isEmpty()) {
                             for (int i = mAllDoodles.size() - 1; i >= 0; i--) {
-                                mSelectedDoodleIndex = i;
                                 Doodle d = mAllDoodles.get(i);
                                 d.setState(Doodle.STATE_IDLE);
                                 mSelectedOnPressed = d.isSelected(mDownPoint.x ,mDownPoint.y);
                                 if (mSelectedOnPressed) {
-                                    mSelectionRectRegion = Utils.RECT_BODY;
+                                    mSelectionRectRegion = IntersectionHelper.RECT_BODY;
                                     mDoodle = d;
                                     mDoodle.setState(Doodle.STATE_EDIT);
                                     postInvalidate();
@@ -596,7 +580,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                     }
                     break;
                 case MODE_TEXT:
-                    if (mDoodle != null && mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
+                    if (mDoodle != null && mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
                         hideInputMethod();
                     }
                     break;
@@ -626,7 +610,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             if (mCurrentMode == MODE_TEXT) {
                 if (mDoodle != null) {
                     if (mDoodle.getState() == Doodle.STATE_EDIT || mDoodle.getState() == Doodle.STATE_DRAWING) {
-                        if (mSelectionRectRegion == Utils.RECT_NO_SELECTED) {
+                        if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
                             mDoodle.setState(Doodle.STATE_IDLE);
                             mDoodle = null;
                             hideInputMethod();
@@ -635,7 +619,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                     }
 
                     //如果当前在选择模式下，但是是没有变换（如拖动，缩放，平移操作），重新检测该图形是否被选中
-                    if (!mTransform && mSelectionRectRegion != Utils.RECT_NO_SELECTED) {
+                    if (!mTransform && mSelectionRectRegion != IntersectionHelper.RECT_NO_SELECTED) {
                         mSelectedOnPressed = mDoodle.isSelected(mDownPoint.x ,mDownPoint.y);
                         if (!mSelectedOnPressed) {
                             mDoodle.setState(Doodle.STATE_IDLE);
@@ -651,7 +635,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                             d.setState(Doodle.STATE_IDLE);
                             mSelectedOnPressed = d.isSelected(mDownPoint.x ,mDownPoint.y);
                             if (mSelectedOnPressed) {
-                                mSelectionRectRegion = Utils.RECT_BODY;
+                                mSelectionRectRegion = IntersectionHelper.RECT_BODY;
                                 mDoodle = d;
                                 mDoodle.setState(Doodle.STATE_EDIT);
                                 postInvalidate();
@@ -834,14 +818,12 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             return;
         }
 
-        //TextWriting.clearCursorCount();
-        //isAddDoodle = true;
         mEditText.requestFocus();
         showInputMethod(mEditText);
 
-        float padding = TextWriting.TEXT_BORDER_PADDING;
+        float padding = WhiteboardConfigs.TEXT_BORDER_PADDING;
 
-        float defaultW = TextWriting.MIN_EDIT_TEXT_WIDTH;
+        float defaultW = WhiteboardConfigs.MIN_EDIT_TEXT_WIDTH;
         float defaultH = Utils.getDefaultTextHeight(mDoodle);
 
         x = center ? x - defaultW / 2.0f : x;
@@ -875,9 +857,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
         mEditText.setText("");
         invalidate();
-
-        mCursorVisibleBottom = y + padding;
-        //startDrawCursorTask();
     }
 
     public void switchMode(int mode) {

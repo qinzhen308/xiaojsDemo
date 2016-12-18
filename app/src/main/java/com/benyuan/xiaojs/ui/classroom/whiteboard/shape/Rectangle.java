@@ -8,6 +8,7 @@ import android.graphics.PointF;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
@@ -110,7 +111,7 @@ public class Rectangle extends TwoDimensionalShape {
             mRect.set(mDoodleRect);
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            return Utils.isRectFramePressed(p.x, p.y, mRect, matrix);
+            return IntersectionHelper.isRectFramePressed(p.x, p.y, mRect, matrix);
         }
 
         return false;

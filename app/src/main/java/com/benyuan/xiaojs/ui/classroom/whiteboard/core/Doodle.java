@@ -20,9 +20,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
@@ -64,7 +62,6 @@ public abstract class Doodle implements Action {
 
     protected Path mOriginalPath;
     protected Matrix mDrawingMatrix;
-    protected Matrix mBorderDrawingMatrix;
     protected Matrix mTransformMatrix;
     protected Matrix mDisplayMatrix;
     protected int mState = STATE_IDLE;
@@ -93,7 +90,6 @@ public abstract class Doodle implements Action {
         mDoodleRect = new RectF();
         mBorderRect = new RectF();
         mDrawingMatrix = new Matrix();
-        mBorderDrawingMatrix = new Matrix();
         mTransformMatrix = new Matrix();
         mDisplayMatrix = new Matrix();
 
@@ -203,12 +199,6 @@ public abstract class Doodle implements Action {
         } else {
             mDrawingMatrix = matrix;
         }
-
-        if (mBorderDrawingMatrix != null) {
-            mBorderDrawingMatrix.set(matrix);
-        } else {
-            mBorderDrawingMatrix = matrix;
-        }
     }
 
     public void setDisplayMatrix(Matrix matrix) {
@@ -227,9 +217,9 @@ public abstract class Doodle implements Action {
     public void drawBorder(Canvas canvas) {
         if (mPoints.size() > 1 && !mDoodleRect.isEmpty()) {
             WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
-            float dashW = Utils.DEFAULT_DASH_WIDTH / params.scale;
+            float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
 
-            mBorderPaint.setStrokeWidth(Utils.DEFAULT_BORDER_WIDTH / params.scale);
+            mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
             mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
 
             float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
@@ -260,20 +250,20 @@ public abstract class Doodle implements Action {
             mRect.set(mDoodleRect);
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            int corner = Utils.isPressedCorner(p.x, p.y, mRect, matrix);
-            if (corner != Utils.RECT_NO_SELECTED) {
+            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mRect, matrix);
+            if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                int edge = Utils.whichEdgePressed(p.x, p.y, mRect, matrix);
-                if (edge != Utils.RECT_NO_SELECTED) {
+                int edge = IntersectionHelper.whichEdgePressed(p.x, p.y, mRect, matrix);
+                if (edge != IntersectionHelper.RECT_NO_SELECTED) {
                     return edge;
                 }
 
-                return Utils.checkRectPressed(p.x, p.y, mRect, matrix);
+                return IntersectionHelper.checkRectPressed(p.x, p.y, mRect, matrix);
             }
         }
 
-        return Utils.RECT_NO_SELECTED;
+        return IntersectionHelper.RECT_NO_SELECTED;
     }
 
     public abstract boolean isSelected(float x, float y);

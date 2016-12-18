@@ -8,6 +8,7 @@ import android.graphics.PointF;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
@@ -145,7 +146,7 @@ public class Beeline extends TwoDimensionalShape {
     @Override
     public boolean isSelected(float x, float y) {
         if (mPoints.size() > 1) {
-            return Utils.intersect(x, y , this);
+            return IntersectionHelper.intersect(x, y , this);
         }
 
         return false;

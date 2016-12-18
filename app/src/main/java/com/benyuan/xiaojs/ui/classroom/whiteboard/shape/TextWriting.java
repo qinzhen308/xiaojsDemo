@@ -10,7 +10,9 @@ import android.text.TextUtils;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.WhiteboardConfigs;
 
 import java.util.ArrayList;
 
@@ -30,10 +32,6 @@ import java.util.ArrayList;
  * ======================================================================================== */
 
 public class TextWriting extends Doodle {
-    public static float TEXT_BORDER_PADDING = 20;
-    public static int MIN_EDIT_TEXT_WIDTH = 80;
-    public static int MIN_EDIT_TEXT_HEIGHT = 60;
-
     private String mTextString;
     private PointF mTextSize;
     private PointF mTextBasePoint;
@@ -95,13 +93,13 @@ public class TextWriting extends Doodle {
     public void drawBorder(Canvas canvas) {
         if(!TextUtils.isEmpty(mTextString)) {
             WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
-            float dashW = Utils.DEFAULT_DASH_WIDTH / params.scale;
+            float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
 
-            mBorderPaint.setStrokeWidth(Utils.DEFAULT_BORDER_WIDTH / params.scale);
+            mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
             mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
 
             float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
-            float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2 + WhiteBoard.TEXT_BORDER_PADDING;
+            float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2 + WhiteboardConfigs.TEXT_BORDER_PADDING;
             PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
             float hPadding = p.x / mTotalScale;
             float vPadding = p.y / mTotalScale;
@@ -139,15 +137,15 @@ public class TextWriting extends Doodle {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
             mRect.set(mDoodleRect);
-            int corner = Utils.isPressedCorner(p.x, p.y, mRect, matrix);
-            if (corner != Utils.RECT_NO_SELECTED) {
+            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mRect, matrix);
+            if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                return Utils.checkRectPressed(p.x, p.y, mRect, matrix);
+                return IntersectionHelper.checkRectPressed(p.x, p.y, mRect, matrix);
             }
         }
 
-        return Utils.RECT_NO_SELECTED;
+        return IntersectionHelper.RECT_NO_SELECTED;
     }
 
     @Override
@@ -156,7 +154,7 @@ public class TextWriting extends Doodle {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
             mRect.set(mDoodleRect);
-            return Utils.checkRectPressed(p.x, p.y, mRect, matrix) != Utils.RECT_NO_SELECTED;
+            return IntersectionHelper.checkRectPressed(p.x, p.y, mRect, matrix) != IntersectionHelper.RECT_NO_SELECTED;
         }
 
         return false;
@@ -177,7 +175,7 @@ public class TextWriting extends Doodle {
         float etH = 0;
 
         if (TextUtils.isEmpty(changedText)) {
-            etW = MIN_EDIT_TEXT_WIDTH;
+            etW = WhiteboardConfigs.MIN_EDIT_TEXT_WIDTH;
             etH = Utils.getDefaultTextHeight(this);
         } else {
             PointF p = measureTextSize(this);

@@ -74,26 +74,28 @@ public abstract class GeometryShape extends Doodle {
         PointF p = Utils.normalizeScreenPoint(x - oldX, y - oldY, drawingBounds);
         float deltaX = p.x / mTotalScale;
         float deltaY = p.y / mTotalScale;
+        float remainDegree = mTotalDegree % 360;
+        //TODO
         switch (edge) {
-            case Utils.TOP_EDGE:
+            case IntersectionHelper.TOP_EDGE:
                 float top = mDoodleRect.top + deltaY;
                 if (top < mDoodleRect.bottom) {
                     mDoodleRect.set(mDoodleRect.left, top, mDoodleRect.right, mDoodleRect.bottom);
                 }
                 break;
-            case Utils.RIGHT_EDGE:
+            case IntersectionHelper.RIGHT_EDGE:
                 float right = mDoodleRect.right + deltaX;
                 if (right > mDoodleRect.left) {
                     mDoodleRect.set(mDoodleRect.left, mDoodleRect.top , right, mDoodleRect.bottom);
                 }
                 break;
-            case Utils.BOTTOM_EDGE:
+            case IntersectionHelper.BOTTOM_EDGE:
                 float bottom = mDoodleRect.bottom + deltaY;
                 if (bottom > mDoodleRect.top) {
                     mDoodleRect.set(mDoodleRect.left, mDoodleRect.top, mDoodleRect.right, bottom);
                 }
                 break;
-            case Utils.LEFT_EDGE:
+            case IntersectionHelper.LEFT_EDGE:
                 float left = mDoodleRect.left + deltaX;
                 if (left < mDoodleRect.right) {
                     mDoodleRect.set(left, mDoodleRect.top, mDoodleRect.right, mDoodleRect.bottom);

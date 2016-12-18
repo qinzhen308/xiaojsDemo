@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 
@@ -96,22 +97,22 @@ public class HandWriting extends Doodle {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
             mRect.set(mDoodleRect);
-            int corner = Utils.isPressedCorner(p.x, p.y, mRect, matrix);
-            if (corner != Utils.RECT_NO_SELECTED) {
+            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mRect, matrix);
+            if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                return Utils.checkRectPressed(p.x, p.y, mRect, matrix);
+                return IntersectionHelper.checkRectPressed(p.x, p.y, mRect, matrix);
             }
         }
 
-        return Utils.RECT_NO_SELECTED;
+        return IntersectionHelper.RECT_NO_SELECTED;
     }
 
     @Override
     public boolean isSelected(float x, float y) {
         if (mPoints.size() > 1) {
             long s = System.currentTimeMillis();
-            boolean intersect = Utils.intersect(x, y , this);
+            boolean intersect = IntersectionHelper.intersect(x, y , this);
             Log.i("aaa", "take=" + (System.currentTimeMillis() - s)+"   intersect="+intersect);
             return intersect;
         }

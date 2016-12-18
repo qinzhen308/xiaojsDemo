@@ -27,8 +27,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class ViewGestureListener {
 
-    public static final float MAX_SCALE = 5.0f;
-    public static final float MIN_SCALE = 1.0f;
+    public static final float MAX_SCALE = WhiteboardConfigs.WHITE_BOARD_MAX_SCALE;
+    public static final float MIN_SCALE = WhiteboardConfigs.WHITE_BOARD_MIN_SCALE;
 
     private int mVisibleWidth;
     private int mVisibleHeight;
