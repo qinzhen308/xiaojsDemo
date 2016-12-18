@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/white"/>
+    <item android:top="@dimen/px200">
+        <bitmap
+                android:gravity="top"
+                android:src="@drawable/logo_splash"/>
+    </item>
+    <item android:bottom="@dimen/px36">
+        <bitmap
+                android:gravity="bottom"
+                android:src="@drawable/domian_splash"/>
+    </item>
+
+</layer-list>

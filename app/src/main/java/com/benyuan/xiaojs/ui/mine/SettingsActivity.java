@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.XiaojsConfig;
 import com.benyuan.xiaojs.common.xf_foundation.Errors;
+import com.benyuan.xiaojs.data.AccountDataManager;
 import com.benyuan.xiaojs.data.LoginDataManager;
 import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.ui.MainActivity;
@@ -67,6 +68,7 @@ public class SettingsActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 Toast.makeText(mContext, R.string.logout_tips, Toast.LENGTH_SHORT).show();
                 XiaojsConfig.mLoginUser = null;
+                AccountDataManager.clearUserInfo(mContext);
                 CacheUtil.saveLoginInfo(null);
 
                 //jump login page

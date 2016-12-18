@@ -9,6 +9,11 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="SplashTheme" parent="android:Theme.Light.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@drawable/splash_bg</item>
+    </style>
+
+
     <style name="ActAnimationStyle" mce_bogus="1" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/base_act_anim_enter</item>
         <item name="android:activityOpenExitAnimation">@anim/base_act_anim_exit</item>

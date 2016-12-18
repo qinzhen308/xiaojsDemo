@@ -62,15 +62,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void addViewContent() {
-        if (AccountDataManager.isLogin(this)) {
-            XiaojsConfig.mLoginUser = CacheUtil.getLoginInfo();
-            finish();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            return;
-        }
-
         mContext = this;
         addView(R.layout.activity_login);
         setMiddleTitle(R.string.login);

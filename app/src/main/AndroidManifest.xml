@@ -34,12 +34,17 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".ui.account.LoginActivity">
+        <activity
+                android:name=".ui.SplashActivity"
+                android:theme="@style/SplashTheme"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".ui.account.LoginActivity">
         </activity>
         <activity
                 android:name=".ui.MainActivity"
@@ -70,7 +75,6 @@
         <activity android:name=".ui.course.LessonHomeActivity">
         </activity>
         <activity android:name=".ui.TestAPIActivity">
-
         </activity>
         <activity android:name=".ui.course.LiveLessonBriefActivity"/>
         <activity android:name=".ui.course.SalePromotionActivity"/>
@@ -99,26 +103,27 @@
         <activity
                 android:name=".ui.GlobalSearchActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.home.MomentDetailActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.mine.PersonHomeActivity" android:screenOrientation="portrait" />
-
+        <activity
+                android:name=".ui.home.MomentDetailActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.mine.PersonHomeActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.message.ContactActivity"
-                android:windowSoftInputMode="stateAlwaysHidden"
-                >
+                android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
                 android:name=".ui.message.PostDynamicActivity"
                 android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
         </activity>
-        <activity
-                android:name=".ui.message.SecurityLevelActivity"
-                >
+        <activity android:name=".ui.message.SecurityLevelActivity">
         </activity>
         <activity
                 android:name=".ui.message.ChoiceContactActivity"
                 android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
+
     </application>
 
 </manifest>
