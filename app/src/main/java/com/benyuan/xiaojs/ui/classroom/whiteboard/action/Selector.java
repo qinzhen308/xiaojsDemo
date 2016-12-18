@@ -46,7 +46,6 @@ public class Selector extends Doodle {
 
     private Region mRegion;
     private Region mSelectorRegion;
-    private int mSelectCount;
     private float[] mDoodleRectCenter;
 
     public Selector(WhiteBoard whiteBoard) {
@@ -105,8 +104,6 @@ public class Selector extends Doodle {
             mPoints.clear();
         }
 
-        mSelectCount = 0;
-
         mDoodleRect.set(0, 0, 0, 0);
         mTotalScale = 1.0f;
         mTotalDegree = 0;
@@ -153,7 +150,7 @@ public class Selector extends Doodle {
                 return;
             }
 
-            Log.i("aaa", "mDoodleRect="+mDoodleRect);
+            Log.i("aaa", "mDoodleRect="+mDoodleRect +"   mTransformMatrix="+mTransformMatrix);
             WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
             float padding = params.paintStrokeWidth / 2.0f;
             mBorderRect.set(mDoodleRect.left - padding, mDoodleRect.top - padding, mDoodleRect.right + padding, mDoodleRect.bottom + padding);
@@ -187,7 +184,7 @@ public class Selector extends Doodle {
             }
 
             if (count > 0) {
-                mDoodleRect.offset(deltaX, deltaY);
+                mTransformMatrix.postTranslate(deltaX, deltaY);
             }
         }
     }
@@ -207,10 +204,12 @@ public class Selector extends Doodle {
             if (count > 0) {
                 //Log.i("aaa", "mDoodleRect="+mDoodleRect);
                 WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-                PointF p = Utils.mapScreenToDoodlePoint(mDoodleRect.left, mDoodleRect.top, params.drawingBounds);
+                mRect.set(mDoodleRect);
+                mTransformMatrix.mapRect(mRect);
+                PointF p = Utils.mapScreenToDoodlePoint(mRect.left, mRect.top, params.drawingBounds);
                 float left = p.x;
                 float top = p.y;
-                p = Utils.mapScreenToDoodlePoint(mDoodleRect.right, mDoodleRect.bottom, params.drawingBounds);
+                p = Utils.mapScreenToDoodlePoint(mRect.right, mRect.bottom, params.drawingBounds);
                 float right = p.x;
                 float bottom = p.y;
 
@@ -229,12 +228,12 @@ public class Selector extends Doodle {
                 }
 
 
-                arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mDoodleRect, null);
+                matrix = Utils.transformScreenMatrix(mTransformMatrix, null);
+                arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mDoodleRect, matrix);
                 scale = arr[0];
                 degree = arr[1];
                 computeCenterPoint(mDoodleRect);
 
-                Log.i("aaa", "scale="+scale+"  degree="+degree+  " center="+mRectCenter[0]+", "+mRectCenter[1]);
                 scaleRotateByPoint(scale, degree, mRectCenter[0], mRectCenter[1]);
 
             }
@@ -248,13 +247,14 @@ public class Selector extends Doodle {
 
     @Override
     public int checkRegionPressedArea(float x, float y) {
-        //return mRect.contains(x, y) ? Utils.RECT_BODY : Utils.RECT_NO_SELECTED;
-        if (getState() == STATE_EDIT && mPoints.size() > 1) {
-            int corner = Utils.isPressedCorner(x, y, mDoodleRect, null);
+        if (getState() == STATE_EDIT) {
+            PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
+            Matrix matrix = Utils.transformMatrix(mTransformMatrix, null, mRectCenter, mTotalDegree);
+            int corner = Utils.isPressedCorner(p.x, p.y, mDoodleRect, matrix);
             if (corner != Utils.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                return Utils.checkRectPressed(x, y, mDoodleRect, null);
+                return Utils.checkRectPressed(p.x, p.y, mDoodleRect, matrix);
             }
         }
 
@@ -277,8 +277,7 @@ public class Selector extends Doodle {
             intersectCount = intersect(x1, y1, x2, y2);
         }
 
-        mSelectCount = intersectCount;
-        return mSelectCount;
+        return intersectCount;
     }
 
     public int checkIntersect(float x, float y) {
@@ -299,8 +298,7 @@ public class Selector extends Doodle {
         if (intersectCount > 0) {
             setState(STATE_EDIT);
         }
-        mSelectCount = intersectCount;
-        return mSelectCount;
+        return intersectCount;
     }
 
     /**
@@ -362,7 +360,7 @@ public class Selector extends Doodle {
             }
         }
 
-        Log.i("aaa", "intersect take="+(System.currentTimeMillis() - s)+"   doodle size="+ allDoodles.size());
+        //Log.i("aaa", "intersect take="+(System.currentTimeMillis() - s)+"   doodle size="+ allDoodles.size());
         if (intersectCount > 0) {
             mDoodleRect.set(0, 0, 0, 0);
             for (Doodle d : allDoodles) {
@@ -378,6 +376,7 @@ public class Selector extends Doodle {
 
     public void updateRect(Doodle doodle) {
         RectF rect = doodle.getDoodleTransformRect();
+        mTransformMatrix.reset();
         if (mDoodleRect.isEmpty()) {
             mDoodleRect.set(rect);
         } else {
@@ -398,7 +397,6 @@ public class Selector extends Doodle {
             }
         }
 
-        computeCenterPoint(mDoodleRect);
         Log.i("aaa", "updateRect mDoodleRect="+mDoodleRect);
 
     }
@@ -407,6 +405,7 @@ public class Selector extends Doodle {
     protected void computeCenterPoint(RectF rect) {
         mRectCenter[0] = rect.centerX();
         mRectCenter[1] = rect.centerY();
+        mTransformMatrix.mapPoints(mRectCenter);
     }
 
     private void computeDoodleCenterPoint(RectF rect) {
@@ -415,10 +414,6 @@ public class Selector extends Doodle {
         mDrawingMatrix.mapPoints(mDoodleRectCenter);
     }
 
-
-    public int getSelectCount() {
-        return mSelectCount;
-    }
 
     public void updateDoodleColor(int color) {
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
