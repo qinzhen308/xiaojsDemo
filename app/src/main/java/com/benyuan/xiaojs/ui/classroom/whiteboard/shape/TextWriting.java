@@ -36,8 +36,7 @@ public class TextWriting extends Doodle {
     private PointF mTextBasePoint;
 
     private float mSingleLineTextHeight;
-
-    ArrayList<String> mMultiLineText;
+    private ArrayList<String> mMultiLineText;
 
     public TextWriting(WhiteBoard whiteBoard, Paint paint) {
         super(whiteBoard, Doodle.STYLE_TEXT);

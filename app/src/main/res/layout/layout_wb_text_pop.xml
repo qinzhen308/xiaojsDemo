@@ -26,13 +26,6 @@
                 android:layout_marginLeft="@dimen/px20"
                 android:layout_toRightOf="@+id/horizontal_text"
                 android:src="@drawable/ic_wb_vertical_txt"/>
-
-        <SeekBar
-                android:id="@+id/text_size"
-                android:layout_width="@dimen/px200"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px16"
-                android:layout_below="@+id/horizontal_text"/>
     </RelativeLayout>
 
 
@@ -44,23 +37,5 @@
             android:layout_marginLeft="@dimen/px20"
             android:layout_toRightOf="@+id/layout_left"/>
 
-    <TextView
-            android:id="@+id/text_size_show"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="@dimen/px60"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/px16"
-            android:background="@color/white"
-            android:textColor="@color/font_dark_gray"
-            android:paddingLeft="@dimen/px8"
-            android:paddingRight="@dimen/px8"
-            android:paddingTop="@dimen/px10"
-            android:paddingBottom="@dimen/px10"
-            android:layout_marginLeft="@dimen/px20"
-            android:textSize="@dimen/font_26px"
-            android:text="10"
-            android:layout_toRightOf="@+id/layout_left"
-            android:layout_below="@+id/insert_line"/>
 </RelativeLayout>
 

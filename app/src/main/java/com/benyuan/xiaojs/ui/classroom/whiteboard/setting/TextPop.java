@@ -21,10 +21,9 @@ import android.widget.SeekBar;
 
 import com.benyuan.xiaojs.R;
 
-public class TextPop extends SettingsPopupWindow implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class TextPop extends SettingsPopupWindow implements View.OnClickListener{
     public final static int TEXT_HORIZONTAL = 1;
     public final static int TEXT_VERTICAL = 2;
-    public final static int MIN_TEXT_SIZE = 10;
 
     private TextChangeListener mListener;
 
@@ -77,25 +76,6 @@ public class TextPop extends SettingsPopupWindow implements View.OnClickListener
             case R.id.insert_line:
                 mListener.onInsertLine();
                 break;
-        }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (mListener != null) {
-            mListener.onTextPaintSize(seekBar.getProgress() + MIN_TEXT_SIZE);
-        }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        if (mListener != null) {
-            mListener.onTextPaintSize(seekBar.getProgress() + MIN_TEXT_SIZE);
         }
     }
 
