@@ -15,10 +15,13 @@ package com.benyuan.xiaojs.ui.home;
  *
  * ======================================================================================== */
 
+import android.animation.Animator;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.AbsSwipeAdapter;
@@ -27,6 +30,7 @@ import com.benyuan.xiaojs.ui.base.BaseFragment;
 import com.benyuan.xiaojs.ui.widget.banner.BannerAdapter;
 import com.benyuan.xiaojs.ui.widget.banner.BannerBean;
 import com.benyuan.xiaojs.ui.widget.banner.BannerView;
+import com.benyuan.xiaojs.util.DeviceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +52,15 @@ public class HomeFragment extends BaseFragment {
 
     @BindView(R.id.title)
     View mTitle;
+    @BindView(R.id.home_moment_mark_wrapper)
+    RelativeLayout mMark;
+    @BindView(R.id.home_moment_mark_right_wrapper)
+    LinearLayout mRightMark;
 //    @BindView(R.id.right_view)
 //    MessageImageView mRightImage;
 
     PullToRefreshSwipeListView mList;
+    private boolean mScrolled;
 
     @Override
     protected View getContentView() {
@@ -121,6 +130,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onScrollY(int y) {
                 handleScrollChanged(y);
+                mark();
             }
         });
     }
@@ -149,6 +159,43 @@ public class HomeFragment extends BaseFragment {
 //                break;
 //        }
 //    }
+
+    //动态更新的提示转换动画
+    private void mark(){
+        if (!mScrolled){
+            mMark.animate().translationX(getMarkScrollDistance()).start();
+            mMark.animate().setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mMark.setVisibility(View.INVISIBLE);
+                    mRightMark.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            mScrolled = true;
+        }
+    }
+
+    private int getMarkScrollDistance(){
+        int l[] = new int[2];
+        mMark.getLocationOnScreen(l);
+        int endX = DeviceUtil.getScreenWidth(mContext) - mMark.getWidth() / 2;
+        return endX - l[0];
+    }
 
     @Override
     public void onResume() {

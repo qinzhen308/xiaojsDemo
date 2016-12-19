@@ -13,17 +13,11 @@
             android:layout_width="@dimen/px100"
             android:layout_height="@dimen/px100"/>
 
-    <TextView
+    <com.benyuan.xiaojs.ui.view.FollowView
             android:id="@+id/moment_header_focus"
             android:text="关注"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
-            android:textColor="@color/font_orange"
-            android:textSize="@dimen/font_28px"
-            android:gravity="center"
-            android:minWidth="@dimen/px100"
-            android:background="@drawable/orange_stoke_bg"
-            android:padding="@dimen/px5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

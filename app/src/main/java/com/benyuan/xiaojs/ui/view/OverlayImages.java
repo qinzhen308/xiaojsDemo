@@ -54,6 +54,7 @@ public class OverlayImages extends FlowBaseLayout {
     }
 
     public void show(){
+        removeAllViews();
         init();
     }
 

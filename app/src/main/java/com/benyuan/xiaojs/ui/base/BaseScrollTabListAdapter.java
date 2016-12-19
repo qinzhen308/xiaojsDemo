@@ -47,13 +47,13 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
     private View mEmptyView;
     private ImageView mEmptyIcon;
     private TextView mEmptyTitle;
-    private TextView  mEmptyViewTip;
+    private TextView mEmptyViewTip;
     private RelativeLayout mEmptyDescWrapper;
     private TextView mEmptyDesc;
     private String mEmptyTip;//空提示
     private boolean mIsShowEmptyIcon = true;// 是否显示空图片
     private boolean mIsShowBoldTip = true;// 是否显示大字提示
-    private  int mEmptyIconRes = 0;//空提示图片
+    private int mEmptyIconRes = 0;//空提示图片
 
     public int mLoadStatus = 0;// 0 正常 1 空 2 失败
     public static final int VIEW_TYPE_NORMAL = 0;
@@ -62,27 +62,34 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
     public void setEmptyTip(String emptyTip) {
         this.mEmptyTip = emptyTip;
     }
+
     public void setShowEmptyIcon(boolean isShowEmptyIcon) {
         this.mIsShowEmptyIcon = isShowEmptyIcon;
     }
-    public void setShowEmptyIcon(boolean isShowEmptyIcon,int emptyIconRes) {
+
+    public void setShowEmptyIcon(boolean isShowEmptyIcon, int emptyIconRes) {
         this.mIsShowEmptyIcon = isShowEmptyIcon;
         this.mEmptyIconRes = emptyIconRes;
     }
+
     public void setIsShowBoldTip(boolean isShowBoldTip) {
         this.mIsShowBoldTip = isShowBoldTip;
     }
+
     private boolean mShowEmptyDesc;
-    public void setShowEmptyDesc(boolean b){
+
+    public void setShowEmptyDesc(boolean b) {
         mShowEmptyDesc = b;
     }
+
     public void setOnRequestReturnListener(
-            OnRequestReturnListener onRequestReturnListener,int position) {
+            OnRequestReturnListener onRequestReturnListener, int position) {
         this.onRequestReturnListener = onRequestReturnListener;
         this.mCurrentPosition = position;
     }
+
     public BaseScrollTabListAdapter(Context context,
-                                  ArrayList<T> dataList,boolean isNeedPreLoading) {
+                                    ArrayList<T> dataList, boolean isNeedPreLoading) {
         if (dataList != null && dataList.size() > 0) {
             mDataList.addAll(dataList);
             isFirstLoad = false;
@@ -90,8 +97,9 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
         mIsNeedPreLoading = isNeedPreLoading;
         initParams(context);
     }
+
     public BaseScrollTabListAdapter(Context context,
-                                  ArrayList<T> dataList) {
+                                    ArrayList<T> dataList) {
         if (dataList != null && dataList.size() > 0) {
             mDataList.addAll(dataList);
             isFirstLoad = false;
@@ -100,22 +108,24 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
     }
 
 
-
     public BaseScrollTabListAdapter(Context context) {
         mIsNeedPreLoading = false;//默认不预加载
         initParams(context);
 
     }
+
     public void initParams(Context context) {
         mContext = context;
         mInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
+
     public void initAdapter(
-                             PullToRefreshListView pullToRefreshListView) {
+            PullToRefreshListView pullToRefreshListView) {
         this.pullToRefreshListView = pullToRefreshListView;
         initScrollView();
     }
+
     /**
      * 重设数据内容。
      */
@@ -123,12 +133,13 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
         mDataList.clear();
         PageIndex = 0;
     }
+
     @Override
     public final int getCount() {
-        if(mDataList.size() == 0){
+        if (mDataList.size() == 0) {
             return 1;
         }
-        return  mDataList.size();
+        return mDataList.size();
     }
 
     @Override
@@ -138,9 +149,9 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
 
     @Override
     public final int getItemViewType(int position) {
-        if( position == 0 && mDataList.size() == 0){
+        if (position == 0 && mDataList.size() == 0) {
             return VIEW_TYPE_EMPTY;
-        }else{
+        } else {
             return VIEW_TYPE_NORMAL;
         }
     }
@@ -152,7 +163,7 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
 
     @Override
     public T getItem(int position) {
-        if(mDataList.size() == 0){
+        if (mDataList.size() == 0) {
             return null;
         }
         return mDataList == null ? null : mDataList.get(position);
@@ -161,7 +172,7 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
     private void initScrollView() {
         if (mDataList.size() == 0) {
             DefaultStartIndex = 0;
-            if(mIsNeedPreLoading){
+            if (mIsNeedPreLoading) {
                 requestNew();
             }
         } else {
@@ -169,25 +180,28 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
             PageIndex = DefaultStartIndex;
         }
     }
-    public void requestNew(){
+
+    public void requestNew() {
         isLoadMore = false;
         isFirstLoad = false;
         PageIndex = DefaultStartIndex;
         request();
     }
-    public void requestMore(){
+
+    public void requestMore() {
         if (!mIsLoading) {
             isLoadMore = true;
             request();
         }
     }
+
     public void request() {
         mIsLoading = true;
         mHandler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
-                if ((mDataList == null || mDataList.size() == 0)&&!mIsNeedPreLoading) {
+                if ((mDataList == null || mDataList.size() == 0) && !mIsNeedPreLoading) {
                     pullToRefreshListView.setFirstLoading(true);
                     pullToRefreshListView.setRefreshing();
                 }
@@ -198,13 +212,13 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
 
     protected abstract void requestData();
 
-    protected final void onSuccess(List<T> data){
+    protected final void onSuccess(List<T> data) {
         pullToRefreshListView.onRefreshComplete();
         mIsLoading = false;
         addList(data);
     }
 
-    protected final void onFailure(String errorCode, String msg){
+    protected final void onFailure(String errorCode, String msg) {
         pullToRefreshListView.onRefreshComplete();
         if (onRequestReturnListener != null
                 && mDataList.size() < 1) {
@@ -212,7 +226,7 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
             onRequestReturnListener.onFailedData(mCurrentPosition);
         }
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-        ToastUtil.showToast(mContext,msg);
+        ToastUtil.showToast(mContext, msg);
         mIsLoading = false;
     }
 
@@ -242,9 +256,9 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
             if (onRequestReturnListener != null) {
                 onRequestReturnListener.oSuccessData(mCurrentPosition);
             }
-            if(newList.size() < PAGE_SIZE){
+            if (newList.size() < PAGE_SIZE) {
                 pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-            }else{
+            } else {
                 pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
             }
         } else {
@@ -253,45 +267,59 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
                 mLoadStatus = 1;
                 onRequestReturnListener.onEmptyData(mCurrentPosition);
 
-            }else{
+            } else {
                 //ToastUtil.showCustomViewToast(mContext, R.string.no_data);
             }
         }
     }
-    public void deleteItem(int position){
+
+    public void deleteItem(int position) {
         mDataList.remove(position);
         notifyDataSetChanged();
     }
 
     @Override
-    public final View getView(int position, View convertView, ViewGroup parent) {
+    public final View getView(final int position, View convertView, ViewGroup parent) {
         int type = getItemViewType(position);
-        if(type == VIEW_TYPE_EMPTY){
-            if(mEmptyLayout == null){
+        if (type == VIEW_TYPE_EMPTY) {
+            if (mEmptyLayout == null) {
                 mEmptyLayout = new LinearLayout(mContext);
-                mEmptyLayout.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,AbsListView.LayoutParams.MATCH_PARENT));
+                mEmptyLayout.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT));
                 mEmptyLayout.setOrientation(LinearLayout.VERTICAL);
             }
 
             return mEmptyLayout;
-        }else {
-            return getView(position,convertView);
+        } else {
+            View view = getView(position, convertView);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClick(position);
+                }
+            });
+            return view;
         }
     }
+
     public abstract View getView(int position, View convertView);
 
-    public void  showEmptyFailed(int emptyHeight){
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,emptyHeight);
-        if(mLoadStatus == 2){
+    protected void onItemClick(int position) {
+
+    }
+
+    public void showEmptyFailed(int emptyHeight) {
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, emptyHeight);
+        if (mLoadStatus == 2) {
             addFailedView();
             mEmptyLayout.removeAllViews();
-            mEmptyLayout.addView(mFailedView,lp);
-        }else{
+            mEmptyLayout.addView(mFailedView, lp);
+        } else {
             addEmptyView();
             mEmptyLayout.removeAllViews();
-            mEmptyLayout.addView(mEmptyView,lp);
+            mEmptyLayout.addView(mEmptyView, lp);
         }
     }
+
     /**
      * 添加失败提示视图
      */
@@ -342,28 +370,29 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
 //        }
 
     }
+
     private void initEmptyViewData() {
-        mEmptyViewTip.setText(""+mEmptyTip);
-        if(mIsShowBoldTip){
+        mEmptyViewTip.setText("" + mEmptyTip);
+        if (mIsShowBoldTip) {
             mEmptyTitle.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mEmptyTitle.setVisibility(View.GONE);
         }
-        if(mIsShowEmptyIcon){
+        if (mIsShowEmptyIcon) {
             mEmptyIcon.setVisibility(View.VISIBLE);
-            if(mEmptyIconRes > 0){
-                try{
+            if (mEmptyIconRes > 0) {
+                try {
                     mEmptyIcon.setImageResource(mEmptyIconRes);
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }else{
+        } else {
             mEmptyIcon.setVisibility(View.GONE);
         }
 
-        if(mShowEmptyDesc){
-            mEmptyDesc.setText(""+mEmptyTip);
+        if (mShowEmptyDesc) {
+            mEmptyDesc.setText("" + mEmptyTip);
             mEmptyDescWrapper.setVisibility(View.VISIBLE);
             mEmptyIcon.setVisibility(View.GONE);
             mEmptyTitle.setVisibility(View.GONE);
@@ -374,7 +403,9 @@ public abstract class BaseScrollTabListAdapter<T> extends BaseAdapter {
 
     public interface OnRequestReturnListener {
         public void oSuccessData(int position);
+
         public void onEmptyData(int position);
+
         public void onFailedData(int position);
     }
 }

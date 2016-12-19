@@ -44,7 +44,7 @@
     <color name="font_error_red">#ff0000</color>
     <color name="font_red">#cc0000</color>
     <color name="font_white">#ffffff</color>
-
+    <color name="translucent_50_orange">#7dff9833</color>
     <!-- 二维码 -->
     <color name="viewfinder_mask">#60000000</color>
     <color name="result_view">#b0000000</color>
@@ -72,6 +72,8 @@
     <color name="course_state_examine">#66cccc</color>
     <color name="course_item_stroke_line">#eff2f6</color>
     <color name="common_btn_white_bg_press">#ffd7d7db</color>
+    <color name="moment_write_comment_bg">#ebecf0</color>
+    <color name="moment_write_comment_stoke">#959595</color>
 
     <color name="progresshud_default_color">#b1000000</color>
 

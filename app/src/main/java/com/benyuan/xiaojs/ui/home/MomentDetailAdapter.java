@@ -15,6 +15,7 @@ package com.benyuan.xiaojs.ui.home;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -70,9 +71,18 @@ public class MomentDetailAdapter extends BaseScrollTabListAdapter<RecommendCours
         return convertView;
     }
 
+    @Override
+    protected void onItemClick(int position) {
+        Intent intent = new Intent(mContext,MomentCommentActivity.class);
+        intent.putExtra(HomeConstant.KEY_COMMENT_TYPE,HomeConstant.COMMENT_TYPE_REPLY);
+        intent.putExtra(HomeConstant.KEY_COMMENT_REPLY_NAME,"菜菜菜");
+        mContext.startActivity(intent);
+    }
+
     class Holder extends BaseHolder {
         public Holder(View view) {
             super(view);
         }
     }
+
 }

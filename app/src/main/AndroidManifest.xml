@@ -104,8 +104,17 @@
         <activity
                 android:name=".ui.GlobalSearchActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.home.MomentDetailActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.mine.PersonHomeActivity" android:screenOrientation="portrait" />
+        <activity
+                android:name=".ui.home.MomentDetailActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.mine.PersonHomeActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.home.MomentCommentActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustResize"
+                android:theme="@style/ActivityStyleBottomToTop"/>
     </application>
 
 </manifest>

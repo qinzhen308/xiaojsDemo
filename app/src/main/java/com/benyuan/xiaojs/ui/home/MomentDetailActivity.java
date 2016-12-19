@@ -14,20 +14,26 @@ package com.benyuan.xiaojs.ui.home;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseScrollTabActivity;
+import com.benyuan.xiaojs.ui.widget.ImageMatrixExpandableLayout;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class MomentDetailActivity extends BaseScrollTabActivity {
 
     private Unbinder mBinder;
+    @BindView(R.id.moment_detail_image_expand)
+    ImageMatrixExpandableLayout mExpand;
     @Override
     public void addHoverHeaderView() {
 
@@ -37,6 +43,7 @@ public class MomentDetailActivity extends BaseScrollTabActivity {
         initList();
         mBinder = ButterKnife.bind(this);
         mTabHeader.setVisibility(View.GONE);
+        mExpand.show(100);
     }
 
     private void initList(){
@@ -52,6 +59,17 @@ public class MomentDetailActivity extends BaseScrollTabActivity {
         //adapters.add(adapter1);
         addTabListIntoContent(header,footer,mPagerTitles,adapters,0);
         setNeedTabView(false);
+    }
+
+    @OnClick({R.id.moment_detail_footer_click})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.moment_detail_footer_click:
+                Intent comment = new Intent(this,MomentCommentActivity.class);
+                comment.putExtra(HomeConstant.KEY_COMMENT_TYPE,HomeConstant.COMMENT_TYPE_WRITE);
+                startActivity(comment);
+                break;
+        }
     }
 
     @Override

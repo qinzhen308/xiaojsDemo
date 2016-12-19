@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -44,16 +45,80 @@
 
     </LinearLayout>
 
-    <TextView
-            android:id="@+id/home_moment_tip"
+    <RelativeLayout
+            android:id="@+id/home_moment_mark_wrapper"
             android:background="@drawable/ic_home_moment_msg"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/px120"
-            android:text="123"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_30px"
+            android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/px360"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_centerInParent="true"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    android:layout_width="@dimen/px60"
+                    android:layout_height="@dimen/px60"
+                    app:oval="true"
+                    android:scaleType="fitXY"
+                    app:border_color="@color/white"
+                    app:border_width="@dimen/px1"
+                    android:src="@drawable/default_portrait"/>
+
+            <TextView
+                    android:id="@+id/home_moment_tip"
+                    android:text="444条与我相关"
+                    android:drawableRight="@drawable/ic_relevant_white"
+                    android:drawablePadding="@dimen/px10"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/font_28px"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:id="@+id/home_moment_mark_right_wrapper"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/px360"
+            android:visibility="gone"
+            android:background="@drawable/mark_hover_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                android:layout_marginLeft="@dimen/px5"
+                android:layout_width="@dimen/px70"
+                android:layout_height="@dimen/px70"
+                android:layout_marginTop="@dimen/px5"
+                android:layout_marginBottom="@dimen/px5"
+                app:oval="true"
+                android:scaleType="fitXY"
+                app:border_color="@color/white"
+                app:border_width="@dimen/px1"
+                android:src="@drawable/default_portrait"/>
+
+        <TextView
+                android:text="5条"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_28px"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/px10"
+                android:layout_marginLeft="@dimen/px10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 </RelativeLayout>
