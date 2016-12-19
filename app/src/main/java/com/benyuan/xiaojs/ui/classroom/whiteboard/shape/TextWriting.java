@@ -20,7 +20,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
@@ -31,24 +33,38 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import java.util.ArrayList;
 
 public class TextWriting extends Doodle {
+    public final static int TEXT_HORIZONTAL = 1;
+    public final static int TEXT_VERTICAL = 2;
+
     private String mTextString;
     private PointF mTextSize;
     private PointF mTextBasePoint;
 
     private float mSingleLineTextHeight;
+    private float mSingleLineTextWidth;
     private ArrayList<String> mMultiLineText;
 
+    /**
+     * 文字排列方式：横排和竖排 默认是横排
+     * */
+    private int mTextOrientation = TEXT_HORIZONTAL;
+
     public TextWriting(WhiteBoard whiteBoard, Paint paint) {
+        this(whiteBoard, paint, TEXT_HORIZONTAL);
+    }
+
+    public TextWriting(WhiteBoard whiteBoard, Paint paint, int textOrientation) {
         super(whiteBoard, Doodle.STYLE_TEXT);
         setPaint(paint);
 
-        init();
+        init(textOrientation);
     }
 
-    private void init() {
+    private void init(int textOrientation) {
         mMultiLineText = new ArrayList<String>();
         mTextSize = new PointF();
         mTextBasePoint = new PointF();
+        mTextOrientation = checkTextOrientation(textOrientation) ? textOrientation : TEXT_HORIZONTAL;
     }
 
     @Override
@@ -75,15 +91,37 @@ public class TextWriting extends Doodle {
 
         float baseX = mTextBasePoint.x;
         float baseY = mTextBasePoint.y;
-        float singleH = mSingleLineTextHeight;
 
-        canvas.concat(mTransformMatrix);
-        mDrawingMatrix.postConcat(mTransformMatrix);
-        String SingleLineText;
-        for (int i = 0; i < mMultiLineText.size(); i++) {
-            SingleLineText = mMultiLineText.get(i);
-            canvas.drawText(SingleLineText, baseX, baseY + singleH * i, getPaint());
+        if (mTextOrientation == TEXT_HORIZONTAL) {
+            float singleH = mSingleLineTextHeight;
+
+            canvas.concat(mTransformMatrix);
+            mDrawingMatrix.postConcat(mTransformMatrix);
+            String singleLineText;
+            for (int i = 0; i < mMultiLineText.size(); i++) {
+                singleLineText = mMultiLineText.get(i);
+                canvas.drawText(singleLineText, baseX, baseY + singleH * i, getPaint());
+            }
+        } else {
+            float singleW = mSingleLineTextWidth;
+            canvas.concat(mTransformMatrix);
+            mDrawingMatrix.postConcat(mTransformMatrix);
+            String singleLineText;
+            float offsetX = 0;
+            float offsetY = 0;
+            for (int i = 0; i < mMultiLineText.size(); i++) {
+                singleLineText = mMultiLineText.get(i);
+                offsetX = baseX - singleW * i;
+                if (!TextUtils.isEmpty(singleLineText)) {
+                    for (int j = 0; j < singleLineText.length(); j++) {
+                        offsetY = baseY + mSingleLineTextHeight * j;
+                        String s = String.valueOf(singleLineText.charAt(j));
+                        canvas.drawText(s, offsetX, offsetY, getPaint());
+                    }
+                }
+            }
         }
+
         canvas.restore();
     }
 
@@ -121,7 +159,21 @@ public class TextWriting extends Doodle {
 
     @Override
     public Path getOriginalPath() {
-        return null;
+        mOriginalPath.reset();
+        mTransRect.set(mDoodleRect);
+        mDrawingMatrix.mapRect(mTransRect);
+        mDisplayMatrix.mapRect(mTransRect);
+        mOriginalPath.addOval(mTransRect, Path.Direction.CCW);
+        return mOriginalPath;
+    }
+
+    @Override
+    public RectF getDoodleTransformRect() {
+        mOriginalPath.reset();
+        mTransRect.set(mDoodleRect);
+        mDrawingMatrix.mapRect(mTransRect);
+        mDisplayMatrix.mapRect(mTransRect);
+        return mTransRect;
     }
 
     @Override
@@ -181,13 +233,26 @@ public class TextWriting extends Doodle {
             etH = p.y;
         }
 
-        PointF p = Utils.normalizeScreenPoint(etW, etH, params.drawingBounds);
-        float x = mPoints.get(0).x + p.x;
-        float y = mPoints.get(0).y + p.y;
+        if (mTextOrientation == TEXT_HORIZONTAL) {
+            PointF p = Utils.normalizeScreenPoint(etW, etH, params.drawingBounds);
+            float x = mPoints.get(0).x;
+            float y = mPoints.get(0).y;
+            x = x + p.x;
+            y = y + p.y;
+            mPoints.get(1).set(x, y);
+            mDoodleRect.set(mPoints.get(0).x, mPoints.get(0).y, mPoints.get(1).x, mPoints.get(1).y);
+        } else {
+            PointF p = Utils.normalizeScreenPoint(etW, etH, params.drawingBounds);
+            float x1 = mPoints.get(0).x;
+            float y1 = mPoints.get(0).y;
+            float x2 = x1 - p.x;
+            float y2 = y1 + p.y;
 
-
-        mPoints.get(1).set(x, y);
-        mDoodleRect.set(mPoints.get(0).x, mPoints.get(0).y, mPoints.get(1).x, mPoints.get(1).y);
+            p = Utils.normalizeScreenPoint(mSingleLineTextWidth, mSingleLineTextHeight, params.drawingBounds);
+            mPoints.get(1).set(x2, y2);
+            mDoodleRect.set(x2, y1, x1, y2);
+            mDoodleRect.offset(p.x, 0);
+        }
     }
 
     private PointF measureTextSize(TextWriting doodle) {
@@ -200,27 +265,50 @@ public class TextWriting extends Doodle {
 
 
         ArrayList<String> multiLineText = getMultiLineText(text);
-        int line = Math.max(1, multiLineText.size());
+        int line = Math.max(0, multiLineText.size());
 
         String singleLineText;
-        float w = 0;
-        for (int i = 0; i < line; i++) {
-            singleLineText = multiLineText.get(i);
-            if (!TextUtils.isEmpty(singleLineText)) {
-                w = paint.measureText(singleLineText);
-                if (w > textWidth) {
-                    textWidth = w;
+        if (mTextOrientation == TEXT_HORIZONTAL) {
+            float w = 0;
+            for (int i = 0; i < line; i++) {
+                singleLineText = multiLineText.get(i);
+                if (!TextUtils.isEmpty(singleLineText)) {
+                    w = paint.measureText(singleLineText);
+                    if (w > textWidth) {
+                        textWidth = w;
+                    }
                 }
             }
+
+            mSingleLineTextHeight = textHeight;
+            PointF p = getFirstPoint();
+            mTextBasePoint.set(p.x * params.originalWidth, p.y * params.originalHeight - fontMetrics.ascent);
+
+            float txtW = textWidth * params.scale;
+            float txtH = textHeight * line * params.scale;
+            mTextSize.set(txtW, txtH);
+        } else {
+            float h = 0;
+            float singleLineHeight = 0;
+            for (int i = 0; i < line; i++) {
+                singleLineText = multiLineText.get(i);
+                if (!TextUtils.isEmpty(singleLineText)) {
+                    h = textHeight * singleLineText.length();
+                    if (h > singleLineHeight) {
+                        singleLineHeight = h;
+                    }
+                }
+            }
+
+            mSingleLineTextWidth = textHeight;
+            mSingleLineTextHeight = textHeight;
+            PointF p = getFirstPoint();
+            mTextBasePoint.set(p.x * params.originalWidth, p.y * params.originalHeight - fontMetrics.ascent);
+
+            float txtW = mSingleLineTextWidth * line * params.scale;
+            float txtH = singleLineHeight * params.scale;
+            mTextSize.set(txtW, txtH);
         }
-
-        mSingleLineTextHeight = textHeight;
-        PointF p = getFirstPoint();
-        mTextBasePoint.set(p.x * params.originalWidth, p.y * params.originalHeight - fontMetrics.ascent);
-
-        float txtW = textWidth * params.scale;
-        float txtH = textHeight * line * params.scale;
-        mTextSize.set(txtW, txtH);
 
         return mTextSize;
     }
@@ -245,6 +333,20 @@ public class TextWriting extends Doodle {
         }
 
         return mMultiLineText;
+    }
+
+    private boolean checkTextOrientation(int textOrientation) {
+        int oriArr[] = new int[2];
+        oriArr[0] = TEXT_HORIZONTAL;
+        oriArr[1] = TEXT_VERTICAL;
+
+        for (int i = 0; i < oriArr.length; i++) {
+            if (oriArr[i] == textOrientation) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

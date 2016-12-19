@@ -17,22 +17,17 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.setting;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.SeekBar;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.TextWriting;
 
 public class TextPop extends SettingsPopupWindow implements View.OnClickListener{
-    public final static int TEXT_HORIZONTAL = 1;
-    public final static int TEXT_VERTICAL = 2;
-
     private TextChangeListener mListener;
 
     public interface TextChangeListener {
         void onTextPaintSize(int size);
 
         void onTextOrientation(int orientation);
-
-        void onInsertLine();
     }
 
     public TextPop(Context context) {
@@ -49,7 +44,6 @@ public class TextPop extends SettingsPopupWindow implements View.OnClickListener
     private void setListener(View root) {
         root.findViewById(R.id.horizontal_text).setOnClickListener(this);
         root.findViewById(R.id.vertical_text).setOnClickListener(this);
-        root.findViewById(R.id.insert_line).setOnClickListener(this);
     }
 
     public void show(View anchor, int panelWidth) {
@@ -68,15 +62,14 @@ public class TextPop extends SettingsPopupWindow implements View.OnClickListener
 
         switch (v.getId()) {
             case R.id.horizontal_text:
-                mListener.onTextOrientation(TEXT_HORIZONTAL);
+                mListener.onTextOrientation(TextWriting.TEXT_HORIZONTAL);
                 break;
             case R.id.vertical_text:
-                mListener.onTextOrientation(TEXT_VERTICAL);
-                break;
-            case R.id.insert_line:
-                mListener.onInsertLine();
+                mListener.onTextOrientation(TextWriting.TEXT_VERTICAL);
                 break;
         }
+
+        TextPop.this.dismiss();
     }
 
 }
