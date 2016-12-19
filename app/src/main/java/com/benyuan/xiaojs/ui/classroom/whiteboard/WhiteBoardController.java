@@ -26,6 +26,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.setting.EraserPop;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.setting.GeometryPop;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.setting.HandwritingPop;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.setting.TextPop;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.TextWriting;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView;
 
 public class WhiteBoardController implements
@@ -77,7 +78,7 @@ public class WhiteBoardController implements
         mWhiteboard.setEditText(mWhiteboardEdit);
         mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
         mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
-        mColorPicker.setPaintColor(mWhiteboard.getColor());
+        mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
         mPanel.measure(0, 0);
         mPanelWidth = mPanel.getMeasuredWidth();
     }
@@ -155,7 +156,7 @@ public class WhiteBoardController implements
             if (mShapeSetting == null) {
                 mShapeSetting = new GeometryPop(mContext);
                 mShapeSetting.setOnShapeChangeListener(this);
-                mShapeSetting.setShapeParams(mWhiteboard.getColor(), mGeometryId);
+                mShapeSetting.setShapeParams(mWhiteboard.getPaintColor(), mGeometryId);
             }
             mShapeSetting.updateShapeSelectedState(mGeometryId);
             mShapeSetting.show(mGeoShape, mPanelWidth);
@@ -201,7 +202,7 @@ public class WhiteBoardController implements
     @Override
     public void onColorChange(int color) {
         mColorPicker.setPaintColor(color);
-        mWhiteboard.setColor(color);
+        mWhiteboard.setPaintColor(color);
     }
 
     @Override
@@ -242,12 +243,17 @@ public class WhiteBoardController implements
 
     @Override
     public void onTextOrientation(int orientation) {
+        switch (orientation) {
+            case TextWriting.TEXT_HORIZONTAL:
+                mTextWriting.setImageResource(R.drawable.wb_text_selector);
+                break;
 
-    }
+            case TextWriting.TEXT_VERTICAL:
+                mTextWriting.setImageResource(R.drawable.wb_text_vertical_selector);
+                break;
+        }
 
-    @Override
-    public void onInsertLine() {
-
+        mWhiteboard.setTextOrientation(orientation);
     }
 
     private void enterMode(int mode) {
