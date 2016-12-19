@@ -37,12 +37,20 @@ public class Beeline extends TwoDimensionalShape {
     private LineSegment mLineSegment;
     private int mOrientation = FORWARD;
 
-    public Beeline(WhiteBoard whiteBoard) {
+    private Beeline(WhiteBoard whiteBoard) {
         super(whiteBoard, GeometryShape.BEELINE);
     }
 
     public Beeline(WhiteBoard whiteBoard, Paint paint) {
         this(whiteBoard);
+        setPaint(paint);
+
+        init();
+    }
+
+    public Beeline(WhiteBoard whiteBoard, Paint paint, String doodleId) {
+        this(whiteBoard);
+        setDoodleId(doodleId);
         setPaint(paint);
 
         init();

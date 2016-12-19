@@ -30,12 +30,21 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 public class HandWriting extends Doodle {
     private Path mNormalizedPath;
 
-    public HandWriting(WhiteBoard whiteBoard) {
+    private HandWriting(WhiteBoard whiteBoard) {
         super(whiteBoard, Doodle.STYLE_HAND_WRITING);
     }
 
     public HandWriting(WhiteBoard whiteBoard, Paint paint, float x, float y) {
         this(whiteBoard);
+        setPaint(paint);
+        init();
+
+        setFirstPoint(x, y);
+    }
+
+    public HandWriting(WhiteBoard whiteBoard, Paint paint, float x, float y, String doodleId) {
+        this(whiteBoard);
+        setDoodleId(doodleId);
         setPaint(paint);
         init();
 
@@ -111,7 +120,6 @@ public class HandWriting extends Doodle {
         if (mPoints.size() > 1) {
             long s = System.currentTimeMillis();
             boolean intersect = IntersectionHelper.intersect(x, y, this);
-            Log.i("aaa", "take=" + (System.currentTimeMillis() - s) + "   intersect=" + intersect);
             return intersect;
         }
 

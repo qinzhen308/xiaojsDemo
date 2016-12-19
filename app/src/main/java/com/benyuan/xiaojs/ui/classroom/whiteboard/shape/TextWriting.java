@@ -48,12 +48,20 @@ public class TextWriting extends Doodle {
      * */
     private int mTextOrientation = TEXT_HORIZONTAL;
 
-    public TextWriting(WhiteBoard whiteBoard, Paint paint) {
+    private TextWriting(WhiteBoard whiteBoard, Paint paint) {
         this(whiteBoard, paint, TEXT_HORIZONTAL);
     }
 
     public TextWriting(WhiteBoard whiteBoard, Paint paint, int textOrientation) {
         super(whiteBoard, Doodle.STYLE_TEXT);
+        setPaint(paint);
+
+        init(textOrientation);
+    }
+
+    public TextWriting(WhiteBoard whiteBoard, Paint paint, int textOrientation, String doodleID) {
+        super(whiteBoard, Doodle.STYLE_TEXT);
+        setDoodleId(doodleID);
         setPaint(paint);
 
         init(textOrientation);

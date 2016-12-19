@@ -34,6 +34,12 @@ public class Rectangle extends TwoDimensionalShape {
         setPaint(paint);
     }
 
+    public Rectangle(WhiteBoard whiteBoard, Paint paint, String doodleId) {
+        super(whiteBoard, GeometryShape.RECTANGLE);
+        setDoodleId(doodleId);
+        setPaint(paint);
+    }
+
     @Override
     protected int initialCapacity() {
         return 2;

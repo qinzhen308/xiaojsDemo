@@ -22,7 +22,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 
 public class Eraser extends Doodle {
 
-    public Eraser(WhiteBoard whiteBoard) {
+    private Eraser(WhiteBoard whiteBoard) {
         super(whiteBoard, Doodle.STYLE_HAND_WRITING);
     }
 

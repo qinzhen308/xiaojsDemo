@@ -314,7 +314,7 @@ public abstract class Doodle implements Action {
     }
 
     /**
-     * 返回doodle映射到屏幕上的rect
+     * 杩斿洖doodle鏄犲皠鍒板睆骞曚笂鐨剅ect
      * @return
      */
     public RectF getDoodleScreenRect() {

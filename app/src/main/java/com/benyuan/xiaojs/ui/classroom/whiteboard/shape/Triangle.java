@@ -33,12 +33,20 @@ public class Triangle extends TwoDimensionalShape {
     private Vector<PointF> mTriangleCoordinates;
     private LineSegment[] mLineSegments;
 
-    protected Triangle(WhiteBoard whiteBoard) {
+    private Triangle(WhiteBoard whiteBoard) {
         super(whiteBoard, GeometryShape.TRIANGLE);
     }
 
     public Triangle(WhiteBoard whiteBoard, Paint paint) {
         this(whiteBoard);
+        setPaint(paint);
+
+        init();
+    }
+
+    public Triangle(WhiteBoard whiteBoard, Paint paint, String doodleId) {
+        this(whiteBoard);
+        setDoodleId(doodleId);
         setPaint(paint);
 
         init();

@@ -33,6 +33,12 @@ public class Oval extends TwoDimensionalShape {
         setPaint(paint);
     }
 
+    public Oval(WhiteBoard whiteBoard, Paint paint, String doodleId) {
+        super(whiteBoard, GeometryShape.OVAL);
+        setDoodleId(doodleId);
+        setPaint(paint);
+    }
+
     @Override
     protected int initialCapacity() {
         return 2;
