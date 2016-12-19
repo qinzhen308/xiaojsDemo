@@ -1,18 +1,4 @@
 package com.benyuan.xiaojs.ui.classroom.whiteboard.shape;
-
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PointF;
-
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
-
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -27,6 +13,19 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
  * Desc:
  *
  * ======================================================================================== */
+
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PointF;
+
+import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 public class Beeline extends TwoDimensionalShape {
     /**
@@ -78,7 +77,7 @@ public class Beeline extends TwoDimensionalShape {
 
     @Override
     public Path getOriginalPath() {
-        WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+        WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
         float stx = mPoints.get(0).x;
         float sty = mPoints.get(0).y;
         float edx = mPoints.get(1).x;

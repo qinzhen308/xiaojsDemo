@@ -122,9 +122,9 @@ public class Selector extends Doodle {
 
             float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
             float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
-            mRect.set(x1, y1, x2, y2);
+            mTransRect.set(x1, y1, x2, y2);
             mDrawingPath.reset();
-            mDrawingPath.addRect(mRect, Path.Direction.CCW);
+            mDrawingPath.addRect(mTransRect, Path.Direction.CCW);
             mDrawingPath.transform(mDrawingMatrix);
 
             canvas.drawPath(mDrawingPath, mSelectingBgPaint);
@@ -141,21 +141,21 @@ public class Selector extends Doodle {
                 return;
             }
 
-            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+            WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
             float padding = params.paintStrokeWidth / 2.0f;
             mBorderRect.set(mDoodleRect.left - padding, mDoodleRect.top - padding, mDoodleRect.right + padding, mDoodleRect.bottom + padding);
-            mBorderNormalizedPath.reset();
-            mBorderNormalizedPath.addRect(mBorderRect, Path.Direction.CCW);
-            mBorderNormalizedPath.transform(mTransformMatrix);
-            canvas.drawPath(mBorderNormalizedPath, mBorderPaint);
+            mBorderDrawingPath.reset();
+            mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
+            mBorderDrawingPath.transform(mTransformMatrix);
+            canvas.drawPath(mBorderDrawingPath, mBorderPaint);
 
             //draw controller
             float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
             mBorderRect.set(mDoodleRect.right - radius, mDoodleRect.top - radius, mDoodleRect.right + radius, mDoodleRect.top + radius);
-            mBorderNormalizedPath.reset();
-            mBorderNormalizedPath.addOval(mBorderRect, Path.Direction.CCW);
-            mBorderNormalizedPath.transform(mTransformMatrix);
-            canvas.drawPath(mBorderNormalizedPath, mControllerPaint);
+            mBorderDrawingPath.reset();
+            mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
+            mBorderDrawingPath.transform(mTransformMatrix);
+            canvas.drawPath(mBorderDrawingPath, mControllerPaint);
         } catch (Exception e) {
 
         }
@@ -192,23 +192,23 @@ public class Selector extends Doodle {
             }
 
             if (count > 0) {
-                WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
-                mRect.set(mDoodleRect);
-                mTransformMatrix.mapRect(mRect);
-                PointF p = Utils.mapScreenToDoodlePoint(mRect.left, mRect.top, params.drawingBounds);
+                WhiteBoard.WhiteboardParams params = getWhiteboard().getParams();
+                mTransRect.set(mDoodleRect);
+                mTransformMatrix.mapRect(mTransRect);
+                PointF p = Utils.mapScreenToDoodlePoint(mTransRect.left, mTransRect.top, params.drawingBounds);
                 float left = p.x;
                 float top = p.y;
-                p = Utils.mapScreenToDoodlePoint(mRect.right, mRect.bottom, params.drawingBounds);
+                p = Utils.mapScreenToDoodlePoint(mTransRect.right, mTransRect.bottom, params.drawingBounds);
                 float right = p.x;
                 float bottom = p.y;
 
-                mRect.set(left, top, right, bottom);
+                mTransRect.set(left, top, right, bottom);
                 Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
-                float[] arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mRect, matrix);
+                float[] arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mTransRect, matrix);
                 float scale = arr[0];
                 float degree = arr[1];
 
-                computeDoodleCenterPoint(mRect);
+                computeDoodleCenterPoint(mTransRect);
 
                 for (Doodle d : allDoodles) {
                     if (d.getState() == Doodle.STATE_EDIT) {
@@ -256,6 +256,7 @@ public class Selector extends Doodle {
     }
 
     public int checkIntersect() {
+        cleanAllDoodlesState();
         int intersectCount = 0;
         if (mPoints.size() > 1) {
             float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
@@ -270,6 +271,7 @@ public class Selector extends Doodle {
     }
 
     public int checkSingleIntersect(float x, float y) {
+        cleanAllDoodlesState();
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
         int intersectCount = 0;
         if (allDoodles != null) {
@@ -290,7 +292,7 @@ public class Selector extends Doodle {
     }
 
     /**
-	 * @param x1
+     * @param x1
      * @param y1
      * @param x2
      * @param y2
@@ -298,7 +300,7 @@ public class Selector extends Doodle {
      */
     public int intersect(float x1, float y1, float x2, float y2) {
         //map points
-        WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+        WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
         PointF p = Utils.mapDoodlePointToScreen(x1, y1, params.drawingBounds);
         x1 = p.x;
         y1 = p.y;
@@ -347,7 +349,7 @@ public class Selector extends Doodle {
             }
         }
 
-        Log.i("aaa", "updateRect mDoodleRect="+mDoodleRect);
+        Log.i("aaa", "updateRect mDoodleRect=" + mDoodleRect);
 
     }
 
@@ -373,6 +375,17 @@ public class Selector extends Doodle {
                     d.getPaint().setColor(color);
                 }
             }
+        }
+    }
+
+    private void cleanAllDoodlesState() {
+        ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+        if (allDoodles == null) {
+            return;
+        }
+
+        for (Doodle d : allDoodles) {
+            d.setState(Doodle.STATE_IDLE);
         }
     }
 

@@ -23,13 +23,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
-import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.classroom.ClassroomPopupWindowLayout;
 
 public abstract class SettingsPopupWindow {
     protected final PopupWindow mPopupWindow;
     protected final Rect mPadding = new Rect();
-    protected final int mAnchorPaddingTop;
+    protected int mAnchorPaddingTop;
     protected ClassroomPopupWindowLayout mPopWindowLayout;
     protected int mAnchorWidth;
     protected int mAnchorHeight;
@@ -57,8 +56,6 @@ public abstract class SettingsPopupWindow {
         if (mPopupWindow.getBackground() != null) {
             mPopupWindow.getBackground().getPadding(mPadding);
         }
-
-        mAnchorPaddingTop = getDimensionPixelSize(context, R.dimen.px25);
 
         addContent(context);
     }

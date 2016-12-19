@@ -1,4 +1,18 @@
 package com.benyuan.xiaojs.ui.classroom.whiteboard;
+/*  =======================================================================================
+ *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
+ *
+ *  This computer program source code file is protected by copyright law and international
+ *  treaties. Unauthorized distribution of source code files, programs, or portion of the
+ *  package, may result in severe civil and criminal penalties, and will be prosecuted to
+ *  the maximum extent under the law.
+ *
+ *  ---------------------------------------------------------------------------------------
+ * Author:huangyong
+ * Date:2016/11/29
+ * Desc:
+ *
+ * ======================================================================================== */
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -40,21 +54,6 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Triangle;
 
 import java.util.ArrayList;
 
-/*  =======================================================================================
- *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
- *
- *  This computer program source code file is protected by copyright law and international
- *  treaties. Unauthorized distribution of source code files, programs, or portion of the
- *  package, may result in severe civil and criminal penalties, and will be prosecuted to
- *  the maximum extent under the law.
- *
- *  ---------------------------------------------------------------------------------------
- * Author:huangyong
- * Date:2016/11/29
- * Desc:
- *
- * ======================================================================================== */
-
 public class WhiteBoard extends View implements ViewGestureListener.ViewRectChangedListener{
     /**
      * blackboard mode
@@ -79,7 +78,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
     private int mPaintColor = Color.BLACK;
     private int mPaintStrokeWidth = 15;
 
-    private BlackParams mBlackParams;
+    private WhiteboardParams mWhiteboardParams;
 
     private int mCurrentMode = MODE_SELECTION;
 
@@ -281,7 +280,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         mDownPoint = new PointF();
         mLastPoint = new PointF();
         mDrawingPath = new Path();
-        mBlackParams = new BlackParams();
+        mWhiteboardParams = new WhiteboardParams();
 
         //init screen size
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
@@ -924,7 +923,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         mInputMethodManager.hideSoftInputFromWindow(getWindowToken(), 0);
     }
 
-    public static class BlackParams {
+    public static class WhiteboardParams {
         public RectF drawingBounds;
         public int originalWidth;
         public int originalHeight;
@@ -933,14 +932,14 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         public float paintStrokeWidth;
     }
 
-    public BlackParams getBlackParams() {
-        mBlackParams.originalWidth = mBlackboardWidth;
-        mBlackParams.originalHeight = mBlackboardHeight;
-        mBlackParams.paintScale = mPaintScale;
-        mBlackParams.scale = mViewGestureListener.getScale();
-        mBlackParams.drawingBounds = mDoodleBounds;
-        mBlackParams.paintStrokeWidth = mPaintStrokeWidth;
-        return mBlackParams;
+    public WhiteboardParams getParams() {
+        mWhiteboardParams.originalWidth = mBlackboardWidth;
+        mWhiteboardParams.originalHeight = mBlackboardHeight;
+        mWhiteboardParams.paintScale = mPaintScale;
+        mWhiteboardParams.scale = mViewGestureListener.getScale();
+        mWhiteboardParams.drawingBounds = mDoodleBounds;
+        mWhiteboardParams.paintStrokeWidth = mPaintStrokeWidth;
+        return mWhiteboardParams;
     }
 
     public ArrayList<Doodle> getAllDoodles() {

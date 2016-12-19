@@ -96,7 +96,7 @@ public class Utils {
     }
 
     public static void mapDoodleToScreen(Doodle doodle, PointF downPint, PointF upPoint) {
-        WhiteBoard.BlackParams params = doodle.getWhiteboard().getBlackParams();
+        WhiteBoard.WhiteboardParams params = doodle.getWhiteboard().getParams();
         PointF dp = doodle.getFirstPoint();
         PointF up = doodle.getLastPoint();
 
@@ -614,7 +614,7 @@ public class Utils {
 
     public static float getDefaultTextHeight(Doodle doodle) {
         Paint paint = doodle.getPaint();
-        WhiteBoard.BlackParams params = doodle.getWhiteboard().getBlackParams();
+        WhiteBoard.WhiteboardParams params = doodle.getWhiteboard().getParams();
         Paint.FontMetrics fontMetrics = paint.getFontMetrics();
 
         float textHeight = fontMetrics.descent - fontMetrics.ascent;

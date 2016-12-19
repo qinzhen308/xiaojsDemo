@@ -15,9 +15,13 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
  * ======================================================================================== */
 
 public class ActionRecord {
+    public int action;
+
+    //translate
     public float translateX;
     public float translateY;
-
+    //scale
     public float scale;
-    public float rotate;
+    //rotate
+    public float degree;
 }

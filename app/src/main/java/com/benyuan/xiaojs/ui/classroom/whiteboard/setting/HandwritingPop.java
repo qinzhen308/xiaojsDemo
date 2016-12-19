@@ -15,7 +15,6 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.setting;
  * ======================================================================================== */
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SeekBar;
@@ -30,7 +29,6 @@ public class HandwritingPop extends SettingsPopupWindow {
     public final int MIN_PAINT_SIZE = 6;
 
     public final int DEFAULT_PAINT_ALPHA = 152;
-    public final int MIN_PAINT_ALPHA = 50;
 
     private PaintChangeListener mListener;
 
@@ -39,7 +37,6 @@ public class HandwritingPop extends SettingsPopupWindow {
 
     private int mPaintColor;
     private int mPaintAlpha = DEFAULT_PAINT_ALPHA;
-    private Paint mPaint = new Paint();
 
     public interface PaintChangeListener {
         void onPaintSize(int size);

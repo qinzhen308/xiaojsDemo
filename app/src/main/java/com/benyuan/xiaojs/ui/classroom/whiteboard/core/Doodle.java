@@ -39,8 +39,6 @@ public abstract class Doodle implements Action {
     public final static int STATE_EDIT = 2;
 
     protected WhiteBoard mWhiteboard;
-    protected Vector<Doodle> mDoodlePaths = new Vector<Doodle>();
-
     protected Vector<PointF> mPoints;
 
     protected Paint mPaint;
@@ -52,15 +50,16 @@ public abstract class Doodle implements Action {
 
     protected int mStyle;
 
-    protected Path mDrawingPath;
     protected RectF mDoodleRect;
-    protected RectF mRect;
-    protected Path mBorderNormalizedPath;
+    protected RectF mTransRect;
     protected RectF mBorderRect;
+
+    protected Path mDrawingPath;
+    protected Path mBorderDrawingPath;
+    protected Path mOriginalPath;
 
     protected float[] mRectCenter;
 
-    protected Path mOriginalPath;
     protected Matrix mDrawingMatrix;
     protected Matrix mTransformMatrix;
     protected Matrix mDisplayMatrix;
@@ -80,27 +79,25 @@ public abstract class Doodle implements Action {
         } else {
             mPoints = new Vector<PointF>(capacity);
         }
-        mDoodlePaths.add(this);
 
         initParams();
     }
 
     private void initParams() {
-        mRect = new RectF();
+        mTransRect = new RectF();
         mDoodleRect = new RectF();
         mBorderRect = new RectF();
+
         mDrawingMatrix = new Matrix();
         mTransformMatrix = new Matrix();
         mDisplayMatrix = new Matrix();
 
         mDrawingPath = new Path();
         mOriginalPath = new Path();
-
-        mDrawingPath = new Path();
-        mOriginalPath = new Path();
-        mBorderNormalizedPath = new Path();
+        mBorderDrawingPath = new Path();
 
         mRectCenter = new float[2];
+
         mBorderPaint = Utils.buildDashPaint();
         mControllerPaint = Utils.buildControllerPaint();
     }
@@ -144,7 +141,7 @@ public abstract class Doodle implements Action {
     }
 
     public RectF getRect() {
-        return mRect;
+        return mTransRect;
     }
 
     public int getState() {
@@ -164,18 +161,6 @@ public abstract class Doodle implements Action {
     }
 
     //==========================getter and setter==========================================
-
-    public void merge(Doodle d) {
-        if (d != this) {
-            mDoodlePaths.add(d);
-        }
-    }
-
-    public void deMerge(Doodle d) {
-        if (d != this) {
-            mDoodlePaths.remove(d);
-        }
-    }
 
     public void addControlPoint(PointF point) {
         mPoints.add(point);
@@ -216,7 +201,7 @@ public abstract class Doodle implements Action {
 
     public void drawBorder(Canvas canvas) {
         if (mPoints.size() > 1 && !mDoodleRect.isEmpty()) {
-            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+            WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
             float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
 
             mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
@@ -229,37 +214,37 @@ public abstract class Doodle implements Action {
             float vPadding = p.y / mTotalScale * params.scale;
             mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding, mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
 
-            mBorderNormalizedPath.reset();
-            mBorderNormalizedPath.addRect(mBorderRect, Path.Direction.CCW);
-            mBorderNormalizedPath.transform(mDrawingMatrix);
-            canvas.drawPath(mBorderNormalizedPath, mBorderPaint);
+            mBorderDrawingPath.reset();
+            mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
+            mBorderDrawingPath.transform(mDrawingMatrix);
+            canvas.drawPath(mBorderDrawingPath, mBorderPaint);
 
             //draw controller
             float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
             p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
             mBorderRect.set(mDoodleRect.right - p.x, mDoodleRect.top - p.y, mDoodleRect.right + p.x, mDoodleRect.top + p.y);
-            mBorderNormalizedPath.reset();
-            mBorderNormalizedPath.addOval(mBorderRect, Path.Direction.CCW);
-            mBorderNormalizedPath.transform(mDrawingMatrix);
-            canvas.drawPath(mBorderNormalizedPath, mControllerPaint);
+            mBorderDrawingPath.reset();
+            mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
+            mBorderDrawingPath.transform(mDrawingMatrix);
+            canvas.drawPath(mBorderDrawingPath, mControllerPaint);
         }
     }
 
     public int checkRegionPressedArea(float x, float y) {
         if (getState() == STATE_EDIT && mPoints.size() > 1) {
-            mRect.set(mDoodleRect);
+            mTransRect.set(mDoodleRect);
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mRect, matrix);
+            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mTransRect, matrix);
             if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                int edge = IntersectionHelper.whichEdgePressed(p.x, p.y, mRect, matrix);
+                int edge = IntersectionHelper.whichEdgePressed(p.x, p.y, mTransRect, matrix);
                 if (edge != IntersectionHelper.RECT_NO_SELECTED) {
                     return edge;
                 }
 
-                return IntersectionHelper.checkRectPressed(p.x, p.y, mRect, matrix);
+                return IntersectionHelper.checkRectPressed(p.x, p.y, mTransRect, matrix);
             }
         }
 
@@ -270,17 +255,17 @@ public abstract class Doodle implements Action {
 
     @Override
     public void move(float deltaX, float deltaY) {
-        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        WhiteBoard.WhiteboardParams params = getWhiteboard().getParams();
         mTransformMatrix.postTranslate(deltaX / params.scale, deltaY / params.scale);
     }
 
     @Override
     public void scale(float oldX, float oldY, float x, float y) {
         if (mPoints.size() > 1) {
-            mRect.set(mDoodleRect);
+            mTransRect.set(mDoodleRect);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
-            float scale = Utils.calcRectScale(oldX, oldY, x, y, mRect, matrix);
-            computeCenterPoint(mRect);
+            float scale = Utils.calcRectScale(oldX, oldY, x, y, mTransRect, matrix);
+            computeCenterPoint(mTransRect);
 
             mTotalScale = mTotalScale * scale;
             //mTransformMatrix.reset();
@@ -291,10 +276,10 @@ public abstract class Doodle implements Action {
     @Override
     public void rotate(float oldX, float oldY, float x, float y) {
         if (mPoints.size() > 1) {
-            mRect.set(mDoodleRect);
+            mTransRect.set(mDoodleRect);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
-            float degree = Utils.calcRectDegrees(oldX, oldY, x, y, mRect, matrix);
-            computeCenterPoint(mRect);
+            float degree = Utils.calcRectDegrees(oldX, oldY, x, y, mTransRect, matrix);
+            computeCenterPoint(mTransRect);
 
             mTotalDegree += degree;
             //mTransformMatrix.reset();
@@ -304,13 +289,13 @@ public abstract class Doodle implements Action {
 
     public void scaleAndRotate(float oldX, float oldY, float x, float y) {
         if (mPoints.size() > 1) {
-            mRect.set(mDoodleRect);
+            mTransRect.set(mDoodleRect);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, 0);
-            float[] arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mRect, matrix);
+            float[] arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mTransRect, matrix);
             float scale = arr[0];
             float degree = arr[1];
 
-            computeCenterPoint(mRect);
+            computeCenterPoint(mTransRect);
 
             mTotalDegree += degree;
             mTotalScale = mTotalScale * scale;
@@ -341,11 +326,11 @@ public abstract class Doodle implements Action {
 
     public RectF getDoodleTransformRect() {
         if (mPoints.size() > 1) {
-            mDrawingPath.computeBounds(mRect, true);
+            mDrawingPath.computeBounds(mTransRect, true);
         }
 
-        mDisplayMatrix.mapRect(mRect);
-        return mRect;
+        mDisplayMatrix.mapRect(mTransRect);
+        return mTransRect;
     }
 
     public RectF getDoodleRect() {

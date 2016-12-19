@@ -20,18 +20,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.widget.PaintPathPreview;
 
 public class EraserPop extends SettingsPopupWindow implements View.OnClickListener{
-    public static final int MIN_ERASER_SIZE = 10;
-    public static final int MAX_ERASER_SIZE = 60;
-    public static final int DEFAULT_ERASER_SIZE = (MAX_ERASER_SIZE + MIN_ERASER_SIZE) / 2;
-
     private EraserChangeListener mParamsChangeListener;
 
     private TextView mClearDoodleButton;
-    private PaintPathPreview mEraserSizeView;
-
 
     public interface EraserChangeListener {
         void onEraserPaintSize(int size);

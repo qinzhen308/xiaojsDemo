@@ -1,20 +1,4 @@
 package com.benyuan.xiaojs.ui.classroom.whiteboard.shape;
-
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PointF;
-import android.graphics.RectF;
-import android.util.Log;
-
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
-
-
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -29,6 +13,18 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
  * Desc:
  *
  * ======================================================================================== */
+
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PointF;
+
+import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 public class Oval extends TwoDimensionalShape {
 
@@ -82,10 +78,10 @@ public class Oval extends TwoDimensionalShape {
 
         canvas.save();
 
-        mRect.set(mDoodleRect);
+        mTransRect.set(mDoodleRect);
 
         mDrawingPath.reset();
-        mDrawingPath.addOval(mRect, Path.Direction.CCW);
+        mDrawingPath.addOval(mTransRect, Path.Direction.CCW);
         mDrawingMatrix.postConcat(mTransformMatrix);
         mDrawingPath.transform(mDrawingMatrix);
         canvas.drawPath(mDrawingPath, getPaint());
@@ -96,10 +92,10 @@ public class Oval extends TwoDimensionalShape {
     @Override
     public Path getOriginalPath() {
         mOriginalPath.reset();
-        mRect.set(mDoodleRect);
-        mDrawingMatrix.mapRect(mRect);
-        mDisplayMatrix.mapRect(mRect);
-        mOriginalPath.addOval(mRect, Path.Direction.CCW);
+        mTransRect.set(mDoodleRect);
+        mDrawingMatrix.mapRect(mTransRect);
+        mDisplayMatrix.mapRect(mTransRect);
+        mOriginalPath.addOval(mTransRect, Path.Direction.CCW);
         return mOriginalPath;
     }
 
@@ -116,10 +112,10 @@ public class Oval extends TwoDimensionalShape {
     @Override
     public boolean isSelected(float x, float y) {
         if (mPoints.size() > 1) {
-            mRect.set(mDoodleRect);
+            mTransRect.set(mDoodleRect);
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            return IntersectionHelper.checkOvalFramePress(p.x, p.y, mRect, matrix);
+            return IntersectionHelper.checkOvalFramePress(p.x, p.y, mTransRect, matrix);
         }
 
         return false;

@@ -1,4 +1,18 @@
 package com.benyuan.xiaojs.ui.classroom.whiteboard.shape;
+/*  =======================================================================================
+ *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
+ *
+ *  This computer program source code file is protected by copyright law and international
+ *  treaties. Unauthorized distribution of source code files, programs, or portion of the
+ *  package, may result in severe civil and criminal penalties, and will be prosecuted to
+ *  the maximum extent under the law.
+ *
+ *  ---------------------------------------------------------------------------------------
+ * Author:huangyong
+ * Date:2016/10/18
+ * Desc:
+ *
+ * ======================================================================================== */
 
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
@@ -15,21 +29,6 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.WhiteboardConfigs;
 
 import java.util.ArrayList;
-
-/*  =======================================================================================
- *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
- *
- *  This computer program source code file is protected by copyright law and international
- *  treaties. Unauthorized distribution of source code files, programs, or portion of the
- *  package, may result in severe civil and criminal penalties, and will be prosecuted to
- *  the maximum extent under the law.
- *
- *  ---------------------------------------------------------------------------------------
- * Author:huangyong
- * Date:2016/10/18
- * Desc:
- *
- * ======================================================================================== */
 
 public class TextWriting extends Doodle {
     private String mTextString;
@@ -92,7 +91,7 @@ public class TextWriting extends Doodle {
     @Override
     public void drawBorder(Canvas canvas) {
         if(!TextUtils.isEmpty(mTextString)) {
-            WhiteBoard.BlackParams params = mWhiteboard.getBlackParams();
+            WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
             float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
 
             mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
@@ -105,19 +104,19 @@ public class TextWriting extends Doodle {
             float vPadding = p.y / mTotalScale;
             mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding, mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
 
-            mBorderNormalizedPath.reset();
-            mBorderNormalizedPath.addRect(mBorderRect, Path.Direction.CCW);
-            mBorderNormalizedPath.transform(mDrawingMatrix);
-            canvas.drawPath(mBorderNormalizedPath, mBorderPaint);
+            mBorderDrawingPath.reset();
+            mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
+            mBorderDrawingPath.transform(mDrawingMatrix);
+            canvas.drawPath(mBorderDrawingPath, mBorderPaint);
 
             //draw controller
             float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
             p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
             mBorderRect.set(mDoodleRect.right - p.x, mDoodleRect.top - p.y, mDoodleRect.right + p.x, mDoodleRect.top + p.y);
-            mBorderNormalizedPath.reset();
-            mBorderNormalizedPath.addOval(mBorderRect, Path.Direction.CCW);
-            mBorderNormalizedPath.transform(mDrawingMatrix);
-            canvas.drawPath(mBorderNormalizedPath, mControllerPaint);
+            mBorderDrawingPath.reset();
+            mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
+            mBorderDrawingPath.transform(mDrawingMatrix);
+            canvas.drawPath(mBorderDrawingPath, mControllerPaint);
         }
     }
 
@@ -136,12 +135,12 @@ public class TextWriting extends Doodle {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            mRect.set(mDoodleRect);
-            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mRect, matrix);
+            mTransRect.set(mDoodleRect);
+            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mTransRect, matrix);
             if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                return IntersectionHelper.checkRectPressed(p.x, p.y, mRect, matrix);
+                return IntersectionHelper.checkRectPressed(p.x, p.y, mTransRect, matrix);
             }
         }
 
@@ -153,8 +152,8 @@ public class TextWriting extends Doodle {
         if (mPoints.size() > 1) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            mRect.set(mDoodleRect);
-            return IntersectionHelper.checkRectPressed(p.x, p.y, mRect, matrix) != IntersectionHelper.RECT_NO_SELECTED;
+            mTransRect.set(mDoodleRect);
+            return IntersectionHelper.checkRectPressed(p.x, p.y, mTransRect, matrix) != IntersectionHelper.RECT_NO_SELECTED;
         }
 
         return false;
@@ -169,7 +168,7 @@ public class TextWriting extends Doodle {
         }
 
         setTextString(changedText);
-        WhiteBoard.BlackParams params = getWhiteboard().getBlackParams();
+        WhiteBoard.WhiteboardParams params = getWhiteboard().getParams();
 
         float etW = 0;
         float etH = 0;
@@ -195,7 +194,7 @@ public class TextWriting extends Doodle {
     private PointF measureTextSize(TextWriting doodle) {
         Paint paint = doodle.getPaint();
         String text = doodle.getTextString();
-        WhiteBoard.BlackParams params = doodle.getWhiteboard().getBlackParams();
+        WhiteBoard.WhiteboardParams params = doodle.getWhiteboard().getParams();
         Paint.FontMetrics fontMetrics = paint.getFontMetrics();
         float textWidth = 0;
         float textHeight = fontMetrics.descent - fontMetrics.ascent;

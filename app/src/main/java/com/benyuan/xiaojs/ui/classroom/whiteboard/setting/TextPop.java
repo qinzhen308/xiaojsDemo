@@ -51,7 +51,6 @@ public class TextPop extends SettingsPopupWindow implements View.OnClickListener
         root.findViewById(R.id.horizontal_text).setOnClickListener(this);
         root.findViewById(R.id.vertical_text).setOnClickListener(this);
         root.findViewById(R.id.insert_line).setOnClickListener(this);
-        ((SeekBar)root.findViewById(R.id.text_size)).setOnSeekBarChangeListener(this);
     }
 
     public void show(View anchor, int panelWidth) {

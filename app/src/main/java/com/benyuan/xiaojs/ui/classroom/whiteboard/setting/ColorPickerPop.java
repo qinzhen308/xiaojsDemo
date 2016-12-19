@@ -41,6 +41,7 @@ public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickL
     public ColorPickerPop(Context context) {
         super(context);
 
+        mAnchorPaddingTop = getDimensionPixelSize(context, R.dimen.px25);
         initViews();
     }
 

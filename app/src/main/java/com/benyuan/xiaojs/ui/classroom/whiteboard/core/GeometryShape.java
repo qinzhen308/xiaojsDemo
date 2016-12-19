@@ -19,7 +19,6 @@ import android.graphics.RectF;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
-
 public abstract class GeometryShape extends Doodle {
     public final static int BEELINE = 0;
     public final static int RECTANGLE = 1;
@@ -70,7 +69,7 @@ public abstract class GeometryShape extends Doodle {
     }
 
     protected RectF updateRectOnChangeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
-        RectF drawingBounds = getWhiteboard().getBlackParams().drawingBounds;
+        RectF drawingBounds = getWhiteboard().getParams().drawingBounds;
         PointF p = Utils.normalizeScreenPoint(x - oldX, y - oldY, drawingBounds);
         float deltaX = p.x / mTotalScale;
         float deltaY = p.y / mTotalScale;

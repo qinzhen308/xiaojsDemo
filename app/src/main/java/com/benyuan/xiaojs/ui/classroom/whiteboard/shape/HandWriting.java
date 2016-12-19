@@ -27,7 +27,6 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
-
 public class HandWriting extends Doodle {
     private Path mTransformPath;
 
@@ -53,9 +52,8 @@ public class HandWriting extends Doodle {
     }
 
     /**
-     * Path.quadTo(): If no moveTo() call has been made for
-     * this contour, the first point is automatically set to (0,0)
-     * @param point
+     * Path.quadTo(): If no moveTo() call has been made for this contour, the first point is
+     * automatically set to (0,0)
      */
     @Override
     public void addControlPoint(PointF point) {
@@ -96,12 +94,12 @@ public class HandWriting extends Doodle {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
-            mRect.set(mDoodleRect);
-            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mRect, matrix);
+            mTransRect.set(mDoodleRect);
+            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mTransRect, matrix);
             if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
-                return IntersectionHelper.checkRectPressed(p.x, p.y, mRect, matrix);
+                return IntersectionHelper.checkRectPressed(p.x, p.y, mTransRect, matrix);
             }
         }
 
@@ -112,8 +110,8 @@ public class HandWriting extends Doodle {
     public boolean isSelected(float x, float y) {
         if (mPoints.size() > 1) {
             long s = System.currentTimeMillis();
-            boolean intersect = IntersectionHelper.intersect(x, y , this);
-            Log.i("aaa", "take=" + (System.currentTimeMillis() - s)+"   intersect="+intersect);
+            boolean intersect = IntersectionHelper.intersect(x, y, this);
+            Log.i("aaa", "take=" + (System.currentTimeMillis() - s) + "   intersect=" + intersect);
             return intersect;
         }
 
@@ -122,8 +120,8 @@ public class HandWriting extends Doodle {
 
     @Override
     public RectF getDoodleTransformRect() {
-        mDrawingPath.computeBounds(mRect, true);
-        mDisplayMatrix.mapRect(mRect);
-        return mRect;
+        mDrawingPath.computeBounds(mTransRect, true);
+        mDisplayMatrix.mapRect(mTransRect);
+        return mTransRect;
     }
 }
