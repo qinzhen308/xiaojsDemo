@@ -28,7 +28,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 public class HandWriting extends Doodle {
-    private Path mTransformPath;
+    private Path mNormalizedPath;
 
     public HandWriting(WhiteBoard whiteBoard) {
         super(whiteBoard, Doodle.STYLE_HAND_WRITING);
@@ -43,12 +43,12 @@ public class HandWriting extends Doodle {
     }
 
     private void init() {
-        mTransformPath = new Path();
+        mNormalizedPath = new Path();
     }
 
     private void setFirstPoint(float x, float y) {
         addControlPoint(x, y);
-        mTransformPath.moveTo(x, y);
+        mNormalizedPath.moveTo(x, y);
     }
 
     /**
@@ -59,8 +59,8 @@ public class HandWriting extends Doodle {
     public void addControlPoint(PointF point) {
         if (!mPoints.isEmpty()) {
             PointF last = mPoints.lastElement();
-            mTransformPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);
-            mTransformPath.computeBounds(mDoodleRect, true);
+            mNormalizedPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);
+            mNormalizedPath.computeBounds(mDoodleRect, true);
         }
         mPoints.add(point);
     }
@@ -73,7 +73,7 @@ public class HandWriting extends Doodle {
     @Override
     public void drawSelf(Canvas canvas) {
         canvas.save();
-        mDrawingPath.set(mTransformPath);
+        mDrawingPath.set(mNormalizedPath);
         mDrawingMatrix.postConcat(mTransformMatrix);
         mDrawingPath.transform(mDrawingMatrix);
         canvas.drawPath(mDrawingPath, getPaint());
@@ -81,21 +81,21 @@ public class HandWriting extends Doodle {
     }
 
     @Override
-    public Path getOriginalPath() {
-        mOriginalPath.reset();
-        mOriginalPath.set(mTransformPath);
-        mOriginalPath.transform(mDrawingMatrix);
-        mOriginalPath.transform(mDisplayMatrix);
-        return mOriginalPath;
+    public Path getScreenPath() {
+        mScreenPath.reset();
+        mScreenPath.set(mNormalizedPath);
+        mScreenPath.transform(mDrawingMatrix);
+        mScreenPath.transform(mDisplayMatrix);
+        return mScreenPath;
     }
 
     @Override
-    public int checkRegionPressedArea(float x, float y) {
+    public int checkPressedRegion(float x, float y) {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
             mTransRect.set(mDoodleRect);
-            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mTransRect, matrix);
+            int corner = IntersectionHelper.whichCornerPressed(p.x, p.y, mTransRect, matrix);
             if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
@@ -119,7 +119,7 @@ public class HandWriting extends Doodle {
     }
 
     @Override
-    public RectF getDoodleTransformRect() {
+    public RectF getDoodleScreenRect() {
         mDrawingPath.computeBounds(mTransRect, true);
         mDisplayMatrix.mapRect(mTransRect);
         return mTransRect;

@@ -76,25 +76,8 @@ public class Beeline extends TwoDimensionalShape {
     }
 
     @Override
-    public Path getOriginalPath() {
-        WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
-        float stx = mPoints.get(0).x;
-        float sty = mPoints.get(0).y;
-        float edx = mPoints.get(1).x;
-        float edy = mPoints.get(1).y;
-
-        PointF p = Utils.mapDoodlePointToScreen(stx, sty, params.drawingBounds);
-        int x1 = (int)p.x;
-        int y1 = (int)p.y;
-
-        p = Utils.mapDoodlePointToScreen(edx, edy, params.drawingBounds);
-        int x2 = (int)p.x;
-        int y2 = (int)p.y;
-
-        mOriginalPath.moveTo(x1, y1);
-        mOriginalPath.lineTo(x2, y2);
-
-        return mOriginalPath;
+    public Path getScreenPath() {
+        return null;
     }
 
     public LineSegment getLineSegment() {
@@ -138,8 +121,8 @@ public class Beeline extends TwoDimensionalShape {
     }
 
     @Override
-    public int checkRegionPressedArea(float x, float y) {
-        return super.checkRegionPressedArea(x, y);
+    public int checkPressedRegion(float x, float y) {
+        return super.checkPressedRegion(x, y);
     }
 
     @Override

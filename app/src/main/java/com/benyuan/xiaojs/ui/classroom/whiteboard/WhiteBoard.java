@@ -70,7 +70,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
     private Context mContext;
     private Doodle mDoodle;
-    private Doodle mSelector;
+    private Selector mSelector;
     private int mGeometryShapeId = GeometryShape.BEELINE;
     private RectF mDoodleBounds;
     private PointF mPreviousPoint;
@@ -135,8 +135,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
     private boolean mTransform;
     private boolean mCanMovable;
     private boolean mIsRecordedParams;
-    private boolean mDoodleEditing;
-
 
     private ClassRoomGestureDetector mClassRoomGestureDetector;
 
@@ -196,7 +194,6 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             mBlackboardHeight = mViewHeight;
             mBlackboardWidth = temp;
         }
-        Log.i("aaa", "after:w="+mViewWidth+"   h="+mViewHeight);
 
         mBlackboardRect.set(0, 0, mBlackboardWidth, mBlackboardHeight);
         mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
@@ -317,7 +314,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         }
 
         //2. draw selector
-        drawDoodle(canvas, mSelector);
+        drawSelector(canvas, mSelector);
         canvas.restore();
 
         //3. draw border(selected doodle or selector)
@@ -348,12 +345,11 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
             mSelectionRectRegion = IntersectionHelper.RECT_NO_SELECTED;
             mTransform = false;
             mCanMovable = false;
-            Log.i("aaa", "             ");
 
             switch (mCurrentMode) {
                 case MODE_SELECTION:
                     if (mSelector != null && mSelector.getState() == Doodle.STATE_EDIT) {
-                        mSelectionRectRegion = mSelector.checkRegionPressedArea(mDownPoint.x ,mDownPoint.y);
+                        mSelectionRectRegion = mSelector.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
                     }
                     break;
                 case MODE_TEXT:
@@ -362,7 +358,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                             mAllDoodles.remove(mDoodle);
                             mDoodle = null;
                         } else if (mDoodle.getState() == Doodle.STATE_EDIT){
-                            mSelectionRectRegion = mDoodle.checkRegionPressedArea(mDownPoint.x ,mDownPoint.y);
+                            mSelectionRectRegion = mDoodle.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
                         }
                     }
                     break;
@@ -372,7 +368,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                 case MODE_GEOMETRY:
                     if (mDoodle != null) {
                         if (mDoodle.getState() == Doodle.STATE_EDIT) {
-                            mSelectionRectRegion = mDoodle.checkRegionPressedArea(mDownPoint.x ,mDownPoint.y);
+                            mSelectionRectRegion = mDoodle.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
                             //do nothing
                             //在手指弹起的时候才更新才状态，即在onActionUP函数调用时候
                         }
@@ -478,6 +474,14 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
+                                case IntersectionHelper.TOP_EDGE:
+                                case IntersectionHelper.RIGHT_EDGE:
+                                case IntersectionHelper.BOTTOM_EDGE:
+                                case IntersectionHelper.LEFT_EDGE:
+                                    mSelector.changeAreaByEdge(mPreviousPoint.x, mPreviousPoint.y, x, y, mSelectionRectRegion);
+                                    drawAllDoodlesCanvas();
+                                    postInvalidate();
+                                    break;
                                 default:
                                     //move
                                     mSelector.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
@@ -512,8 +516,8 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                 case MODE_SELECTION:
                     if (mSelector != null) {
                         if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
-                            int intersectCount = mCanMovable ? ((Selector)mSelector).checkIntersect() :
-                                    ((Selector)mSelector).checkSingleIntersect(event.getX(), event.getY());
+                            int intersectCount = mCanMovable ? mSelector.checkIntersect() :
+                                    mSelector.checkSingleIntersect(event.getX(), event.getY());
                             if (intersectCount <= 0) {
                                 mSelector.reset();
                             } else {
@@ -611,26 +615,21 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
         doodle.setDrawingMatrix(mDrawingMatrix);
         doodle.setDisplayMatrix(mDisplayMatrix);
+        doodle.drawSelf(canvas);
+    }
+
+    private void drawSelector(Canvas canvas, Selector selector) {
+        if (selector == null) {
+            return;
+        }
+
+        selector.setDrawingMatrix(mDrawingMatrix);
+        selector.setDisplayMatrix(mDisplayMatrix);
         switch (mCurrentMode) {
-            case MODE_HAND_WRITING:
-                doodle.drawSelf(canvas);
-                break;
-            case MODE_GEOMETRY:
-                doodle.drawSelf(canvas);
-                break;
             case MODE_SELECTION:
-                if(doodle.getState() == Doodle.STATE_DRAWING) {
-                    doodle.drawSelf(canvas);
+                if(selector.getState() == Doodle.STATE_DRAWING) {
+                    selector.drawSelf(canvas);
                 }
-                break;
-            case MODE_TEXT:
-                doodle.drawSelf(canvas);
-                break;
-            case MODE_ERASER:
-
-                break;
-            case MODE_COLOR_PICKER:
-
                 break;
         }
     }
@@ -845,7 +844,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
         switch (mCurrentMode) {
             case MODE_SELECTION:
                 if (mSelector != null) {
-                    ((Selector)mSelector).updateDoodleColor(color);
+                    mSelector.updateDoodleColor(color);
                     drawAllDoodlesCanvas();
                     postInvalidate();
                 }

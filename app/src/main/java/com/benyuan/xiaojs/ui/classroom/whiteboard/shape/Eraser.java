@@ -37,7 +37,7 @@ public class Eraser extends Doodle {
     }
 
     @Override
-    public Path getOriginalPath() {
+    public Path getScreenPath() {
         return null;
     }
 }

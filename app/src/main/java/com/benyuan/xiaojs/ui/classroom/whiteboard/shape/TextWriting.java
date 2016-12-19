@@ -22,7 +22,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
@@ -158,18 +157,18 @@ public class TextWriting extends Doodle {
     }
 
     @Override
-    public Path getOriginalPath() {
-        mOriginalPath.reset();
+    public Path getScreenPath() {
+        mScreenPath.reset();
         mTransRect.set(mDoodleRect);
         mDrawingMatrix.mapRect(mTransRect);
         mDisplayMatrix.mapRect(mTransRect);
-        mOriginalPath.addOval(mTransRect, Path.Direction.CCW);
-        return mOriginalPath;
+        mScreenPath.addOval(mTransRect, Path.Direction.CCW);
+        return mScreenPath;
     }
 
     @Override
-    public RectF getDoodleTransformRect() {
-        mOriginalPath.reset();
+    public RectF getDoodleScreenRect() {
+        mScreenPath.reset();
         mTransRect.set(mDoodleRect);
         mDrawingMatrix.mapRect(mTransRect);
         mDisplayMatrix.mapRect(mTransRect);
@@ -182,12 +181,12 @@ public class TextWriting extends Doodle {
     }
 
     @Override
-    public int checkRegionPressedArea(float x, float y) {
+    public int checkPressedRegion(float x, float y) {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
             mTransRect.set(mDoodleRect);
-            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mTransRect, matrix);
+            int corner = IntersectionHelper.whichCornerPressed(p.x, p.y, mTransRect, matrix);
             if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {

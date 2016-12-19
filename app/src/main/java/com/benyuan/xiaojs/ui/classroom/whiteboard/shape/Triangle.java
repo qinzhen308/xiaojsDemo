@@ -95,7 +95,7 @@ public class Triangle extends TwoDimensionalShape {
     }
 
     @Override
-    public Path getOriginalPath() {
+    public Path getScreenPath() {
         return null;
     }
 

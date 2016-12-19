@@ -90,13 +90,13 @@ public class Oval extends TwoDimensionalShape {
     }
 
     @Override
-    public Path getOriginalPath() {
-        mOriginalPath.reset();
+    public Path getScreenPath() {
+        mScreenPath.reset();
         mTransRect.set(mDoodleRect);
         mDrawingMatrix.mapRect(mTransRect);
         mDisplayMatrix.mapRect(mTransRect);
-        mOriginalPath.addOval(mTransRect, Path.Direction.CCW);
-        return mOriginalPath;
+        mScreenPath.addOval(mTransRect, Path.Direction.CCW);
+        return mScreenPath;
     }
 
     @Override
@@ -105,8 +105,8 @@ public class Oval extends TwoDimensionalShape {
     }
 
     @Override
-    public int checkRegionPressedArea(float x, float y) {
-        return super.checkRegionPressedArea(x, y);
+    public int checkPressedRegion(float x, float y) {
+        return super.checkPressedRegion(x, y);
     }
 
     @Override

@@ -19,6 +19,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
@@ -71,13 +72,13 @@ public class Rectangle extends TwoDimensionalShape {
     }
 
     @Override
-    public Path getOriginalPath() {
-        mOriginalPath.reset();
+    public Path getScreenPath() {
+        mScreenPath.reset();
         mTransRect.set(mDoodleRect);
         mDrawingMatrix.mapRect(mTransRect);
         mDisplayMatrix.mapRect(mTransRect);
-        mOriginalPath.addOval(mTransRect, Path.Direction.CCW);
-        return mOriginalPath;
+        mScreenPath.addOval(mTransRect, Path.Direction.CCW);
+        return mScreenPath;
     }
 
     @Override
@@ -99,8 +100,8 @@ public class Rectangle extends TwoDimensionalShape {
     }
 
     @Override
-    public int checkRegionPressedArea(float x, float y) {
-        return super.checkRegionPressedArea(x, y);
+    public int checkPressedRegion(float x, float y) {
+        return super.checkPressedRegion(x, y);
     }
 
     @Override
