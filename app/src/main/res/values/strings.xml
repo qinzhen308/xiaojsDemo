@@ -336,4 +336,7 @@
     <string name="person_lesson">Ta的课</string>
     <string name="person_comment">评价</string>
     <string name="person_moment">动态</string>
+    <string name="send">发送</string>
+    <string name="talk_about_your_comment">说说你的评论</string>
+    <string name="comment_reply">回复&#160;%1$s:</string>
 </resources>

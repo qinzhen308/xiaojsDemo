@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/moment_write_comment_bg"/>
+    <stroke
+            android:color="@color/moment_write_comment_stoke"
+            android:width="@dimen/px1"/>
+</shape>

@@ -223,4 +223,42 @@
         <item name="android:fastScrollEnabled">true</item>
     </style>
 
+    <!-- 透明Activity样式从下往上弹出 -->
+    <style name="ActivityStyleBottomToTop" parent="android:Theme.Translucent">
+
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 动画效果 -->
+        <item name="android:windowAnimationStyle">@style/bottom_to_upStyle</item>
+        <!-- 对话框是否有遮盖 -->
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 设置是否背景模糊 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:baselineAlignBottom">true</item>
+    </style>
+
+    <style name="bottom_to_upStyle" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
+
+    <!-- 透明Activity的dialog样式 -->
+    <style name="CustomerDialog" parent="android:Theme.Translucent">
+
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 对话框是否有遮盖 -->
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 设置是否背景模糊 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:baselineAlignBottom">true</item>
+    </style>
 </resources>

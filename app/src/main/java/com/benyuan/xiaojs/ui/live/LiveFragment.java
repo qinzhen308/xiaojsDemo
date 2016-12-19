@@ -78,25 +78,6 @@ public class LiveFragment extends BaseFragment {
         mHorizontalListView.setLayoutParams(lp);
         mGrid.setAdapter(new LiveAdapter(mContext,mGrid));
 
-//        if (mUserType == LiveConstant.USER_TEACHER){
-//            mTeach.setSelected(true);
-//        }else {
-//            mLearn.setSelected(true);
-//        }
-
-//        mTeach.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switchTab(0);
-//            }
-//        });
-//        mLearn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switchTab(1);
-//            }
-//        });
-
         mLessonList.setAdapter(new LiveLessonAdapter(mContext));
     }
 

@@ -70,12 +70,12 @@ public class ImageFlowLayout extends FlowBaseLayout{
     }
 
     public void show(List<Bitmap> bitmaps,int radius,int margin){
+        removeAllViews();
         if (bitmaps == null || bitmaps.size() == 0)
             return;
         mImageCount = bitmaps.size();
         mMargin = margin;
         mRadius = radius;
-        removeAllViews();
         setMaxLines(1);
         for (int i = 0;i<bitmaps.size();i++){
             ImageView image = getItem(bitmaps,radius,margin);
