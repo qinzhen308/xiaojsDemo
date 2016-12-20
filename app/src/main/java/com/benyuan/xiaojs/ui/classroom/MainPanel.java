@@ -24,7 +24,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
  * ======================================================================================== */
 
 public class MainPanel extends RelativeLayout {
-    private ClassRoomGestureDetector mGestureDetector;
+    private ClassroomGestureDetector mGestureDetector;
     private Whiteboard mWhiteboard;
     private boolean mWhiteBoardTransformation = false;
 
@@ -50,7 +50,7 @@ public class MainPanel extends RelativeLayout {
         return super.onInterceptTouchEvent(event);
     }
 
-    public void setGestureDetector(ClassRoomGestureDetector gestureDetector) {
+    public void setGestureDetector(ClassroomGestureDetector gestureDetector) {
         mGestureDetector = gestureDetector;
     }
 
@@ -61,7 +61,7 @@ public class MainPanel extends RelativeLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mGestureDetector != null) {
-            if (ClassRoomActivity.STATE_MAIN_PANEL == mGestureDetector.getState()) {
+            if (ClassroomActivity.STATE_MAIN_PANEL == mGestureDetector.getState()) {
                 int action = event.getActionMasked();
                 int pointCnt = event.getPointerCount();
                 if (pointCnt > 1) {

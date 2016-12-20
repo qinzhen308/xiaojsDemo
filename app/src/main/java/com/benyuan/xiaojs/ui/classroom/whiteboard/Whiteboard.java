@@ -35,8 +35,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.benyuan.xiaojs.ui.classroom.ClassRoomActivity;
-import com.benyuan.xiaojs.ui.classroom.ClassRoomGestureDetector;
+import com.benyuan.xiaojs.ui.classroom.ClassroomActivity;
+import com.benyuan.xiaojs.ui.classroom.ClassroomGestureDetector;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.action.Selector;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
@@ -136,7 +136,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private boolean mCanMovable;
     private boolean mIsRecordedParams;
 
-    private ClassRoomGestureDetector mClassRoomGestureDetector;
+    private ClassroomGestureDetector mClassroomGestureDetector;
 
     public Whiteboard(Context context) {
         super(context);
@@ -159,15 +159,15 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         initData(context);
     }
 
-    public void setGestureDetector(ClassRoomGestureDetector gestureDetector) {
-        mClassRoomGestureDetector = gestureDetector;
+    public void setGestureDetector(ClassroomGestureDetector gestureDetector) {
+        mClassroomGestureDetector = gestureDetector;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mClassRoomGestureDetector != null) {
-            if (ClassRoomActivity.STATE_WHITE_BOARD == mClassRoomGestureDetector.getState()) {
-                mClassRoomGestureDetector.onTouchEvent(event);
+        if (mClassroomGestureDetector != null) {
+            if (ClassroomActivity.STATE_WHITE_BOARD == mClassroomGestureDetector.getState()) {
+                mClassroomGestureDetector.onTouchEvent(event);
                 mViewGestureListener.onTouchEvent(event);
                 return true;
             } else {
