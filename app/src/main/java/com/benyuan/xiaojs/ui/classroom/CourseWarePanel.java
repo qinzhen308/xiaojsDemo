@@ -15,6 +15,7 @@ package com.benyuan.xiaojs.ui.classroom;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -32,7 +33,7 @@ public class CourseWarePanel extends Panel {
 
     @Override
     public View onCreateView() {
-        return null;
+        return  null;
     }
 
     @Override

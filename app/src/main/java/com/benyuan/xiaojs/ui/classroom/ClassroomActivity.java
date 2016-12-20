@@ -132,8 +132,7 @@ public class ClassroomActivity extends FragmentActivity {
     }
 
     /**
-     * 教室内容分为WhiteBord，(MainPanel:含视频) 2层，底层是WhiteBord
-     * 通过重写MainPanel和WhiteBord的OnTouchEvent来控制事件分发
+     * 教室内容分为WhiteBord，(MainPanel:含视频) 2层，底层是WhiteBord 通过重写MainPanel和WhiteBord的OnTouchEvent来控制事件分发
      */
     private void initGestureDetector() {
         mMainPanelGestureDetector = new ClassroomGestureDetector(this, new MainPanelGestureListener());
@@ -146,6 +145,8 @@ public class ClassroomActivity extends FragmentActivity {
     }
 
     private void initDrawer() {
+        //默认关闭手势滑动
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -182,12 +183,16 @@ public class ClassroomActivity extends FragmentActivity {
 
     private boolean m = false;
 
-    @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.courese_ware_btn, R.id.setting_btn,
+    @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.course_ware_btn, R.id.setting_btn,
             R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn, R.id.play_pause_btn,
-            R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.color_picker_btn})
+            R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.color_picker_btn,
+            R.id.exit_btn, R.id.main_screen_setting, R.id.save_white_board_btn})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
+                finish();
+                break;
+            case R.id.exit_btn:
                 finish();
                 break;
             case R.id.blackboard_switcher_btn:
@@ -210,7 +215,7 @@ public class ClassroomActivity extends FragmentActivity {
                 }
                 mContainer.addPlayer(Config.pathHK);
                 break;
-            case R.id.courese_ware_btn:
+            case R.id.course_ware_btn:
                 openCourseWarePanel();
                 break;
             case R.id.setting_btn:
@@ -230,6 +235,10 @@ public class ClassroomActivity extends FragmentActivity {
                 break;
             case R.id.more_btn:
                 switchWhiteBoardPanel();
+                break;
+            case R.id.main_screen_setting:
+                break;
+            case R.id.save_white_board_btn:
                 break;
             case R.id.select_btn:
             case R.id.handwriting_btn:
@@ -255,7 +264,7 @@ public class ClassroomActivity extends FragmentActivity {
     }
 
     /**
-     * 打开课件
+     * 打开课件，课件的布局是提前在xml布局添加了，这里打开课件只需要绑定数据
      */
     private void openCourseWarePanel() {
         if (mCourseWarePanel == null) {

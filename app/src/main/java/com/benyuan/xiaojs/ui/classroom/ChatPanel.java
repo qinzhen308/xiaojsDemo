@@ -32,10 +32,16 @@ public class ChatPanel extends Panel implements View.OnClickListener {
     private ListView mChatContactLv;
     private ChatSimpleContactAdapter mChatContactAdapter;
 
+    private ListView mChatMsgLv;
+    private ChatMsgAdapter mChatMsgAdapter;
+
     private View mContactView;
     private View mChatView;
 
+    private ImageView mAddContact;
+    private ImageView mManageContact;
     private ImageView mOpenMsg;
+
     private ImageView mOpenContact;
 
     private int mCurrentMode = MODE_CONTACT;
@@ -85,11 +91,18 @@ public class ChatPanel extends Panel implements View.OnClickListener {
 
         mContactBook = (ListView) root.findViewById(R.id.contact_book);
         mChatContactLv = (ListView) root.findViewById(R.id.chat_simple_contact);
+        mChatMsgLv = (ListView)root.findViewById(R.id.chat_msg);
 
         mOpenContact = (ImageView) root.findViewById(R.id.open_contact);
+
         mOpenMsg = (ImageView) root.findViewById(R.id.open_chat);
+        mAddContact = (ImageView) root.findViewById(R.id.add_contact);
+        mManageContact = (ImageView) root.findViewById(R.id.manage_contact);
+
         mOpenMsg.setOnClickListener(this);
         mOpenContact.setOnClickListener(this);
+        mAddContact.setOnClickListener(this);
+        mManageContact.setOnClickListener(this);
     }
 
     @Override
@@ -98,10 +111,15 @@ public class ChatPanel extends Panel implements View.OnClickListener {
             case R.id.open_chat:
                 switchToChat();
                 setChatSimpleContactData(false);
+                setChatMsgData(false);
                 break;
             case R.id.open_contact:
                 switchToContact();
                 setContactBookData(false);
+                break;
+            case R.id.add_contact:
+                break;
+            case R.id.manage_contact:
                 break;
         }
     }
@@ -138,6 +156,19 @@ public class ChatPanel extends Panel implements View.OnClickListener {
             //TODO set data
             if (dataChanged) {
                 mChatContactAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    private void setChatMsgData(boolean dataChanged) {
+        if (mChatMsgAdapter == null) {
+            mChatMsgAdapter = new ChatMsgAdapter(mContext);
+            mChatMsgLv.setAdapter(mChatMsgAdapter);
+            mChatMsgLv.setDividerHeight(0);
+        } else {
+            //TODO set data
+            if (dataChanged) {
+                mChatMsgAdapter.notifyDataSetChanged();
             }
         }
     }

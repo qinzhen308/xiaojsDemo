@@ -57,21 +57,21 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_message"/>
+                    android:src="@drawable/cr_chat"/>
 
             <ImageView
                     android:id="@+id/add_contact"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_message"/>
+                    android:src="@drawable/cr_add_contact"/>
 
             <ImageView
                     android:id="@+id/manage_contact"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_message"/>
+                    android:src="@drawable/cr_contact_manage"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -93,48 +93,87 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                <TextView
+                <LinearLayout
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:gravity="center_vertical"
                         android:layout_height="@dimen/px80"
-                        android:text="@string/classroom_discussion"
                         android:paddingLeft="@dimen/px10"
                         android:paddingRight="@dimen/px15"
-                        android:textColor="@color/font_white"
-                        android:textSize="@dimen/font_30px"
-                        android:background="@color/classroom_chat_bg"
-                        android:drawableRight="@drawable/toggle_btn_selector"/>
+                        android:background="@color/classroom_chat_bg">
 
-                <TextView
+                    <TextView
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/classroom_discussion"
+                            android:textColor="@color/font_white"
+                            android:textSize="@dimen/font_30px"/>
+
+                    <ToggleButton
+                            android:id="@+id/discussion_switcher"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/toggle_btn_selector"
+                            android:textOff=""
+                            android:textOn=""/>
+                </LinearLayout>
+
+                <LinearLayout
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/px80"
                         android:gravity="center_vertical"
-                        android:text="龚婷"
+                        android:layout_height="@dimen/px80"
                         android:paddingLeft="@dimen/px10"
-                        android:paddingRight="@dimen/px15"
-                        android:textColor="@color/font_white"
-                        android:textSize="@dimen/font_30px"
-                        android:drawableRight="@drawable/ic_del_label"/>
+                        android:paddingRight="@dimen/px15">
+
+                    <TextView
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="龚婷"
+                            android:textColor="@color/font_white"
+                            android:textSize="@dimen/font_30px"/>
+
+                    <ImageView
+                            android:id="@+id/del_chat_tab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_del_label"/>
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <ListView
-                    android:id="@+id/chat_content"
+                    android:id="@+id/chat_msg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/chat_tab"
                     android:background="@color/classroom_chat_bg"
-                    android:layout_above="@+id/input">
+                    android:layout_above="@+id/msg_input_layout">
 
             </ListView>
 
-            <EditText
-                    android:id="@+id/input"
+            <FrameLayout
+                    android:id="@+id/msg_input_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/px80"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/white"/>
+                    android:layout_height="wrap_content"
+                    android:background="@color/classroom_chat_bg"
+                    android:layout_alignParentBottom="true">
+
+                <EditText
+                        android:id="@+id/msg_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/px70"
+                        android:background="@drawable/cr_msg_input_bg"
+                        android:padding="@dimen/px5"
+                        android:layout_marginLeft="@dimen/px20"
+                        android:layout_marginRight="@dimen/px20"
+                        android:layout_marginBottom="@dimen/px20"
+                        android:imeOptions="actionSend"/>
+            </FrameLayout>
+
         </RelativeLayout>
 
         <LinearLayout
@@ -155,7 +194,7 @@
                     android:layout_height="@dimen/px80"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="center"
-                    android:src="@drawable/ic_message"/>
+                    android:src="@drawable/cr_contact_book"/>
         </LinearLayout>
 
 

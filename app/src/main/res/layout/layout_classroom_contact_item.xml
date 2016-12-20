@@ -6,6 +6,7 @@
               android:paddingTop="@dimen/px16"
               android:paddingBottom="@dimen/px16"
               android:paddingLeft="@dimen/px20"
+              android:paddingRight="@dimen/px10"
               android:gravity="center_vertical">
 
     <ImageView
@@ -49,19 +50,17 @@
 
 
     <ImageView
-            android:id="@+id/msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/px10"
-            android:paddingRight="@dimen/px10"
-            android:src="@drawable/ic_message_pressed"/>
-
-    <ImageView
             android:id="@+id/video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/px10"
-            android:paddingRight="@dimen/px10"
-            android:src="@drawable/ic_message_pressed"/>
+            android:padding="@dimen/px16"
+            android:src="@drawable/cr_video"/>
+
+    <ImageView
+            android:id="@+id/microphone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/px16"
+            android:src="@drawable/cr_microphone"/>
 
 </LinearLayout>

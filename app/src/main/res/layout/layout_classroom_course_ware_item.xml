@@ -66,6 +66,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px10"
+            android:maxHeight="@dimen/px2"
+            android:progressDrawable="@drawable/course_progress_bar"
+            android:thumb="@drawable/ic_cw_progress_controller"
+            android:thumbOffset="@dimen/px1"
             android:layout_below="@+id/img1"/>
 
 </RelativeLayout>

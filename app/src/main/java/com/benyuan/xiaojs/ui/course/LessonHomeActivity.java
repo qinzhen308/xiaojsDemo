@@ -5,11 +5,9 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +27,6 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Enroll;
 import com.benyuan.xiaojs.model.Fee;
 import com.benyuan.xiaojs.model.LessonDetail;
-import com.benyuan.xiaojs.model.Promotion;
 import com.benyuan.xiaojs.model.Schedule;
 import com.benyuan.xiaojs.model.Teacher;
 import com.benyuan.xiaojs.ui.base.BaseActivity;
@@ -105,7 +102,7 @@ public class LessonHomeActivity extends BaseActivity {
         loadData();
     }
 
-    @OnClick({R.id.back_btn, R.id.favourite_btn, R.id.share_btn, R.id.report, R.id.apply_btn})
+    @OnClick({R.id.back_btn, R.id.favourite_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
@@ -113,7 +110,7 @@ public class LessonHomeActivity extends BaseActivity {
                 break;
             case R.id.favourite_btn:
                 break;
-            case R.id.share_btn:
+            case R.id.share_wb_btn:
                 break;
             case R.id.report:
                 break;
