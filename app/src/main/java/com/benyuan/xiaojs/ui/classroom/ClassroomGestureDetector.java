@@ -19,20 +19,20 @@ import android.view.GestureDetector;
  *
  * ======================================================================================== */
 
-public class ClassRoomGestureDetector extends GestureDetector {
+public class ClassroomGestureDetector extends GestureDetector {
     private Context mContext;
 
-    public ClassRoomGestureDetector(Context context, OnGestureListener listener) {
+    public ClassroomGestureDetector(Context context, OnGestureListener listener) {
         super(context, listener);
         init(context);
     }
 
-    public ClassRoomGestureDetector(Context context, OnGestureListener listener, Handler handler) {
+    public ClassroomGestureDetector(Context context, OnGestureListener listener, Handler handler) {
         super(context, listener, handler);
         init(context);
     }
 
-    public ClassRoomGestureDetector(Context context, OnGestureListener listener, Handler handler, boolean unused) {
+    public ClassroomGestureDetector(Context context, OnGestureListener listener, Handler handler, boolean unused) {
         super(context, listener, handler, unused);
         init(context);
     }
@@ -42,10 +42,10 @@ public class ClassRoomGestureDetector extends GestureDetector {
     }
 
     public int getState() {
-        if (mContext instanceof ClassRoomActivity) {
-            return ((ClassRoomActivity)mContext).getCurrentState();
+        if (mContext instanceof ClassroomActivity) {
+            return ((ClassroomActivity)mContext).getCurrentState();
         }
 
-        return ClassRoomActivity.STATE_MAIN_PANEL;
+        return ClassroomActivity.STATE_MAIN_PANEL;
     }
 }

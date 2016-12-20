@@ -42,7 +42,7 @@ import butterknife.Unbinder;
  *
  * ======================================================================================== */
 
-public class ClassRoomActivity extends FragmentActivity {
+public class ClassroomActivity extends FragmentActivity {
     public final static int STATE_MAIN_PANEL = 0;
     public final static int STATE_LIVE = 1;
     public final static int STATE_WHITE_BOARD = 2;
@@ -101,8 +101,8 @@ public class ClassRoomActivity extends FragmentActivity {
     private DialogFragment mWhiteBoardManagePanel;
 
     //gesture
-    private ClassRoomGestureDetector mMainPanelGestureDetector;
-    private ClassRoomGestureDetector mWhiteBoardGestureDetector;
+    private ClassroomGestureDetector mMainPanelGestureDetector;
+    private ClassroomGestureDetector mWhiteBoardGestureDetector;
     private int mCurrentState = STATE_MAIN_PANEL;
     private boolean mAnimating = false;
     private PanelAnimListener mPanelAnimListener;
@@ -136,8 +136,8 @@ public class ClassRoomActivity extends FragmentActivity {
      * 通过重写MainPanel和WhiteBord的OnTouchEvent来控制事件分发
      */
     private void initGestureDetector() {
-        mMainPanelGestureDetector = new ClassRoomGestureDetector(this, new MainPanelGestureListener());
-        mWhiteBoardGestureDetector = new ClassRoomGestureDetector(this, new WhiteBoardGestureListener());
+        mMainPanelGestureDetector = new ClassroomGestureDetector(this, new MainPanelGestureListener());
+        mWhiteBoardGestureDetector = new ClassroomGestureDetector(this, new WhiteBoardGestureListener());
 
         mMainPanel.setGestureDetector(mMainPanelGestureDetector);
         //为了控制面板模式也能缩放，移动画布操作
