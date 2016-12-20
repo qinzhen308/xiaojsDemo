@@ -1,9 +1,15 @@
 package com.benyuan.xiaojs.ui.message;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.benyuan.xiaojs.R;
@@ -19,6 +25,9 @@ public class PostDynamicActivity extends BaseActivity {
 
     @BindView(R.id.pic_thumbnail)
     ImageView thumbnailView;
+
+    @BindView(R.id.input_edit)
+    EditText editText;
 
     @Override
     protected void addViewContent() {
@@ -42,10 +51,22 @@ public class PostDynamicActivity extends BaseActivity {
                 break;
             case R.id.chose_at:
                 startActivity(new Intent(this, ChoiceContactActivity.class));
+                testAddAt();
                 break;
 
         }
 
+    }
+
+    private void testAddAt() {
+
+        String str = "@李小萌";
+
+        SpannableStringBuilder ssb = new SpannableStringBuilder(str);
+        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.input_at));
+        ssb.setSpan(span,0,str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        editText.append(ssb.append(" "));
     }
 
 
