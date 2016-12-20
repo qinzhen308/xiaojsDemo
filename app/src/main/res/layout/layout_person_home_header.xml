@@ -22,6 +22,7 @@
                 android:layout_height="wrap_content">
 
             <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    android:id="@+id/person_home_head"
                     android:scaleType="fitXY"
                     app:oval="true"
                     app:border_color="@color/white"
@@ -33,6 +34,7 @@
                     android:layout_height="@dimen/px100"/>
 
             <com.benyuan.xiaojs.ui.widget.IconTextView
+                    android:id="@+id/person_home_name"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/px10"
                     android:text="林妙可"
@@ -108,6 +110,67 @@
         </LinearLayout>
     </FrameLayout>
 
+    <TextView
+            android:textSize="@dimen/font_30px"
+            android:textColor="@color/font_black"
+            android:text="与我相关"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <com.benyuan.xiaojs.ui.view.RelationshipView
+            android:id="@+id/person_home_relationship"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/font_black"
+                android:text="我们共同关注的人"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout
+                android:id="@+id/person_home_follow_people"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/font_black"
+                android:layout_marginTop="@dimen/px30"
+                android:text="学校目标"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/person_home_target"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/font_black"
+                android:layout_marginTop="@dimen/px30"
+                android:text="计算机二级OFFICE高级应用取证普通班"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_marginTop="@dimen/px30"/>
+
     <RelativeLayout
             android:id="@+id/person_home_look_material"
             android:background="@drawable/white_grey_selector"
@@ -137,4 +200,67 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/px30"
             android:background="@color/main_bg"/>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/person_home_free_video_cover"
+                android:scaleType="fitXY"
+                android:src="@drawable/default_portrait"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px200"/>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:background="@drawable/video_play_conner_bg"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:scaleType="fitXY"
+                    android:layout_marginLeft="@dimen/px6"
+                    android:layout_marginTop="@dimen/px6"
+                    android:layout_marginBottom="@dimen/px6"
+                    android:src="@drawable/ic_play"
+                    android:layout_width="@dimen/px68"
+                    android:layout_height="@dimen/px68"/>
+
+            <TextView
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/white"
+                    android:text="免费试听"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+                android:layout_gravity="bottom|left"
+                android:layout_marginLeft="@dimen/px20"
+                android:layout_marginBottom="@dimen/px20"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_30px"
+                    android:text="完美妆容，从底妆开始"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_26px"
+                    android:text="完美妆容，从底妆开始"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

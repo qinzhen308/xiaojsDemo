@@ -31,4 +31,12 @@
             android:layout_marginLeft="@dimen/px30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+    <com.benyuan.xiaojs.ui.view.RelationshipCircleView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <com.benyuan.xiaojs.ui.view.RelationshipView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 </LinearLayout>

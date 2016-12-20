@@ -80,6 +80,17 @@
 
     <color name="light_grey">#fcfcfc</color>
     <color name="moment_comment_bg">#eaecef</color>
+    
+    <color name="light_blue">#ecf6fa</color>
+    <color name="light_blue1">#ebf6fa</color>
+    <color name="light_blue2">#95cee3</color>
+
+    <color name="relationship_tag1">#6bd8ef</color>
+    <color name="relationship_tag2">#9abef7</color>
+    <color name="relationship_tag3">#ff7e7e</color>
+    <color name="relationship_tag4">#ff9833</color>
+    <color name="relationship_tag5">#b8e986</color>
+    <color name="relationship_tag6">#50e3c2</color>
     <!--whiteboard-->
     <color name="wb_color_1">#44DB5E</color>
     <color name="wb_color_2">#54C7FC</color>

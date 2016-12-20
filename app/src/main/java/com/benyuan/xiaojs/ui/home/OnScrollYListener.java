@@ -31,6 +31,13 @@ public abstract class OnScrollYListener implements AbsListView.OnScrollListener 
         mListView = list;
     }
 
+    public OnScrollYListener(){
+    }
+
+    public void setListView(ListView listView){
+        mListView = listView;
+    }
+
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 

@@ -18,21 +18,29 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.base.BaseScrollTabActivity;
 import com.benyuan.xiaojs.ui.base.BaseScrollTabListAdapter;
+import com.benyuan.xiaojs.ui.view.RelationshipView;
+import com.benyuan.xiaojs.ui.widget.IconTextView;
+import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+import com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout;
 import com.benyuan.xiaojs.util.BitmapUtils;
+import com.benyuan.xiaojs.util.DeviceUtil;
 import com.benyuan.xiaojs.util.FastBlur;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class PersonHomeActivity extends BaseScrollTabActivity {
+public class PersonHomeActivity extends BaseScrollTabActivity implements BaseScrollTabActivity.OnPagerClickListener {
 
     private Unbinder mBinder;
 
@@ -42,6 +50,21 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
     View mMaterial;
     @BindView(R.id.person_home_header_image_holder)
     View mImageHolder;
+    @BindView(R.id.person_home_head)
+    RoundedImageView mHead;
+    @BindView(R.id.person_home_name)
+    IconTextView mName;
+    @BindView(R.id.person_home_relationship)
+    RelationshipView mRelationship;
+    @BindView(R.id.person_home_follow_people)
+    ImageFlowLayout mFollowPeople;
+    @BindView(R.id.person_home_target)
+    TextView mTarget;
+
+    @BindView(R.id.person_home_free_video_cover)
+    ImageView mFreeCover;
+
+    private float mCoverScale = 9.0f / 16;
 
     @Override
     public void addHoverHeaderView() {
@@ -50,6 +73,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         mPagerTitles.add(getString(R.string.person_comment));
         mPagerTitles.add(getString(R.string.person_moment));
         View header = LayoutInflater.from(this).inflate(R.layout.layout_person_home_header, null);
+        View footer = LayoutInflater.from(this).inflate(R.layout.layout_person_home_footer,null);
         ArrayList<BaseScrollTabListAdapter> adapters = new ArrayList<>();
         PersonHomeLessonAdapter adapter = new PersonHomeLessonAdapter(this);
         PersonHomeLessonAdapter adapter1 = new PersonHomeLessonAdapter(this);
@@ -57,32 +81,64 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         adapters.add(adapter);
         adapters.add(adapter1);
         adapters.add(adapter2);
-        addTabListIntoContent(header, null, mPagerTitles, adapters, 0);
+        addTabListIntoContent(header, footer, mPagerTitles, adapters, 0);
         setNeedTabView(true);
 
         mBinder = ButterKnife.bind(this);
         initHeader();
+        setOnPagerClickListener(this);
     }
 
-    private void initHeader(){
-        Bitmap blur = FastBlur.smartBlur(BitmapUtils.getBitmap(this,R.drawable.default_portrait),2,true);
+    private void initHeader() {
+        needHeaderDivider(false);
+        Bitmap blur = FastBlur.smartBlur(BitmapUtils.getBitmap(this, R.drawable.default_portrait), 2, true);
         mBlur.setImageBitmap(blur);
         needHeader(false);
         mTabHeader.setBackgroundResource(R.drawable.ic_home_title_bg);
         mTabRightText.setText("关注他");
         mTabRightText.setTextColor(getResources().getColor(R.color.white));
+
+        int width = DeviceUtil.getScreenWidth(this);
+        int height = (int) (width * mCoverScale);
+        mFreeCover.getLayoutParams().height = height;
+
+        List<Bitmap> lists = new ArrayList<>();
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
+        mFollowPeople.show(lists);
     }
 
     @Override
     protected void onScrollY(int y) {
-        if (y >= 0) {
-            int bannerHeight = mImageHolder.getMeasuredHeight();
-            if (y >= 0 && y <= bannerHeight) {
+        int bannerHeight = mImageHolder.getMeasuredHeight();
+        Logger.i("onScrollY y = " + y);
+        if (y <= bannerHeight) {
+            changeHeader(true);
+        } else {
+            changeHeader(false);
+        }
+    }
+
+    private void changeHeader(boolean transparent) {
+        if (mTabHeader != null && mTabRightText != null) {
+            if (transparent) {
                 mTabHeader.setBackgroundResource(R.drawable.ic_home_title_bg);
                 mTabRightText.setTextColor(getResources().getColor(R.color.white));
-            }else{
+                needHeaderDivider(false);
+            } else {
                 mTabHeader.setBackgroundColor(getResources().getColor(R.color.white));
                 mTabRightText.setTextColor(getResources().getColor(R.color.common_text));
+                needHeaderDivider(true);
             }
         }
     }
@@ -93,13 +149,13 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
     }
 
     @OnClick({R.id.left_image})
-    public void onClick(View view){
+    public void onClick(View view) {
 
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.left_image:
-                if (mMaterial.getVisibility() == View.VISIBLE){
+                if (mMaterial.getVisibility() == View.VISIBLE) {
                     mMaterial.setVisibility(View.GONE);
-                }else {
+                } else {
                     mMaterial.setVisibility(View.VISIBLE);
                 }
 
@@ -107,11 +163,19 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         }
     }
 
+
     @Override
     protected void onDestroy() {
         if (mBinder != null) {
             mBinder.unbind();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onSelected(int position) {
+        changeHeader(true);
+
+        Logger.i("onSelected");
     }
 }
