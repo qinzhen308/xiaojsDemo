@@ -26,14 +26,14 @@ import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshBase;
 import com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshListView;
 import com.benyuan.xiaojs.ui.home.OnScrollYListener;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 
 /**
- * 功能描述：带共同头视图的单个或者多个Tab可切换 往上拉可选择是否悬浮切换Tab 支持上下拉刷新 采用多PullToRefreshListView实现
- * 通过监听多PullToRefreshListView的滑动坐标来同步顶部Tab的悬停 通过监听页面切换不断remove 和 add headerView到头部
+ * 功能描述：带共同头视图的单个或者多个Tab可切换 往上拉可选择是否悬浮切换Tab 支持上下拉刷新 采用多PullToRefreshListView实现 通过监听多PullToRefreshListView的滑动坐标来同步顶部Tab的悬停 通过监听页面切换不断remove 和 add headerView到头部
  *
  * 需在子类调用ButterKnife.bind对view进行绑定
  */
@@ -89,6 +89,9 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
     protected TextView mTabMiddleText;
     @BindView(R.id.scroll_tab_right_view)
     protected TextView mTabRightText;
+    @BindView(R.id.scroll_tab_header_divider)
+    protected View mDivider;
+
 
     public void setShowHover(boolean isShowHover) {
         this.mIsShowHover = isShowHover;
@@ -159,7 +162,14 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
 
     }
 
-    ;
+    @Override
+    protected void needHeaderDivider(boolean need) {
+        if (need) {
+            mDivider.setVisibility(View.VISIBLE);
+        } else {
+            mDivider.setVisibility(View.GONE);
+        }
+    }
 
     private void initBaseView(View headerView, View footView, int hoverResId) {
         mViewPagerContent = (LinearLayout) findViewById(R.id.pager_content);
@@ -459,12 +469,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
                 listView.setMode(PullToRefreshBase.Mode.BOTH);
                 listView.getRefreshableView().setDivider(colorDrawable);
                 listView.getRefreshableView().setDividerHeight(height);
-                final OnScrollYListener yl = new OnScrollYListener(listView.getRefreshableView()) {
-                    @Override
-                    public void onScrollY(int y) {
-                        BaseScrollTabActivity.this.onScrollY(y);
-                    }
-                };
+
                 listView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
                     @Override
@@ -485,7 +490,10 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
                     @Override
                     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                         BaseScrollTabActivity.this.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, position);
-                        yl.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+                        OnScrollYListener yl = getYListener(position);
+                        if (yl != null) {
+                            yl.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+                        }
                     }
                 });
                 listView.setOnHeaderScrollListener(new PullToRefreshListView.OnHeaderScrollListener() {
@@ -503,6 +511,25 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
                 mViewPager.addView(listView, nlp);
             }
         }
+    }
+
+    private OnScrollYListener mYListener;
+
+    private OnScrollYListener getYListener(int position) {
+        if (position != mCurrentPosition) {
+            return null;
+        }
+
+        if (mYListener == null) {
+            mYListener = new OnScrollYListener() {
+                @Override
+                public void onScrollY(int y) {
+                    BaseScrollTabActivity.this.onScrollY(y);
+                }
+            };
+        }
+        mYListener.setListView(mListViewCache.get(position).getRefreshableView());
+        return mYListener;
     }
 
     protected void onScrollY(int y) {
@@ -741,11 +768,11 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
      */
     @Override
     public void onHeaderScroll(boolean isRefreashing, int value, int pagePosition) {
+        Logger.i("onHeaderScroll");
         if (mCurrentPosition != pagePosition && isRefreashing) {
             return;
         }
         headerScrollSize = value;
-        Log.e("Main", "onHeaderScroll=" + -value);
     }
 
     public void setNeedTabView(boolean need) {

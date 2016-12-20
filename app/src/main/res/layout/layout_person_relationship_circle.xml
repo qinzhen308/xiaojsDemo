@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:orientation="vertical"
+             android:padding="@dimen/px30"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content">
+
+    <View
+            android:background="@drawable/white_with_stoke_circle"
+            android:layout_width="@dimen/px255"
+            android:layout_height="@dimen/px255"
+            android:layout_gravity="center"
+            android:id="@+id/view"/>
+
+    <View
+            android:background="@drawable/light_blue_circle"
+            android:layout_width="@dimen/px220"
+            android:layout_height="@dimen/px220"
+            android:layout_gravity="center"/>
+
+    <View
+            android:background="@drawable/dark_blue_circle"
+            android:layout_width="@dimen/px200"
+            android:layout_height="@dimen/px200"
+            android:layout_gravity="center"/>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/relationship_desc"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/white"
+                android:text="同城"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/relationship_distance"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/white"
+                android:text="1288m"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+            android:id="@+id/relationship_other"
+            app:oval="true"
+            android:src="@drawable/default_portrait"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_marginTop="@dimen/px20"
+            app:border_color="@color/light_blue1"
+            app:border_width="@dimen/px1"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/px40"
+            android:layout_height="@dimen/px40"/>
+
+    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+            android:id="@+id/relationship_myself"
+            app:oval="true"
+            android:src="@drawable/default_portrait"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="@dimen/px40"
+            android:layout_marginBottom="@dimen/px40"
+            app:border_color="@color/light_blue1"
+            app:border_width="@dimen/px1"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/px40"
+            android:layout_height="@dimen/px40"/>
+</merge>

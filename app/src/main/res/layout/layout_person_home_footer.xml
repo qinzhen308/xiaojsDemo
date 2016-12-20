@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <View style="@style/DividerHorizontal"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_gravity="center"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:drawableLeft="@drawable/send_message_selector"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_28px"
+                    android:text="消息"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/px15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_gravity="center"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:drawableLeft="@drawable/counsel_selector"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_28px"
+                    android:text="约辅导"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/px15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_gravity="center"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:drawableLeft="@drawable/put_question_selector"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_28px"
+                    android:text="提问"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/px15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

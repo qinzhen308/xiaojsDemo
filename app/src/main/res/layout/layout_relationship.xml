@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/relationship_tag1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_28px"
+                android:text="AI零基础学平面设计"
+                android:background="@drawable/relationship_tag1_bg"
+                android:paddingTop="@dimen/px5"
+                android:paddingBottom="@dimen/px5"
+                android:paddingLeft="@dimen/px10"
+                android:paddingRight="@dimen/px10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <com.benyuan.xiaojs.ui.view.RelationshipCircleView
+                android:id="@+id/relationship_circle"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/relationship_tag2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_28px"
+                android:text="WEB前端怎样写简历"
+                android:layout_marginTop="@dimen/px20"
+                android:background="@drawable/relationship_tag2_bg"
+                android:paddingTop="@dimen/px5"
+                android:paddingBottom="@dimen/px5"
+                android:paddingLeft="@dimen/px10"
+                android:paddingRight="@dimen/px10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/relationship_tag3"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_28px"
+                    android:text="一级建造大师"
+                    android:layout_marginTop="@dimen/px20"
+                    android:background="@drawable/relationship_tag3_bg"
+                    android:layout_gravity="right"
+                    android:paddingTop="@dimen/px5"
+                    android:paddingBottom="@dimen/px5"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/relationship_tag4"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_28px"
+                    android:text="26岁"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="@dimen/px20"
+                    android:background="@drawable/relationship_tag4_bg"
+                    android:paddingTop="@dimen/px5"
+                    android:paddingBottom="@dimen/px5"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <View
+                android:background="@android:color/transparent"
+                android:layout_width="@dimen/px260"
+                android:layout_height="@dimen/px260"/>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/relationship_tag5"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_28px"
+                    android:text="北京大学"
+                    android:layout_marginTop="@dimen/px20"
+                    android:background="@drawable/relationship_tag5_bg"
+                    android:paddingTop="@dimen/px5"
+                    android:paddingBottom="@dimen/px5"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/relationship_tag6"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_28px"
+                    android:text="大美女"
+                    android:layout_marginTop="@dimen/px20"
+                    android:background="@drawable/relationship_tag6_bg"
+                    android:paddingTop="@dimen/px5"
+                    android:paddingBottom="@dimen/px5"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</merge>
