@@ -220,8 +220,10 @@ public class FlowBaseLayout extends ViewGroup {
 		mAllViews.add(lineViews);
 
 		if (showLast()){
-			mAllViews.get(0).remove(mAllViews.get(0).size() - 1);
-			mAllViews.get(0).add(lastView(getTotal() - mAllViews.get(0).size()));
+			if (mAllViews != null && mAllViews.size() > 1){
+				mAllViews.get(0).remove(mAllViews.get(0).size() - 1);
+				mAllViews.get(0).add(lastView(getTotal() - mAllViews.get(0).size()));
+			}
 		}
 		int left = 0;
 		int top = 0;

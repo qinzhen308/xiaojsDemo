@@ -40,6 +40,7 @@
     <color name="font_light_gray">#bfbfbf</color>
     <color name="font_black">#333333</color>
     <color name="font_blue">#0076ff</color>
+    <color name="translucent_10_blue">#1f0076ff</color>
     <color name="font_orange">#ff9833</color>
     <color name="font_error_red">#ff0000</color>
     <color name="font_red">#cc0000</color>

@@ -17,9 +17,11 @@ package com.benyuan.xiaojs.ui.live;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.common.pulltorefresh.BaseHolder;
@@ -62,6 +64,8 @@ public class LiveLessonAdapter extends CanInScrollviewListView.Adapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
+        holder.enter.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        holder.enter.getPaint().setAntiAlias(true);
 //        holder.time.setText("12:00");
 //        holder.image.setImageResource(R.drawable.default_portrait);
 //        holder.title.setText("titletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitle");
@@ -88,7 +92,8 @@ public class LiveLessonAdapter extends CanInScrollviewListView.Adapter {
         list.add(b8);
         list.add(b9);
         list.add(b10);
-        holder.imageFlow.showWithNum(list,mContext.getResources().getDimensionPixelSize(R.dimen.px20),mContext.getResources().getDimensionPixelSize(R.dimen.px2));
+        //holder.imageFlow.showWithNum(list,mContext.getResources().getDimensionPixelSize(R.dimen.px20),mContext.getResources().getDimensionPixelSize(R.dimen.px2));
+        holder.imageFlow.show(list,mContext.getResources().getDimensionPixelSize(R.dimen.px20),mContext.getResources().getDimensionPixelSize(R.dimen.px5));
         return convertView;
     }
 
@@ -96,15 +101,8 @@ public class LiveLessonAdapter extends CanInScrollviewListView.Adapter {
 
         @BindView(R.id.image_flow)
         ImageFlowLayout imageFlow;
-
-//        @BindView(R.id.live_block_time)
-//        TextView time;
-//        @BindView(R.id.live_block_image)
-//        ImageView image;
-//        @BindView(R.id.live_block_title)
-//        TextView title;
-//        @BindView(R.id.live_block_stu_num)
-//        TextView stuNum;
+        @BindView(R.id.live_enter)
+        TextView enter;
 
         public Holder(View view) {
             super(view);

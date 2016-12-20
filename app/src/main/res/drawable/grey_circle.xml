@@ -4,6 +4,6 @@
        android:useLevel="false">
     <solid android:color="@color/hor_divide_line2"/>
     <size
-            android:height="@dimen/px40"
-            android:width="@dimen/px40"/>
+            android:height="@dimen/px50"
+            android:width="@dimen/px50"/>
 </shape>

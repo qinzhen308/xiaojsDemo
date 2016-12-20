@@ -10,56 +10,157 @@ package com.benyuan.xiaojs.ui.widget.flow;
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
  * Date:2016/11/13
- * Desc:单行image的流式布局，多余的数据自动截取，不会出现显示部分的情况
+ * Desc:单行image的流式布局，多余的数据自动截取，不会出现显示部分的情况,如果数量超出1行会在最后显示剩余数量
  *
  * ======================================================================================== */
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
 import com.benyuan.xiaojs.ui.widget.RoundedImageView;
+import com.benyuan.xiaojs.util.BitmapUtils;
 
 import java.util.List;
 
-public class ImageFlowLayout extends FlowBaseLayout{
+public class ImageFlowLayout extends ViewGroup {
 
-    private OnItemClickListener l;
-    private int defaultMargin = getResources().getDimensionPixelSize(R.dimen.px10);
-    private int mImageCount;
 
-    private int mMargin;
-    private int mRadius;
+    public ImageFlowLayout(Context context) {
+        super(context);
+    }
+
     public ImageFlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public void show(List<Bitmap> bitmaps){
-        show(bitmaps,getResources().getDimensionPixelSize(R.dimen.px30),defaultMargin);
+    public ImageFlowLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
     }
 
-    public void show(List<Bitmap> bitmaps,int margin){
-        show(bitmaps,getResources().getDimensionPixelSize(R.dimen.px30),margin);
+    @TargetApi(21)
+    public ImageFlowLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void setOnItemClickListener(OnItemClickListener l){
-        this.l = l;
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        int width = getWidth();
+        int lineWidth = 0;
+        int num = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+            int childWidth = child.getMeasuredWidth();
+            if (lineWidth + childWidth + lp.leftMargin + lp.rightMargin < width) {
+                num++;
+                lineWidth += childWidth + lp.leftMargin + lp.rightMargin;
+            } else {
+                break;
+            }
+        }
+        int extra = getChildCount() - num;
+        int left = 0;
+        int top = 0;
+        for (int i = 0; i < num; i++) {
+            View child = getChildAt(i);
+            if (i == num - 1 && extra > 0) {
+                //最后一个需要显示数字
+                ((ImageView) child).setImageDrawable(getLastItem(extra + 1));
+            }
+
+            if (child == null || child.getVisibility() == View.GONE) {
+                continue;
+            }
+            MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+
+            // 计算childView的left,top,right,bottom
+            int lc = 0;
+            lc = left + lp.leftMargin;
+
+            int tc = top + lp.topMargin;
+            int rc = lc + child.getMeasuredWidth();
+            int bc = tc + child.getMeasuredHeight();
+
+            //Log.e(TAG, child + " , l = " + lc + " , t = " + t + " , r =" + rc + " , b = " + bc);
+
+            child.layout(lc, tc, rc, bc);
+
+            left += child.getMeasuredWidth() + lp.rightMargin + lp.leftMargin;
+        }
     }
 
-    public interface OnItemClickListener{
-        void onItemClick(int position);
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // 获得它的父容器为它设置的测量模式和大小
+        int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
+        int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
+        int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
+
+        // 如果是warp_content情况下，记录宽和高
+        int width = 0;
+        int height = 0;
+        /**
+         * 记录每一行的宽度，width不断取最大宽度
+         */
+        int lineWidth = 0;
+        /**
+         * 每一行的高度，累加至height
+         */
+        int lineHeight = 0;
+
+        int cCount = getChildCount();
+
+        int row = 0;
+
+        // 遍历每个子元素
+        for (int i = 0; i < cCount; i++) {
+            View child = getChildAt(i);
+            // 测量每一个child的宽和高
+            measureChild(child, widthMeasureSpec, heightMeasureSpec);
+            // 得到child的lp
+            MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+            // 当前子空间实际占据的宽度
+            int childWidth = child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
+            // 当前子空间实际占据的高度
+            int childHeight = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
+            /**
+             * 如果加入当前child，则超出最大宽度，则的到目前最大宽度给width，类加height 然后开启新行
+             */
+            if (lineWidth + childWidth > sizeWidth) {
+                width = Math.max(lineWidth, childWidth);// 取最大的
+                lineWidth = childWidth; // 重新开启新行，开始记录
+                // 叠加当前高度，
+                height += lineHeight;
+                row++;
+                break;
+//                // 开启记录下一行的高度
+//                lineHeight = childHeight;
+            } else
+            // 否则累加值lineWidth,lineHeight取最大高度
+            {
+                lineWidth += childWidth;
+                lineHeight = Math.max(lineHeight, childHeight);
+            }
+            // 如果是最后一个，则将当前记录的最大宽度和当前lineWidth做比较
+            if (i == cCount - 1) {
+                width = Math.max(width, lineWidth);
+                height += lineHeight;
+            }
+        }
+        setMeasuredDimension((modeWidth == MeasureSpec.EXACTLY) ? sizeWidth : width, (modeHeight == MeasureSpec.EXACTLY) ? sizeHeight : height);
     }
 
-    private ImageView getItem(List<Bitmap> bitmaps,int radius,int margin){
+    private ImageView getItem(List<Bitmap> bitmaps, int radius, int margin) {
         RoundedImageView image = new RoundedImageView(getContext());
-        MarginLayoutParams mlp = new MarginLayoutParams(radius * 2,radius * 2);
+        MarginLayoutParams mlp = new MarginLayoutParams(radius * 2, radius * 2);
         mlp.leftMargin = margin;
         mlp.rightMargin = margin;
         image.setLayoutParams(mlp);
@@ -69,79 +170,21 @@ public class ImageFlowLayout extends FlowBaseLayout{
         return image;
     }
 
-    public void show(List<Bitmap> bitmaps,int radius,int margin){
-        removeAllViews();
-        if (bitmaps == null || bitmaps.size() == 0)
-            return;
-        mImageCount = bitmaps.size();
-        mMargin = margin;
-        mRadius = radius;
-        setMaxLines(1);
-        for (int i = 0;i<bitmaps.size();i++){
-            ImageView image = getItem(bitmaps,radius,margin);
-            addView(image);
-            final int index = i;
-            image.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (l != null){
-                        l.onItemClick(index);
-                    }
-                }
-            });
-        }
+    private Drawable getLastItem(int num) {
+        Bitmap b = BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.grey_circle));
+        return BitmapUtils.getDrawableWithText(getContext(), b, String.valueOf(num), R.color.common_text, R.dimen.font_24px);
     }
 
-    public void showWithNum(List<Bitmap> bitmaps,int radius,int margin){
+    public void show(List<Bitmap> bitmaps) {
+        int radius = getResources().getDimensionPixelSize(R.dimen.px25);
+        int margin = getResources().getDimensionPixelSize(R.dimen.px5);
         show(bitmaps,radius,margin);
-        showLast = true;
     }
 
-    public void showWithNum(List<Bitmap> bitmaps,int margin){
-        showWithNum(bitmaps,getResources().getDimensionPixelSize(R.dimen.px30),margin);
-    }
-
-    private boolean showLast;
-
-    @Override
-    protected boolean showLast() {
-        return showLast;
-    }
-
-    @Override
-    protected View lastView(int num) {
-        if (num > 0){
-            TextView textView = new TextView(getContext());
-            ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(mRadius * 2,mRadius * 2);
-            lp.leftMargin = mMargin;
-            textView.setLayoutParams(lp);
-            textView.setGravity(Gravity.CENTER);
-            textView.setTextColor(getResources().getColor(R.color.common_text));
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimensionPixelSize(R.dimen.font_22px));
-            textView.setBackgroundResource(R.drawable.grey_circle);
-            if (num <= 0){
-                textView.setText(String.valueOf(0));
-            }else if (num > 0 && num < 99){
-                textView.setText(String.valueOf(num));
-            }else {
-                textView.setText("99+");
-            }
-            addView(textView);
-            textView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (l != null){
-                        l.onItemClick(getChildCount() - 1);
-                    }
-                }
-            });
-            return textView;
+    public void show(List<Bitmap> bitmaps,int radius,int margin){
+        for (int i = 0; i < bitmaps.size(); i++) {
+            ImageView view = getItem(bitmaps, radius, margin);
+            addView(view);
         }
-        return null;
-    }
-
-    @Override
-    protected int getTotal() {
-        return mImageCount;
     }
 }

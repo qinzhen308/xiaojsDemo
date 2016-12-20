@@ -32,8 +32,6 @@ public class LiveFragment extends BaseFragment {
 
     PullToRefreshGridView mGrid;
     HorizontalAdaptScrollerView mHorizontalListView;
-//    BottomLineTextView mTeach;
-//    BottomLineTextView mLearn;
     CanInScrollviewListView mLessonList;
 
     View mHeader;
