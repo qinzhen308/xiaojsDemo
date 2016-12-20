@@ -22,9 +22,8 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
@@ -49,12 +48,20 @@ public class TextWriting extends Doodle {
      * */
     private int mTextOrientation = TEXT_HORIZONTAL;
 
-    public TextWriting(WhiteBoard whiteBoard, Paint paint) {
-        this(whiteBoard, paint, TEXT_HORIZONTAL);
+    private TextWriting(Whiteboard whiteboard, Paint paint) {
+        this(whiteboard, paint, TEXT_HORIZONTAL);
     }
 
-    public TextWriting(WhiteBoard whiteBoard, Paint paint, int textOrientation) {
-        super(whiteBoard, Doodle.STYLE_TEXT);
+    public TextWriting(Whiteboard whiteboard, Paint paint, int textOrientation) {
+        super(whiteboard, Doodle.STYLE_TEXT);
+        setPaint(paint);
+
+        init(textOrientation);
+    }
+
+    public TextWriting(Whiteboard whiteboard, Paint paint, int textOrientation, String doodleID) {
+        super(whiteboard, Doodle.STYLE_TEXT);
+        setDoodleId(doodleID);
         setPaint(paint);
 
         init(textOrientation);
@@ -128,7 +135,7 @@ public class TextWriting extends Doodle {
     @Override
     public void drawBorder(Canvas canvas) {
         if(!TextUtils.isEmpty(mTextString)) {
-            WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
+            Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
             float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
 
             mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
@@ -158,18 +165,18 @@ public class TextWriting extends Doodle {
     }
 
     @Override
-    public Path getOriginalPath() {
-        mOriginalPath.reset();
+    public Path getScreenPath() {
+        mScreenPath.reset();
         mTransRect.set(mDoodleRect);
         mDrawingMatrix.mapRect(mTransRect);
         mDisplayMatrix.mapRect(mTransRect);
-        mOriginalPath.addOval(mTransRect, Path.Direction.CCW);
-        return mOriginalPath;
+        mScreenPath.addOval(mTransRect, Path.Direction.CCW);
+        return mScreenPath;
     }
 
     @Override
-    public RectF getDoodleTransformRect() {
-        mOriginalPath.reset();
+    public RectF getDoodleScreenRect() {
+        mScreenPath.reset();
         mTransRect.set(mDoodleRect);
         mDrawingMatrix.mapRect(mTransRect);
         mDisplayMatrix.mapRect(mTransRect);
@@ -182,12 +189,12 @@ public class TextWriting extends Doodle {
     }
 
     @Override
-    public int checkRegionPressedArea(float x, float y) {
+    public int checkPressedRegion(float x, float y) {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
             mTransRect.set(mDoodleRect);
-            int corner = IntersectionHelper.isPressedCorner(p.x, p.y, mTransRect, matrix);
+            int corner = IntersectionHelper.whichCornerPressed(p.x, p.y, mTransRect, matrix);
             if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
@@ -219,7 +226,7 @@ public class TextWriting extends Doodle {
         }
 
         setTextString(changedText);
-        WhiteBoard.WhiteboardParams params = getWhiteboard().getParams();
+        Whiteboard.WhiteboardParams params = getWhiteboard().getParams();
 
         float etW = 0;
         float etH = 0;
@@ -258,7 +265,7 @@ public class TextWriting extends Doodle {
     private PointF measureTextSize(TextWriting doodle) {
         Paint paint = doodle.getPaint();
         String text = doodle.getTextString();
-        WhiteBoard.WhiteboardParams params = doodle.getWhiteboard().getParams();
+        Whiteboard.WhiteboardParams params = doodle.getWhiteboard().getParams();
         Paint.FontMetrics fontMetrics = paint.getFontMetrics();
         float textWidth = 0;
         float textHeight = fontMetrics.descent - fontMetrics.ascent;

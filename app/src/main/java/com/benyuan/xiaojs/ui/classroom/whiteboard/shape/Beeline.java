@@ -20,7 +20,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
@@ -37,12 +37,20 @@ public class Beeline extends TwoDimensionalShape {
     private LineSegment mLineSegment;
     private int mOrientation = FORWARD;
 
-    public Beeline(WhiteBoard whiteBoard) {
-        super(whiteBoard, GeometryShape.BEELINE);
+    private Beeline(Whiteboard whiteboard) {
+        super(whiteboard, GeometryShape.BEELINE);
     }
 
-    public Beeline(WhiteBoard whiteBoard, Paint paint) {
-        this(whiteBoard);
+    public Beeline(Whiteboard whiteboard, Paint paint) {
+        this(whiteboard);
+        setPaint(paint);
+
+        init();
+    }
+
+    public Beeline(Whiteboard whiteboard, Paint paint, String doodleId) {
+        this(whiteboard);
+        setDoodleId(doodleId);
         setPaint(paint);
 
         init();
@@ -76,25 +84,8 @@ public class Beeline extends TwoDimensionalShape {
     }
 
     @Override
-    public Path getOriginalPath() {
-        WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
-        float stx = mPoints.get(0).x;
-        float sty = mPoints.get(0).y;
-        float edx = mPoints.get(1).x;
-        float edy = mPoints.get(1).y;
-
-        PointF p = Utils.mapDoodlePointToScreen(stx, sty, params.drawingBounds);
-        int x1 = (int)p.x;
-        int y1 = (int)p.y;
-
-        p = Utils.mapDoodlePointToScreen(edx, edy, params.drawingBounds);
-        int x2 = (int)p.x;
-        int y2 = (int)p.y;
-
-        mOriginalPath.moveTo(x1, y1);
-        mOriginalPath.lineTo(x2, y2);
-
-        return mOriginalPath;
+    public Path getScreenPath() {
+        return null;
     }
 
     public LineSegment getLineSegment() {
@@ -138,8 +129,8 @@ public class Beeline extends TwoDimensionalShape {
     }
 
     @Override
-    public int checkRegionPressedArea(float x, float y) {
-        return super.checkRegionPressedArea(x, y);
+    public int checkPressedRegion(float x, float y) {
+        return super.checkPressedRegion(x, y);
     }
 
     @Override

@@ -17,7 +17,7 @@
                 android:visibility="invisible"/>
 
         <!--白板-->
-        <com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard
+        <com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard
                 android:id="@+id/white_board"
                 android:background="@color/white"
                 android:layout_width="match_parent"

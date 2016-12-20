@@ -31,10 +31,15 @@
 
         <SeekBar
                 android:id="@+id/paint_thickness"
-                android:layout_width="@dimen/px200"
+                android:layout_width="@dimen/px220"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/px10"
                 android:layout_gravity="center_vertical"
+                android:maxHeight="@dimen/px2"
+                android:thumbOffset="@dimen/px6"
+                android:foregroundGravity="center_vertical"
+                android:thumb="@drawable/paint_progress_controller"
+                android:progressDrawable="@drawable/wb_paint_progress_bar"
                 android:max="30"/>
     </LinearLayout>
 

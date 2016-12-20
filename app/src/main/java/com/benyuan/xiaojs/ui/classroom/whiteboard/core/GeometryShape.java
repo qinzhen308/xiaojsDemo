@@ -17,7 +17,7 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 
 public abstract class GeometryShape extends Doodle {
     public final static int BEELINE = 0;
@@ -29,8 +29,8 @@ public abstract class GeometryShape extends Doodle {
 
     protected int mGeometryId;
 
-    protected GeometryShape(WhiteBoard whiteBoard, int style, int geometryId) {
-        super(whiteBoard, style);
+    protected GeometryShape(Whiteboard whiteboard, int style, int geometryId) {
+        super(whiteboard, style);
         mGeometryId = geometryId;
     }
 

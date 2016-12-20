@@ -28,7 +28,7 @@ limitations under the License.
             <shape>
                 <corners android:radius="1dip" />
 
-                <solid android:color="@color/main_orange" />
+                <solid android:color="@color/main_blue" />
             </shape>
         </clip>
     </item>

@@ -156,7 +156,7 @@ public class IntersectionHelper {
      * @param x 按下点x
      * @param y 按下点y
      */
-    public static int isPressedCorner(float x, float y, PointF rectP1, PointF rectP2, Matrix mapMatrix) {
+    public static int whichCornerPressed(float x, float y, PointF rectP1, PointF rectP2, Matrix mapMatrix) {
         RectF transRect = Utils.transformToScreenRect(rectP1, rectP2, mapMatrix);
         return whichCornerPressed(x, y, transRect);
     }
@@ -167,7 +167,7 @@ public class IntersectionHelper {
      * @param x 按下点x
      * @param y 按下点y
      */
-    public static int isPressedCorner(float x, float y, RectF rect, Matrix mapMatrix) {
+    public static int whichCornerPressed(float x, float y, RectF rect, Matrix mapMatrix) {
         RectF transRect = Utils.transformToScreenRect(rect, mapMatrix);
         return whichCornerPressed(x, y, transRect);
     }
@@ -385,7 +385,7 @@ public class IntersectionHelper {
                 intersect = Utils.intersect(transRect, lineSegment);
             }
         } else {
-            Path originalPath = d.getOriginalPath();
+            Path originalPath = d.getScreenPath();
             if (originalPath == null) {
                 return false;
             }
@@ -426,7 +426,7 @@ public class IntersectionHelper {
                         }
                     }
                 } else {
-                    Path originalPath = d.getOriginalPath();
+                    Path originalPath = d.getScreenPath();
                     if (originalPath == null) {
                         continue;
                     }

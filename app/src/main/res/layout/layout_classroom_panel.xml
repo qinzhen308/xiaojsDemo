@@ -166,8 +166,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/px10"
                     android:layout_marginRight="@dimen/px10"
-                    android:maxHeight="@dimen/px4"
-                    android:thumbOffset="0dp"
+                    android:maxHeight="@dimen/px2"
+                    android:thumbOffset="@dimen/px7"
                     android:foregroundGravity="center_vertical"
                     android:thumb="@drawable/live_progress_controller"
                     android:progressDrawable="@drawable/live_progress_bar"/>

@@ -32,7 +32,7 @@ import com.benyuan.xiaojs.data.api.service.APIServiceCallback;
 import com.benyuan.xiaojs.model.Account;
 import com.benyuan.xiaojs.model.CenterData;
 import com.benyuan.xiaojs.ui.base.BaseFragment;
-import com.benyuan.xiaojs.ui.classroom.ClassRoomActivity;
+import com.benyuan.xiaojs.ui.classroom.ClassroomActivity;
 import com.benyuan.xiaojs.ui.course.MyLessonActivity;
 import com.benyuan.xiaojs.ui.mine.MyEnrollActivity;
 import com.benyuan.xiaojs.ui.mine.ProfileActivity;
@@ -101,7 +101,7 @@ public class MineFragment extends BaseFragment {
                 editProfile();
                 break;
             case R.id.my_page:
-                startActivity(new Intent(mContext, ClassRoomActivity.class));
+                startActivity(new Intent(mContext, ClassroomActivity.class));
                 break;
             case R.id.my_course:
                 startActivity(new Intent(mContext, MyLessonActivity.class));

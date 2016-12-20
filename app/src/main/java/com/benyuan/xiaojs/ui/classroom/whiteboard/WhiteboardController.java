@@ -29,7 +29,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.setting.TextPop;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.TextWriting;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView;
 
-public class WhiteBoardController implements
+public class WhiteboardController implements
         EraserPop.EraserChangeListener,
         HandwritingPop.PaintChangeListener,
         GeometryPop.GeometryChangeListener,
@@ -49,7 +49,7 @@ public class WhiteBoardController implements
     ColorPickerPop mColorSetting;
     TextPop mTextSetting;
 
-    WhiteBoard mWhiteboard;
+    Whiteboard mWhiteboard;
     EditText mWhiteboardEdit;
     View mPanel;
 
@@ -59,7 +59,7 @@ public class WhiteBoardController implements
     private int mGeometryId;
     private int mPanelWidth;
 
-    public WhiteBoardController(Context context, View root) {
+    public WhiteboardController(Context context, View root) {
         mContext = context;
         mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
@@ -71,7 +71,7 @@ public class WhiteBoardController implements
         mEraser = (ImageView) root.findViewById(R.id.eraser_btn);
         mColorPicker = (CircleView) root.findViewById(R.id.color_picker_btn);
 
-        mWhiteboard = (WhiteBoard) root.findViewById(R.id.white_board);
+        mWhiteboard = (Whiteboard) root.findViewById(R.id.white_board);
         mWhiteboardEdit = (EditText) root.findViewById(R.id.blackboard_edit);
         mGeoShape.setImageResource(R.drawable.wb_oval_selector);
 
@@ -99,7 +99,7 @@ public class WhiteBoardController implements
 
         switch (v.getId()) {
             case R.id.select_btn:
-                enterMode(WhiteBoard.MODE_SELECTION);
+                enterMode(Whiteboard.MODE_SELECTION);
                 break;
 
             case R.id.handwriting_btn:
@@ -121,25 +121,25 @@ public class WhiteBoardController implements
     }
 
     private void enterText() {
-        if (mWhiteboard.getMode() == WhiteBoard.MODE_TEXT) {
+        if (mWhiteboard.getMode() == Whiteboard.MODE_TEXT) {
             if (mTextSetting == null) {
                 mTextSetting = new TextPop(mContext);
                 mTextSetting.setTextChangeListener(this);
             }
             mTextSetting.show(mTextWriting, mPanelWidth);
         }
-        enterMode(WhiteBoard.MODE_TEXT);
+        enterMode(Whiteboard.MODE_TEXT);
     }
 
     private void enterHandWriting() {
-        if (mWhiteboard.getMode() == WhiteBoard.MODE_HAND_WRITING) {
+        if (mWhiteboard.getMode() == Whiteboard.MODE_HAND_WRITING) {
             if (mPaintSetting == null) {
                 mPaintSetting = new HandwritingPop(mContext);
                 mPaintSetting.setOnDoodlePaintParamsListener(this);
             }
             mPaintSetting.show(mHandWriting, mPanelWidth);
         }
-        enterMode(WhiteBoard.MODE_HAND_WRITING);
+        enterMode(Whiteboard.MODE_HAND_WRITING);
     }
 
     private void enterEraser() {
@@ -148,11 +148,11 @@ public class WhiteBoardController implements
             mEraserSetting.setOnEraserParamsListener(this);
         }
         mEraserSetting.show(mEraser, mPanelWidth);
-        enterMode(WhiteBoard.MODE_ERASER);
+        enterMode(Whiteboard.MODE_ERASER);
     }
 
     private void enterGeometry() {
-        if (mWhiteboard.getMode() == WhiteBoard.MODE_GEOMETRY) {
+        if (mWhiteboard.getMode() == Whiteboard.MODE_GEOMETRY) {
             if (mShapeSetting == null) {
                 mShapeSetting = new GeometryPop(mContext);
                 mShapeSetting.setOnShapeChangeListener(this);
@@ -161,7 +161,7 @@ public class WhiteBoardController implements
             mShapeSetting.updateShapeSelectedState(mGeometryId);
             mShapeSetting.show(mGeoShape, mPanelWidth);
         }
-        enterMode(WhiteBoard.MODE_GEOMETRY);
+        enterMode(Whiteboard.MODE_GEOMETRY);
     }
 
     private void enterColorPicker() {

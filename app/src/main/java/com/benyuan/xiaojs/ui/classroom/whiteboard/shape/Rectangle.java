@@ -20,7 +20,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
@@ -28,8 +28,14 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 public class Rectangle extends TwoDimensionalShape {
 
-    public Rectangle(WhiteBoard whiteBoard, Paint paint) {
-        super(whiteBoard, GeometryShape.RECTANGLE);
+    public Rectangle(Whiteboard whiteboard, Paint paint) {
+        super(whiteboard, GeometryShape.RECTANGLE);
+        setPaint(paint);
+    }
+
+    public Rectangle(Whiteboard whiteboard, Paint paint, String doodleId) {
+        super(whiteboard, GeometryShape.RECTANGLE);
+        setDoodleId(doodleId);
         setPaint(paint);
     }
 
@@ -71,13 +77,13 @@ public class Rectangle extends TwoDimensionalShape {
     }
 
     @Override
-    public Path getOriginalPath() {
-        mOriginalPath.reset();
+    public Path getScreenPath() {
+        mScreenPath.reset();
         mTransRect.set(mDoodleRect);
         mDrawingMatrix.mapRect(mTransRect);
         mDisplayMatrix.mapRect(mTransRect);
-        mOriginalPath.addOval(mTransRect, Path.Direction.CCW);
-        return mOriginalPath;
+        mScreenPath.addOval(mTransRect, Path.Direction.CCW);
+        return mScreenPath;
     }
 
     @Override
@@ -99,8 +105,8 @@ public class Rectangle extends TwoDimensionalShape {
     }
 
     @Override
-    public int checkRegionPressedArea(float x, float y) {
-        return super.checkRegionPressedArea(x, y);
+    public int checkPressedRegion(float x, float y) {
+        return super.checkPressedRegion(x, y);
     }
 
     @Override
