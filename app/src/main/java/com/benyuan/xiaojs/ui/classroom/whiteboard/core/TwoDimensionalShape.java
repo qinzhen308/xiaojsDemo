@@ -14,11 +14,11 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
  *
  * ======================================================================================== */
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 
 public abstract class TwoDimensionalShape extends GeometryShape {
 
-    protected TwoDimensionalShape(WhiteBoard whiteBoard, int geometryId) {
-        super(whiteBoard, Doodle.STYLE_GEOMETRY, geometryId);
+    protected TwoDimensionalShape(Whiteboard whiteboard, int geometryId) {
+        super(whiteboard, Doodle.STYLE_GEOMETRY, geometryId);
     }
 }

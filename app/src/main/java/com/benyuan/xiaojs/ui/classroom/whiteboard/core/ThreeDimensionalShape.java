@@ -14,11 +14,11 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.core;
  *
  * ======================================================================================== */
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 
 public abstract class ThreeDimensionalShape extends GeometryShape {
-    protected ThreeDimensionalShape(WhiteBoard whiteBoard, int style, int geometryId) {
-        super(whiteBoard, style, geometryId);
+    protected ThreeDimensionalShape(Whiteboard whiteboard, int style, int geometryId) {
+        super(whiteboard, style, geometryId);
     }
 
     protected abstract double computeVolume();

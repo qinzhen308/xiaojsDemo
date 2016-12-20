@@ -20,7 +20,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
@@ -28,13 +28,13 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 public class Oval extends TwoDimensionalShape {
 
-    public Oval(WhiteBoard whiteBoard, Paint paint) {
-        super(whiteBoard, GeometryShape.OVAL);
+    public Oval(Whiteboard whiteboard, Paint paint) {
+        super(whiteboard, GeometryShape.OVAL);
         setPaint(paint);
     }
 
-    public Oval(WhiteBoard whiteBoard, Paint paint, String doodleId) {
-        super(whiteBoard, GeometryShape.OVAL);
+    public Oval(Whiteboard whiteboard, Paint paint, String doodleId) {
+        super(whiteboard, GeometryShape.OVAL);
         setDoodleId(doodleId);
         setPaint(paint);
     }

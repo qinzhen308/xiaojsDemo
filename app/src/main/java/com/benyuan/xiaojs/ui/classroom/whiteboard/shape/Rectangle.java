@@ -19,9 +19,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.util.Log;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.TwoDimensionalShape;
@@ -29,13 +28,13 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 
 public class Rectangle extends TwoDimensionalShape {
 
-    public Rectangle(WhiteBoard whiteBoard, Paint paint) {
-        super(whiteBoard, GeometryShape.RECTANGLE);
+    public Rectangle(Whiteboard whiteboard, Paint paint) {
+        super(whiteboard, GeometryShape.RECTANGLE);
         setPaint(paint);
     }
 
-    public Rectangle(WhiteBoard whiteBoard, Paint paint, String doodleId) {
-        super(whiteBoard, GeometryShape.RECTANGLE);
+    public Rectangle(Whiteboard whiteboard, Paint paint, String doodleId) {
+        super(whiteboard, GeometryShape.RECTANGLE);
         setDoodleId(doodleId);
         setPaint(paint);
     }

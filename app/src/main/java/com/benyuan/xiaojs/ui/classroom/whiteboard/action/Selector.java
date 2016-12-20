@@ -11,7 +11,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
@@ -42,8 +42,8 @@ public class Selector extends Doodle {
 
     private float[] mTransformCenter;
 
-    public Selector(WhiteBoard whiteBoard) {
-        super(whiteBoard, SELECTION);
+    public Selector(Whiteboard whiteboard) {
+        super(whiteboard, SELECTION);
 
         init();
     }
@@ -151,7 +151,7 @@ public class Selector extends Doodle {
                     return;
                 }
 
-                WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
+                Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
                 float padding = params.paintStrokeWidth / 2.0f;
                 mBorderRect.set(mDoodleRect.left - padding, mDoodleRect.top - padding, mDoodleRect.right + padding, mDoodleRect.bottom + padding);
                 mBorderDrawingPath.reset();
@@ -213,7 +213,7 @@ public class Selector extends Doodle {
             }
 
             if (count > 0) {
-                WhiteBoard.WhiteboardParams params = getWhiteboard().getParams();
+                Whiteboard.WhiteboardParams params = getWhiteboard().getParams();
                 mTransRect.set(mDoodleRect);
                 mTransformMatrix.mapRect(mTransRect);
                 PointF p = Utils.mapScreenToDoodlePoint(mTransRect.left, mTransRect.top, params.drawingBounds);
@@ -346,7 +346,7 @@ public class Selector extends Doodle {
      */
     public int intersect(float x1, float y1, float x2, float y2) {
         //map points
-        WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
+        Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
         PointF p = Utils.mapDoodlePointToScreen(x1, y1, params.drawingBounds);
         x1 = p.x;
         y1 = p.y;

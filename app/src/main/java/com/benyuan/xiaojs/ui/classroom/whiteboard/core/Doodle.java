@@ -22,7 +22,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 
 import java.util.UUID;
 import java.util.Vector;
@@ -38,7 +38,7 @@ public abstract class Doodle implements Action {
     public final static int STATE_DRAWING = 1;
     public final static int STATE_EDIT = 2;
 
-    protected WhiteBoard mWhiteboard;
+    protected Whiteboard mWhiteboard;
     protected Vector<PointF> mPoints;
 
     protected Paint mPaint;
@@ -68,9 +68,9 @@ public abstract class Doodle implements Action {
     private String mDoodleId;
     private boolean mMatrixDrawing = false;
 
-    protected Doodle(WhiteBoard whiteBoard, int style) {
+    protected Doodle(Whiteboard whiteboard, int style) {
         mDoodleId = UUID.randomUUID().toString();
-        mWhiteboard = whiteBoard;
+        mWhiteboard = whiteboard;
         mStyle = style;
         mState = STATE_IDLE;
 
@@ -126,7 +126,7 @@ public abstract class Doodle implements Action {
         mPaint = paint;
     }
 
-    public WhiteBoard getWhiteboard() {
+    public Whiteboard getWhiteboard() {
         return mWhiteboard;
     }
 
@@ -207,7 +207,7 @@ public abstract class Doodle implements Action {
 
     public void drawBorder(Canvas canvas) {
         if (mPoints.size() > 1 && !mDoodleRect.isEmpty()) {
-            WhiteBoard.WhiteboardParams params = mWhiteboard.getParams();
+            Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
             float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
 
             mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
@@ -261,7 +261,7 @@ public abstract class Doodle implements Action {
 
     @Override
     public void move(float deltaX, float deltaY) {
-        WhiteBoard.WhiteboardParams params = getWhiteboard().getParams();
+        Whiteboard.WhiteboardParams params = getWhiteboard().getParams();
         mTransformMatrix.postTranslate(deltaX / params.scale, deltaY / params.scale);
     }
 

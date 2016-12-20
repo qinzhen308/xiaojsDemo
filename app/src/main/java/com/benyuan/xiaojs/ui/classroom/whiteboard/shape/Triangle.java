@@ -20,7 +20,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
@@ -33,19 +33,19 @@ public class Triangle extends TwoDimensionalShape {
     private Vector<PointF> mTriangleCoordinates;
     private LineSegment[] mLineSegments;
 
-    private Triangle(WhiteBoard whiteBoard) {
-        super(whiteBoard, GeometryShape.TRIANGLE);
+    private Triangle(Whiteboard whiteboard) {
+        super(whiteboard, GeometryShape.TRIANGLE);
     }
 
-    public Triangle(WhiteBoard whiteBoard, Paint paint) {
-        this(whiteBoard);
+    public Triangle(Whiteboard whiteboard, Paint paint) {
+        this(whiteboard);
         setPaint(paint);
 
         init();
     }
 
-    public Triangle(WhiteBoard whiteBoard, Paint paint, String doodleId) {
-        this(whiteBoard);
+    public Triangle(Whiteboard whiteboard, Paint paint, String doodleId) {
+        this(whiteboard);
         setDoodleId(doodleId);
         setPaint(paint);
 

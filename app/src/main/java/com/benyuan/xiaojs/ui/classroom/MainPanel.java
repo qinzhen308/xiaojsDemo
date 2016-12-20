@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -25,7 +25,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
 
 public class MainPanel extends RelativeLayout {
     private ClassRoomGestureDetector mGestureDetector;
-    private WhiteBoard mWhiteBoard;
+    private Whiteboard mWhiteboard;
     private boolean mWhiteBoardTransformation = false;
 
     public MainPanel(Context context) {
@@ -54,8 +54,8 @@ public class MainPanel extends RelativeLayout {
         mGestureDetector = gestureDetector;
     }
 
-    public void setTransformationWhiteBoard(WhiteBoard whiteBoard) {
-        mWhiteBoard = whiteBoard;
+    public void setTransformationWhiteBoard(Whiteboard whiteboard) {
+        mWhiteboard = whiteboard;
     }
 
     @Override
@@ -70,8 +70,8 @@ public class MainPanel extends RelativeLayout {
                     mGestureDetector.onTouchEvent(event);
                 }
 
-                if (mWhiteBoardTransformation && mWhiteBoard != null) {
-                    mWhiteBoard.transformation(event);
+                if (mWhiteBoardTransformation && mWhiteboard != null) {
+                    mWhiteboard.transformation(event);
                     switch (action) {
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:

@@ -20,9 +20,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
@@ -30,20 +29,20 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Utils;
 public class HandWriting extends Doodle {
     private Path mNormalizedPath;
 
-    private HandWriting(WhiteBoard whiteBoard) {
-        super(whiteBoard, Doodle.STYLE_HAND_WRITING);
+    private HandWriting(Whiteboard whiteboard) {
+        super(whiteboard, Doodle.STYLE_HAND_WRITING);
     }
 
-    public HandWriting(WhiteBoard whiteBoard, Paint paint, float x, float y) {
-        this(whiteBoard);
+    public HandWriting(Whiteboard whiteboard, Paint paint, float x, float y) {
+        this(whiteboard);
         setPaint(paint);
         init();
 
         setFirstPoint(x, y);
     }
 
-    public HandWriting(WhiteBoard whiteBoard, Paint paint, float x, float y, String doodleId) {
-        this(whiteBoard);
+    public HandWriting(Whiteboard whiteboard, Paint paint, float x, float y, String doodleId) {
+        this(whiteboard);
         setDoodleId(doodleId);
         setPaint(paint);
         init();

@@ -17,13 +17,13 @@ package com.benyuan.xiaojs.ui.classroom.whiteboard.shape;
 import android.graphics.Canvas;
 import android.graphics.Path;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.Doodle;
 
 public class Eraser extends Doodle {
 
-    private Eraser(WhiteBoard whiteBoard) {
-        super(whiteBoard, Doodle.STYLE_HAND_WRITING);
+    private Eraser(Whiteboard whiteboard) {
+        super(whiteboard, Doodle.STYLE_HAND_WRITING);
     }
 
     @Override

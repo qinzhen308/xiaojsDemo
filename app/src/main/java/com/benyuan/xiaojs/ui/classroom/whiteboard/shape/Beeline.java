@@ -20,7 +20,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.GeometryShape;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.IntersectionHelper;
 import com.benyuan.xiaojs.ui.classroom.whiteboard.core.LineSegment;
@@ -37,19 +37,19 @@ public class Beeline extends TwoDimensionalShape {
     private LineSegment mLineSegment;
     private int mOrientation = FORWARD;
 
-    private Beeline(WhiteBoard whiteBoard) {
-        super(whiteBoard, GeometryShape.BEELINE);
+    private Beeline(Whiteboard whiteboard) {
+        super(whiteboard, GeometryShape.BEELINE);
     }
 
-    public Beeline(WhiteBoard whiteBoard, Paint paint) {
-        this(whiteBoard);
+    public Beeline(Whiteboard whiteboard, Paint paint) {
+        this(whiteboard);
         setPaint(paint);
 
         init();
     }
 
-    public Beeline(WhiteBoard whiteBoard, Paint paint, String doodleId) {
-        this(whiteBoard);
+    public Beeline(Whiteboard whiteboard, Paint paint, String doodleId) {
+        this(whiteboard);
         setDoodleId(doodleId);
         setPaint(paint);
 

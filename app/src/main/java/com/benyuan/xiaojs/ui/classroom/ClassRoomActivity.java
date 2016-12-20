@@ -19,8 +19,8 @@ import com.benyuan.xiaojs.ui.classroom.drawer.DrawerLayout;
 import com.benyuan.xiaojs.ui.classroom.live.core.Config;
 import com.benyuan.xiaojs.ui.classroom.live.view.LiveRecordView;
 import com.benyuan.xiaojs.ui.classroom.live.view.MediaContainerView;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoardController;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteboardController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,7 +84,7 @@ public class ClassRoomActivity extends FragmentActivity {
 
     //live,whiteboard
     @BindView(R.id.white_board)
-    WhiteBoard mWhiteBoard;
+    Whiteboard mWhiteboard;
     @BindView(R.id.teacher_video)
     LiveRecordView mTeacherVideo;
     @BindView(R.id.player_container)
@@ -109,7 +109,7 @@ public class ClassRoomActivity extends FragmentActivity {
     private boolean mNeedOpenWhiteBoardPanel = false;
     private int mPlayState = STATE_PLAY;
 
-    private WhiteBoardController mWhiteBoardController;
+    private WhiteboardController mWhiteboardController;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,8 +141,8 @@ public class ClassRoomActivity extends FragmentActivity {
 
         mMainPanel.setGestureDetector(mMainPanelGestureDetector);
         //为了控制面板模式也能缩放，移动画布操作
-        mMainPanel.setTransformationWhiteBoard(mWhiteBoard);
-        mWhiteBoard.setGestureDetector(mWhiteBoardGestureDetector);
+        mMainPanel.setTransformationWhiteBoard(mWhiteboard);
+        mWhiteboard.setGestureDetector(mWhiteBoardGestureDetector);
     }
 
     private void initDrawer() {
@@ -378,8 +378,8 @@ public class ClassRoomActivity extends FragmentActivity {
             mBinder.unbind();
         }
 
-        if (mWhiteBoardController != null) {
-            mWhiteBoardController.release();
+        if (mWhiteboardController != null) {
+            mWhiteboardController.release();
         }
 
         cancelAllAnim();
@@ -483,8 +483,8 @@ public class ClassRoomActivity extends FragmentActivity {
             return;
         }
 
-        if (mWhiteBoardController == null) {
-            mWhiteBoardController = new WhiteBoardController(this, mContentRoot);
+        if (mWhiteboardController == null) {
+            mWhiteboardController = new WhiteboardController(this, mContentRoot);
         }
 
         if (needAnim) {
@@ -616,8 +616,8 @@ public class ClassRoomActivity extends FragmentActivity {
     }
 
     private void handleWhitePanelClick(View v) {
-        if (mWhiteBoardController != null) {
-            mWhiteBoardController.handlePanelItemClick(v);
+        if (mWhiteboardController != null) {
+            mWhiteboardController.handlePanelItemClick(v);
         }
     }
 

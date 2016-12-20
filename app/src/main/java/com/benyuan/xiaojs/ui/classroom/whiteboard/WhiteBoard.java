@@ -54,7 +54,7 @@ import com.benyuan.xiaojs.ui.classroom.whiteboard.shape.Triangle;
 
 import java.util.ArrayList;
 
-public class WhiteBoard extends View implements ViewGestureListener.ViewRectChangedListener{
+public class Whiteboard extends View implements ViewGestureListener.ViewRectChangedListener{
     /**
      * blackboard mode
      * */
@@ -138,23 +138,23 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
 
     private ClassRoomGestureDetector mClassRoomGestureDetector;
 
-    public WhiteBoard(Context context) {
+    public Whiteboard(Context context) {
         super(context);
         initData(context);
     }
 
-    public WhiteBoard(Context context, AttributeSet attrs) {
+    public Whiteboard(Context context, AttributeSet attrs) {
         super(context, attrs);
         initData(context);
     }
 
-    public WhiteBoard(Context context, AttributeSet attrs, int defStyleAttr) {
+    public Whiteboard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initData(context);
     }
 
     @TargetApi(21)
-    public WhiteBoard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public Whiteboard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initData(context);
     }
@@ -227,7 +227,7 @@ public class WhiteBoard extends View implements ViewGestureListener.ViewRectChan
                     ((TextWriting)mDoodle).onTextChanged(text);
 
                     drawAllDoodlesCanvas();
-                    WhiteBoard.this.invalidate();
+                    Whiteboard.this.invalidate();
                 }
             }
         });

@@ -25,7 +25,7 @@ import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import com.benyuan.xiaojs.ui.classroom.whiteboard.WhiteBoard;
+import com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard;
 
 public class Utils {
     public final static double ZERO = 1e-9;
@@ -96,7 +96,7 @@ public class Utils {
     }
 
     public static void mapDoodleToScreen(Doodle doodle, PointF downPint, PointF upPoint) {
-        WhiteBoard.WhiteboardParams params = doodle.getWhiteboard().getParams();
+        Whiteboard.WhiteboardParams params = doodle.getWhiteboard().getParams();
         PointF dp = doodle.getFirstPoint();
         PointF up = doodle.getLastPoint();
 
@@ -614,7 +614,7 @@ public class Utils {
 
     public static float getDefaultTextHeight(Doodle doodle) {
         Paint paint = doodle.getPaint();
-        WhiteBoard.WhiteboardParams params = doodle.getWhiteboard().getParams();
+        Whiteboard.WhiteboardParams params = doodle.getWhiteboard().getParams();
         Paint.FontMetrics fontMetrics = paint.getFontMetrics();
 
         float textHeight = fontMetrics.descent - fontMetrics.ascent;
