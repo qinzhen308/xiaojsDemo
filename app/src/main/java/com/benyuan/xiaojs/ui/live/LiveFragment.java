@@ -32,8 +32,6 @@ public class LiveFragment extends BaseFragment {
 
     PullToRefreshGridView mGrid;
     HorizontalAdaptScrollerView mHorizontalListView;
-//    BottomLineTextView mTeach;
-//    BottomLineTextView mLearn;
     CanInScrollviewListView mLessonList;
 
     View mHeader;
@@ -77,25 +75,6 @@ public class LiveFragment extends BaseFragment {
         lp.height = getResources().getDimensionPixelSize(R.dimen.px370);
         mHorizontalListView.setLayoutParams(lp);
         mGrid.setAdapter(new LiveAdapter(mContext,mGrid));
-
-//        if (mUserType == LiveConstant.USER_TEACHER){
-//            mTeach.setSelected(true);
-//        }else {
-//            mLearn.setSelected(true);
-//        }
-
-//        mTeach.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switchTab(0);
-//            }
-//        });
-//        mLearn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switchTab(1);
-//            }
-//        });
 
         mLessonList.setAdapter(new LiveLessonAdapter(mContext));
     }

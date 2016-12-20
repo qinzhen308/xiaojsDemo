@@ -492,9 +492,6 @@ public class GooeyMenu extends View {
     }
 
     private void cancelAllAnimation() {
-        if (!canAnimation()){
-            return;
-        }
         if (mShowArcCakeAnim != null && mHideArcCakeAnim != null){
             for (ObjectAnimator objectAnimator : mHideAnimation) {
                 objectAnimator.cancel();

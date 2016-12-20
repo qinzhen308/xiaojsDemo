@@ -188,50 +188,60 @@
             </FrameLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
                 android:layout_marginTop="@dimen/px30"
                 android:background="@drawable/wb_conner_bg"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             <TextView
+                    android:id="@+id/live_enter"
+                    android:text="进入教室"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:drawableRight="@drawable/ic_enter_double"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:drawablePadding="@dimen/px2"
                     android:textColor="@color/white"
-                    android:layout_marginTop="@dimen/px30"
-                    android:id="@+id/home_live_lesson_item_name"
-                    android:text="上课中:心理咨询师取证课程-基础知识"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             <LinearLayout
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_marginTop="@dimen/px30"
                     android:layout_marginBottom="@dimen/px30"
-                    android:layout_width="match_parent"
+                    android:layout_toLeftOf="@id/live_enter"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_marginLeft="@dimen/px30"
+                        android:textColor="@color/white"
+                        android:id="@+id/home_live_lesson_item_name"
+                        android:text="上课中:心理咨询师取证课程-基础知识"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <com.benyuan.xiaojs.ui.widget.LiveProgress
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginTop="@dimen/px20"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
                 <com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout
                         android:id="@+id/image_flow"
-                        android:layout_marginTop="@dimen/px5"
-                        android:layout_marginBottom="@dimen/px5"
+                        android:layout_marginTop="@dimen/px20"
                         android:layout_marginLeft="@dimen/px25"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-                <TextView
-                        android:text="进入教室"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/px10"
-                        android:layout_marginRight="@dimen/px30"
-                        android:drawableRight="@drawable/ic_enter_double"
-                        android:drawablePadding="@dimen/px2"
-                        android:textColor="@color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
             </LinearLayout>
-        </LinearLayout>
+
+
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>
