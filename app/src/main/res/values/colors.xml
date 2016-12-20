@@ -93,5 +93,6 @@
     <color name="cancel_fllow_btn_color">#DEDEDE</color>
     <color name="expandable_list_child_divider">#E9EBEE</color>
     <color name="expandable_list_group_divider">#E9EBEE</color>
+    <color name="input_at">#779AC0</color>
 
 </resources>
