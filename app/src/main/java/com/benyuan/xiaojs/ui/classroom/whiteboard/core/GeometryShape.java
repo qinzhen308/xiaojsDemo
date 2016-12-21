@@ -29,6 +29,10 @@ public abstract class GeometryShape extends Doodle {
 
     protected int mGeometryId;
 
+    private PointF mHorizontalVector = new PointF();
+    private PointF mVerticalVector = new PointF();
+    private PointF mCurrVector = new PointF();
+
     protected GeometryShape(Whiteboard whiteboard, int style, int geometryId) {
         super(whiteboard, style);
         mGeometryId = geometryId;
@@ -71,10 +75,23 @@ public abstract class GeometryShape extends Doodle {
     protected RectF updateRectOnChangeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
         RectF drawingBounds = getWhiteboard().getParams().drawingBounds;
         PointF p = Utils.normalizeScreenPoint(x - oldX, y - oldY, drawingBounds);
-        float deltaX = p.x / mTotalScale;
-        float deltaY = p.y / mTotalScale;
-        float remainDegree = mTotalDegree % 360;
-        //TODO
+        mCurrVector.x = p.x / mTotalScale;
+        mCurrVector.y = p.y / mTotalScale;
+        float degree = mTotalDegree % 360;
+
+        //使用向量变换求的delta值
+        mHorizontalVector.x = mDoodleRect.right - mDoodleRect.left;
+        mHorizontalVector.y = 0;
+
+        mVerticalVector.x = 0;
+        mVerticalVector.y = mDoodleRect.bottom - mDoodleRect.top;
+
+        Utils.mapRotateVector(mHorizontalVector, degree);
+        Utils.mapRotateVector(mVerticalVector, degree);
+
+        float deltaX = (float) Utils.vectorProjection(mCurrVector, mHorizontalVector);
+        float deltaY = (float) Utils.vectorProjection(mCurrVector, mVerticalVector);
+
         switch (edge) {
             case IntersectionHelper.TOP_EDGE:
                 float top = mDoodleRect.top + deltaY;

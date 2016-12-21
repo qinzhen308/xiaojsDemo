@@ -266,8 +266,8 @@ public class Utils {
         PointF vectorBC = new PointF(C.x - B.x, C.y - B.y);
         PointF vectorBD = new PointF(D.x - B.x, D.y - B.y);
 
-        return (vectorProduct(vectorAC, vectorAD) * vectorProduct(vectorBC, vectorBD) <= ZERO)
-                && (vectorProduct(vectorAC, vectorBC) * vectorProduct(vectorAD, vectorBD) <= ZERO);
+        return (crossProduct(vectorAC, vectorAD) * crossProduct(vectorBC, vectorBD) <= ZERO)
+                && (crossProduct(vectorAC, vectorBC) * crossProduct(vectorAD, vectorBD) <= ZERO);
 
     }
 
@@ -299,8 +299,46 @@ public class Utils {
     /**
      * 两个向量叉乘
      */
-    public static double vectorProduct(PointF vectorA, PointF vectorB) {
+    public static double crossProduct(PointF vectorA, PointF vectorB) {
         return vectorA.x * vectorB.y - vectorB.x * vectorA.y;
+    }
+
+    /**
+     * 两个向量点积
+     */
+    public static double dotProduct(PointF vectorA, PointF vectorB) {
+        return vectorA.x * vectorB.x + vectorA.y * vectorB.y;
+    }
+
+    /**
+     * 向量的模
+     */
+    public static double module(PointF vectorA) {
+        return Math.sqrt(vectorA.x * vectorA.x + vectorA.y * vectorA.y);
+    }
+
+    /**
+     * 求向量A在向量B上的投影值A1. A1的长度计算： |A1| = |A|cosθ = |A|A.B / |A||B| = A.B / |B|
+     */
+    public static double vectorProjection(PointF vectorA, PointF vectorB) {
+        return dotProduct(vectorA, vectorB) / module(vectorB);
+    }
+
+    /**
+     * 求向量A旋转后的向量
+     *
+     * @param vectorA 旋转前的向量
+     * @param degree  旋转角度
+     */
+    public static PointF mapRotateVector(PointF vectorA, float degree) {
+        mMapPointMatrix.reset();
+        mMapPointMatrix.postRotate(degree);
+        mPointArr[0] = vectorA.x;
+        mPointArr[1] = vectorA.y;
+        mMapPointMatrix.mapPoints(mPointArr);
+
+        vectorA.set(mPointArr[0], mPointArr[1]);
+        return vectorA;
     }
 
     /**
