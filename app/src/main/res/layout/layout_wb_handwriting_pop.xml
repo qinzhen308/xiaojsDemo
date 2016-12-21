@@ -7,7 +7,7 @@
               android:paddingBottom="@dimen/px20"
               android:orientation="vertical">
 
-    <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.PaintPathPreview
+    <cn.xiaojs.xma.ui.classroom.whiteboard.widget.PaintPathPreview
             android:id="@+id/doodle_paint_preview"
             android:layout_width="match_parent"
             android:layout_height="@dimen/px100"

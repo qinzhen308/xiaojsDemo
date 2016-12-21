@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.benyuan.xiaojs.ui.widget.ClosableSlidingLayout
+<cn.xiaojs.xma.ui.widget.ClosableSlidingLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,13 +34,13 @@
                 android:layout_toRightOf="@+id/raise_hands_title"
                 android:textSize="@dimen/font_26px"/>
 
-        <com.benyuan.xiaojs.ui.widget.HorizontalListView
+        <cn.xiaojs.xma.ui.widget.HorizontalListView
                 android:id="@+id/raise_hands_stu"
                 android:layout_below="@+id/raise_hands_title"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px90">
 
-        </com.benyuan.xiaojs.ui.widget.HorizontalListView>
+        </cn.xiaojs.xma.ui.widget.HorizontalListView>
     </RelativeLayout>
 
-</com.benyuan.xiaojs.ui.widget.ClosableSlidingLayout>
+</cn.xiaojs.xma.ui.widget.ClosableSlidingLayout>

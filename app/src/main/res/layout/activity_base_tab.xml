@@ -3,7 +3,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <com.benyuan.xiaojs.ui.widget.LazyViewPager
+    <cn.xiaojs.xma.ui.widget.LazyViewPager
             android:id="@+id/tab_fragment_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -17,7 +17,7 @@
 
     </RelativeLayout>
 
-    <com.benyuan.xiaojs.ui.widget.GooeyMenu
+    <cn.xiaojs.xma.ui.widget.GooeyMenu
             android:id="@+id/gooey_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

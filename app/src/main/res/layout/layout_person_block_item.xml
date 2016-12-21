@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <com.benyuan.xiaojs.ui.widget.RoundedImageView
+            <cn.xiaojs.xma.ui.widget.RoundedImageView
                     android:id="@+id/person_item_image"
                     android:layout_width="@dimen/px120"
                     android:layout_height="@dimen/px120"
@@ -62,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
-                <com.benyuan.xiaojs.ui.widget.EvaluationStar
+                <cn.xiaojs.xma.ui.widget.EvaluationStar
                         android:id="@+id/person_item_star"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>

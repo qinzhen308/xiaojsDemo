@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.benyuan.xiaojs.ui.classroom.MainPanel
+<cn.xiaojs.xma.ui.classroom.MainPanel
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,7 +25,7 @@
 
     </LinearLayout>
 
-    <com.benyuan.xiaojs.ui.classroom.live.view.MediaContainerView
+    <cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView
             android:id="@+id/player_container"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -139,7 +139,7 @@
 
         </RelativeLayout>
 
-        <com.benyuan.xiaojs.ui.classroom.live.view.LiveRecordView
+        <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
                 android:id="@+id/teacher_video"
                 android:layout_width="@dimen/px160"
                 android:layout_height="@dimen/px90"
@@ -348,7 +348,7 @@
                 android:layout_toRightOf="@+id/eraser_btn"
                 android:padding="@dimen/px25"/>
 
-        <com.benyuan.xiaojs.ui.classroom.whiteboard.widget.CircleView
+        <cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView
                 android:id="@+id/color_picker_btn"
                 android:layout_width="@dimen/px40"
                 android:layout_height="@dimen/px40"
@@ -359,5 +359,5 @@
 
     </RelativeLayout>
 
-</com.benyuan.xiaojs.ui.classroom.MainPanel>
+</cn.xiaojs.xma.ui.classroom.MainPanel>
 

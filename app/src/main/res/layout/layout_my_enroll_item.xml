@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/px20">
 
-                    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    <cn.xiaojs.xma.ui.widget.RoundedImageView
                             android:id="@+id/my_enroll_teacher_image"
                             android:layout_width="@dimen/px40"
                             android:layout_height="@dimen/px40"

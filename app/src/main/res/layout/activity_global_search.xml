@@ -4,12 +4,12 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <com.benyuan.xiaojs.ui.widget.IconTextView
+    <cn.xiaojs.xma.ui.widget.IconTextView
             android:id="@+id/tt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    <com.benyuan.xiaojs.ui.widget.ImageMatrixExpandableLayout
+    <cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout
             android:id="@+id/image_expand"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"
@@ -17,14 +17,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    <com.benyuan.xiaojs.ui.widget.LiveProgress
+    <cn.xiaojs.xma.ui.widget.LiveProgress
             android:layout_marginTop="@dimen/px30"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    <com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout
+    <cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout
             android:id="@+id/flow"
             android:background="@color/white"
             android:layout_marginRight="@dimen/px30"
@@ -32,11 +32,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    <com.benyuan.xiaojs.ui.view.RelationshipCircleView
+    <cn.xiaojs.xma.ui.view.RelationshipCircleView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-    <com.benyuan.xiaojs.ui.view.RelationshipView
+    <cn.xiaojs.xma.ui.view.RelationshipView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 </LinearLayout>

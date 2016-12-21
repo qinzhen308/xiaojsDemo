@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-        <com.benyuan.xiaojs.ui.widget.RedTipTextView
+        <cn.xiaojs.xma.ui.widget.RedTipTextView
                 android:id="@+id/course_item_fun_circle"
                 android:padding="@dimen/px25"
                 android:textSize="@dimen/font_26px"
@@ -30,7 +30,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_height="@dimen/px36"/>
 
-        <com.benyuan.xiaojs.ui.widget.RedTipTextView
+        <cn.xiaojs.xma.ui.widget.RedTipTextView
                 android:id="@+id/course_item_fun_enter"
                 android:padding="@dimen/px25"
                 android:textSize="@dimen/font_26px"
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout
+        <cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout
                 android:id="@+id/course_item_fun_stu_images"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
     </LinearLayout>
 
 
-    <com.benyuan.xiaojs.ui.widget.RedTipImageView
+    <cn.xiaojs.xma.ui.widget.RedTipImageView
             android:id="@+id/course_item_fun_data_base"
             android:padding="@dimen/px10"
             android:visibility="gone"
@@ -129,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-    <com.benyuan.xiaojs.ui.widget.RedTipImageView
+    <cn.xiaojs.xma.ui.widget.RedTipImageView
             android:id="@+id/course_item_fun_more"
             android:padding="@dimen/px35"
             android:visibility="gone"

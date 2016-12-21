@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.benyuan.xiaojs.ui.widget.CheckableLinearLayout
+<cn.xiaojs.xma.ui.widget.CheckableLinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="@dimen/px90"
@@ -24,7 +24,7 @@
             android:textColor="@color/font_black"
             android:layout_marginLeft="12dp"/>
 
-</com.benyuan.xiaojs.ui.widget.CheckableLinearLayout>
+</cn.xiaojs.xma.ui.widget.CheckableLinearLayout>
 
 
 

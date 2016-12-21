@@ -157,7 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-            <com.benyuan.xiaojs.ui.view.OverlayImages
+            <cn.xiaojs.xma.ui.view.OverlayImages
                     android:id="@+id/images"
                     android:layout_width="0dp"
                     android:layout_weight="1"

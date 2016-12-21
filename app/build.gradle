@@ -9,7 +9,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
-        applicationId "com.benyuan.xiaojs"
+        applicationId "cn.xiaojs.xma"
         minSdkVersion 15
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3

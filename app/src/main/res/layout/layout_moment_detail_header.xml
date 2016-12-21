@@ -4,14 +4,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <com.benyuan.xiaojs.ui.view.MomentHeader
+    <cn.xiaojs.xma.ui.view.MomentHeader
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"
             android:layout_marginTop="@dimen/px30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    <com.benyuan.xiaojs.ui.view.MomentContent
+    <cn.xiaojs.xma.ui.view.MomentContent
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"
             android:layout_marginTop="@dimen/px30"
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <com.benyuan.xiaojs.ui.widget.ImageMatrixExpandableLayout
+    <cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout
             android:id="@+id/moment_detail_image_expand"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"

@@ -12,18 +12,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <com.benyuan.xiaojs.ui.view.MomentHeader
+        <cn.xiaojs.xma.ui.view.MomentHeader
                 android:id="@+id/home_moment_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-        <com.benyuan.xiaojs.ui.view.MomentContent
+        <cn.xiaojs.xma.ui.view.MomentContent
                 android:id="@+id/home_moment_content"
                 android:layout_marginTop="@dimen/px20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-        <com.benyuan.xiaojs.ui.view.MomentUGC
+        <cn.xiaojs.xma.ui.view.MomentUGC
                 android:id="@+id/home_moment_ugc"
                 android:layout_marginTop="@dimen/px30"
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <com.benyuan.xiaojs.ui.live.LiveScrollView
+        <cn.xiaojs.xma.ui.live.LiveScrollView
                 android:id="@+id/home_recommend_list"
                 android:layout_marginTop="@dimen/px30"
                 android:layout_width="match_parent"

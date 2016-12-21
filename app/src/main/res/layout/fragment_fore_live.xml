@@ -37,7 +37,7 @@
 
     <View style="@style/DividerHorizontal"/>
 
-    <com.benyuan.xiaojs.ui.widget.LazyViewPager
+    <cn.xiaojs.xma.ui.widget.LazyViewPager
             android:id="@+id/live_fore_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

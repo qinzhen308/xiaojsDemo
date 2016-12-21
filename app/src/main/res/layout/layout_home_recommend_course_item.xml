@@ -59,7 +59,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
-                <com.benyuan.xiaojs.ui.widget.EvaluationStar
+                <cn.xiaojs.xma.ui.widget.EvaluationStar
                         android:layout_marginLeft="@dimen/px20"
                         android:id="@+id/recommend_course_star"
                         android:layout_width="wrap_content"

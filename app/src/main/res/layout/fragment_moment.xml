@@ -36,7 +36,7 @@
 
     <View style="@style/DividerHorizontal"/>
 
-    <com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshGridView
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshGridView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/live_grid"
             android:scrollbars="none"
@@ -51,5 +51,5 @@
             android:stretchMode="columnWidth"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-    </com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshGridView>
+    </cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshGridView>
 </LinearLayout>

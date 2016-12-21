@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <com.benyuan.xiaojs.ui.widget.RoundedImageView
+            <cn.xiaojs.xma.ui.widget.RoundedImageView
                     android:id="@+id/person_home_head"
                     android:scaleType="fitXY"
                     app:oval="true"
@@ -33,7 +33,7 @@
                     android:layout_width="@dimen/px100"
                     android:layout_height="@dimen/px100"/>
 
-            <com.benyuan.xiaojs.ui.widget.IconTextView
+            <cn.xiaojs.xma.ui.widget.IconTextView
                     android:id="@+id/person_home_name"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/px10"
@@ -59,7 +59,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
-                <com.benyuan.xiaojs.ui.widget.EvaluationStar
+                <cn.xiaojs.xma.ui.widget.EvaluationStar
                         android:layout_marginLeft="@dimen/px30"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-    <com.benyuan.xiaojs.ui.view.RelationshipView
+    <cn.xiaojs.xma.ui.view.RelationshipView
             android:id="@+id/person_home_relationship"
             android:layout_marginTop="@dimen/px30"
             android:layout_width="match_parent"
@@ -139,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout
+        <cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout
                 android:id="@+id/person_home_follow_people"
                 android:layout_marginTop="@dimen/px30"
                 android:layout_marginLeft="@dimen/px30"

@@ -167,7 +167,7 @@
                     android:layout_marginTop="@dimen/px24"
                     style="@style/lesson_home_layout">
 
-                <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                <cn.xiaojs.xma.ui.widget.RoundedImageView
                         android:id="@+id/tea_avatar"
                         app:oval="true"
                         android:layout_width="@dimen/px120"
@@ -191,7 +191,7 @@
                         android:layout_marginTop="8dp"
                         android:textSize="16sp"/>
 
-                <com.benyuan.xiaojs.ui.widget.EvaluationStar
+                <cn.xiaojs.xma.ui.widget.EvaluationStar
                         android:id="@+id/eval_star"
                         android:layout_toRightOf="@id/tea_name"
                         android:layout_width="wrap_content"
@@ -216,7 +216,7 @@
                     style="@style/DividerHorizontal"
                     android:layout_marginTop="@dimen/px24"/>
 
-            <com.benyuan.xiaojs.ui.widget.BlockTabView
+            <cn.xiaojs.xma.ui.widget.BlockTabView
                     android:id="@+id/block_detail_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

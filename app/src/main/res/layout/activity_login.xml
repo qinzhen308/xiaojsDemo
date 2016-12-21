@@ -37,7 +37,7 @@
                 android:textSize="@dimen/font_28px"
                 android:text="@string/phone_num"/>
 
-        <com.benyuan.xiaojs.ui.widget.EditTextDel
+        <cn.xiaojs.xma.ui.widget.EditTextDel
                 android:id="@+id/login_name"
                 android:background="@null"
                 android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                 android:textSize="@dimen/font_28px"
                 android:text="@string/pwd"/>
 
-        <com.benyuan.xiaojs.ui.widget.EditTextDel
+        <cn.xiaojs.xma.ui.widget.EditTextDel
                 android:id="@+id/login_pwd"
                 android:background="@null"
                 android:layout_centerInParent="true"

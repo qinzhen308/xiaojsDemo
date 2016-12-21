@@ -47,7 +47,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true">
 
-                        <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                        <cn.xiaojs.xma.ui.widget.RoundedImageView
                                 android:id="@+id/portrait"
                                 roundimg:oval="true"
                                 android:layout_width="@dimen/px160"

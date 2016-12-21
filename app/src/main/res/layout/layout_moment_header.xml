@@ -4,7 +4,7 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content">
 
-    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+    <cn.xiaojs.xma.ui.widget.RoundedImageView
             android:id="@+id/moment_header_image"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
@@ -13,7 +13,7 @@
             android:layout_width="@dimen/px100"
             android:layout_height="@dimen/px100"/>
 
-    <com.benyuan.xiaojs.ui.view.FollowView
+    <cn.xiaojs.xma.ui.view.FollowView
             android:id="@+id/moment_header_focus"
             android:text="关注"
             android:layout_alignParentRight="true"
@@ -70,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-            <com.benyuan.xiaojs.ui.widget.IconTextView
+            <cn.xiaojs.xma.ui.widget.IconTextView
                     android:id="@+id/moment_header_desc"
                     android:layout_gravity="center_vertical"
                     android:ellipsize="end"

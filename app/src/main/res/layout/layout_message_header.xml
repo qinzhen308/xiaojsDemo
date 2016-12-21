@@ -9,7 +9,7 @@
             android:layout_marginTop="@dimen/px30"
             style="@style/DividerHorizontal"/>
 
-    <com.benyuan.xiaojs.ui.widget.CanInScrollviewListView
+    <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

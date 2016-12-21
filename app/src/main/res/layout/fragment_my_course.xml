@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
 
             android:id="@+id/listview"
             android:orientation="vertical"
@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-    </com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView>
+    </cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView>
 
     <include
             android:id="@+id/hover"

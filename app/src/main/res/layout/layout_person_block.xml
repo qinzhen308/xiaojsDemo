@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <com.benyuan.xiaojs.ui.widget.HorizontalListView
+    <cn.xiaojs.xma.ui.widget.HorizontalListView
             android:id="@+id/person_block_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

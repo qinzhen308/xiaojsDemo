@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.benyuan.xiaojs">
+          package="cn.xiaojs.xma">
 
     <application tools:replace="android:name"
                  android:name=".DebugApplication"/>

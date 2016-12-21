@@ -91,7 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    <cn.xiaojs.xma.ui.widget.RoundedImageView
                             android:id="@+id/course_teacher_image"
                             android:layout_width="@dimen/px40"
                             android:layout_height="@dimen/px40"

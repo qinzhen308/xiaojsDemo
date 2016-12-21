@@ -43,7 +43,7 @@
                     style="@style/LiveLessonCreateTitle"
                     android:text="@string/live_lesson_name"/>
 
-            <com.benyuan.xiaojs.ui.widget.EditTextDel
+            <cn.xiaojs.xma.ui.widget.EditTextDel
                     android:id="@+id/live_lesson_name"
                     style="@style/LiveLessonCreateEdt"
                     android:layout_marginLeft="@dimen/px40"
@@ -84,7 +84,7 @@
                     style="@style/LiveLessonCreateTitle"
                     android:text="@string/lesson_people_limit"/>
 
-            <com.benyuan.xiaojs.ui.widget.EditTextDel
+            <cn.xiaojs.xma.ui.widget.EditTextDel
                     android:id="@+id/lesson_stu_count"
                     android:gravity="right"
                     android:layout_weight="1"
@@ -309,7 +309,7 @@
                     style="@style/LiveLessonTitle"
                     android:text="@string/lesson_duration"/>
 
-            <com.benyuan.xiaojs.ui.widget.EditTextDel
+            <cn.xiaojs.xma.ui.widget.EditTextDel
                     android:id="@+id/lesson_duration"
                     android:gravity="right"
                     android:layout_weight="1"

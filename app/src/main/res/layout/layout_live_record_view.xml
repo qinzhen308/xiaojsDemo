@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.benyuan.xiaojs.ui.classroom.live.core.CameraPreviewFrameView
+    <cn.xiaojs.xma.ui.classroom.live.core.CameraPreviewFrameView
             android:id="@+id/camera_preview_surfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true">
 
-        <com.benyuan.xiaojs.ui.widget.TabIndicatorView
+        <cn.xiaojs.xma.ui.widget.TabIndicatorView
                 android:id="@+id/tab_scroller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <com.benyuan.xiaojs.ui.widget.LazyViewPager
+        <cn.xiaojs.xma.ui.widget.LazyViewPager
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

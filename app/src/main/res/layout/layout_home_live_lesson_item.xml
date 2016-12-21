@@ -71,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    <cn.xiaojs.xma.ui.widget.RoundedImageView
                             android:id="@+id/home_live_lesson_item_pro1"
                             app:corner_radius="@dimen/px60"
                             app:oval="true"
@@ -113,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    <cn.xiaojs.xma.ui.widget.RoundedImageView
                             android:id="@+id/home_live_lesson_item_pro2"
                             app:corner_radius="@dimen/px60"
                             app:oval="true"
@@ -155,7 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                    <cn.xiaojs.xma.ui.widget.RoundedImageView
                             android:id="@+id/home_live_lesson_item_pro3"
                             app:corner_radius="@dimen/px60"
                             app:oval="true"
@@ -225,13 +225,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
-                <com.benyuan.xiaojs.ui.widget.LiveProgress
+                <cn.xiaojs.xma.ui.widget.LiveProgress
                         android:layout_marginLeft="@dimen/px30"
                         android:layout_marginTop="@dimen/px20"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-                <com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout
+                <cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout
                         android:id="@+id/image_flow"
                         android:layout_marginTop="@dimen/px20"
                         android:layout_marginLeft="@dimen/px25"

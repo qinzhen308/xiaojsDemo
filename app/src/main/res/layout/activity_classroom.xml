@@ -1,4 +1,4 @@
-<com.benyuan.xiaojs.ui.classroom.drawer.DrawerLayout
+<cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
                 android:visibility="invisible"/>
 
         <!--白板-->
-        <com.benyuan.xiaojs.ui.classroom.whiteboard.Whiteboard
+        <cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard
                 android:id="@+id/white_board"
                 android:background="@color/white"
                 android:layout_width="match_parent"
@@ -52,4 +52,4 @@
 
     </FrameLayout>
 
-</com.benyuan.xiaojs.ui.classroom.drawer.DrawerLayout>
+</cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout>

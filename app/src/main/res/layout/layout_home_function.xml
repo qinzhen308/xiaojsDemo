@@ -6,12 +6,12 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content">
 
-    <com.benyuan.xiaojs.ui.widget.WrapContentViewPager
+    <cn.xiaojs.xma.ui.widget.WrapContentViewPager
             android:id="@+id/home_function_pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    <com.benyuan.xiaojs.ui.widget.banner.PointIndicateView
+    <cn.xiaojs.xma.ui.widget.banner.PointIndicateView
             android:id="@+id/home_function_point"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

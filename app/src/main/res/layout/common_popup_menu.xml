@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/px26"
     android:paddingTop="@dimen/px13" >
 
-    <com.benyuan.xiaojs.ui.view.CommonPopupMenuList
+    <cn.xiaojs.xma.ui.view.CommonPopupMenuList
         android:id="@+id/listView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,6 +19,6 @@
         android:dividerHeight="@dimen/px1"
         android:listSelector="@android:color/transparent"
         android:scrollbars="none" >
-    </com.benyuan.xiaojs.ui.view.CommonPopupMenuList>
+    </cn.xiaojs.xma.ui.view.CommonPopupMenuList>
 
 </LinearLayout>

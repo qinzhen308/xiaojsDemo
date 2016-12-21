@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+    <cn.xiaojs.xma.ui.widget.RoundedImageView
             android:id="@+id/relationship_other"
             app:oval="true"
             android:src="@drawable/default_portrait"
@@ -63,7 +63,7 @@
             android:layout_width="@dimen/px40"
             android:layout_height="@dimen/px40"/>
 
-    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+    <cn.xiaojs.xma.ui.widget.RoundedImageView
             android:id="@+id/relationship_myself"
             app:oval="true"
             android:src="@drawable/default_portrait"

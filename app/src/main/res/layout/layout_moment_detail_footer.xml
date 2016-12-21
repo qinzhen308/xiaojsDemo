@@ -6,7 +6,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <com.benyuan.xiaojs.ui.widget.RoundedImageView
+    <cn.xiaojs.xma.ui.widget.RoundedImageView
             android:id="@+id/moment_detail_footer_image"
             app:oval="true"
             app:border_width="@dimen/px1"

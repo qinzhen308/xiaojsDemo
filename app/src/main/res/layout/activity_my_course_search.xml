@@ -20,7 +20,7 @@
                 android:visibility="visible"
                 android:layout_gravity="center_vertical"/>
 
-        <com.benyuan.xiaojs.ui.widget.EditTextDel
+        <cn.xiaojs.xma.ui.widget.EditTextDel
                 android:id="@+id/my_course_search"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -56,7 +56,7 @@
             style="@style/DividerHorizontal2"/>
 
 
-    <com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshSwipeListView
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
             android:id="@+id/my_course_search_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -51,14 +51,14 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/px316">
 
-        <com.benyuan.xiaojs.ui.widget.RoundedImageView
+        <cn.xiaojs.xma.ui.widget.RoundedImageView
                 android:id="@+id/block_course_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
                 app:corner_radius="@dimen/px5"/>
 
-        <com.benyuan.xiaojs.ui.widget.RoundedImageView
+        <cn.xiaojs.xma.ui.widget.RoundedImageView
                 android:src="@drawable/profile_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -114,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-            <com.benyuan.xiaojs.ui.widget.RoundedImageView
+            <cn.xiaojs.xma.ui.widget.RoundedImageView
                     android:id="@+id/block_course_person1_image"
                     android:layout_width="@dimen/px100"
                     android:layout_height="@dimen/px100"
@@ -157,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-            <com.benyuan.xiaojs.ui.widget.RoundedImageView
+            <cn.xiaojs.xma.ui.widget.RoundedImageView
                     android:id="@+id/block_course_person2_image"
                     android:layout_width="@dimen/px100"
                     android:layout_height="@dimen/px100"
@@ -222,7 +222,7 @@
                 android:layout_gravity="center_vertical"
                 android:text="@string/enter_cls_stu_hint"/>
 
-        <com.benyuan.xiaojs.ui.widget.flow.ImageFlowLayout
+        <cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout
                 android:id="@+id/image_flow"
                 android:layout_marginTop="@dimen/px5"
                 android:layout_marginBottom="@dimen/px5"

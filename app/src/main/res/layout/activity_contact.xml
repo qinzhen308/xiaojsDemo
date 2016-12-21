@@ -18,7 +18,7 @@
             android:layout_margin="10dp"
             android:padding="5dp"/>
 
-    <com.benyuan.xiaojs.common.pulltorefresh.core.PullToRefreshExpandableListView
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView
             android:id="@+id/list_contact"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

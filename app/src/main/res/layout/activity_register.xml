@@ -30,7 +30,7 @@
                 android:textSize="@dimen/font_28px"
                 android:text="@string/reg_name_title"/>
 
-        <com.benyuan.xiaojs.ui.widget.EditTextDel
+        <cn.xiaojs.xma.ui.widget.EditTextDel
                 android:id="@+id/reg_name"
                 android:background="@null"
                 android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                 android:textSize="@dimen/font_28px"
                 android:text="@string/phone_num"/>
 
-        <com.benyuan.xiaojs.ui.widget.EditTextDel
+        <cn.xiaojs.xma.ui.widget.EditTextDel
                 android:id="@+id/reg_phone"
                 android:background="@null"
                 android:layout_width="match_parent"
@@ -114,7 +114,7 @@
                     android:textSize="@dimen/font_28px"
                     android:text="@string/verify_code_title"/>
 
-            <com.benyuan.xiaojs.ui.widget.EditTextDel
+            <cn.xiaojs.xma.ui.widget.EditTextDel
                     android:id="@+id/verify_code"
                     android:background="@null"
                     android:layout_width="match_parent"
@@ -168,7 +168,7 @@
                 android:textSize="@dimen/font_28px"
                 android:text="@string/pwd"/>
 
-        <com.benyuan.xiaojs.ui.widget.EditTextDel
+        <cn.xiaojs.xma.ui.widget.EditTextDel
                 android:id="@+id/reg_pwd"
                 android:background="@null"
                 android:layout_centerInParent="true"

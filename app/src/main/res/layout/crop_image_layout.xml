@@ -4,7 +4,7 @@
              android:layout_width="fill_parent"
              android:layout_height="fill_parent">
 
-    <com.benyuan.xiaojs.common.crop.CropImageView
+    <cn.xiaojs.xma.common.crop.CropImageView
             android:id="@+id/crop_img"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>

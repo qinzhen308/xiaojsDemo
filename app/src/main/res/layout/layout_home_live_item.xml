@@ -41,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                <com.benyuan.xiaojs.ui.widget.RoundedImageView
+                <cn.xiaojs.xma.ui.widget.RoundedImageView
                         android:id="@+id/home_live_item_portrait"
                         app:corner_radius="@dimen/px30"
                         android:scaleType="fitXY"
@@ -82,7 +82,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
 
-                        <com.benyuan.xiaojs.ui.widget.EvaluationStar
+                        <cn.xiaojs.xma.ui.widget.EvaluationStar
                                 android:id="@+id/home_live_item_star"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="@dimen/px10"

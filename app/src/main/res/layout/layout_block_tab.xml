@@ -46,14 +46,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                <com.benyuan.xiaojs.ui.widget.BottomLineTextView
+                <cn.xiaojs.xma.ui.widget.BottomLineTextView
                         android:id="@+id/block_tab1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@drawable/orange_common_selector"
                         android:textSize="@dimen/font_26px"/>
 
-                <com.benyuan.xiaojs.ui.widget.BottomLineTextView
+                <cn.xiaojs.xma.ui.widget.BottomLineTextView
                         android:id="@+id/block_tab2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
