@@ -407,7 +407,8 @@ public class IntersectionHelper {
         boolean intersect = false;
         int intersectCount = 0;
         if (allDoodles != null) {
-            for (Doodle d : allDoodles) {
+            for (int i = allDoodles.size() - 1; i >= 0; i--) {
+                Doodle d = allDoodles.get(i);
                 if (d instanceof Beeline) {
                     LineSegment beeLineSeg = ((Beeline) d).getLineSegment();
                     intersect = Utils.intersect(transRect, beeLineSeg);
