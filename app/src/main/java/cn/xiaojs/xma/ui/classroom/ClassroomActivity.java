@@ -21,6 +21,7 @@ import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,6 +110,7 @@ public class ClassroomActivity extends FragmentActivity {
     private boolean mNeedOpenWhiteBoardPanel = false;
     private int mPlayState = STATE_PLAY;
 
+    private WhiteboardLayer mWhiteboardLayer;
     private WhiteboardController mWhiteboardController;
 
     @Override
@@ -122,6 +124,7 @@ public class ClassroomActivity extends FragmentActivity {
         initDrawer();
         initLiveProgress();
         initGestureDetector();
+        initWhiteboard();
         mTeacherVideo.setPath(Config.pathPush);
     }
 
@@ -172,6 +175,11 @@ public class ClassroomActivity extends FragmentActivity {
         int w = getResources().getDisplayMetrics().widthPixels;
         ViewGroup.LayoutParams params = mLiveProgress.getLayoutParams();
         params.width = (int) (w * LIVE_PROGRESS_WIDTH_FACTOR);
+    }
+
+    private void initWhiteboard() {
+        mWhiteboardLayer = new WhiteboardLayer();
+        mWhiteboard.setLayer(mWhiteboardLayer);
     }
 
     @Override

@@ -66,7 +66,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     //picker color by taking whiteboard pixel
     public final static int MODE_COLOR_PICKER = 5;
 
-    private static final float DOODLE_CANVAS_RATIO = 4 / 3.0F; // w:h = 4:3
+    private final float DOODLE_CANVAS_RATIO = WhiteboardLayer.DOODLE_CANVAS_RATIO; // w:h = 4:3
 
     private Context mContext;
     private Doodle mDoodle;
@@ -84,9 +84,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     private ViewGestureListener mViewGestureListener;
     private InputMethodManager mInputMethodManager;
-
-    private ArrayList<Doodle> mAllDoodles;
-    private ArrayList<Doodle> mReDoStack;
 
     private int mScreenWidth;
     private int mScreenHeight;
@@ -113,6 +110,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
      * the bitmap of blackboard background
      */
     private Bitmap mSrcBmp;
+    private WhiteboardLayer mLayer;
+
+    private ArrayList<Doodle> mAllDoodles;
+    private ArrayList<Doodle> mReDoStack;
 
     private Bitmap mDoodleBitmap;
     private Canvas mDoodleCanvas;
@@ -140,23 +141,23 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public Whiteboard(Context context) {
         super(context);
-        initData(context);
+        initParams(context);
     }
 
     public Whiteboard(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initData(context);
+        initParams(context);
     }
 
     public Whiteboard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initData(context);
+        initParams(context);
     }
 
     @TargetApi(21)
     public Whiteboard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        initData(context);
+        initParams(context);
     }
 
     public void setGestureDetector(ClassroomGestureDetector gestureDetector) {
@@ -231,7 +232,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 }
             }
         });
-
     }
 
     public void setSourceBmp(Bitmap srcBmp) {
@@ -256,17 +256,21 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         postInvalidate();
     }
 
+    public void setLayer(WhiteboardLayer layer) {
+        mLayer = layer;
+        mAllDoodles = layer.getAllDoodles();
+        mReDoStack = layer.getReDoStack();
+        invalidate();
+    }
+
     public float getPhotoScale(int viewW, int viewH, int photoW, int photoH) {
         float scale = Math.min((float) viewW / (float) photoW, (float) viewH / (float) photoH);
         return Math.min(20, scale);
     }
 
-    private void initData(Context context) {
+    private void initParams(Context context) {
         mContext = context;
         mDoodleBounds = new RectF();
-
-        mAllDoodles = new ArrayList<Doodle>();
-        mReDoStack = new ArrayList<Doodle>();
         mDoodleBounds = new RectF();
 
         mDownPoint = new PointF();
@@ -355,7 +359,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 case MODE_TEXT:
                     if (mDoodle instanceof TextWriting) {
                         if (TextUtils.isEmpty(((TextWriting)mDoodle).getTextString())) {
-                            mAllDoodles.remove(mDoodle);
+                            if (mAllDoodles != null) {
+                                mAllDoodles.remove(mDoodle);
+                            }
                             mDoodle = null;
                         } else if (mDoodle.getState() == Doodle.STATE_EDIT){
                             mSelectionRectRegion = mDoodle.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
@@ -704,7 +710,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         }
 
-        if (mDoodle != null && mDoodle.getState() == Doodle.STATE_IDLE) {
+        if (mDoodle != null && mDoodle.getState() == Doodle.STATE_IDLE && mAllDoodles != null) {
             mDoodle.setState(Doodle.STATE_DRAWING);
             mAllDoodles.add(mDoodle);
         }
@@ -722,10 +728,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             return;
         }
 
-        if (mDoodleCanvas == null) {
-            mDoodleBitmap = Bitmap.createBitmap(mBlackboardWidth, mBlackboardHeight, Bitmap.Config.ARGB_8888);
-            mDoodleCanvas = new Canvas(mDoodleBitmap);
-        }
+        createDoodleCanvas();
 
         drawDoodle(mDoodleCanvas, mDoodle);
         invalidate();
@@ -742,22 +745,39 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mDoodleBitmap.eraseColor(0);
         }
 
+        if (mAllDoodles == null) {
+            return;
+        }
+
         for (int i = 0; i < mAllDoodles.size() - 1; i++) {
             drawDoodle(mDoodleCanvas, mAllDoodles.get(i));
         }
     }
 
     private void drawAllDoodlesCanvas() {
-        if (mDoodleCanvas == null) {
-            mDoodleBitmap = Bitmap.createBitmap(mBlackboardWidth, mBlackboardHeight, Bitmap.Config.ARGB_8888);
-            mDoodleCanvas = new Canvas(mDoodleBitmap);
-        }
+        createDoodleCanvas();
 
         eraserAllDoodle();
-        for (Doodle d : mAllDoodles) {
-            d.setDrawingMatrix(mDrawingMatrix);
-            d.setDisplayMatrix(mDisplayMatrix);
-            d.drawSelf(mDoodleCanvas);
+
+        if (mAllDoodles != null) {
+            for (Doodle d : mAllDoodles) {
+                d.setDrawingMatrix(mDrawingMatrix);
+                d.setDisplayMatrix(mDisplayMatrix);
+                d.drawSelf(mDoodleCanvas);
+            }
+        }
+    }
+
+    private void createDoodleCanvas() {
+        if (mDoodleCanvas == null) {
+            int w = mBlackboardWidth;
+            int h = mBlackboardHeight;
+            mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            mDoodleCanvas = new Canvas(mDoodleBitmap);
+
+            mBlackboardRect.set(0, 0, w, h);
+            mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
+            mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
         }
     }
 
