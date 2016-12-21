@@ -329,13 +329,11 @@ public abstract class Doodle implements Action {
     public void scale(float scale, float px, float py) {
         mTotalScale = mTotalScale * scale;
         mTransformMatrix.postScale(scale, scale, px, py);
-        mDrawingMatrix.postConcat(mTransformMatrix);
     }
 
     public void rotate(float degree, float px, float py) {
         mTotalDegree += degree;
         mTransformMatrix.postRotate(degree, px, py);
-        mDrawingMatrix.postConcat(mTransformMatrix);
     }
 
     public void scaleRotateByPoint(float scale, float degree, float px, float py) {
