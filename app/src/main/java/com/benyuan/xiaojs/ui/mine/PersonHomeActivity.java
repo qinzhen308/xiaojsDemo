@@ -17,6 +17,7 @@ package com.benyuan.xiaojs.ui.mine;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,7 +74,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseScr
         mPagerTitles.add(getString(R.string.person_comment));
         mPagerTitles.add(getString(R.string.person_moment));
         View header = LayoutInflater.from(this).inflate(R.layout.layout_person_home_header, null);
-        View footer = LayoutInflater.from(this).inflate(R.layout.layout_person_home_footer,null);
+        View footer = LayoutInflater.from(this).inflate(R.layout.layout_person_home_footer, null);
         ArrayList<BaseScrollTabListAdapter> adapters = new ArrayList<>();
         PersonHomeLessonAdapter adapter = new PersonHomeLessonAdapter(this);
         PersonHomeLessonAdapter adapter1 = new PersonHomeLessonAdapter(this);
@@ -95,8 +96,16 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseScr
         mBlur.setImageBitmap(blur);
         needHeader(false);
         mTabHeader.setBackgroundResource(R.drawable.ic_home_title_bg);
-        mTabRightText.setText("关注他");
+        mTabRightText.setText("关注");
         mTabRightText.setTextColor(getResources().getColor(R.color.white));
+        mTabRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
+        mTabRightText.setBackgroundResource(R.drawable.white_stoke_bg);
+        int paddingv = getResources().getDimensionPixelSize(R.dimen.px10);
+        int paddingh = getResources().getDimensionPixelSize(R.dimen.px15);
+        mTabRightText.setPadding(paddingh,paddingv,paddingh,paddingv);
+        mTabRightText.setCompoundDrawablePadding(paddingh);
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mTabRightText.getLayoutParams();
+        mlp.rightMargin = getResources().getDimensionPixelSize(R.dimen.px30);
 
         int width = DeviceUtil.getScreenWidth(this);
         int height = (int) (width * mCoverScale);
@@ -134,10 +143,16 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseScr
             if (transparent) {
                 mTabHeader.setBackgroundResource(R.drawable.ic_home_title_bg);
                 mTabRightText.setTextColor(getResources().getColor(R.color.white));
+                mTabRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
+                mTabRightText.setBackgroundResource(R.drawable.white_stoke_bg);
+                mTabMiddleText.setText("");
                 needHeaderDivider(false);
             } else {
                 mTabHeader.setBackgroundColor(getResources().getColor(R.color.white));
-                mTabRightText.setTextColor(getResources().getColor(R.color.common_text));
+                mTabRightText.setTextColor(getResources().getColor(R.color.font_orange));
+                mTabRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus, 0, 0, 0);
+                mTabRightText.setBackgroundResource(R.drawable.orange_stoke_bg);
+                mTabMiddleText.setText("林妙可");
                 needHeaderDivider(true);
             }
         }

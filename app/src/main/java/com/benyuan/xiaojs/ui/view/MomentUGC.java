@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.benyuan.xiaojs.R;
+import com.benyuan.xiaojs.util.DeviceUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,6 +93,8 @@ public class MomentUGC extends RelativeLayout {
                 }
             }
         });
+
+        DeviceUtil.expandViewTouch(mMore,getResources().getDimensionPixelSize(R.dimen.px100));
     }
 
     public void setPraise(int count){

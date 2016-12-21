@@ -31,6 +31,7 @@ import com.benyuan.xiaojs.ui.view.MomentContent;
 import com.benyuan.xiaojs.ui.view.MomentHeader;
 import com.benyuan.xiaojs.ui.view.MomentUGC;
 import com.benyuan.xiaojs.ui.widget.HorizontalAdaptScrollerView;
+import com.benyuan.xiaojs.ui.widget.ListBottomDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,10 +59,54 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<RecommendCourseBean, Home
         } else {
             holder.showMoment();
             holder.content.show();
+            holder.ugc.setOnItemClickListener(new MomentUGC.OnItemClickListener() {
+                @Override
+                public void onPraise() {
+
+                }
+
+                @Override
+                public void onComment() {
+
+                }
+
+                @Override
+                public void onShare() {
+
+                }
+
+                @Override
+                public void onMore() {
+                    more();
+                }
+            });
         }
 
         holder.header.setData();
 
+    }
+
+    private void more(){
+        ListBottomDialog dialog = new ListBottomDialog(mContext);
+        String[] items = mContext.getResources().getStringArray(R.array.ugc_more);
+        dialog.setItems(items);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                switch (position){
+                    case 0://忽略此条动态
+                        break;
+                    case 1://忽略他的动态
+                        break;
+                    case 2://取消关注
+                        break;
+                    case 3://举报
+                        break;
+                }
+            }
+        });
+
+        dialog.show();
     }
 
     @Override
