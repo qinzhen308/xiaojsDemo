@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -25,6 +26,8 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 
 public class MainPanel extends RelativeLayout {
     private ClassroomGestureDetector mGestureDetector;
+    private WhiteboardScrollerView mWhiteboardScrollview;
+
     private Whiteboard mWhiteboard;
     private boolean mWhiteBoardTransformation = false;
 
@@ -58,18 +61,34 @@ public class MainPanel extends RelativeLayout {
         mWhiteboard = whiteboard;
     }
 
+    public void setWhiteboardSv(WhiteboardScrollerView wbSv) {
+        mWhiteboardScrollview = wbSv;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                mWhiteBoardTransformation = false;
+                break;
+        }
+
         if (mGestureDetector != null) {
-            if (ClassroomActivity.STATE_MAIN_PANEL == mGestureDetector.getState()) {
+            if (ClassroomState.STATE_MAIN_PANEL == mGestureDetector.getState()) {
                 int action = event.getActionMasked();
                 int pointCnt = event.getPointerCount();
                 if (pointCnt > 1) {
                     mWhiteBoardTransformation = true;
                 } else {
+                    //传递教室主控制面板的事件分发
                     mGestureDetector.onTouchEvent(event);
+                    //传递水平滚动的的白板事件分发
+                    if (!mWhiteBoardTransformation) {
+                        mWhiteboardScrollview.onTouchEvent(event);
+                    }
                 }
 
+                //传递白板的变换事件分发：如缩放，平移动动作
                 if (mWhiteBoardTransformation && mWhiteboard != null) {
                     mWhiteboard.transformation(event);
                     switch (action) {

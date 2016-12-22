@@ -24,6 +24,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -35,8 +36,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import java.util.ArrayList;
+
 import cn.xiaojs.xma.ui.classroom.ClassroomGestureDetector;
+import cn.xiaojs.xma.ui.classroom.ClassroomState;
 import cn.xiaojs.xma.ui.classroom.whiteboard.action.Selector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
@@ -52,12 +55,11 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
 
-import java.util.ArrayList;
-
 public class Whiteboard extends View implements ViewGestureListener.ViewRectChangedListener {
     /**
      * blackboard mode
      * */
+    public final static int MODE_NONE = -1;
     public final static int MODE_SELECTION = 0;
     public final static int MODE_HAND_WRITING = 1;
     public final static int MODE_GEOMETRY = 2;
@@ -75,12 +77,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private RectF mDoodleBounds;
     private PointF mPreviousPoint;
 
-    private int mPaintColor = Color.BLACK;
+    private int mPaintColor = WhiteboardConfigs.DEFAULT_PAINT_COLOR;
     private int mPaintStrokeWidth = 15;
 
     private WhiteboardParams mWhiteboardParams;
 
-    private int mCurrentMode = MODE_SELECTION;
+    private int mCurrentMode = MODE_NONE;
 
     private ViewGestureListener mViewGestureListener;
     private InputMethodManager mInputMethodManager;
@@ -110,6 +112,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
      * the bitmap of blackboard background
      */
     private Bitmap mSrcBmp;
+    private Uri mCourseUri;
     private WhiteboardLayer mLayer;
 
     private ArrayList<Doodle> mAllDoodles;
@@ -167,7 +170,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mClassroomGestureDetector != null) {
-            if (ClassroomActivity.STATE_WHITE_BOARD == mClassroomGestureDetector.getState()) {
+            if (ClassroomState.STATE_WHITE_BOARD == mClassroomGestureDetector.getState()) {
                 mClassroomGestureDetector.onTouchEvent(event);
                 mViewGestureListener.onTouchEvent(event);
                 return true;
@@ -261,6 +264,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mAllDoodles = layer.getAllDoodles();
         mReDoStack = layer.getReDoStack();
         invalidate();
+    }
+
+    public void setCourseUri(Uri uri) {
+        mCourseUri = uri;
+        //load course img
     }
 
     public float getPhotoScale(int viewW, int viewH, int photoW, int photoH) {
@@ -947,6 +955,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mViewGestureListener != null) {
             mViewGestureListener.onTouchEvent(event);
         }
+    }
+
+    public void exit() {
+        mDoodle = null;
+        postInvalidate();
     }
 
 }

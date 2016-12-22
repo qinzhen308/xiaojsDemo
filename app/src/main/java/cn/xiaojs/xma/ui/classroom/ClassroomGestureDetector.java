@@ -46,6 +46,6 @@ public class ClassroomGestureDetector extends GestureDetector {
             return ((ClassroomActivity)mContext).getCurrentState();
         }
 
-        return ClassroomActivity.STATE_MAIN_PANEL;
+        return ClassroomState.STATE_MAIN_PANEL;
     }
 }

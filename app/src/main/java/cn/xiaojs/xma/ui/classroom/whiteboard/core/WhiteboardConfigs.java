@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.core;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 
 import cn.xiaojs.xma.R;
 
@@ -23,6 +24,8 @@ public class WhiteboardConfigs {
 
     public static final float WHITE_BOARD_MAX_SCALE = 5.0f;
     public static final float WHITE_BOARD_MIN_SCALE = 1.0f;
+
+    public static final int DEFAULT_PAINT_COLOR = Color.BLACK;
 
     public static int BORDER_STROKE_WIDTH = 5;
     public static int SELECTOR_STROKE_WIDTH = 5;

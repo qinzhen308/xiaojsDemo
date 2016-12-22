@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -14,19 +15,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -43,11 +48,7 @@ import butterknife.Unbinder;
  *
  * ======================================================================================== */
 
-public class ClassroomActivity extends FragmentActivity {
-    public final static int STATE_MAIN_PANEL = 0;
-    public final static int STATE_LIVE = 1;
-    public final static int STATE_WHITE_BOARD = 2;
-
+public class ClassroomActivity extends FragmentActivity implements WhiteboardAdapter.OnWhiteboardListener {
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.5F;
 
     private final static int ANIM_SHOW = 1 << 1;
@@ -83,15 +84,18 @@ public class ClassroomActivity extends FragmentActivity {
     @BindView(R.id.live_progress)
     SeekBar mLiveProgress;
 
-    //live,whiteboard
-    @BindView(R.id.white_board)
-    Whiteboard mWhiteboard;
+    //live, whiteboard list
+    @BindView(R.id.white_board_scrollview)
+    WhiteboardScrollerView mWhiteboardSv;
     @BindView(R.id.teacher_video)
     LiveRecordView mTeacherVideo;
     @BindView(R.id.player_container)
     MediaContainerView mContainer;
 
     private Unbinder mBinder;
+
+    //whiteboard adapter
+    private WhiteboardAdapter mWhiteboardAdapter;
 
     //all kind of panels
     private CourseWarePanel mCourseWarePanel;
@@ -103,14 +107,15 @@ public class ClassroomActivity extends FragmentActivity {
 
     //gesture
     private ClassroomGestureDetector mMainPanelGestureDetector;
-    private ClassroomGestureDetector mWhiteBoardGestureDetector;
-    private int mCurrentState = STATE_MAIN_PANEL;
+    private ClassroomGestureDetector mWhiteboardGestureDetector;
+
+    private int mCurrentState = ClassroomState.STATE_MAIN_PANEL;
     private boolean mAnimating = false;
     private PanelAnimListener mPanelAnimListener;
     private boolean mNeedOpenWhiteBoardPanel = false;
     private int mPlayState = STATE_PLAY;
 
-    private WhiteboardLayer mWhiteboardLayer;
+    private List<WhiteboardLayer> mWhiteboardLayerList;
     private WhiteboardController mWhiteboardController;
 
     @Override
@@ -124,7 +129,8 @@ public class ClassroomActivity extends FragmentActivity {
         initDrawer();
         initLiveProgress();
         initGestureDetector();
-        initWhiteboard();
+        //init whiteboard
+        initWhiteboardData();
         mTeacherVideo.setPath(Config.pathPush);
     }
 
@@ -135,16 +141,15 @@ public class ClassroomActivity extends FragmentActivity {
     }
 
     /**
-     * 教室内容分为WhiteBord，(MainPanel:含视频) 2层，底层是WhiteBord 通过重写MainPanel和WhiteBord的OnTouchEvent来控制事件分发
+     * 教室内容分为WhiteBord，(MainPanel:含视频) 2层， 底层是WhiteBord 通过重写MainPanel, WhiteboardScrollView,
+     * Whiteboard的OnTouchEvent来控制事件分发
      */
     private void initGestureDetector() {
         mMainPanelGestureDetector = new ClassroomGestureDetector(this, new MainPanelGestureListener());
-        mWhiteBoardGestureDetector = new ClassroomGestureDetector(this, new WhiteBoardGestureListener());
+        mWhiteboardGestureDetector = new ClassroomGestureDetector(this, new WhiteBoardGestureListener());
 
         mMainPanel.setGestureDetector(mMainPanelGestureDetector);
-        //为了控制面板模式也能缩放，移动画布操作
-        mMainPanel.setTransformationWhiteBoard(mWhiteboard);
-        mWhiteboard.setGestureDetector(mWhiteBoardGestureDetector);
+        mMainPanel.setWhiteboardSv(mWhiteboardSv);
     }
 
     private void initDrawer() {
@@ -177,9 +182,41 @@ public class ClassroomActivity extends FragmentActivity {
         params.width = (int) (w * LIVE_PROGRESS_WIDTH_FACTOR);
     }
 
-    private void initWhiteboard() {
-        mWhiteboardLayer = new WhiteboardLayer();
-        mWhiteboard.setLayer(mWhiteboardLayer);
+    private void initWhiteboardData() {
+        if (mWhiteboardAdapter == null) {
+            mWhiteboardAdapter = new WhiteboardAdapter(this);
+        }
+
+        if (mWhiteboardLayerList == null) {
+            mWhiteboardLayerList = new ArrayList<WhiteboardLayer>();
+        }
+
+        if (mWhiteboardController == null) {
+            mWhiteboardController = new WhiteboardController(this, mContentRoot);
+        }
+
+        mWhiteboardLayerList.add(new WhiteboardLayer());
+        mWhiteboardLayerList.add(new WhiteboardLayer());
+        mWhiteboardAdapter.setData(mWhiteboardLayerList);
+        mWhiteboardSv.setAdapter(mWhiteboardAdapter);
+        mWhiteboardAdapter.notifyDataSetChanged();
+        mWhiteboardAdapter.setOnWhiteboardListener(this);
+    }
+
+    @Override
+    public void onWhiteboardSelected(Whiteboard whiteboard) {
+        if (mWhiteboardController != null) {
+            //为了控制面板模式也能缩放，移动画布操作
+            mMainPanel.setTransformationWhiteBoard(whiteboard);
+
+            whiteboard.setGestureDetector(mWhiteboardGestureDetector);
+            mWhiteboardController.setWhiteboard(whiteboard);
+        }
+    }
+
+    private void updateWhiteboardData(List<WhiteboardLayer> layers) {
+        mWhiteboardAdapter.setData(layers);
+        mWhiteboardAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -329,7 +366,7 @@ public class ClassroomActivity extends FragmentActivity {
             return;
         }
 
-        if (mCurrentState == STATE_MAIN_PANEL) {
+        if (mCurrentState == ClassroomState.STATE_MAIN_PANEL) {
             if (mBottomPanel.getVisibility() == View.VISIBLE) {
                 //若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板
                 mNeedOpenWhiteBoardPanel = true;
@@ -355,7 +392,7 @@ public class ClassroomActivity extends FragmentActivity {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             Log.i("aaa", "========MainPanelGestureListener====onSingleTapConfirmed=============" + mCurrentState);
-            if (mCurrentState == STATE_MAIN_PANEL && !mAnimating) {
+            if (mCurrentState == ClassroomState.STATE_MAIN_PANEL && !mAnimating) {
                 if (mBottomPanel.getVisibility() == View.VISIBLE) {
                     mNeedOpenWhiteBoardPanel = false;
                     hideTopBottomPanel();
@@ -486,10 +523,15 @@ public class ClassroomActivity extends FragmentActivity {
             return;
         }
 
+        if (mWhiteboardController != null) {
+            mWhiteboardController.exitWhiteboard();
+        }
+
         mWhiteBoardPanel.animate()
                 .alpha(0.0f)
                 .setListener(mPanelAnimListener.with(mWhiteBoardPanel).play(ANIM_HIDE))
                 .start();
+
     }
 
     /**
@@ -498,10 +540,6 @@ public class ClassroomActivity extends FragmentActivity {
     private void showWhiteBoardPanel(boolean needAnim) {
         if (mAnimating) {
             return;
-        }
-
-        if (mWhiteboardController == null) {
-            mWhiteboardController = new WhiteboardController(this, mContentRoot);
         }
 
         if (needAnim) {
@@ -584,7 +622,7 @@ public class ClassroomActivity extends FragmentActivity {
                             break;
                         case R.id.white_board_panel:
                             if (mWhiteBoardPanel != null) {
-                                mCurrentState = STATE_WHITE_BOARD;
+                                mCurrentState = ClassroomState.STATE_WHITE_BOARD;
                                 showWhiteBoardPanel(false);
                             }
                             break;
@@ -602,14 +640,14 @@ public class ClassroomActivity extends FragmentActivity {
                                 mBottomPanel.setVisibility(View.GONE);
                                 if (mNeedOpenWhiteBoardPanel) {
                                     mNeedOpenWhiteBoardPanel = false;
-                                    mCurrentState = STATE_WHITE_BOARD;
+                                    mCurrentState = ClassroomState.STATE_WHITE_BOARD;
                                     showWhiteBoardPanel(false);
                                 }
                             }
                             break;
                         case R.id.white_board_panel:
                             if (mWhiteBoardPanel != null) {
-                                mCurrentState = STATE_MAIN_PANEL;
+                                mCurrentState = ClassroomState.STATE_MAIN_PANEL;
                                 mWhiteBoardPanel.setVisibility(View.GONE);
                             }
                             break;
@@ -636,6 +674,10 @@ public class ClassroomActivity extends FragmentActivity {
         if (mWhiteboardController != null) {
             mWhiteboardController.handlePanelItemClick(v);
         }
+    }
+
+    public int getState() {
+        return mCurrentState;
     }
 
 }
