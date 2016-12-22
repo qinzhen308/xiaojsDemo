@@ -58,6 +58,7 @@ public class MainPanel extends RelativeLayout {
     }
 
     public void setTransformationWhiteBoard(Whiteboard whiteboard) {
+        mWhiteboard = null;
         mWhiteboard = whiteboard;
     }
 

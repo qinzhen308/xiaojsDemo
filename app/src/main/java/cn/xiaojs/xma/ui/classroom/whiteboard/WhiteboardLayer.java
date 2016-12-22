@@ -36,10 +36,6 @@ public class WhiteboardLayer {
         init();
     }
 
-    public String getWhiteboardLayerId() {
-        return mWhiteboardId;
-    }
-
     private void init() {
         mAllDoodles = new ArrayList<Doodle>();
         mReDoStack = new ArrayList<Doodle>();

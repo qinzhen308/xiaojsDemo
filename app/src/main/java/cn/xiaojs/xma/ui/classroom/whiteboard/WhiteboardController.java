@@ -293,6 +293,7 @@ public class WhiteboardController implements
     }
 
     public void setWhiteboard(Whiteboard whiteboard) {
+        mWhiteboard = null;
         mWhiteboard = whiteboard;
         if (mWhiteboard != null) {
             mWhiteboard.setEditText(mWhiteboardEdit);

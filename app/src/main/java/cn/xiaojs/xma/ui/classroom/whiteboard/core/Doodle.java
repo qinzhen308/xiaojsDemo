@@ -180,6 +180,10 @@ public abstract class Doodle implements Action {
         return mPoints.lastElement();
     }
 
+    public void setWhiteboard(Whiteboard whiteboard) {
+        mWhiteboard = whiteboard;
+    }
+
     public void setDrawingMatrix(Matrix matrix) {
         if (mDrawingMatrix != null) {
             mDrawingMatrix.set(matrix);

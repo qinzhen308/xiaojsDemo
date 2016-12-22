@@ -26,7 +26,6 @@ public class WhiteboardAdapter extends PagerAdapter {
     private Context mContext;
     private List<WhiteboardLayer> mLayers;
     private List<Whiteboard> mWhiteboards;
-    private Whiteboard mCurrWhiteboardView;
     private OnWhiteboardListener mOnWhiteboardListener;
 
     public WhiteboardAdapter(Context context) {
@@ -69,22 +68,18 @@ public class WhiteboardAdapter extends PagerAdapter {
             Whiteboard wb = (Whiteboard)object;
             wb.release();
             container.removeView(wb);
+            wb = null;
         }
     }
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
         if (object instanceof Whiteboard) {
-            mCurrWhiteboardView = (Whiteboard) object;
+            Whiteboard wb = (Whiteboard) object;
             if (mOnWhiteboardListener != null) {
-                mOnWhiteboardListener.onWhiteboardSelected(mCurrWhiteboardView);
+                mOnWhiteboardListener.onWhiteboardSelected(wb);
             }
         }
-    }
-
-
-    public Whiteboard getCurrWhiteboardView() {
-        return mCurrWhiteboardView;
     }
 
     public void setOnWhiteboardListener(OnWhiteboardListener listener) {

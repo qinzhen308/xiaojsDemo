@@ -139,6 +139,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private boolean mTransform;
     private boolean mCanMovable;
     private boolean mIsRecordedParams;
+    private boolean mMeasureFinished = false;
+    private boolean mInitLayer = false;
 
     private ClassroomGestureDetector mClassroomGestureDetector;
 
@@ -203,6 +205,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
         mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
         mViewGestureListener.onViewChanged(mViewWidth, mViewHeight, mBlackboardWidth, mBlackboardHeight);
+        mMeasureFinished = mBlackboardHeight > 0 && mBlackboardWidth > 0;
     }
 
     public void setEditText (final EditText editText) {
@@ -263,6 +266,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mLayer = layer;
         mAllDoodles = layer.getAllDoodles();
         mReDoStack = layer.getReDoStack();
+        if (mAllDoodles != null) {
+            for (Doodle d : mAllDoodles) {
+                d.setWhiteboard(this);
+            }
+        }
         invalidate();
     }
 
@@ -277,6 +285,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void initParams(Context context) {
+        mMeasureFinished = false;
         mContext = context;
         mDoodleBounds = new RectF();
         mDoodleBounds = new RectF();
@@ -307,6 +316,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (!mInitLayer && mMeasureFinished) {
+            mInitLayer = true;
+            drawAllDoodlesCanvas();
+        }
+
         RectF destF = mViewGestureListener.getDestRect();
         mDoodleBounds.set(destF.left, destF.top, destF.right, destF.bottom);
 
@@ -947,7 +961,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public void release() {
         //do something
         if (mDoodleBitmap != null && !mDoodleBitmap.isRecycled()) {
+            //TODO 构建一个bitmap池，保证图片重用,回收的时候首先是把图片放到图片池,下次初始化时，可以从对象池中获取
+            //否则会报oom
+            mDoodleBitmap.recycle();
+            mDoodleBitmap = null;
+        }
 
+        if (mAllDoodles != null) {
+            for (Doodle d : mAllDoodles) {
+                d.setWhiteboard(null);
+            }
         }
     }
 
@@ -958,6 +981,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     public void exit() {
+        if (mDoodle != null) {
+            mDoodle.setWhiteboard(null);
+        }
         mDoodle = null;
         postInvalidate();
     }
