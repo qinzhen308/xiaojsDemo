@@ -333,7 +333,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         //clip
         canvas.clipRect(mDoodleBounds);
         //draw background
-        canvas.drawColor(Color.argb(255, 230, 230, 230));
+        //canvas.drawColor(Color.argb(255, 230, 230, 230));
 
         canvas.concat(mDisplayMatrix);
         //1. draw doodle
@@ -782,7 +782,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         createDoodleCanvas();
 
         eraserAllDoodle();
-
+        //draw background
+        mDoodleCanvas.drawColor(Color.argb(255, 230, 230, 230));
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
                 d.setDrawingMatrix(mDrawingMatrix);
@@ -796,7 +797,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mDoodleCanvas == null) {
             int w = mBlackboardWidth;
             int h = mBlackboardHeight;
-            mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
             mDoodleCanvas = new Canvas(mDoodleBitmap);
 
             mBlackboardRect.set(0, 0, w, h);
@@ -951,6 +952,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             if (mDoodleBitmap != null) {
                 mDoodleBitmap.eraseColor(0);
             }
+
+            //draw background
+            mDoodleCanvas.drawColor(Color.argb(255, 230, 230, 230));
 
             if (mSelector != null) {
                 mSelector.reset();
