@@ -51,7 +51,7 @@ public class WhiteboardController implements
     TextPop mTextSetting;
 
     Whiteboard mWhiteboard;
-    EditText mWhiteboardEdit;
+    Whiteboard mOldWhiteboard;
     View mPanel;
 
     private Context mContext;
@@ -72,7 +72,6 @@ public class WhiteboardController implements
         mEraser = (ImageView) root.findViewById(R.id.eraser_btn);
         mColorPicker = (CircleView) root.findViewById(R.id.color_picker_btn);
 
-        mWhiteboardEdit = (EditText) root.findViewById(R.id.blackboard_edit);
         mGeoShape.setImageResource(R.drawable.wb_oval_selector);
 
         mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
@@ -293,19 +292,20 @@ public class WhiteboardController implements
     }
 
     public void setWhiteboard(Whiteboard whiteboard) {
-        mWhiteboard = null;
-        mWhiteboard = whiteboard;
-        if (mWhiteboard != null) {
-            mWhiteboard.setEditText(mWhiteboardEdit);
-            mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
-            mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
+        if (mOldWhiteboard != whiteboard) {
+            mWhiteboard = whiteboard;
+            if (mWhiteboard != null) {
+                mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
+                mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
 
-            reset(whiteboard);
+                reset(whiteboard);
+            }
         }
+
+        mOldWhiteboard = whiteboard;
     }
 
     private void reset(Whiteboard whiteboard) {
-        whiteboard.setEditText(mWhiteboardEdit);
         whiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
         whiteboard.switchMode(Whiteboard.MODE_NONE);
 

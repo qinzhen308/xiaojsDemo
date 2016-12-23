@@ -594,4 +594,8 @@ public class ViewGestureListener {
         return hasScaleAction;
     }
 
+    public void removeViewRectChangedListener() {
+        mRectChangedListener = null;
+    }
+
 }

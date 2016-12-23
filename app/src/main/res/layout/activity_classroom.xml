@@ -10,12 +10,6 @@
             android:layout_height="wrap_content"
             android:background="@color/white">
 
-        <EditText
-                android:id="@+id/blackboard_edit"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:visibility="invisible"/>
-
         <!--白板列表-->
         <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView
                 android:id="@+id/white_board_scrollview"

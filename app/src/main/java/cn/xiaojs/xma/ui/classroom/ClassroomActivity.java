@@ -197,8 +197,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         mWhiteboardLayerList.add(new WhiteboardLayer());
         mWhiteboardLayerList.add(new WhiteboardLayer());
+        mWhiteboardLayerList.add(new WhiteboardLayer());
+        mWhiteboardLayerList.add(new WhiteboardLayer());
+        mWhiteboardLayerList.add(new WhiteboardLayer());
+        mWhiteboardLayerList.add(new WhiteboardLayer());
+        mWhiteboardLayerList.add(new WhiteboardLayer());
+
         mWhiteboardAdapter.setData(mWhiteboardLayerList);
         mWhiteboardSv.setAdapter(mWhiteboardAdapter);
+        mWhiteboardSv.setOffscreenPageLimit(2);
         mWhiteboardAdapter.notifyDataSetChanged();
         mWhiteboardAdapter.setOnWhiteboardListener(this);
     }
@@ -208,9 +215,21 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (mWhiteboardController != null) {
             //为了控制面板模式也能缩放，移动画布操作
             mMainPanel.setTransformationWhiteBoard(whiteboard);
+            mWhiteboardController.setWhiteboard(whiteboard);
 
             whiteboard.setGestureDetector(mWhiteboardGestureDetector);
-            mWhiteboardController.setWhiteboard(whiteboard);
+        }
+    }
+
+    @Override
+    public void onWhiteboardRemove(Whiteboard whiteboard) {
+        if (mWhiteboardController != null) {
+            mMainPanel.setTransformationWhiteBoard(null);
+            mWhiteboardController.setWhiteboard(null);
+
+            if (whiteboard != null) {
+                whiteboard.setGestureDetector(null);
+            }
         }
     }
 

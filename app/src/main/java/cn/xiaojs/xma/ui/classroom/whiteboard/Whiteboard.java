@@ -213,32 +213,34 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mEditText.setVisibility(View.VISIBLE);
         mEditText.setAlpha(0);
 
-        mEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String text = s.toString();
-                if (mDoodle instanceof TextWriting) {
-                    if (mDoodle.getState() == Doodle.STATE_DRAWING) {
-                        mDoodle.setState(Doodle.STATE_EDIT);
-                    }
-                    ((TextWriting)mDoodle).onTextChanged(text);
-
-                    drawAllDoodlesCanvas();
-                    Whiteboard.this.invalidate();
-                }
-            }
-        });
+        mEditText.addTextChangedListener(mTextWatcher);
     }
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String text = s.toString();
+            if (mDoodle instanceof TextWriting) {
+                if (mDoodle.getState() == Doodle.STATE_DRAWING) {
+                    mDoodle.setState(Doodle.STATE_EDIT);
+                }
+                ((TextWriting)mDoodle).onTextChanged(text);
+
+                drawAllDoodlesCanvas();
+                Whiteboard.this.invalidate();
+            }
+        }
+    };
 
     public void setSourceBmp(Bitmap srcBmp) {
         mSrcBmp = srcBmp;
@@ -972,6 +974,25 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 d.setWhiteboard(null);
             }
         }
+		
+		if (mSelector != null) {
+            mSelector.setWhiteboard(null);
+        }
+
+        if (mViewGestureListener != null) {
+            mViewGestureListener.removeViewRectChangedListener();
+        }
+
+        if (mEditText != null) {
+            mEditText.removeTextChangedListener(mTextWatcher);
+        }
+
+        mContext = null;
+        mLayer = null;
+        mEditText = null;
+        mInputMethodManager = null;
+        mViewGestureListener = null;
+        mClassroomGestureDetector = null;
     }
 
     public void transformation(MotionEvent event) {

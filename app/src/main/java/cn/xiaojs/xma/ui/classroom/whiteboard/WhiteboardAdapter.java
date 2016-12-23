@@ -52,11 +52,11 @@ public class WhiteboardAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         if (mLayers != null) {
             WhiteboardLayer layer = mLayers.get(position);
-            Whiteboard whiteboard = new Whiteboard(mContext);
+            WhiteboardLayout wbLayout = new WhiteboardLayout(mContext);
+            container.addView(wbLayout);
+            Whiteboard whiteboard = wbLayout.getWhiteboard();
             whiteboard.setLayer(layer);
-
-            container.addView(whiteboard);
-            return whiteboard;
+            return wbLayout;
         }
 
         return null;
@@ -64,18 +64,25 @@ public class WhiteboardAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        if (object instanceof Whiteboard) {
-            Whiteboard wb = (Whiteboard)object;
+        if (object instanceof WhiteboardLayout) {
+            WhiteboardLayout wbLayout = (WhiteboardLayout)object;
+            Whiteboard wb = wbLayout.getWhiteboard();
             wb.release();
-            container.removeView(wb);
+            if (mOnWhiteboardListener != null) {
+                mOnWhiteboardListener.onWhiteboardRemove(wb);
+            }
+            container.removeView(wbLayout);
+
             wb = null;
+            wbLayout = null;
         }
     }
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
-        if (object instanceof Whiteboard) {
-            Whiteboard wb = (Whiteboard) object;
+        if (object instanceof WhiteboardLayout) {
+            WhiteboardLayout wbLayout = (WhiteboardLayout)object;
+            Whiteboard wb = wbLayout.getWhiteboard();
             if (mOnWhiteboardListener != null) {
                 mOnWhiteboardListener.onWhiteboardSelected(wb);
             }
@@ -88,5 +95,7 @@ public class WhiteboardAdapter extends PagerAdapter {
 
     public interface OnWhiteboardListener{
         public void onWhiteboardSelected(Whiteboard whiteboard);
+
+        public void onWhiteboardRemove(Whiteboard whiteboard);
     }
 }
