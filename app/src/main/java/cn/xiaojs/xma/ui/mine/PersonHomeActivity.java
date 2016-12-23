@@ -21,6 +21,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.BaseScrollTabListAdapter;
@@ -31,15 +40,6 @@ import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.FastBlur;
-import com.orhanobut.logger.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 
 public class PersonHomeActivity extends BaseScrollTabActivity implements BaseScrollTabActivity.OnPagerClickListener {
 
@@ -129,8 +129,9 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseScr
 
     @Override
     protected void onScrollY(int y) {
+        super.onScrollY(y);
         int bannerHeight = mImageHolder.getMeasuredHeight();
-        Logger.i("onScrollY y = " + y);
+//        Logger.i("onScrollY y = " + y);
         if (y <= bannerHeight) {
             changeHeader(true);
         } else {
@@ -189,7 +190,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseScr
 
     @Override
     public void onSelected(int position) {
-        changeHeader(true);
+        //changeHeader(true);
 
         Logger.i("onSelected");
     }

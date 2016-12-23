@@ -22,15 +22,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
-import cn.xiaojs.xma.ui.home.OnScrollYListener;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.ui.home.OnScrollYListener;
 
 /**
  * 功能描述：带共同头视图的单个或者多个Tab可切换 往上拉可选择是否悬浮切换Tab 支持上下拉刷新 采用多PullToRefreshListView实现 通过监听多PullToRefreshListView的滑动坐标来同步顶部Tab的悬停 通过监听页面切换不断remove 和 add headerView到头部
@@ -59,7 +59,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
     private LinearLayout mHovTopTabContent = null;// tab标题所在的容器
 
     private LinearLayout mViewPagerContent;//多个ListView的容器
-    private LinearLayout mViewPager;//多个ListView的容器
+    private FrameLayout mViewPager;//多个ListView的容器
     private BaseScrollTabLayout mHeaderBaseContent;//滑动头容器 头部视图的根布局
     private LinearLayout mHeaderLayout;//头部添加View所在容器
     private LinearLayout mHeaderHoverLayout;//头部中需要悬浮的容器
@@ -79,6 +79,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
     private int headerHeight;//带TAB头的高度
     private int headerTranslationDis;//不带Tab时的高度
     private int mScrollY;//向上滑动的距离
+    private ArrayList<Integer> mListPositionCache = new ArrayList<>();
     protected ArrayList<OnScrollYListener> mScrollYListenerCache = new ArrayList<OnScrollYListener>();
 
     @BindView(R.id.scroll_tab_header)
@@ -173,8 +174,8 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
 
     private void initBaseView(View headerView, View footView, int hoverResId) {
         mViewPagerContent = (LinearLayout) findViewById(R.id.pager_content);
-        mViewPager = new LinearLayout(this);
-        mViewPager.setOrientation(LinearLayout.HORIZONTAL);
+        mViewPager = new FrameLayout(this);
+        //mViewPager.setOrientation(LinearLayout.HORIZONTAL);
 
         initHeaderView(headerView, hoverResId);
 
@@ -329,7 +330,8 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
             // 修正滚出去的偏移量
             adjustScroll(mCurrentPosition, position);
             mCurrentPosition = position;
-            refreshListOnlyFirst();
+
+            //refreshListOnlyFirst();
             pageSelected(mTxtContent, mIvLine, position);
             if (mHovTxtContent != null && mHovIvLine != null) {
                 pageSelected(mHovTxtContent, mHovIvLine, position);
@@ -337,6 +339,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
             if (position >= 0 && position < mListScrollY.size()) {
                 synchHoverView(mListScrollY.get(position));
             }
+
             if (mOnPagerClickListener != null) {
                 mOnPagerClickListener.onSelected(position);
             }
@@ -437,6 +440,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
             int height = getResources().getDimensionPixelSize(R.dimen.px1);
             for (int i = 0; i < mBaseAdapters.size(); i++) {
                 mListScrollY.add(i, 0);
+                mListPositionCache.add(i,0);
                 final int position = i;
                 PullToRefreshListView listView = new PullToRefreshListView(this);
                 listViewAddHeader(position, listView);
@@ -489,6 +493,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
 
                     @Override
                     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        mListPositionCache.set(position,firstVisibleItem);
                         BaseScrollTabActivity.this.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, position);
                         OnScrollYListener yl = getYListener(position);
                         if (yl != null) {
@@ -507,7 +512,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
                 });
                 listView.setOnRefreshListener(onRefreshListener2);
                 mListViewCache.add(listView);
-                LinearLayout.LayoutParams nlp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                FrameLayout.LayoutParams nlp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
                 mViewPager.addView(listView, nlp);
             }
         }
@@ -533,7 +538,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
     }
 
     protected void onScrollY(int y) {
-        //Logger.i(getClass().getName() + "ScrollY = " + y);
+        Logger.i(getClass().getName() + "onScrollY = " + y + "mScrollY = " + mScrollY);
     }
 
     private void delayedSynchHeaderHeight() {
@@ -590,9 +595,12 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
      */
     public void refreshListOnlyFirst() {
         if (currentAdapterIsNotNull()) {
-            if (mBaseAdapters.get(mCurrentPosition).mDataList.isEmpty() &&
-                    !mBaseAdapters.get(mCurrentPosition).mIsNeedPreLoading) {
-                mBaseAdapters.get(mCurrentPosition).requestNew();
+//            if (mBaseAdapters.get(mCurrentPosition).mDataList.isEmpty() &&
+//                    !mBaseAdapters.get(mCurrentPosition).mIsNeedPreLoading) {
+//                mBaseAdapters.get(mCurrentPosition).requestNew();
+//            }
+            for (int i = 0 ;i < mBaseAdapters.size();i++){
+                mBaseAdapters.get(i).requestNew();
             }
         }
     }
@@ -638,14 +646,26 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Base
         int oldScrollY = mListScrollY.get(oldPosition);
         int newScrollY = mListScrollY.get(position);
         Log.e("ViewHelper", "oldScrollY" + oldScrollY + "newScrollY" + newScrollY);
-        if (oldScrollY != newScrollY || (oldScrollY == 0 && newScrollY == 0)) {
+        //if (oldScrollY != newScrollY || (oldScrollY == 0 && newScrollY == 0)) {
             //比较 选大的一个 也就是绝对值小的
             int factScrollY = oldScrollY < newScrollY ? newScrollY : oldScrollY;
             //同步坐标值
             mListScrollY.set(oldPosition, factScrollY);
             mListScrollY.set(position, factScrollY);
 
-            listView.getRefreshableView().setSelectionFromTop(0, factScrollY);
+
+        //}
+
+        int np = mListPositionCache.get(position);
+        int op = mListPositionCache.get(oldPosition);
+        if (op > 0 /*&& np > 0*/){
+            if (np > 0){
+                listView.getRefreshableView().setSelection(np);
+            }else {
+                listView.getRefreshableView().setSelection(1);
+            }
+        }else {
+            listView.getRefreshableView().setSelectionFromTop(0, mScrollY);
         }
     }
 

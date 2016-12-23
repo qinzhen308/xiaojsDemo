@@ -17,14 +17,16 @@ package cn.xiaojs.xma.ui.mine;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.ui.base.BaseScrollTabListAdapter;
 import cn.xiaojs.xma.ui.course.LessonBusiness;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PersonHomeLessonAdapter extends BaseScrollTabListAdapter<LessonBusiness> {
     public PersonHomeLessonAdapter(Context context, ArrayList<LessonBusiness> dataList, boolean isNeedPreLoading) {
@@ -66,10 +68,15 @@ public class PersonHomeLessonAdapter extends BaseScrollTabListAdapter<LessonBusi
         } else {
             holder = (Holder) convertView.getTag();
         }
+
+        holder.title.setText("重要的化妆防晒手册 " + position);
         return convertView;
     }
 
     class Holder extends BaseHolder {
+
+        @BindView(R.id.lesson_adapter_name)
+        TextView title;
         public Holder(View view) {
             super(view);
         }

@@ -1,42 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <cn.xiaojs.xma.ui.widget.IconTextView
-            android:id="@+id/tt"
+    <LinearLayout
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    <cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout
-            android:id="@+id/image_expand"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginRight="@dimen/px30"
+            android:layout_height="@dimen/px90"
             android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:orientation="horizontal">
 
-    <cn.xiaojs.xma.ui.widget.LiveProgress
-            android:layout_marginTop="@dimen/px30"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginRight="@dimen/px30"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back_arrow"
+                android:layout_marginLeft="@dimen/px30"
+                android:visibility="visible"
+                android:layout_gravity="center_vertical"/>
 
-    <cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout
-            android:id="@+id/flow"
-            android:background="@color/white"
-            android:layout_marginRight="@dimen/px30"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/my_course_search"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_search"
+                android:paddingLeft="@dimen/px10"
+                android:paddingRight="@dimen/px10"
+                android:hint="@string/home_search_hint"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/font_28px"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:background="@drawable/grey_conner_bg"
+                android:paddingBottom="@dimen/px15"
+                android:paddingTop="@dimen/px15"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_height="wrap_content"/>
 
-    <cn.xiaojs.xma.ui.view.RelationshipCircleView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/my_course_search_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_gravity="center_vertical"
+                android:textColor="@drawable/orange_click_text_selector"
+                android:text="@string/search"/>
 
-    <cn.xiaojs.xma.ui.view.RelationshipView
+    </LinearLayout>
+
+    <View style="@style/DividerHorizontal"/>
+
+    <ScrollView
+            android:scrollbars="none"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:id="@+id/search_lesson_list_wrapper"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginTop="@dimen/px30"
+                        android:layout_marginBottom="@dimen/px30"
+                        android:text="课"
+                        android:textSize="@dimen/font_28px"
+                        android:textColor="@color/common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
+                        android:id="@+id/search_lesson_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                <View style="@style/DividerHorizontal"/>
+
+                <FrameLayout
+                        android:id="@+id/search_lesson_more"
+                        android:background="@drawable/white_grey_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_marginTop="@dimen/px30"
+                            android:layout_marginBottom="@dimen/px30"
+                            android:text="查看更多课"
+                            android:textSize="@dimen/font_28px"
+                            android:drawableRight="@drawable/ic_entrance"
+                            android:drawablePadding="@dimen/px15"
+                            android:textColor="@color/common_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </FrameLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                    android:id="@+id/search_people_list_wrapper"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginTop="@dimen/px30"
+                        android:layout_marginBottom="@dimen/px30"
+                        android:text="个人"
+                        android:textSize="@dimen/font_28px"
+                        android:textColor="@color/common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
+                        android:id="@+id/search_people_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                <View style="@style/DividerHorizontal"/>
+
+                <FrameLayout
+                        android:id="@+id/search_people_more"
+                        android:background="@drawable/white_grey_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_marginTop="@dimen/px30"
+                            android:layout_marginBottom="@dimen/px30"
+                            android:text="查看更多人"
+                            android:textSize="@dimen/font_28px"
+                            android:drawableRight="@drawable/ic_entrance"
+                            android:drawablePadding="@dimen/px15"
+                            android:textColor="@color/common_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/search_organization_list_wrapper"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginTop="@dimen/px30"
+                        android:layout_marginBottom="@dimen/px30"
+                        android:text="机构"
+                        android:textSize="@dimen/font_28px"
+                        android:textColor="@color/common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <include layout="@layout/layout_search_organization_item"/>
+
+                <View style="@style/DividerHorizontal"/>
+
+                <FrameLayout
+                        android:id="@+id/search_organization_more"
+                        android:background="@drawable/white_grey_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_marginTop="@dimen/px30"
+                            android:layout_marginBottom="@dimen/px30"
+                            android:text="查看更多机构"
+                            android:textSize="@dimen/font_28px"
+                            android:drawableRight="@drawable/ic_entrance"
+                            android:drawablePadding="@dimen/px15"
+                            android:textColor="@color/common_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </FrameLayout>
+            </LinearLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:background="@color/main_bg"
+                    android:layout_height="@dimen/px90"/>
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

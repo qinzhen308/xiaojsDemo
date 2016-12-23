@@ -3,6 +3,9 @@ package cn.xiaojs.xma.ui;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
@@ -16,11 +19,8 @@ import cn.xiaojs.xma.ui.message.NotificationFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.mine.PersonHomeActivity;
 import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
+import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import okhttp3.OkHttpClient;
 
 public class MainActivity extends BaseTabActivity {
@@ -72,7 +72,7 @@ public class MainActivity extends BaseTabActivity {
                 }
                 break;
             case 2:
-                startActivity(new Intent(this,GlobalSearchActivity.class));
+                startActivity(new Intent(this,SearchActivity.class));
                 break;
             case 3:
                 startActivity(new Intent(this,MomentDetailActivity.class));

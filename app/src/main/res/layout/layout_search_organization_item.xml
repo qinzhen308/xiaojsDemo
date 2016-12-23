@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/search_organization_result"
+        android:orientation="horizontal"
+        android:background="@drawable/white_grey_selector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <cn.xiaojs.xma.ui.widget.RoundedImageView
+            app:oval="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_portrait"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginBottom="@dimen/px30"
+            android:layout_width="@dimen/px100"
+            android:layout_height="@dimen/px100"/>
+
+    <LinearLayout
+            android:layout_margin="@dimen/px30"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:text="王小波教育培训"
+                    android:textSize="@dimen/font_30px"
+                    android:textColor="@color/font_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:text="A5"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/font_orange"
+                    android:layout_marginLeft="@dimen/px10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

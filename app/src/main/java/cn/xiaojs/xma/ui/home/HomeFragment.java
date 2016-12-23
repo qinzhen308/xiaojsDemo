@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.home;
  * ======================================================================================== */
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,11 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
@@ -31,11 +37,6 @@ import cn.xiaojs.xma.ui.widget.banner.BannerAdapter;
 import cn.xiaojs.xma.ui.widget.banner.BannerBean;
 import cn.xiaojs.xma.ui.widget.banner.BannerView;
 import cn.xiaojs.xma.util.DeviceUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
 
 public class HomeFragment extends BaseFragment {
 
@@ -151,14 +152,19 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-//    @OnClick({R.id.right_view})
-//    public void onClick(View v) {
-//        switch (v.getId()){
-//            case R.id.right_view:
+    @OnClick({R.id.home_moment_mark_wrapper,R.id.home_moment_mark_right_wrapper})
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.home_moment_mark_wrapper:
+            case R.id.home_moment_mark_right_wrapper:
+                Intent intent = new Intent(mContext,MomentUpdateActivity.class);
+                mContext.startActivity(intent);
+                break;
+            case R.id.right_view:
 //                ToastUtil.showToast(mContext,"message");
-//                break;
-//        }
-//    }
+                break;
+        }
+    }
 
     //动态更新的提示转换动画
     private void mark(){
