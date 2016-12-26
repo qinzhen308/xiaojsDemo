@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.internal.Util;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -25,7 +27,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
  */
 
 public class ApiManager {
-
 
     private volatile static ApiManager apiManager;
     //private XiaojsService xiaojsService;
@@ -160,6 +161,10 @@ public class ApiManager {
         }
 
         return Platform.AppType.MOBILE_ANDROID;
+    }
+
+    private static String urlToKey(Request request) {
+        return Util.md5Hex(request.url().toString());
     }
 
 }

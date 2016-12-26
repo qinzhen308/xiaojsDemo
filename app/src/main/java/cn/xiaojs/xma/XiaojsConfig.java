@@ -19,6 +19,11 @@ public class XiaojsConfig {
     //HTTP缓存目录最大SIZE
     public static final int HTTP_CACHE_SIZE = 10 * 1024 * 1024;//10MiB
 
+    //DB name
+    public static final String DB_NAME = "xdb";
+    //DB current version
+    public static final int DB_VERSION = 1;
+
 
     //登录成功后用户信息, 退出后重置为null
     public static User mLoginUser;
