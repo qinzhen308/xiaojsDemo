@@ -129,11 +129,13 @@ public class RegisterActivity extends BaseActivity {
 
         try {
             mGetRegVerifyTv.setEnabled(false);
+            showProgress(true);
             long phone = Long.parseLong(mRegPhoneEdit.getEditableText().toString());
             RegisterDataManager.requestSendVerifyCode(this, phone, new APIServiceCallback<VerifyCode>() {
 
                 @Override
                 public void onSuccess(VerifyCode object) {
+                    cancelProgress();
                     mCurrVerifyTime = SMS_GETTING_TIME_OUT;
                     mRegVerifyEdit.setText(String.valueOf(object.getCode()));
                     mHandler.sendEmptyMessage(0);
@@ -141,12 +143,14 @@ public class RegisterActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
                     mGetRegVerifyTv.setEnabled(true);
                     Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (NumberFormatException e) {
             Logger.i(TAG, "phone num error");
+            cancelProgress();
             mGetRegVerifyTv.setEnabled(true);
         }
 
