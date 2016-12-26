@@ -1,9 +1,10 @@
-package cn.xiaojs.xma.ui.base;
+package cn.xiaojs.xma.ui.base.hover;
 
 import android.widget.AbsListView;
 
-public interface BaseScrollTabListener {
+public interface ScrollTabHolder {
 
+    void adjustScroll(int scrollHeight);
 
     void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount, int pagePosition);
 

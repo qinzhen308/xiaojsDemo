@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.home;
+package cn.xiaojs.xma.ui.mine;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -23,17 +23,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
+import cn.xiaojs.xma.common.pulltorefresh.AbsListAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.ui.home.HomeConstant;
+import cn.xiaojs.xma.ui.home.MomentCommentActivity;
+import cn.xiaojs.xma.ui.home.RecommendCourseBean;
 
-public class MomentDetailAdapter extends AbsSwipeAdapter<RecommendCourseBean,MomentDetailAdapter.Holder> {
+public class MomentDetailAdapter extends AbsListAdapter<RecommendCourseBean,MomentDetailAdapter.Holder> {
 
-    public MomentDetailAdapter(Context context, PullToRefreshSwipeListView list, boolean isNeedPreLoading) {
+    public MomentDetailAdapter(Context context, PullToRefreshListView list, boolean isNeedPreLoading) {
         super(context,list,isNeedPreLoading);
     }
 
-    public MomentDetailAdapter(Context context, PullToRefreshSwipeListView list) {
+    public MomentDetailAdapter(Context context, PullToRefreshListView list) {
         super(context, list);
     }
 

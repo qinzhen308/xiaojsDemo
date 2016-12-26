@@ -42,6 +42,12 @@ public class PullToRefreshSwipeListView extends
 	private FrameLayout mLvFooterLoadingFrame;
 
 	private boolean mListViewExtrasEnabled;
+	private OnHeaderScrollListener headerScrollListener;
+
+	public interface OnHeaderScrollListener {
+
+		public void onHeaderScroll(boolean isRefreashing, boolean isTop, int value);
+	}
 
 	public PullToRefreshSwipeListView(Context context) {
 		super(context);
@@ -62,6 +68,22 @@ public class PullToRefreshSwipeListView extends
 			AnimationStyle style) {
 		super(context, mode, style);
 		init();
+	}
+
+	@Override
+	protected void onHeaderScrol(boolean isTop, int value) {
+		if (headerScrollListener != null) {
+			if (isRefreshing()) {
+				if (mHeaderLoadingView != null){
+					value = value - mHeaderLoadingView.getMeasuredHeight();
+				}
+			}
+			headerScrollListener.onHeaderScroll(isRefreshing(),isTop, value);
+		}
+	}
+
+	public void setOnHeaderScrollListener(OnHeaderScrollListener headerScrollListener) {
+		this.headerScrollListener = headerScrollListener;
 	}
 
 	/**
