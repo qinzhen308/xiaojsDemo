@@ -10,19 +10,13 @@
             android:layout_height="wrap_content"
             android:background="@color/white">
 
-        <EditText
-                android:id="@+id/blackboard_edit"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:visibility="invisible"/>
-
-        <!--白板-->
-        <cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard
-                android:id="@+id/white_board"
-                android:background="@color/white"
+        <!--白板列表-->
+        <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView
+                android:id="@+id/white_board_scrollview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center">
+        </cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView>
 
         <!--控制面板, 直播-->
         <include

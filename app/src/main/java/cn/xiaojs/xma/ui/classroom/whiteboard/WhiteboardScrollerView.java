@@ -1,8 +1,15 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.whiteboard;
 
 import android.content.Context;
-import android.os.Handler;
-import android.view.GestureDetector;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.ClassroomGestureDetector;
+import cn.xiaojs.xma.ui.classroom.ClassroomState;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -14,26 +21,21 @@ import android.view.GestureDetector;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2016/11/30
+ * Date:2016/12/21
  * Desc:
  *
  * ======================================================================================== */
 
-public class ClassroomGestureDetector extends GestureDetector {
+public class WhiteboardScrollerView extends ViewPager {
     private Context mContext;
 
-    public ClassroomGestureDetector(Context context, OnGestureListener listener) {
-        super(context, listener);
+    public WhiteboardScrollerView(Context context) {
+        super(context);
         init(context);
     }
 
-    public ClassroomGestureDetector(Context context, OnGestureListener listener, Handler handler) {
-        super(context, listener, handler);
-        init(context);
-    }
-
-    public ClassroomGestureDetector(Context context, OnGestureListener listener, Handler handler, boolean unused) {
-        super(context, listener, handler, unused);
+    public WhiteboardScrollerView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         init(context);
     }
 
@@ -41,11 +43,15 @@ public class ClassroomGestureDetector extends GestureDetector {
         mContext = context;
     }
 
-    public int getState() {
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mContext instanceof ClassroomActivity) {
-            return ((ClassroomActivity)mContext).getCurrentState();
+            if (((ClassroomActivity)mContext).getState() == ClassroomState.STATE_WHITE_BOARD) {
+                return false;
+            }
         }
 
-        return ClassroomState.STATE_MAIN_PANEL;
+        return super.onInterceptTouchEvent(ev);
     }
+
 }

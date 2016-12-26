@@ -304,6 +304,10 @@ public class Selector extends Doodle {
 
         if (intersectCount == 1) {
             ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+            if (allDoodles == null) {
+                return 0;
+            }
+
             for (Doodle d : allDoodles) {
                 if (d.getState() == STATE_EDIT) {
                     mSelectedDoodle = d;
@@ -360,6 +364,10 @@ public class Selector extends Doodle {
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
         int intersectCount = IntersectionHelper.intersect(allDoodles, mDoodleRect);
         if (intersectCount > 0) {
+            if (allDoodles == null) {
+                return 0;
+            }
+
             mDoodleRect.set(0, 0, 0, 0);
             for (Doodle d : allDoodles) {
                 if (d.getState() == STATE_EDIT) {

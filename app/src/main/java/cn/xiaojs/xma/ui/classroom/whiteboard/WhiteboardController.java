@@ -21,6 +21,7 @@ import android.widget.ImageView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.ColorPickerPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.EraserPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.GeometryPop;
@@ -50,7 +51,7 @@ public class WhiteboardController implements
     TextPop mTextSetting;
 
     Whiteboard mWhiteboard;
-    EditText mWhiteboardEdit;
+    Whiteboard mOldWhiteboard;
     View mPanel;
 
     private Context mContext;
@@ -71,14 +72,9 @@ public class WhiteboardController implements
         mEraser = (ImageView) root.findViewById(R.id.eraser_btn);
         mColorPicker = (CircleView) root.findViewById(R.id.color_picker_btn);
 
-        mWhiteboard = (Whiteboard) root.findViewById(R.id.white_board);
-        mWhiteboardEdit = (EditText) root.findViewById(R.id.blackboard_edit);
         mGeoShape.setImageResource(R.drawable.wb_oval_selector);
 
-        mWhiteboard.setEditText(mWhiteboardEdit);
-        mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
         mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
-        mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
         mPanel.measure(0, 0);
         mPanelWidth = mPanel.getMeasuredWidth();
     }
@@ -121,6 +117,10 @@ public class WhiteboardController implements
     }
 
     private void enterText() {
+        if (mWhiteboard == null) {
+            return;
+        }
+
         if (mWhiteboard.getMode() == Whiteboard.MODE_TEXT) {
             if (mTextSetting == null) {
                 mTextSetting = new TextPop(mContext);
@@ -132,6 +132,10 @@ public class WhiteboardController implements
     }
 
     private void enterHandWriting() {
+        if (mWhiteboard == null) {
+            return;
+        }
+
         if (mWhiteboard.getMode() == Whiteboard.MODE_HAND_WRITING) {
             if (mPaintSetting == null) {
                 mPaintSetting = new HandwritingPop(mContext);
@@ -143,6 +147,10 @@ public class WhiteboardController implements
     }
 
     private void enterEraser() {
+        if (mWhiteboard == null) {
+            return;
+        }
+
         if (mEraserSetting == null) {
             mEraserSetting = new EraserPop(mContext);
             mEraserSetting.setOnEraserParamsListener(this);
@@ -152,6 +160,10 @@ public class WhiteboardController implements
     }
 
     private void enterGeometry() {
+        if (mWhiteboard == null) {
+            return;
+        }
+
         if (mWhiteboard.getMode() == Whiteboard.MODE_GEOMETRY) {
             if (mShapeSetting == null) {
                 mShapeSetting = new GeometryPop(mContext);
@@ -165,6 +177,10 @@ public class WhiteboardController implements
     }
 
     private void enterColorPicker() {
+        if (mWhiteboard == null) {
+            return;
+        }
+
         if (mColorSetting == null) {
             mColorSetting = new ColorPickerPop(mContext);
             mColorSetting.setOnColorChangeListener(this);
@@ -201,13 +217,15 @@ public class WhiteboardController implements
 
     @Override
     public void onColorChange(int color) {
-        mColorPicker.setPaintColor(color);
-        mWhiteboard.setPaintColor(color);
+        if (mWhiteboard != null) {
+            mColorPicker.setPaintColor(color);
+            mWhiteboard.setPaintColor(color);
+        }
     }
 
     @Override
     public void onColorPick() {
-        //mColorPicker.setPaintColor(color);
+
     }
 
     @Override
@@ -217,13 +235,17 @@ public class WhiteboardController implements
 
     @Override
     public void onClearDoodles() {
-        mWhiteboard.clearWhiteboard();
+        if (mWhiteboard != null) {
+            mWhiteboard.clearWhiteboard();
+        }
     }
 
     @Override
     public void onGeometryChange(int geometryID) {
-        mWhiteboard.setGeometryShapeId(geometryID);
-        updateGeometryStyle(geometryID);
+        if (mWhiteboard != null) {
+            mWhiteboard.setGeometryShapeId(geometryID);
+            updateGeometryStyle(geometryID);
+        }
     }
 
     @Override
@@ -243,24 +265,64 @@ public class WhiteboardController implements
 
     @Override
     public void onTextOrientation(int orientation) {
-        switch (orientation) {
-            case TextWriting.TEXT_HORIZONTAL:
-                mTextWriting.setImageResource(R.drawable.wb_text_selector);
-                break;
+        if (mWhiteboard != null) {
+            switch (orientation) {
+                case TextWriting.TEXT_HORIZONTAL:
+                    mTextWriting.setImageResource(R.drawable.wb_text_selector);
+                    break;
 
-            case TextWriting.TEXT_VERTICAL:
-                mTextWriting.setImageResource(R.drawable.wb_text_vertical_selector);
-                break;
+                case TextWriting.TEXT_VERTICAL:
+                    mTextWriting.setImageResource(R.drawable.wb_text_vertical_selector);
+                    break;
+            }
+            mWhiteboard.setTextOrientation(orientation);
         }
-
-        mWhiteboard.setTextOrientation(orientation);
     }
 
     private void enterMode(int mode) {
-        mWhiteboard.switchMode(mode);
+        if (mWhiteboard != null) {
+            mWhiteboard.switchMode(mode);
+        }
     }
 
     public void release() {
-        mWhiteboard.release();
+        if (mWhiteboard != null) {
+            mWhiteboard.release();
+        }
+    }
+
+    public void setWhiteboard(Whiteboard whiteboard) {
+        if (mOldWhiteboard != whiteboard) {
+            mWhiteboard = whiteboard;
+            if (mWhiteboard != null) {
+                mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
+                mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
+
+                reset(whiteboard);
+            }
+        }
+
+        mOldWhiteboard = whiteboard;
+    }
+
+    private void reset(Whiteboard whiteboard) {
+        whiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
+        whiteboard.switchMode(Whiteboard.MODE_NONE);
+
+        onGeometryChange(GeometryShape.RECTANGLE);
+        onColorChange(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
+        onTextOrientation(TextWriting.TEXT_HORIZONTAL);
+
+        mSelection.setSelected(false);
+        mHandWriting.setSelected(false);
+        mGeoShape.setSelected(false);
+        mTextWriting.setSelected(false);
+        mEraser.setSelected(false);
+    }
+
+    public void exitWhiteboard() {
+        if (mWhiteboard != null) {
+            mWhiteboard.exit();
+        }
     }
 }
