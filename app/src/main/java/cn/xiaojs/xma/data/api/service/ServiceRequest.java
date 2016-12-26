@@ -246,6 +246,10 @@ public class ServiceRequest<T> implements ContextLifecycle {
         serviceCall.enqueue(new Callback<T>(){
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
+
+                //okhttp3.Response res = response.raw().cacheResponse();
+                //okhttp3.Response res1 = response.raw().networkResponse();
+
                 onRespones(apiType, response);
             }
 

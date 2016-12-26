@@ -14,7 +14,6 @@ public class CSubject {
     private String remarks;
     private String name;
 
-
     public String getId() {
         return id;
     }

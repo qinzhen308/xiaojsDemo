@@ -14,7 +14,18 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/10/25.
  */
 
-public class DataManager {
+public class DataManager{
+
+
+    //    public final void initLoader(Context context, LoaderManager.LoaderCallbacks<Cursor> callbacks) {
+//        if (context instanceof FragmentActivity) {
+//
+//            FragmentActivity fragmentActivity = (FragmentActivity) context;
+//
+//            ((FragmentActivity)context).getLoaderManager().initLoader(0,null,callbacks);
+//        }
+//
+//    }
 
 
     public static String generateLessonKey() {
