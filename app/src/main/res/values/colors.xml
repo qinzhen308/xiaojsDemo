@@ -10,6 +10,7 @@
     <color name="white">#ffffff</color>
     <color name="red">#dc2314</color>
     <color name="def">#000000</color>
+    <color name="trans">#00000000</color>
 
     <!--app base color-->
     <color name="main_orange">#ff9833</color>

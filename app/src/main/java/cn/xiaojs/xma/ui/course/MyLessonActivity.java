@@ -20,6 +20,10 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.AdapterView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
@@ -27,11 +31,6 @@ import cn.xiaojs.xma.ui.base.BaseTopTabActivity;
 import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.OnClick;
 
 public class MyLessonActivity extends BaseTopTabActivity {
 
@@ -80,7 +79,7 @@ public class MyLessonActivity extends BaseTopTabActivity {
                     }
                 });
                 int offset = getResources().getDimensionPixelSize(R.dimen.px68);
-                menu.show(mHeader,offset);
+                menu.show(mBaseHeader,offset);
                 break;
             default:
                 break;

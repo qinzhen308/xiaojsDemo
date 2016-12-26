@@ -18,47 +18,46 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.base.BaseScrollTabActivity;
-import cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout;
-
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout;
 
-public class MomentDetailActivity extends BaseScrollTabActivity {
+public class MomentDetailActivity extends BaseActivity {
 
     private Unbinder mBinder;
+
+    PullToRefreshSwipeListView mList;
     @BindView(R.id.moment_detail_image_expand)
     ImageMatrixExpandableLayout mExpand;
-    @Override
-    public void addHoverHeaderView() {
 
+
+    @Override
+    protected void addViewContent() {
+        addView(R.layout.activity_moment_detail);
         setMiddleTitle(R.string.detail);
         setRightImage(R.drawable.ic_lesson_more);
         setRightImage2(R.drawable.share_selector);
         initList();
         mBinder = ButterKnife.bind(this);
-        mTabHeader.setVisibility(View.GONE);
         mExpand.show(100);
     }
 
     private void initList(){
-        ArrayList<String> mPagerTitles = new ArrayList<String>();
-        mPagerTitles.add("title");
-        //mPagerTitles.add("title1");
+        mList = (PullToRefreshSwipeListView) findViewById(R.id.moment_detail_list);
         View header = LayoutInflater.from(this).inflate(R.layout.layout_moment_detail_header,null);
-        View footer = LayoutInflater.from(this).inflate(R.layout.layout_moment_detail_footer,null);
-        ArrayList<MomentDetailAdapter> adapters = new ArrayList<>();
-        MomentDetailAdapter adapter = new MomentDetailAdapter(this);
-        //MomentDetailAdapter adapter1 = new MomentDetailAdapter(this);
-        adapters.add(adapter);
-        //adapters.add(adapter1);
-        addTabListIntoContent(header,footer,mPagerTitles,adapters,0);
-        setNeedTabView(false);
+        mList.getRefreshableView().addHeaderView(header);
+        MomentDetailAdapter adapter = new MomentDetailAdapter(this,mList,true);
+        mList.setAdapter(adapter);
+    }
+
+    @Override
+    protected boolean delayBindView() {
+        return true;
     }
 
     @OnClick({R.id.moment_detail_footer_click})
@@ -71,6 +70,8 @@ public class MomentDetailActivity extends BaseScrollTabActivity {
                 break;
         }
     }
+
+
 
     @Override
     protected void onDestroy() {

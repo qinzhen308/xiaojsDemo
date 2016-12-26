@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scroll_tab_base_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:divider="@color/main_bg"
+        android:listSelector="@android:color/transparent"
+        android:dividerHeight="@dimen/px1"
+        android:orientation="vertical"/>
