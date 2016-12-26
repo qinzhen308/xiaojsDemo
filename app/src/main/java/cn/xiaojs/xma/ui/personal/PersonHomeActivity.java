@@ -130,6 +130,11 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         mFollowPeople.show(lists);
     }
 
+    @Override
+    protected int getTitleHeight() {
+        return mScrollTitleBar.getHeight();
+    }
+
     @OnClick({R.id.left_image})
     public void onClick(View view) {
 

@@ -77,7 +77,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
             @Override
             public void onGlobalLayout() {
                 headerHeight = mHeader.getHeight();
-                headerTranslationDis = mIndicator.getHeight() - headerHeight;
+                headerTranslationDis = mIndicator.getHeight() + getTitleHeight() - headerHeight;
                 if (Build.VERSION.SDK_INT > 15){
                     mHeader.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }else {
@@ -85,6 +85,10 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
                 }
             }
         });
+    }
+
+    protected int getTitleHeight(){
+        return 0;
     }
 
     @Override
