@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="@dimen/px500"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:clickable="true">
+
+    <RelativeLayout
+            android:layout_width="@dimen/px500"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/px20">
+
+        <TextView
+                android:id="@+id/invite_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                android:layout_centerVertical="true"
+                android:text="@string/invite_friend"/>
+
+        <TextView
+                android:id="@+id/selected_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_24px"
+                android:textColor="@color/font_black"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/invite_title"
+                android:layout_toLeftOf="@+id/invite"
+                android:layout_marginLeft="@dimen/px15"
+                android:layout_marginRight="@dimen/px15"/>
+
+        <TextView
+                android:id="@+id/invite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_24px"
+                android:textColor="@color/font_white"
+                android:background="@color/main_blue"
+                android:padding="@dimen/px20"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/invite"/>
+    </RelativeLayout>
+
+    <View style="@style/DividerHorizontal"/>
+
+    <ExpandableListView
+            android:id="@+id/friends"
+            android:layout_width="@dimen/px500"
+            android:layout_height="match_parent"
+            android:groupIndicator="@drawable/ic_expand_selector"/>
+
+</LinearLayout>
