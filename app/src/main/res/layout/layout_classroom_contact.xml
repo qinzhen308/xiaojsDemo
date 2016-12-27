@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/contact"
+        android:layout_width="@dimen/px400"
+        android:layout_height="match_parent"
+        android:background="@color/classroom_main_gray"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+    <EditText
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px70"
+            android:textColorHint="@color/font_dark_gray"
+            android:textColor="@color/font_dark_gray"
+            android:hint="搜索"
+            android:textSize="@dimen/font_28px"
+            android:background="#88ffffff"
+            android:layout_margin="@dimen/px15"
+            android:drawableRight="@drawable/ic_search"
+            android:paddingLeft="@dimen/px5"
+            android:paddingRight="@dimen/px5"/>
+
+    <ListView
+            android:id="@+id/contact_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/search"
+            android:layout_above="@+id/action_line"
+            android:listSelector="@android:color/transparent">
+
+    </ListView>
+
+    <View
+            android:id="@+id/action_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px1"
+            android:background="#333333"
+            android:layout_above="@+id/contact_action_btn"/>
+
+    <FrameLayout
+            android:id="@+id/contact_action_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="@dimen/px16"
+            android:paddingBottom="@dimen/px16">
+
+        <LinearLayout
+                android:id="@+id/default_contact_action"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px40"
+                android:orientation="horizontal">
+
+            <ImageView
+                    android:id="@+id/open_chat"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/cr_chat"
+                    android:scaleType="fitCenter"/>
+
+            <ImageView
+                    android:id="@+id/add_contact"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/cr_add_contact"
+                    android:scaleType="fitCenter"/>
+
+            <ImageView
+                    android:id="@+id/manage_contact"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/cr_contact_manage"
+                    android:scaleType="fitCenter"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/manage_contact_action"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px40"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+            <TextView
+                    android:id="@+id/set_assistant"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/font_white"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/set_assistant"/>
+
+            <TextView
+                    android:id="@+id/kick_out"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/font_white"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/kick_out"/>
+
+            <TextView
+                    android:id="@+id/back_manage_contact"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/font_white"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/back"/>
+        </LinearLayout>
+    </FrameLayout>
+
+</RelativeLayout>

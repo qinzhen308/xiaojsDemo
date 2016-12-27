@@ -12,7 +12,9 @@
     <ImageView
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:src="@drawable/multi_check_selector"
+            android:layout_marginRight="@dimen/px15"/>
 
     <cn.xiaojs.xma.ui.widget.RoundedImageView
             android:id="@+id/portrait"
