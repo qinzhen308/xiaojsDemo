@@ -14,6 +14,7 @@ import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.Dynamic;
@@ -62,6 +63,15 @@ public class SocialRequest extends ServiceRequest {
                 paginationJsonstr);
 
         enqueueRequest(APIType.GET_ACTIVITIES,call);
+    }
+
+    public void commentActivity(@NonNull String session,String activity,String commentContent) {
+
+        Comment comment = new Comment();
+        comment.comment = commentContent;
+
+        Call<Comment> call = getService().commentActivity(session,activity,comment);
+        enqueueRequest(APIType.COMMENT_ACTIVITY,call);
     }
 
 }

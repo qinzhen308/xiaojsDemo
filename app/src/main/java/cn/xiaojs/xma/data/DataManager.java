@@ -39,7 +39,7 @@ public class DataManager{
         if (TextUtils.isEmpty(session)) {
 
             if (XiaojsConfig.DEBUG) {
-                Logger.d("the session is empty,so the get home data request return failure");
+                Logger.d("the session is empty,so the request return failure");
             }
 
             if (callback != null){

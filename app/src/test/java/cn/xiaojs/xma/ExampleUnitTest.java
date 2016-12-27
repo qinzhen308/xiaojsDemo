@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import cn.xiaojs.xma.model.Error;
+
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -79,8 +81,13 @@ public class ExampleUnitTest {
 //
 //        System.out.println(haha);
 
+        String j = "{\"ec\": \"0x01000001\", \"details\": \"non-sensitive only, e.g. bad param on SharedErrs.BadParameter error, requires XF 0.3.0 or later\"}";
 
+        ObjectMapper mapper = new ObjectMapper();
+        Error error = mapper.readValue(j, Error.class);
 
+        System.out.println("error details:"+error.details);
+        System.out.println("error ec:"+error.ec);
 
 
     }

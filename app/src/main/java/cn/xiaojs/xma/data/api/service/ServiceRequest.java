@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.APPUtils;
@@ -89,25 +90,38 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
 
     //解析error body json
-    public String parseErrorBody(String errorBody) {
+//    public String parseErrorBody(String errorBody) {
+//
+//        String errorCode = getDefaultErrorCode();
+//
+//        if (TextUtils.isEmpty(errorBody)) {
+//            return errorCode;
+//        }
+//
+//        try {
+//            JSONObject jobject = new JSONObject(errorBody);
+//
+//            errorCode = jobject.getString("ec");
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return errorCode;
+//
+//    }
 
-        String errorCode = getDefaultErrorCode();
-
-        if (TextUtils.isEmpty(errorBody)) {
-            return errorCode;
-        }
-
+    private Error getError(String errorBody) {
+        Error error = null;
         try {
-            JSONObject jobject = new JSONObject(errorBody);
+            ObjectMapper mapper = new ObjectMapper();
+            error = mapper.readValue(errorBody, Error.class);
 
-            errorCode = jobject.getString("ec");
-
-        } catch (JSONException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return errorCode;
-
+        return error;
     }
 
     private ContactGroup parseAddGroup(String body) {
@@ -314,7 +328,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
             }
 
 
-            String errorCode = parseErrorBody(errorBody);
+            String errorCode = getError(errorBody).ec;
             String errorMessage = ErrorPrompts.getErrorMessage(apiType, errorCode);
 
             if (serviceCallback != null) {
