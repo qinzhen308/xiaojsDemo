@@ -115,7 +115,10 @@ public class SocialManager extends DataManager {
      * @param commentContent
      * @param callback
      */
-    public static void commentActivity(Context context, String activity, String commentContent, APIServiceCallback<Comment> callback) {
+    public static void commentActivity(Context context,
+                                       String activity,
+                                       String commentContent,
+                                       APIServiceCallback<Comment> callback) {
 
         String session = AccountDataManager.getSessionID(context);
         if (checkSession(session, callback)) {
@@ -125,6 +128,93 @@ public class SocialManager extends DataManager {
         SocialRequest socialRequest = new SocialRequest(context, callback);
         socialRequest.commentActivity(session,activity,commentContent);
 
+    }
+
+    /**
+     * Get Comments
+     * Returns a hierarchy of comments and replies underneath them for the specific document.
+     * @param context
+     * @param criteria
+     * @param pagination
+     * @param callback
+     */
+    public static void getComments(Context context,
+                                   Criteria criteria,
+                                   Pagination pagination,
+                                   APIServiceCallback<CollectionPage<Comment>> callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.getComments(session, criteria, pagination);
+    }
+
+    /**
+     * Like Activity
+     * Enables to express love to an activity.
+     * @param context
+     * @param activity
+     * @param callback
+     */
+    public static void likeActivity(Context context,
+                                    String activity,
+                                    APIServiceCallback<Dynamic.DynStatus> callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.likeActivity(session,activity);
+    }
+
+    /**
+     * Reply To Comment
+     * Replies to a comment.
+     * @param context
+     * @param commentID
+     * @param reply
+     * @param callback
+     */
+    public static void replyComment(Context context,
+                                    String commentID,
+                                    String reply,
+                                    APIServiceCallback<Comment> callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.replyComment(session,commentID,reply);
+    }
+
+
+    /**
+     * Reply To Reply
+     * Replies to a reply.
+     * @param context
+     * @param replyID
+     * @param reply
+     * @param callback
+     */
+    public static void reply2Reply(Context context,
+                                   String replyID,
+                                   String reply,
+                                   APIServiceCallback<Comment> callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.reply2Reply(session,replyID,reply);
     }
 
 

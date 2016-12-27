@@ -53,7 +53,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.4:3000";
+    String BASE_URL = "http://192.168.100.3:3000";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -300,8 +300,8 @@ public interface XiaojsService {
 
     //Like Activity
     @POST("/v1/social/activities/{activity}/liked")
-    Call<ResponseBody> likeActivity(@Header("SessionID") String sessionID,
-                                    @Path("activity") String activity);
+    Call<Dynamic.DynStatus> likeActivity(@Header("SessionID") String sessionID,
+                                         @Path("activity") String activity);
 
     // Post Activity
     @Headers("Content-Type: application/json")
@@ -309,15 +309,17 @@ public interface XiaojsService {
     Call<Dynamic> postActivity(@Header("SessionID") String sessionID, @Body DynPost post);
 
     //Reply To Comment
-//    @Headers("Content-Type: application/json")
-//    @POST("/v1/social/comments/{comment}/replies")
-//    replyComment(@Header("SessionID") String sessionID,@Path("comment") String comment);
+    @Headers("Content-Type: application/json")
+    @POST("/v1/social/comments/{comment}/replies")
+    Call<Comment> replyComment(@Header("SessionID") String sessionID,
+                              @Path("comment") String commentID,
+                              @Body Comment comment);
 
 
     //Reply To Reply
-//    @Headers("Content-Type: application/json")
-//    @POST("/v1/social/replies/{reply}/replies")
-//    replyReply();
+    @Headers("Content-Type: application/json")
+    @POST("/v1/social/replies/{reply}/replies")
+    Call<Comment> reply2Reply(@Header("SessionID") String sessionID,@Path("reply") String replyID, @Body Comment comment);
 
 
 

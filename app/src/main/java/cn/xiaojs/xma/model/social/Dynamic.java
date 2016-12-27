@@ -66,6 +66,7 @@ public class Dynamic {
     }
 
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DynStatus {
         public int liked;

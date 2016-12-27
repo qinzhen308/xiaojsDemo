@@ -16,6 +16,7 @@ import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CategoriesDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -33,6 +34,7 @@ import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.Enroll;
 import cn.xiaojs.xma.model.Fee;
@@ -46,6 +48,7 @@ import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.RegisterInfo;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.VerifyCode;
+import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.message.ContactActivity;
@@ -142,21 +145,13 @@ public class TestAPIActivity extends Activity {
 
     private void testT(Context context){
 
-        Duration duration = new Duration();
-        duration.setStart(new Date(System.currentTimeMillis()-(3600*1000*24)));
-        duration.setEnd(new Date(System.currentTimeMillis()+(3600*1000*24)));
 
-        Criteria criteria = new Criteria();
-        criteria.setDuration(duration);
+        String cid = "5863a7de65894305bd4e8505";
+        String reply = "r2=======";
 
-        Pagination pagination = new Pagination();
-        pagination.setPage(1);
-        pagination.setMaxNumOfObjectsPerPage(20);
-
-
-        SocialManager.getActivities(context, criteria, pagination, new APIServiceCallback<CollectionPage<Dynamic>>() {
+        SocialManager.reply2Reply(context, cid, reply, new APIServiceCallback<Comment>() {
             @Override
-            public void onSuccess(CollectionPage<Dynamic> object) {
+            public void onSuccess(Comment object) {
 
             }
 
@@ -165,6 +160,97 @@ public class TestAPIActivity extends Activity {
 
             }
         });
+
+//        SocialManager.replyComment(context, cid, reply, new APIServiceCallback<Comment>() {
+//            @Override
+//            public void onSuccess(Comment object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+
+//        String activity = "5863662d0f56a24e3c635c58";
+//        SocialManager.likeActivity(context, activity, new APIServiceCallback<Dynamic.DynStatus>() {
+//            @Override
+//            public void onSuccess(Dynamic.DynStatus object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+
+
+//        Doc doc = new Doc();
+//        doc.subtype = Social.ActivityType.POST_ACTIIVTY;
+//        doc.id = "586374cdb08097313c1d602b";
+//
+//        Criteria criteria = new Criteria();
+//        criteria.setDoc(doc);
+//
+//        Pagination pagination = new Pagination();
+//        pagination.setPage(1);
+//        pagination.setMaxNumOfObjectsPerPage(20);
+//
+//        SocialManager.getComments(context, criteria, pagination, new APIServiceCallback<CollectionPage<Comment>>() {
+//            @Override
+//            public void onSuccess(CollectionPage<Comment> object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+
+
+
+//        String actvity = "586374cdb08097313c1d602b";
+//        String comment = "我喜欢~~~";
+//        SocialManager.commentActivity(context, actvity, comment, new APIServiceCallback<Comment>() {
+//            @Override
+//            public void onSuccess(Comment object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+
+
+
+//        Duration duration = new Duration();
+//        duration.setStart(new Date(System.currentTimeMillis()-(3600*1000*24)));
+//        duration.setEnd(new Date(System.currentTimeMillis()+(3600*1000*24)));
+//
+//        Criteria criteria = new Criteria();
+//        criteria.setDuration(duration);
+//
+//        Pagination pagination = new Pagination();
+//        pagination.setPage(1);
+//        pagination.setMaxNumOfObjectsPerPage(20);
+//
+//
+//        SocialManager.getActivities(context, criteria, pagination, new APIServiceCallback<CollectionPage<Dynamic>>() {
+//            @Override
+//            public void onSuccess(CollectionPage<Dynamic> object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 //        DynPost post = new DynPost();
 //        post.text = "这是第一条动态";
