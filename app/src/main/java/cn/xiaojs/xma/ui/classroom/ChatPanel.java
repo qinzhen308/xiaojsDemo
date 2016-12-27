@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 
@@ -38,9 +39,16 @@ public class ChatPanel extends Panel implements View.OnClickListener {
     private View mContactView;
     private View mChatView;
 
+    private View mDefaultContactAction;
+    private View mManageContactAction;
+
     private ImageView mAddContact;
     private ImageView mManageContact;
     private ImageView mOpenMsg;
+
+    private TextView mSetAssistantTv;
+    private TextView mKickOutTv;
+    private TextView mBackTv;
 
     private ImageView mOpenContact;
 
@@ -95,13 +103,23 @@ public class ChatPanel extends Panel implements View.OnClickListener {
 
         mOpenContact = (ImageView) root.findViewById(R.id.open_contact);
 
+        mDefaultContactAction = root.findViewById(R.id.default_contact_action);
+        mManageContactAction = root.findViewById(R.id.manage_contact_action);
+
         mOpenMsg = (ImageView) root.findViewById(R.id.open_chat);
         mAddContact = (ImageView) root.findViewById(R.id.add_contact);
         mManageContact = (ImageView) root.findViewById(R.id.manage_contact);
 
+        mSetAssistantTv = (TextView) root.findViewById(R.id.set_assistant);
+        mKickOutTv = (TextView) root.findViewById(R.id.kick_out);
+        mBackTv = (TextView) root.findViewById(R.id.back_manage_contact);
+
         mOpenMsg.setOnClickListener(this);
         mOpenContact.setOnClickListener(this);
         mAddContact.setOnClickListener(this);
+        mSetAssistantTv.setOnClickListener(this);
+        mKickOutTv.setOnClickListener(this);
+        mBackTv.setOnClickListener(this);
         mManageContact.setOnClickListener(this);
     }
 
@@ -120,6 +138,14 @@ public class ChatPanel extends Panel implements View.OnClickListener {
             case R.id.add_contact:
                 break;
             case R.id.manage_contact:
+                enterContactManagement();
+                break;
+            case R.id.set_assistant:
+                break;
+            case R.id.kick_out:
+                break;
+            case R.id.back_manage_contact:
+                exitContactManagement();
                 break;
         }
     }
@@ -172,4 +198,21 @@ public class ChatPanel extends Panel implements View.OnClickListener {
             }
         }
     }
+
+    private void enterContactManagement() {
+        mDefaultContactAction.setVisibility(View.GONE);
+        mManageContactAction.setVisibility(View.VISIBLE);
+        if (mContactBookAdapter != null) {
+            mContactBookAdapter.enterManagementMode();
+        }
+    }
+
+    private void exitContactManagement() {
+        mDefaultContactAction.setVisibility(View.VISIBLE);
+        mManageContactAction.setVisibility(View.GONE);
+        if (mContactBookAdapter != null) {
+            mContactBookAdapter.exitManagementMode();
+        }
+    }
 }
+
