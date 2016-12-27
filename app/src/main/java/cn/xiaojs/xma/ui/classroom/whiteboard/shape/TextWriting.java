@@ -157,7 +157,8 @@ public class TextWriting extends Doodle {
             //draw controller
             float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
             p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
-            mBorderRect.set(mDoodleRect.right - p.x, mDoodleRect.top - p.y, mDoodleRect.right + p.x, mDoodleRect.top + p.y);
+            mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
+                    mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
             mBorderDrawingPath.reset();
             mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
             mBorderDrawingPath.transform(mDrawingMatrix);

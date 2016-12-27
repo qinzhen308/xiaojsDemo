@@ -136,7 +136,7 @@ public class Utils {
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setStyle(Paint.Style.FILL);
         p.setStrokeWidth(WhiteboardConfigs.CONTROLLER_RADIUS);
-        p.setColor(Color.RED);
+        p.setColor(WhiteboardConfigs.BORDER_COLOR);
         return p;
     }
 

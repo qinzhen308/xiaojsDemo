@@ -21,6 +21,7 @@ import cn.xiaojs.xma.data.CategoriesDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
+import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.Account;
@@ -28,6 +29,7 @@ import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.Criteria;
@@ -40,9 +42,12 @@ import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.LoginInfo;
 import cn.xiaojs.xma.model.LoginParams;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.RegisterInfo;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.VerifyCode;
+import cn.xiaojs.xma.model.social.DynPost;
+import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
@@ -134,11 +139,64 @@ public class TestAPIActivity extends Activity {
     }
 
 
+
     private void testT(Context context){
 
+        Duration duration = new Duration();
+        duration.setStart(new Date(System.currentTimeMillis()-(3600*1000*24)));
+        duration.setEnd(new Date(System.currentTimeMillis()+(3600*1000*24)));
 
-         Intent i = new Intent(this,PostDynamicActivity.class);
-        startActivity(i);
+        Criteria criteria = new Criteria();
+        criteria.setDuration(duration);
+
+        Pagination pagination = new Pagination();
+        pagination.setPage(1);
+        pagination.setMaxNumOfObjectsPerPage(20);
+
+
+        SocialManager.getActivities(context, criteria, pagination, new APIServiceCallback<CollectionPage<Dynamic>>() {
+            @Override
+            public void onSuccess(CollectionPage<Dynamic> object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
+//        DynPost post = new DynPost();
+//        post.text = "这是第一条动态";
+//
+//        SocialManager.postActivityRequest(context, post, new APIServiceCallback<Dynamic>() {
+//            @Override
+//            public void onSuccess(Dynamic object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+
+//        SocialManager.addContactGroupRequest(context, "MAX", new APIServiceCallback() {
+//            @Override
+//            public void onSuccess(Object object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+
+
+
+//         Intent i = new Intent(this,PostDynamicActivity.class);
+//        startActivity(i);
 
 
 

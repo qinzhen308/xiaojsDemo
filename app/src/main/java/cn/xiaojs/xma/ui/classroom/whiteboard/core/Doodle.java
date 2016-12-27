@@ -256,7 +256,7 @@ public abstract class Doodle implements Action {
             mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
 
             float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
-            float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2;
+            float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2 + WhiteboardConfigs.BORDER_PADDING;
             PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
             float hPadding = p.x / mTotalScale * params.scale;
             float vPadding = p.y / mTotalScale * params.scale;
@@ -270,7 +270,8 @@ public abstract class Doodle implements Action {
             //draw controller
             float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
             p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
-            mBorderRect.set(mDoodleRect.right - p.x, mDoodleRect.top - p.y, mDoodleRect.right + p.x, mDoodleRect.top + p.y);
+            mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
+                    mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
             mBorderDrawingPath.reset();
             mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
             mBorderDrawingPath.transform(mDrawingMatrix);
