@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.model.Contact;
+import cn.xiaojs.xma.model.social.Contact;
 
 public class InviteFriendPanel extends Panel {
     private ExpandableListView mFriendListView;

@@ -12,12 +12,10 @@ import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.model.Contact;
-import cn.xiaojs.xma.ui.message.ChoiceContactActivity;
+import cn.xiaojs.xma.model.social.Contact;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
