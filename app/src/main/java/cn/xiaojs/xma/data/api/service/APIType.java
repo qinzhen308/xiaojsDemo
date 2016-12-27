@@ -76,4 +76,8 @@ public class APIType {
     public static final int POST_ACTIVITY = 60;
     public static final int GET_ACTIVITIES = 61;
     public static final int COMMENT_ACTIVITY = 62;
+    public static final int GET_COMMENTS = 63;
+    public static final int LIKE_ACTIVITY = 64;
+    public static final int REPLAY_COMMENT = 65;
+    public static final int REPLAY_2_REPLY = 66;
 }

@@ -74,4 +74,44 @@ public class SocialRequest extends ServiceRequest {
         enqueueRequest(APIType.COMMENT_ACTIVITY,call);
     }
 
+    public void getComments(@NonNull String session, Criteria criteria, Pagination pagination) {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+        Call<CollectionPage<Comment>> call = getService().getComments(session,
+                criteriaJsonstr,
+                paginationJsonstr);
+
+        enqueueRequest(APIType.GET_COMMENTS,call);
+    }
+
+    public void likeActivity(@NonNull String session,String activity) {
+        Call<Dynamic.DynStatus> call = getService().likeActivity(session,activity);
+        enqueueRequest(APIType.LIKE_ACTIVITY,call);
+    }
+
+    public void replyComment(@NonNull String session, String commentID, String reply) {
+
+        Comment replyComment = new Comment();
+        replyComment.reply = reply;
+
+        Call<Comment> call = getService().replyComment(session,commentID,replyComment);
+        enqueueRequest(APIType.REPLAY_COMMENT,call);
+    }
+
+    public void reply2Reply(@NonNull String session, String replyID, String reply) {
+
+        Comment replyComment = new Comment();
+        replyComment.reply = reply;
+
+        Call<Comment> call = getService().reply2Reply(session,replyID,replyComment);
+        enqueueRequest(APIType.REPLAY_2_REPLY,call);
+    }
+
 }
