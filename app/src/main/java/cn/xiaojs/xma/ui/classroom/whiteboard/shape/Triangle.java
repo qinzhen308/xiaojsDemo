@@ -132,12 +132,16 @@ public class Triangle extends TwoDimensionalShape {
         return false;
     }
 
-    private void updateTriangleCoordinates() {
-        if (mPoints.size() >= 2) {
-            mTriangleCoordinates.clear();
-            mTriangleCoordinates.add(new PointF((mDoodleRect.left + mDoodleRect.right) / 2.0F, mDoodleRect.top));
-            mTriangleCoordinates.add(new PointF(mDoodleRect.left, mDoodleRect.bottom));
-            mTriangleCoordinates.add(new PointF(mDoodleRect.right, mDoodleRect.bottom));
+    public synchronized void updateTriangleCoordinates() {
+        try {
+            if (mPoints.size() >= 2) {
+                mTriangleCoordinates.clear();
+                mTriangleCoordinates.add(new PointF((mDoodleRect.left + mDoodleRect.right) / 2.0F, mDoodleRect.top));
+                mTriangleCoordinates.add(new PointF(mDoodleRect.left, mDoodleRect.bottom));
+                mTriangleCoordinates.add(new PointF(mDoodleRect.right, mDoodleRect.bottom));
+            }
+        } catch (Exception e) {
+
         }
     }
 

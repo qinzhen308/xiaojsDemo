@@ -152,7 +152,7 @@ public class Selector extends Doodle {
                 }
 
                 Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
-                float padding = params.paintStrokeWidth / 2.0f;
+                float padding = params.paintStrokeWidth / 2 + WhiteboardConfigs.BORDER_PADDING;
                 mBorderRect.set(mDoodleRect.left - padding, mDoodleRect.top - padding, mDoodleRect.right + padding, mDoodleRect.bottom + padding);
                 mBorderDrawingPath.reset();
                 mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
@@ -161,7 +161,8 @@ public class Selector extends Doodle {
 
                 //draw controller
                 float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
-                mBorderRect.set(mDoodleRect.right - radius, mDoodleRect.top - radius, mDoodleRect.right + radius, mDoodleRect.top + radius);
+                mBorderRect.set(mDoodleRect.right + padding - radius, mDoodleRect.top - padding- radius,
+                        mDoodleRect.right + padding + radius, mDoodleRect.top - padding + radius);
                 mBorderDrawingPath.reset();
                 mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
                 mBorderDrawingPath.transform(mTransformMatrix);
@@ -441,6 +442,10 @@ public class Selector extends Doodle {
         for (Doodle d : allDoodles) {
             d.setState(Doodle.STATE_IDLE);
         }
+    }
+
+    public Doodle getSelectedDoodle() {
+        return mSelectedDoodle;
     }
 
 }

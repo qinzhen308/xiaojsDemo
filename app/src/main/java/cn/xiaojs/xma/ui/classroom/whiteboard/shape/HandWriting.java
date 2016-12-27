@@ -66,7 +66,7 @@ public class HandWriting extends Doodle {
     @Override
     public void addControlPoint(PointF point) {
         if (!mPoints.isEmpty()) {
-            PointF last = mPoints.lastElement();
+            PointF last = mPoints.get(mPoints.size() - 1);
             mNormalizedPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);
             mNormalizedPath.computeBounds(mDoodleRect, true);
         }

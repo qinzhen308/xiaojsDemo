@@ -24,6 +24,7 @@ import android.graphics.RectF;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.ActionRecord;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
@@ -156,7 +157,8 @@ public class TextWriting extends Doodle {
             //draw controller
             float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
             p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
-            mBorderRect.set(mDoodleRect.right - p.x, mDoodleRect.top - p.y, mDoodleRect.right + p.x, mDoodleRect.top + p.y);
+            mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
+                    mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
             mBorderDrawingPath.reset();
             mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
             mBorderDrawingPath.transform(mDrawingMatrix);
@@ -356,4 +358,13 @@ public class TextWriting extends Doodle {
         return false;
     }
 
+    @Override
+    public void addRecords(int action, int groupId) {
+        super.addRecords(action, groupId);
+        if (mUndoRecords != null && !mUndoRecords.isEmpty()) {
+            ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 1);
+            record.textStr = getTextString();
+        }
+
+    }
 }

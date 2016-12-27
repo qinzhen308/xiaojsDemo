@@ -22,10 +22,12 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
+
+import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 
 public abstract class Doodle implements Action {
     public final static int SELECTION = 0;
@@ -39,7 +41,7 @@ public abstract class Doodle implements Action {
     public final static int STATE_EDIT = 2;
 
     protected Whiteboard mWhiteboard;
-    protected Vector<PointF> mPoints;
+    protected List<PointF> mPoints;
 
     protected Paint mPaint;
     protected Paint mBorderPaint;
@@ -47,6 +49,8 @@ public abstract class Doodle implements Action {
 
     protected float mTotalDegree = 0;
     protected float mTotalScale = 1.0f;
+    protected float mTranslateX = 0;
+    protected float mTranslateY = 0;
 
     protected int mStyle;
 
@@ -66,7 +70,8 @@ public abstract class Doodle implements Action {
     protected int mState = STATE_IDLE;
 
     private String mDoodleId;
-    private boolean mMatrixDrawing = false;
+    protected List<ActionRecord> mUndoRecords;
+    protected List<ActionRecord> mRedoRecords;
 
     protected Doodle(Whiteboard whiteboard, int style) {
         mDoodleId = UUID.randomUUID().toString();
@@ -102,6 +107,9 @@ public abstract class Doodle implements Action {
 
         mBorderPaint = Utils.buildDashPaint();
         mControllerPaint = Utils.buildControllerPaint();
+
+        mUndoRecords = new ArrayList<ActionRecord>();
+        mRedoRecords = new ArrayList<ActionRecord>();
     }
 
     protected int initialCapacity() {
@@ -114,8 +122,12 @@ public abstract class Doodle implements Action {
         return mPaint;
     }
 
-    public Vector<PointF> getPoints() {
+    public List<PointF> getPoints() {
         return mPoints;
+    }
+
+    public void setPoints(List<PointF> points) {
+        mPoints = points;
     }
 
     public int getStyle() {
@@ -138,8 +150,12 @@ public abstract class Doodle implements Action {
         mTotalScale = totalScale;
     }
 
-    public float getDegree() {
+    public float getTotalDegree() {
         return mTotalDegree;
+    }
+
+    public void setTotalDegree(float degree) {
+        mTotalDegree = degree;
     }
 
     public RectF getRect() {
@@ -162,6 +178,28 @@ public abstract class Doodle implements Action {
         mDoodleId = doodleId;
     }
 
+    public float getTranslateX() {
+        return mTranslateX;
+    }
+
+    public void setTranslateX(float translateX) {
+        mTranslateX = translateX;
+    }
+
+    public float getTranslateY() {
+        return mTranslateY;
+    }
+
+    public void setTranslateY(float translateY) {
+        mTranslateY = translateY;
+    }
+
+    public void setDoodleRect(RectF rect) {
+        if (rect != null) {
+            mDoodleRect.set(rect);
+        }
+    }
+
     //==========================getter and setter==========================================
 
     public void addControlPoint(PointF point) {
@@ -173,11 +211,11 @@ public abstract class Doodle implements Action {
     }
 
     public PointF getFirstPoint() {
-        return mPoints.firstElement();
+        return mPoints.get(0);
     }
 
     public PointF getLastPoint() {
-        return mPoints.lastElement();
+        return mPoints.get(mPoints.size() - 1);
     }
 
     public void setWhiteboard(Whiteboard whiteboard) {
@@ -218,7 +256,7 @@ public abstract class Doodle implements Action {
             mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
 
             float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
-            float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2;
+            float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2 + WhiteboardConfigs.BORDER_PADDING;
             PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
             float hPadding = p.x / mTotalScale * params.scale;
             float vPadding = p.y / mTotalScale * params.scale;
@@ -232,7 +270,8 @@ public abstract class Doodle implements Action {
             //draw controller
             float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
             p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
-            mBorderRect.set(mDoodleRect.right - p.x, mDoodleRect.top - p.y, mDoodleRect.right + p.x, mDoodleRect.top + p.y);
+            mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
+                    mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
             mBorderDrawingPath.reset();
             mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
             mBorderDrawingPath.transform(mDrawingMatrix);
@@ -266,7 +305,11 @@ public abstract class Doodle implements Action {
     @Override
     public void move(float deltaX, float deltaY) {
         Whiteboard.WhiteboardParams params = getWhiteboard().getParams();
-        mTransformMatrix.postTranslate(deltaX / params.scale, deltaY / params.scale);
+        float moveX = deltaX / params.scale;
+        float moveY = deltaY / params.scale;
+        mTranslateX += moveX;
+        mTranslateY += moveY;
+        mTransformMatrix.postTranslate(moveX, moveY);
     }
 
     @Override
@@ -343,6 +386,81 @@ public abstract class Doodle implements Action {
     public void scaleRotateByPoint(float scale, float degree, float px, float py) {
         scale(scale, px, py);
         rotate(degree, px, py);
+    }
+
+    public Matrix getTransformMatrix() {
+        return mTransformMatrix;
+    }
+
+    public void setTransformMatrix(Matrix matrix) {
+        if (mTransformMatrix != null) {
+            mTransformMatrix.set(matrix);
+        } else {
+            mTransformMatrix = matrix;
+        }
+    }
+
+    public void addRecords(int action, int groupId) {
+        ActionRecord record = new ActionRecord(getDoodleId(), groupId, action);
+        record.scale = getTotalScale();
+        record.degree = getTotalDegree();
+        record.translateX = getTranslateX();
+        record.translateY = getTranslateY();
+        record.setRect(mDoodleRect);
+        record.setMatrix(getTransformMatrix());
+        record.setPoints(getPoints());
+
+        mUndoRecords.add(record);
+        mRedoRecords.clear();
+    }
+
+    /**
+     * @return last and last but one Records
+     */
+    public ActionRecord[] undo(int groupId) {
+        ActionRecord[] records = new ActionRecord[2];
+        if (mUndoRecords.size() > 0) {
+            ActionRecord lastRecord = mUndoRecords.get(mUndoRecords.size() - 1);
+            if (lastRecord.groupId == groupId) {
+                mUndoRecords.remove(lastRecord);
+                mRedoRecords.add(lastRecord);
+                records[0] = lastRecord;
+                if (mUndoRecords.size() > 0) {
+                    records[1] = mUndoRecords.get(mUndoRecords.size() - 1);
+                }
+            }
+        }
+
+        return records;
+    }
+
+    public ActionRecord redo(int groupId) {
+        if (mRedoRecords.size() > 0) {
+            ActionRecord record = mRedoRecords.get(mRedoRecords.size() - 1);
+            if (record.groupId == groupId) {
+                mRedoRecords.remove(record);
+                mUndoRecords.add(record);
+                return record;
+            }
+        }
+
+        return null;
+    }
+
+    public List<ActionRecord> getUndoRecords() {
+        return mUndoRecords;
+    }
+
+    public List<ActionRecord> getRedoRecords() {
+        return mRedoRecords;
+    }
+
+    public boolean isCanUndo() {
+        return mUndoRecords != null && !mUndoRecords.isEmpty();
+    }
+
+    public boolean isCanRedo() {
+        return mRedoRecords != null && !mRedoRecords.isEmpty();
     }
 
 }

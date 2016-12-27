@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
+            android:id="@+id/moment_detail_list"
+            android:layout_width="match_parent"
+            android:scrollbars="none"
+            android:listSelector="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    <include layout="@layout/layout_moment_detail_footer"/>
+</LinearLayout>

@@ -32,7 +32,7 @@ import butterknife.Unbinder;
 
 public abstract class BaseActivity extends FragmentActivity {
 
-    protected View mHeader;
+    protected View mBaseHeader;
     protected FrameLayout mContent;
     private TextView mLeftText;
     protected TextView mRightText;
@@ -51,7 +51,7 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-        mHeader = findViewById(R.id.header);
+        mBaseHeader = findViewById(R.id.header);
         mContent = (FrameLayout) findViewById(R.id.base_content);
         mLeftText = (TextView) findViewById(R.id.left_view);
         mRightText = (TextView) findViewById(R.id.right_view);
@@ -67,10 +67,10 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected void needHeader(boolean need){
         if (!need){
-            mHeader.setVisibility(View.GONE);
+            mBaseHeader.setVisibility(View.GONE);
             mHeaderDivider.setVisibility(View.GONE);
         }else {
-            mHeader.setVisibility(View.VISIBLE);
+            mBaseHeader.setVisibility(View.VISIBLE);
             mHeaderDivider.setVisibility(View.VISIBLE);
         }
     }

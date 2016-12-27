@@ -15,12 +15,14 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.core;
  * ======================================================================================== */
 
 public interface Action {
-    public static final int NO_ACTION = 0;
+    public static final int NO_ACTION = -1;
+    public static final int ADD_ACTION = 0;
     public static final int MOVE_ACTION = 1;
     public static final int SCALE_ACTION = 2;
     public static final int ROTATE_ACTION = 3;
-    public static final int CHANGE_AREA_ACTION = 4;
-    public static final int DELETE_ACTION = 5;
+    public static final int SCALE_ROTATE_ACTION = 4;
+    public static final int CHANGE_AREA_ACTION = 5;
+    public static final int DELETE_ACTION = 6;
 
     public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge);
 

@@ -19,29 +19,43 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
-import cn.xiaojs.xma.ui.base.BaseScrollTabListAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MomentDetailAdapter extends BaseScrollTabListAdapter<RecommendCourseBean> {
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
+import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 
-    public MomentDetailAdapter(Context context, ArrayList<RecommendCourseBean> dataList, boolean isNeedPreLoading) {
-        super(context, dataList, isNeedPreLoading);
+public class MomentDetailAdapter extends AbsSwipeAdapter<RecommendCourseBean,MomentDetailAdapter.Holder> {
+
+    public MomentDetailAdapter(Context context, PullToRefreshSwipeListView list, boolean isNeedPreLoading) {
+        super(context,list,isNeedPreLoading);
     }
 
-    public MomentDetailAdapter(Context context, ArrayList<RecommendCourseBean> dataList) {
-        super(context, dataList);
-    }
-
-    public MomentDetailAdapter(Context context) {
-        super(context);
+    public MomentDetailAdapter(Context context, PullToRefreshSwipeListView list) {
+        super(context, list);
     }
 
     @Override
-    protected void requestData() {
+    protected void setViewContent(Holder holder, RecommendCourseBean bean, int position) {
+
+    }
+
+    @Override
+    protected View createContentView(int position) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_moment_comment_item,null);
+        return view;
+    }
+
+    @Override
+    protected Holder initHolder(View view) {
+        Holder holder = new Holder(view);
+        return holder;
+    }
+
+    @Override
+    protected void doRequest() {
         List<RecommendCourseBean> list = new ArrayList<>();
         list.add(new RecommendCourseBean());
         list.add(new RecommendCourseBean());
@@ -50,29 +64,16 @@ public class MomentDetailAdapter extends BaseScrollTabListAdapter<RecommendCours
         list.add(new RecommendCourseBean());
         list.add(new RecommendCourseBean());
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         onSuccess(list);
     }
 
     @Override
-    public View getView(int position, View convertView) {
-        Holder holder = null;
-        if (convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_moment_comment_item,null);
-            holder = new Holder(convertView);
-            convertView.setTag(holder);
-        }else {
-            holder = (Holder) convertView.getTag();
-        }
-        return convertView;
-    }
-
-    @Override
-    protected void onItemClick(int position) {
+    protected void onDataItemClick(int position, RecommendCourseBean bean) {
         Intent intent = new Intent(mContext,MomentCommentActivity.class);
         intent.putExtra(HomeConstant.KEY_COMMENT_TYPE,HomeConstant.COMMENT_TYPE_REPLY);
         intent.putExtra(HomeConstant.KEY_COMMENT_REPLY_NAME,"菜菜菜");

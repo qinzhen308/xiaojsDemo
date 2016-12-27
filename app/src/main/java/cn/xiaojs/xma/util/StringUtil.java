@@ -27,8 +27,13 @@ public class StringUtil {
         int start = origin.indexOf(target);
         int end = start + target.length();
         span.setSpan(new ForegroundColorSpan(fontColor),start,end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        span.setSpan(new AbsoluteSizeSpan(fontSize),start,end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (fontSize > 0){
+            span.setSpan(new AbsoluteSizeSpan(fontSize),start,end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
         return span;
     }
 
+    public static Spannable getSpecialString(String origin,String target,int fontColor){
+        return getSpecialString(origin,target,0,fontColor);
+    }
 }

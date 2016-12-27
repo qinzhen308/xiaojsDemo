@@ -5,10 +5,12 @@
     <!--common-->
     <color name="main_bg">#f7f7f7</color>
     <color name="main_light_bg">#fbfbfb</color>
+    <color name="grey">#f2f2f2</color>
     <color name="header_color">#3F51B5</color>
     <color name="white">#ffffff</color>
     <color name="red">#dc2314</color>
     <color name="def">#000000</color>
+    <color name="trans">#00000000</color>
 
     <!--app base color-->
     <color name="main_orange">#ff9833</color>
@@ -84,6 +86,7 @@
     <color name="light_blue">#ecf6fa</color>
     <color name="light_blue1">#ebf6fa</color>
     <color name="light_blue2">#95cee3</color>
+    <color name="light_grey1">#e0e5ed</color>
 
     <color name="relationship_tag1">#6bd8ef</color>
     <color name="relationship_tag2">#9abef7</color>

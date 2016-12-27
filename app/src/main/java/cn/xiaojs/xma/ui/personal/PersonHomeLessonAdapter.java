@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.mine;
+package cn.xiaojs.xma.ui.personal;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -17,30 +17,46 @@ package cn.xiaojs.xma.ui.mine;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
-import cn.xiaojs.xma.ui.base.BaseScrollTabListAdapter;
-import cn.xiaojs.xma.ui.course.LessonBusiness;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonHomeLessonAdapter extends BaseScrollTabListAdapter<LessonBusiness> {
-    public PersonHomeLessonAdapter(Context context, ArrayList<LessonBusiness> dataList, boolean isNeedPreLoading) {
-        super(context, dataList, isNeedPreLoading);
+import butterknife.BindView;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
+import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.ui.course.LessonBusiness;
+
+public class PersonHomeLessonAdapter extends AbsSwipeAdapter<LessonBusiness,PersonHomeLessonAdapter.Holder> {
+    public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, boolean isNeedPreLoading) {
+        super(context, list, isNeedPreLoading);
     }
 
-    public PersonHomeLessonAdapter(Context context, ArrayList<LessonBusiness> dataList) {
-        super(context, dataList);
-    }
-
-    public PersonHomeLessonAdapter(Context context) {
-        super(context);
+    public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list) {
+        super(context, list);
     }
 
     @Override
-    protected void requestData() {
+    protected void setViewContent(Holder holder, LessonBusiness bean, int position) {
+        holder.title.setText("重要的化妆防晒手册 " + position);
+    }
+
+    @Override
+    protected View createContentView(int position) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_person_home_lesson_item, null);
+        return view;
+    }
+
+    @Override
+    protected Holder initHolder(View view) {
+        Holder holder = new Holder(view);
+        return holder;
+    }
+
+    @Override
+    protected void doRequest() {
         List<LessonBusiness> list = new ArrayList<>();
         list.add(new LessonBusiness());
         list.add(new LessonBusiness());
@@ -56,20 +72,10 @@ public class PersonHomeLessonAdapter extends BaseScrollTabListAdapter<LessonBusi
         onSuccess(list);
     }
 
-    @Override
-    public View getView(int position, View convertView) {
-        Holder holder = null;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_person_home_lesson_item, null);
-            holder = new Holder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (Holder) convertView.getTag();
-        }
-        return convertView;
-    }
-
     class Holder extends BaseHolder {
+
+        @BindView(R.id.lesson_adapter_name)
+        TextView title;
         public Holder(View view) {
             super(view);
         }
