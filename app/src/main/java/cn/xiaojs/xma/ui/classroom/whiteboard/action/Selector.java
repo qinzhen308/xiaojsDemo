@@ -443,4 +443,8 @@ public class Selector extends Doodle {
         }
     }
 
+    public Doodle getSelectedDoodle() {
+        return mSelectedDoodle;
+    }
+
 }

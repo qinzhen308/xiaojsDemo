@@ -24,6 +24,7 @@ import android.graphics.RectF;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.ActionRecord;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
@@ -356,4 +357,13 @@ public class TextWriting extends Doodle {
         return false;
     }
 
+    @Override
+    public void addRecords(int action, int groupId) {
+        super.addRecords(action, groupId);
+        if (mUndoRecords != null && !mUndoRecords.isEmpty()) {
+            ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 1);
+            record.textStr = getTextString();
+        }
+
+    }
 }

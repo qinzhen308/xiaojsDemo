@@ -14,8 +14,23 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.core;
  *
  * ======================================================================================== */
 
+import android.graphics.Matrix;
+import android.graphics.PointF;
+import android.graphics.RectF;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ActionRecord {
     public int action;
+    public int groupId;
+    public String id;
+
+    public ActionRecord(String id, int groupId, int ac) {
+        this.id = id;
+        this.groupId = groupId;
+        this.action = ac;
+    }
 
     //translate
     public float translateX;
@@ -24,4 +39,40 @@ public class ActionRecord {
     public float scale;
     //rotate
     public float degree;
+
+    //transform matrix
+    public Matrix mTransMatrix;
+
+    public List<PointF> mPoints;
+
+    public RectF rect;
+
+    //for text writing
+    public String textStr;
+
+    public void setPoints(List<PointF> points) {
+        if (points != null && !points.isEmpty()) {
+            if (mPoints == null) {
+                mPoints = new ArrayList<PointF>();
+            }
+
+            for (PointF p : points) {
+                mPoints.add(new PointF(p.x, p.y));
+            }
+        }
+    }
+
+    public void setMatrix(Matrix transformMatrix) {
+        if (transformMatrix != null) {
+            mTransMatrix = new Matrix();
+            mTransMatrix.set(transformMatrix);
+        }
+    }
+
+    public void setRect(RectF src) {
+        if (rect == null) {
+            rect = new RectF();
+        }
+        rect.set(src);
+    }
 }
