@@ -51,4 +51,91 @@ public class Social {
         public static final int SPECIFIC = 5;
     }
 
+    /**
+     * Defines the type of relationship between two persons on the Xiaojs platform.
+     * @readonly
+     * @enum {Number}
+     */
+    public class RelationType {
+        // For people followed by somebody or followed each other, it's 1st degree relationship
+        public static final String FRIENDS = "A";
+        // For teachers (both lead and assistants), classmates or students within specific classes, it's 2nd degree relationship
+        public static final String CLASSES = "B";
+        // For those you've not followed and also do not participate in any class they've involved
+        public static final String STRANGERS = "C";
+    }
+
+
+    /**
+     * Defines the in-class relationship between two participants.
+     */
+    public class InClassRelation {
+        public static final int LEAD_TEACHER = 1;
+        public static final int ASSISTANT_TEACHER = 2;
+        public static final int CLASSMATE = 3;
+        public static final int STUDENT = 4;
+    }
+
+    /**
+     * Returns the user-friendly name or tag for the specified in-class relationship.
+     * @param relation
+     * @return
+     */
+    public static String getInClassRelationTag(int relation) {
+
+        switch (relation)
+        {
+            case InClassRelation.LEAD_TEACHER:
+                return "主讲";
+
+            case InClassRelation.ASSISTANT_TEACHER:
+                return "助教";
+
+            case InClassRelation.CLASSMATE:
+                return "同学";
+
+            case InClassRelation.STUDENT:
+                return "学生";
+
+            default:
+                return "n/a";
+        }
+
+    }
+
+    /**
+     * Defines support activity types.
+     */
+    public class ActivityType {
+        //个人动态
+        public static final String POST_ACTIIVTY = "PostActivity";
+        //直播课公开（选项）分享动态
+        public static final String LESSON_ACCESSIBLE_PREFERRED_ACTIIVTY = "LessonAccessiblePreferredActivity";
+        //报名（成功）分享动态
+        public static final String ENROLLMENT_SHARE_ACTIIVTY = "EnrollmentShareActivity";
+        //转发动态
+        public static final String FORWARD_ACTIIVTY = "ForwardActivity";
+        //资料分享动态
+        public static final String DOCUMENT_SHARE_ACTIIVTY = "DocumentShareActivity";
+        //班级公告（选项）分享动态
+        public static final String ANNOUNCEMENT_PREFERRED_ACTIIVTY = "AnnouncementPreferredActivity";
+        //提问动态
+        public static final String TOPIC_ACTIIVTY = "TopicActivity";
+        //解答动态
+        public static final String SOLUTION_ACTIIVTY = "SolutionActivity";
+    }
+
+    /**
+     * Defines support Behavior types.
+     */
+    public class BehaviorType {
+        //动态评论
+        public static final String COMMENT = "Comment";
+        //动态评论回复
+        public static final String REPLY = "Reply";
+        //动态点赞
+        public static final String LIKED = "Liked";
+
+    }
+
 }

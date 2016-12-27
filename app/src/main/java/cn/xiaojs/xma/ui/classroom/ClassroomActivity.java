@@ -100,6 +100,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     //all kind of panels
     private CourseWarePanel mCourseWarePanel;
     private MessagePanel mMessagePanel;
+    private InviteFriendPanel mInviteFriendPanel;
     private SettingPanel mSettingPanel;
     private ChatPanel mChatPanel;
     private Dialog mQuestionAnswerPanel;

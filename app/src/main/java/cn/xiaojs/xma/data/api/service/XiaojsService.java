@@ -300,8 +300,8 @@ public interface XiaojsService {
 
     //Like Activity
     @POST("/v1/social/activities/{activity}/liked")
-    Call<ResponseBody> likeActivity(@Header("SessionID") String sessionID,
-                                    @Path("activity") String activity);
+    Call<Dynamic.DynStatus> likeActivity(@Header("SessionID") String sessionID,
+                                         @Path("activity") String activity);
 
     // Post Activity
     @Headers("Content-Type: application/json")
@@ -309,15 +309,17 @@ public interface XiaojsService {
     Call<Dynamic> postActivity(@Header("SessionID") String sessionID, @Body DynPost post);
 
     //Reply To Comment
-//    @Headers("Content-Type: application/json")
-//    @POST("/v1/social/comments/{comment}/replies")
-//    replyComment(@Header("SessionID") String sessionID,@Path("comment") String comment);
+    @Headers("Content-Type: application/json")
+    @POST("/v1/social/comments/{comment}/replies")
+    Call<Comment> replyComment(@Header("SessionID") String sessionID,
+                              @Path("comment") String commentID,
+                              @Body Comment comment);
 
 
     //Reply To Reply
-//    @Headers("Content-Type: application/json")
-//    @POST("/v1/social/replies/{reply}/replies")
-//    replyReply();
+    @Headers("Content-Type: application/json")
+    @POST("/v1/social/replies/{reply}/replies")
+    Call<Comment> reply2Reply(@Header("SessionID") String sessionID,@Path("reply") String replyID, @Body Comment comment);
 
 
 

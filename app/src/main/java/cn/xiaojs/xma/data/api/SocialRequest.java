@@ -14,6 +14,7 @@ import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.Dynamic;
@@ -62,6 +63,55 @@ public class SocialRequest extends ServiceRequest {
                 paginationJsonstr);
 
         enqueueRequest(APIType.GET_ACTIVITIES,call);
+    }
+
+    public void commentActivity(@NonNull String session,String activity,String commentContent) {
+
+        Comment comment = new Comment();
+        comment.comment = commentContent;
+
+        Call<Comment> call = getService().commentActivity(session,activity,comment);
+        enqueueRequest(APIType.COMMENT_ACTIVITY,call);
+    }
+
+    public void getComments(@NonNull String session, Criteria criteria, Pagination pagination) {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+        Call<CollectionPage<Comment>> call = getService().getComments(session,
+                criteriaJsonstr,
+                paginationJsonstr);
+
+        enqueueRequest(APIType.GET_COMMENTS,call);
+    }
+
+    public void likeActivity(@NonNull String session,String activity) {
+        Call<Dynamic.DynStatus> call = getService().likeActivity(session,activity);
+        enqueueRequest(APIType.LIKE_ACTIVITY,call);
+    }
+
+    public void replyComment(@NonNull String session, String commentID, String reply) {
+
+        Comment replyComment = new Comment();
+        replyComment.reply = reply;
+
+        Call<Comment> call = getService().replyComment(session,commentID,replyComment);
+        enqueueRequest(APIType.REPLAY_COMMENT,call);
+    }
+
+    public void reply2Reply(@NonNull String session, String replyID, String reply) {
+
+        Comment replyComment = new Comment();
+        replyComment.reply = reply;
+
+        Call<Comment> call = getService().reply2Reply(session,replyID,replyComment);
+        enqueueRequest(APIType.REPLAY_2_REPLY,call);
     }
 
 }

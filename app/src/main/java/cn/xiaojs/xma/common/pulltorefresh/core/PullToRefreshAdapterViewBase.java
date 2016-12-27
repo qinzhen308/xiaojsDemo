@@ -195,6 +195,20 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		((ExpandableListView) mRefreshableView).expandGroup(groupPos,animated);
 	}
 
+	public boolean collapseGroup(int groupPos) {
+		return ((ExpandableListView) mRefreshableView).collapseGroup(groupPos);
+	}
+
+	public void setOnGroupCollapseListener(
+			ExpandableListView.OnGroupCollapseListener onGroupCollapseListener) {
+		((ExpandableListView) mRefreshableView).setOnGroupCollapseListener(onGroupCollapseListener);
+	}
+
+	public void setOnGroupExpandListener(
+			ExpandableListView.OnGroupExpandListener onGroupExpandListener) {
+		((ExpandableListView) mRefreshableView).setOnGroupExpandListener(onGroupExpandListener);
+	}
+
 	/**
 	 * Sets the Empty View to be used by the Adapter View.
 	 * <p/>
