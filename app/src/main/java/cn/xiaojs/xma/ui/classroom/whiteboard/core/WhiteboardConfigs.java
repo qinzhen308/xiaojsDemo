@@ -27,6 +27,7 @@ public class WhiteboardConfigs {
 
     public static final int DEFAULT_PAINT_COLOR = Color.BLACK;
 
+    public static int BORDER_PADDING = 10;
     public static int BORDER_STROKE_WIDTH = 5;
     public static int SELECTOR_STROKE_WIDTH = 5;
     public static int BORDER_DASH_WIDTH = 20;
@@ -57,6 +58,7 @@ public class WhiteboardConfigs {
         BORDER_COLOR = rs.getColor(R.color.main_blue);
         BORDER_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px4);
         BORDER_DASH_WIDTH = rs.getDimensionPixelOffset(R.dimen.px10);
+        BORDER_PADDING = rs.getDimensionPixelOffset(R.dimen.px10);
         SELECTOR_DASH_WIDTH = rs.getDimensionPixelOffset(R.dimen.px5);
         SELECTOR_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px2);
         CONTROLLER_RADIUS = rs.getDimensionPixelOffset(R.dimen.px30);

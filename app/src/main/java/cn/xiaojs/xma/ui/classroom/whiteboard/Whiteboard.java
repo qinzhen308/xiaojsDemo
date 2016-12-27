@@ -1103,12 +1103,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     continue;
                 }
 
-                if (prevRecord == null && lastRecord.action == Action.ADD_ACTION) {
+                if (lastRecord.action == Action.ADD_ACTION) {
                     it.remove();
                     if (mSelector != null) {
                         mSelector.reset();
                     }
-                } else {
+                } else if (prevRecord != null){
                     doodle.setPoints(prevRecord.mPoints);
                     doodle.setDoodleRect(prevRecord.rect);
                     doodle.setTransformMatrix(prevRecord.mTransMatrix);
