@@ -1,7 +1,6 @@
 package cn.xiaojs.xma.model.social;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Date;
 
@@ -19,7 +18,7 @@ public class Dynamic {
     public boolean liked;
     public DynOwner owner;
     public DynBody body;
-    public DynStatus status;
+    public DynStatus stats;
 
 
 

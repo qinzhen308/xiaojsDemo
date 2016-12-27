@@ -91,36 +91,7 @@ public class HomeFragment extends BaseFragment {
         beanList.add(b4);
         BannerAdapter adapter = new BannerAdapter(mContext,beanList);
         mBanner.setAdapter(adapter);
-//        List<CourseBlock> cs = new ArrayList<>();
-//        CourseBlock c1 = new CourseBlock(mContext);
-//        CourseBlock c2 = new CourseBlock(mContext);
-//        cs.add(c1);
-//        cs.add(c2);
-//        c1.setData(new Date(System.currentTimeMillis() + 1000*60*60*36));
-//        c2.setData(new Date(System.currentTimeMillis() + 1000*60*60*23));
-//        mClass.setViews(mContext.getString(R.string.my_xiaojs),mContext.getResources().getStringArray(R.array.course_block_tabs),cs,mContext.getString(R.string.schedule));
-//
-//
-//        List<LiveBlock> ls = new ArrayList<>();
-//        LiveBlock l1 = new LiveBlock(mContext);
-//        LiveBlock l2 = new LiveBlock(mContext);
-//        ls.add(l1);
-//        ls.add(l2);
-//        l1.setData();
-//        l2.setData();
-//        mLive.setViews(mContext.getString(R.string.living_time),mContext.getResources().getStringArray(R.array.live_block_tabs),ls,mContext.getString(R.string.live_today));
-//
-//        List<PersonBlock> pss = new ArrayList<>();
-//        PersonBlock p = new PersonBlock(mContext);
-//        pss.add(p);
-//        p.setData();
-//        mTeacher.setViews(mContext.getString(R.string.teacher_recommend),null,pss,mContext.getString(R.string.become_teacher));
 
-//        List<PersonBlock> ps = new ArrayList<>();
-//        PersonBlock p1 = new PersonBlock(mContext);
-//        ps.add(p1);
-//        p1.setData();
-        //mPerson.setViews(mContext.getString(R.string.perhaps_interest),null,ps,mContext.getString(R.string.recommend_self));
         mList.getRefreshableView().setOnScrollListener(new OnScrollYListener(mList.getRefreshableView().getWrappedList()) {
             @Override
             public void onScrollY(int y) {

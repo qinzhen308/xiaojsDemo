@@ -21,11 +21,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.util.DeviceUtil;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public class MomentUGC extends RelativeLayout {
 
@@ -38,6 +38,7 @@ public class MomentUGC extends RelativeLayout {
     @BindView(R.id.ugc_more)
     ImageView mMore;
 
+    private Dynamic mDynamic;
     private OnItemClickListener listener;
 
     public MomentUGC(Context context) {
@@ -61,6 +62,14 @@ public class MomentUGC extends RelativeLayout {
         mPraise.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDynamic.liked = !mDynamic.liked;
+                int newTotal = getTotal(mPraise);
+                if (mDynamic.liked){
+                    newTotal++;
+                }else {
+                    newTotal--;
+                }
+                praise(mDynamic.liked,newTotal);
                 if (listener != null){
                     listener.onPraise();
                 }
@@ -97,6 +106,16 @@ public class MomentUGC extends RelativeLayout {
         DeviceUtil.expandViewTouch(mMore,getResources().getDimensionPixelSize(R.dimen.px100));
     }
 
+    private void praise(boolean status,int total){
+        if (status){
+            mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_on,0,0,0);
+        }else {
+            mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_off,0,0,0);
+        }
+
+        mPraise.setText(String.valueOf(total));
+    }
+
     public void setPraise(int count){
         mPraise.setText(String.valueOf(count));
     }
@@ -116,6 +135,25 @@ public class MomentUGC extends RelativeLayout {
     public void setOnItemClickListener(OnItemClickListener listener){
         this.listener = listener;
     }
+
+    private int getTotal(TextView view){
+        String strInt = view.getText().toString();
+        int Int = 0;
+        try {
+            Int = Integer.parseInt(strInt);
+        }catch (Exception e){
+        }
+        return Int;
+    }
+
+    public void setStatus(Dynamic status){
+        mDynamic = status;
+        mComment.setText(String.valueOf(mDynamic.stats.comments));
+        mShare.setText(String.valueOf(mDynamic.stats.shared));
+        praise(mDynamic.liked,mDynamic.stats.liked);
+    }
+
+
 
     public interface OnItemClickListener{
         void onPraise();

@@ -17,10 +17,13 @@ package cn.xiaojs.xma.ui.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.widget.IconTextView;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.BitmapUtils;
 
 import butterknife.BindView;
@@ -30,6 +33,17 @@ public class MomentHeader extends RelativeLayout {
 
     @BindView(R.id.moment_header_desc)
     IconTextView mDesc;
+    @BindView(R.id.moment_header_name)
+    TextView mName;
+    @BindView(R.id.moment_header_time)
+    TextView mTime;
+    @BindView(R.id.moment_header_role)
+    TextView mTag;
+    @BindView(R.id.moment_header_image)
+    RoundedImageView mHead;
+    @BindView(R.id.moment_header_focus)
+    FollowView mFollow;
+
     public MomentHeader(Context context) {
         super(context);
         init();
@@ -56,7 +70,9 @@ public class MomentHeader extends RelativeLayout {
         ButterKnife.bind(this);
     }
 
-    public void setData(){
+    public void setData(Dynamic.DynOwner owner){
         mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(),BitmapUtils.getBitmap(getContext(),R.drawable.ic_clz_remain),"22",R.color.white,R.dimen.font_20px));
+        mName.setText(owner.alias);
+        mTag.setText(owner.tag);
     }
 }

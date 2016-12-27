@@ -16,49 +16,47 @@ package cn.xiaojs.xma.ui.home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.live.LiveScrollView;
 import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.view.MomentUGC;
-import cn.xiaojs.xma.ui.widget.HorizontalAdaptScrollerView;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-
-public class HomeMomentAdapter extends AbsSwipeAdapter<RecommendCourseBean, HomeMomentAdapter.Holder> {
+public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapter.Holder> {
 
     public HomeMomentAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
     }
 
     @Override
-    protected void setViewContent(Holder holder, RecommendCourseBean bean, int position) {
+    protected void setViewContent(Holder holder, Dynamic bean, int position) {
 
-        if (position % 5 == 0) {
-            holder.showRecommend();
-            RecyclerView.Adapter adapter = new PersonAdapter(mContext);
-            holder.mList.setItemVisibleCountType(HorizontalAdaptScrollerView.ItemVisibleTypeCount.TYPE_FREE);
-            holder.mList.setItemVisibleCount(1.3f);
-            holder.mList.setAdapter(adapter);
-            ViewGroup.LayoutParams lp = holder.mList.getLayoutParams();
-            lp.height = mContext.getResources().getDimensionPixelSize(R.dimen.px370);
-            holder.mList.setLayoutParams(lp);
-        } else {
+//        if (position % 5 == 0) {
+//            holder.showRecommend();
+//            RecyclerView.Adapter adapter = new PersonAdapter(mContext);
+//            holder.mList.setItemVisibleCountType(HorizontalAdaptScrollerView.ItemVisibleTypeCount.TYPE_FREE);
+//            holder.mList.setItemVisibleCount(1.3f);
+//            holder.mList.setAdapter(adapter);
+//            ViewGroup.LayoutParams lp = holder.mList.getLayoutParams();
+//            lp.height = mContext.getResources().getDimensionPixelSize(R.dimen.px370);
+//            holder.mList.setLayoutParams(lp);
+//        } else {
             holder.showMoment();
-            holder.content.show();
+            holder.content.show(bean.body,bean.typeName);
+            holder.ugc.setStatus(bean);
             holder.ugc.setOnItemClickListener(new MomentUGC.OnItemClickListener() {
                 @Override
                 public void onPraise() {
@@ -80,9 +78,9 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<RecommendCourseBean, Home
                     more();
                 }
             });
-        }
+//        }
 
-        holder.header.setData();
+        holder.header.setData(bean.owner);
 
     }
 
@@ -123,18 +121,34 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<RecommendCourseBean, Home
 
     @Override
     protected void doRequest() {
-        RecommendCourseBean b = new RecommendCourseBean();
-        List<RecommendCourseBean> beans = new ArrayList<>();
-        beans.add(b);
-        beans.add(b);
-        beans.add(b);
-        beans.add(b);
-        beans.add(b);
-        onSuccess(beans);
+
+        SocialManager.getActivities(mContext, null, mPagination, new APIServiceCallback<CollectionPage<Dynamic>>() {
+            @Override
+            public void onSuccess(CollectionPage<Dynamic> object) {
+                if (object != null){
+                    HomeMomentAdapter.this.onSuccess(object.objectsOfPage);
+                }else {
+                    HomeMomentAdapter.this.onSuccess(null);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                HomeMomentAdapter.this.onFailure(errorCode,errorMessage);
+            }
+        });
+//        RecommendCourseBean b = new RecommendCourseBean();
+//        List<RecommendCourseBean> beans = new ArrayList<>();
+//        beans.add(b);
+//        beans.add(b);
+//        beans.add(b);
+//        beans.add(b);
+//        beans.add(b);
+//        onSuccess(beans);
     }
 
     @Override
-    protected void onDataItemClick(int position, RecommendCourseBean bean) {
+    protected void onDataItemClick(int position, Dynamic bean) {
         mContext.startActivity(new Intent(mContext,MomentDetailActivity.class));
     }
 
