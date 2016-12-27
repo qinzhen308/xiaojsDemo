@@ -9,6 +9,7 @@ import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CancelReason;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.ELResponse;
@@ -28,6 +29,10 @@ import cn.xiaojs.xma.model.RegisterInfo;
 import cn.xiaojs.xma.model.TokenResponse;
 import cn.xiaojs.xma.model.VerifyCode;
 
+import cn.xiaojs.xma.model.social.Comment;
+import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.model.social.DynPost;
+import cn.xiaojs.xma.model.social.Dynamic;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -246,6 +251,74 @@ public interface XiaojsService {
     @GET("/v1/security/privileges/{privileges}")
     Call<Privilege[]>havePrivileges(@Header("SessionID") String sessionID,
                                     @Path("privileges") String privileges);
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Social
+    //
+
+    //Add Contact Group
+    @Headers("Content-Type: application/json")
+    @POST("/v1/social/contactgroups")
+    Call<ResponseBody> addContactGroup(@Header("SessionID") String sessionID,
+                                       @Body ContactGroup group);
+
+    //Comment Activity
+    @Headers("Content-Type: application/json")
+    @POST("/v1/social/activities/{activity}/comments")
+    Call<Comment> commentActivity(@Header("SessionID") String sessionID,
+                                  @Path("activity") String activity,
+                                  @Body Comment comment);
+
+    //Follow Contact
+    @Headers("Content-Type: application/json")
+    @POST("/v1/social/contacts")
+    Call<ResponseBody> followContact(@Header("SessionID") String sessionID,
+                                     String contact,
+                                     int group);
+
+    // Get Activities
+    @GET("/v1/social/activities/{criteria}/{pagination}")
+    Call<CollectionPage<Dynamic>> getActivities(@Header("SessionID") String sessionID,
+                                                @Path("criteria") String criteria,
+                                                @Path("pagination") String pagination);
+
+
+    //Get Comments
+    @GET("/v1/social/comments/{criteria}/{pagination}")
+    Call<CollectionPage<Comment>> getComments(@Header("SessionID") String sessionID,
+                                              @Path("criteria") String criteria,
+                                              @Path("pagination") String pagination);
+
+
+
+
+    // Get Updates
+    //@GET("/v1/social/updates/{pagination}")
+    //Call<CollectionPage<>>
+
+    //Like Activity
+    @POST("/v1/social/activities/{activity}/liked")
+    Call<ResponseBody> likeActivity(@Header("SessionID") String sessionID,
+                                    @Path("activity") String activity);
+
+    // Post Activity
+    @Headers("Content-Type: application/json")
+    @POST("/v1/social/activities")
+    Call<Dynamic> postActivity(@Header("SessionID") String sessionID, @Body DynPost post);
+
+    //Reply To Comment
+//    @Headers("Content-Type: application/json")
+//    @POST("/v1/social/comments/{comment}/replies")
+//    replyComment(@Header("SessionID") String sessionID,@Path("comment") String comment);
+
+
+    //Reply To Reply
+//    @Headers("Content-Type: application/json")
+//    @POST("/v1/social/replies/{reply}/replies")
+//    replyReply();
+
 
 
 }

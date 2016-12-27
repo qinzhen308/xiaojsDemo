@@ -67,4 +67,12 @@ public class APIType {
     public static final int VALIDATE_CODE = 51;
     public static final int VERIFY_MOBILE = 52;
     public static final int HAVE_PROVILEGES = 53;
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    //Social
+    //
+    public static final int ADD_CONTACT_GROUP = 6;
+    public static final int POST_ACTIVITY = 60;
+    public static final int GET_ACTIVITIES = 61;
 }

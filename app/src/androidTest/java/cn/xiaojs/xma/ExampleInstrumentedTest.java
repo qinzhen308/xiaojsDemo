@@ -30,8 +30,12 @@ import cn.xiaojs.xma.model.RegisterInfo;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.util.APPUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -72,7 +76,20 @@ public class ExampleInstrumentedTest {
         //testCenterData(appContext);
         //testGetData(appContext);
         //testToggleLesson(appContext);
-        testT(appContext);
+        //testT(appContext);
+
+
+        String json = "{\"1482891322185\":\"xiao peng you\"}";
+
+
+        ObjectMapper o = new ObjectMapper();
+        JsonNode x = o.readTree(json);
+
+
+
+        JSONObject jobject = new JSONObject(json);
+        String cc = jobject.keys().next();
+        System.out.println("===========:"+cc);
     }
 
 

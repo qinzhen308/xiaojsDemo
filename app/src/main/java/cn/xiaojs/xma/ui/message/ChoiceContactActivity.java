@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
-import cn.xiaojs.xma.model.Contact;
-import cn.xiaojs.xma.model.ContactGroup;
+import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 import java.util.ArrayList;

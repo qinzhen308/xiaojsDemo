@@ -12,7 +12,10 @@ import android.text.TextUtils;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.APPUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
@@ -24,6 +27,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,7 +67,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
         return serviceCallback;
     }
 
-    public void doTask(int apiType,T responseBody) { }
+    public void doTask(int apiType, T responseBody) {
+    }
 
     //Convert object to JSON string
     public String objectToJsonString(Object object) {
@@ -103,6 +108,27 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
         return errorCode;
 
+    }
+
+    private ContactGroup parseAddGroup(String body) {
+
+        ContactGroup contactGroup = null;
+
+        try {
+            JSONObject jobject = new JSONObject(body);
+
+            String key = jobject.keys().next();
+            String name = jobject.getString(key);
+
+            contactGroup = new ContactGroup();
+            contactGroup.name = name;
+            contactGroup.id = key;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return contactGroup;
     }
 
 
@@ -208,13 +234,12 @@ public class ServiceRequest<T> implements ContextLifecycle {
         }
 
 
-
     }
 
 
     private void cancelAndResetnull() {
 
-        if(serviceCall != null) {
+        if (serviceCall != null) {
             serviceCall.cancel();
         }
 
@@ -237,13 +262,13 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
     public final void enqueueRequest(final int apiType, Call<T> call) {
 
-        if (call ==null) {
+        if (call == null) {
             return;
         }
 
         serviceCall = call;
 
-        serviceCall.enqueue(new Callback<T>(){
+        serviceCall.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
 
@@ -277,7 +302,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 serviceCallback.onSuccess(object);
             }
 
-            doTask(apiType,object);
+            doTask(apiType, object);
 
         } else {
 
@@ -300,6 +325,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
         delRefrence();
     }
+
 
     private void onFailures(int apiType, Throwable t) {
         if (XiaojsConfig.DEBUG) {

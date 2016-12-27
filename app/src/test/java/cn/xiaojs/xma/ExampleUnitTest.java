@@ -1,6 +1,21 @@
 package cn.xiaojs.xma;
 
+import com.fasterxml.jackson.core.Base64Variant;
+import com.fasterxml.jackson.core.JsonLocation;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonStreamContext;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONObject;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -41,12 +56,12 @@ public class ExampleUnitTest {
 //
 //        fee1.setType(0);
 
-        Haha.No h = new Haha.No();
-        h.setNum(100);
-
-        Haha<Haha.No> haha = new Haha<>();
-        haha.setId("123456");
-        haha.setT(h);
+//        Haha.No h = new Haha.No();
+//        h.setNum(100);
+//
+//        Haha<Haha.No> haha = new Haha<>();
+//        haha.setId("123456");
+//        haha.setT(h);
 
 //        ServiceRequest serviceRequest = new ServiceRequest();
 //
@@ -63,6 +78,9 @@ public class ExampleUnitTest {
 //        Haha<Haha.No> haha1 = objectMapper.readValue(jj,javaType);
 //
 //        System.out.println(haha);
+
+
+
 
 
     }
