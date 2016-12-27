@@ -16,6 +16,7 @@ import cn.xiaojs.xma.data.db.LoadDataCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.Dynamic;
 
@@ -41,6 +42,13 @@ public class SocialManager extends DataManager {
 
     }
 
+    /**
+     * Add Contact Group
+     * Adds a custom contact group.
+     * @param context
+     * @param groupName
+     * @param callback
+     */
     public static void addContactGroup(@NonNull Context context,
                                        String groupName,
                                        @NonNull APIServiceCallback callback) {
@@ -56,6 +64,13 @@ public class SocialManager extends DataManager {
 
     }
 
+    /**
+     * Post Activity
+     * Posts an activity into one's Moments or specific Class Circles.
+     * @param context
+     * @param post
+     * @param callback
+     */
     public static void postActivity(@NonNull Context context,
                                     DynPost post,
                                     @NonNull APIServiceCallback<Dynamic> callback) {
@@ -69,6 +84,15 @@ public class SocialManager extends DataManager {
         socialRequest.postActivity(session, post);
     }
 
+    /**
+     * Get Activities
+     * Returns recent activities and new activity updates for a specific account,
+     * optionally filtered by criteria.
+     * @param context
+     * @param criteria
+     * @param pagination
+     * @param callback
+     */
     public static void getActivities(Context context,
                                      Criteria criteria,
                                      Pagination pagination,
@@ -82,4 +106,26 @@ public class SocialManager extends DataManager {
         SocialRequest socialRequest = new SocialRequest(context, callback);
         socialRequest.getActivities(session, criteria, pagination);
     }
+
+    /**
+     * Comment Activity
+     * Leaves a comment on the specific activity.
+     * @param context
+     * @param activity
+     * @param commentContent
+     * @param callback
+     */
+    public static void commentActivity(Context context, String activity, String commentContent, APIServiceCallback<Comment> callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.commentActivity(session,activity,commentContent);
+
+    }
+
+
 }
