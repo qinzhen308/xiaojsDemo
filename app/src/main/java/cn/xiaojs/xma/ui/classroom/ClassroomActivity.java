@@ -356,6 +356,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void openChat(int mode) {
         if (mChatPanel == null) {
             mChatPanel = new ChatPanel(this);
+            mChatPanel.setPanelCallback(new PanelCallback() {
+                @Override
+                public void onOpenPanel(int panel) {
+                    mChatPanel.close(mDrawerLayout, mDrawerRightLayout, false);
+                    openInviteFriend();
+                }
+            });
         }
         mChatPanel.with(mode).show(mDrawerLayout, mDrawerRightLayout);
     }
@@ -368,6 +375,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mMessagePanel = new MessagePanel(this);
         }
         mMessagePanel.show(mDrawerLayout, mDrawerRightLayout);
+    }
+
+    /**
+     * 邀请好友
+     */
+    private void openInviteFriend() {
+        if (mInviteFriendPanel == null) {
+            mInviteFriendPanel = new InviteFriendPanel(this);
+        }
+
+        mInviteFriendPanel.show(mDrawerLayout, mDrawerRightLayout);
     }
 
     /**

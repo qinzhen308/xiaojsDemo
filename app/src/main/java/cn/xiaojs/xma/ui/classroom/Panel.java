@@ -64,6 +64,14 @@ public abstract class Panel {
         initData();
     }
 
+    public void close(final DrawerLayout drawerLayout, final ViewGroup container, boolean animate ) {
+        if (drawerLayout == null || container == null) {
+            return;
+        }
+
+        drawerLayout.closeDrawer(container, animate);
+    }
+
     public void initChildView(View root) {
 
     }

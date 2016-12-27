@@ -54,12 +54,19 @@ public class ChatPanel extends Panel implements View.OnClickListener {
 
     private int mCurrentMode = MODE_CONTACT;
 
+    private PanelCallback mCallback;
+
     public ChatPanel(Context context) {
         super(context);
     }
 
     public ChatPanel with(int mode) {
         mCurrentMode = mode;
+        return this;
+    }
+
+    public ChatPanel setPanelCallback(PanelCallback callback) {
+        mCallback = callback;
         return this;
     }
 
@@ -136,6 +143,9 @@ public class ChatPanel extends Panel implements View.OnClickListener {
                 setContactBookData(false);
                 break;
             case R.id.add_contact:
+                if (mCallback != null) {
+                    mCallback.onOpenPanel(PanelCallback.INVITE_FRIEND_PANEL);
+                }
                 break;
             case R.id.manage_contact:
                 enterContactManagement();
