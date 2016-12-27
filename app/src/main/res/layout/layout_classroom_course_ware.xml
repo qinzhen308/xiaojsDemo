@@ -18,7 +18,7 @@
 
     <ListView
             android:id="@+id/course_ware_list"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/px500"
             android:layout_height="match_parent">
 
     </ListView>
