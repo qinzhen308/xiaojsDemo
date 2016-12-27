@@ -250,7 +250,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.course_ware_btn, R.id.setting_btn,
             R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn, R.id.play_pause_btn,
             R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.color_picker_btn,
-            R.id.exit_btn, R.id.main_screen_setting, R.id.save_white_board_btn})
+            R.id.exit_btn, R.id.main_screen_setting, R.id.save_white_board_btn, R.id.undo, R.id.redo})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -310,6 +310,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case R.id.eraser_btn:
             case R.id.text_btn:
             case R.id.color_picker_btn:
+            case R.id.undo:
+            case R.id.redo:
                 handleWhitePanelClick(v);
                 break;
             default:
@@ -569,6 +571,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         } else {
             mWhiteBoardPanel.setAlpha(1.0f);
             mWhiteBoardPanel.setVisibility(View.VISIBLE);
+            if (mWhiteboardController != null) {
+                mWhiteboardController.setUndoRedoStyle();
+            }
         }
     }
 

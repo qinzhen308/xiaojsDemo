@@ -19,8 +19,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.util.List;
+
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.ActionRecord;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.UndoRedoListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.ColorPickerPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.EraserPop;
@@ -35,24 +40,27 @@ public class WhiteboardController implements
         HandwritingPop.PaintChangeListener,
         GeometryPop.GeometryChangeListener,
         ColorPickerPop.ColorChangeListener,
-        TextPop.TextChangeListener {
+        TextPop.TextChangeListener,
+        UndoRedoListener {
 
-    ImageView mSelection;
-    ImageView mHandWriting;
-    ImageView mGeoShape;
-    ImageView mTextWriting;
-    ImageView mEraser;
-    CircleView mColorPicker;
+    private ImageView mSelection;
+    private ImageView mHandWriting;
+    private ImageView mGeoShape;
+    private ImageView mTextWriting;
+    private ImageView mEraser;
+    private CircleView mColorPicker;
+    private ImageView mUndo;
+    private ImageView mRedo;
 
-    HandwritingPop mPaintSetting;
-    EraserPop mEraserSetting;
-    GeometryPop mShapeSetting;
-    ColorPickerPop mColorSetting;
-    TextPop mTextSetting;
+    private HandwritingPop mPaintSetting;
+    private EraserPop mEraserSetting;
+    private GeometryPop mShapeSetting;
+    private ColorPickerPop mColorSetting;
+    private TextPop mTextSetting;
 
-    Whiteboard mWhiteboard;
-    Whiteboard mOldWhiteboard;
-    View mPanel;
+    private Whiteboard mWhiteboard;
+    private Whiteboard mOldWhiteboard;
+    private View mPanel;
 
     private Context mContext;
     private int mScreenWidth;
@@ -71,6 +79,8 @@ public class WhiteboardController implements
         mTextWriting = (ImageView) root.findViewById(R.id.text_btn);
         mEraser = (ImageView) root.findViewById(R.id.eraser_btn);
         mColorPicker = (CircleView) root.findViewById(R.id.color_picker_btn);
+        mUndo = (ImageView) root.findViewById(R.id.undo);
+        mRedo = (ImageView) root.findViewById(R.id.redo);
 
         mGeoShape.setImageResource(R.drawable.wb_oval_selector);
 
@@ -112,6 +122,14 @@ public class WhiteboardController implements
 
             case R.id.eraser_btn:
                 enterEraser();
+                break;
+
+            case R.id.undo:
+                undo();
+                break;
+
+            case R.id.redo:
+                redo();
                 break;
         }
     }
@@ -297,7 +315,7 @@ public class WhiteboardController implements
             if (mWhiteboard != null) {
                 mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
                 mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
-
+                mWhiteboard.setUndoRedoListener(this);
                 reset(whiteboard);
             }
         }
@@ -324,5 +342,29 @@ public class WhiteboardController implements
         if (mWhiteboard != null) {
             mWhiteboard.exit();
         }
+    }
+
+    public void setUndoRedoStyle() {
+        if (mWhiteboard != null) {
+            mUndo.setEnabled(mWhiteboard.isCanUndo());
+            mRedo.setEnabled(mWhiteboard.isCanRedo());
+        }
+    }
+
+    private void undo() {
+        if (mWhiteboard != null) {
+            mWhiteboard.undo();
+        }
+    }
+
+    private void redo() {
+        if (mWhiteboard != null) {
+            mWhiteboard.redo();
+        }
+    }
+
+    @Override
+    public void onUndoRedoStackChanged() {
+        setUndoRedoStyle();
     }
 }
