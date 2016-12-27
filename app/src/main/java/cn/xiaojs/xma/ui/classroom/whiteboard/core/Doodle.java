@@ -258,8 +258,8 @@ public abstract class Doodle implements Action {
             float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
             float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2 + WhiteboardConfigs.BORDER_PADDING;
             PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
-            float hPadding = p.x / mTotalScale * params.scale;
-            float vPadding = p.y / mTotalScale * params.scale;
+            float hPadding = p.x / mTotalScale;
+            float vPadding = p.y / mTotalScale;
             mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding, mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
 
             mBorderDrawingPath.reset();
