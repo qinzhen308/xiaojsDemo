@@ -16,6 +16,8 @@ public class Account implements Serializable{
     private String id;
     private Basic basic;
 
+    private boolean isPerson;
+
     public Basic getBasic() {
         return basic;
     }
@@ -30,6 +32,14 @@ public class Account implements Serializable{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isPerson() {
+        return isPerson;
+    }
+
+    public void setPerson(boolean person) {
+        isPerson = person;
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
