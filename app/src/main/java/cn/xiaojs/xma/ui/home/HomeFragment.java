@@ -19,8 +19,6 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -69,10 +67,6 @@ public class HomeFragment extends BaseFragment {
         mList = (PullToRefreshSwipeListView) v.findViewById(R.id.home_list);
         View header = mContext.getLayoutInflater().inflate(R.layout.layout_home_list_header,null);
         mList.getRefreshableView().addHeaderView(header);
-        View view = new View(mContext);
-        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mContext.getResources().getDimensionPixelSize(R.dimen.px100));
-        view.setLayoutParams(lp);
-        mList.getRefreshableView().addFooterView(view);
         return v;
     }
 

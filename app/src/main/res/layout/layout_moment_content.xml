@@ -142,44 +142,81 @@
 
         <!-- 报名的人、在教室的人、回答问题的人 -->
         <LinearLayout
-                android:background="@drawable/ic_student_bg"
-                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/px20"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                    android:id="@+id/moment_content_lesson_student_num"
-                    android:textColor="@color/common_text"
-                    android:layout_gravity="center_vertical"
-                    android:text="456人在教室"
-                    android:layout_marginLeft="@dimen/px10"
-                    android:textSize="@dimen/font_24px"
+            <ImageView
+                    android:src="@drawable/ic_grey_arrow_up"
+                    android:layout_marginLeft="@dimen/px50"
+                    android:scaleType="fitXY"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-            <cn.xiaojs.xma.ui.view.OverlayImages
-                    android:id="@+id/images"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginTop="@dimen/px5"
-                    android:layout_marginBottom="@dimen/px5"
-                    android:layout_marginLeft="@dimen/px10"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content"/>
+            <LinearLayout
+                    android:background="@drawable/grey_conner_bg"
+                    android:orientation="horizontal"
+                    android:minHeight="@dimen/px100"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                    android:id="@+id/moment_content_lesson_student_enter"
-                    android:textColor="@color/font_blue"
-                    android:textSize="@dimen/font_24px"
-                    android:text="进入教室"
-                    android:layout_marginLeft="@dimen/px20"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px20"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <TextView
+                        android:id="@+id/moment_content_lesson_student_num"
+                        android:textColor="@color/common_text"
+                        android:layout_gravity="center_vertical"
+                        android:text="456人在教室"
+                        android:layout_marginLeft="@dimen/px20"
+                        android:textSize="@dimen/font_24px"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <cn.xiaojs.xma.ui.view.OverlayImages
+                        android:id="@+id/images"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="@dimen/px10"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"/>
+
+                <FrameLayout
+                        android:background="@drawable/moment_light_blue_conner_bg"
+                        android:paddingLeft="@dimen/px10"
+                        android:paddingRight="@dimen/px30"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_marginLeft="@dimen/px20"
+                            android:layout_gravity="center_vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        <TextView
+                                android:id="@+id/moment_content_lesson_student_enter"
+                                android:textColor="@color/font_blue"
+                                android:textSize="@dimen/font_28px"
+                                android:text="进入教室"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        <TextView
+                                android:id="@+id/moment_content_lesson_student_remain"
+                                android:textColor="@color/font_orange"
+                                android:textSize="@dimen/font_20px"
+                                android:visibility="visible"
+                                android:text="还剩2个名额"
+                                android:layout_gravity="center_vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+            </LinearLayout>
         </LinearLayout>
-
 
     </LinearLayout>
 </merge>

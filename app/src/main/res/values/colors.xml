@@ -58,6 +58,9 @@
     <color name="top_cornor_bg">#f7f7f7</color>
     <color name="totally_red_font">#ff0000</color>
     <color name="clicked_grey_light">#d7d7db</color> <!-- 用于浅灰按钮hover -->
+    <color name="GreyWhite_has_alpha">#66FAFAFA</color>
+    <color name="transparent">#00000000</color>
+
 
     <color name="search_stroke">#d4d7dd</color>
     <color name="common_list_line">#33ffffff</color>
@@ -87,6 +90,7 @@
     <color name="light_blue1">#ebf6fa</color>
     <color name="light_blue2">#95cee3</color>
     <color name="light_grey1">#e0e5ed</color>
+    <color name="moment_light_blue">#e3e8f0</color>
 
     <color name="relationship_tag1">#6bd8ef</color>
     <color name="relationship_tag2">#9abef7</color>

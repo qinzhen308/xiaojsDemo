@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.core.GridViewWithHeaderAndFooter;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshGridView;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
@@ -46,13 +45,6 @@ public class LiveFragment extends BaseFragment {
         mHorizontalListView = (HorizontalAdaptScrollerView) mHeader.findViewById(R.id.home_live_brilliant);
         mGrid.getRefreshableView().addHeaderView(mHeader);
 
-        View view = new View(mContext);
-        GridViewWithHeaderAndFooter.LayoutParams lp = new GridViewWithHeaderAndFooter.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mContext.getResources().getDimensionPixelSize(R.dimen.px100));
-        view.setLayoutParams(lp);
-        mGrid.getRefreshableView().addFooterView(view);
-
-//        mTeach = (BottomLineTextView) mHeader.findViewById(R.id.home_lesson_tab_teach);
-//        mLearn = (BottomLineTextView) mHeader.findViewById(R.id.home_lesson_tab_learn);
         mLessonList = (CanInScrollviewListView) mHeader.findViewById(R.id.home_live_list);
 
         mLessonList.setNeedDivider(true);
@@ -79,10 +71,4 @@ public class LiveFragment extends BaseFragment {
         mLessonList.setAdapter(new LiveLessonAdapter(mContext));
     }
 
-//    private void switchTab(int position){
-//        Fragment f = getParentFragment();
-//        if (f != null && f instanceof LiveForeFragment){
-//            ((LiveForeFragment)f).switchTab(position);
-//        }
-//    }
 }
