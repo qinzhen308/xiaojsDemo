@@ -101,7 +101,7 @@ public class CropImageActivity extends BaseActivity {
 
                     @Override
                     protected String doInBackground(Integer... params) {
-                        return BitmapUtils.writeImage(mCropImage.getCropImage(),
+                        return BitmapUtils.saveImage(mCropImage.getCropImage(),
                                 FileUtil.SDCARD_PATH + CropImagePath.CROP_IMAGE_PATH, 90);
                     }
 

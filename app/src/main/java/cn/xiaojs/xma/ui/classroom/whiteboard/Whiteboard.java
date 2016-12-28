@@ -1263,5 +1263,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mUndoRedoListener = listener;
     }
 
+    public Bitmap getWhiteboardBitmap() {
+        return mDoodleBitmap;
+    }
+
+    public WhiteboardLayer getLayer() {
+        return mLayer;
+    }
+
 }
 
