@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
@@ -453,30 +454,6 @@ public class BitmapUtils {
         return bitmap;
     }
 
-    public static String writeImage(Bitmap bitmap, String destPath, int quality) {
-        if (bitmap == null) {
-            return destPath;
-        }
-
-        try {
-            FileUtil.deleteFile(destPath);
-            if (FileUtil.createFile(destPath)) {
-                FileOutputStream out = new FileOutputStream(destPath);
-                if (bitmap.compress(Bitmap.CompressFormat.JPEG, quality, out)) {
-                    out.flush();
-                    out.close();
-                    out = null;
-                }
-            }
-            bitmap.recycle();
-            bitmap = null;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return destPath;
-    }
-
     /**
      * 根据传入参数压缩图片
      *
@@ -533,6 +510,154 @@ public class BitmapUtils {
         if (buffer.length >= fileSize)
             return bitmap;
         return BitmapFactory.decodeByteArray(buffer, 0, buffer.length);
+    }
+
+    //saves the lossless compression jpg image to the file
+    public static String saveImage(Bitmap bitmap, String destPath, int quality) {
+        return saveImage(bitmap, destPath, quality, true);
+    }
+
+    public static String saveImage(Bitmap bitmap, String destPath, int quality, boolean recycle) {
+        if (bitmap == null) {
+            return destPath;
+        }
+
+        try {
+            FileUtil.deleteFile(destPath);
+            if (FileUtil.createFile(destPath)) {
+                FileOutputStream out = new FileOutputStream(destPath);
+                if (bitmap.compress(Bitmap.CompressFormat.JPEG, quality, out)) {
+                    out.flush();
+                    out.close();
+                    out = null;
+                }
+            }
+            if (recycle) {
+                bitmap.recycle();
+                bitmap = null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return destPath;
+    }
+
+    //saves the lossless compression bmp image to the file
+    public static File saveBMPImage(Context context, Bitmap bitmap, File oldFile) {
+        File tempFile = null;
+        FileOutputStream fos = null;
+        File newFile = new File(oldFile.getAbsolutePath());
+        if (bitmap == null)
+            return null;
+
+        int nBmpWidth = bitmap.getWidth();
+        int nBmpHeight = bitmap.getHeight();
+        //image buffer data size
+        int bufferSize = nBmpHeight * (nBmpWidth * 3 + nBmpWidth % 4);
+        try {
+            String filename = oldFile.getAbsolutePath()+System.currentTimeMillis();
+            tempFile = new File(filename);
+            if (!tempFile.exists()) {
+                tempFile.createNewFile();
+            }
+            fos = new FileOutputStream(filename);
+            //file header of bmp
+            int bfType = 0x4d42;
+            long bfSize = 14 + 40 + bufferSize;
+            int bfReserved1 = 0;
+            int bfReserved2 = 0;
+            long bfOffBits = 14 + 40;
+            //save file header
+            writeWord(fos, bfType);
+            writeDword(fos, bfSize);
+            writeWord(fos, bfReserved1);
+            writeWord(fos, bfReserved2);
+            writeDword(fos, bfOffBits);
+            //info header of bmp
+            long biSize = 40L;
+            long biWidth = nBmpWidth;
+            long biHeight = nBmpHeight;
+            int biPlanes = 1;
+            int biBitCount = 24;
+            long biCompression = 0L;
+            long biSizeImage = 0L;
+            long biXpelsPerMeter = 0L;
+            long biYPelsPerMeter = 0L;
+            long biClrUsed = 0L;
+            long biClrImportant = 0L;
+            //save info header of bmp
+            writeDword(fos, biSize);
+            writeLong(fos, biWidth);
+            writeLong(fos, biHeight);
+            writeWord(fos, biPlanes);
+            writeWord(fos, biBitCount);
+            writeDword(fos, biCompression);
+            writeDword(fos, biSizeImage);
+            writeLong(fos, biXpelsPerMeter);
+            writeLong(fos, biYPelsPerMeter);
+            writeDword(fos, biClrUsed);
+            writeDword(fos, biClrImportant);
+            //scans bmp pixel
+            byte bmpData[] = new byte[bufferSize];
+            int wWidth = (nBmpWidth * 3 + nBmpWidth % 4);
+            for (int nCol = 0, nRealCol = nBmpHeight - 1; nCol < nBmpHeight; ++nCol, --nRealCol) {
+                for (int wRow = 0, wByteIdex = 0; wRow < nBmpWidth; wRow++, wByteIdex += 3) {
+                    int clr = bitmap.getPixel(wRow, nCol);
+                    bmpData[nRealCol * wWidth + wByteIdex] = (byte) Color.blue(clr);
+                    bmpData[nRealCol * wWidth + wByteIdex + 1] = (byte) Color.green(clr);
+                    bmpData[nRealCol * wWidth + wByteIdex + 2] = (byte) Color.red(clr);
+                }
+            }
+
+            fos.write(bmpData);
+            fos.flush();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (oldFile != null && oldFile.exists()) {
+            //oldFile.delete();
+            FileUtil.deleteFile(oldFile.getAbsolutePath());
+        }
+        tempFile.renameTo(newFile);
+        return newFile;
+    }
+
+    private static void writeWord(FileOutputStream stream, int value) throws IOException {
+        byte[] b = new byte[2];
+        b[0] = (byte) (value & 0xff);
+        b[1] = (byte) (value >> 8 & 0xff);
+        stream.write(b);
+    }
+
+
+    private static void writeDword(FileOutputStream stream, long value) throws IOException {
+        byte[] b = new byte[4];
+        b[0] = (byte) (value & 0xff);
+        b[1] = (byte) (value >> 8 & 0xff);
+        b[2] = (byte) (value >> 16 & 0xff);
+        b[3] = (byte) (value >> 24 & 0xff);
+        stream.write(b);
+    }
+
+    private static void writeLong(FileOutputStream stream, long value) throws IOException {
+        byte[] b = new byte[4];
+        b[0] = (byte) (value & 0xff);
+        b[1] = (byte) (value >> 8 & 0xff);
+        b[2] = (byte) (value >> 16 & 0xff);
+        b[3] = (byte) (value >> 24 & 0xff);
+        stream.write(b);
     }
 
     public static Drawable getDrawableWithText(Context context, int icon, String text) {

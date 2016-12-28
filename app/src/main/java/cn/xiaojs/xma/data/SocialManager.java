@@ -20,6 +20,7 @@ import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.Relation;
 
 /**
  * Created by maxiaobao on 2016/12/23.
@@ -236,6 +237,47 @@ public class SocialManager extends DataManager {
         }
         SocialRequest socialRequest = new SocialRequest(context, callback);
         socialRequest.getUpdates(session,pagination);
+
+    }
+
+    /**
+     * Follow Contact
+     * Follows the specific account.
+     * @param context
+     * @param contact
+     * @param group
+     * @param callback
+     */
+    public static void followContact(Context context,
+                                     String contact,
+                                     int group,
+                                     APIServiceCallback<Relation> callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.followContact(session,contact,group);
+    }
+
+
+    /**
+     * Unfollow Contact
+     * Cancels followship with the specific contact.
+     * @param context
+     * @param contact
+     * @param callback
+     */
+    public static void unfollowContact(Context context, String contact,APIServiceCallback callback) {
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.unfollowContact(session,contact);
 
     }
 

@@ -22,6 +22,7 @@ import java.util.UUID;
 public class WhiteboardLayer {
     public static final float DOODLE_CANVAS_RATIO = 4 / 3.0F; // w:h = 4:3
     private String mWhiteboardId;
+    private String mWhiteboardName;
 
     private ArrayList<Doodle> mAllDoodles;
     private ArrayList<Doodle> mReDoStack;
@@ -47,6 +48,14 @@ public class WhiteboardLayer {
 
     public ArrayList<Doodle> getReDoStack() {
         return mReDoStack;
+    }
+
+    public String getWhiteboardId (){
+        return mWhiteboardId;
+    }
+
+    public String getWhiteboardName() {
+        return mWhiteboardName;
     }
 
 }
