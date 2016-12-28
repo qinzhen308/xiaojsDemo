@@ -58,6 +58,7 @@ public class APIType {
     public static final int GET_NOTIFICATIONS = 41;
     public static final int IGNORE_NOTIFICATIONS = 42;
 
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Security
     //
@@ -81,4 +82,13 @@ public class APIType {
     public static final int REPLAY_COMMENT = 65;
     public static final int REPLAY_2_REPLY = 66;
     public static final int GET_UPDATES = 67;
+    public static final int FOLLOW_CONTACT = 68;
+    public static final int UNFOLLOW_CONTACT = 69;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Search
+    //
+
+    public static final int SEARCH_ACCOUNT = 7;
+
 }

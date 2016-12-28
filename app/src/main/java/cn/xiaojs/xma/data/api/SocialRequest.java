@@ -19,6 +19,8 @@ import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.FollowParam;
+import cn.xiaojs.xma.model.social.Relation;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -124,6 +126,21 @@ public class SocialRequest extends ServiceRequest {
         }
         Call<CollectionPage<DynUpdate>> call = getService().getUpdates(session,paginationJsonstr);
         enqueueRequest(APIType.GET_UPDATES,call);
+    }
+
+    public void followContact(@NonNull String session, String contact, int group) {
+
+        FollowParam param = new FollowParam();
+        param.contact = contact;
+        param.group = group;
+
+        Call<Relation> call = getService().followContact(session,param);
+        enqueueRequest(APIType.FOLLOW_CONTACT,call);
+    }
+
+    public void unfollowContact(@NonNull String session, String contact) {
+        Call<ResponseBody> call = getService().unfollowContact(session,contact);
+        enqueueRequest(APIType.UNFOLLOW_CONTACT,call);
     }
 
 }

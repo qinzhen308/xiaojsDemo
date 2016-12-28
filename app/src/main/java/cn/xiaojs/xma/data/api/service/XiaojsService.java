@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.data.api.service;
 
+import java.util.ArrayList;
+
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
 import cn.xiaojs.xma.model.Account;
@@ -29,11 +31,14 @@ import cn.xiaojs.xma.model.RegisterInfo;
 import cn.xiaojs.xma.model.TokenResponse;
 import cn.xiaojs.xma.model.VerifyCode;
 
+import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.FollowParam;
+import cn.xiaojs.xma.model.social.Relation;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -223,6 +228,20 @@ public interface XiaojsService {
                                               @Path("criteria") String criteria);
 
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Search
+    // Provides access to platform search interfaces accessible to the Xiaojs client applications.
+    //
+
+    //Search Accounts
+    @GET("/v1/search/accounts/{query}")
+    Call<ArrayList<AccountSearch>> searchAccounts(@Path("query") String query);
+
+
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Security
@@ -272,13 +291,6 @@ public interface XiaojsService {
                                   @Path("activity") String activity,
                                   @Body Comment comment);
 
-    //Follow Contact
-    @Headers("Content-Type: application/json")
-    @POST("/v1/social/contacts")
-    Call<ResponseBody> followContact(@Header("SessionID") String sessionID,
-                                     String contact,
-                                     int group);
-
     // Get Activities
     @GET("/v1/social/activities/{criteria}/{pagination}")
     Call<CollectionPage<Dynamic>> getActivities(@Header("SessionID") String sessionID,
@@ -326,5 +338,15 @@ public interface XiaojsService {
                               @Body Comment comment);
 
 
+    //Follow Contact
+    @Headers("Content-Type: application/json")
+    @POST("/v1/social/contacts")
+    Call<Relation> followContact(@Header("SessionID") String sessionID, @Body FollowParam param);
+
+
+    //Unfollow Contact
+    @DELETE("/v1/social/contacts/{contact}")
+    Call<ResponseBody> unfollowContact(@Header("SessionID") String sessionID,
+                                       @Path("contact") String contact);
 
 }
