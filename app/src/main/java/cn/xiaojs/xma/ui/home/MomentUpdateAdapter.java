@@ -17,18 +17,22 @@ package cn.xiaojs.xma.ui.home;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cn.xiaojs.xma.R;
 import butterknife.BindView;
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.ui.view.MomentUpdateTargetView;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.TimeUtil;
 
-public class MomentUpdateAdapter extends AbsSwipeAdapter<RecommendCourseBean, MomentUpdateAdapter.Holder> {
+public class MomentUpdateAdapter extends AbsSwipeAdapter<DynUpdate, MomentUpdateAdapter.Holder> {
 
 
     public MomentUpdateAdapter(Context context, PullToRefreshSwipeListView listView) {
@@ -40,14 +44,12 @@ public class MomentUpdateAdapter extends AbsSwipeAdapter<RecommendCourseBean, Mo
     }
 
     @Override
-    protected void setViewContent(Holder holder, RecommendCourseBean bean, int position) {
-        if (position % 3 == 0){
-            holder.target.show(1);
-        }else if (position % 3 == 1){
-            holder.target.show(2);
-        }else {
-            holder.target.show(3);
-        }
+    protected void setViewContent(Holder holder, DynUpdate bean, int position) {
+        holder.name.setText(bean.behavedBy.name);
+        holder.behavior.setText(bean.tips);
+        holder.time.setText(TimeUtil.getTimeByNow(bean.createdOn));
+        holder.content.setText(bean.body.summary);
+        holder.target.show(bean);
     }
 
     @Override
@@ -64,25 +66,37 @@ public class MomentUpdateAdapter extends AbsSwipeAdapter<RecommendCourseBean, Mo
 
     @Override
     protected void doRequest() {
-        List<RecommendCourseBean> list = new ArrayList<>();
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
+        SocialManager.getUpdates(mContext, mPagination, new APIServiceCallback<CollectionPage<DynUpdate>>() {
+            @Override
+            public void onSuccess(CollectionPage<DynUpdate> object) {
+                if (object != null){
+                    MomentUpdateAdapter.this.onSuccess(object.objectsOfPage);
+                }else {
+                    MomentUpdateAdapter.this.onSuccess(null);
+                }
+            }
 
-        onSuccess(list);
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                MomentUpdateAdapter.this.onFailure(errorCode,errorMessage);
+            }
+        });
     }
 
     class Holder extends BaseHolder {
 
         @BindView(R.id.moment_update_item_target)
         MomentUpdateTargetView target;
+        @BindView(R.id.moment_update_item_portrait)
+        RoundedImageView portrait;
+        @BindView(R.id.moment_update_item_name)
+        TextView name;
+        @BindView(R.id.moment_update_item_behavior)
+        TextView behavior;
+        @BindView(R.id.moment_update_item_time)
+        TextView time;
+        @BindView(R.id.moment_update_item_content)
+        TextView content;
 
         public Holder(View view) {
             super(view);

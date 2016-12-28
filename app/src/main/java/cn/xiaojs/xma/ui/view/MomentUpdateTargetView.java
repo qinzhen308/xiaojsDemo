@@ -16,14 +16,18 @@ package cn.xiaojs.xma.ui.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.model.social.DynUpdate;
 
 public class MomentUpdateTargetView extends FrameLayout {
 
@@ -33,6 +37,8 @@ public class MomentUpdateTargetView extends FrameLayout {
     ImageView mImage;
     @BindView(R.id.moment_update_target_lesson_wrapper)
     LinearLayout mLessonWrapper;
+    @BindView(R.id.moment_update_target_word)
+    TextView mTargetWord;
 
     public static final int TYPE_WORD = 1;
     public static final int TYPE_IMAGE = 2;
@@ -77,6 +83,20 @@ public class MomentUpdateTargetView extends FrameLayout {
             mWordWrapper.setVisibility(GONE);
             mImage.setVisibility(GONE);
             mLessonWrapper.setVisibility(VISIBLE);
+        }
+    }
+
+    public void show(DynUpdate bean){
+        if (bean == null)
+            return;
+        //个人动态
+        if (bean.source.subtype.equalsIgnoreCase(Social.ActivityType.POST_ACTIIVTY)){
+            if (bean.body.ref != null && TextUtils.isEmpty(bean.body.ref.snap)){
+                show(TYPE_WORD);
+            }else {
+                show(TYPE_LESSON);
+            }
+            mTargetWord.setText(bean.body.ref.title);
         }
     }
 }
