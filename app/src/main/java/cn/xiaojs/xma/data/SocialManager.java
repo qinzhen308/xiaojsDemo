@@ -20,6 +20,8 @@ import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.DynamicDetail;
+import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.model.social.Relation;
 
 /**
@@ -278,6 +280,50 @@ public class SocialManager extends DataManager {
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
         socialRequest.unfollowContact(session,contact);
+
+    }
+
+    /**
+     * Get Activity Details
+     * Returns details for a specific activity.
+     * @param context
+     * @param activity
+     * @param callback
+     */
+    public static void getActivityDetails(Context context,
+                                          String activity,
+                                          APIServiceCallback<DynamicDetail> callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.getActivityDetails(session,activity);
+
+    }
+
+    /**
+     * Get Liked Records
+     * Returns a specific page of liked records for the specific document.
+     * @param context
+     * @param criteria
+     * @param pagination
+     * @param callback
+     */
+    public static void getLikedRecords(Context context,
+                                       Criteria criteria,
+                                       Pagination pagination,
+                                       APIServiceCallback<CollectionPage<LikedRecord>> callback) {
+
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.getLikedRecords(session,criteria,pagination);
 
     }
 
