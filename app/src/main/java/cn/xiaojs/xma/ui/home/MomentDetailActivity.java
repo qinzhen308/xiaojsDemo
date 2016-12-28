@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +26,12 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.view.MomentContent;
+import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout;
 
 public class MomentDetailActivity extends BaseActivity {
@@ -35,6 +41,16 @@ public class MomentDetailActivity extends BaseActivity {
     PullToRefreshSwipeListView mList;
     @BindView(R.id.moment_detail_image_expand)
     ImageMatrixExpandableLayout mExpand;
+    @BindView(R.id.moment_detail_header)
+    MomentHeader mHeader;
+    @BindView(R.id.moment_detail_content)
+    MomentContent mContent;
+    @BindView(R.id.moment_detail_prise_sum)
+    TextView mPraiseNum;
+    @BindView(R.id.moment_detail_prise)
+    TextView mPraise;
+    @BindView(R.id.moment_detail_comment_summary)
+    TextView mCommentSummary;
 
     private String mMomentId;
     private MomentDetailAdapter mAdapter;
@@ -50,15 +66,52 @@ public class MomentDetailActivity extends BaseActivity {
         }
         initList();
         mBinder = ButterKnife.bind(this);
-        mExpand.show(100);
+        request();
+    }
+
+    private void request(){
+        showProgress(false);
+        SocialManager.getActivityDetails(this, mMomentId, new APIServiceCallback<DynamicDetail>() {
+            @Override
+            public void onSuccess(DynamicDetail object) {
+                cancelProgress();
+                initView(object);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                showFailedView(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        request();
+                    }
+                });
+            }
+        });
     }
 
     private void initList(){
         mList = (PullToRefreshSwipeListView) findViewById(R.id.moment_detail_list);
         View header = LayoutInflater.from(this).inflate(R.layout.layout_moment_detail_header,null);
         mList.getRefreshableView().addHeaderView(header);
-        mAdapter = new MomentDetailAdapter(this,mList,true,mMomentId,"PostActivity");
+    }
+
+    private void initView(DynamicDetail detail){
+        if (detail == null)
+            return;
+        mHeader.setData(detail);
+        mContent.show(detail.body,detail.typeName);
+        mExpand.show(100);
+        mAdapter = new MomentDetailAdapter(this,mList,true,mMomentId,detail.typeName);
         mList.setAdapter(mAdapter);
+        mPraiseNum.setText(getString(R.string.praise_summary,detail.stats.liked));
+        mCommentSummary.setText(getString(R.string.comment_summary,detail.stats.comments));
+        if (detail.liked){
+            mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_on,0,0,0);
+        }else {
+            mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_off,0,0,0);
+        }
     }
 
     @Override

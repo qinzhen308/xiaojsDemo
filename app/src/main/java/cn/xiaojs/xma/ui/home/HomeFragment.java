@@ -31,6 +31,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.banner.BannerAdapter;
 import cn.xiaojs.xma.ui.widget.banner.BannerBean;
 import cn.xiaojs.xma.ui.widget.banner.BannerView;
@@ -117,7 +118,8 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.home_moment_mark_wrapper,R.id.home_moment_mark_right_wrapper})
+    @OnClick({R.id.home_moment_mark_wrapper,R.id.home_moment_mark_right_wrapper,
+                R.id.home_search,R.id.home_search_wrapper})
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.home_moment_mark_wrapper:
@@ -127,6 +129,11 @@ public class HomeFragment extends BaseFragment {
                 break;
             case R.id.right_view:
 //                ToastUtil.showToast(mContext,"message");
+                break;
+            case R.id.home_search:
+            case R.id.home_search_wrapper:
+                Intent search = new Intent(mContext, SearchActivity.class);
+                mContext.startActivity(search);
                 break;
         }
     }

@@ -14,13 +14,25 @@ package cn.xiaojs.xma.ui.search;
  *
  * ======================================================================================== */
 
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.SearchManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 public class SearchActivity extends BaseActivity {
 
@@ -28,64 +40,67 @@ public class SearchActivity extends BaseActivity {
     CanInScrollviewListView mLesson;
     @BindView(R.id.search_people_list)
     CanInScrollviewListView mPeople;
+    @BindView(R.id.search_input)
+    EditText mInput;
+
+    @BindView(R.id.search_organization_head)
+    RoundedImageView mOrganizationHead;
+    @BindView(R.id.search_organization_name)
+    TextView mOrganizationName;
+    @BindView(R.id.search_organization_level)
+    TextView mOrganizationLevel;
+
+    @BindView(R.id.search_lesson_list_wrapper)
+    View mLessonWrapper;
+    @BindView(R.id.search_people_list_wrapper)
+    View mPeopleWrapper;
+    @BindView(R.id.search_organization_list_wrapper)
+    View mOrganizationWrapper;
+
+    private final int MAX_LESSON = 3;
+    private final int MAX_PEOPLE = 3;
+    private final int MAX_ORGANIZATION = 1;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_global_search);
         needHeader(false);
-        CanInScrollviewListView.Adapter adapter = new SearchLessonAdapter(this,null);
-        //mLesson.setDividerColor(R.color.main_bg);
-        mLesson.setNeedDivider(true);
-        mLesson.setAdapter(adapter);
+//        CanInScrollviewListView.Adapter adapter = new SearchLessonAdapter(this,null);
+//        mLesson.setNeedDivider(true);
+//        mLesson.setAdapter(adapter);
+//
+//        CanInScrollviewListView.Adapter adapter1 = new SearchPeopleAdapter(this,null);
+//        //mLesson.setDividerColor(R.color.main_bg);
+//        mPeople.setNeedDivider(true);
+//        mPeople.setAdapter(adapter1);
+        mInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        CanInScrollviewListView.Adapter adapter1 = new SearchPeopleAdapter(this,null);
-        //mLesson.setDividerColor(R.color.main_bg);
-        mPeople.setNeedDivider(true);
-        mPeople.setAdapter(adapter1);
+            }
 
-//        tt.setText("这个是中文");
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ic_msg_bg);
-//        tt.setIcon(BitmapUtils.getDrawableWithText(this,bitmap.copy(Bitmap.Config.ARGB_8888,true),"22"));
-//        mExpand.show(28);
-//        Bitmap b1 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//        Bitmap b2 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//        Bitmap b3 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//        Bitmap b4 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//        Bitmap b5 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//        Bitmap b6 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//        Bitmap b7 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//        Bitmap b8 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//        Bitmap b9= BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//        Bitmap b10 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_center_shader);
-//
-//        List<Bitmap> list = new ArrayList<>();
-//        list.add(b1);
-//        list.add(b2);
-//        list.add(b3);
-//        list.add(b4);
-//        list.add(b5);
-//        list.add(b6);
-//        list.add(b7);
-//        list.add(b8);
-////        list.add(b9);
-////        list.add(b10);
-////        list.add(b10);
-////        list.add(b10);
-////        list.add(b10);
-////        list.add(b10);
-////        list.add(b10);
-////        list.add(b10);
-////        list.add(b10);
-//
-//        flow.show(list);
-//
-//        Spannable spannable = StringUtil.getSpecialString("显示一种颜色一种","一种",getResources().getColor(R.color.font_blue));
-//        tx.setText(spannable);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                search();
+            }
+        });
     }
 
-    @OnClick({R.id.search_lesson_more,R.id.search_people_more,R.id.search_organization_more,
-                R.id.search_organization_result})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.search_lesson_more, R.id.search_people_more, R.id.search_organization_more,
+            R.id.search_organization_result, R.id.back})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            case R.id.search_ok:
+                search();
+                break;
             case R.id.search_lesson_more:
                 break;
             case R.id.search_people_more:
@@ -94,6 +109,57 @@ public class SearchActivity extends BaseActivity {
                 break;
             case R.id.search_organization_result:
                 break;
+        }
+    }
+
+    private void search() {
+        String query = mInput.getText().toString();
+        if (TextUtils.isEmpty(query))
+            return;
+        SearchManager.searchAccounts(this, query, new APIServiceCallback<ArrayList<AccountSearch>>() {
+            @Override
+            public void onSuccess(ArrayList<AccountSearch> object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+    }
+
+    private void updateDisplay(ArrayList<AccountSearch> result) {
+        if (result == null)
+            return;
+        List<AccountSearch> lessons = SearchBusiness.getSearchResultByType(result, "Lesson");
+        List<AccountSearch> people = SearchBusiness.getSearchResultByType(result, "Person");
+        List<AccountSearch> organization = SearchBusiness.getSearchResultByType(result, "Organization");
+
+        if (lessons != null && lessons.size() > 0) {
+            mLessonWrapper.setVisibility(View.VISIBLE);
+            CanInScrollviewListView.Adapter adapter = new SearchLessonAdapter(this, lessons, MAX_LESSON);
+            mLesson.setNeedDivider(true);
+            mLesson.setAdapter(adapter);
+        } else {
+            mLessonWrapper.setVisibility(View.GONE);
+        }
+
+        if (people != null && people.size() > 0) {
+            mPeopleWrapper.setVisibility(View.VISIBLE);
+            CanInScrollviewListView.Adapter adapter1 = new SearchPeopleAdapter(this, people,MAX_PEOPLE);
+            mPeople.setNeedDivider(true);
+            mPeople.setAdapter(adapter1);
+        } else {
+            mPeopleWrapper.setVisibility(View.GONE);
+        }
+
+        if (organization != null && organization.size() > 0) {
+            mOrganizationWrapper.setVisibility(View.VISIBLE);
+            AccountSearch search = organization.get(0);
+            mOrganizationName.setText(search._source.basic.getName());
+        } else {
+            mOrganizationWrapper.setVisibility(View.GONE);
         }
     }
 }

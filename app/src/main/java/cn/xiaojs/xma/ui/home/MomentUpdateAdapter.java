@@ -48,7 +48,12 @@ public class MomentUpdateAdapter extends AbsSwipeAdapter<DynUpdate, MomentUpdate
         holder.name.setText(bean.behavedBy.name);
         holder.behavior.setText(bean.tips);
         holder.time.setText(TimeUtil.getTimeByNow(bean.createdOn));
-        holder.content.setText(bean.body.summary);
+        if (bean.body == null){
+            holder.content.setVisibility(View.GONE);
+        }else {
+            holder.content.setVisibility(View.VISIBLE);
+            holder.content.setText(bean.body.summary);
+        }
         holder.target.show(bean);
     }
 

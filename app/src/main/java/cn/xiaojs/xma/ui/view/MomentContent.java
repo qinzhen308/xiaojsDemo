@@ -24,10 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -144,24 +140,23 @@ public class MomentContent extends RelativeLayout {
 
     private void showNormal(Dynamic.DynBody body){
         mNormalContent.setText(body.text);
-        body.drawings = new Dynamic.DynPhoto[1];
-        body.drawings[0] = new Dynamic.DynPhoto();
-        body.drawings[0].name = "http://pic.58pic.com/58pic/13/42/89/02A58PICR6b_1024.jpg";
+        if (body.drawings == null || body.drawings.length == 0){
+            body.drawings = new Dynamic.DynPhoto[1];
+            body.drawings[0] = new Dynamic.DynPhoto();
+            body.drawings[0].name = "http://pic.58pic.com/58pic/13/42/89/02A58PICR6b_1024.jpg";
+        }
         if (body.drawings != null && body.drawings.length > 0){
+            Dynamic.DynPhoto photo = body.drawings[0];
+            if (photo.width > 0 && photo.height > 0){
+                int[] res = XjsUtils.getLimitFormat(photo.width,photo.height);
+                ViewGroup.LayoutParams lp = mNormalImage.getLayoutParams();
+                lp.width = res[0];
+                lp.height = res[1];
+            }
             Glide.with(getContext()).
-                    load(body.drawings[0].name).
+                    load(photo.name).
                     error(R.drawable.default_lesson_cover).
-                    into(new GlideDrawableImageViewTarget(mNormalImage){
-                        @Override
-                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                            super.onResourceReady(resource, animation);
-                            int[] res = XjsUtils.getLimitFormat(resource.getIntrinsicWidth(),resource.getIntrinsicHeight());
-                            ViewGroup.LayoutParams lp = mNormalImage.getLayoutParams();
-                            lp.width = res[0];
-                            lp.height = res[1];
-                            Logger.i("w = " + res[0] + " h = " + res[1]);
-                        }
-                    });
+                    into(mNormalImage);
         }else {
             mNormalImage.setVisibility(GONE);
         }

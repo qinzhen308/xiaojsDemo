@@ -7,6 +7,7 @@
               android:layout_height="wrap_content">
 
     <cn.xiaojs.xma.ui.widget.RoundedImageView
+            android:id="@+id/search_people_head"
             app:oval="true"
             android:scaleType="fitXY"
             android:src="@drawable/default_portrait"
@@ -39,6 +40,7 @@
                     android:layout_height="wrap_content"/>
 
             <cn.xiaojs.xma.ui.widget.EvaluationStar
+                    android:id="@+id/search_people_star"
                     android:layout_centerInParent="true"
                     android:layout_toRightOf="@id/search_people_item_name"
                     android:layout_marginLeft="@dimen/px30"
@@ -46,6 +48,7 @@
                     android:layout_height="wrap_content"/>
 
             <ImageView
+                    android:id="@+id/search_people_relationship"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/ic_follow_both"
@@ -60,6 +63,7 @@
                 android:layout_height="wrap_content">
 
             <TextView
+                    android:id="@+id/search_people_tag"
                     android:text="同学"
                     android:textSize="@dimen/font_28px"
                     android:textColor="@color/common_text"
@@ -67,6 +71,7 @@
                     android:layout_height="wrap_content"/>
 
             <TextView
+                    android:id="@+id/search_people_desc"
                     android:text="2017考研政治高分培训小班"
                     android:layout_marginLeft="@dimen/px30"
                     android:textSize="@dimen/font_28px"

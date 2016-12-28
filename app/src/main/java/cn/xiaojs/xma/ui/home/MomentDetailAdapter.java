@@ -120,6 +120,16 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAd
         ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_COMMENT);
     }
 
+    @Override
+    protected boolean showEmptyView() {
+        return false;
+    }
+
+    @Override
+    protected boolean showFailedView() {
+        return false;
+    }
+
     class Holder extends BaseHolder {
 
         @BindView(R.id.moment_comment_name)

@@ -6,6 +6,7 @@
               android:layout_height="match_parent">
 
     <cn.xiaojs.xma.ui.view.MomentHeader
+            android:id="@+id/moment_detail_header"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"
             android:layout_marginTop="@dimen/px30"
@@ -14,6 +15,7 @@
             android:layout_height="wrap_content"/>
 
     <cn.xiaojs.xma.ui.view.MomentContent
+            android:id="@+id/moment_detail_content"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"
             android:layout_marginTop="@dimen/px30"
@@ -28,7 +30,6 @@
                 android:id="@+id/moment_detail_prise_sum"
                 android:textColor="@color/common_text"
                 android:textSize="@dimen/font_28px"
-                android:text="22人觉得很赞"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_alignParentLeft="true"
                 android:paddingTop="@dimen/px30"
@@ -72,7 +73,6 @@
             android:id="@+id/moment_detail_comment_summary"
             android:textColor="@color/common_text"
             android:textSize="@dimen/font_28px"
-            android:text="222条评论"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginTop="@dimen/px30"
             android:layout_marginBottom="@dimen/px30"
