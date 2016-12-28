@@ -358,8 +358,8 @@ public interface XiaojsService {
                                        @Path("contact") String contact);
 
     //Get Contacts
-//    @GET("/v1/social/contacts")
-//    getContacts(@Header("SessionID") String sessionID);
+    @GET("/v1/social/contacts")
+    Call<ArrayList<ContactGroup>> getContacts(@Header("SessionID") String sessionID);
 
 
     // Get Liked Records

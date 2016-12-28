@@ -165,4 +165,9 @@ public class SocialRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_LINKED_RECORDS,call);
     }
 
+    public void getContacts(@NonNull String session){
+        Call<ArrayList<ContactGroup>> call = getService().getContacts(session);
+        enqueueRequest(APIType.GET_CONTACTS,call);
+    }
+
 }
