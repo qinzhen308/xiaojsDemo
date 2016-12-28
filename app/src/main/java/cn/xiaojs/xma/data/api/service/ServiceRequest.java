@@ -327,8 +327,12 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 e.printStackTrace();
             }
 
+            Error error = getError(errorBody);
+            String errorCode = "-1";
 
-            String errorCode = getError(errorBody).ec;
+            if (error != null){
+                errorCode = error.ec;
+            }
             String errorMessage = ErrorPrompts.getErrorMessage(apiType, errorCode);
 
             if (serviceCallback != null) {

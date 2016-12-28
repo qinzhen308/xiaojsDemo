@@ -37,7 +37,9 @@ import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.FollowParam;
+import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.model.social.Relation;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -297,6 +299,12 @@ public interface XiaojsService {
                                                 @Path("criteria") String criteria,
                                                 @Path("pagination") String pagination);
 
+    // Get Activity Details
+    @GET("/v1/social/activities/{activity}")
+    Call<DynamicDetail> getActivityDetails(@Header("SessionID") String sessionID,
+                                           @Path("activity") String activity);
+
+
 
     //Get Comments
     @GET("/v1/social/comments/{criteria}/{pagination}")
@@ -348,5 +356,16 @@ public interface XiaojsService {
     @DELETE("/v1/social/contacts/{contact}")
     Call<ResponseBody> unfollowContact(@Header("SessionID") String sessionID,
                                        @Path("contact") String contact);
+
+    //Get Contacts
+//    @GET("/v1/social/contacts")
+//    getContacts(@Header("SessionID") String sessionID);
+
+
+    // Get Liked Records
+    @GET("/v1/social/liked/{criteria}/{pagination}")
+    Call<CollectionPage<LikedRecord>> getLikedRecords(@Header("SessionID") String sessionID,
+                                                      @Path("criteria") String criteria,
+                                                      @Path("pagination") String pagination);
 
 }

@@ -19,7 +19,9 @@ import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.FollowParam;
+import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.model.social.Relation;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -141,6 +143,26 @@ public class SocialRequest extends ServiceRequest {
     public void unfollowContact(@NonNull String session, String contact) {
         Call<ResponseBody> call = getService().unfollowContact(session,contact);
         enqueueRequest(APIType.UNFOLLOW_CONTACT,call);
+    }
+
+    public void getActivityDetails(@NonNull String session, String activity) {
+        Call<DynamicDetail> call = getService().getActivityDetails(session,activity);
+        enqueueRequest(APIType.GET_ACTIVITY_DETAILS,call);
+    }
+
+    public void getLikedRecords(@NonNull String session, Criteria criteria, Pagination pagination) {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+        Call<CollectionPage<LikedRecord>> call = getService().getLikedRecords(session,
+                criteriaJsonstr,
+                paginationJsonstr);
+        enqueueRequest(APIType.GET_LINKED_RECORDS,call);
     }
 
 }

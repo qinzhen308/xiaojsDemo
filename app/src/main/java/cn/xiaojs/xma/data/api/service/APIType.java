@@ -84,6 +84,8 @@ public class APIType {
     public static final int GET_UPDATES = 67;
     public static final int FOLLOW_CONTACT = 68;
     public static final int UNFOLLOW_CONTACT = 69;
+    public static final int GET_ACTIVITY_DETAILS = 691;
+    public static final int GET_LINKED_RECORDS = 692;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Search
