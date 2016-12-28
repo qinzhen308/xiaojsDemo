@@ -59,7 +59,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             holder.ugc.setStatus(bean);
             holder.ugc.setOnItemClickListener(new MomentUGC.OnItemClickListener() {
                 @Override
-                public void onPraise() {
+                public void onPraise(boolean liked,boolean success) {
 
                 }
 
@@ -149,7 +149,9 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
 
     @Override
     protected void onDataItemClick(int position, Dynamic bean) {
-        mContext.startActivity(new Intent(mContext,MomentDetailActivity.class));
+        Intent intent = new Intent(mContext,MomentDetailActivity.class);
+        intent.putExtra(HomeConstant.KEY_MOMENT_ID,bean.id);
+        mContext.startActivity(intent);
     }
 
     class Holder extends BaseHolder {

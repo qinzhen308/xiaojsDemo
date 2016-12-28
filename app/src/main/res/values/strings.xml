@@ -344,4 +344,5 @@
     <string name="send">发送</string>
     <string name="talk_about_your_comment">说说你的评论</string>
     <string name="comment_reply">回复&#160;%1$s:</string>
+    <string name="comment_reply_title">回复&#160;%1$s:&#160;%2$s</string>
 </resources>

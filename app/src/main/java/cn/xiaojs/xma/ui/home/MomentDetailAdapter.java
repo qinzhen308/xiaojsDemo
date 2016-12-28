@@ -16,35 +16,63 @@ package cn.xiaojs.xma.ui.home;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.Doc;
+import cn.xiaojs.xma.model.social.Comment;
+import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.TimeUtil;
 
-public class MomentDetailAdapter extends AbsSwipeAdapter<RecommendCourseBean,MomentDetailAdapter.Holder> {
+public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAdapter.Holder> {
 
-    public MomentDetailAdapter(Context context, PullToRefreshSwipeListView list, boolean isNeedPreLoading) {
-        super(context,list,isNeedPreLoading);
-    }
+    private String mMomentId;
+    private String mSubType;
 
-    public MomentDetailAdapter(Context context, PullToRefreshSwipeListView list) {
-        super(context, list);
+    public MomentDetailAdapter(Context context, PullToRefreshSwipeListView list, boolean isNeedPreLoading, String momentId, String sutType) {
+        super(context, list, isNeedPreLoading);
+        mMomentId = momentId;
+        mSubType = sutType;
     }
 
     @Override
-    protected void setViewContent(Holder holder, RecommendCourseBean bean, int position) {
+    protected void setViewContent(Holder holder, Comment bean, int position) {
+        if (bean.target == null) {//普通评论
+            holder.reply(false);
+            holder.name.setText(bean.createdBy.getBasic().getName());
+            holder.time.setText(TimeUtil.getTimeByNow(bean.createdOn));
+            holder.content.setText(bean.body.text);
+        } else {//评论的回复
+            holder.reply(true);
+            holder.name.setText(bean.createdBy.getBasic().getName());
+            String replyTitle = mContext.getString(R.string.comment_reply_title,
+                    bean.target.createdBy.getBasic().getName(),
+                    bean.target.body.text);
+            Spannable replySpan = StringUtil.getSpecialString(replyTitle,
+                    bean.target.createdBy.getBasic().getName(),
+                    mContext.getResources().getColor(R.color.font_black));
+            holder.reply.setText(replySpan);
+            holder.time.setText(TimeUtil.getTimeByNow(bean.createdOn));
+            holder.content.setText(bean.body.text);
+        }
 
     }
 
     @Override
     protected View createContentView(int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_moment_comment_item,null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_moment_comment_item, null);
         return view;
     }
 
@@ -56,31 +84,61 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<RecommendCourseBean,Mom
 
     @Override
     protected void doRequest() {
-        List<RecommendCourseBean> list = new ArrayList<>();
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
-        list.add(new RecommendCourseBean());
+        Criteria criteria = new Criteria();
+        Doc doc = new Doc();
+        doc.id = mMomentId;
+        doc.subtype = mSubType;
+        criteria.setDoc(doc);
+        SocialManager.getComments(mContext, criteria, mPagination, new APIServiceCallback<CollectionPage<Comment>>() {
+            @Override
+            public void onSuccess(CollectionPage<Comment> object) {
+                if (object != null) {
+                    //MomentDetailAdapter.this.onSuccess(object.objectsOfPage);
+                    MomentDetailAdapter.this.onSuccess(HomeBusiness.resolveComments(object.objectsOfPage));
+                } else {
+                    MomentDetailAdapter.this.onSuccess(null);
+                }
+            }
 
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        onSuccess(list);
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                MomentDetailAdapter.this.onFailure(errorCode, errorMessage);
+            }
+        });
     }
 
     @Override
-    protected void onDataItemClick(int position, RecommendCourseBean bean) {
-        Intent intent = new Intent(mContext,MomentCommentActivity.class);
-        intent.putExtra(HomeConstant.KEY_COMMENT_TYPE,HomeConstant.COMMENT_TYPE_REPLY);
-        intent.putExtra(HomeConstant.KEY_COMMENT_REPLY_NAME,"菜菜菜");
-        mContext.startActivity(intent);
+    protected void onDataItemClick(int position, Comment bean) {
+        Intent intent = new Intent(mContext, MomentCommentActivity.class);
+        if (bean.target == null){
+            intent.putExtra(HomeConstant.KEY_COMMENT_TYPE, HomeConstant.COMMENT_TYPE_REPLY);
+        }else {
+            intent.putExtra(HomeConstant.KEY_COMMENT_TYPE, HomeConstant.COMMENT_TYPE_REPLY_REPLY);
+        }
+        intent.putExtra(HomeConstant.KEY_COMMENT_REPLY_NAME, bean.createdBy.getBasic().getName());
+        intent.putExtra(HomeConstant.KEY_MOMENT_REPLY_ID, bean.id);
+        ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_COMMENT);
     }
 
     class Holder extends BaseHolder {
+
+        @BindView(R.id.moment_comment_name)
+        TextView name;
+        @BindView(R.id.moment_comment_time)
+        TextView time;
+        @BindView(R.id.moment_comment_content)
+        TextView content;
+        @BindView(R.id.moment_comment_reply)
+        TextView reply;
+
+        public void reply(boolean reply) {
+            if (reply){
+                this.reply.setVisibility(View.VISIBLE);
+            }else {
+                this.reply.setVisibility(View.GONE);
+            }
+        }
+
         public Holder(View view) {
             super(view);
         }

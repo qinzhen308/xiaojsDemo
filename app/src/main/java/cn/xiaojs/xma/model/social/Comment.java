@@ -27,6 +27,8 @@ public class Comment {
     public CommentContent body;
     public ArrayList<Comment> replies;
 
+    public Comment target;//本地字段，如果当前是回复，则此字段为回复的对象
+
 
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)

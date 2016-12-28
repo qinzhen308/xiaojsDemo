@@ -74,5 +74,10 @@ public class MomentHeader extends RelativeLayout {
         mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(),BitmapUtils.getBitmap(getContext(),R.drawable.ic_clz_remain),"22",R.color.white,R.dimen.font_20px));
         mName.setText(owner.alias);
         mTag.setText(owner.tag);
+        if (owner.followed){
+            mFollow.setVisibility(GONE);
+        }else {
+            mFollow.setVisibility(VISIBLE);
+        }
     }
 }

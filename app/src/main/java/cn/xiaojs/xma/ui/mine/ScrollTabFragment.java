@@ -20,7 +20,7 @@ public class ScrollTabFragment extends BaseScrollTabFragment {
 
     @Override
     protected void initData() {
-        cn.xiaojs.xma.ui.home.MomentDetailAdapter adapter1 = new cn.xiaojs.xma.ui.home.MomentDetailAdapter(getContext(),mList);
-        mList.setAdapter(adapter1);
+//        cn.xiaojs.xma.ui.home.MomentDetailAdapter adapter1 = new cn.xiaojs.xma.ui.home.MomentDetailAdapter(getContext(),mList);
+//        mList.setAdapter(adapter1);
     }
 }
