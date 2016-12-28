@@ -12,6 +12,7 @@ public class Doc {
 
     public String id;
     public String subtype;
+    public String name;
 
 
 }

@@ -17,6 +17,7 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
+import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -112,6 +113,17 @@ public class SocialRequest extends ServiceRequest {
 
         Call<Comment> call = getService().reply2Reply(session,replyID,replyComment);
         enqueueRequest(APIType.REPLAY_2_REPLY,call);
+    }
+
+    public void getUpdates(@NonNull String session, Pagination pagination) {
+
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(paginationJsonstr);
+        }
+        Call<CollectionPage<DynUpdate>> call = getService().getUpdates(session,paginationJsonstr);
+        enqueueRequest(APIType.GET_UPDATES,call);
     }
 
 }

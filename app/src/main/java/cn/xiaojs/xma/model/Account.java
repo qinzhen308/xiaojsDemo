@@ -98,4 +98,12 @@ public class Account implements Serializable{
         }
 
     }
+
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class SimpleAccount {
+        public String id;
+        public String name;
+    }
 }

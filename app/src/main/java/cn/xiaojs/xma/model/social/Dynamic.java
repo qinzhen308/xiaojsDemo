@@ -48,7 +48,7 @@ public class Dynamic {
 
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class DynPhoto {
+    public static class DynPhoto extends Dimension{
         public String name;
     }
 
