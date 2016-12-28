@@ -1,12 +1,15 @@
 package cn.xiaojs.xma.ui.classroom;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionFail;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -32,6 +38,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
+import cn.xiaojs.xma.util.CacheUtil;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -50,6 +57,9 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 
 public class ClassroomActivity extends FragmentActivity implements WhiteboardAdapter.OnWhiteboardListener {
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.5F;
+    private static final int REQUEST_GALLERY_PERMISSION = 1000;
+    private static final String[] PERMISSIONS = new String[] {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
@@ -114,10 +124,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private boolean mAnimating = false;
     private PanelAnimListener mPanelAnimListener;
     private boolean mNeedOpenWhiteBoardPanel = false;
+    private boolean mSavingWhiteboard = false;
     private int mPlayState = STATE_PLAY;
 
     private List<WhiteboardLayer> mWhiteboardLayerList;
     private WhiteboardController mWhiteboardController;
+    private Whiteboard mCurrWhiteboard;
+    private AsyncTask mSaveTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -213,6 +226,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     @Override
     public void onWhiteboardSelected(Whiteboard whiteboard) {
+        mCurrWhiteboard = whiteboard;
         if (mWhiteboardController != null) {
             //为了控制面板模式也能缩放，移动画布操作
             mMainPanel.setTransformationWhiteBoard(whiteboard);
@@ -304,6 +318,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case R.id.main_screen_setting:
                 break;
             case R.id.save_white_board_btn:
+                saveWhiteboard();
                 break;
             case R.id.select_btn:
             case R.id.handwriting_btn:
@@ -477,10 +492,28 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
 
         cancelAllAnim();
+
+        if(mSaveTask != null) {
+            mSavingWhiteboard = false;
+            mSaveTask.cancel(true);
+        }
     }
 
     public int getCurrentState() {
         return mCurrentState;
+    }
+
+    private void saveWhiteboard() {
+        if (mSavingWhiteboard) {
+            return;
+        }
+
+        mSavingWhiteboard = true;
+        //save to local
+        //PermissionGen.needPermission(ClassroomActivity.this, REQUEST_GALLERY_PERMISSION, PERMISSIONS);
+
+        //save to server
+        //TODO
     }
 
     /**
@@ -721,6 +754,44 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     public int getState() {
         return mCurrentState;
+    }
+
+    @PermissionSuccess(requestCode = REQUEST_GALLERY_PERMISSION)
+    public void getGallerySuccess() {
+        if (mSavingWhiteboard) {
+            if (mCurrWhiteboard == null) {
+                mSavingWhiteboard = false;
+                return;
+            }
+
+            final Bitmap bmp = mCurrWhiteboard.getWhiteboardBitmap();
+            final WhiteboardLayer layer = mCurrWhiteboard.getLayer();
+            if (layer != null) {
+                CacheUtil.saveWhiteboard(bmp, layer.getWhiteboardId());
+                mSaveTask = new AsyncTask<Integer, Integer, String>() {
+
+                    @Override
+                    protected String doInBackground(Integer... params) {
+                        return CacheUtil.saveWhiteboard(bmp, layer.getWhiteboardId());
+                    }
+
+                    @Override
+                    protected void onPostExecute(String result) {
+                        mSavingWhiteboard = false;
+                        String tips = getString(!TextUtils.isEmpty(result) ? R.string.save_white_board_succ :
+                                R.string.save_white_board_fail);
+                        Toast.makeText(ClassroomActivity.this, tips, Toast.LENGTH_SHORT).show();
+                    }
+                }.execute(0);
+            } else {
+                mSavingWhiteboard = false;
+            }
+        }
+    }
+
+    @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
+    public void getGalleryFailure() {
+
     }
 
 }

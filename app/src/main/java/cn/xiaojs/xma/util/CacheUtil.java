@@ -14,6 +14,10 @@ package cn.xiaojs.xma.util;
  *
  * ======================================================================================== */
 
+import android.graphics.Bitmap;
+import android.text.TextUtils;
+import android.util.Log;
+
 import cn.xiaojs.xma.model.User;
 
 import java.io.File;
@@ -21,12 +25,16 @@ import java.io.File;
 public class CacheUtil {
     private static final String APP_CACHE_DIR = "/xjs";
     private static final String DATA_CACHE_DIR = "/cache/";// 存放数据缓存文件，如json, 数据bean等
+    private static final String WHITE_BOARD_CACHE_DIR = "/whiteboard/";
     private static final String IMAGE_CACHE_DIR = "/images";// 存放图片文件缓存文件
     private static final String CRASH_CACHE_DIR = "/crash"; // 程序崩溃日志
     private static final String DOWNLOAD_CACHE_DIR = "/download";// 存放下载的apk
     private static final String FLASH_CACHE_DIR = "splashCache"; // 闪屏信息
 
     public final static String USER_INFO = "user_info";
+    public final static String SUFFIX_JPG = ".jpg";
+    public final static String SUFFIX_BMP = ".bmp";
+    public final static int DEFAULT_QUALITY = 90;
 
     public static String getAppCacheRoot() {
         return FileUtil.SDCARD_PATH + APP_CACHE_DIR;
@@ -47,10 +55,24 @@ public class CacheUtil {
         return ObjectSerializableUtil.readObject(getAppDataCacheRoot() + USER_INFO);
     }
 
+    public static String saveWhiteboard(Bitmap bmp, String name) {
+        if (bmp == null || TextUtils.isEmpty(name)) {
+            return null;
+        }
+
+        String path = mkdirs(getAppCacheRoot() + WHITE_BOARD_CACHE_DIR);
+        String t = String.valueOf(System.currentTimeMillis());
+        path = path + name + t +  SUFFIX_JPG;
+        BitmapUtils.saveImage(bmp, path, DEFAULT_QUALITY, false);
+
+        return path;
+    }
+
     private static String mkdirs(String path) {
         File f = new File(path);
         if (!f.exists()) {
-            f.mkdirs();
+            boolean succ = f.mkdirs();
+            Log.i("aaa", "succ" + succ);
         }
 
         return path;

@@ -308,6 +308,8 @@
     <string name="invite_selected_friends">已选择<![CDATA[<font color="#ff9833">%1$d</font>]]>人</string>
     <string name="set_assistant">设为助教</string>
     <string name="kick_out">踢出</string>
+    <string name="save_white_board_succ">白板保存成功</string>
+    <string name="save_white_board_fail">白板保存失败</string>
     <!--whiteboard-->
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>
