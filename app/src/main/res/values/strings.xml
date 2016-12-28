@@ -284,6 +284,7 @@
 
 
     <!--class room-->
+    <string name="white_board">白板</string>
     <string name="class_room_setting">教室设置</string>
     <string name="camera">摄像头</string>
     <string name="microphone">麦克风</string>
@@ -310,6 +311,7 @@
     <string name="kick_out">踢出</string>
     <string name="save_white_board_succ">白板保存成功</string>
     <string name="save_white_board_fail">白板保存失败</string>
+    <string name="add_white_board_exceed">最多只能添加%1$d块白板</string>
     <!--whiteboard-->
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>
