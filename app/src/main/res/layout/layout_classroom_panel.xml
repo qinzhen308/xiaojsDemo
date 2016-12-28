@@ -206,16 +206,16 @@
             android:orientation="vertical">
 
         <TextView
-                android:id="@+id/blackboard_switcher_tips"
+                android:id="@+id/blackboard_coll_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:text="2"
                 android:textSize="@dimen/font_20px"
                 android:paddingLeft="@dimen/px15"
                 android:paddingRight="@dimen/px15"
                 android:textColor="@color/white"
+                android:visibility="gone"
                 android:background="@drawable/ic_cr_tips_bg"/>
 
         <ImageView

@@ -1,8 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="#dd4e4e4e">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/coll_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="#dd4e4e4e"
+                android:paddingTop="@dimen/px20"
+                android:clickable="true">
 
-</LinearLayout>
+    <ImageView
+            android:id="@+id/add_white_board"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/px10"
+            android:src="@drawable/cr_add_wb"/>
+
+    <ImageView
+            android:id="@+id/open_docs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/add_white_board"
+            android:layout_marginRight="@dimen/px36"
+            android:src="@drawable/cr_open_docs"/>
+
+    <GridView
+            android:id="@+id/white_coll_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:verticalSpacing="@dimen/px10"
+            android:layout_below="@+id/add_white_board"
+            android:layout_marginTop="@dimen/px10"
+            android:scrollbars="none"></GridView>
+
+</RelativeLayout>

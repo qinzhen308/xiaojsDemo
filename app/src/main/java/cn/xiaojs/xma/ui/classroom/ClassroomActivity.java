@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ import cn.xiaojs.xma.util.CacheUtil;
 public class ClassroomActivity extends FragmentActivity implements WhiteboardAdapter.OnWhiteboardListener {
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.5F;
     private static final int REQUEST_GALLERY_PERMISSION = 1000;
-    private static final String[] PERMISSIONS = new String[] {Manifest.permission.READ_EXTERNAL_STORAGE,
+    private static final String[] PERMISSIONS = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     private final static int ANIM_SHOW = 1 << 1;
@@ -93,6 +94,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     View mLiveProgressLayout;
     @BindView(R.id.live_progress)
     SeekBar mLiveProgress;
+    @BindView(R.id.blackboard_coll_count)
+    TextView mBlackboardCollCountTv;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
@@ -127,10 +130,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private boolean mSavingWhiteboard = false;
     private int mPlayState = STATE_PLAY;
 
-    private List<WhiteboardLayer> mWhiteboardLayerList;
+    private ArrayList<WhiteboardCollection> mWhiteboardCollectionList;
     private WhiteboardController mWhiteboardController;
     private Whiteboard mCurrWhiteboard;
+    private String mWhiteboardSuffix;
     private AsyncTask mSaveTask;
+    private Bundle mExtraData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -152,6 +157,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mBinder = ButterKnife.bind(this);
 
         mPanelAnimListener = new PanelAnimListener();
+        mWhiteboardCollectionList = new ArrayList<WhiteboardCollection>();
+        mWhiteboardSuffix = getString(R.string.white_board);
     }
 
     /**
@@ -201,23 +208,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mWhiteboardAdapter = new WhiteboardAdapter(this);
         }
 
-        if (mWhiteboardLayerList == null) {
-            mWhiteboardLayerList = new ArrayList<WhiteboardLayer>();
-        }
-
         if (mWhiteboardController == null) {
             mWhiteboardController = new WhiteboardController(this, mContentRoot);
         }
 
-        mWhiteboardLayerList.add(new WhiteboardLayer());
-        mWhiteboardLayerList.add(new WhiteboardLayer());
-        mWhiteboardLayerList.add(new WhiteboardLayer());
-        mWhiteboardLayerList.add(new WhiteboardLayer());
-        mWhiteboardLayerList.add(new WhiteboardLayer());
-        mWhiteboardLayerList.add(new WhiteboardLayer());
-        mWhiteboardLayerList.add(new WhiteboardLayer());
+        WhiteboardCollection whiteboardCollection = new WhiteboardCollection();
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        addToWhiteboardCollectionList(whiteboardCollection);
 
-        mWhiteboardAdapter.setData(mWhiteboardLayerList);
+        mWhiteboardAdapter.setData(whiteboardCollection.getWhiteboardLayer());
         mWhiteboardSv.setAdapter(mWhiteboardAdapter);
         mWhiteboardSv.setOffscreenPageLimit(2);
         mWhiteboardAdapter.notifyDataSetChanged();
@@ -341,8 +340,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void openWhiteBoardManager() {
         if (mWhiteBoardManagePanel == null) {
             mWhiteBoardManagePanel = new WhiteBoardManagement();
+            mExtraData = new Bundle();
         }
         mWhiteBoardManagePanel.show(getSupportFragmentManager(), "white_board_management");
+        mExtraData.putParcelableArrayList(WhiteBoardManagement.WHITE_BOARD_COLL, mWhiteboardCollectionList);
+        mWhiteBoardManagePanel.setArguments(mExtraData);
     }
 
     /**
@@ -493,7 +495,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         cancelAllAnim();
 
-        if(mSaveTask != null) {
+        if (mSaveTask != null) {
             mSavingWhiteboard = false;
             mSaveTask.cancel(true);
         }
@@ -754,6 +756,34 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     public int getState() {
         return mCurrentState;
+    }
+
+    private void addToWhiteboardCollectionList(WhiteboardCollection collection) {
+        if (collection != null) {
+            if (TextUtils.isEmpty(collection.getName())) {
+                int count = 0;
+                for (WhiteboardCollection coll : mWhiteboardCollectionList) {
+                    if (coll.isDefaultWhiteboard()) {
+                        count++;
+                    }
+                }
+                String name = mWhiteboardSuffix + "_" + (count + 1);
+                collection.setName(name);
+            }
+            mWhiteboardCollectionList.add(collection);
+        }
+    }
+
+    /**
+     * 白板管理界面添加新的白板回调
+     */
+    public void onAddWhiteboardCollection(WhiteboardCollection collection) {
+        addToWhiteboardCollectionList(collection);
+
+        if (mWhiteboardCollectionList != null && mWhiteboardCollectionList.size() > 1) {
+            mBlackboardCollCountTv.setVisibility(View.VISIBLE);
+            mBlackboardCollCountTv.setText(String.valueOf(mWhiteboardCollectionList.size()));
+        }
     }
 
     @PermissionSuccess(requestCode = REQUEST_GALLERY_PERMISSION)
