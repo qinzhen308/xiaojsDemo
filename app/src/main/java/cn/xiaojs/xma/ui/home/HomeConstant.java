@@ -18,6 +18,12 @@ public interface HomeConstant {
     public static final String KEY_COMMENT_TYPE = "key_comment_type";//评论类型
     public static final int COMMENT_TYPE_WRITE = 1;//写评论
     public static final int COMMENT_TYPE_REPLY = 2;//回复评论
+    public static final int COMMENT_TYPE_REPLY_REPLY = 3;//回复评论的回复
 
     public static final String KEY_COMMENT_REPLY_NAME = "key_comment_reply_name";//回复对象的名称
+
+    public static final String KEY_MOMENT_ID = "key_moment_id";
+    public static final String KEY_MOMENT_REPLY_ID = "key_moment_reply_id";//评论回复的id
+
+    public static final int REQUEST_CODE_COMMENT = 1;
 }

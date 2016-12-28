@@ -89,7 +89,7 @@ public class ScrollTabIndicator extends HorizontalScrollView implements OnPageCh
 
     private int lastScrollX = 0;
 
-//    private int tabBackgroundResId = R.drawable.c;
+    private int tabBackgroundResId = R.drawable.background_tab;
 
     private int checkedTextColor = R.color.font_orange;
 
@@ -148,7 +148,7 @@ public class ScrollTabIndicator extends HorizontalScrollView implements OnPageCh
                 .getDimensionPixelSize(R.styleable.ScrollTabIndicator_pstsUnderlineHeight, underlineHeight);
         dividerPadding = a.getDimensionPixelSize(R.styleable.ScrollTabIndicator_pstsDividerPadding, dividerPadding);
         tabPadding = a.getDimensionPixelSize(R.styleable.ScrollTabIndicator_pstsTabPaddingLeftRight, tabPadding);
-//        tabBackgroundResId = a.getResourceId(R.styleable.ScrollTabIndicator_pstsTabBackground, tabBackgroundResId);
+        tabBackgroundResId = a.getResourceId(R.styleable.ScrollTabIndicator_pstsTabBackground, tabBackgroundResId);
         shouldExpand = a.getBoolean(R.styleable.ScrollTabIndicator_pstsShouldExpand, shouldExpand);
         scrollOffset = a.getDimensionPixelSize(R.styleable.ScrollTabIndicator_pstsScrollOffset, scrollOffset);
         textAllCaps = a.getBoolean(R.styleable.ScrollTabIndicator_pstsTextAllCaps, textAllCaps);
@@ -271,7 +271,7 @@ public class ScrollTabIndicator extends HorizontalScrollView implements OnPageCh
 
             View v = tabsContainer.getChildAt(i);
 
-//            v.setBackgroundResource(tabBackgroundResId);
+            v.setBackgroundResource(tabBackgroundResId);
 
             if (v instanceof TextView) {
 
@@ -490,13 +490,13 @@ public class ScrollTabIndicator extends HorizontalScrollView implements OnPageCh
         updateTabStyles();
     }
 
-//    public void setTabBackground(int resId) {
-//        this.tabBackgroundResId = resId;
-//    }
-//
-//    public int getTabBackground() {
-//        return tabBackgroundResId;
-//    }
+    public void setTabBackground(int resId) {
+        this.tabBackgroundResId = resId;
+    }
+
+    public int getTabBackground() {
+        return tabBackgroundResId;
+    }
 
     public void setTabPaddingLeftRight(int paddingPx) {
         this.tabPadding = paddingPx;

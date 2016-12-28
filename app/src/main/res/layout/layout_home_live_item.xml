@@ -9,6 +9,7 @@
     <LinearLayout
             android:id="@+id/home_live_item"
             android:background="@drawable/white_bolder_bg"
+            android:layout_marginTop="@dimen/px30"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"
             android:orientation="vertical"

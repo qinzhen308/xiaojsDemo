@@ -16,9 +16,9 @@ import cn.xiaojs.xma.ui.home.HomeFragment;
 import cn.xiaojs.xma.ui.home.MomentDetailActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.NotificationFragment;
-import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
-import cn.xiaojs.xma.ui.mine.ScrollTabActivity;
+import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import okhttp3.OkHttpClient;
@@ -81,7 +81,7 @@ public class MainActivity extends BaseTabActivity {
                 startActivity(new Intent(this,PersonHomeActivity.class));
                 break;
             case 5:
-                startActivity(new Intent(this, ScrollTabActivity.class));
+                startActivity(new Intent(this, PostDynamicActivity.class));
                 break;
         }
     }

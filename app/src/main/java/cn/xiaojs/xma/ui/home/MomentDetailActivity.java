@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.home;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,13 +36,18 @@ public class MomentDetailActivity extends BaseActivity {
     @BindView(R.id.moment_detail_image_expand)
     ImageMatrixExpandableLayout mExpand;
 
-
+    private String mMomentId;
+    private MomentDetailAdapter mAdapter;
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_moment_detail);
         setMiddleTitle(R.string.detail);
         setRightImage(R.drawable.ic_lesson_more);
         setRightImage2(R.drawable.share_selector);
+        Intent intent = getIntent();
+        if (intent != null){
+            mMomentId = intent.getStringExtra(HomeConstant.KEY_MOMENT_ID);
+        }
         initList();
         mBinder = ButterKnife.bind(this);
         mExpand.show(100);
@@ -51,8 +57,8 @@ public class MomentDetailActivity extends BaseActivity {
         mList = (PullToRefreshSwipeListView) findViewById(R.id.moment_detail_list);
         View header = LayoutInflater.from(this).inflate(R.layout.layout_moment_detail_header,null);
         mList.getRefreshableView().addHeaderView(header);
-        MomentDetailAdapter adapter = new MomentDetailAdapter(this,mList,true);
-        mList.setAdapter(adapter);
+        mAdapter = new MomentDetailAdapter(this,mList,true,mMomentId,"PostActivity");
+        mList.setAdapter(mAdapter);
     }
 
     @Override
@@ -60,13 +66,17 @@ public class MomentDetailActivity extends BaseActivity {
         return true;
     }
 
-    @OnClick({R.id.moment_detail_footer_click})
+    @OnClick({R.id.left_image,R.id.moment_detail_footer_click})
     public void onClick(View view){
         switch (view.getId()){
+            case R.id.left_image:
+                finish();
+                break;
             case R.id.moment_detail_footer_click:
                 Intent comment = new Intent(this,MomentCommentActivity.class);
                 comment.putExtra(HomeConstant.KEY_COMMENT_TYPE,HomeConstant.COMMENT_TYPE_WRITE);
-                startActivity(comment);
+                comment.putExtra(HomeConstant.KEY_MOMENT_ID,mMomentId);
+                startActivityForResult(comment,HomeConstant.REQUEST_CODE_COMMENT);
                 break;
         }
     }
@@ -79,5 +89,19 @@ public class MomentDetailActivity extends BaseActivity {
             mBinder.unbind();
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case HomeConstant.REQUEST_CODE_COMMENT:
+                if (resultCode == Activity.RESULT_OK){
+                    if (mAdapter != null){
+                        mAdapter.doRefresh();
+                    }
+                }
+                break;
+        }
     }
 }

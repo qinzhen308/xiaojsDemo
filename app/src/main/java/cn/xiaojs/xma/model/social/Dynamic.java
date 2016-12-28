@@ -19,7 +19,7 @@ public class Dynamic {
     public boolean liked;
     public DynOwner owner;
     public DynBody body;
-    public DynStatus status;
+    public DynStatus stats;
 
 
 

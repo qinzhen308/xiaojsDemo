@@ -15,17 +15,22 @@ package cn.xiaojs.xma.ui.view;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.util.DeviceUtil;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.ui.home.HomeConstant;
+import cn.xiaojs.xma.ui.home.MomentDetailActivity;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public class MomentUGC extends RelativeLayout {
 
@@ -38,6 +43,7 @@ public class MomentUGC extends RelativeLayout {
     @BindView(R.id.ugc_more)
     ImageView mMore;
 
+    private Dynamic mDynamic;
     private OnItemClickListener listener;
 
     public MomentUGC(Context context) {
@@ -61,15 +67,39 @@ public class MomentUGC extends RelativeLayout {
         mPraise.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener != null){
-                    listener.onPraise();
-                }
+                SocialManager.likeActivity(getContext(), mDynamic.id, new APIServiceCallback<Dynamic.DynStatus>() {
+                    @Override
+                    public void onSuccess(Dynamic.DynStatus object) {
+                        mDynamic.liked = !mDynamic.liked;
+                        int newTotal = getTotal(mPraise);
+                        if (mDynamic.liked){
+                            newTotal++;
+                        }else {
+                            newTotal--;
+                        }
+                        praise(mDynamic.liked,newTotal);
+                        if (listener != null){
+                            listener.onPraise(mDynamic.liked,true);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        if (listener != null){
+                            listener.onPraise(mDynamic.liked,false);
+                        }
+                    }
+                });
+
             }
         });
 
         mComment.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(getContext(), MomentDetailActivity.class);
+                intent.putExtra(HomeConstant.KEY_MOMENT_ID,mDynamic.id);
+                getContext().startActivity(intent);
                 if (listener != null){
                     listener.onComment();
                 }
@@ -97,6 +127,16 @@ public class MomentUGC extends RelativeLayout {
         DeviceUtil.expandViewTouch(mMore,getResources().getDimensionPixelSize(R.dimen.px100));
     }
 
+    private void praise(boolean status,int total){
+        if (status){
+            mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_on,0,0,0);
+        }else {
+            mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_off,0,0,0);
+        }
+
+        mPraise.setText(String.valueOf(total));
+    }
+
     public void setPraise(int count){
         mPraise.setText(String.valueOf(count));
     }
@@ -117,8 +157,27 @@ public class MomentUGC extends RelativeLayout {
         this.listener = listener;
     }
 
+    private int getTotal(TextView view){
+        String strInt = view.getText().toString();
+        int Int = 0;
+        try {
+            Int = Integer.parseInt(strInt);
+        }catch (Exception e){
+        }
+        return Int;
+    }
+
+    public void setStatus(Dynamic status){
+        mDynamic = status;
+        mComment.setText(String.valueOf(mDynamic.stats.comments));
+        mShare.setText(String.valueOf(mDynamic.stats.shared));
+        praise(mDynamic.liked,mDynamic.stats.liked);
+    }
+
+
+
     public interface OnItemClickListener{
-        void onPraise();
+        void onPraise(boolean liked,boolean success);
         void onComment();
         void onShare();
         void onMore();

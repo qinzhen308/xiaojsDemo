@@ -33,6 +33,7 @@
                 android:minLines="3"/>
 
         <Button
+                android:id="@+id/moment_comment_send"
                 android:textSize="@dimen/font_28px"
                 android:textColor="@color/font_black"
                 android:minWidth="@dimen/px100"

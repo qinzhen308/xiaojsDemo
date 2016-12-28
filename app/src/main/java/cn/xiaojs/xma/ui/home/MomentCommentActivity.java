@@ -15,19 +15,28 @@ package cn.xiaojs.xma.ui.home;
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.base.BaseCheckSoftInputActivity;
-
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.social.Comment;
+import cn.xiaojs.xma.ui.base.BaseCheckSoftInputActivity;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class MomentCommentActivity extends BaseCheckSoftInputActivity {
 
     @BindView(R.id.moment_comment_input)
     EditText mInput;
+
+    private int mType;
+    private String mMomentId;
+    private String mReplyId;
+
     @Override
     protected void onImShow() {
 
@@ -45,23 +54,78 @@ public class MomentCommentActivity extends BaseCheckSoftInputActivity {
 
         Intent intent = getIntent();
         if (intent != null){
-            int type = intent.getIntExtra(HomeConstant.KEY_COMMENT_TYPE,HomeConstant.COMMENT_TYPE_WRITE);
-            if (type == HomeConstant.COMMENT_TYPE_WRITE){
+            mType = intent.getIntExtra(HomeConstant.KEY_COMMENT_TYPE,HomeConstant.COMMENT_TYPE_WRITE);
+            if (mType == HomeConstant.COMMENT_TYPE_WRITE){
                 //写评论
                 mInput.setHint(R.string.talk_about_your_comment);
             }else {
                 String name = intent.getStringExtra(HomeConstant.KEY_COMMENT_REPLY_NAME);
                 mInput.setHint(getString(R.string.comment_reply,name));
+                mReplyId = intent.getStringExtra(HomeConstant.KEY_MOMENT_REPLY_ID);
             }
+            mMomentId = intent.getStringExtra(HomeConstant.KEY_MOMENT_ID);
         }
     }
 
-    @OnClick({R.id.moment_comment_outside})
+    @OnClick({R.id.moment_comment_outside,R.id.moment_comment_send})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.moment_comment_outside:
                 finish();
                 break;
+            case R.id.moment_comment_send:
+                send();
+                break;
+        }
+    }
+
+    private void send(){
+        String comment = mInput.getText().toString();
+        if (TextUtils.isEmpty(comment))
+            return;
+        if (mType == HomeConstant.COMMENT_TYPE_WRITE){
+            //写评论
+            SocialManager.commentActivity(this, mMomentId, comment, new APIServiceCallback<Comment>() {
+                @Override
+                public void onSuccess(Comment object) {
+                    ToastUtil.showToast(MomentCommentActivity.this,"评论成功!");
+                    setResult(RESULT_OK);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    ToastUtil.showToast(MomentCommentActivity.this,errorMessage);
+                }
+            });
+        }else if (mType == HomeConstant.COMMENT_TYPE_REPLY){
+            SocialManager.replyComment(this, mReplyId, comment, new APIServiceCallback<Comment>() {
+                @Override
+                public void onSuccess(Comment object) {
+                    ToastUtil.showToast(MomentCommentActivity.this,"评论成功!");
+                    setResult(RESULT_OK);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    ToastUtil.showToast(MomentCommentActivity.this,errorMessage);
+                }
+            });
+        }else if (mType == HomeConstant.COMMENT_TYPE_REPLY_REPLY){
+            SocialManager.reply2Reply(this, mReplyId, comment, new APIServiceCallback<Comment>() {
+                @Override
+                public void onSuccess(Comment object) {
+                    ToastUtil.showToast(MomentCommentActivity.this,"评论成功!");
+                    setResult(RESULT_OK);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    ToastUtil.showToast(MomentCommentActivity.this,errorMessage);
+                }
+            });
         }
     }
 

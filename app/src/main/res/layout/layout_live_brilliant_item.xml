@@ -6,6 +6,7 @@
     <LinearLayout
             android:id="@+id/live_brilliant_wrapper"
             android:orientation="vertical"
+            android:background="@drawable/white_grey_selector"
             android:layout_marginRight="@dimen/px15"
             android:layout_marginLeft="@dimen/px15"
             android:layout_width="match_parent"
