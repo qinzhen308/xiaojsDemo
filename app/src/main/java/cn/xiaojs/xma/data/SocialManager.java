@@ -18,6 +18,7 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.DynPost;
+import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
 
 /**
@@ -215,6 +216,27 @@ public class SocialManager extends DataManager {
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
         socialRequest.reply2Reply(session,replyID,reply);
+    }
+
+
+    /**
+     * Get Updates
+     * Returns a page of new activity updates only.
+     * @param context
+     * @param pagination
+     * @param callback
+     */
+    public static void getUpdates(Context context,
+                                  Pagination pagination,
+                                  APIServiceCallback<CollectionPage<DynUpdate>> callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.getUpdates(session,pagination);
+
     }
 
 

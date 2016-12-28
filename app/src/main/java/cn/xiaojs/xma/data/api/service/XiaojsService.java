@@ -32,6 +32,7 @@ import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
+import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -295,8 +296,9 @@ public interface XiaojsService {
 
 
     // Get Updates
-    //@GET("/v1/social/updates/{pagination}")
-    //Call<CollectionPage<>>
+    @GET("/v1/social/updates/{pagination}")
+    Call<CollectionPage<DynUpdate>> getUpdates(@Header("SessionID") String sessionID,
+                                               @Path("pagination") String pagination);
 
     //Like Activity
     @POST("/v1/social/activities/{activity}/liked")
@@ -319,7 +321,9 @@ public interface XiaojsService {
     //Reply To Reply
     @Headers("Content-Type: application/json")
     @POST("/v1/social/replies/{reply}/replies")
-    Call<Comment> reply2Reply(@Header("SessionID") String sessionID,@Path("reply") String replyID, @Body Comment comment);
+    Call<Comment> reply2Reply(@Header("SessionID") String sessionID,
+                              @Path("reply") String replyID,
+                              @Body Comment comment);
 
 
 

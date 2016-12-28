@@ -50,6 +50,7 @@ import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.DynPost;
+import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
@@ -145,13 +146,13 @@ public class TestAPIActivity extends Activity {
 
     private void testT(Context context){
 
+        Pagination pagination = new Pagination();
+        pagination.setPage(1);
+        pagination.setMaxNumOfObjectsPerPage(20);
 
-        String cid = "5863a7de65894305bd4e8505";
-        String reply = "r2=======";
-
-        SocialManager.reply2Reply(context, cid, reply, new APIServiceCallback<Comment>() {
+        SocialManager.getUpdates(context, pagination, new APIServiceCallback<CollectionPage<DynUpdate>>() {
             @Override
-            public void onSuccess(Comment object) {
+            public void onSuccess(CollectionPage<DynUpdate> object) {
 
             }
 
@@ -160,6 +161,21 @@ public class TestAPIActivity extends Activity {
 
             }
         });
+
+//        String cid = "5863a7de65894305bd4e8505";
+//        String reply = "r2=======";
+//
+//        SocialManager.reply2Reply(context, cid, reply, new APIServiceCallback<Comment>() {
+//            @Override
+//            public void onSuccess(Comment object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 //        SocialManager.replyComment(context, cid, reply, new APIServiceCallback<Comment>() {
 //            @Override

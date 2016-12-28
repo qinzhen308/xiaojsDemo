@@ -80,4 +80,5 @@ public class APIType {
     public static final int LIKE_ACTIVITY = 64;
     public static final int REPLAY_COMMENT = 65;
     public static final int REPLAY_2_REPLY = 66;
+    public static final int GET_UPDATES = 67;
 }

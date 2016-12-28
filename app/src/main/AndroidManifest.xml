@@ -38,11 +38,7 @@
                 android:name=".ui.SplashActivity"
                 android:theme="@style/SplashTheme"
                 >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".ui.account.LoginActivity">
         </activity>
@@ -75,7 +71,11 @@
         <activity android:name="ui.course.LessonHomeActivity">
         </activity>
         <activity android:name=".ui.TestAPIActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity android:name=".ui.course.LiveLessonBriefActivity"/>
         <activity android:name=".ui.course.SalePromotionActivity"/>
