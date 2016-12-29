@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/white">
+
+        <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/px32"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/back_arrow"/>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+            <TextView
+                    android:id="@+id/my_document"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_white"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/my_document"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
+                    android:background="@drawable/cr_my_doc_bg"/>
+
+            <TextView
+                    android:id="@+id/class_document"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_blue"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/class_document"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
+                    android:background="@drawable/cr_class_doc_stroke_bg"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+            android:id="@+id/hold_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px20"
+            android:background="@color/main_bg"
+            android:layout_below="@+id/title"/>
+
+    <ScrollView
+            android:id="@+id/nav_layout"
+            android:layout_width="@dimen/px180"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/hold_view"
+            android:background="@color/white">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+            <TextView
+                    android:id="@+id/all"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_black"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:text="@string/all"
+                    android:gravity="center"/>
+
+            <TextView
+                    android:id="@+id/ppt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_black"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:text="@string/ppt"
+                    android:gravity="center"/>
+
+            <TextView
+                    android:id="@+id/word"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_black"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:text="@string/word"
+                    android:gravity="center"/>
+
+            <TextView
+                    android:id="@+id/pdf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_black"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:text="@string/pdf"
+                    android:gravity="center"/>
+
+            <TextView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_black"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:text="@string/image"
+                    android:gravity="center"/>
+
+            <TextView
+                    android:id="@+id/hand_writing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_black"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:text="@string/hand_writing"
+                    android:gravity="center"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <View
+            android:id="@+id/divide_line"
+            style="@style/DividerVertical"
+            android:layout_below="@+id/hold_view"
+            android:layout_toRightOf="@+id/nav_layout"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/hold_view"
+            android:layout_toRightOf="@id/divide_line"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10">
+
+            <ImageView
+                    android:id="@+id/upload"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/cr_upload_doc"/>
+
+            <ImageView
+                    android:id="@+id/new_folder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/upload"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="@dimen/px40"
+                    android:src="@drawable/cr_new_folder"/>
+
+            <EditText
+                    android:id="@+id/search"
+                    android:layout_width="@dimen/px400"
+                    android:layout_height="@dimen/px70"
+                    android:background="@color/main_bg"
+                    android:padding="@dimen/px10"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentRight="true"
+                    android:drawableLeft="@drawable/ic_search"/>
+        </RelativeLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_gray"
+                    android:text="@string/file_name"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/px20"/>
+
+            <TextView
+                    android:layout_width="@dimen/px200"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_gray"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
+                    android:gravity="center"
+                    android:text="@string/size"/>
+
+            <TextView
+                    android:layout_width="@dimen/px200"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_gray"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
+                    android:gravity="center"
+                    android:text="@string/modify_time"/>
+
+            <ImageView
+                    android:layout_width="@dimen/px200"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px32"
+                    android:paddingRight="@dimen/px32"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:src="@drawable/ic_lesson_more"
+                    android:visibility="invisible"/>
+        </LinearLayout>
+
+        <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
+                android:id="@+id/doc_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@android:color/transparent"
+                android:listSelector="@android:color/transparent">
+
+        </cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView>
+
+    </LinearLayout>
+
+</RelativeLayout>

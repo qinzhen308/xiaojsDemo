@@ -20,6 +20,7 @@ import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import java.text.DecimalFormat;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
@@ -28,6 +29,8 @@ public class XjsUtils {
     private static Context mAppContext;
     public static int BITMAP_LIMIT_WIDTH;
     public static int BITMAP_LIMIT_HEIGHT;
+
+    private static DecimalFormat mFormater = new DecimalFormat("#.##");
 
     public static void init(Context appContext){
         mAppContext = appContext;
@@ -57,6 +60,45 @@ public class XjsUtils {
     public static int sp2px(Context context, float spValue) {
         final float fontScale = getDisplayMetrics(context).scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    /**
+     * @param length 文件长度
+     * @return 带有合适单位名称的文件大小
+     */
+    public static String getSizeFormatText(long length) {
+        if (length <= 0)
+            return "0KB";
+
+        String str = "B";
+        double result = (double) length;
+        if(length < 1024){
+            return "1KB";
+        }
+        // 以1024为界，找到合适的文件大小单位
+        if (result >= 1024) {
+            str = "KB";
+            result /= 1024;
+            if (result >= 1024) {
+                str = "MB";
+                result /= 1024;
+            }
+            if (result >= 1024) {
+                str = "GB";
+                result /= 1024;
+            }
+        }
+        String sizeString = null;
+
+        // 按照需求设定文件的精度
+        // MB 和 GB 保留两位小数
+        if (str.equals("MB") || str.equals("GB")) {
+            sizeString = mFormater.format(result);
+        }
+        // B 和 KB 保留到各位
+        else
+            sizeString = Integer.toString((int) result);
+        return sizeString + str;
     }
 
     /**

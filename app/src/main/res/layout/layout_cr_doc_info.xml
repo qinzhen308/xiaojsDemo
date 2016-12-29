@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal"
+              android:paddingTop="@dimen/px25"
+              android:paddingBottom="@dimen/px25">
+
+    <TextView
+            android:id="@+id/file_name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px10"
+            android:drawablePadding="@dimen/px10"
+            android:gravity="center_vertical"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_28px"
+            android:layout_marginLeft="@dimen/px20"/>
+
+    <TextView
+            android:id="@+id/size"
+            android:layout_width="@dimen/px200"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_gray"
+            android:gravity="center"
+            android:textSize="@dimen/font_24px"/>
+
+    <TextView
+            android:id="@+id/modify_time"
+            android:layout_width="@dimen/px200"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_gray"
+            android:gravity="center"
+            android:textSize="@dimen/font_24px"/>
+
+    <ImageView
+            android:id="@+id/more"
+            android:layout_width="@dimen/px200"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="@dimen/px32"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:src="@drawable/ic_lesson_more"/>
+
+</LinearLayout>

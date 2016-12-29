@@ -35,6 +35,21 @@
     <string name="load_failed_tip_2">请确保您的手机已连网</string>
     <string name="mark">标记为已读</string>
     <string name="back">返回</string>
+    <string name="ppt">PPT</string>
+    <string name="word">Word</string>
+    <string name="pdf">PDF</string>
+    <string name="image">图片</string>
+    <string name="hand_writing">板书</string>
+    <string name="screen_shot">截图</string>
+    <string name="file_name">文件名</string>
+    <string name="size">大小</string>
+    <string name="modify_time">修改时间</string>
+    <string name="moment_ago">刚刚</string>
+    <string name="minute_ago">%1$d分钟之前</string>
+    <string name="hour_ago">%1$d小时之前</string>
+    <string name="rename">重命名</string>
+    <string name="all">全部</string>
+    
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_circle">小圈</string>
@@ -312,6 +327,8 @@
     <string name="save_white_board_succ">白板保存成功</string>
     <string name="save_white_board_fail">白板保存失败</string>
     <string name="add_white_board_exceed">最多只能添加%1$d块白板</string>
+    <string name="my_document">我的资料库</string>
+    <string name="class_document">班级资料库</string>
     <!--whiteboard-->
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>

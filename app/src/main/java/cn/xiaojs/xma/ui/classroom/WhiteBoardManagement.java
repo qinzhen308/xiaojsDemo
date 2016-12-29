@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.document.DocumentActivity;
 import retrofit2.http.PUT;
 
 /*  =======================================================================================
@@ -161,7 +163,8 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                     break;
                 case R.id.open_docs:
                     //open document
-
+                    Intent i = new Intent(mContext, DocumentActivity.class);
+                    mContext.startActivity(i);
                     break;
             }
         }
