@@ -18,9 +18,21 @@ import cn.xiaojs.xma.ui.base.BaseListActivity;
 
 public class MomentUpdateActivity extends BaseListActivity {
 
+    private boolean mSuccess;
+
     @Override
     protected void initData() {
-        MomentUpdateAdapter adapter = new MomentUpdateAdapter(this,mList,true);
+        MomentUpdateAdapter adapter = new MomentUpdateAdapter(this, mList, true);
+        adapter.setActivity(this);
         mList.setAdapter(adapter);
+    }
+
+    public void notifySuccess(boolean success) {
+        if (!mSuccess) {
+            mSuccess = success;
+            if (success) {
+                setResult(RESULT_OK);
+            }
+        }
     }
 }

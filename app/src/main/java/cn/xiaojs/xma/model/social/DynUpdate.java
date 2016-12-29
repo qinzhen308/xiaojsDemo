@@ -36,6 +36,7 @@ public class DynUpdate {
         public String snap;
         public Dimension dimension;
         public String title;
+        public String text;
         public Doc doc;
 
     }

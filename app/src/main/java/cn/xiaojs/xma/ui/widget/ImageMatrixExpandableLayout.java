@@ -20,7 +20,10 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.util.List;
+
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.util.DeviceUtil;
 
 public class ImageMatrixExpandableLayout extends LinearLayout{
@@ -31,6 +34,7 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
     private int minDis;
     private int sum;
     private final int SHRINK_LINE = 2;
+    private List<LikedRecord> records;
 
     public ImageMatrixExpandableLayout(Context context) {
         super(context);
@@ -67,6 +71,14 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
         shrink();
     }
 
+    public void show(List<LikedRecord> records){
+        this.records = records;
+        if (records != null){
+            this.sum = records.size();
+        }
+        shrink();
+    }
+
     private void shrink() {
         removeAllViews();
         //最多只有两行数据就直接显示，不会伸缩
@@ -84,7 +96,7 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
             }
             l.setLayoutParams(lp);
             if (i == SHRINK_LINE - 1){
-                l.show(maxNum, IMAGE_RADIUS,true);
+                l.show(maxNum, IMAGE_RADIUS,true,getSubList(i));
                 l.setListener(new OnImageMatrixItemListener() {
                     @Override
                     public void onShrinkClick() {
@@ -97,7 +109,7 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
                     }
                 });
             }else {
-                l.show(maxNum, IMAGE_RADIUS,false);
+                l.show(maxNum, IMAGE_RADIUS,false,getSubList(i));
             }
             addView(l);
         }
@@ -113,7 +125,7 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
                 lp.topMargin = topMargin;
             }
             l.setLayoutParams(lp);
-            l.show(maxNum, IMAGE_RADIUS,false);
+            l.show(maxNum, IMAGE_RADIUS,false,getSubList(i));
             addView(l);
         }
 
@@ -122,7 +134,7 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.topMargin = topMargin;
             l.setLayoutParams(lp);
-            l.showLast(maxNum, sum % maxNum, IMAGE_RADIUS,i > 1);
+            l.showLast(maxNum, sum % maxNum, IMAGE_RADIUS,i > 1,getSubList(i));
             l.setListener(new OnImageMatrixItemListener() {
                 @Override
                 public void onShrinkClick() {
@@ -136,6 +148,14 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
             });
             addView(l);
         }
+    }
+
+    private List<LikedRecord> getSubList(int line){
+        if (records != null){
+            return records.subList(line * maxNum , Math.min(records.size(),(line + 1) * maxNum));
+        }
+
+        return null;
     }
 
     public interface OnImageMatrixItemListener{

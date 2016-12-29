@@ -28,11 +28,18 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.Doc;
+import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.DynamicDetail;
+import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class MomentDetailActivity extends BaseActivity {
 
@@ -49,11 +56,15 @@ public class MomentDetailActivity extends BaseActivity {
     TextView mPraiseNum;
     @BindView(R.id.moment_detail_prise)
     TextView mPraise;
-    @BindView(R.id.moment_detail_comment_summary)
-    TextView mCommentSummary;
+//    @BindView(R.id.moment_detail_comment_summary)
+//    TextView mCommentSummary;
 
     private String mMomentId;
     private MomentDetailAdapter mAdapter;
+
+    private final int MAX_LIKED = 100;
+
+    private DynamicDetail mDetail;
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_moment_detail);
@@ -75,6 +86,8 @@ public class MomentDetailActivity extends BaseActivity {
             @Override
             public void onSuccess(DynamicDetail object) {
                 cancelProgress();
+                mDetail = object;
+                requestLiked(object);
                 initView(object);
             }
 
@@ -91,6 +104,32 @@ public class MomentDetailActivity extends BaseActivity {
         });
     }
 
+    private void requestLiked(DynamicDetail object){
+        if (object == null)
+            return;
+        Criteria criteria = new Criteria();
+        Doc doc = new Doc();
+        doc.id = mMomentId;
+        doc.subtype = object.typeName;
+        criteria.setDoc(doc);
+
+        Pagination pagination = new Pagination();
+        pagination.setPage(1);
+        pagination.setMaxNumOfObjectsPerPage(MAX_LIKED);
+
+        SocialManager.getLikedRecords(this, criteria, pagination, new APIServiceCallback<CollectionPage<LikedRecord>>() {
+            @Override
+            public void onSuccess(CollectionPage<LikedRecord> object) {
+                mExpand.show(object.objectsOfPage);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+    }
+
     private void initList(){
         mList = (PullToRefreshSwipeListView) findViewById(R.id.moment_detail_list);
         View header = LayoutInflater.from(this).inflate(R.layout.layout_moment_detail_header,null);
@@ -102,11 +141,10 @@ public class MomentDetailActivity extends BaseActivity {
             return;
         mHeader.setData(detail);
         mContent.show(detail.body,detail.typeName);
-        mExpand.show(100);
         mAdapter = new MomentDetailAdapter(this,mList,true,mMomentId,detail.typeName);
         mList.setAdapter(mAdapter);
         mPraiseNum.setText(getString(R.string.praise_summary,detail.stats.liked));
-        mCommentSummary.setText(getString(R.string.comment_summary,detail.stats.comments));
+//        mCommentSummary.setText(getString(R.string.comment_summary,detail.stats.comments));
         if (detail.liked){
             mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_on,0,0,0);
         }else {
@@ -131,9 +169,34 @@ public class MomentDetailActivity extends BaseActivity {
                 comment.putExtra(HomeConstant.KEY_MOMENT_ID,mMomentId);
                 startActivityForResult(comment,HomeConstant.REQUEST_CODE_COMMENT);
                 break;
+            case R.id.moment_detail_prise:
+                praise();
+                break;
         }
     }
 
+    private void praise(){
+        if (mDetail != null){
+            if (mDetail.liked){
+                //取消赞
+            }else {
+                //赞
+                SocialManager.likeActivity(this, mDetail.id, new APIServiceCallback<Dynamic.DynStatus>() {
+                    @Override
+                    public void onSuccess(Dynamic.DynStatus object) {
+                        mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_on,0,0,0);
+                        mDetail.stats.liked += 1;
+                        mPraise.setText(String.valueOf(mDetail.stats.liked));
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        ToastUtil.showToast(MomentDetailActivity.this,errorMessage);
+                    }
+                });
+            }
+        }
+    }
 
 
     @Override

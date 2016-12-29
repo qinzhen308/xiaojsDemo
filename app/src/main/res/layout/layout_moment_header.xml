@@ -29,7 +29,7 @@
             android:layout_marginRight="@dimen/px30"
             android:layout_centerInParent="true"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content">
+            android:layout_width="match_parent">
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -73,8 +73,6 @@
             <cn.xiaojs.xma.ui.widget.IconTextView
                     android:id="@+id/moment_header_desc"
                     android:layout_gravity="center_vertical"
-                    android:ellipsize="end"
-                    android:maxLines="1"
                     android:layout_marginLeft="@dimen/px30"
                     android:text="2022考研政治高分补习培优班2022考研政治高分补习培优班"
                     android:textColor="@color/font_black"

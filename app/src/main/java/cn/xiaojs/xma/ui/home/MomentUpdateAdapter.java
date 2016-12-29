@@ -34,6 +34,7 @@ import cn.xiaojs.xma.util.TimeUtil;
 
 public class MomentUpdateAdapter extends AbsSwipeAdapter<DynUpdate, MomentUpdateAdapter.Holder> {
 
+    private MomentUpdateActivity mActivity;
 
     public MomentUpdateAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
@@ -74,6 +75,7 @@ public class MomentUpdateAdapter extends AbsSwipeAdapter<DynUpdate, MomentUpdate
         SocialManager.getUpdates(mContext, mPagination, new APIServiceCallback<CollectionPage<DynUpdate>>() {
             @Override
             public void onSuccess(CollectionPage<DynUpdate> object) {
+                notifySuccess(true);
                 if (object != null){
                     MomentUpdateAdapter.this.onSuccess(object.objectsOfPage);
                 }else {
@@ -84,8 +86,19 @@ public class MomentUpdateAdapter extends AbsSwipeAdapter<DynUpdate, MomentUpdate
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 MomentUpdateAdapter.this.onFailure(errorCode,errorMessage);
+                notifySuccess(false);
             }
         });
+    }
+
+    private void notifySuccess(boolean success){
+        if (mActivity != null){
+            mActivity.notifySuccess(success);
+        }
+    }
+
+    public void setActivity(MomentUpdateActivity activity){
+        mActivity = activity;
     }
 
     class Holder extends BaseHolder {

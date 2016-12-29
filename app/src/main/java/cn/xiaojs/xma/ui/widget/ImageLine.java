@@ -21,7 +21,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
+
+import java.util.List;
+
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.util.DeviceUtil;
 
 public class ImageLine extends LinearLayout {
@@ -58,7 +63,7 @@ public class ImageLine extends LinearLayout {
         listener = l;
     }
 
-    public void show(int maxNum,int radius,boolean expand){
+    public void show(int maxNum, int radius, boolean expand, List<LikedRecord> records){
         this.maxNum = maxNum;
         this.radius = radius;
         computeDis();
@@ -67,12 +72,12 @@ public class ImageLine extends LinearLayout {
                 addView(getLastItem(false));
                 continue;
             }
-            ImageView image = getImageItem();
+            ImageView image = getImageItem(records.get(i));
             addView(image);
         }
     }
 
-    private RoundedImageView getImageItem() {
+    private RoundedImageView getImageItem(LikedRecord record) {
         RoundedImageView image = new RoundedImageView(getContext());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(radius * 2, radius * 2);
         int child = getChildCount();
@@ -88,18 +93,23 @@ public class ImageLine extends LinearLayout {
         }
 
         image.setLayoutParams(lp);
-        image.setImageResource(R.drawable.default_portrait);
+        //image.setImageResource(R.drawable.default_portrait);
         image.setScaleType(ImageView.ScaleType.FIT_XY);
         image.setOval(true);
+
+        Glide.with(getContext())
+                .load(record.createdBy.getBasic().getAvatar())
+                .error(R.drawable.default_avatar)
+                .into(image);
         return image;
     }
 
-    public void showLast(int maxNum,int num,int radius,boolean shrink){
+    public void showLast(int maxNum,int num,int radius,boolean shrink,List<LikedRecord> records){
         this.maxNum = maxNum;
         this.radius = radius;
         computeDis();
         for (int i = 0;i < num;i++){
-            ImageView image = getImageItem();
+            ImageView image = getImageItem(records.get(i));
             addView(image);
         }
         if (shrink){

@@ -14,8 +14,12 @@ package cn.xiaojs.xma.util;
  *
  * ======================================================================================== */
 
+import android.text.TextUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.xiaojs.xma.XiaojsConfig;
 
 public class VerifyUtils {
     /**
@@ -99,4 +103,13 @@ public class VerifyUtils {
         return hexString;
     }
 
+    public static boolean isMyself(String uid){
+        if (XiaojsConfig.mLoginUser != null &&
+                !TextUtils.isEmpty(XiaojsConfig.mLoginUser.getId()) &&
+                !TextUtils.isEmpty(uid)){
+            return XiaojsConfig.mLoginUser.getId().equalsIgnoreCase(uid);
+        }
+
+        return false;
+    }
 }

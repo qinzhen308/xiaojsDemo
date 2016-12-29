@@ -41,6 +41,8 @@ import cn.xiaojs.xma.util.ToastUtil;
 
 public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapter.Holder> {
 
+    private HomeFragment mFragment;
+
     public HomeMomentAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
     }
@@ -105,7 +107,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         //未关注时不能取消关注
         if (!bean.owner.followed)
             return;
-        SocialManager.unfollowContact(mContext, bean.owner.id, new APIServiceCallback() {
+        SocialManager.unfollowContact(mContext, bean.owner.account, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 ToastUtil.showToast(mContext,R.string.cancel_followed);
@@ -122,7 +124,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
     private void deleteByOwner(Dynamic.DynOwner owner){
         List<Dynamic> removes = new ArrayList<>();
         for (Dynamic dynamic : getList()){
-            if (dynamic.owner.id.equalsIgnoreCase(owner.id)){
+            if (dynamic.owner.account.equalsIgnoreCase(owner.account)){
                 removes.add(dynamic);
             }
         }
@@ -156,9 +158,11 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             @Override
             public void onSuccess(CollectionPage<Dynamic> object) {
                 if (object != null) {
+                    notifyUpdates(object.totalUpdates);
                     HomeMomentAdapter.this.onSuccess(object.objectsOfPage);
                 } else {
                     HomeMomentAdapter.this.onSuccess(null);
+                    notifyUpdates(0);
                 }
             }
 
@@ -174,6 +178,16 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         Intent intent = new Intent(mContext, MomentDetailActivity.class);
         intent.putExtra(HomeConstant.KEY_MOMENT_ID, bean.id);
         mContext.startActivity(intent);
+    }
+
+    private void notifyUpdates(int updates){
+        if (mFragment != null){
+            mFragment.notifyUpdates(updates);
+        }
+    }
+
+    public void setFragment(HomeFragment fragment){
+        mFragment = fragment;
     }
 
     class Holder extends BaseHolder {

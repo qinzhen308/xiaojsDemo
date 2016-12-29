@@ -108,16 +108,16 @@ public class MomentUpdateTargetView extends FrameLayout {
                 StringBuilder sb = new StringBuilder();
                 sb.append(bean.body.ref.account.name);
                 sb.append(':');
-                sb.append(bean.body.ref.title);
+                sb.append(bean.body.ref.text);
 
                 Spannable span = StringUtil.getSpecialString(sb.toString(),bean.body.ref.account.name,getResources().getColor(R.color.font_blue));
                 mTargetWord.setText(span);
             }else {
                 if (TextUtils.isEmpty(bean.body.ref.snap)) {
                     show(TYPE_WORD);
-                    mTargetWord.setText(bean.body.ref.title);
+                    mTargetWord.setText(bean.body.ref.text);
                 } else {
-                    if (TextUtils.isEmpty(bean.body.ref.title)){//只有图
+                    if (TextUtils.isEmpty(bean.body.ref.text)){//只有图
                         show(TYPE_IMAGE);
                         Glide.with(getContext())
                                 .load(bean.body.ref.snap)
@@ -129,7 +129,7 @@ public class MomentUpdateTargetView extends FrameLayout {
                                 .load(bean.body.ref.snap)
                                 .error(R.drawable.default_lesson_cover)
                                 .into(mLessonImage);
-                        mLessonWord.setText(bean.body.ref.title);
+                        mLessonWord.setText(bean.body.ref.text);
                     }
 
                 }

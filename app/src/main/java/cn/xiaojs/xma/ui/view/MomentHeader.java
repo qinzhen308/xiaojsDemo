@@ -37,6 +37,7 @@ import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
+import cn.xiaojs.xma.util.VerifyUtils;
 
 public class MomentHeader extends RelativeLayout {
 
@@ -83,7 +84,7 @@ public class MomentHeader extends RelativeLayout {
 
     public void setData(Dynamic dynamic) {
         mOwner = dynamic.owner;
-        if (mOwner.myself){
+        if (mOwner.myself || VerifyUtils.isMyself(mOwner.account)){
             mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
             mName.setText(XiaojsConfig.mLoginUser.getName());
             mTag.setText("自己");
@@ -93,7 +94,7 @@ public class MomentHeader extends RelativeLayout {
             mTag.setText(dynamic.owner.tag);
         }
         mTime.setText(TimeUtil.getTimeByNow(dynamic.createdOn));
-        if (dynamic.owner.followed && mOwner.myself) {
+        if (dynamic.owner.followed || mOwner.myself || VerifyUtils.isMyself(mOwner.account)) {
             mFollow.setVisibility(GONE);
         } else {
             mFollow.setVisibility(VISIBLE);

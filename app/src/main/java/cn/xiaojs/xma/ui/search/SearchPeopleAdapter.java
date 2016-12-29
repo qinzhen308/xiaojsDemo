@@ -90,6 +90,10 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
         holder.name.setText(mBeans.get(position)._source.basic.getName());
         return convertView;
     }
+
+    public void setData(List<AccountSearch> accounts){
+        mBeans = accounts;
+    }
     class Holder extends BaseHolder {
         @BindView(R.id.search_people_head)
         RoundedImageView head;
