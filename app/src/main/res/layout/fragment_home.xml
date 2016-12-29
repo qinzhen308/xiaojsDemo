@@ -51,6 +51,7 @@
             android:background="@drawable/ic_home_moment_msg"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/px360"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -74,7 +75,6 @@
 
             <TextView
                     android:id="@+id/home_moment_tip"
-                    android:text="444条与我相关"
                     android:drawableRight="@drawable/ic_relevant_white"
                     android:drawablePadding="@dimen/px10"
                     android:gravity="center"
@@ -112,7 +112,7 @@
                 android:src="@drawable/default_portrait"/>
 
         <TextView
-                android:text="5条"
+                android:id="@+id/home_right_moment_tip"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_28px"
                 android:layout_gravity="center_vertical"

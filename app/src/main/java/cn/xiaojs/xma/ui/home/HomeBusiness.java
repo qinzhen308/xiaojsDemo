@@ -23,11 +23,11 @@ public class HomeBusiness {
     //递归拆分评论列表的数据
     private static void resolveComments(List<Comment> comments,Comment target,List<Comment> result){
         for (Comment comment : comments){
+            comment.target = target;
             if (comment.replies != null && comment.replies.size() > 0){
                 resolveComments(comment.replies,comment,result);
                 result.add(comment);
             }else {
-                comment.target = target;
                 result.add(comment);
             }
         }

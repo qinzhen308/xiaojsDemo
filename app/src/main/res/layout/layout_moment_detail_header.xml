@@ -73,6 +73,7 @@
             android:id="@+id/moment_detail_comment_summary"
             android:textColor="@color/common_text"
             android:textSize="@dimen/font_28px"
+            android:text="@string/comment"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginTop="@dimen/px30"
             android:layout_marginBottom="@dimen/px30"

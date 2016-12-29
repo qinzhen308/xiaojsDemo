@@ -76,6 +76,11 @@ public class SearchLessonAdapter extends CanInScrollviewListView.Adapter {
         Holder holder = new Holder(convertView);
         return convertView;
     }
+
+    public void setData(List<AccountSearch> accounts){
+        mBeans = accounts;
+    }
+
     class Holder extends BaseHolder{
         public Holder(View view) {
             super(view);

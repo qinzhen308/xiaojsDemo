@@ -16,11 +16,13 @@ package cn.xiaojs.xma.ui.home;
  * ======================================================================================== */
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +30,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.banner.BannerAdapter;
@@ -41,23 +43,17 @@ public class HomeFragment extends BaseFragment {
 
     @BindView(R.id.home_banner)
     BannerView mBanner;
-//    @BindView(R.id.home_my_cls)
-//    BlockTabView mClass;
-//    @BindView(R.id.home_my_live)
-//    BlockTabView mLive;
-//    @BindView(R.id.home_teacher)
-//    BlockTabView mTeacher;
-//    @BindView(R.id.home_person)
-//    BlockTabView mPerson;
 
     @BindView(R.id.title)
     View mTitle;
     @BindView(R.id.home_moment_mark_wrapper)
     RelativeLayout mMark;
+    @BindView(R.id.home_moment_tip)
+    TextView mMarkTip;
     @BindView(R.id.home_moment_mark_right_wrapper)
     LinearLayout mRightMark;
-//    @BindView(R.id.right_view)
-//    MessageImageView mRightImage;
+    @BindView(R.id.home_right_moment_tip)
+    TextView mRightMarkTip;
 
     PullToRefreshSwipeListView mList;
     private boolean mScrolled;
@@ -73,7 +69,8 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        AbsSwipeAdapter ada = new HomeMomentAdapter(mContext,mList);
+        HomeMomentAdapter ada = new HomeMomentAdapter(mContext,mList);
+        ada.setFragment(this);
         mList.setAdapter(ada);
 
         BannerBean b1 = new BannerBean();
@@ -106,11 +103,7 @@ public class HomeFragment extends BaseFragment {
         if (offsetY >= 0) {
             int bannerHeight = mBanner.getMeasuredHeight();
             if (offsetY >= 0 && offsetY <= bannerHeight) {
-//                int alpha = (int)((float)(offsetY - bannerHeight) / bannerHeight * 255);
-//                Logger.d("alpha = " + alpha);
-//                bgColor = Color.argb(alpha,0xf5,0xf5,0xf5);
                 mTitle.setBackgroundResource(R.drawable.ic_home_title_bg);
-                //mTitle.setBackgroundColor(bgColor);
             }else if (offsetY > bannerHeight){
                 int bgColor = Color.argb(255,0xf5,0xf5,0xf5);
                 mTitle.setBackgroundColor(bgColor);
@@ -125,10 +118,9 @@ public class HomeFragment extends BaseFragment {
             case R.id.home_moment_mark_wrapper:
             case R.id.home_moment_mark_right_wrapper:
                 Intent intent = new Intent(mContext,MomentUpdateActivity.class);
-                mContext.startActivity(intent);
+                ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_UPDATE);
                 break;
             case R.id.right_view:
-//                ToastUtil.showToast(mContext,"message");
                 break;
             case R.id.home_search:
             case R.id.home_search_wrapper:
@@ -175,6 +167,25 @@ public class HomeFragment extends BaseFragment {
         return endX - l[0];
     }
 
+    public void notifyUpdates(int updates){
+        if (updates > 0){
+            if (mScrolled){
+                mRightMark.setVisibility(View.VISIBLE);
+                mMark.setVisibility(View.INVISIBLE);
+                mRightMarkTip.setText(getString(R.string.dynamic_update,updates));
+                mMarkTip.setText(getString(R.string.dynamic_about_me,updates));
+            }else {
+                mRightMark.setVisibility(View.INVISIBLE);
+                mMark.setVisibility(View.VISIBLE);
+                mRightMarkTip.setText(getString(R.string.dynamic_update,updates));
+                mMarkTip.setText(getString(R.string.dynamic_about_me,updates));
+            }
+        }else {
+            mRightMark.setVisibility(View.INVISIBLE);
+            mMark.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -185,5 +196,18 @@ public class HomeFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         mBanner.stop();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case HomeConstant.REQUEST_CODE_UPDATE:
+                if (resultCode == Activity.RESULT_OK){
+                    //进入过动态更新界面，并成功获取过数据，回来就不显示动态更新的提示
+                    mRightMark.setVisibility(View.INVISIBLE);
+                    mMark.setVisibility(View.INVISIBLE);
+                }
+                break;
+        }
     }
 }

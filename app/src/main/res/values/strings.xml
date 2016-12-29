@@ -372,4 +372,7 @@
     <string name="cancel_followed">已取消关注</string>
     <string name="praise_summary">%1$d人觉得很赞</string>
     <string name="comment_summary">%1$d条评论</string>
+    <string name="comment">评论</string>
+    <string name="dynamic_about_me">%1$d条与我相关</string>
+    <string name="dynamic_update">%1$d条</string>
 </resources>

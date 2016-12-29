@@ -27,12 +27,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.SearchManager;
+import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.search.AccountSearch;
+import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class SearchActivity extends BaseActivity {
 
@@ -61,6 +65,8 @@ public class SearchActivity extends BaseActivity {
     private final int MAX_PEOPLE = 3;
     private final int MAX_ORGANIZATION = 1;
 
+    private SearchLessonAdapter mLessonAdapter;
+    private SearchPeopleAdapter mPeopleAdapter;
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_global_search);
@@ -119,7 +125,7 @@ public class SearchActivity extends BaseActivity {
         SearchManager.searchAccounts(this, query, new APIServiceCallback<ArrayList<AccountSearch>>() {
             @Override
             public void onSuccess(ArrayList<AccountSearch> object) {
-
+                updateDisplay(object);
             }
 
             @Override
@@ -130,26 +136,57 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void updateDisplay(ArrayList<AccountSearch> result) {
-        if (result == null)
+        if (result == null || result.size() == 0){
+            mLessonWrapper.setVisibility(View.GONE);
+            mPeopleWrapper.setVisibility(View.GONE);
+            mOrganizationWrapper.setVisibility(View.GONE);
             return;
+        }
         List<AccountSearch> lessons = SearchBusiness.getSearchResultByType(result, "Lesson");
-        List<AccountSearch> people = SearchBusiness.getSearchResultByType(result, "Person");
+        final List<AccountSearch> people = SearchBusiness.getSearchResultByType(result, "Person");
         List<AccountSearch> organization = SearchBusiness.getSearchResultByType(result, "Organization");
 
         if (lessons != null && lessons.size() > 0) {
             mLessonWrapper.setVisibility(View.VISIBLE);
-            CanInScrollviewListView.Adapter adapter = new SearchLessonAdapter(this, lessons, MAX_LESSON);
             mLesson.setNeedDivider(true);
-            mLesson.setAdapter(adapter);
+            if (mLessonAdapter == null){
+                mLessonAdapter = new SearchLessonAdapter(this, lessons, MAX_LESSON);
+                mLesson.setAdapter(mLessonAdapter);
+            }else {
+                mLessonAdapter.setData(lessons);
+                mLessonAdapter.notifyDataSetChanged();
+            }
         } else {
             mLessonWrapper.setVisibility(View.GONE);
         }
 
         if (people != null && people.size() > 0) {
             mPeopleWrapper.setVisibility(View.VISIBLE);
-            CanInScrollviewListView.Adapter adapter1 = new SearchPeopleAdapter(this, people,MAX_PEOPLE);
             mPeople.setNeedDivider(true);
-            mPeople.setAdapter(adapter1);
+            if (mPeopleAdapter == null){
+                mPeopleAdapter = new SearchPeopleAdapter(this, people,MAX_PEOPLE);
+                mPeople.setAdapter(mPeopleAdapter);
+            }else {
+                mPeopleAdapter.setData(people);
+                mPeopleAdapter.notifyDataSetChanged();
+            }
+            mPeople.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    AccountSearch search = people.get(position);
+                    SocialManager.followContact(SearchActivity.this, search._id, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+                        @Override
+                        public void onSuccess(Relation object) {
+                            ToastUtil.showToast(SearchActivity.this,R.string.followed);
+                        }
+
+                        @Override
+                        public void onFailure(String errorCode, String errorMessage) {
+                            ToastUtil.showToast(SearchActivity.this,errorMessage);
+                        }
+                    });
+                }
+            });
         } else {
             mPeopleWrapper.setVisibility(View.GONE);
         }
