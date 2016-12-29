@@ -28,6 +28,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
@@ -37,11 +43,6 @@ import cn.xiaojs.xma.common.pulltorefresh.swipelistview.BaseSwipeListViewListene
 import cn.xiaojs.xma.common.pulltorefresh.swipelistview.SwipeListView;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.util.DeviceUtil;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @param <B> bean对象
@@ -510,6 +511,8 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     }
 
     private void addFailedView(){
+        if (!showFailedView())
+            return;
         if (mFailedView == null){
             mFailedView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty,null);
             TextView desc = (TextView) mFailedView.findViewById(R.id.empty_desc);
@@ -553,7 +556,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     }
 
     protected boolean showEmptyView(){
+        return true;
+    }
 
+    protected boolean showFailedView(){
         return true;
     }
 

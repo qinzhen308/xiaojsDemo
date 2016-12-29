@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentActivity;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
+
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.SocialRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -17,12 +19,14 @@ import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.social.Comment;
+import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.model.social.Relation;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2016/12/23.
@@ -30,21 +34,21 @@ import cn.xiaojs.xma.model.social.Relation;
 
 public class SocialManager extends DataManager {
 
-    public static void getContacts(final Context context, final LoadDataCallback<Cursor> callback) {
-
-        if (!(context instanceof FragmentActivity)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the context is not FragmentActivity,so do nothing and return");
-            }
-            return;
-        }
-
-        CursorTaskLoader taskLoader = new CursorTaskLoader(context, new ContactDao());
-        DataLoader<Cursor> dataLoader = new DataLoader<>(taskLoader, callback);
-        ((FragmentActivity) context).getSupportLoaderManager().initLoader(0, null, dataLoader);
-
-    }
+//    public static void getContacts(final Context context, final LoadDataCallback<Cursor> callback) {
+//
+//        if (!(context instanceof FragmentActivity)) {
+//
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the context is not FragmentActivity,so do nothing and return");
+//            }
+//            return;
+//        }
+//
+//        CursorTaskLoader taskLoader = new CursorTaskLoader(context, new ContactDao());
+//        DataLoader<Cursor> dataLoader = new DataLoader<>(taskLoader, callback);
+//        ((FragmentActivity) context).getSupportLoaderManager().initLoader(0, null, dataLoader);
+//
+//    }
 
     /**
      * Add Contact Group
@@ -55,7 +59,7 @@ public class SocialManager extends DataManager {
      */
     public static void addContactGroup(@NonNull Context context,
                                        String groupName,
-                                       @NonNull APIServiceCallback callback) {
+                                       APIServiceCallback<ResponseBody> callback) {
 
         String session = AccountDataManager.getSessionID(context);
         if (checkSession(session, callback)) {
@@ -324,6 +328,24 @@ public class SocialManager extends DataManager {
         }
         SocialRequest socialRequest = new SocialRequest(context, callback);
         socialRequest.getLikedRecords(session,criteria,pagination);
+
+    }
+
+    /**
+     * Get Contacts
+     * Retrieves all contacts, classes got involved in and recent chats for the session account.
+     * @param context
+     * @param callback
+     */
+    public void getContacts(Context context, APIServiceCallback<ArrayList<ContactGroup>> callback) {
+
+        String session = AccountDataManager.getSessionID(context);
+        if (checkSession(session, callback)) {
+            return;
+        }
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.getContacts(session);
 
     }
 

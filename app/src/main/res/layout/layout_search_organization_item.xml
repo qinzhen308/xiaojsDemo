@@ -9,6 +9,7 @@
         android:layout_height="wrap_content">
 
     <cn.xiaojs.xma.ui.widget.RoundedImageView
+            android:id="@+id/search_organization_head"
             app:oval="true"
             android:scaleType="fitXY"
             android:src="@drawable/default_portrait"
@@ -32,14 +33,14 @@
                 android:layout_height="wrap_content">
 
             <TextView
-                    android:text="王小波教育培训"
+                    android:id="@+id/search_organization_name"
                     android:textSize="@dimen/font_30px"
                     android:textColor="@color/font_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             <TextView
-                    android:text="A5"
+                    android:id="@+id/search_organization_level"
                     android:textSize="@dimen/font_26px"
                     android:textColor="@color/font_orange"
                     android:layout_marginLeft="@dimen/px10"

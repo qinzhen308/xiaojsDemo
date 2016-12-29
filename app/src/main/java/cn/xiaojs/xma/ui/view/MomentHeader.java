@@ -14,20 +14,29 @@ package cn.xiaojs.xma.ui.view;
  *
  * ======================================================================================== */
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.BitmapUtils;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class MomentHeader extends RelativeLayout {
 
@@ -44,6 +53,7 @@ public class MomentHeader extends RelativeLayout {
     @BindView(R.id.moment_header_focus)
     FollowView mFollow;
 
+    private Dynamic.DynOwner mOwner;
     public MomentHeader(Context context) {
         super(context);
         init();
@@ -60,6 +70,7 @@ public class MomentHeader extends RelativeLayout {
         init();
     }
 
+    @TargetApi(21)
     public MomentHeader(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
@@ -70,14 +81,50 @@ public class MomentHeader extends RelativeLayout {
         ButterKnife.bind(this);
     }
 
-    public void setData(Dynamic.DynOwner owner){
-        mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(),BitmapUtils.getBitmap(getContext(),R.drawable.ic_clz_remain),"22",R.color.white,R.dimen.font_20px));
-        mName.setText(owner.alias);
-        mTag.setText(owner.tag);
-        if (owner.followed){
-            mFollow.setVisibility(GONE);
+    public void setData(Dynamic dynamic) {
+        mOwner = dynamic.owner;
+        if (mOwner.myself){
+            mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
+            mName.setText(XiaojsConfig.mLoginUser.getName());
+            mTag.setText("自己");
         }else {
+            mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
+            mName.setText(dynamic.owner.alias);
+            mTag.setText(dynamic.owner.tag);
+        }
+        mTime.setText(TimeUtil.getTimeByNow(dynamic.createdOn));
+        if (dynamic.owner.followed && mOwner.myself) {
+            mFollow.setVisibility(GONE);
+        } else {
             mFollow.setVisibility(VISIBLE);
         }
+    }
+
+    @OnClick({R.id.moment_header_focus})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.moment_header_focus:
+                follow();
+                break;
+        }
+    }
+
+    //关注
+    private void follow() {
+        if (mOwner == null || mOwner.followed)
+            return;
+        SocialManager.followContact(getContext(), mOwner.id, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+            @Override
+            public void onSuccess(Relation object) {
+                ToastUtil.showToast(getContext(),R.string.followed);
+                mFollow.setVisibility(GONE);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ToastUtil.showToast(getContext(),errorMessage);
+            }
+        });
+
     }
 }

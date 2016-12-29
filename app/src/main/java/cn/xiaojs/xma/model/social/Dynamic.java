@@ -15,7 +15,7 @@ import cn.xiaojs.xma.model.Doc;
 public class Dynamic {
 
     public String id;
-    public String createdOn;
+    public Date createdOn;
     public String typeName;
     public boolean liked;
     public DynOwner owner;
@@ -35,7 +35,7 @@ public class Dynamic {
         public String subtype;
         public Date startedOn;
         public String state;
-
+        public boolean myself;
     }
 
 

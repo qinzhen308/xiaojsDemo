@@ -22,7 +22,7 @@
                 android:layout_gravity="center_vertical"/>
 
         <cn.xiaojs.xma.ui.widget.EditTextDel
-                android:id="@+id/my_course_search"
+                android:id="@+id/search_input"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_search"
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"/>
 
         <TextView
-                android:id="@+id/my_course_search_ok"
+                android:id="@+id/search_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/px30"
@@ -66,6 +66,7 @@
             <LinearLayout
                     android:id="@+id/search_lesson_list_wrapper"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -110,6 +111,7 @@
             <LinearLayout
                     android:id="@+id/search_people_list_wrapper"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -153,6 +155,7 @@
             <LinearLayout
                     android:id="@+id/search_organization_list_wrapper"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -192,7 +195,6 @@
 
             <View
                     android:layout_width="match_parent"
-                    android:background="@color/main_bg"
                     android:layout_height="@dimen/px90"/>
         </LinearLayout>
     </ScrollView>

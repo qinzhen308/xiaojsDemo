@@ -27,5 +27,19 @@ public class Contact {
     }
 
 
+    /////////////////////////////////////////////////////////////////
+
+    public String account;
+    public String unread;
+    public String lastMessage;
+    public long group;
+    public String alias;
+    public String subtype;
+    public int followType;
+    public String id;
+    public String subject;
+    public String title;
+    public String state;
+    public String startedOn;
 
 }

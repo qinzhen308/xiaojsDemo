@@ -1,7 +1,6 @@
 package cn.xiaojs.xma.model.social;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Date;
 
@@ -33,7 +32,7 @@ public class DynUpdate {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UpdateRef {
 
-        //public Object account;
+        public Account.SimpleAccount account;
         public String snap;
         public Dimension dimension;
         public String title;

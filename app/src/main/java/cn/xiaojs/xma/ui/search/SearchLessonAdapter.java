@@ -23,32 +23,41 @@ import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
-import cn.xiaojs.xma.ui.home.RecommendCourseBean;
+import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 
 public class SearchLessonAdapter extends CanInScrollviewListView.Adapter {
 
-    private final int MAX_COUNT = 3;
+    private int MAX_COUNT = 0;
 
-    private List<RecommendCourseBean> mBeans;
+    private List<AccountSearch> mBeans;
     private Context mContext;
 
-    public SearchLessonAdapter(Context context, List<RecommendCourseBean> beans) {
+    public SearchLessonAdapter(Context context, List<AccountSearch> beans,int max) {
+        mContext = context;
+        mBeans = beans;
+        MAX_COUNT = max;
+    }
+
+    public SearchLessonAdapter(Context context, List<AccountSearch> beans) {
         mContext = context;
         mBeans = beans;
     }
 
     @Override
     public int getCount() {
-        int count = 3;
-        if (mBeans != null) {
-            if (mBeans.size() > MAX_COUNT) {//最多显示3个
-                count = MAX_COUNT;
-            } else {
-                count = mBeans.size();
+        if (MAX_COUNT > 0){
+            int count = 0;
+            if (mBeans != null) {
+                if (mBeans.size() > MAX_COUNT) {//最多显示3个
+                    count = MAX_COUNT;
+                } else {
+                    count = mBeans.size();
+                }
             }
+            return count;
         }
-        return count;
+        return mBeans == null ? 0 : mBeans.size();
     }
 
     @Override
