@@ -25,6 +25,14 @@
             android:layout_marginRight="@dimen/px36"
             android:src="@drawable/cr_open_docs"/>
 
+    <ImageView
+            android:id="@+id/del_white_board"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/open_docs"
+            android:layout_marginRight="@dimen/px36"
+            android:src="@drawable/cr_del_wb"/>
+
     <GridView
             android:id="@+id/white_coll_list"
             android:layout_width="match_parent"

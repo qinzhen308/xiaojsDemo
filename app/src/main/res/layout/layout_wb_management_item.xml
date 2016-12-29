@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:padding="@dimen/px10"
-              android:background="@color/white"
-              android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-    <TextView
-            android:id="@+id/wb_title"
-            android:lines="1"
-            android:ellipsize="end"
+    <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_margin="@dimen/px5"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/wb_title"
+                android:lines="1"
+                android:ellipsize="end"
+                android:padding="@dimen/px10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        <ImageView
+                android:id="@+id/wb_cover"
+                android:layout_margin="@dimen/px10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
 
     <ImageView
-            android:id="@+id/wb_cover"
-            android:layout_marginTop="@dimen/px15"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:id="@+id/wb_remove"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cr_remove_wb"/>
 
-</LinearLayout>
+</RelativeLayout>
