@@ -50,6 +50,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
     private GridView mGridView;
     private ImageView mAddWbBtn;
     private ImageView mOpenDocsBtn;
+    private ImageView mDelWbBtn;
     private Drawable mTransparentBg;
     private WbAdapter mWbAdapter;
 
@@ -105,20 +106,23 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         mGridView = (GridView) mRoot.findViewById(R.id.white_coll_list);
         mAddWbBtn = (ImageView) mRoot.findViewById(R.id.add_white_board);
         mOpenDocsBtn = (ImageView) mRoot.findViewById(R.id.open_docs);
+        mDelWbBtn = (ImageView) mRoot.findViewById(R.id.del_white_board);
 
         mRoot.setOnClickListener(mClickListener);
         mAddWbBtn.setOnClickListener(mClickListener);
         mOpenDocsBtn.setOnClickListener(mClickListener);
+        mDelWbBtn.setOnClickListener(mClickListener);
 
         mGridView.setOnItemClickListener(this);
 
         Resources rs = mContext.getResources();
         mGridView.setHorizontalSpacing(mHorizontalPadding);
         mGridView.setNumColumns(NUM_COLUMN);
-
         mScreenWidth = rs.getDisplayMetrics().widthPixels;
-        mHorizontalPadding = rs.getDimensionPixelOffset(R.dimen.px20);
-        mCoverWidth = (mScreenWidth - (NUM_COLUMN - 1) * mHorizontalPadding) / NUM_COLUMN;
+        //mHorizontalPadding = rs.getDimensionPixelOffset(R.dimen.px20);
+        int margin = rs.getDimensionPixelOffset(R.dimen.px30);
+
+        mCoverWidth = (mScreenWidth - (NUM_COLUMN - 1) * (mHorizontalPadding + margin) * 2) / NUM_COLUMN;
         mCOverHeight =  (int)(0.75f * mCoverWidth);
     }
 
@@ -145,7 +149,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         @Override
         public void onClick(View v) {
             int count = mCollections != null ? mCollections.size() : 0;
-            if (count >= MAX_COUNT) {
+            if (count >= MAX_COUNT && v.getId() != R.id.del_white_board) {
                 String tips = String.format(mContext.getString(R.string.add_white_board_exceed), MAX_COUNT);
                 Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return;
@@ -165,6 +169,9 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                     //open document
                     Intent i = new Intent(mContext, DocumentActivity.class);
                     mContext.startActivity(i);
+                    break;
+                case R.id.del_white_board:
+                    //del white boards
                     break;
             }
         }
