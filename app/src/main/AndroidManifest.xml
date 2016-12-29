@@ -36,8 +36,7 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".ui.SplashActivity"
-                android:theme="@style/SplashTheme"
-                >
+                android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -75,7 +74,6 @@
         <activity android:name="ui.course.LessonHomeActivity">
         </activity>
         <activity android:name=".ui.TestAPIActivity">
-
         </activity>
         <activity android:name=".ui.course.LiveLessonBriefActivity"/>
         <activity android:name=".ui.course.SalePromotionActivity"/>
@@ -113,8 +111,8 @@
         <activity
                 android:name=".ui.home.MomentCommentActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize"
-                android:theme="@style/ActivityStyleBottomToTop"/>
+                android:theme="@style/ActivityStyleBottomToTop"
+                android:windowSoftInputMode="adjustResize"/>
         <activity
                 android:name=".ui.message.ContactActivity"
                 android:windowSoftInputMode="stateAlwaysHidden">
@@ -132,10 +130,11 @@
         <activity
                 android:name=".ui.home.MomentUpdateActivity"
                 android:screenOrientation="portrait"/>
-
         <activity
                 android:name=".ui.mine.ScrollTabActivity"
                 android:screenOrientation="portrait"/>
+        <activity android:name=".ui.message.ShareScopeActivity">
+        </activity>
     </application>
 
 </manifest>

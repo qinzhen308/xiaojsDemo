@@ -16,7 +16,7 @@ import cn.xiaojs.xma.model.Account;
 public class ContactGroup {
     public String id;
     public String name;
-    public ArrayList<Contact> contacts;
+    //public ArrayList<Contact> contacts;
     //////////////////////////////////////////////////
 
     public String set;

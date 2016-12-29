@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentActivity;
 
 import com.orhanobut.logger.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.XiaojsConfig;
@@ -337,7 +340,8 @@ public class SocialManager extends DataManager {
      * @param context
      * @param callback
      */
-    public void getContacts(Context context, APIServiceCallback<ArrayList<ContactGroup>> callback) {
+    public static void getContacts(Context context,
+                                   APIServiceCallback<ArrayList<ContactGroup>> callback) {
 
         String session = AccountDataManager.getSessionID(context);
         if (checkSession(session, callback)) {
@@ -348,6 +352,32 @@ public class SocialManager extends DataManager {
         socialRequest.getContacts(session);
 
     }
+
+
+    public static  ContactGroup parseAddGroup(String body) {
+
+        ContactGroup contactGroup = null;
+
+        try {
+            JSONObject jobject = new JSONObject(body);
+
+            String key = jobject.keys().next();
+            String name = jobject.getString(key);
+
+            contactGroup = new ContactGroup();
+            contactGroup.name = name;
+            contactGroup.group = Long.valueOf(key);
+            contactGroup.collection = new ArrayList<>(0);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return contactGroup;
+    }
+
+
+
 
 
 }

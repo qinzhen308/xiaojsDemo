@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
@@ -29,6 +30,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ChoiceContactActivity extends BaseActivity {
+
+    public static final String CHOOSE_CONTACT_EXTRA = "ccontact_extra";
+
 
     @BindView(R.id.list_contact)
     PullToRefreshExpandableListView listView;
@@ -48,6 +52,18 @@ public class ChoiceContactActivity extends BaseActivity {
         editText.setVisibility(View.GONE);
 
         addTestData();
+
+        listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ExpandableListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
+
+            }
+        });
     }
 
     @OnClick({R.id.left_image,R.id.right_image})

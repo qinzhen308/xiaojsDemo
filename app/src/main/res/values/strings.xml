@@ -320,7 +320,7 @@
     <string name="post_dyn">发动态</string>
     <string name="post">发布</string>
     <string name="input_dyn_hint">分享你的新鲜事儿</string>
-    <string name="publish">公开</string>
+    <string name="publish">所有人可见</string>
     <string name="who_can_see_me">谁能看见</string>
     <string name="choice_contact">选择联系人</string>
     <string name="move_contact">移动联系人</string>
@@ -332,6 +332,7 @@
     <string name="group_select_count">(%1$d/%2$d)</string>
     <string name="post_dyn_ok">发布动态成功</string>
     <string name="post_dyn_none">动态内容不能为空</string>
+    <string name="num_can_see">%1$d人可见</string>
 
     <!-- live tab -->
     <string name="lesson_of_choiceness">精选课</string>
