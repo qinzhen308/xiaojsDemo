@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/px10"
+            android:layout_marginRight="@dimen/px30"
             android:src="@drawable/cr_add_wb"/>
 
     <ImageView
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/add_white_board"
-            android:layout_marginRight="@dimen/px36"
+            android:layout_marginRight="@dimen/px42"
             android:src="@drawable/cr_open_docs"/>
 
     <ImageView
@@ -30,16 +30,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/open_docs"
-            android:layout_marginRight="@dimen/px36"
+            android:layout_marginRight="@dimen/px42"
             android:src="@drawable/cr_del_wb"/>
 
     <GridView
             android:id="@+id/white_coll_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:verticalSpacing="@dimen/px10"
+            android:verticalSpacing="@dimen/px20"
             android:layout_below="@+id/add_white_board"
-            android:layout_marginTop="@dimen/px10"
-            android:scrollbars="none"></GridView>
+            android:layout_marginTop="@dimen/px20"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none"
+            android:layout_marginLeft="@dimen/px12"
+            android:layout_marginRight="@dimen/px12"></GridView>
 
 </RelativeLayout>

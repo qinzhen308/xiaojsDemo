@@ -94,8 +94,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     View mLiveProgressLayout;
     @BindView(R.id.live_progress)
     SeekBar mLiveProgress;
-    @BindView(R.id.blackboard_coll_count)
-    TextView mBlackboardCollCountTv;
+    @BindView(R.id.whiteboard_coll_count)
+    TextView mWhiteboardCollCountTv;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
@@ -780,9 +780,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     public void onAddWhiteboardCollection(WhiteboardCollection collection) {
         addToWhiteboardCollectionList(collection);
 
+        updateWhiteboardCollCountStyle();
+    }
+
+    public void updateWhiteboardCollCountStyle() {
         if (mWhiteboardCollectionList != null && mWhiteboardCollectionList.size() > 1) {
-            mBlackboardCollCountTv.setVisibility(View.VISIBLE);
-            mBlackboardCollCountTv.setText(String.valueOf(mWhiteboardCollectionList.size()));
+            mWhiteboardCollCountTv.setVisibility(View.VISIBLE);
+            mWhiteboardCollCountTv.setText(String.valueOf(mWhiteboardCollectionList.size()));
         }
     }
 

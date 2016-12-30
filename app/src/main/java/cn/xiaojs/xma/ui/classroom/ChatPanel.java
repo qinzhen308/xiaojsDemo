@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 
-public class ChatPanel extends Panel implements View.OnClickListener {
+public class ChatPanel extends Panel implements View.OnClickListener, ContactBookAdapter.OnContactBookListener {
     public final static int MODE_CONTACT = 0;
     public final static int MODE_CHAT = 1;
 
@@ -163,6 +163,7 @@ public class ChatPanel extends Panel implements View.OnClickListener {
     private void setContactBookData(boolean dataChanged) {
         if (mContactBookAdapter == null) {
             mContactBookAdapter = new ContactBookAdapter(mContext);
+            mContactBookAdapter.setOnContactBookListener(this);
             mContactBook.setAdapter(mContactBookAdapter);
             mContactBook.setDividerHeight(0);
         } else {
@@ -223,6 +224,13 @@ public class ChatPanel extends Panel implements View.OnClickListener {
         if (mContactBookAdapter != null) {
             mContactBookAdapter.exitManagementMode();
         }
+    }
+
+    @Override
+    public void onPortraitClick() {
+        switchToChat();
+        setChatSimpleContactData(false);
+        setChatMsgData(false);
     }
 }
 

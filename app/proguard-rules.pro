@@ -35,7 +35,8 @@
   **[] $VALUES;
   public *;
 }
--keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+# for DexGuard only
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 #------------------butterknife----------------------------------------------------------------------
 -keep class butterknife.** { *; }
