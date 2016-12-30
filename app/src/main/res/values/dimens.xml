@@ -543,6 +543,35 @@
     <dimen name="px528">264.0dp</dimen>
     <dimen name="px529">264.5dp</dimen>
     <dimen name="px530">265.0dp</dimen>
+    <dimen name="px531">265.5dp</dimen>
+    <dimen name="px532">266.0dp</dimen>
+    <dimen name="px533">266.5dp</dimen>
+    <dimen name="px534">267.0dp</dimen>
+    <dimen name="px535">267.5dp</dimen>
+    <dimen name="px536">268.0dp</dimen>
+    <dimen name="px537">268.5dp</dimen>
+    <dimen name="px538">269.0dp</dimen>
+    <dimen name="px539">269.5dp</dimen>
+    <dimen name="px540">270.0dp</dimen>
+    <dimen name="px541">270.5dp</dimen>
+    <dimen name="px542">271.0dp</dimen>
+    <dimen name="px543">271.5dp</dimen>
+    <dimen name="px544">272.0dp</dimen>
+    <dimen name="px545">272.5dp</dimen>
+    <dimen name="px546">273.0dp</dimen>
+    <dimen name="px547">273.5dp</dimen>
+    <dimen name="px548">274.0dp</dimen>
+    <dimen name="px549">274.5dp</dimen>
+    <dimen name="px550">275.0dp</dimen>
+    <dimen name="px551">275.5dp</dimen>
+    <dimen name="px552">276.0dp</dimen>
+    <dimen name="px553">276.5dp</dimen>
+    <dimen name="px554">277.0dp</dimen>
+    <dimen name="px555">277.5dp</dimen>
+    <dimen name="px556">278.0dp</dimen>
+    <dimen name="px557">278.5dp</dimen>
+    <dimen name="px558">279.0dp</dimen>
+    <dimen name="px559">279.5dp</dimen>
     <dimen name="px560">280.0dp</dimen>
 
 </resources>

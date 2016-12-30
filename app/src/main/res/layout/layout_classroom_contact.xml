@@ -2,7 +2,7 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/contact"
-        android:layout_width="@dimen/px400"
+        android:layout_width="@dimen/px350"
         android:layout_height="match_parent"
         android:background="@color/classroom_main_gray"
         android:focusable="true"

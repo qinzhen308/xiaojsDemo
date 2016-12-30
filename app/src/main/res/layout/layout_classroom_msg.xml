@@ -13,13 +13,15 @@
             android:text="@string/all_class_room_msg"
             android:textSize="@dimen/font_32px"
             android:textColor="@color/font_black"
-            android:padding="@dimen/px30"/>
+            android:paddingLeft="@dimen/px30"
+            android:paddingTop="@dimen/px34"
+            android:paddingBottom="@dimen/px34"/>
 
     <View
             style="@style/DividerHorizontal"/>
 
     <ListView
             android:id="@+id/msg_list"
-            android:layout_width="@dimen/px400"
+            android:layout_width="@dimen/px560"
             android:layout_height="wrap_content"></ListView>
 </LinearLayout>
