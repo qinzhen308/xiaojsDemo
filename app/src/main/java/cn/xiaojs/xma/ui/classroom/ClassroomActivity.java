@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,9 +74,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.drawer_left_layout)
-    ViewGroup mDrawerLeftLayout;
+    ViewGroup mLeftDrawer;
     @BindView(R.id.drawer_right_layout)
-    ViewGroup mDrawerRightLayout;
+    ViewGroup mRightDrawer;
 
     //panel
     @BindView(R.id.drawer_content_layout)
@@ -122,6 +123,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     //gesture
     private ClassroomGestureDetector mMainPanelGestureDetector;
     private ClassroomGestureDetector mWhiteboardGestureDetector;
+
+    private ViewGroup mOpenedDrawer;
+    private Panel mOpenedPanel;
 
     private int mCurrentState = ClassroomState.STATE_MAIN_PANEL;
     private boolean mAnimating = false;
@@ -184,11 +188,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             @Override
             public void onDrawerOpened(View drawerView) {
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                mOpenedDrawer = (ViewGroup) drawerView;
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mOpenedDrawer = null;
+                mOpenedPanel = null;
             }
 
             @Override
@@ -354,7 +361,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (mCourseWarePanel == null) {
             mCourseWarePanel = new CourseWarePanel(this);
         }
-        mCourseWarePanel.show(mDrawerLayout, mDrawerLeftLayout);
+        mCourseWarePanel.show(mDrawerLayout, mLeftDrawer);
+        mOpenedPanel = mCourseWarePanel;
     }
 
     /**
@@ -364,7 +372,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (mSettingPanel == null) {
             mSettingPanel = new SettingPanel(this);
         }
-        mSettingPanel.show(mDrawerLayout, mDrawerRightLayout);
+        mSettingPanel.show(mDrawerLayout, mRightDrawer);
+        mOpenedPanel = mSettingPanel;
     }
 
     /**
@@ -376,12 +385,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mChatPanel.setPanelCallback(new PanelCallback() {
                 @Override
                 public void onOpenPanel(int panel) {
-                    mChatPanel.close(mDrawerLayout, mDrawerRightLayout, false);
+                    mChatPanel.close(mDrawerLayout, mRightDrawer, false);
                     openInviteFriend();
                 }
             });
         }
-        mChatPanel.with(mode).show(mDrawerLayout, mDrawerRightLayout);
+        mChatPanel.with(mode).show(mDrawerLayout, mRightDrawer);
+        mOpenedPanel = mChatPanel;
     }
 
     /**
@@ -391,7 +401,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (mMessagePanel == null) {
             mMessagePanel = new MessagePanel(this);
         }
-        mMessagePanel.show(mDrawerLayout, mDrawerRightLayout);
+        mMessagePanel.show(mDrawerLayout, mRightDrawer);
+        mOpenedPanel = mMessagePanel;
     }
 
     /**
@@ -402,7 +413,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mInviteFriendPanel = new InviteFriendPanel(this);
         }
 
-        mInviteFriendPanel.show(mDrawerLayout, mDrawerRightLayout);
+        mInviteFriendPanel.show(mDrawerLayout, mRightDrawer);
+        mOpenedPanel = mInviteFriendPanel;
     }
 
     /**
@@ -828,4 +840,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mOpenedDrawer != null && mOpenedPanel != null) {
+                mOpenedPanel.close(mDrawerLayout, mOpenedDrawer);
+                return false;
+            }
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
 }

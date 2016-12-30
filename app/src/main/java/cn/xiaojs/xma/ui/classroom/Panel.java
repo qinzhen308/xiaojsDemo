@@ -64,12 +64,25 @@ public abstract class Panel {
         initData();
     }
 
-    public void close(final DrawerLayout drawerLayout, final ViewGroup container, boolean animate ) {
+    public void close(final DrawerLayout drawerLayout, final ViewGroup container) {
+        close(drawerLayout, container, true);
+    }
+
+
+    public void close(final DrawerLayout drawerLayout, final ViewGroup container, boolean animate) {
         if (drawerLayout == null || container == null) {
             return;
         }
 
         drawerLayout.closeDrawer(container, animate);
+    }
+
+    public void close(final DrawerLayout drawerLayout, int gravity, boolean animate) {
+        if (drawerLayout == null) {
+            return;
+        }
+
+        drawerLayout.closeDrawer(gravity, animate);
     }
 
     public void initChildView(View root) {
