@@ -31,6 +31,7 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.DynamicStatus;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -170,8 +171,8 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
 
     @Override
     protected void doRequest() {
-
-        SocialManager.getActivities(mContext, null, mPagination, new APIServiceCallback<CollectionPage<Dynamic>>() {
+        Criteria criteria = new Criteria();
+        SocialManager.getActivities(mContext, criteria, mPagination, new APIServiceCallback<CollectionPage<Dynamic>>() {
             @Override
             public void onSuccess(CollectionPage<Dynamic> object) {
                 if (object != null) {

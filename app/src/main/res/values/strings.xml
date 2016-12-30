@@ -376,4 +376,7 @@
     <string name="comment">评论</string>
     <string name="dynamic_about_me">%1$d条与我相关</string>
     <string name="dynamic_update">%1$d条</string>
+    <string name="lesson">课</string>
+    <string name="personal">个人</string>
+    <string name="organization">机构</string>
 </resources>
