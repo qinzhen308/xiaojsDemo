@@ -17,10 +17,21 @@ package cn.xiaojs.xma.ui.classroom;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import cn.xiaojs.xma.R;
 
-public class SettingPanel extends Panel {
+public class SettingPanel extends Panel implements View.OnClickListener{
+    private TextView mFluentTv;
+    private TextView mStandardTv;
+    private TextView mHighTv;
+
+    private ToggleButton mMicroPhoneSwitcher;
+    private ToggleButton mCameraSwitcher;
+    private ToggleButton mChatSwitcher;
+
     public SettingPanel(Context context) {
         super(context);
     }
@@ -31,7 +42,51 @@ public class SettingPanel extends Panel {
     }
 
     @Override
-    public void initData() {
+    public void initChildView(View root) {
+        mFluentTv = (TextView) root.findViewById(R.id.fluent);
+        mStandardTv = (TextView) root.findViewById(R.id.standard_definition);
+        mHighTv = (TextView) root.findViewById(R.id.high_definition);
 
+        mMicroPhoneSwitcher = (ToggleButton) root.findViewById(R.id.microphone_switcher);
+        mCameraSwitcher = (ToggleButton) root.findViewById(R.id.camera_switcher);
+        mChatSwitcher = (ToggleButton) root.findViewById(R.id.class_room_chat);
+
+        mFluentTv.setOnClickListener(this);
+        mStandardTv.setOnClickListener(this);
+        mHighTv.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void initData() {
+        //default fluent
+        mFluentTv.setSelected(true);
+
+        mMicroPhoneSwitcher.setChecked(true);
+        mCameraSwitcher.setChecked(true);
+        mChatSwitcher.setChecked(true);
+    }
+
+    @Override
+    public void onClick(View v) {
+        reset();
+        if (!v.isSelected()) {
+            v.setSelected(true);
+        }
+
+        switch (v.getId()) {
+            case R.id.fluent:
+                break;
+            case R.id.standard_definition:
+                break;
+            case R.id.high_definition:
+                break;
+        }
+    }
+
+    private void reset() {
+        mFluentTv.setSelected(false);
+        mStandardTv.setSelected(false);
+        mHighTv.setSelected(false);
     }
 }
