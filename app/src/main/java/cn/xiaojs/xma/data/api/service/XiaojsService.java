@@ -88,13 +88,14 @@ public interface XiaojsService {
     Call<HomeData> getHomeData(@Header("SessionID") String sessionID);
 
     //Edit Profile
+    @Headers("Content-Type: application/json")
     @PATCH("/v1/accounts/profile")
     Call<ResponseBody> editProfile(@Header("SessionID") String sessionID,
-                            @Body Account.Basic accountBasic);
+                            @Body Account account);
 
     //Get Profile
     @GET("/v1/accounts/profile")
-    Call<Account.Basic> getProfile(@Header("SessionID") String sessionID);
+    Call<Account> getProfile(@Header("SessionID") String sessionID);
 
     //Get upToken
     @GET("/v1/accounts/up_avatar_token")

@@ -30,6 +30,64 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.UNFOLLOW_CONTACT:
+                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+                    errorMessage = "您未关注此人";
+                } else {
+                    errorMessage = "取消关注失败";
+                }
+                break;
+            case APIType.REPLAY_2_REPLY:
+                errorMessage = "回复失败";
+                break;
+            case APIType.REPLAY_COMMENT:
+                errorMessage = "回复失败";
+                break;
+            case APIType.POST_ACTIVITY:
+                errorMessage = "发布动态失败";
+                break;
+            case APIType.LIKE_ACTIVITY:
+                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+                    errorMessage = "您已赞过";
+                } else {
+                    errorMessage = "点赞失败";
+                }
+                break;
+            case APIType.GET_UPDATES:
+                errorMessage = "获取动态更新失败";
+                break;
+            case APIType.GET_LINKED_RECORDS:
+                errorMessage = "获取赞失败";
+                break;
+            case APIType.GET_CONTACTS:
+                errorMessage = "获取联系人失败";
+                break;
+            case APIType.GET_COMMENTS:
+                errorMessage = "获取评论失败";
+                break;
+            case APIType.GET_ACTIVITY_DETAILS:
+                errorMessage = "获取详情失败";
+                break;
+            case APIType.GET_ACTIVITIES:
+                errorMessage = "获取动态失败";
+                break;
+            case APIType.FOLLOW_CONTACT:
+                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+                    errorMessage = "您已关注";
+                } else {
+                    errorMessage = "关注失败";
+                }
+                break;
+            case APIType.COMMENT_ACTIVITY:
+                errorMessage = "评论失败";
+                break;
+            case APIType.ADD_CONTACT_GROUP:
+                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+                    errorMessage = "组已存在";
+                } else {
+                    errorMessage = "新建组失败";
+                }
+                break;
             case APIType.HAVE_PROVILEGES:
                 errorMessage = "查询特权失败";
                 break;
