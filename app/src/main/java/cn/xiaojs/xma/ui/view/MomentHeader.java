@@ -34,7 +34,6 @@ import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
@@ -85,11 +84,12 @@ public class MomentHeader extends RelativeLayout {
     public void setData(Dynamic dynamic) {
         mOwner = dynamic.owner;
         if (mOwner.myself || VerifyUtils.isMyself(mOwner.account)){
-            mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
             mName.setText(XiaojsConfig.mLoginUser.getName());
             mTag.setText("自己");
+            mDesc.setText("");
         }else {
-            mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
+            //mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
+            mDesc.setText("");
             mName.setText(dynamic.owner.alias);
             mTag.setText(dynamic.owner.tag);
         }

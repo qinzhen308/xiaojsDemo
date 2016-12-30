@@ -9,6 +9,7 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
 import cn.xiaojs.xma.ui.course.CourseConstant;
 import cn.xiaojs.xma.ui.course.LessonCreationActivity;
@@ -81,9 +82,11 @@ public class MainActivity extends BaseTabActivity {
                 startActivity(new Intent(this,PersonHomeActivity.class));
                 break;
             case 5:
-                startActivity(new Intent(this, PostDynamicActivity.class));
+                startActivityForResult(new Intent(this, PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
                 break;
         }
+
+        autoClose();
     }
 
     @Override

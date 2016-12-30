@@ -28,15 +28,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.widget.GooeyMenu;
-import cn.xiaojs.xma.ui.widget.LazyViewPager;
-import cn.xiaojs.xma.ui.widget.RedTipTextView;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.widget.GooeyMenu;
+import cn.xiaojs.xma.ui.widget.LazyViewPager;
+import cn.xiaojs.xma.ui.widget.RedTipTextView;
 
 public abstract class BaseTabActivity extends BaseActivity {
 
@@ -175,6 +174,10 @@ public abstract class BaseTabActivity extends BaseActivity {
     }
 
     protected void onTabClick(int position) {
+        autoClose();
+    }
+
+    protected void autoClose(){
         if (mGooeyMenu.opened()){
             mGooeyMenu.close();
         }

@@ -33,6 +33,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.model.DynamicStatus;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.banner.BannerAdapter;
@@ -218,6 +219,13 @@ public class HomeFragment extends BaseFragment {
                     if (mAdapter != null){
                         DynamicStatus status = (DynamicStatus) data.getSerializableExtra(HomeConstant.KEY_DATA_MOMENT_DETAIL);
                         mAdapter.update(status);
+                    }
+                }
+                break;
+            case BaseConstant.REQUEST_CODE_SEND_MOMENT:
+                if (resultCode == Activity.RESULT_OK){
+                    if (mAdapter != null){
+                        mAdapter.doRefresh();
                     }
                 }
                 break;
