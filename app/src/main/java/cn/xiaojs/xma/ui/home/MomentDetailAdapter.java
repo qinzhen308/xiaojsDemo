@@ -117,7 +117,7 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAd
         }
         intent.putExtra(HomeConstant.KEY_COMMENT_REPLY_NAME, bean.createdBy.getBasic().getName());
         intent.putExtra(HomeConstant.KEY_MOMENT_REPLY_ID, bean.id);
-        ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_COMMENT);
+        ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_COMMENT_REPLY);
     }
 
     @Override

@@ -759,13 +759,21 @@ public class TimeUtil {
         StringBuilder time = new StringBuilder();
         if (target.getTime() >= now.getTime()) {//之后
             int dis = getTime(target, Calendar.MINUTE) - getTime(now, Calendar.MINUTE);
-            time.append(dis);
-            time.append("分钟之后");
+            if (dis > 0){
+                time.append(dis);
+                time.append("分钟之后");
+            }else {
+                time.append("刚刚");
+            }
             return time.toString();
         } else {//之前
             int dis = getTime(now, Calendar.MINUTE) - getTime(target, Calendar.MINUTE);
-            time.append(dis);
-            time.append("分钟之前");
+            if (dis > 0 ){
+                time.append(dis);
+                time.append("分钟之前");
+            }else {
+                time.append("刚刚");
+            }
             return time.toString();
         }
 

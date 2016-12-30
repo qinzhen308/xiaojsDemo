@@ -138,4 +138,14 @@ public class Social {
 
     }
 
+    public class UpdateType{
+        public static final String NEW_UPDATE = "NewUpdate";
+        public static final String MENTIONED_UPDATE = "ForwardedUpdate";
+        public static final String FORWARDED_UPDATE = "NewUpdate";
+        public static final String COMMENTED_UPDATE = "CommentedUpdate";
+        public static final String REPLIED_UPDATE = "RepliedUpdate";
+        public static final String LIKED_UPDATE = "LikedUpdate";
+        public static final String SOLUTION_UPDATE = "SolutionUpdate";
+    }
+
 }

@@ -31,6 +31,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.model.DynamicStatus;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.search.SearchActivity;
@@ -58,6 +59,8 @@ public class HomeFragment extends BaseFragment {
     PullToRefreshSwipeListView mList;
     private boolean mScrolled;
 
+    private HomeMomentAdapter mAdapter;
+
     @Override
     protected View getContentView() {
         View v = mContext.getLayoutInflater().inflate(R.layout.fragment_home, null);
@@ -69,9 +72,9 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        HomeMomentAdapter ada = new HomeMomentAdapter(mContext,mList);
-        ada.setFragment(this);
-        mList.setAdapter(ada);
+        mAdapter = new HomeMomentAdapter(mContext,mList);
+        mAdapter.setFragment(this);
+        mList.setAdapter(mAdapter);
 
         BannerBean b1 = new BannerBean();
         BannerBean b2 = new BannerBean();
@@ -181,6 +184,7 @@ public class HomeFragment extends BaseFragment {
                 mMarkTip.setText(getString(R.string.dynamic_about_me,updates));
             }
         }else {
+            mScrolled = true;
             mRightMark.setVisibility(View.INVISIBLE);
             mMark.setVisibility(View.INVISIBLE);
         }
@@ -206,6 +210,15 @@ public class HomeFragment extends BaseFragment {
                     //进入过动态更新界面，并成功获取过数据，回来就不显示动态更新的提示
                     mRightMark.setVisibility(View.INVISIBLE);
                     mMark.setVisibility(View.INVISIBLE);
+                    mScrolled = true;
+                }
+                break;
+            case HomeConstant.REQUEST_CODE_MOMENT_DETAIL:
+                if (resultCode == Activity.RESULT_OK){
+                    if (mAdapter != null){
+                        DynamicStatus status = (DynamicStatus) data.getSerializableExtra(HomeConstant.KEY_DATA_MOMENT_DETAIL);
+                        mAdapter.update(status);
+                    }
                 }
                 break;
         }

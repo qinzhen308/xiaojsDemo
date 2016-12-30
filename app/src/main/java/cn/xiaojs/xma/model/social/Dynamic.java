@@ -3,6 +3,7 @@ package cn.xiaojs.xma.model.social;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import cn.xiaojs.xma.model.Doc;
@@ -69,7 +70,7 @@ public class Dynamic {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class DynStatus {
+    public static class DynStatus implements Serializable{
         public int liked;
         public int comments;
         public int forwarded;

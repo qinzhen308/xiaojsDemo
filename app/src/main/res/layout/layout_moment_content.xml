@@ -56,8 +56,10 @@
                 android:id="@+id/moment_content_question_image"
                 android:scaleType="fitXY"
                 android:visibility="gone"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
                 android:src="@drawable/default_portrait"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
         <RelativeLayout

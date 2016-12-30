@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
             android:id="@+id/title"
@@ -18,7 +18,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/back_arrow"
                 android:layout_marginLeft="@dimen/px30"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_gravity="center_vertical"/>
 
         <cn.xiaojs.xma.ui.widget.EditTextDel
@@ -47,49 +47,32 @@
                 android:layout_marginRight="@dimen/px30"
                 android:layout_gravity="center_vertical"
                 android:textColor="@drawable/orange_click_text_selector"
-                android:text="@string/search"/>
+                android:text="@string/cancel"/>
 
     </LinearLayout>
 
     <View style="@style/DividerHorizontal"/>
 
-    <ScrollView
-            android:scrollbars="none"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        <LinearLayout
-                android:orientation="vertical"
+        <ScrollView
+                android:id="@+id/search_category"
+                android:scrollbars="none"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
             <LinearLayout
-                    android:id="@+id/search_lesson_list_wrapper"
                     android:orientation="vertical"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                <TextView
-                        android:layout_marginLeft="@dimen/px30"
-                        android:layout_marginTop="@dimen/px30"
-                        android:layout_marginBottom="@dimen/px30"
-                        android:text="课"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/common_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
-                        android:id="@+id/search_lesson_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                <View style="@style/DividerHorizontal"/>
-
-                <FrameLayout
-                        android:id="@+id/search_lesson_more"
-                        android:background="@drawable/white_grey_selector"
+                <LinearLayout
+                        android:id="@+id/search_lesson_list_wrapper"
+                        android:orientation="vertical"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -97,85 +80,44 @@
                             android:layout_marginLeft="@dimen/px30"
                             android:layout_marginTop="@dimen/px30"
                             android:layout_marginBottom="@dimen/px30"
-                            android:text="查看更多课"
+                            android:text="课"
                             android:textSize="@dimen/font_28px"
-                            android:drawableRight="@drawable/ic_entrance"
-                            android:drawablePadding="@dimen/px15"
                             android:textColor="@color/common_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
-                </FrameLayout>
-            </LinearLayout>
 
-
-            <LinearLayout
-                    android:id="@+id/search_people_list_wrapper"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <TextView
-                        android:layout_marginLeft="@dimen/px30"
-                        android:layout_marginTop="@dimen/px30"
-                        android:layout_marginBottom="@dimen/px30"
-                        android:text="个人"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/common_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
-                        android:id="@+id/search_people_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                <View style="@style/DividerHorizontal"/>
-
-                <FrameLayout
-                        android:id="@+id/search_people_more"
-                        android:background="@drawable/white_grey_selector"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                    <TextView
-                            android:layout_marginLeft="@dimen/px30"
-                            android:layout_marginTop="@dimen/px30"
-                            android:layout_marginBottom="@dimen/px30"
-                            android:text="查看更多人"
-                            android:textSize="@dimen/font_28px"
-                            android:drawableRight="@drawable/ic_entrance"
-                            android:drawablePadding="@dimen/px15"
-                            android:textColor="@color/common_text"
-                            android:layout_width="wrap_content"
+                    <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
+                            android:id="@+id/search_lesson_list"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
-                </FrameLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                    android:id="@+id/search_organization_list_wrapper"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    <View style="@style/DividerHorizontal"/>
 
-                <TextView
-                        android:layout_marginLeft="@dimen/px30"
-                        android:layout_marginTop="@dimen/px30"
-                        android:layout_marginBottom="@dimen/px30"
-                        android:text="机构"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/common_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                    <FrameLayout
+                            android:id="@+id/search_lesson_more"
+                            android:background="@drawable/white_grey_selector"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                <include layout="@layout/layout_search_organization_item"/>
+                        <TextView
+                                android:layout_marginLeft="@dimen/px30"
+                                android:layout_marginTop="@dimen/px30"
+                                android:layout_marginBottom="@dimen/px30"
+                                android:text="查看更多课"
+                                android:textSize="@dimen/font_28px"
+                                android:drawableRight="@drawable/ic_entrance"
+                                android:drawablePadding="@dimen/px15"
+                                android:textColor="@color/common_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </FrameLayout>
+                </LinearLayout>
 
-                <View style="@style/DividerHorizontal"/>
 
-                <FrameLayout
-                        android:id="@+id/search_organization_more"
-                        android:background="@drawable/white_grey_selector"
+                <LinearLayout
+                        android:id="@+id/search_people_list_wrapper"
+                        android:orientation="vertical"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -183,20 +125,104 @@
                             android:layout_marginLeft="@dimen/px30"
                             android:layout_marginTop="@dimen/px30"
                             android:layout_marginBottom="@dimen/px30"
-                            android:text="查看更多机构"
+                            android:text="个人"
                             android:textSize="@dimen/font_28px"
-                            android:drawableRight="@drawable/ic_entrance"
-                            android:drawablePadding="@dimen/px15"
                             android:textColor="@color/common_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
-                </FrameLayout>
-            </LinearLayout>
 
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/px90"/>
-        </LinearLayout>
-    </ScrollView>
+                    <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
+                            android:id="@+id/search_people_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    <View style="@style/DividerHorizontal"/>
+
+                    <FrameLayout
+                            android:id="@+id/search_people_more"
+                            android:background="@drawable/white_grey_selector"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <TextView
+                                android:layout_marginLeft="@dimen/px30"
+                                android:layout_marginTop="@dimen/px30"
+                                android:layout_marginBottom="@dimen/px30"
+                                android:text="查看更多人"
+                                android:textSize="@dimen/font_28px"
+                                android:drawableRight="@drawable/ic_entrance"
+                                android:drawablePadding="@dimen/px15"
+                                android:textColor="@color/common_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:id="@+id/search_organization_list_wrapper"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_marginTop="@dimen/px30"
+                            android:layout_marginBottom="@dimen/px30"
+                            android:text="机构"
+                            android:textSize="@dimen/font_28px"
+                            android:textColor="@color/common_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <include layout="@layout/layout_search_organization_item"/>
+
+                    <View style="@style/DividerHorizontal"/>
+
+                    <FrameLayout
+                            android:id="@+id/search_organization_more"
+                            android:background="@drawable/white_grey_selector"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <TextView
+                                android:layout_marginLeft="@dimen/px30"
+                                android:layout_marginTop="@dimen/px30"
+                                android:layout_marginBottom="@dimen/px30"
+                                android:text="查看更多机构"
+                                android:textSize="@dimen/font_28px"
+                                android:drawableRight="@drawable/ic_entrance"
+                                android:drawablePadding="@dimen/px15"
+                                android:textColor="@color/common_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </FrameLayout>
+                </LinearLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/px90"/>
+            </LinearLayout>
+        </ScrollView>
+
+        <FrameLayout
+                android:id="@+id/search_empty"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:text="暂无结果～"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/common_text"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>
+
+
+
+
