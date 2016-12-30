@@ -17,10 +17,7 @@ package cn.xiaojs.xma.ui.live;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
 
-import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.widget.HorizontalAdaptScrollerView;
 
 public class LiveScrollView extends HorizontalAdaptScrollerView {
@@ -44,13 +41,13 @@ public class LiveScrollView extends HorizontalAdaptScrollerView {
         super(context, attrs, defStyle);
     }
 
-    @Override
-    protected void changeChildrenParams(View parent, LayoutParams parentParams) {
-        View view = null;
-        if ((view = parent.findViewById(R.id.live_block_image)) != null){
-            ViewGroup.LayoutParams lp = view.getLayoutParams();
-            lp.width = parentParams.width;
-            lp.height = (int) (3.0 / 4 * lp.width);
-        }
-    }
+//    @Override
+//    protected void changeChildrenParams(View parent, LayoutParams parentParams) {
+//        View view = null;
+//        if ((view = parent.findViewById(R.id.live_block_image)) != null){
+//            ViewGroup.LayoutParams lp = view.getLayoutParams();
+//            lp.width = parentParams.width;
+//            lp.height = (int) (3.0 / 4 * lp.width);
+//        }
+//    }
 }
