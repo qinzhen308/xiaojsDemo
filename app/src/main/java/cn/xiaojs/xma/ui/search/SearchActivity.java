@@ -61,6 +61,11 @@ public class SearchActivity extends BaseActivity {
     @BindView(R.id.search_organization_list_wrapper)
     View mOrganizationWrapper;
 
+    @BindView(R.id.search_category)
+    View mCategory;
+    @BindView(R.id.search_empty)
+    View mEmpty;
+
     private final int MAX_LESSON = 3;
     private final int MAX_PEOPLE = 3;
     private final int MAX_ORGANIZATION = 1;
@@ -71,14 +76,6 @@ public class SearchActivity extends BaseActivity {
     protected void addViewContent() {
         addView(R.layout.activity_global_search);
         needHeader(false);
-//        CanInScrollviewListView.Adapter adapter = new SearchLessonAdapter(this,null);
-//        mLesson.setNeedDivider(true);
-//        mLesson.setAdapter(adapter);
-//
-//        CanInScrollviewListView.Adapter adapter1 = new SearchPeopleAdapter(this,null);
-//        //mLesson.setDividerColor(R.color.main_bg);
-//        mPeople.setNeedDivider(true);
-//        mPeople.setAdapter(adapter1);
         mInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,14 +95,11 @@ public class SearchActivity extends BaseActivity {
     }
 
     @OnClick({R.id.search_lesson_more, R.id.search_people_more, R.id.search_organization_more,
-            R.id.search_organization_result, R.id.back})
+            R.id.search_organization_result,R.id.search_ok})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.back:
-                finish();
-                break;
             case R.id.search_ok:
-                search();
+                finish();
                 break;
             case R.id.search_lesson_more:
                 break;
@@ -120,8 +114,11 @@ public class SearchActivity extends BaseActivity {
 
     private void search() {
         String query = mInput.getText().toString();
-        if (TextUtils.isEmpty(query))
+        if (TextUtils.isEmpty(query)){
+            mCategory.setVisibility(View.GONE);
+            mEmpty.setVisibility(View.GONE);
             return;
+        }
         SearchManager.searchAccounts(this, query, new APIServiceCallback<ArrayList<AccountSearch>>() {
             @Override
             public void onSuccess(ArrayList<AccountSearch> object) {
@@ -130,7 +127,7 @@ public class SearchActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-
+                updateDisplay( null);
             }
         });
     }
@@ -140,8 +137,12 @@ public class SearchActivity extends BaseActivity {
             mLessonWrapper.setVisibility(View.GONE);
             mPeopleWrapper.setVisibility(View.GONE);
             mOrganizationWrapper.setVisibility(View.GONE);
+            mCategory.setVisibility(View.GONE);
+            mEmpty.setVisibility(View.VISIBLE);
             return;
         }
+        mCategory.setVisibility(View.VISIBLE);
+        mEmpty.setVisibility(View.GONE);
         List<AccountSearch> lessons = SearchBusiness.getSearchResultByType(result, "Lesson");
         final List<AccountSearch> people = SearchBusiness.getSearchResultByType(result, "Person");
         List<AccountSearch> organization = SearchBusiness.getSearchResultByType(result, "Organization");

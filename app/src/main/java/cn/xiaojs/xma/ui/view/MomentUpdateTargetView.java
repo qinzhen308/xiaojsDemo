@@ -98,8 +98,10 @@ public class MomentUpdateTargetView extends FrameLayout {
     }
 
     public void show(DynUpdate bean) {
-        if (bean == null)
+        if (bean == null || bean.body == null){
+            show(-1);
             return;
+        }
         if (bean.body.ref != null) {
 
             //引用其他人的动态

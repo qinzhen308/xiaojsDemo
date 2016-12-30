@@ -26,5 +26,9 @@ public interface HomeConstant {
     public static final String KEY_MOMENT_REPLY_ID = "key_moment_reply_id";//评论回复的id
 
     public static final int REQUEST_CODE_COMMENT = 1;
+    public static final int REQUEST_CODE_COMMENT_REPLY = 4;
     public static final int REQUEST_CODE_UPDATE = 2;
+
+    public static final String KEY_DATA_MOMENT_DETAIL = "key_data_moment_detail";
+    public static final int REQUEST_CODE_MOMENT_DETAIL = 3;//进入动态详情
 }

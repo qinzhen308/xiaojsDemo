@@ -31,13 +31,16 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.DynamicStatus;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.live.LiveScrollView;
 import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.view.MomentUGC;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.ToastUtil;
+import cn.xiaojs.xma.util.VerifyUtils;
 
 public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapter.Holder> {
 
@@ -51,7 +54,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
     protected void setViewContent(Holder holder, final Dynamic bean, int position) {
 
         holder.showMoment();
-        holder.content.show(bean.body, bean.typeName);
+        holder.content.show(bean);
         holder.ugc.setStatus(bean);
         holder.ugc.setOnItemClickListener(new MomentUGC.OnItemClickListener() {
             @Override
@@ -80,26 +83,40 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
 
     private void more(final Dynamic bean) {
         ListBottomDialog dialog = new ListBottomDialog(mContext);
-        String[] items = mContext.getResources().getStringArray(R.array.ugc_more);
-        dialog.setItems(items);
-        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-            @Override
-            public void onItemClick(int position) {
-                switch (position) {
-                    case 0://忽略此条动态
-                        break;
-                    case 1://忽略他的动态
-                        break;
-                    case 2://取消关注
-                        cancelFollow(bean);
-                        break;
-                    case 3://举报
-                        break;
+        if (!VerifyUtils.isMyself(bean.owner.account)){
+            String[] items = mContext.getResources().getStringArray(R.array.ugc_more);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0://忽略此条动态
+                            break;
+                        case 1://忽略他的动态
+                            break;
+                        case 2://取消关注
+                            cancelFollow(bean);
+                            break;
+                        case 3://举报
+                            break;
+                    }
                 }
-            }
-        });
-
+            });
+        }else {
+            String[] items = new String[]{mContext.getString(R.string.delete)};
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    delete(bean);
+                }
+            });
+        }
         dialog.show();
+    }
+
+    private void delete(Dynamic bean){
+
     }
 
     //取消关注
@@ -177,7 +194,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
     protected void onDataItemClick(int position, Dynamic bean) {
         Intent intent = new Intent(mContext, MomentDetailActivity.class);
         intent.putExtra(HomeConstant.KEY_MOMENT_ID, bean.id);
-        mContext.startActivity(intent);
+        ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_MOMENT_DETAIL);
     }
 
     private void notifyUpdates(int updates){
@@ -188,6 +205,19 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
 
     public void setFragment(HomeFragment fragment){
         mFragment = fragment;
+    }
+
+    public void update(DynamicStatus status){
+        if (status != null){
+            for (Dynamic dynamic : getList()){
+                if (dynamic.id.equalsIgnoreCase(status.id)){
+                    dynamic.liked = status.liked;
+                    dynamic.stats = status.status;
+                    notifyDataSetChanged();
+                    break;
+                }
+            }
+        }
     }
 
     class Holder extends BaseHolder {

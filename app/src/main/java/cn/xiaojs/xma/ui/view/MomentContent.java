@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.view;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -28,8 +29,11 @@ import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class MomentContent extends RelativeLayout {
@@ -128,23 +132,102 @@ public class MomentContent extends RelativeLayout {
 
     }
 
-    public void show(Dynamic.DynBody body,String typeName){
-        if (TextUtils.isEmpty(typeName))
+    public void show(Dynamic dynamic){
+        if (dynamic == null || TextUtils.isEmpty(dynamic.typeName))
             return;
-        if (typeName.equalsIgnoreCase("PostActivity")){
+        //个人动态
+        if (dynamic.typeName.equalsIgnoreCase(Social.ActivityType.POST_ACTIIVTY)){
             setShowType(TYPE_NORMAL);
-            showNormal(body);
+            showNormal(dynamic.body);
+        }else if (dynamic.typeName.equalsIgnoreCase(Social.ActivityType.FORWARD_ACTIIVTY)){
+            //转发动态
+
+        }else if (dynamic.typeName.equalsIgnoreCase(Social.ActivityType.DOCUMENT_SHARE_ACTIIVTY)){
+            //资料分享动态
+            setShowType(TYPE_LESSON_WARE);
+            if (dynamic.body != null && dynamic.body.ref != null){
+                StringBuilder sb = new StringBuilder();
+                sb.append(dynamic.body.ref.overview);
+                sb.append(' ');
+                sb.append(dynamic.body.ref.title);
+                Spannable span = StringUtil.getSpecialString(sb.toString(),
+                        dynamic.body.ref.title,
+                        getResources().getDimensionPixelSize(R.dimen.px32),
+                        getResources().getColor(R.color.font_blue));
+                mSpecialContent.setText(span);
+
+                if (TextUtils.isEmpty(dynamic.body.ref.snap)){
+                    mSpecialImage.setVisibility(GONE);
+                }else {
+                    mSpecialImage.setVisibility(VISIBLE);
+                    Glide.with(getContext())
+                            .load(dynamic.body.ref.snap)
+                            .error(R.drawable.default_lesson_cover)
+                            .into(mSpecialImage);
+                }
+            }
+
+        }else if (dynamic.typeName.equalsIgnoreCase(Social.ActivityType.ENROLLMENT_SHARE_ACTIIVTY) ||
+                dynamic.typeName.equalsIgnoreCase(Social.ActivityType.LESSON_ACCESSIBLE_PREFERRED_ACTIIVTY)){
+            //报名成功分享动态
+            //直播课公开分享动态
+            setShowType(TYPE_LESSON);
+            StringBuilder sb = new StringBuilder();
+            sb.append(dynamic.body.ref.overview);
+            sb.append(' ');
+            sb.append(dynamic.body.ref.title);
+            Spannable span = StringUtil.getSpecialString(sb.toString(),
+                    dynamic.body.ref.title,
+                    getResources().getDimensionPixelSize(R.dimen.px32),
+                    getResources().getColor(R.color.font_blue));
+            mSpecialContent.setText(span);
+            Glide.with(getContext())
+                    .load(dynamic.body.ref.snap)
+                    .error(R.drawable.default_lesson_cover)
+                    .into(mLessonImage);
+            mLessonDuration.setText(dynamic.body.ref.duration);
+            if (dynamic.body.ref.free){
+                mLessonCharge.setText(R.string.free);
+            }else {
+                //缺少charge
+                //mLessonCharge.setText(NumberUtil.getPrice(dynamic.body.ref.));
+            }
+            mLessonName.setText(dynamic.body.ref.title);
+            mLessonTime.setText(TimeUtil.format(dynamic.body.ref.startedOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+            //mLessonStuNum 缺少已报名或者在教室的人数
+            //mLessonEnter 缺少可报名的名额，是否满额
+            //mLessonType 缺少直播课的状态，是课还是课程
+            //缺少在教室或已报名的人的头像
+        }else if (dynamic.typeName.equalsIgnoreCase(Social.ActivityType.ANNOUNCEMENT_PREFERRED_ACTIIVTY)){
+            //班级公告分享动态
+            setShowType(TYPE_LESSON_WARE);
+            if (dynamic.body != null && dynamic.body.ref != null){
+                StringBuilder sb = new StringBuilder();
+                sb.append(dynamic.body.ref.overview);
+                sb.append(' ');
+                sb.append(dynamic.body.ref.title);
+                Spannable span = StringUtil.getSpecialString(sb.toString(),
+                        dynamic.body.ref.title,
+                        getResources().getDimensionPixelSize(R.dimen.px32),
+                        getResources().getColor(R.color.font_blue));
+                mSpecialContent.setText(span);
+
+                if (TextUtils.isEmpty(dynamic.body.ref.snap)){
+                    mSpecialImage.setVisibility(GONE);
+                }else {
+                    mSpecialImage.setVisibility(VISIBLE);
+                    Glide.with(getContext())
+                            .load(dynamic.body.ref.snap)
+                            .error(R.drawable.default_lesson_cover)
+                            .into(mSpecialImage);
+                }
+            }
         }
 
     }
 
     private void showNormal(Dynamic.DynBody body){
         mNormalContent.setText(body.text);
-//        if (body.drawings == null || body.drawings.length == 0){
-//            body.drawings = new Dynamic.DynPhoto[1];
-//            body.drawings[0] = new Dynamic.DynPhoto();
-//            body.drawings[0].name = "http://pic.58pic.com/58pic/13/42/89/02A58PICR6b_1024.jpg";
-//        }
         if (body.drawings != null && body.drawings.length > 0){
             Dynamic.DynPhoto photo = body.drawings[0];
             if (photo.width > 0 && photo.height > 0){
@@ -200,6 +283,7 @@ public class MomentContent extends RelativeLayout {
         //隐藏回答的人的列表
         //隐藏课的图片
         mLessonWrapper.setVisibility(GONE);
+        setSpecialImageHeight();
     }
 
     private void showLesson() {
@@ -222,4 +306,11 @@ public class MomentContent extends RelativeLayout {
         mLessonWrapper.setLayoutParams(lp);
     }
 
+    private void setSpecialImageHeight(){
+        int width = DeviceUtil.getScreenWidth(getContext()) - getContext().getResources().getDimensionPixelSize(R.dimen.px30) * 2;
+        int height = (int) (width * LESSON_IMAGE_SCALE);
+        ViewGroup.LayoutParams lp = mSpecialImage.getLayoutParams();
+        lp.height = height;
+        mSpecialImage.setLayoutParams(lp);
+    }
 }

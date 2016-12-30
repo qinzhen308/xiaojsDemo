@@ -20,6 +20,7 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
@@ -35,6 +36,7 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
     private int sum;
     private final int SHRINK_LINE = 2;
     private List<LikedRecord> records;
+    private boolean mExpand;
 
     public ImageMatrixExpandableLayout(Context context) {
         super(context);
@@ -79,8 +81,37 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
         shrink();
     }
 
+    public void add(LikedRecord record){
+        if (records == null){
+            records = new ArrayList<>();
+        }
+        records.add(record);
+        notifyChanged();
+    }
+
+    public void delete(LikedRecord record){
+        for (LikedRecord r : records){
+            if (r.createdBy.getId().equalsIgnoreCase(record.createdBy.getId())){
+                records.remove(r);
+            }
+        }
+        notifyChanged();
+    }
+
+    private void notifyChanged(){
+        if (records != null){
+            sum = records.size();
+        }
+        if (mExpand){
+            expand();
+        }else {
+            shrink();
+        }
+    }
+
     private void shrink() {
         removeAllViews();
+        mExpand = false;
         //最多只有两行数据就直接显示，不会伸缩
         if (sum <= maxNum * SHRINK_LINE){
             expand();
@@ -117,6 +148,7 @@ public class ImageMatrixExpandableLayout extends LinearLayout{
 
     private void expand() {
         removeAllViews();
+        mExpand = true;
         int i = 0;
         for (; i < sum / maxNum; i++) {
             ImageLine l = new ImageLine(getContext());
