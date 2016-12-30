@@ -277,7 +277,7 @@ public class ChoiceContactActivity extends BaseActivity {
             }
 
 
-            holder.nameView.setText(getChild(groupPosition, childPosition).name);
+            holder.nameView.setText(getChild(groupPosition, childPosition).alias);
 
             return convertView;
         }

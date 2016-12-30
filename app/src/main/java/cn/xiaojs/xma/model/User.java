@@ -58,4 +58,15 @@ public class User implements Serializable{
     public void setAliasAndTags(AliasTags aliasAndTags) {
         this.aliasAndTags = aliasAndTags;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", sessionID='" + sessionID + '\'' +
+                ", account=" + account +
+                ", name='" + name + '\'' +
+                ", aliasAndTags=" + aliasAndTags +
+                '}';
+    }
 }
