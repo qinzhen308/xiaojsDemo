@@ -64,21 +64,25 @@ public class SettingsActivity extends BaseActivity {
         LoginDataManager.requestLogoutByAPI(this, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
-                Toast.makeText(mContext, R.string.logout_tips, Toast.LENGTH_SHORT).show();
-                XiaojsConfig.mLoginUser = null;
-                AccountDataManager.clearUserInfo(mContext);
-                CacheUtil.saveLoginInfo(null);
 
-                //jump login page
-                Intent i = new Intent(mContext, LoginActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+
+        //总是退出成功
+
+        Toast.makeText(mContext, R.string.logout_tips, Toast.LENGTH_SHORT).show();
+        XiaojsConfig.mLoginUser = null;
+        AccountDataManager.clearUserInfo(mContext);
+        CacheUtil.saveLoginInfo(null);
+
+        //jump login page
+        Intent i = new Intent(mContext, LoginActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
     }
 }

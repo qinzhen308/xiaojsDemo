@@ -56,6 +56,7 @@ public class PostDynamicActivity extends BaseActivity {
         addView(R.layout.activity_post_dynamic);
         setMiddleTitle(R.string.post_dyn);
         setRightText(R.string.post);
+        setRightTextColor(getResources().getColor(R.color.font_orange));
     }
 
     @OnClick({R.id.left_image, R.id.chose_pic, R.id.chose_at, R.id.btn_level, R.id.right_image})

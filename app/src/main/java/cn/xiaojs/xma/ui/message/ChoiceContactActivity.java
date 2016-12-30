@@ -54,6 +54,7 @@ public class ChoiceContactActivity extends BaseActivity {
         addView(R.layout.activity_contact);
         setMiddleTitle(R.string.choice_contact);
         setRightText(R.string.finish);
+        setRightTextColor(getResources().getColor(R.color.font_orange));
         //listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expand_selector));
         //listView.setDivider(getResources().getDrawable(R.color.common_list_line));
         //listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);

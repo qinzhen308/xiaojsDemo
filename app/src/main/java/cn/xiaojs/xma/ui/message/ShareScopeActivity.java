@@ -37,6 +37,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
         addView(R.layout.activity_share_scope);
         setMiddleTitle(R.string.who_can_see_me);
         setRightText(R.string.finish);
+        setRightTextColor(getResources().getColor(R.color.font_orange));
 
         initView();
     }

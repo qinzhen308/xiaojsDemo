@@ -15,6 +15,8 @@ package cn.xiaojs.xma.ui.base;
  * ======================================================================================== */
 
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -155,6 +157,10 @@ public abstract class BaseActivity extends FragmentActivity {
         }else {
             mRightText.setVisibility(View.GONE);
         }
+    }
+
+    protected final void setRightTextColor(@ColorInt int color) {
+        mRightText.setTextColor(color);
     }
 
     protected final void setLeftImage(int resId){
