@@ -12,13 +12,13 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:orientation="horizontal"
-            android:layout_marginRight="@dimen/px10"
-            android:layout_marginBottom="@dimen/px10">
+            android:layout_marginRight="@dimen/px20"
+            android:layout_marginBottom="@dimen/px20">
 
         <ImageView
                 android:id="@+id/chat_btn"
-                android:layout_width="@dimen/px60"
-                android:layout_height="@dimen/px60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/cr_msg"/>
@@ -48,8 +48,6 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/px16"
                 android:paddingBottom="@dimen/px16"
-                android:paddingLeft="@dimen/px20"
-                android:paddingRight="@dimen/px20"
                 android:background="@color/classroom_main_gray">
 
             <ImageView
@@ -60,6 +58,7 @@
                     android:layout_alignParentLeft="true"
                     android:paddingLeft="@dimen/px20"
                     android:paddingRight="@dimen/px20"
+                    android:layout_marginLeft="@dimen/px30"
                     android:src="@drawable/ic_back_pressed"/>
 
             <ImageView
@@ -69,6 +68,7 @@
                     android:layout_centerInParent="true"
                     android:paddingLeft="@dimen/px20"
                     android:paddingRight="@dimen/px20"
+                    android:layout_marginLeft="@dimen/px20"
                     android:layout_toRightOf="@+id/back_btn"
                     android:src="@drawable/ic_cr_start"/>
 
@@ -79,6 +79,7 @@
                     android:layout_centerInParent="true"
                     android:paddingLeft="@dimen/px20"
                     android:paddingRight="@dimen/px20"
+                    android:layout_marginLeft="@dimen/px20"
                     android:layout_toRightOf="@+id/play_pause_btn"
                     android:src="@drawable/ic_cr_exit"/>
 
@@ -96,6 +97,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/font_30px"
                         android:text="战略性积极管理"/>
 
                 <TextView
@@ -103,6 +105,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
+                        android:layout_marginTop="@dimen/px4"
+                        android:textSize="@dimen/font_20px"
                         android:text="01:15:30"/>
             </LinearLayout>
 
@@ -113,6 +117,7 @@
                     android:layout_centerInParent="true"
                     android:paddingLeft="@dimen/px20"
                     android:paddingRight="@dimen/px20"
+                    android:layout_marginRight="@dimen/px20"
                     android:layout_toLeftOf="@+id/notify_msg_btn"
                     android:src="@drawable/ic_cr_contact_book"/>
 
@@ -123,6 +128,7 @@
                     android:layout_centerInParent="true"
                     android:paddingLeft="@dimen/px20"
                     android:paddingRight="@dimen/px20"
+                    android:layout_marginRight="@dimen/px20"
                     android:layout_toLeftOf="@+id/setting_btn"
                     android:src="@drawable/ic_cr_notice"/>
 
@@ -134,6 +140,7 @@
                     android:layout_centerInParent="true"
                     android:paddingLeft="@dimen/px20"
                     android:paddingRight="@dimen/px20"
+                    android:layout_marginRight="@dimen/px30"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/ic_cr_setting"/>
 
@@ -141,18 +148,18 @@
 
         <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
                 android:id="@+id/teacher_video"
-                android:layout_width="@dimen/px160"
-                android:layout_height="@dimen/px90"
+                android:layout_width="@dimen/px144"
+                android:layout_height="@dimen/px81"
                 android:layout_below="@+id/title_bar"
-                android:layout_marginTop="@dimen/px20"
-                android:layout_marginLeft="@dimen/px10"/>
+                android:layout_marginTop="@dimen/px18"
+                android:layout_marginLeft="@dimen/px15"/>
 
         <LinearLayout
                 android:id="@+id/live_progress_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="@dimen/px20"
+                android:layout_marginTop="@dimen/px18"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_vertical"
                 android:layout_below="@+id/title_bar"
@@ -162,20 +169,20 @@
             <TextView
                     android:id="@+id/play_time"
                     android:textColor="@color/font_white"
-                    android:textSize="@dimen/font_24px"
+                    android:textSize="@dimen/font_20px"
                     android:layout_width="wrap_content"
                     android:text="00:15:00"
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
-                    android:paddingLeft="@dimen/px10"
+                    android:paddingLeft="@dimen/px15"
                     android:layout_height="wrap_content"/>
 
             <SeekBar
                     android:id="@+id/live_progress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/px10"
-                    android:layout_marginRight="@dimen/px10"
+                    android:layout_marginLeft="@dimen/px12"
+                    android:layout_marginRight="@dimen/px12"
                     android:maxHeight="@dimen/px2"
                     android:thumbOffset="@dimen/px7"
                     android:foregroundGravity="center_vertical"
@@ -185,10 +192,10 @@
             <TextView
                     android:id="@+id/total_time"
                     android:textColor="@color/font_white"
-                    android:textSize="@dimen/font_24px"
+                    android:textSize="@dimen/font_20px"
                     android:layout_width="wrap_content"
                     android:text="01:15:00"
-                    android:paddingRight="@dimen/px10"
+                    android:paddingRight="@dimen/px15"
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
                     android:layout_height="wrap_content"/>
@@ -201,8 +208,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/px10"
-            android:layout_marginLeft="@dimen/px10"
+            android:layout_marginBottom="@dimen/px20"
+            android:layout_marginLeft="@dimen/px16"
             android:orientation="vertical">
 
         <TextView
@@ -228,7 +235,7 @@
                 android:id="@+id/course_ware_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px10"
+                android:layout_marginTop="@dimen/px40"
                 android:src="@drawable/cr_teaching_switcher"/>
 
 
@@ -237,14 +244,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/cr_qa"
-                android:layout_marginTop="@dimen/px10"/>
+                android:layout_marginTop="@dimen/px40"
+                android:visibility="gone"/>
 
         <ImageView
                 android:id="@+id/more_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/cr_more"
-                android:layout_marginTop="@dimen/px10"/>
+                android:layout_marginTop="@dimen/px40"/>
 
     </LinearLayout>
 
@@ -255,7 +263,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/px10"
+            android:layout_marginBottom="@dimen/px20"
             android:background="@drawable/cr_corner_gray_bg"
             android:paddingLeft="@dimen/px20"
             android:paddingRight="@dimen/px20"
@@ -300,7 +308,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/px10"
+            android:layout_marginBottom="@dimen/px20"
             android:visibility="gone"
             android:orientation="horizontal"
             android:gravity="center_vertical"

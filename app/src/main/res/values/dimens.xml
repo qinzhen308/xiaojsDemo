@@ -513,6 +513,36 @@
     <dimen name="px498">249.0dp</dimen>
     <dimen name="px499">249.5dp</dimen>
     <dimen name="px500">250.0dp</dimen>
+    <dimen name="px501">250.5dp</dimen>
+    <dimen name="px502">251.0dp</dimen>
+    <dimen name="px503">251.5dp</dimen>
+    <dimen name="px504">252.0dp</dimen>
+    <dimen name="px505">252.5dp</dimen>
+    <dimen name="px506">253.0dp</dimen>
+    <dimen name="px507">253.5dp</dimen>
+    <dimen name="px508">254.0dp</dimen>
+    <dimen name="px509">254.5dp</dimen>
+    <dimen name="px510">255.0dp</dimen>
+    <dimen name="px511">255.5dp</dimen>
+    <dimen name="px512">256.0dp</dimen>
+    <dimen name="px513">256.5dp</dimen>
+    <dimen name="px514">257.0dp</dimen>
+    <dimen name="px515">257.5dp</dimen>
+    <dimen name="px516">258.0dp</dimen>
+    <dimen name="px517">258.5dp</dimen>
+    <dimen name="px518">259.0dp</dimen>
+    <dimen name="px519">259.5dp</dimen>
+    <dimen name="px520">260.0dp</dimen>
+    <dimen name="px521">260.5dp</dimen>
+    <dimen name="px522">261.0dp</dimen>
+    <dimen name="px523">261.5dp</dimen>
+    <dimen name="px524">262.0dp</dimen>
+    <dimen name="px525">262.5dp</dimen>
+    <dimen name="px526">263.0dp</dimen>
+    <dimen name="px527">263.5dp</dimen>
+    <dimen name="px528">264.0dp</dimen>
+    <dimen name="px529">264.5dp</dimen>
+    <dimen name="px530">265.0dp</dimen>
     <dimen name="px560">280.0dp</dimen>
 
 </resources>
