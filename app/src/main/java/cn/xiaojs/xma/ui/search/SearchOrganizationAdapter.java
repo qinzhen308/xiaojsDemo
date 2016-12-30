@@ -18,7 +18,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -28,22 +27,21 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
-import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
-public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
+public class SearchOrganizationAdapter extends CanInScrollviewListView.Adapter {
 
     private int MAX_COUNT = 0;
 
     private List<AccountSearch> mBeans;
     private Context mContext;
 
-    public SearchPeopleAdapter(Context context, List<AccountSearch> beans) {
+    public SearchOrganizationAdapter(Context context, List<AccountSearch> beans) {
         mContext = context;
         mBeans = beans;
     }
 
-    public SearchPeopleAdapter(Context context, List<AccountSearch> beans,int max) {
+    public SearchOrganizationAdapter(Context context, List<AccountSearch> beans, int max) {
         mContext = context;
         mBeans = beans;
         MAX_COUNT = max;
@@ -80,7 +78,7 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder = null;
         if (convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_search_people_item, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_search_organization_item, null);
             holder = new Holder(convertView);
             convertView.setTag(holder);
         }else {
@@ -95,18 +93,12 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
         mBeans = accounts;
     }
     class Holder extends BaseHolder {
-        @BindView(R.id.search_people_head)
+        @BindView(R.id.search_organization_head)
         RoundedImageView head;
-        @BindView(R.id.search_people_item_name)
+        @BindView(R.id.search_organization_name)
         TextView name;
-        @BindView(R.id.search_people_star)
-        EvaluationStar star;
-        @BindView(R.id.search_people_tag)
-        TextView tag;
-        @BindView(R.id.search_people_desc)
-        TextView desc;
-        @BindView(R.id.search_people_relationship)
-        ImageView relationship;
+        @BindView(R.id.search_organization_level)
+        TextView level;
 
         public Holder(View view) {
             super(view);

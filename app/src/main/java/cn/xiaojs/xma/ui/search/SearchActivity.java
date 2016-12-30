@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.search;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -66,6 +67,8 @@ public class SearchActivity extends BaseActivity {
     @BindView(R.id.search_empty)
     View mEmpty;
 
+    private AccountSearch mOrganization;
+
     private final int MAX_LESSON = 3;
     private final int MAX_PEOPLE = 3;
     private final int MAX_ORGANIZATION = 1;
@@ -102,12 +105,27 @@ public class SearchActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.search_lesson_more:
+                Intent lesson = new Intent(this,SearchListActivity.class);
+                lesson.putExtra(SearchConstant.KEY_SEARCH_TYPE,Social.SearchType.LESSON);
+                lesson.putExtra(SearchConstant.KEY_SEARCH_KEY,mInput.getText().toString());
+                startActivity(lesson);
                 break;
             case R.id.search_people_more:
+                Intent people = new Intent(this,SearchListActivity.class);
+                people.putExtra(SearchConstant.KEY_SEARCH_TYPE,Social.SearchType.PERSON);
+                people.putExtra(SearchConstant.KEY_SEARCH_KEY,mInput.getText().toString());
+                startActivity(people);
                 break;
             case R.id.search_organization_more:
+                Intent organization = new Intent(this,SearchListActivity.class);
+                organization.putExtra(SearchConstant.KEY_SEARCH_TYPE,Social.SearchType.ORGANIZATION);
+                organization.putExtra(SearchConstant.KEY_SEARCH_KEY,mInput.getText().toString());
+                startActivity(organization);
                 break;
             case R.id.search_organization_result:
+                if (mOrganization != null){
+                    follow(mOrganization._id);
+                }
                 break;
         }
     }
@@ -143,9 +161,9 @@ public class SearchActivity extends BaseActivity {
         }
         mCategory.setVisibility(View.VISIBLE);
         mEmpty.setVisibility(View.GONE);
-        List<AccountSearch> lessons = SearchBusiness.getSearchResultByType(result, "Lesson");
-        final List<AccountSearch> people = SearchBusiness.getSearchResultByType(result, "Person");
-        List<AccountSearch> organization = SearchBusiness.getSearchResultByType(result, "Organization");
+        List<AccountSearch> lessons = SearchBusiness.getSearchResultByType(result, Social.SearchType.LESSON);
+        final List<AccountSearch> people = SearchBusiness.getSearchResultByType(result, Social.SearchType.PERSON);
+        List<AccountSearch> organization = SearchBusiness.getSearchResultByType(result, Social.SearchType.ORGANIZATION);
 
         if (lessons != null && lessons.size() > 0) {
             mLessonWrapper.setVisibility(View.VISIBLE);
@@ -175,17 +193,7 @@ public class SearchActivity extends BaseActivity {
                 @Override
                 public void onItemClick(View view, int position) {
                     AccountSearch search = people.get(position);
-                    SocialManager.followContact(SearchActivity.this, search._id, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
-                        @Override
-                        public void onSuccess(Relation object) {
-                            ToastUtil.showToast(SearchActivity.this,R.string.followed);
-                        }
-
-                        @Override
-                        public void onFailure(String errorCode, String errorMessage) {
-                            ToastUtil.showToast(SearchActivity.this,errorMessage);
-                        }
-                    });
+                    follow(search._id);
                 }
             });
         } else {
@@ -194,10 +202,24 @@ public class SearchActivity extends BaseActivity {
 
         if (organization != null && organization.size() > 0) {
             mOrganizationWrapper.setVisibility(View.VISIBLE);
-            AccountSearch search = organization.get(0);
-            mOrganizationName.setText(search._source.basic.getName());
+            mOrganization = organization.get(0);
+            mOrganizationName.setText(mOrganization._source.basic.getName());
         } else {
             mOrganizationWrapper.setVisibility(View.GONE);
         }
+    }
+
+    private void follow(String id){
+        SocialManager.followContact(SearchActivity.this, id, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+            @Override
+            public void onSuccess(Relation object) {
+                ToastUtil.showToast(SearchActivity.this,R.string.followed);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ToastUtil.showToast(SearchActivity.this,errorMessage);
+            }
+        });
     }
 }

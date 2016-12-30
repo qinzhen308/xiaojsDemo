@@ -184,4 +184,9 @@ public class Social {
         public static final String SOLUTION_UPDATE = "SolutionUpdate";
     }
 
+    public class SearchType{
+        public static final String PERSON = "Person";
+        public static final String LESSON = "Lesson";
+        public static final String ORGANIZATION = "Organization";
+    }
 }
