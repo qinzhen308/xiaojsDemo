@@ -19,11 +19,14 @@ import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.model.Doc;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -32,6 +35,7 @@ public class PostDynamicActivity extends BaseActivity {
 
     public static final int REQUEST_PIC_CODE = 0x3;
     public static final int REQUEST_SHARE_SCOPE_CODE = 0x4;
+    public static final int REQUEST_AT_CODE = 0x5;
 
     @BindView(R.id.pic_thumbnail)
     ImageView thumbnailView;
@@ -43,7 +47,9 @@ public class PostDynamicActivity extends BaseActivity {
     Button scopeButton;
 
     private DynPost.Audience audience;
+    private ArrayList<String> mentioneds;
     private int checkedIndex = 0;
+    private ArrayList<Contact> atContacts;
 
     @Override
     protected void addViewContent() {
@@ -69,8 +75,9 @@ public class PostDynamicActivity extends BaseActivity {
                 startActivityForResult(intent,REQUEST_SHARE_SCOPE_CODE);
                 break;
             case R.id.chose_at:
-                startActivity(new Intent(this, ChoiceContactActivity.class));
-                testAddAt();
+
+                startActivityForResult(new Intent(this, ChoiceContactActivity.class),
+                        REQUEST_AT_CODE);
                 break;
             case R.id.right_image:
                 postDynamic();
@@ -80,15 +87,30 @@ public class PostDynamicActivity extends BaseActivity {
 
     }
 
-    private void testAddAt() {
+    private void showAt() {
 
-        String str = "@李小萌";
 
-        SpannableStringBuilder ssb = new SpannableStringBuilder(str);
+        if (atContacts == null)
+            return;
+
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+
+        if (mentioneds == null){
+            mentioneds = new ArrayList<>(atContacts.size());
+        }
+
+        //FIXME 如果用户删除了之前的@,需要将mentioneds中的account也要删除。
+
+        for (Contact contact : atContacts) {
+            ssb.append("@").append(contact.alias).append(" ");
+            mentioneds.add(contact.account);
+        }
+
         ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.input_at));
-        ssb.setSpan(span, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(span, 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        editText.append(ssb.append(" "));
+        editText.append(ssb);
+
     }
 
 
@@ -107,6 +129,10 @@ public class PostDynamicActivity extends BaseActivity {
 
         if (audience !=null && audience.type != Social.ShareScope.PUBLIC){
             dynPost.audience = audience;
+        }
+
+        if (mentioneds != null){
+            dynPost.mentioned = mentioneds;
         }
 
         SocialManager.postActivity(this, dynPost, new APIServiceCallback<Dynamic>() {
@@ -149,6 +175,10 @@ public class PostDynamicActivity extends BaseActivity {
                 checkedIndex = data.getIntExtra(ShareScopeActivity.CHOOSE_INDEX,0);
 
                 updateScope();
+            } else if (requestCode == REQUEST_AT_CODE) {
+                atContacts = data.getParcelableArrayListExtra(
+                        ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
+                showAt();
             }
         }
 
@@ -170,8 +200,8 @@ public class PostDynamicActivity extends BaseActivity {
                 return "班级圈可见";
             case Social.ShareScope.SPECIFIC:
 
-                Doc[] choosen = audience.chosen;
-                int num = choosen == null ? 0 : choosen.length;
+                ArrayList<Doc> choosen = audience.chosen;
+                int num = choosen == null ? 0 : choosen.size();
 
                 return String.format(getResources().getString(R.string.num_can_see), num);
             default:
