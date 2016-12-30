@@ -1,0 +1,132 @@
+package cn.xiaojs.xma.ui.message;
+
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.model.Doc;
+import cn.xiaojs.xma.model.social.DynPost;
+import cn.xiaojs.xma.ui.base.BaseActivity;
+
+public class ShareScopeActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+
+    public static final int REQUEST_CHOOSE_CONTACT_CODE = 0x1;
+    public static final int REQUEST_CHOOSE_CLASS_CODE = 0x2;
+
+    public static final String CHOOSE_INDEX = "cindex";
+    public static final String CHOOSE_DATA = "cdata";
+
+
+    @BindView(R.id.lv)
+    ListView listView;
+
+    private ArrayAdapter<String> adapter;
+    private Doc[] docs;
+
+    @Override
+    protected void addViewContent() {
+        addView(R.layout.activity_share_scope);
+        setMiddleTitle(R.string.who_can_see_me);
+        setRightText(R.string.finish);
+
+        initView();
+    }
+
+    @OnClick({R.id.left_image, R.id.right_image})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.left_image:
+                finish();
+                break;
+            case R.id.right_image:
+                chooseOver();
+                break;
+        }
+
+    }
+
+
+    private void initView() {
+
+        String[] shareScopes = getResources().getStringArray(R.array.share_scope);
+
+        adapter = new ArrayAdapter<>(this,
+                R.layout.layout_single_select_item,
+                R.id.title,
+                shareScopes);
+
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
+
+        //set public scope defaut checked
+        listView.setItemChecked(getIntent().getIntExtra(CHOOSE_INDEX,0), true);
+
+
+    }
+
+    private void chooseOver() {
+
+        int checkedPos = listView.getCheckedItemPosition();
+
+        DynPost.Audience audience = new DynPost.Audience();
+        audience.type = getScopeId(checkedPos);
+
+        if (checkedPos == 2 || checkedPos == 3) {
+            audience.chosen = docs;
+        }
+
+        Intent data = new Intent();
+        data.putExtra(CHOOSE_DATA, audience);
+        data.putExtra(CHOOSE_INDEX, checkedPos);
+        setResult(RESULT_OK, data);
+
+        finish();
+
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        if (position == 2) {
+
+            // TODO 班级圈
+        } else if (position == 3) {
+            startActivityForResult(new Intent(this, ChoiceContactActivity.class),
+                    REQUEST_CHOOSE_CONTACT_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CHOOSE_CONTACT_CODE) {
+            if (resultCode == RESULT_OK) {
+                docs = (Doc[]) data.getParcelableArrayExtra(
+                        ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
+            }
+        } else if (requestCode == REQUEST_CHOOSE_CLASS_CODE) {
+            //TODO class
+        }
+    }
+
+    private int getScopeId(int checkedPos) {
+        switch (checkedPos) {
+            case 1:
+                return Social.ShareScope.FRIENDS;
+            case 2:
+                return Social.ShareScope.CLASSES;
+            case 3:
+                return Social.ShareScope.SPECIFIC;
+            default:
+                return Social.ShareScope.PUBLIC;
+        }
+    }
+
+}

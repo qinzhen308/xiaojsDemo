@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.common.xf_foundation.schemas;
 
+
 /**
  * Created by maxiaobao on 2016/12/26.
  */
@@ -74,6 +75,41 @@ public class Social {
         public static final int ASSISTANT_TEACHER = 2;
         public static final int CLASSMATE = 3;
         public static final int STUDENT = 4;
+    }
+
+    /**
+     *
+     * Returns the user-friendly name for the specified contact group.
+     * @param groupId
+     * @return
+     */
+    public static String getContactName(int groupId) {
+        switch (groupId)
+        {
+            case ContactGroup.TEACHERS:
+                return "老师";
+
+            case ContactGroup.STUDENTS:
+                return "学生";
+
+            case ContactGroup.CLASSMATES:
+                return "同学";
+
+            case ContactGroup.FRIENDS:
+                return "好友";
+
+            case ContactGroup.ORGANIZATIONS:
+                return "机构";
+
+            case ContactGroup.COLLEAGUES:
+                return "同事";
+
+            case ContactGroup.STRANGERS:
+                return "陌生人";
+
+            default:
+                return "n/a";
+        }
     }
 
     /**

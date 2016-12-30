@@ -124,28 +124,6 @@ public class ServiceRequest<T> implements ContextLifecycle {
         return error;
     }
 
-    private ContactGroup parseAddGroup(String body) {
-
-        ContactGroup contactGroup = null;
-
-        try {
-            JSONObject jobject = new JSONObject(body);
-
-            String key = jobject.keys().next();
-            String name = jobject.getString(key);
-
-            contactGroup = new ContactGroup();
-            contactGroup.name = name;
-            contactGroup.id = key;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return contactGroup;
-    }
-
-
     private void configContext(Context context) {
         if (context == null) {
             throw new IllegalArgumentException("You cannot start a load on a null Context");
