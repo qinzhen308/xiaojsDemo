@@ -67,6 +67,13 @@ public class SearchActivity extends BaseActivity {
     @BindView(R.id.search_empty)
     View mEmpty;
 
+    @BindView(R.id.search_lesson_more)
+    View mLessonMore;
+    @BindView(R.id.search_people_more)
+    View mPeopleMore;
+    @BindView(R.id.search_organization_more)
+    View mOrganizationMore;
+
     private AccountSearch mOrganization;
 
     private final int MAX_LESSON = 3;
@@ -167,6 +174,11 @@ public class SearchActivity extends BaseActivity {
 
         if (lessons != null && lessons.size() > 0) {
             mLessonWrapper.setVisibility(View.VISIBLE);
+            if (lessons.size() <= MAX_LESSON){
+                mLessonMore.setVisibility(View.GONE);
+            }else {
+                mLessonMore.setVisibility(View.VISIBLE);
+            }
             mLesson.setNeedDivider(true);
             if (mLessonAdapter == null){
                 mLessonAdapter = new SearchLessonAdapter(this, lessons, MAX_LESSON);
@@ -181,6 +193,11 @@ public class SearchActivity extends BaseActivity {
 
         if (people != null && people.size() > 0) {
             mPeopleWrapper.setVisibility(View.VISIBLE);
+            if (people.size() <= MAX_PEOPLE){
+                mPeopleMore.setVisibility(View.GONE);
+            }else {
+                mPeopleMore.setVisibility(View.VISIBLE);
+            }
             mPeople.setNeedDivider(true);
             if (mPeopleAdapter == null){
                 mPeopleAdapter = new SearchPeopleAdapter(this, people,MAX_PEOPLE);
@@ -202,6 +219,11 @@ public class SearchActivity extends BaseActivity {
 
         if (organization != null && organization.size() > 0) {
             mOrganizationWrapper.setVisibility(View.VISIBLE);
+            if (organization.size() <= MAX_ORGANIZATION){
+                mOrganizationMore.setVisibility(View.GONE);
+            }else {
+                mOrganizationMore.setVisibility(View.VISIBLE);
+            }
             mOrganization = organization.get(0);
             mOrganizationName.setText(mOrganization._source.basic.getName());
         } else {
