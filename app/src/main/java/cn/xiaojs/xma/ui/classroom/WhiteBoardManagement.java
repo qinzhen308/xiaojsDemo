@@ -58,6 +58,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
     private LayoutInflater mInflater;
     private int mHorizontalPadding;
     private int mScreenWidth;
+    private int mItemWidth;
     private int mCoverWidth;
     private int mCOverHeight;
 
@@ -68,6 +69,17 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (mContext instanceof ClassroomActivity) {
+            ((ClassroomActivity)mContext).updateWhiteboardCollCountStyle();
+        }
+        if (mWbAdapter != null) {
+            mWbAdapter.exitRemoveMode(false);
+        }
     }
 
     @Override
@@ -116,13 +128,16 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         mGridView.setOnItemClickListener(this);
 
         Resources rs = mContext.getResources();
+        mScreenWidth = rs.getDisplayMetrics().widthPixels;
+        mHorizontalPadding = rs.getDimensionPixelOffset(R.dimen.px6);
+        int gdMargin = rs.getDimensionPixelOffset(R.dimen.px12);
+        int coverMargin = rs.getDimensionPixelOffset(R.dimen.px12);
+        int contentMargin = rs.getDimensionPixelOffset(R.dimen.px12);
+
         mGridView.setHorizontalSpacing(mHorizontalPadding);
         mGridView.setNumColumns(NUM_COLUMN);
-        mScreenWidth = rs.getDisplayMetrics().widthPixels;
-        //mHorizontalPadding = rs.getDimensionPixelOffset(R.dimen.px20);
-        int margin = rs.getDimensionPixelOffset(R.dimen.px30);
 
-        mCoverWidth = (mScreenWidth - (NUM_COLUMN - 1) * (mHorizontalPadding + margin) * 2) / NUM_COLUMN;
+        mCoverWidth = (mScreenWidth - 2 * gdMargin - (NUM_COLUMN - 1) * mHorizontalPadding) / 4 - (coverMargin + contentMargin) * 2;
         mCOverHeight =  (int)(0.75f * mCoverWidth);
     }
 
@@ -162,23 +177,35 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                     if (mContext instanceof ClassroomActivity) {
                         ((ClassroomActivity)mContext).onAddWhiteboardCollection(wbColl);
                     }
-                    mGridView.setHorizontalSpacing(mHorizontalPadding);
                     mWbAdapter.notifyDataSetChanged();
                     break;
                 case R.id.open_docs:
                     //open document
+                    if (mWbAdapter != null) {
+                        if (mWbAdapter.isRemoveMode()) {
+                            mWbAdapter.exitRemoveMode(true);
+                        }
+                    }
                     Intent i = new Intent(mContext, DocumentActivity.class);
                     mContext.startActivity(i);
                     break;
                 case R.id.del_white_board:
-                    //del white boards
+                    //remove white boards
+                    if (mWbAdapter != null) {
+                        if (mWbAdapter.isRemoveMode()) {
+                            mWbAdapter.exitRemoveMode(true);
+                        } else {
+                            mWbAdapter.enterRemoveMode();
+                        }
+                    }
                     break;
             }
         }
     };
 
-    private class WbAdapter extends BaseAdapter {
+    private class WbAdapter extends BaseAdapter implements View.OnClickListener{
         private ArrayList<WhiteboardCollection> mWbCollList;
+        private boolean mRemoveMode = false;
 
         public WbAdapter() {
         }
@@ -190,6 +217,22 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         public void setData(ArrayList<WhiteboardCollection> list) {
             mWbCollList = list;
             notifyDataSetChanged();
+        }
+
+        public void enterRemoveMode() {
+            mRemoveMode = true;
+            notifyDataSetChanged();
+        }
+
+        public void exitRemoveMode(boolean needRefresh) {
+            mRemoveMode = false;
+            if (needRefresh) {
+                notifyDataSetChanged();
+            }
+        }
+
+        public boolean isRemoveMode() {
+            return mRemoveMode;
         }
 
         @Override
@@ -228,6 +271,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
 
             holder.title = (TextView) v.findViewById(R.id.wb_title);
             holder.cover = (ImageView) v.findViewById(R.id.wb_cover);
+            holder.removeBtn = (ImageView) v.findViewById(R.id.wb_remove);
             v.setTag(holder);
 
             ViewGroup.LayoutParams params = holder.cover.getLayoutParams();
@@ -239,6 +283,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                 holder.cover.setLayoutParams(params);
             }
 
+            holder.removeBtn.setOnClickListener(this);
             return v;
         }
 
@@ -246,11 +291,32 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
             WhiteboardCollection wbColl = mWbCollList.get(pos);
             holder.title.setText(wbColl.getName());
             holder.cover.setBackgroundColor(Color.GRAY);
+
+            if (mRemoveMode) {
+                holder.removeBtn.setVisibility(View.VISIBLE);
+                holder.removeBtn.setTag(wbColl);
+            } else {
+                holder.removeBtn.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.wb_remove:
+                    Object obj = v.getTag();
+                    if (mWbCollList != null && obj instanceof WhiteboardCollection) {
+                        mWbCollList.remove(obj);
+                        notifyDataSetChanged();
+                    }
+                    break;
+            }
         }
     }
 
     private static class Holder {
         public TextView title;
         public ImageView cover;
+        public ImageView removeBtn;
     }
 }
