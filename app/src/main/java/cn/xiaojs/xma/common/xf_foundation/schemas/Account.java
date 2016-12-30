@@ -12,6 +12,7 @@ public class Account {
     public class TypeName {
         public static final String PERSION = "Person";
         public static final String ORGANIZATION = "Organization";
+        public static final String STAND_ALONE_LESSON="StandaloneLesson";
     }
 
 }

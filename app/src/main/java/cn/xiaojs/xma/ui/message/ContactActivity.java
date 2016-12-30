@@ -295,7 +295,7 @@ public class ContactActivity extends BaseActivity {
     }
 
 
-    private void addDefaultGroup(ArrayList<ContactGroup> contactData) {
+    public static void addDefaultGroup(ArrayList<ContactGroup> contactData) {
 
         Map<Long, ContactGroup> map = getDefaultGroup();
 
@@ -320,7 +320,7 @@ public class ContactActivity extends BaseActivity {
     }
 
 
-    public Map<Long, ContactGroup> getDefaultGroup() {
+    public static Map<Long, ContactGroup> getDefaultGroup() {
 
         Map<Long, ContactGroup> map = new HashMap<>();
 
@@ -335,7 +335,7 @@ public class ContactActivity extends BaseActivity {
         return map;
     }
 
-    private ContactGroup createGroup(int groupId) {
+    public static ContactGroup createGroup(int groupId) {
 
         ContactGroup group = new ContactGroup();
         group.group = groupId;

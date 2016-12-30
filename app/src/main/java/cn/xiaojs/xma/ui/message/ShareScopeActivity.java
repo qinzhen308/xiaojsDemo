@@ -6,11 +6,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.model.Doc;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
@@ -27,7 +30,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
     ListView listView;
 
     private ArrayAdapter<String> adapter;
-    private Doc[] docs;
+    private ArrayList<Doc> docs;
 
     @Override
     protected void addViewContent() {
@@ -99,6 +102,9 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
 
             // TODO 班级圈
         } else if (position == 3) {
+
+            //FIXME 如果用户再次进入选择联系人，需要将之前以选择的联系人删除清零。
+
             startActivityForResult(new Intent(this, ChoiceContactActivity.class),
                     REQUEST_CHOOSE_CONTACT_CODE);
         }
@@ -108,8 +114,25 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CHOOSE_CONTACT_CODE) {
             if (resultCode == RESULT_OK) {
-                docs = (Doc[]) data.getParcelableArrayExtra(
+                ArrayList<Contact> contacts = data.getParcelableArrayListExtra(
                         ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
+
+                if (contacts != null && contacts.size()>0) {
+
+                    if (docs == null) {
+                        docs = new ArrayList<>(contacts.size());
+                    }else{
+                        docs.clear();
+                    }
+
+                    for (Contact contact : contacts) {
+                        Doc doc = new Doc();
+                        doc.id = contact.account;
+                        doc.subtype = contact.subtype;
+                        docs.add(doc);
+                    }
+                }
+
             }
         } else if (requestCode == REQUEST_CHOOSE_CLASS_CODE) {
             //TODO class

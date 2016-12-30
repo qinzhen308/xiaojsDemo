@@ -6,6 +6,9 @@ import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.LiveLesson;
 
@@ -18,7 +21,7 @@ public class DynPost {
     public String text;
     public String drawing;
     public Audience audience;
-    public String mentioned;
+    public List<String> mentioned;
 
 
 
@@ -26,7 +29,7 @@ public class DynPost {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Audience implements Parcelable{
         public int type;
-        public Doc[] chosen;
+        public ArrayList<Doc> chosen;
 
         @Override
         public int describeContents() {
@@ -37,7 +40,8 @@ public class DynPost {
         public void writeToParcel(Parcel dest, int flags) {
 
             dest.writeInt(type);
-            dest.writeTypedArray(chosen,0);
+            dest.writeList(chosen);
+            //dest.writeTypedArray(chosen,0);
 
         }
 
@@ -47,7 +51,8 @@ public class DynPost {
 
         private Audience(Parcel in) {
             type = in.readInt();
-            chosen = in.createTypedArray(Doc.CREATOR);
+            chosen = in.readArrayList(Doc.class.getClassLoader());
+            //chosen = in.createTypedArray(Doc.CREATOR);
         }
 
         public static final Parcelable.Creator<Audience> CREATOR

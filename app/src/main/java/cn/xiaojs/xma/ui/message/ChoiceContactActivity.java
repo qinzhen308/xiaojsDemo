@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.message;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -13,16 +14,21 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,80 +46,81 @@ public class ChoiceContactActivity extends BaseActivity {
     @BindView(R.id.search_view)
     EditText editText;
 
+    private ChoiceAdapter choiceAdapter;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_contact);
         setMiddleTitle(R.string.choice_contact);
         setRightText(R.string.finish);
-        listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expand_selector));
+        //listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expand_selector));
         //listView.setDivider(getResources().getDrawable(R.color.common_list_line));
         //listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         editText.setVisibility(View.GONE);
 
-        addTestData();
-
-        listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ExpandableListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
-
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
-
-            }
-        });
+        loadContactData();
     }
 
-    @OnClick({R.id.left_image,R.id.right_image})
+    @OnClick({R.id.left_image, R.id.right_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 finish();
                 break;
             case R.id.right_image:
-                //finish();
+                choiceComplete();
                 break;
         }
 
     }
 
+    private void expandALL() {
 
-    private void addTestData() {
-        List<ContactGroup> groupData = new ArrayList<>();
+        int groupCount = listView.getCount();
+        for (int i = 0; i < groupCount; i++) {
 
-        Map<Integer, List<Contact>> contactData = new HashMap<>();
-
-        for (int i = 0; i < 6; i++) {
-
-            ContactGroup cg = new ContactGroup();
-            cg.name = "测试组" + i;
-            groupData.add(cg);
-
-
-            List<Contact> contacts = new ArrayList<>();
-
-            for (int j = 0; j < 3; j++) {
-
-                Contact c = new Contact();
-                c.name = "小明" + j;
-                contacts.add(c);
-
-            }
-
-            contactData.put(i, contacts);
-
+            listView.expandGroup(i, false);
 
         }
+    }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // load contact data and bind to view
 
-        final ChoiceAdapter choiceAdapter = new ChoiceAdapter(this, groupData, contactData);
-        choiceAdapter.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+    private void loadContactData() {
+        SocialManager.getContacts(this, new APIServiceCallback<ArrayList<ContactGroup>>() {
+            @Override
+            public void onSuccess(ArrayList<ContactGroup> object) {
 
-        listView.setAdapter(choiceAdapter);
+                bindDataView(object);
+            }
 
-        expandALL();
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                bindDataView(null);
+
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void bindDataView(ArrayList<ContactGroup> contactData) {
+
+        if (contactData == null) {
+            contactData = new ArrayList<>();
+        }
+
+        ContactActivity.addDefaultGroup(contactData);
+
+        if (choiceAdapter == null) {
+            choiceAdapter = new ChoiceAdapter(this, contactData);
+            choiceAdapter.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+            listView.setAdapter(choiceAdapter);
+        } else {
+            choiceAdapter.changeData(contactData);
+        }
 
         // Handle the click when the user clicks an any child
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -126,40 +133,55 @@ public class ChoiceContactActivity extends BaseActivity {
             }
         });
 
+        expandALL();
     }
 
-    private void expandALL() {
 
-        int groupCount = listView.getCount();
-        for (int i=0; i<groupCount; i++) {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // send choice contact data
+    //
 
-            listView.expandGroup(i,false);
+    private void choiceComplete() {
+        if (choiceAdapter != null) {
+            ArrayList<Contact> contacts = choiceAdapter.getCheckedContacts();
+            Intent i = new Intent();
+            i.putParcelableArrayListExtra(CHOOSE_CONTACT_EXTRA,contacts);
 
+            setResult(RESULT_OK,i);
+        }else{
+            setResult(RESULT_CANCELED);
         }
-    }
 
+        finish();
+    }
 
 
     private class ChoiceAdapter extends BaseExpandableListAdapter {
 
         private LayoutInflater inflater;
         private SparseArray<SparseBooleanArray> checkedPositions;
+
+        private ArrayList<Contact> checkedContacts;
+
         private int choiceMode;
 
 
         private List<ContactGroup> groupData;
-        private Map<Integer, List<Contact>> contactData;
-
         private String defaultCountFromat = getResources().getString(R.string.group_select_count);
 
-        public ChoiceAdapter(Context context, List<ContactGroup> groupData, Map<Integer, List<Contact>> contactData) {
+        public ChoiceAdapter(Context context, List<ContactGroup> groupData) {
 
             inflater = LayoutInflater.from(context);
 
             this.groupData = groupData;
-            this.contactData = contactData;
-
             checkedPositions = new SparseArray<>();
+
+        }
+
+        public void changeData(ArrayList<ContactGroup> data) {
+
+            this.groupData = data;
+            notifyDataSetChanged();
 
         }
 
@@ -170,7 +192,7 @@ public class ChoiceContactActivity extends BaseActivity {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return contactData.get(groupPosition).size();
+            return groupData.get(groupPosition).collection.size();
         }
 
         @Override
@@ -180,7 +202,7 @@ public class ChoiceContactActivity extends BaseActivity {
 
         @Override
         public Contact getChild(int groupPosition, int childPosition) {
-            return contactData.get(groupPosition).get(childPosition);
+            return groupData.get(groupPosition).collection.get(childPosition);
         }
 
         @Override
@@ -211,14 +233,14 @@ public class ChoiceContactActivity extends BaseActivity {
                 holder.countView = (TextView) convertView.findViewById(R.id.group_count);
                 convertView.setTag(holder);
 
-            }else{
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             holder.nameView.setText(getGroup(groupPosition).name);
 
 
-            String gcount = String.format(defaultCountFromat,getChildrenChoiceCount(groupPosition),
+            String gcount = String.format(defaultCountFromat, getChildrenChoiceCount(groupPosition),
                     getChildrenCount(groupPosition));
 
             holder.countView.setText(gcount);
@@ -250,7 +272,7 @@ public class ChoiceContactActivity extends BaseActivity {
             if (checkedPositions.get(groupPosition) != null) {
                 boolean isChecked = checkedPositions.get(groupPosition).get(childPosition);
                 holder.checkedView.setChecked(isChecked);
-            }else{
+            } else {
                 holder.checkedView.setChecked(false);
             }
 
@@ -266,6 +288,29 @@ public class ChoiceContactActivity extends BaseActivity {
         }
 
 
+        private void saveCheckedContact(int groupPosition, int childPosition) {
+
+            if (checkedContacts == null) {
+                checkedContacts = new ArrayList<>();
+            }
+
+            Contact contact = getChild(groupPosition, childPosition);
+            checkedContacts.add(contact);
+
+        }
+
+        private void removeCheckedContact(int groupPosition, int childPosition) {
+
+            if (checkedContacts == null) {
+                return;
+            }
+
+            Contact contact = getChild(groupPosition, childPosition);
+            checkedContacts.remove(contact);
+
+        }
+
+
         public void setClicked(int groupPosition, int childPosition) {
             switch (choiceMode) {
                 case AbsListView.CHOICE_MODE_MULTIPLE:
@@ -277,12 +322,18 @@ public class ChoiceContactActivity extends BaseActivity {
                         // So a click will enable it
                         checkedChildPositionsMultiple.put(childPosition, true);
                         checkedPositions.put(groupPosition, checkedChildPositionsMultiple);
+
+                        saveCheckedContact(groupPosition, childPosition);
+
                     } else {
                         boolean oldState = checkedChildPositionsMultiple.get(childPosition);
-                        if(oldState){
+                        if (oldState) {
                             checkedChildPositionsMultiple.delete(childPosition);
-                        }else{
+                            removeCheckedContact(groupPosition, childPosition);
+
+                        } else {
                             checkedChildPositionsMultiple.put(childPosition, !oldState);
+                            saveCheckedContact(groupPosition, childPosition);
                         }
 
                     }
@@ -329,12 +380,16 @@ public class ChoiceContactActivity extends BaseActivity {
             return checkedPositions;
         }
 
+        public ArrayList<Contact> getCheckedContacts() {
+            return checkedContacts;
+        }
+
         public int getChildrenChoiceCount(int groupPosition) {
 
-            if (checkedPositions !=null){
+            if (checkedPositions != null) {
 
                 SparseBooleanArray booleanArray = checkedPositions.get(groupPosition);
-                if(booleanArray!=null) {
+                if (booleanArray != null) {
                     return booleanArray.size();
                 }
 
@@ -351,4 +406,39 @@ public class ChoiceContactActivity extends BaseActivity {
         ImageView avatarView;
         CheckedTextView checkedView;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //test data
+
+//    private void addTestData() {
+//        List<ContactGroup> groupData = new ArrayList<>();
+//
+//        Map<Integer, List<Contact>> contactData = new HashMap<>();
+//
+//        for (int i = 0; i < 6; i++) {
+//
+//            ContactGroup cg = new ContactGroup();
+//            cg.name = "测试组" + i;
+//            groupData.add(cg);
+//
+//
+//            List<Contact> contacts = new ArrayList<>();
+//
+//            for (int j = 0; j < 3; j++) {
+//
+//                Contact c = new Contact();
+//                c.name = "小明" + j;
+//                contacts.add(c);
+//
+//            }
+//
+//            contactData.put(i, contacts);
+//
+//
+//        }
+//
+//
+//
+//
+//    }
 }
