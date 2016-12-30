@@ -159,6 +159,37 @@ public class ContactActivity extends BaseActivity {
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Unfollow contact
+
+    private void requestUnfollow(final ContactGroup contactGroup, final Contact contact,final int groupPosition,final int childPosition) {
+
+        showProgress(true);
+        SocialManager.unfollowContact(this,contact.account, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+                cancelProgress();
+
+                removeContact(contactGroup,contact,groupPosition,childPosition);
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+            }
+        });
+    }
+
+    private void removeContact(ContactGroup contactGroup, Contact contact, int groupPosition, int childPosition) {
+        if (contactAdapter == null)
+            return;
+
+        contactAdapter.removeData(contactGroup,contact);
+
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //add new group
@@ -382,6 +413,19 @@ public class ContactActivity extends BaseActivity {
             notifyDataSetChanged();
         }
 
+        public void removeData(ContactGroup contactGroup,Contact ocontact) {
+            //this.groupData.get(groupPosition).collection.remove(childPosition);
+
+            if (filterChanges != null) {
+                filterChanges.get(contactGroup).collection.remove(ocontact);
+            }
+
+            contactGroup.collection.remove(ocontact);
+
+
+            notifyDataSetChanged();
+        }
+
         @Override
         public int getGroupCount() {
             return groupData.size();
@@ -445,7 +489,7 @@ public class ContactActivity extends BaseActivity {
 
 
         @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        public View getChildView(final int groupPosition,final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
             ViewHolder holder;
 
@@ -474,6 +518,18 @@ public class ContactActivity extends BaseActivity {
                 }
             });
 
+            holder.delBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Contact c = getChild(groupPosition, childPosition);
+                    ContactGroup cg = getGroup(groupPosition);
+
+
+                    requestUnfollow(cg,c,groupPosition,childPosition);
+                }
+            });
+
             return convertView;
         }
 
@@ -483,9 +539,15 @@ public class ContactActivity extends BaseActivity {
         }
 
 
+        private Map<ContactGroup,ContactGroup> filterChanges;
+
         public void filterDta(String query) {
 
             groupData.clear();
+
+            if (filterChanges != null) {
+                filterChanges.clear();
+            }
 
             if (TextUtils.isEmpty(query)){
                 groupData.addAll(originData);
@@ -508,6 +570,12 @@ public class ContactActivity extends BaseActivity {
                         contactGroup.collection = newList;
 
                         groupData.add(contactGroup);
+
+                        if (filterChanges == null) {
+                            filterChanges = new HashMap<>();
+                        }
+
+                        filterChanges.put(contactGroup,group);
                     }
 
                 }

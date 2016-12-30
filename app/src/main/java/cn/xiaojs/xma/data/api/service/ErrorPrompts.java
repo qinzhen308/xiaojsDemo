@@ -31,7 +31,7 @@ public class ErrorPrompts {
 
         switch (apiType) {
             case APIType.UNFOLLOW_CONTACT:
-                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+                if (errorCode.equals(Errors.INVALID_OPERATION)) {
                     errorMessage = "您未关注此人";
                 } else {
                     errorMessage = "取消关注失败";
@@ -72,7 +72,7 @@ public class ErrorPrompts {
                 errorMessage = "获取动态失败";
                 break;
             case APIType.FOLLOW_CONTACT:
-                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+                if (errorCode.equals(Errors.INVALID_OPERATION)) {
                     errorMessage = "您已关注";
                 } else {
                     errorMessage = "关注失败";
