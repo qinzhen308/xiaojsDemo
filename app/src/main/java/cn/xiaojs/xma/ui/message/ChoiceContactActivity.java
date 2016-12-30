@@ -38,6 +38,7 @@ import butterknife.OnClick;
 public class ChoiceContactActivity extends BaseActivity {
 
     public static final String CHOOSE_CONTACT_EXTRA = "ccontact_extra";
+    public static final String CHOOSE_CONTACT_INDEX = "ccontact_index";
 
 
     @BindView(R.id.list_contact)
