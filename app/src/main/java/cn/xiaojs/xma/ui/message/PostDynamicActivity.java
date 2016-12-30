@@ -144,6 +144,7 @@ public class PostDynamicActivity extends BaseActivity {
                 Toast.makeText(PostDynamicActivity.this, R.string.post_dyn_ok, Toast.LENGTH_SHORT)
                         .show();
 
+                setResult(RESULT_OK);
                 finish();
             }
 
