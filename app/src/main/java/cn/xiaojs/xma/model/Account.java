@@ -15,8 +15,9 @@ public class Account implements Serializable{
 
     private String id;
     private Basic basic;
+    private Phone phone;
 
-    private boolean isPerson;
+    //public boolean isPerson;
 
     public Basic getBasic() {
         return basic;
@@ -34,12 +35,20 @@ public class Account implements Serializable{
         this.id = id;
     }
 
-    public boolean isPerson() {
-        return isPerson;
+//    public boolean isPerson() {
+//        return isPerson;
+//    }
+//
+//    public void setPerson(boolean person) {
+//        isPerson = person;
+//    }
+
+    public Phone getPhone() {
+        return phone;
     }
 
-    public void setPerson(boolean person) {
-        isPerson = person;
+    public void setPhone(Phone phone) {
+        this.phone = phone;
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
@@ -97,6 +106,12 @@ public class Account implements Serializable{
             this.birthday = birthday;
         }
 
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Phone {
+        public String subsNum;
     }
 
 

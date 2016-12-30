@@ -57,7 +57,7 @@ import cn.xiaojs.xma.util.CacheUtil;
  * ======================================================================================== */
 
 public class ClassroomActivity extends FragmentActivity implements WhiteboardAdapter.OnWhiteboardListener {
-    private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.5F;
+    private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.55F;
     private static final int REQUEST_GALLERY_PERMISSION = 1000;
     private static final String[] PERMISSIONS = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};

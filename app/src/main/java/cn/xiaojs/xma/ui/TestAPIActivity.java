@@ -551,18 +551,18 @@ public class TestAPIActivity extends Activity {
 
     private void getProfile(Context context) {
 
-        AccountDataManager.requestProfile(context, new APIServiceCallback<Account.Basic>() {
-            @Override
-            public void onSuccess(Account.Basic object) {
-
-            }
-
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+//        AccountDataManager.requestProfile(context, new APIServiceCallback<Account.Basic>() {
+//            @Override
+//            public void onSuccess(Account.Basic object) {
+//
+//            }
+//
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
     }
 
     private void editProfile(Context context) {

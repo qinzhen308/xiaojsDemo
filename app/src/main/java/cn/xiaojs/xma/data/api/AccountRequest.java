@@ -46,14 +46,17 @@ public class AccountRequest extends ServiceRequest {
 
     public void editProfile(@NonNull String sessionID, @NonNull Account.Basic basic) {
 
-        Call<ResponseBody> call = getService().editProfile(sessionID, basic);
+        Account account = new Account();
+        account.setBasic(basic);
+
+        Call<ResponseBody> call = getService().editProfile(sessionID, account);
         enqueueRequest(APIType.EDIT_PROFILE,call);
 
     }
 
     public void getProfile(@NonNull String sessionID) {
 
-        Call<Account.Basic> call = getService().getProfile(sessionID);
+        Call<Account> call = getService().getProfile(sessionID);
         enqueueRequest(APIType.GET_PROFILE,call);
 
     }

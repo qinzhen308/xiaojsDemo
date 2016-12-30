@@ -113,11 +113,12 @@ public class ProfileActivity extends BaseActivity {
 
     private void loadData() {
         showProgress(true);
-        AccountDataManager.requestProfile(this, new APIServiceCallback<Account.Basic>() {
+        AccountDataManager.requestProfile(this, new APIServiceCallback<Account>() {
             @Override
-            public void onSuccess(Account.Basic basic) {
+            public void onSuccess(Account account) {
                 cancelProgress();
-                if (basic != null) {
+                Account.Basic basic ;
+                if (account != null && (basic = account.getBasic()) != null) {
                     //avatar
                     mBasic = basic;
                     Glide.with(ProfileActivity.this)

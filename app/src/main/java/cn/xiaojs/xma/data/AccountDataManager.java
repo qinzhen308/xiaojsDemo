@@ -185,7 +185,7 @@ public class AccountDataManager extends DataManager{
     }
 
     public static void requestProfile(Context context,
-                                      @NonNull APIServiceCallback<Account.Basic> callback) {
+                                      @NonNull APIServiceCallback<Account> callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
