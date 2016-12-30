@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +33,15 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private Context mContext;
     private boolean mContactManagementMode = false;
     private List<String> mChoiceList;
+    private OnContactBookListener mListener;
 
     public ContactBookAdapter(Context context) {
         mContext = context;
         mChoiceList = new ArrayList<String>();
+    }
+
+    public void setOnContactBookListener(OnContactBookListener listener) {
+        mListener = listener;
     }
 
     @Override
@@ -59,7 +65,6 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         Holder holder;
         if (convertView == null) {
             convertView = createContentView();
-            convertView.setOnClickListener(this);
         }
         holder = (Holder)convertView.getTag();
 
@@ -76,6 +81,16 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.label = (TextView) v.findViewById(R.id.label);
         holder.video = (ImageView) v.findViewById(R.id.video);
         holder.microphone = (ImageView) v.findViewById(R.id.microphone);
+
+        holder.video.setOnClickListener(this);
+        holder.microphone.setOnClickListener(this);
+        holder.portrait.setOnClickListener(this);
+        v.setOnClickListener(this);
+
+        holder.video.setTag(holder);
+        holder.microphone.setTag(holder);
+        holder.portrait.setTag(holder);
+
         v.setTag(holder);
         return v;
     }
@@ -101,13 +116,35 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         if (obj instanceof Holder) {
             Holder holder = (Holder) v.getTag();
             int pos = holder.position;
-            String choice = String.valueOf(pos);
-            if (mChoiceList.contains(choice)) {
-                holder.checkbox.setSelected(false);
-                mChoiceList.remove(choice);
+
+            if (mContactManagementMode) {
+                String choice = String.valueOf(pos);
+                if (mChoiceList.contains(choice)) {
+                    holder.checkbox.setSelected(false);
+                    mChoiceList.remove(choice);
+                } else {
+                    holder.checkbox.setSelected(true);
+                    mChoiceList.add(choice);
+                }
             } else {
-                holder.checkbox.setSelected(true);
-                mChoiceList.add(choice);
+                String s = "";
+                switch (v.getId()) {
+                    case R.id.portrait:
+                        s = "portrait";
+                        //enter chat
+                        if (mListener != null) {
+                            mListener.onPortraitClick();
+                        }
+                        break;
+                    case R.id.video:
+                        s = "video";
+                        break;
+                    case R.id.microphone:
+                        s = "microphone";
+                        break;
+                }
+
+                //Toast.makeText(mContext, s + pos, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -133,5 +170,9 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     public void exitManagementMode() {
         mContactManagementMode = false;
         notifyDataSetChanged();
+    }
+
+    public interface OnContactBookListener {
+        public void onPortraitClick();
     }
 }
