@@ -29,8 +29,7 @@
             android:id="@+id/drawer_left_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:background="@color/white">
+            android:layout_gravity="left">
 
         <include
                 android:id="@+id/course_ware"
@@ -41,8 +40,7 @@
             android:id="@+id/drawer_right_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:background="@color/white">
+            android:layout_gravity="right">
 
     </FrameLayout>
 

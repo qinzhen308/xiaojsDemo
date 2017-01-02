@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:id="@+id/title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/classroom_main_gray"
+                android:lines="1"
+                android:layout_weight="1"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_28px"
+                android:text="1.教案章节示例"
                 android:paddingTop="@dimen/px10"
-                android:paddingBottom="@dimen/px10">
+                android:paddingBottom="@dimen/px10"
+                android:layout_marginLeft="@dimen/px32"/>
 
-    <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:textColor="@color/font_white"
-            android:textSize="@dimen/font_28px"
-            android:text="1.教案章节示例"
-            android:layout_marginLeft="@dimen/px30"/>
-
-    <TextView
-            android:id="@+id/duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/font_white"
-            android:textSize="@dimen/font_24px"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/course_ware_duration_bg"
-            android:text="10分钟"
-            android:layout_marginLeft="@dimen/px10"
-            android:layout_marginRight="@dimen/px10"
-            android:padding="@dimen/px5"/>
+        <TextView
+                android:id="@+id/duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_22px"
+                android:background="@drawable/course_ware_duration_bg"
+                android:text="10分钟"
+                android:layout_marginLeft="@dimen/px16"
+                android:layout_marginRight="@dimen/px16"
+                android:padding="@dimen/px6"/>
+    </LinearLayout>
 
     <TextView
             android:id="@+id/content"
@@ -35,10 +42,11 @@
             android:layout_height="wrap_content"
             android:textColor="@color/font_white"
             android:textSize="@dimen/font_24px"
-            android:layout_below="@+id/title"
-            android:layout_marginLeft="@dimen/px30"
-            android:paddingTop="@dimen/px10"
-            android:paddingBottom="@dimen/px10"
+            android:layout_below="@+id/title_layout"
+            android:layout_marginLeft="@dimen/px32"
+            android:paddingTop="@dimen/px6"
+            android:paddingBottom="@dimen/px6"
+            android:lineSpacingExtra="@dimen/px4"
             android:text="发送方的说法的房间爱思考了房间爱上经济负担是会计看电视就分开打手机肯定是减肥看电视剧肯定就是看几点上课"
             android:maxLines="4"/>
 
@@ -49,6 +57,7 @@
             android:layout_below="@+id/content"
             android:scaleType="centerCrop"
             android:src="@drawable/default_portrait"
+            android:layout_marginTop="@dimen/px20"
             android:layout_marginLeft="@dimen/px30"/>
 
     <ImageView
@@ -59,6 +68,7 @@
             android:layout_toRightOf="@+id/img1"
             android:scaleType="centerCrop"
             android:src="@drawable/default_portrait"
+            android:layout_marginTop="@dimen/px20"
             android:layout_marginLeft="@dimen/px10"/>
 
     <SeekBar
