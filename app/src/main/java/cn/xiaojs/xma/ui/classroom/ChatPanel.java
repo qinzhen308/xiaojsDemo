@@ -51,6 +51,7 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
     private TextView mBackTv;
 
     private ImageView mOpenContact;
+    private ImageView mDelChatTab;
 
     private int mCurrentMode = MODE_CONTACT;
 
@@ -109,6 +110,7 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
         mChatMsgLv = (ListView)root.findViewById(R.id.chat_msg);
 
         mOpenContact = (ImageView) root.findViewById(R.id.open_contact);
+        mDelChatTab = (ImageView) root.findViewById(R.id.del_chat_tab);
 
         mDefaultContactAction = root.findViewById(R.id.default_contact_action);
         mManageContactAction = root.findViewById(R.id.manage_contact_action);
@@ -128,6 +130,7 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
         mKickOutTv.setOnClickListener(this);
         mBackTv.setOnClickListener(this);
         mManageContact.setOnClickListener(this);
+        mDelChatTab.setOnClickListener(this);
     }
 
     @Override
@@ -156,6 +159,8 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
                 break;
             case R.id.back_manage_contact:
                 exitContactManagement();
+                break;
+            case R.id.del_chat_tab:
                 break;
         }
     }

@@ -3,10 +3,10 @@
               xmlns:roundimg="http://schemas.android.com/apk/res-auto"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:paddingTop="@dimen/px16"
-              android:paddingBottom="@dimen/px16"
+              android:paddingTop="@dimen/px15"
+              android:paddingBottom="@dimen/px15"
               android:paddingLeft="@dimen/px20"
-              android:paddingRight="@dimen/px10"
+              android:paddingRight="@dimen/px5"
               android:gravity="center_vertical">
 
     <ImageView
@@ -14,12 +14,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/multi_check_selector"
-            android:layout_marginRight="@dimen/px15"/>
+            android:layout_marginRight="@dimen/px20"/>
 
     <cn.xiaojs.xma.ui.widget.RoundedImageView
             android:id="@+id/portrait"
-            android:layout_width="@dimen/px80"
-            android:layout_height="@dimen/px80"
+            android:layout_width="@dimen/px56"
+            android:layout_height="@dimen/px56"
             roundimg:oval="true"
             roundimg:border_color="@color/white"
             roundimg:border_width="@dimen/px2"/>
@@ -27,8 +27,8 @@
     <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_marginLeft="@dimen/px10"
-            android:layout_marginRight="@dimen/px10"
+            android:layout_marginLeft="@dimen/px12"
+            android:layout_marginRight="@dimen/px12"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="vertical">
@@ -38,13 +38,17 @@
                 android:textColor="@color/font_white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/font_28px"
+                android:textSize="@dimen/font_24px"
+                android:lines="1"
+                android:ellipsize="end"
                 android:text="李阳阳"/>
 
         <TextView
                 android:id="@+id/label"
                 android:textColor="@color/font_orange"
                 android:text="老师"
+                android:lines="1"
+                android:ellipsize="end"
                 android:textSize="@dimen/font_20px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -55,14 +59,14 @@
             android:id="@+id/video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/px16"
+            android:padding="@dimen/px15"
             android:src="@drawable/cr_video"/>
 
     <ImageView
             android:id="@+id/microphone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/px16"
+            android:padding="@dimen/px15"
             android:src="@drawable/cr_microphone"/>
 
 </LinearLayout>

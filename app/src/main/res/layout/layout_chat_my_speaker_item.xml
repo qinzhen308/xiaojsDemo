@@ -5,14 +5,14 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/px20"
                 android:paddingRight="@dimen/px20"
-                android:paddingTop="@dimen/px16"
-                android:paddingBottom="@dimen/px16">
+                android:paddingTop="@dimen/px18"
+                android:paddingBottom="@dimen/px18">
 
     <cn.xiaojs.xma.ui.widget.RoundedImageView
             android:id="@+id/portrait"
             android:layout_alignParentRight="true"
-            android:layout_width="@dimen/px80"
-            android:layout_height="@dimen/px80"
+            android:layout_width="@dimen/px56"
+            android:layout_height="@dimen/px56"
             roundimg:oval="true"
             roundimg:border_color="@color/white"
             roundimg:border_width="@dimen/px2"/>
@@ -24,7 +24,7 @@
             android:layout_toLeftOf="@+id/portrait"
             android:text="19:20"
             android:layout_marginRight="@dimen/px12"
-            android:textSize="@dimen/font_28px"
+            android:textSize="@dimen/font_24px"
             android:textColor="@color/font_black"/>
 
     <TextView
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/time"
             android:text="吴君如"
-            android:textSize="@dimen/font_28px"
+            android:textSize="@dimen/font_24px"
             android:layout_marginRight="@dimen/px15"
             android:textColor="@color/font_blue"/>
 
@@ -45,7 +45,7 @@
             android:gravity="center_vertical"
             android:text="国庆节要上课的哈"
             android:layout_below="@+id/time"
-            android:textSize="@dimen/font_28px"
+            android:textSize="@dimen/font_26px"
             android:layout_marginRight="@dimen/px5"
             android:layout_marginTop="@dimen/px5"
             android:textColor="@color/font_white"

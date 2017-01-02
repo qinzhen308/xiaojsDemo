@@ -2,20 +2,19 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:roundimg="http://schemas.android.com/apk/res-auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="@dimen/px90"
+        android:layout_height="@dimen/px90">
 
     <cn.xiaojs.xma.ui.widget.RoundedImageView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:roundimg="http://schemas.android.com/apk/res-auto"
             android:id="@+id/portrait"
-            android:layout_width="@dimen/px70"
-            android:layout_height="@dimen/px70"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="@dimen/px56"
+            android:layout_height="@dimen/px56"
             roundimg:oval="true"
             roundimg:border_color="@color/white"
             roundimg:border_width="@dimen/px2"
-            android:layout_marginTop="@dimen/px10"
-            android:layout_marginBottom="@dimen/px10"
-            android:layout_marginLeft="@dimen/px10"
-            android:layout_marginRight="@dimen/px10"/>
+            android:layout_margin="@dimen/px15"/>
 
 </FrameLayout>
