@@ -42,7 +42,9 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout;
+import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.ToastUtil;
+import cn.xiaojs.xma.util.VerifyUtils;
 
 public class MomentDetailActivity extends BaseActivity {
 
@@ -59,8 +61,6 @@ public class MomentDetailActivity extends BaseActivity {
     TextView mPraiseNum;
     @BindView(R.id.moment_detail_prise)
     TextView mPraise;
-//    @BindView(R.id.moment_detail_comment_summary)
-//    TextView mCommentSummary;
 
     private String mMomentId;
     private MomentDetailAdapter mAdapter;
@@ -161,7 +161,8 @@ public class MomentDetailActivity extends BaseActivity {
         return true;
     }
 
-    @OnClick({R.id.left_image, R.id.moment_detail_footer_click, R.id.moment_detail_prise})
+    @OnClick({R.id.left_image, R.id.moment_detail_footer_click, R.id.moment_detail_prise,
+                R.id.right_image,R.id.right_image2})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_image:
@@ -176,6 +177,9 @@ public class MomentDetailActivity extends BaseActivity {
             case R.id.moment_detail_prise:
                 praise();
                 break;
+            case R.id.right_image:
+                more();
+                break;
         }
     }
 
@@ -183,6 +187,64 @@ public class MomentDetailActivity extends BaseActivity {
     public void onBackPressed() {
         //super.onBackPressed();
         close();
+    }
+
+    private void more() {
+        if (mDetail == null)
+            return;
+        ListBottomDialog dialog = new ListBottomDialog(this);
+        if (!VerifyUtils.isMyself(mDetail.owner.account)){
+            String[] items = getResources().getStringArray(R.array.ugc_more);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0://忽略此条动态
+                            break;
+                        case 1://忽略他的动态
+                            break;
+                        case 2://取消关注
+                            cancelFollow();
+                            break;
+                        case 3://举报
+                            break;
+                    }
+                }
+            });
+        }else {
+            String[] items = new String[]{this.getString(R.string.delete)};
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    //delete(bean);
+                }
+            });
+        }
+        dialog.show();
+    }
+
+    //取消关注
+    private void cancelFollow(){
+        if (mDetail == null)
+            return;
+        //未关注时不能取消关注
+        if (!mDetail.owner.followed)
+            return;
+        SocialManager.unfollowContact(this, mDetail.owner.account, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                ToastUtil.showToast(MomentDetailActivity.this,R.string.cancel_followed);
+                setResult(HomeConstant.RESULT_MOMENT_DETAIL_OPERATED);
+                finish();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ToastUtil.showToast(MomentDetailActivity.this,errorMessage);
+            }
+        });
     }
 
     private void praise() {

@@ -30,7 +30,6 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.home.HomeConstant;
 import cn.xiaojs.xma.ui.home.MomentDetailActivity;
-import cn.xiaojs.xma.util.DeviceUtil;
 
 public class MomentUGC extends RelativeLayout {
 
@@ -124,7 +123,10 @@ public class MomentUGC extends RelativeLayout {
             }
         });
 
-        DeviceUtil.expandViewTouch(mMore,getResources().getDimensionPixelSize(R.dimen.px100));
+    }
+
+    public View getMore(){
+        return mMore;
     }
 
     private void praise(boolean status,int total){
