@@ -15,10 +15,12 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.core;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -37,6 +39,8 @@ public class Utils {
     private final static Matrix mMapRectMatrix = new Matrix();
     private final static Matrix mMapPointMatrix = new Matrix();
     private final static float[] mPointArr = new float[2];
+    public final static Paint mDelBtnPaint = buildDelBtnPaint();
+    public final static Paint mControllerPaint = buildControllerPaint();
 
     /**
      * map the point of specified canvas to screen point
@@ -137,6 +141,16 @@ public class Utils {
         p.setStyle(Paint.Style.FILL);
         p.setStrokeWidth(WhiteboardConfigs.CONTROLLER_RADIUS);
         p.setColor(WhiteboardConfigs.BORDER_COLOR);
+        return p;
+    }
+
+    public static Paint buildDelBtnPaint() {
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeJoin(Paint.Join.ROUND);
+        p.setStrokeCap(Paint.Cap.ROUND);
+        p.setStrokeWidth(WhiteboardConfigs.DEL_BTN_STROKE_WIDTH);
+        p.setColor(Color.WHITE);
         return p;
     }
 
@@ -661,6 +675,29 @@ public class Utils {
             textHeight = WhiteboardConfigs.MIN_EDIT_TEXT_HEIGHT;
         }
         return textHeight;
+    }
+
+    public static void drawDelBtn(Canvas canvas, RectF borderRect, Path borderDrawingPath,
+                                  Matrix matrix, Whiteboard.WhiteboardParams params) {
+        borderDrawingPath.reset();
+        borderDrawingPath.addOval(borderRect, Path.Direction.CCW);
+        borderDrawingPath.transform(matrix);
+        canvas.drawPath(borderDrawingPath, mControllerPaint);
+
+        float w = borderRect.width() / 5;
+        float h = borderRect.height() / 5;
+        float cx = borderRect.centerX();
+        float cy = borderRect.centerY();
+        borderRect.set(cx - w, cy - h, cx + w, cy + h);
+        borderDrawingPath.reset();
+        borderDrawingPath.moveTo(borderRect.left, borderRect.top);
+        borderDrawingPath.quadTo(borderRect.left, borderRect.top, borderRect.right, borderRect.bottom);
+
+        borderDrawingPath.moveTo(borderRect.right, borderRect.top);
+        borderDrawingPath.quadTo(borderRect.right, borderRect.top, borderRect.left, borderRect.bottom);
+        borderDrawingPath.transform(matrix);
+        mDelBtnPaint.setStrokeWidth(WhiteboardConfigs.DEL_BTN_STROKE_WIDTH / params.scale);
+        canvas.drawPath(borderDrawingPath, mDelBtnPaint);
     }
 
 }

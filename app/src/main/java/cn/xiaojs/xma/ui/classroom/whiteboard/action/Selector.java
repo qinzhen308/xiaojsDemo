@@ -152,7 +152,10 @@ public class Selector extends Doodle {
                 }
 
                 Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
-                float padding = params.paintStrokeWidth / 2 + WhiteboardConfigs.BORDER_PADDING;
+                float padding = params.paintStrokeWidth / 2 / mTotalScale;
+                float exPadding = WhiteboardConfigs.BORDER_PADDING / mTotalScale;
+                padding = padding * params.scale + exPadding;
+
                 mBorderRect.set(mDoodleRect.left - padding, mDoodleRect.top - padding, mDoodleRect.right + padding, mDoodleRect.bottom + padding);
                 mBorderDrawingPath.reset();
                 mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
@@ -167,6 +170,15 @@ public class Selector extends Doodle {
                 mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
                 mBorderDrawingPath.transform(mTransformMatrix);
                 canvas.drawPath(mBorderDrawingPath, mControllerPaint);
+
+                //draw del btn
+                mBorderRect.set(mDoodleRect.left - padding - radius, mDoodleRect.bottom + padding - radius,
+                        mDoodleRect.left - padding + radius, mDoodleRect.bottom + padding + radius);
+                mBorderDrawingPath.reset();
+                mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
+                mBorderDrawingPath.transform(mTransformMatrix);
+                canvas.drawPath(mBorderDrawingPath, mControllerPaint);
+                Utils.drawDelBtn(canvas, mBorderRect, mBorderDrawingPath, mTransformMatrix, params);
             }
         } catch (Exception e) {
 

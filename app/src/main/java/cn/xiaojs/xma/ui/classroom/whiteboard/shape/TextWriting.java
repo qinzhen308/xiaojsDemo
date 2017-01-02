@@ -136,34 +136,29 @@ public class TextWriting extends Doodle {
     @Override
     public void drawBorder(Canvas canvas) {
         if(!TextUtils.isEmpty(mTextString)) {
-            Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
-            float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
-
-            mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
-            mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
-
-            float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
-            float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2 + WhiteboardConfigs.TEXT_BORDER_PADDING;
-            PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
-            float hPadding = p.x / mTotalScale;
-            float vPadding = p.y / mTotalScale;
-            mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding, mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
-
-            mBorderDrawingPath.reset();
-            mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
-            mBorderDrawingPath.transform(mDrawingMatrix);
-            canvas.drawPath(mBorderDrawingPath, mBorderPaint);
-
-            //draw controller
-            float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
-            p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
-            mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
-                    mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
-            mBorderDrawingPath.reset();
-            mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
-            mBorderDrawingPath.transform(mDrawingMatrix);
-            canvas.drawPath(mBorderDrawingPath, mControllerPaint);
+            super.drawBorder(canvas);
         }
+    }
+
+    @Override
+    protected void computeBorderPadding() {
+        Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
+        float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
+
+        mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
+        mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
+
+        float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
+        float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2 ;
+        PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
+        float hPadding = p.x / mTotalScale * params.scale;
+        float vPadding = p.y / mTotalScale * params.scale;
+        //add extra padding
+        p = Utils.normalizeScreenPoint(WhiteboardConfigs.TEXT_BORDER_PADDING, WhiteboardConfigs.TEXT_BORDER_PADDING, params.drawingBounds);
+        hPadding = hPadding + p.x / mTotalScale;
+        vPadding = vPadding + p.y / mTotalScale;
+
+        mBorderPadding.set(hPadding, vPadding);
     }
 
     @Override

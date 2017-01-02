@@ -21,6 +21,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.UUID;
 import java.util.Vector;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 
 public abstract class Doodle implements Action {
     public final static int SELECTION = 0;
@@ -46,6 +48,7 @@ public abstract class Doodle implements Action {
     protected Paint mPaint;
     protected Paint mBorderPaint;
     protected Paint mControllerPaint;
+    protected Paint mDelBtnPaint;
 
     protected float mTotalDegree = 0;
     protected float mTotalScale = 1.0f;
@@ -62,6 +65,7 @@ public abstract class Doodle implements Action {
     protected Path mBorderDrawingPath;
     protected Path mScreenPath;
 
+    protected PointF mBorderPadding;
     protected float[] mRectCenter;
 
     protected Matrix mDrawingMatrix;
@@ -107,9 +111,12 @@ public abstract class Doodle implements Action {
 
         mBorderPaint = Utils.buildDashPaint();
         mControllerPaint = Utils.buildControllerPaint();
+        mDelBtnPaint = Utils.buildDelBtnPaint();
 
         mUndoRecords = new ArrayList<ActionRecord>();
         mRedoRecords = new ArrayList<ActionRecord>();
+
+        mBorderPadding = new PointF();
     }
 
     protected int initialCapacity() {
@@ -249,19 +256,15 @@ public abstract class Doodle implements Action {
 
     public void drawBorder(Canvas canvas) {
         if (mPoints.size() > 1 && !mDoodleRect.isEmpty()) {
+            computeBorderPadding();
+
             Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
-            float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
+            float hPadding = mBorderPadding.x;
+            float vPadding = mBorderPadding.y;
+            mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding,
+                    mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
 
-            mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
-            mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
-
-            float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
-            float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2 + WhiteboardConfigs.BORDER_PADDING;
-            PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
-            float hPadding = p.x / mTotalScale;
-            float vPadding = p.y / mTotalScale;
-            mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding, mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
-
+            //draw border
             mBorderDrawingPath.reset();
             mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
             mBorderDrawingPath.transform(mDrawingMatrix);
@@ -269,14 +272,42 @@ public abstract class Doodle implements Action {
 
             //draw controller
             float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
-            p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
+            PointF p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
             mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
                     mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
             mBorderDrawingPath.reset();
             mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
             mBorderDrawingPath.transform(mDrawingMatrix);
             canvas.drawPath(mBorderDrawingPath, mControllerPaint);
+
+            //draw del btn
+            mBorderRect.set(mDoodleRect.left - hPadding - p.x, mDoodleRect.bottom + vPadding - p.y,
+                    mDoodleRect.left - hPadding + p.x, mDoodleRect.bottom + vPadding + p.y);
+            mBorderDrawingPath.reset();
+            mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
+            mBorderDrawingPath.transform(mDrawingMatrix);
+            canvas.drawPath(mBorderDrawingPath, mControllerPaint);
+            Utils.drawDelBtn(canvas, mBorderRect, mBorderDrawingPath, mDrawingMatrix, params);
         }
+    }
+
+    protected void computeBorderPadding(){
+        Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
+        float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
+
+        mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
+        mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
+
+        float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
+        float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2;
+        PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
+        float hPadding = p.x / mTotalScale * params.scale;
+        float vPadding = p.y / mTotalScale * params.scale;
+        //add extra padding
+        p = Utils.normalizeScreenPoint(WhiteboardConfigs.BORDER_PADDING, WhiteboardConfigs.BORDER_PADDING, params.drawingBounds);
+        hPadding = hPadding + p.x / mTotalScale;
+        vPadding = vPadding + p.y / mTotalScale;
+        mBorderPadding.set(hPadding, vPadding);
     }
 
     public int checkPressedRegion(float x, float y) {
