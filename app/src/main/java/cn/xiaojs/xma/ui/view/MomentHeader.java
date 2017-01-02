@@ -93,7 +93,7 @@ public class MomentHeader extends RelativeLayout {
             mName.setText(dynamic.owner.alias);
             mTag.setText(dynamic.owner.tag);
         }
-        mTime.setText(TimeUtil.getTimeByNow(dynamic.createdOn));
+        mTime.setText(TimeUtil.getTimeFromNow(dynamic.createdOn));
         if (dynamic.owner.followed || mOwner.myself || VerifyUtils.isMyself(mOwner.account)) {
             mFollow.setVisibility(GONE);
         } else {
