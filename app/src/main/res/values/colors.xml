@@ -23,9 +23,11 @@
     <color name="round_img_border_">#888888</color>
     <color name="blur_float_up_bg">#88000000</color>
     <color name="red_bg">#ff4d30</color>
-    <color name="classroom_main_gray">#f04e4e4e</color>
+    <color name="classroom_main_gray">#4e4e4e</color>
+    <color name="classroom_dark_gray">#333333</color>
     <color name="classroom_light_gray">#999999</color>
-    <color name="classroom_chat_bg">#bb999999</color>
+    <color name="classroom_normal_gray">#666666</color>
+    <color name="classroom_chat_bg">#686868</color>
     <color name="classroom_black_bg">#191919</color>
     <!--disable color, eg btn-->
     <color name="disable_btn">#999999</color>

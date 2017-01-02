@@ -329,6 +329,7 @@
     <string name="add_white_board_exceed">最多只能添加%1$d块白板</string>
     <string name="my_document">我的资料库</string>
     <string name="class_document">班级资料库</string>
+    <string name="class_chat_input">输入文字</string>
     <!--whiteboard-->
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>

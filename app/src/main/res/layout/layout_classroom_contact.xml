@@ -11,16 +11,19 @@
     <EditText
             android:id="@+id/search"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px70"
+            android:layout_height="@dimen/px58"
             android:textColorHint="@color/font_dark_gray"
             android:textColor="@color/font_dark_gray"
             android:hint="搜索"
-            android:textSize="@dimen/font_28px"
-            android:background="#88ffffff"
-            android:layout_margin="@dimen/px15"
+            android:textSize="@dimen/font_26px"
+            android:background="#dcdcdc"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_marginBottom="@dimen/px20"
+            android:layout_marginLeft="@dimen/px15"
+            android:layout_marginRight="@dimen/px15"
             android:drawableRight="@drawable/ic_search"
-            android:paddingLeft="@dimen/px5"
-            android:paddingRight="@dimen/px5"/>
+            android:paddingLeft="@dimen/px15"
+            android:paddingRight="@dimen/px15"/>
 
     <ListView
             android:id="@+id/contact_book"
@@ -28,15 +31,17 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/search"
             android:layout_above="@+id/action_line"
-            android:listSelector="@android:color/transparent">
+            android:layout_marginTop="@dimen/px8"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none">
 
     </ListView>
 
     <View
             android:id="@+id/action_line"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px1"
-            android:background="#333333"
+            android:layout_height="@dimen/px2"
+            android:background="#3f3f3f"
             android:layout_above="@+id/contact_action_btn"/>
 
     <FrameLayout

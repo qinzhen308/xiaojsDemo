@@ -23,8 +23,8 @@
                     android:layout_width="0dp"
                     android:gravity="center_vertical"
                     android:layout_height="@dimen/px80"
-                    android:paddingLeft="@dimen/px10"
-                    android:paddingRight="@dimen/px15"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
                     android:background="@color/classroom_chat_bg">
 
                 <TextView
@@ -49,14 +49,15 @@
                     android:layout_width="0dp"
                     android:gravity="center_vertical"
                     android:layout_height="@dimen/px80"
-                    android:paddingLeft="@dimen/px10"
-                    android:paddingRight="@dimen/px15">
+                    android:paddingLeft="@dimen/px20">
 
                 <TextView
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="龚婷"
+                        android:lines="1"
+                        android:ellipsize="end"
                         android:textColor="@color/font_white"
                         android:textSize="@dimen/font_30px"/>
 
@@ -64,6 +65,8 @@
                         android:id="@+id/del_chat_tab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingRight="@dimen/px20"
+                        android:paddingLeft="@dimen/px20"
                         android:src="@drawable/ic_del_label"/>
             </LinearLayout>
 
@@ -90,35 +93,41 @@
             <EditText
                     android:id="@+id/msg_input"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/px70"
+                    android:layout_height="@dimen/px56"
                     android:background="@drawable/cr_msg_input_bg"
-                    android:padding="@dimen/px5"
+                    android:paddingLeft="@dimen/px15"
+                    android:paddingRight="@dimen/px15"
+                    android:paddingTop="@dimen/px2"
+                    android:paddingBottom="@dimen/px2"
+                    android:textSize="@dimen/font_28px"
+                    android:hint="@string/class_chat_input"
+                    android:textColorHint="@color/light_grey"
                     android:layout_marginLeft="@dimen/px20"
                     android:layout_marginRight="@dimen/px20"
-                    android:layout_marginBottom="@dimen/px20"
+                    android:layout_marginBottom="@dimen/px15"
                     android:imeOptions="actionSend"/>
         </FrameLayout>
 
     </RelativeLayout>
 
     <LinearLayout
-            android:layout_width="@dimen/px100"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
         <ListView
                 android:id="@+id/chat_simple_contact"
                 android:layout_weight="1"
-                android:layout_marginTop="@dimen/px20"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:scrollbars="none"
                 android:listSelector="@android:color/transparent"/>
 
         <ImageView
                 android:id="@+id/open_contact"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/px80"
-                android:layout_gravity="center_horizontal"
+                android:layout_height="@dimen/px70"
                 android:scaleType="center"
                 android:src="@drawable/cr_contact_book"/>
     </LinearLayout>
