@@ -21,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
+
+import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
@@ -41,10 +45,6 @@ import cn.xiaojs.xma.ui.widget.RedTipTextView;
 import cn.xiaojs.xma.util.NumberUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
-import com.bumptech.glide.Glide;
-import com.orhanobut.logger.Logger;
-
-import butterknife.BindView;
 
 public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLessonAdapter.Holder> {
     private Criteria mCriteria;
@@ -55,8 +55,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         mFragment = fragment;
     }
 
-    public TeachLessonAdapter(Context context, PullToRefreshSwipeListView listView,boolean autoLoad) {
-        super(context, listView,autoLoad);
+    public TeachLessonAdapter(Context context, PullToRefreshSwipeListView listView, boolean autoLoad) {
+        super(context, listView, autoLoad);
     }
 
     public TeachLessonAdapter(Context context, PullToRefreshSwipeListView listView) {
@@ -64,7 +64,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     }
 
     @Override
-    protected void initParam(){
+    protected void initParam() {
         Duration duration = new Duration();
         duration.setStart(TimeUtil.original());
         duration.setEnd(TimeUtil.yearAfter(10));
@@ -75,7 +75,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     }
 
     @Override
-    protected void setViewContent(Holder holder,final TeachLesson bean, int position) {
+    protected void setViewContent(Holder holder, final TeachLesson bean, int position) {
         holder.reset();
         holder.name.setText(bean.getTitle());
 //        String state = LessonBusiness.getStateByPosition(position,true);
@@ -83,16 +83,16 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 //            bean.setState(state);
 //        }
         holder.price.setVisibility(View.VISIBLE);
-        if (bean.getFee().isFree()){
+        if (bean.getFee().isFree()) {
             holder.price.setText(R.string.free);
-        }else {
+        } else {
             holder.price.setText(NumberUtil.getPrice(bean.getFee().getCharge()));
         }
-        holder.desc.setText(mContext.getString(R.string.course_stu,bean.getEnroll().getCurrent(),bean.getEnroll().getMax()));
+        holder.desc.setText(mContext.getString(R.string.course_stu, bean.getEnroll().getCurrent(), bean.getEnroll().getMax()));
 
-        holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(),bean.getSchedule().getDuration()));
+        holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
         Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
-        if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)){
+        if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)) {
             holder.clsFunction.setVisibility(View.VISIBLE);
             holder.circle.setText(R.string.shelves);
             holder.enter.setText(R.string.edit);
@@ -117,7 +117,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             });
             holder.courseState.setText(R.string.pending_shelves);
             holder.courseState.setBackgroundResource(R.drawable.course_state_draft_bg);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)){
+        } else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
 //            holder.error.setVisibility(View.VISIBLE);
 //            holder.error.setText(R.string.course_examine_error_tip);
             holder.clsFunction.setVisibility(View.VISIBLE);
@@ -139,7 +139,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             });
             holder.courseState.setText(R.string.examine_failure);
             holder.courseState.setBackgroundResource(R.drawable.course_state_failure_bg);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)){
+        } else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
             holder.operaFunction.setVisibility(View.VISIBLE);
             holder.detail.setOnClickListener(new View.OnClickListener() {//查看详情
                 @Override
@@ -149,7 +149,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             });
             holder.courseState.setText(R.string.course_state_cancel);
             holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)){
+        } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
 //            holder.error.setVisibility(View.VISIBLE);
 //            holder.error.setText(R.string.course_stop_error_tip);
             holder.more.setVisibility(View.VISIBLE);
@@ -161,7 +161,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             });
             holder.courseState.setText(R.string.force_stop);
             holder.courseState.setBackgroundResource(R.drawable.course_state_stop_bg);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)){
+        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
             holder.more.setVisibility(View.VISIBLE);
             holder.more.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -171,9 +171,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             });
             holder.courseState.setText(R.string.examining);
             holder.courseState.setBackgroundResource(R.drawable.course_state_examine_bg);
-        }else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
+        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
                 || bean.getState().equalsIgnoreCase(LessonState.LIVE)
-                || bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
+                || bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
             holder.more.setVisibility(View.VISIBLE);
             holder.clsFunction.setVisibility(View.VISIBLE);
             holder.circle.setText(R.string.cls_moment);
@@ -197,28 +197,21 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 }
             });
 
-            if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
+            if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
                 holder.courseState.setText(R.string.pending_for_course);
                 holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
-            }else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)){
+            } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
                 holder.courseState.setText(R.string.living);
                 holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
-            }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
+            } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
                 holder.courseState.setText(R.string.course_state_end);
                 holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
             }
         }
     }
 
-    private void showProgress(boolean cancelable){
-        ((BaseActivity)mContext).showProgress(cancelable);
-    }
-
-    private void cancelProgress(){
-        ((BaseActivity)mContext).cancelProgress();
-    }
     //上架
-    private void shelves(final TeachLesson bean){
+    private void shelves(final TeachLesson bean) {
         showProgress(false);
         LessonDataManager.requestPutLessonOnShelves(mContext, bean.getId(), new APIServiceCallback() {
             @Override
@@ -226,27 +219,27 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 cancelProgress();
                 bean.setState(LessonState.PENDING_FOR_APPROVAL);
                 notifyData(bean);
-                ToastUtil.showToast(mContext,R.string.shelves_need_examine);
+                ToastUtil.showToast(mContext, R.string.shelves_need_examine);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                ToastUtil.showToast(mContext,errorMessage);
+                ToastUtil.showToast(mContext, errorMessage);
             }
         });
     }
 
     //编辑
-    private void edit(TeachLesson bean){
-        Intent intent = new Intent(mContext,LessonCreationActivity.class);
+    private void edit(TeachLesson bean) {
+        Intent intent = new Intent(mContext, LessonCreationActivity.class);
         intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
-        intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE,CourseConstant.TYPE_LESSON_EDIT);
-        ((BaseActivity)mContext).startActivityForResult(intent,CourseConstant.CODE_EDIT_LESSON);
+        intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_EDIT);
+        ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
     }
 
     //撤销审核，取消上架
-    private void offShelves(final TeachLesson bean){
+    private void offShelves(final TeachLesson bean) {
         final CommonDialog dialog = new CommonDialog(mContext);
         dialog.setTitle(R.string.cancel_examine);
         dialog.setDesc(R.string.cancel_examine_tip);
@@ -268,13 +261,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         cancelProgress();
                         bean.setState(LessonState.DRAFT);
                         notifyData(bean);
-                        ToastUtil.showToast(mContext,R.string.off_shelves_success);
+                        ToastUtil.showToast(mContext, R.string.off_shelves_success);
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
                         cancelProgress();
-                        ToastUtil.showToast(mContext,errorMessage);
+                        ToastUtil.showToast(mContext, errorMessage);
                     }
                 });
             }
@@ -285,36 +278,37 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     }
 
     //查看详情
-    private void detail(TeachLesson bean){
-        Intent intent = new Intent(mContext,LiveLessonDetailActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN,bean);
+    private void detail(TeachLesson bean) {
+        Intent intent = new Intent(mContext, LiveLessonDetailActivity.class);
+        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
         mContext.startActivity(intent);
     }
 
     //班级圈
-    private void circle(TeachLesson bean){
+    private void circle(TeachLesson bean) {
         //modifyLesson(bean);
     }
 
     //进入教室
-    private void enterClass(TeachLesson bean){
+    private void enterClass(TeachLesson bean) {
 
     }
 
-    private void modifyLesson(TeachLesson bean){
-        Intent intent = new Intent(mContext,ModifyLessonActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN,bean);
-        ((BaseActivity)mContext).startActivityForResult(intent,CourseConstant.CODE_EDIT_LESSON);
+    private void modifyLesson(TeachLesson bean) {
+        Intent intent = new Intent(mContext, ModifyLessonActivity.class);
+        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
+        ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
     }
+
     //取消上课
-    private void cancelLesson(TeachLesson bean){
-        Intent intent = new Intent(mContext,CancelLessonActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN,bean);
-        ((BaseActivity)mContext).startActivityForResult(intent,CourseConstant.CODE_CANCEL_LESSON);
+    private void cancelLesson(TeachLesson bean) {
+        Intent intent = new Intent(mContext, CancelLessonActivity.class);
+        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
+        ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_CANCEL_LESSON);
     }
 
     //删除
-    private void delete(TeachLesson bean){
+    private void delete(TeachLesson bean) {
         final CommonDialog dialog = new CommonDialog(mContext);
         dialog.setTitle(R.string.delete);
         dialog.setDesc(R.string.delete_lesson_tip);
@@ -332,28 +326,47 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         });
         dialog.show();
     }
+
     //备课
-    private void prepare(TeachLesson bean){
+    private void prepare(TeachLesson bean) {
 
     }
 
     //分享
-    private void share(TeachLesson bean){
+    private void share(TeachLesson bean) {
 
     }
 
     //报名注册
-    private void registration(TeachLesson bean){
+    private void registration(TeachLesson bean) {
 
     }
 
     //发布到主页
-    private void publish(TeachLesson bean){
+    private void publish(final TeachLesson bean) {
+        if (bean.getPublish().accessible){
+            cancelPublish(bean);
+            return;
+        }
+        showProgress(true);
+        LessonDataManager.requestToggleAccessLesson(mContext, bean.getId(), true, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                bean.getPublish().accessible = true;
+                ToastUtil.showToast(mContext,R.string.lesson_publish_tip);
+            }
 
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                ToastUtil.showToast(mContext,errorMessage);
+            }
+        });
     }
 
     //取消发布
-    private void cancelPublish(TeachLesson bean){
+    private void cancelPublish(final TeachLesson bean) {
         final CommonDialog dialog = new CommonDialog(mContext);
         dialog.setTitle(R.string.cancel_publish);
         dialog.setDesc(R.string.cancel_publish_tip);
@@ -366,214 +379,219 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
+                showProgress(true);
+                LessonDataManager.requestToggleAccessLesson(mContext, bean.getId(), true, new APIServiceCallback() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        cancelProgress();
+                        bean.getPublish().accessible = false;
+                        ToastUtil.showToast(mContext,R.string.course_state_cancel);
+                    }
 
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress();
+                        ToastUtil.showToast(mContext,errorMessage);
+                    }
+                });
             }
         });
         dialog.show();
     }
 
     //再次开课
-    private void lessonAgain(TeachLesson bean){
-        Intent intent = new Intent(mContext,LessonCreationActivity.class);
+    private void lessonAgain(TeachLesson bean) {
+        Intent intent = new Intent(mContext, LessonCreationActivity.class);
         intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
-        intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE,CourseConstant.TYPE_LESSON_AGAIN);
-        ((BaseActivity)mContext).startActivityForResult(intent,CourseConstant.CODE_LESSON_AGAIN);
+        intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_AGAIN);
+        ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_LESSON_AGAIN);
     }
 
     //更多
-    private void more(final TeachLesson bean){
+    private void more(final TeachLesson bean) {
 
-            if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)){
-                String[] items = new String[]{
-                        mContext.getString(R.string.look_detail),
-                        mContext.getString(R.string.delete)};
-                ListBottomDialog dialog = new ListBottomDialog(mContext);
-                dialog.setItems(items);
-                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        switch (position){
-                            case 0://上架
-                                detail(bean);
-                                break;
-                            case 1://编辑
-                                delete(bean);
-                                break;
-                        }
+        int publishId = R.string.publish_to_home_page;
+        if (bean.getPublish().accessible){
+            publishId = R.string.cancel_publish;
+        }
+        if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)) {
+            String[] items = new String[]{
+                    mContext.getString(R.string.look_detail),
+                    mContext.getString(R.string.delete)};
+            ListBottomDialog dialog = new ListBottomDialog(mContext);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0://上架
+                            detail(bean);
+                            break;
+                        case 1://编辑
+                            delete(bean);
+                            break;
                     }
-                });
-                dialog.show();
-            }else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)){
-                String[] items = new String[]{mContext.getString(R.string.cancel_examine),
-                        mContext.getString(R.string.look_detail)};
-                ListBottomDialog dialog = new ListBottomDialog(mContext);
-                dialog.setItems(items);
-                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        switch (position){
-                            case 0://撤销审核
-                                offShelves(bean);
-                                break;
-                            case 1://查看详情
-                                detail(bean);
-                                break;
-                        }
+                }
+            });
+            dialog.show();
+        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
+            String[] items = new String[]{mContext.getString(R.string.cancel_examine),
+                    mContext.getString(R.string.look_detail)};
+            ListBottomDialog dialog = new ListBottomDialog(mContext);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0://撤销审核
+                            offShelves(bean);
+                            break;
+                        case 1://查看详情
+                            detail(bean);
+                            break;
                     }
-                });
-                dialog.show();
-            } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)){
-                String[] items = new String[]{
-                        mContext.getString(R.string.prepare_lesson),
-                        mContext.getString(R.string.registration),
-                mContext.getString(R.string.share),
-                mContext.getString(R.string.look_detail),
-                        mContext.getString(R.string.publish_to_home_page),
-                mContext.getString(R.string.modify_lesson_time),
-                mContext.getString(R.string.cancel_lesson),
-                mContext.getString(R.string.cancel_publish)};
-                ListBottomDialog dialog = new ListBottomDialog(mContext);
-                dialog.setItems(items);
-                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        switch (position){
-                            case 0://备课
-                                prepare(bean);
-                                break;
-                            case 1://报名注册
-                                registration(bean);
-                                break;
-                            case 2://分享
-                                share(bean);
-                                break;
-                            case 3://查看详情
-                                detail(bean);
-                                break;
-                            case 4://发布到主页
-                                publish(bean);
-                                break;
-                            case 5://修改上课时间
-                                modifyLesson(bean);
-                                break;
-                            case 6://取消上课
-                                cancelLesson(bean);
-                                break;
-                            case 7://取消发布
-                                cancelPublish(bean);
-                                break;
+                }
+            });
+            dialog.show();
+        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
+            String[] items = new String[]{
+                    mContext.getString(R.string.prepare_lesson),
+                    mContext.getString(R.string.registration),
+                    mContext.getString(R.string.share),
+                    mContext.getString(R.string.look_detail),
+                    mContext.getString(publishId),
+                    mContext.getString(R.string.modify_lesson_time),
+                    mContext.getString(R.string.cancel_lesson)};
+            ListBottomDialog dialog = new ListBottomDialog(mContext);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0://备课
+                            prepare(bean);
+                            break;
+                        case 1://报名注册
+                            registration(bean);
+                            break;
+                        case 2://分享
+                            share(bean);
+                            break;
+                        case 3://查看详情
+                            detail(bean);
+                            break;
+                        case 4://发布到主页
+                            publish(bean);
+                            break;
+                        case 5://修改上课时间
+                            modifyLesson(bean);
+                            break;
+                        case 6://取消上课
+                            cancelLesson(bean);
+                            break;
+                    }
+                }
+            });
+            dialog.show();
+        } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
+            String[] items = new String[]{
+                    mContext.getString(R.string.share),
+                    mContext.getString(R.string.look_detail),
+                    mContext.getString(publishId)};
+            ListBottomDialog dialog = new ListBottomDialog(mContext);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0://分享
+                            share(bean);
+                            break;
+                        case 1://查看详情
+                            detail(bean);
+                            break;
+                        case 2://发布到主页
+                            publish(bean);
+                            break;
+                    }
+                }
+            });
+            dialog.show();
+        } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+            String[] items = new String[]{
+                    mContext.getString(R.string.lesson_again),
+                    mContext.getString(R.string.prepare_lesson),
+                    mContext.getString(R.string.share),
+                    mContext.getString(R.string.look_detail),
+                    mContext.getString(publishId)};
+            ListBottomDialog dialog = new ListBottomDialog(mContext);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0://再次开课
+                            lessonAgain(bean);
+                            break;
+                        case 1://备课
+                            prepare(bean);
+                            break;
+                        case 2://分享
+                            share(bean);
+                            break;
+                        case 3://查看详情
+                            detail(bean);
+                            break;
+                        case 4://发布到主页
+                            publish(bean);
+                            break;
+                    }
+                }
+            });
+            dialog.show();
+        } else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
+            String[] items = new String[]{
+                    mContext.getString(R.string.look_detail),
+                    mContext.getString(R.string.delete)};
+            ListBottomDialog dialog = new ListBottomDialog(mContext);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0://查看详情
+                            detail(bean);
+                            break;
+                        case 1://删除
+                            delete(bean);
+                            break;
+                    }
+                }
+            });
+            dialog.show();
+        } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
+            String[] items = new String[]{
+                    mContext.getString(R.string.look_detail),
+                    mContext.getString(R.string.delete)};
+            ListBottomDialog dialog = new ListBottomDialog(mContext);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0://查看详情
+                            detail(bean);
+                            break;
+                        case 1://删除
+                            delete(bean);
+                            break;
+                    }
+                }
+            });
+            dialog.show();
+        }
 
-                        }
-                    }
-                });
-                dialog.show();
-            }else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)){
-                String[] items = new String[]{
-                        mContext.getString(R.string.share),
-                        mContext.getString(R.string.look_detail),
-                        mContext.getString(R.string.publish_to_home_page),
-                        mContext.getString(R.string.cancel_publish)};
-                ListBottomDialog dialog = new ListBottomDialog(mContext);
-                dialog.setItems(items);
-                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        switch (position){
-                            case 0://分享
-                                share(bean);
-                                break;
-                            case 1://查看详情
-                                detail(bean);
-                                break;
-                            case 2://发布到主页
-                                publish(bean);
-                                break;
-                            case 3://取消发布
-                                cancelPublish(bean);
-                                break;
-                        }
-                    }
-                });
-                dialog.show();
-            }else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)){
-                String[] items = new String[]{
-                        mContext.getString(R.string.lesson_again),
-                        mContext.getString(R.string.prepare_lesson),
-                        mContext.getString(R.string.share),
-                        mContext.getString(R.string.look_detail),
-                        mContext.getString(R.string.publish_to_home_page),
-                        mContext.getString(R.string.cancel_publish)};
-                ListBottomDialog dialog = new ListBottomDialog(mContext);
-                dialog.setItems(items);
-                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        switch (position){
-                            case 0://再次开课
-                                lessonAgain(bean);
-                                break;
-                            case 1://备课
-                                prepare(bean);
-                                break;
-                            case 2://分享
-                                share(bean);
-                                break;
-                            case 3://查看详情
-                                detail(bean);
-                                break;
-                            case 4://发布到主页
-                                publish(bean);
-                                break;
-                            case 5://取消发布
-                                cancelPublish(bean);
-                                break;
-                        }
-                    }
-                });
-                dialog.show();
-            }else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)){
-                String[] items = new String[]{
-                        mContext.getString(R.string.look_detail),
-                        mContext.getString(R.string.delete)};
-                ListBottomDialog dialog = new ListBottomDialog(mContext);
-                dialog.setItems(items);
-                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        switch (position){
-                            case 0://查看详情
-                                detail(bean);
-                                break;
-                            case 1://删除
-                                delete(bean);
-                                break;
-                        }
-                    }
-                });
-                dialog.show();
-            }else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)){
-                String[] items = new String[]{
-                        mContext.getString(R.string.look_detail),
-                        mContext.getString(R.string.delete)};
-                ListBottomDialog dialog = new ListBottomDialog(mContext);
-                dialog.setItems(items);
-                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        switch (position){
-                            case 0://查看详情
-                                detail(bean);
-                                break;
-                            case 1://删除
-                                delete(bean);
-                                break;
-                        }
-                    }
-                });
-                dialog.show();
-            }
-
-     }
+    }
 
     @Override
     protected View createContentView(int position) {
@@ -587,7 +605,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     }
 
     @Override
-    protected void onDataItemClick(int position,TeachLesson bean) {
+    protected void onDataItemClick(int position, TeachLesson bean) {
         Intent i = new Intent(mContext, LessonHomeActivity.class);
         i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
         i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
@@ -601,8 +619,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 Logger.d("onSuccess-----------");
-                if (object.getObjectsOfPage() != null && object.getObjectsOfPage().size() > 0){
-                    if (mFragment != null){
+                if (object.getObjectsOfPage() != null && object.getObjectsOfPage().size() > 0) {
+                    if (mFragment != null) {
                         mFragment.hideTop();
                     }
                 }
@@ -610,8 +628,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             }
 
             @Override
-            public void onFailure(String errorCode,String errorMessage) {
-                TeachLessonAdapter.this.onFailure(errorCode,errorMessage);
+            public void onFailure(String errorCode, String errorMessage) {
+                TeachLessonAdapter.this.onFailure(errorCode, errorMessage);
                 Logger.d("onFailure-----------");
             }
         });
@@ -620,49 +638,49 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     @Override
     protected void onDataEmpty() {
-        if (mFragment != null){
+        if (mFragment != null) {
             mFragment.showTop();
         }
     }
 
     @Override
     protected void onDataFailed() {
-        if (mFragment != null){
+        if (mFragment != null) {
             mFragment.showTop();
         }
     }
 
-    private void notifyData(TeachLesson bean){
+    private void notifyData(TeachLesson bean) {
         boolean changed = false;
-        for (int i = 0;i<mBeanList.size();i++){
+        for (int i = 0; i < mBeanList.size(); i++) {
             TeachLesson b = mBeanList.get(i);
-            if (b.getId().equalsIgnoreCase(bean.getId())){
-                mBeanList.set(i,bean);
+            if (b.getId().equalsIgnoreCase(bean.getId())) {
+                mBeanList.set(i, bean);
                 changed = true;
                 break;
             }
         }
-        if (changed){
+        if (changed) {
             notifyDataSetChanged();
         }
     }
 
-    private void deleteItem(TeachLesson bean){
+    private void deleteItem(TeachLesson bean) {
         boolean changed = false;
-        for (int i = 0;i<mBeanList.size();i++){
+        for (int i = 0; i < mBeanList.size(); i++) {
             TeachLesson b = mBeanList.get(i);
-            if (b.getId().equalsIgnoreCase(bean.getId())){
+            if (b.getId().equalsIgnoreCase(bean.getId())) {
                 removeItem(i);
                 changed = true;
                 break;
             }
         }
-        if (changed){
+        if (changed) {
             notifyDataSetChanged();
         }
     }
 
-    public void request(Criteria criteria){
+    public void request(Criteria criteria) {
         mCriteria = criteria;
         reset();
         notifyDataSetChanged();
@@ -721,7 +739,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         @BindView(R.id.fun_divider)
         View funDivider;
 
-        public void reset(){
+        public void reset() {
             clsFunction.setVisibility(View.GONE);
             enter.setVisibility(View.VISIBLE);
             funDivider.setVisibility(View.VISIBLE);

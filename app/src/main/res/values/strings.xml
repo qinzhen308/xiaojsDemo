@@ -276,6 +276,8 @@
     <string name="delete_lesson_tip">确定需要删除该直播课吗？删除后不可恢复</string>
     <string name="declare_teaching_ability">声明教学能力</string>
     <string name="declare_teaching_ability_tip">开课需要先声明教学能力，确定去声明吗？</string>
+    <string name="lesson_publish_tip">发布到主页后，该直播课将在您的主页中展示、报名并可对外分享</string>
+
 
     <!-- 修改上课时间 -->
     <string name="modify_lesson_time_mark">修改上课时间会影响您的信用等级，请谨慎操作</string>

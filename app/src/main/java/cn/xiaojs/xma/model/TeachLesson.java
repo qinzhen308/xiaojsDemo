@@ -35,8 +35,16 @@ public class TeachLesson implements Serializable{
     private String process;
     private String state;
     private String initiator;
+    private Publish publish;
 
-//    public String getCreatedBy() {
+    public Publish getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Publish publish) {
+        this.publish = publish;
+    }
+    //    public String getCreatedBy() {
 //        return createdBy;
 //    }
 //
