@@ -27,7 +27,6 @@
                 android:textColor="@color/common_text"
                 android:textSize="@dimen/font_26px"
                 android:drawableLeft="@drawable/ic_praise_off"
-                android:text="12"
                 android:drawablePadding="@dimen/px5"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
@@ -57,7 +56,6 @@
                     android:textSize="@dimen/font_26px"
                     android:textColor="@color/common_text"
                     android:layout_marginTop="@dimen/px5"
-                    android:text="2016-12-12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -71,7 +69,6 @@
             android:layout_marginTop="@dimen/px5"
             android:layout_marginLeft="@dimen/px160"
             android:layout_marginRight="@dimen/px30"
-            android:text="2016-12-12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -82,7 +79,6 @@
             android:layout_marginLeft="@dimen/px160"
             android:layout_marginRight="@dimen/px30"
             android:layout_marginTop="@dimen/px10"
-            android:text="这是一个评论"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
