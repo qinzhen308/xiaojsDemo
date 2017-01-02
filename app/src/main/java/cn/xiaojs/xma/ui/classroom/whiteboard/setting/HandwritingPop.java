@@ -21,12 +21,14 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.PaintPathPreview;
 
 
 public class HandwritingPop extends SettingsPopupWindow {
 
-    public final int MIN_PAINT_SIZE = 6;
+    public final float MIN_PAINT_SIZE = WhiteboardConfigs.DEFAULT_PAINT_STROKE_WIDTH;
 
     public final int DEFAULT_PAINT_ALPHA = 152;
 
@@ -39,7 +41,7 @@ public class HandwritingPop extends SettingsPopupWindow {
     private int mPaintAlpha = DEFAULT_PAINT_ALPHA;
 
     public interface PaintChangeListener {
-        void onPaintSize(int size);
+        void onPaintSize(float size);
 
         void onPaintAlpha(int alpha);
     }
@@ -82,12 +84,14 @@ public class HandwritingPop extends SettingsPopupWindow {
         mPaintPathPreView.setPaintColor(color, mPaintAlpha);
     }
 
-    public void setPathPaintParams(int paintColor, int paintAlpha, int paintSize) {
+    public void setPathPaintParams(int paintColor, int paintAlpha, float paintSize) {
         mPaintColor = paintColor;
         mPaintAlpha = paintAlpha;
         mPaintPathPreView.setPaintColor(paintColor, paintAlpha);
         mPaintPathPreView.setPaintSize(paintSize);
-        mPaintSizeBar.setProgress(paintSize - MIN_PAINT_SIZE);
+        int max = mPaintSizeBar.getMax();
+        int progress = Utils.clamp((int)(paintSize - MIN_PAINT_SIZE), 0, max);
+        mPaintSizeBar.setProgress(progress);
     }
 
     private OnSeekBarChangeListener mSeekBarListener = new OnSeekBarChangeListener() {

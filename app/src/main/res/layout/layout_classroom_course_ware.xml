@@ -3,7 +3,7 @@
               android:layout_width="@dimen/px545"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:background="@color/classroom_dark_gray"
+              android:background="@color/classroom_main_gray"
               android:clickable="true">
 
     <TextView
