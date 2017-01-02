@@ -699,6 +699,41 @@ public class TimeUtil {
         return new Date(cal.getTimeInMillis());
     }
 
+    public static String getTimeFromNow(Date date){
+        StringBuilder time = new StringBuilder();
+        Date now = new Date(System.currentTimeMillis());
+        if (inOneHour(date,now)){
+            int target = getTime(date,Calendar.MINUTE);
+            int nowMin = getTime(date,Calendar.MINUTE);
+
+            int fact = nowMin - target;
+            if (fact > 0){
+                time.append(fact);
+                time.append("分钟前");
+            }else {
+                time.append("刚刚");
+            }
+
+        }else if (isSameDay(date,now)){
+            int target = getTime(date,Calendar.HOUR_OF_DAY);
+            int nowHour = getTime(date,Calendar.HOUR_OF_DAY);
+
+            int fact = nowHour - target;
+            if (fact < 0){
+                fact = 1;
+            }
+
+            time.append(fact);
+            time.append("小时前");
+        }else if (isYesterday(date,now)){
+            time.append("1天前");
+        }else {
+            time.append(format(date,TIME_YYYY_MM_DD_HH_MM));
+        }
+
+        return time.toString();
+    }
+
     /**
      * 根据传入的日期返回xx分钟之前/后,今天、明天、昨天或者具体时间
      */

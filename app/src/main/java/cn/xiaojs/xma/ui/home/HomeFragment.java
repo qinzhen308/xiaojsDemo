@@ -220,6 +220,10 @@ public class HomeFragment extends BaseFragment {
                         DynamicStatus status = (DynamicStatus) data.getSerializableExtra(HomeConstant.KEY_DATA_MOMENT_DETAIL);
                         mAdapter.update(status);
                     }
+                }else if (resultCode == HomeConstant.RESULT_MOMENT_DETAIL_OPERATED){
+                    if (mAdapter != null){
+                        mAdapter.doRefresh();
+                    }
                 }
                 break;
             case BaseConstant.REQUEST_CODE_SEND_MOMENT:

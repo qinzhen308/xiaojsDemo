@@ -40,6 +40,7 @@ import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.view.MomentUGC;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
 
@@ -79,7 +80,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             }
         });
         holder.header.setData(bean);
-
+        DeviceUtil.expandViewTouch(holder.ugc.getMore(),150);
     }
 
     private void more(final Dynamic bean) {

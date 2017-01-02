@@ -42,6 +42,7 @@ import cn.xiaojs.xma.common.pulltorefresh.stickylistheaders.StickyListHeadersLis
 import cn.xiaojs.xma.common.pulltorefresh.swipelistview.BaseSwipeListViewListener;
 import cn.xiaojs.xma.common.pulltorefresh.swipelistview.SwipeListView;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.DeviceUtil;
 
 /**
@@ -500,6 +501,14 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         }else {
             changeRequestStatus(STATE_LOADING_ERROR);
         }
+    }
+
+    public void showProgress(boolean cancelable) {
+        ((BaseActivity) mContext).showProgress(cancelable);
+    }
+
+    public void cancelProgress() {
+        ((BaseActivity) mContext).cancelProgress();
     }
 
     private void addEmptyView() {

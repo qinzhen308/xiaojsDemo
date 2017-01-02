@@ -31,4 +31,6 @@ public interface HomeConstant {
 
     public static final String KEY_DATA_MOMENT_DETAIL = "key_data_moment_detail";
     public static final int REQUEST_CODE_MOMENT_DETAIL = 3;//进入动态详情
+
+    public static final int RESULT_MOMENT_DETAIL_OPERATED = 1;
 }

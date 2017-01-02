@@ -52,7 +52,7 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAd
         if (bean.target == null) {//普通评论
             holder.reply(false);
             holder.name.setText(bean.createdBy.getBasic().getName());
-            holder.time.setText(TimeUtil.getTimeByNow(bean.createdOn));
+            holder.time.setText(TimeUtil.getTimeFromNow(bean.createdOn));
             holder.content.setText(bean.body.text);
         } else {//评论的回复
             holder.reply(true);
@@ -64,7 +64,7 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAd
                     bean.target.createdBy.getBasic().getName(),
                     mContext.getResources().getColor(R.color.font_black));
             holder.reply.setText(replySpan);
-            holder.time.setText(TimeUtil.getTimeByNow(bean.createdOn));
+            holder.time.setText(TimeUtil.getTimeFromNow(bean.createdOn));
             holder.content.setText(bean.body.text);
         }
 
