@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="@dimen/px525"
+              android:layout_width="@dimen/px545"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:background="@color/classroom_main_gray"
+              android:background="@color/classroom_dark_gray"
               android:clickable="true">
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/font_white"
-            android:paddingLeft="@dimen/px30"
-            android:paddingTop="@dimen/px20"
-            android:paddingBottom="@dimen/px20"
+            android:paddingLeft="@dimen/px32"
+            android:paddingTop="@dimen/px25"
+            android:paddingBottom="@dimen/px25"
             android:text="@string/course_ware"
             android:textSize="@dimen/font_32px"/>
 
     <ListView
             android:id="@+id/course_ware_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:listSelector="@android:color/transparent"
+            android:divider="@null">
 
     </ListView>
 
