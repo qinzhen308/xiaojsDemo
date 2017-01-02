@@ -28,13 +28,14 @@ import android.view.View;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 
 
 public class PaintPathPreview extends View {
 
     public final static int ERASER_PREVIEW_MODE = 0;
     public final static int PAINT_PREVIEW_MODE = 1;
-    public static final int DEFAULT_PAINT_PATH_SIZE = 20;
+    public static final float DEFAULT_PAINT_PATH_SIZE = WhiteboardConfigs.DEFAULT_PAINT_STROKE_WIDTH;
     public static final int DEFAULT_PAINT_SHADOW_ALPHA = 20;
 
     private Paint mPaint;
@@ -79,13 +80,13 @@ public class PaintPathPreview extends View {
     public void setPreviewMode(int mode) {
         mPreviewMode = mode;
 
-        mPreviewLength = getDimensionPixelSize(mContext, R.dimen.px200);
-        mStartX = (getDimensionPixelSize(mContext, R.dimen.px300) - mPreviewLength) / 2;
+        mPreviewLength = getDimensionPixelSize(mContext, R.dimen.px230);
+        mStartX = (getDimensionPixelSize(mContext, R.dimen.px266) - mPreviewLength) / 2;
         mStartY = (getDimensionPixelSize(mContext, R.dimen.px80)) / 2;
         mAmplitude = 20f;
     }
 
-    public void setPaintSize(int size) {
+    public void setPaintSize(float size) {
         mPathPaint.setStrokeWidth(size);
         invalidate();
     }

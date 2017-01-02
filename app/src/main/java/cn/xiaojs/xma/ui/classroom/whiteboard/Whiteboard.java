@@ -83,7 +83,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private PointF mPreviousPoint;
 
     private int mPaintColor = WhiteboardConfigs.DEFAULT_PAINT_COLOR;
-    private int mPaintStrokeWidth = 15;
+    private float mPaintStrokeWidth = WhiteboardConfigs.DEFAULT_PAINT_STROKE_WIDTH;
 
     private WhiteboardParams mWhiteboardParams;
 
@@ -945,6 +945,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public void setGeometryShapeId(int shapeId) {
         mGeometryShapeId = shapeId;
+    }
+
+    public void setPaintStrokeWidth(float strokeWidth) {
+        mPaintStrokeWidth = strokeWidth;
     }
 
     public void setPaintColor(int color) {

@@ -54,7 +54,7 @@ public class ClassroomPopupWindowLayout extends LinearLayout {
 
 
     public void addContent(View content, int gravity) {
-        addContent(content, gravity, LIGHT_GRAY);
+        addContent(content, gravity, DARK_GRAY);
     }
 
     public void addContent(View content, int gravity, int style) {
