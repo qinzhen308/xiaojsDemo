@@ -163,8 +163,8 @@ public class ApiManager {
         return Platform.AppType.MOBILE_ANDROID;
     }
 
-    private static String urlToKey(Request request) {
-        return Util.md5Hex(request.url().toString());
-    }
+//    private static String urlToKey(Request request) {
+//        return Util.md5Hex(request.url().toString());
+//    }
 
 }
