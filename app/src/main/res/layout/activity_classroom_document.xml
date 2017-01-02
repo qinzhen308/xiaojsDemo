@@ -191,8 +191,11 @@
                     android:layout_height="@dimen/px70"
                     android:background="@color/main_bg"
                     android:padding="@dimen/px10"
+                    android:textSize="@dimen/font_30px"
+                    android:textColor="@color/font_gray"
                     android:layout_centerInParent="true"
                     android:layout_alignParentRight="true"
+                    android:drawablePadding="@dimen/px8"
                     android:drawableLeft="@drawable/ic_search"/>
         </RelativeLayout>
 

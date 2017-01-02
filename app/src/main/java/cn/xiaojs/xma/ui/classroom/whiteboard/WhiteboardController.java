@@ -267,8 +267,10 @@ public class WhiteboardController implements
     }
 
     @Override
-    public void onPaintSize(int size) {
-
+    public void onPaintSize(float size) {
+        if (mWhiteboard != null) {
+            mWhiteboard.setPaintStrokeWidth(size);
+        }
     }
 
     @Override
