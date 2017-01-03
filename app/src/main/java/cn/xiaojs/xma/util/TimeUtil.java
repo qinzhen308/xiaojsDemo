@@ -704,7 +704,7 @@ public class TimeUtil {
         Date now = new Date(System.currentTimeMillis());
         if (inOneHour(date,now)){
             int target = getTime(date,Calendar.MINUTE);
-            int nowMin = getTime(date,Calendar.MINUTE);
+            int nowMin = getTime(now,Calendar.MINUTE);
 
             int fact = nowMin - target;
             if (fact > 0){
@@ -715,18 +715,10 @@ public class TimeUtil {
             }
 
         }else if (isSameDay(date,now)){
-            int target = getTime(date,Calendar.HOUR_OF_DAY);
-            int nowHour = getTime(date,Calendar.HOUR_OF_DAY);
-
-            int fact = nowHour - target;
-            if (fact < 0){
-                fact = 1;
-            }
-
-            time.append(fact);
-            time.append("小时前");
+            time.append(format(date,TIME_HH_MM));
         }else if (isYesterday(date,now)){
-            time.append("1天前");
+            time.append("昨天 ");
+            time.append(format(date,TIME_HH_MM));
         }else {
             time.append(format(date,TIME_YYYY_MM_DD_HH_MM));
         }

@@ -18,9 +18,9 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
-import cn.xiaojs.xma.model.User;
-
 import java.io.File;
+
+import cn.xiaojs.xma.model.User;
 
 public class CacheUtil {
     private static final String APP_CACHE_DIR = "/xjs";
@@ -30,6 +30,7 @@ public class CacheUtil {
     private static final String CRASH_CACHE_DIR = "/crash"; // 程序崩溃日志
     private static final String DOWNLOAD_CACHE_DIR = "/download";// 存放下载的apk
     private static final String FLASH_CACHE_DIR = "splashCache"; // 闪屏信息
+    private static final String IMAGE_DOWNLOAD_DIR = "/downloads/images/";//图片下载文件夹
 
     public final static String USER_INFO = "user_info";
     public final static String SUFFIX_JPG = ".jpg";
@@ -76,6 +77,18 @@ public class CacheUtil {
         }
 
         return path;
+    }
+
+    public static String downloadImage(Bitmap bitmap){
+        if (bitmap == null)
+            return null;
+        String path = mkdirs(getAppCacheRoot() + IMAGE_DOWNLOAD_DIR);
+        String time = String.valueOf(System.currentTimeMillis());
+        StringBuilder sb = new StringBuilder();
+        sb.append(path);
+        sb.append(time);
+        sb.append(SUFFIX_JPG);
+        return BitmapUtils.saveImage(bitmap,sb.toString(),DEFAULT_QUALITY,false);
     }
 
 }
