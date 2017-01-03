@@ -99,7 +99,7 @@ public class Oval extends TwoDimensionalShape {
     public Path getScreenPath() {
         mScreenPath.reset();
         mTransRect.set(mDoodleRect);
-        mScreenPath.addRect(mTransRect, Path.Direction.CCW);
+        mScreenPath.addOval(mTransRect, Path.Direction.CCW);
         mScreenPath.transform(mDrawingMatrix);
         mScreenPath.transform(mDisplayMatrix);
         return mScreenPath;
