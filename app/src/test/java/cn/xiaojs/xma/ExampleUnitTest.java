@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
@@ -75,12 +76,12 @@ public class ExampleUnitTest {
 //        System.out.println(jj);
 //
 //
-//        ObjectMapper objectMapper = new ObjectMapper();
-//
-//        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Haha.class, Haha.No.class);
-//
-//        Haha<Haha.No> haha1 = objectMapper.readValue(jj,javaType);
-//
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        //JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Haha.class, Haha.No.class);
+
+       // Haha<Haha.No> haha1 = objectMapper.readValue(jj,javaType);
+
 //        System.out.println(haha);
 
 //        String j = "{\"ec\": \"0x01000001\", \"details\": \"non-sensitive only, e.g. bad param on SharedErrs.BadParameter error, requires XF 0.3.0 or later\"}";

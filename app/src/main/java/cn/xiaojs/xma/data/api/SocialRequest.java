@@ -67,7 +67,13 @@ public class SocialRequest extends ServiceRequest {
                 criteriaJsonstr,
                 paginationJsonstr);
 
-        enqueueRequest(APIType.GET_ACTIVITIES,call);
+        enqueueRequest(APIType.GET_ACTIVITIES,
+                call,
+                pagination.getPage(),
+                CollectionPage.class,
+                Dynamic.class);
+
+
     }
 
     public void commentActivity(@NonNull String session,String activity,String commentContent) {
