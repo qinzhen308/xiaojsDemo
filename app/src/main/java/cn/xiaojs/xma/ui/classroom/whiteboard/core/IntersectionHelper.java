@@ -373,6 +373,10 @@ public class IntersectionHelper {
     }
 
     public static boolean intersect(float x, float y, Doodle d, RectF transRect) {
+        if (d == null || !d.isShow()) {
+            return false;
+        }
+
         mSelectorRegion.set((int) transRect.left, (int) transRect.top, (int) transRect.right, (int) transRect.bottom);
 
         boolean intersect = false;
@@ -409,6 +413,10 @@ public class IntersectionHelper {
         if (allDoodles != null) {
             for (int i = allDoodles.size() - 1; i >= 0; i--) {
                 Doodle d = allDoodles.get(i);
+                if (d == null || !d.isShow()) {
+                   continue;
+                }
+
                 if (d instanceof Beeline) {
                     LineSegment beeLineSeg = ((Beeline) d).getLineSegment();
                     intersect = Utils.intersect(transRect, beeLineSeg);

@@ -79,7 +79,7 @@ public class HandWriting extends Doodle {
     }
 
     @Override
-    public void drawSelf(Canvas canvas) {
+    public void onDrawSelf(Canvas canvas) {
         canvas.save();
         mDrawingPath.set(mNormalizedPath);
         mDrawingMatrix.postConcat(mTransformMatrix);
@@ -98,7 +98,7 @@ public class HandWriting extends Doodle {
     }
 
     @Override
-    public int checkPressedRegion(float x, float y) {
+    public int onCheckPressedRegion(float x, float y) {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
             Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
@@ -115,7 +115,7 @@ public class HandWriting extends Doodle {
     }
 
     @Override
-    public boolean isSelected(float x, float y) {
+    public boolean onCheckSelected(float x, float y) {
         if (mPoints.size() > 1) {
             long s = System.currentTimeMillis();
             boolean intersect = IntersectionHelper.intersect(x, y, this);

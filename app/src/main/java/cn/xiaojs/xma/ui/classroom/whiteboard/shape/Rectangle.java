@@ -87,7 +87,7 @@ public class Rectangle extends TwoDimensionalShape {
     }
 
     @Override
-    public void drawSelf(Canvas canvas) {
+    public void onDrawSelf(Canvas canvas) {
         if (mPoints.size() < 2) {
             return;
         }
@@ -105,12 +105,7 @@ public class Rectangle extends TwoDimensionalShape {
     }
 
     @Override
-    public int checkPressedRegion(float x, float y) {
-        return super.checkPressedRegion(x, y);
-    }
-
-    @Override
-    public boolean isSelected(float x, float y) {
+    public boolean onCheckSelected(float x, float y) {
         if (mPoints.size() > 1) {
             mTransRect.set(mDoodleRect);
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);

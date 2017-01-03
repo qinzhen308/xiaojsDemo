@@ -113,7 +113,7 @@ public class Selector extends Doodle {
     }
 
     @Override
-    public void drawSelf(Canvas canvas) {
+    public void onDrawSelf(Canvas canvas) {
         if (mPoints.size() < 2) {
             return;
         }
@@ -147,7 +147,7 @@ public class Selector extends Doodle {
                 canvas.restore();
                 return;
             } else {
-                if (mDoodleRect.isEmpty()) {
+                if (mDoodleRect.isEmpty() || mState == Doodle.STATE_IDLE) {
                     return;
                 }
 

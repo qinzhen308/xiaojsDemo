@@ -108,7 +108,7 @@ public class Triangle extends TwoDimensionalShape {
     }
 
     @Override
-    public void drawSelf(Canvas canvas) {
+    public void onDrawSelf(Canvas canvas) {
         if (mTriangleCoordinates.size() == 3) {
             mDrawingPath.reset();
 
@@ -124,7 +124,7 @@ public class Triangle extends TwoDimensionalShape {
     }
 
     @Override
-    public boolean isSelected(float x, float y) {
+    public boolean onCheckSelected(float x, float y) {
         if (mPoints.size() > 1) {
             return IntersectionHelper.intersect(x, y, this);
         }

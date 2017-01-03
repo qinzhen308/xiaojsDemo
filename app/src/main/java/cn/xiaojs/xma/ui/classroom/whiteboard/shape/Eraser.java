@@ -27,12 +27,12 @@ public class Eraser extends Doodle {
     }
 
     @Override
-    public void drawSelf(Canvas canvas) {
+    public void onDrawSelf(Canvas canvas) {
 
     }
 
     @Override
-    public boolean isSelected(float x, float y) {
+    public boolean onCheckSelected(float x, float y) {
         return false;
     }
 

@@ -21,7 +21,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.text.TextUtils;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,6 @@ import java.util.UUID;
 import java.util.Vector;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
-import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 
 public abstract class Doodle implements Action {
     public final static int SELECTION = 0;
@@ -76,6 +75,7 @@ public abstract class Doodle implements Action {
     private String mDoodleId;
     protected List<ActionRecord> mUndoRecords;
     protected List<ActionRecord> mRedoRecords;
+    private int mVisibility = View.VISIBLE;
 
     protected Doodle(Whiteboard whiteboard, int style) {
         mDoodleId = UUID.randomUUID().toString();
@@ -248,47 +248,57 @@ public abstract class Doodle implements Action {
     //==============================
     public abstract Path getScreenPath();
 
-    public abstract void drawSelf(Canvas canvas);
+    public void drawSelf(Canvas canvas) {
+        if (isShow()) {
+            onDrawSelf(canvas);
+        }
+    }
+
+    protected abstract void onDrawSelf(Canvas canvas);
 
     public void reset() {
 
     }
 
     public void drawBorder(Canvas canvas) {
-        if (mPoints.size() > 1 && !mDoodleRect.isEmpty()) {
-            computeBorderPadding();
-
-            Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
-            float hPadding = mBorderPadding.x;
-            float vPadding = mBorderPadding.y;
-            mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding,
-                    mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
-
-            //draw border
-            mBorderDrawingPath.reset();
-            mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
-            mBorderDrawingPath.transform(mDrawingMatrix);
-            canvas.drawPath(mBorderDrawingPath, mBorderPaint);
-
-            //draw controller
-            float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
-            PointF p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
-            mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
-                    mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
-            mBorderDrawingPath.reset();
-            mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
-            mBorderDrawingPath.transform(mDrawingMatrix);
-            canvas.drawPath(mBorderDrawingPath, mControllerPaint);
-
-            //draw del btn
-            mBorderRect.set(mDoodleRect.left - hPadding - p.x, mDoodleRect.bottom + vPadding - p.y,
-                    mDoodleRect.left - hPadding + p.x, mDoodleRect.bottom + vPadding + p.y);
-            mBorderDrawingPath.reset();
-            mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
-            mBorderDrawingPath.transform(mDrawingMatrix);
-            canvas.drawPath(mBorderDrawingPath, mControllerPaint);
-            Utils.drawDelBtn(canvas, mBorderRect, mBorderDrawingPath, mDrawingMatrix, params);
+        if (isShow() && mPoints.size() > 1 && !mDoodleRect.isEmpty()) {
+            onDrawBorder(canvas);
         }
+    }
+
+    protected void onDrawBorder(Canvas canvas) {
+        computeBorderPadding();
+
+        Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
+        float hPadding = mBorderPadding.x;
+        float vPadding = mBorderPadding.y;
+        mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding,
+                mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
+
+        //draw border
+        mBorderDrawingPath.reset();
+        mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
+        mBorderDrawingPath.transform(mDrawingMatrix);
+        canvas.drawPath(mBorderDrawingPath, mBorderPaint);
+
+        //draw controller
+        float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
+        PointF p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
+        mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
+                mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
+        mBorderDrawingPath.reset();
+        mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
+        mBorderDrawingPath.transform(mDrawingMatrix);
+        canvas.drawPath(mBorderDrawingPath, mControllerPaint);
+
+        //draw del btn
+        mBorderRect.set(mDoodleRect.left - hPadding - p.x, mDoodleRect.bottom + vPadding - p.y,
+                mDoodleRect.left - hPadding + p.x, mDoodleRect.bottom + vPadding + p.y);
+        mBorderDrawingPath.reset();
+        mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
+        mBorderDrawingPath.transform(mDrawingMatrix);
+        canvas.drawPath(mBorderDrawingPath, mControllerPaint);
+        Utils.drawDelBtn(canvas, mBorderRect, mBorderDrawingPath, mDrawingMatrix, params);
     }
 
     protected void computeBorderPadding(){
@@ -311,6 +321,14 @@ public abstract class Doodle implements Action {
     }
 
     public int checkPressedRegion(float x, float y) {
+        if (isShow()) {
+           return onCheckPressedRegion(x, y);
+        }
+
+        return IntersectionHelper.RECT_NO_SELECTED;
+    }
+
+    protected int onCheckPressedRegion(float x, float y) {
         if (getState() == STATE_EDIT && mPoints.size() > 1) {
             mTransRect.set(mDoodleRect);
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
@@ -331,7 +349,17 @@ public abstract class Doodle implements Action {
         return IntersectionHelper.RECT_NO_SELECTED;
     }
 
-    public abstract boolean isSelected(float x, float y);
+    public boolean isSelected(float x, float y) {
+        if (isShow()) {
+            return onCheckSelected(x, y);
+        }
+
+        return false;
+    }
+
+    protected boolean onCheckSelected(float x, float y) {
+        return false;
+    }
 
     @Override
     public void move(float deltaX, float deltaY) {
@@ -492,6 +520,14 @@ public abstract class Doodle implements Action {
 
     public boolean isCanRedo() {
         return mRedoRecords != null && !mRedoRecords.isEmpty();
+    }
+
+    public void setVisibility( int visibility) {
+        mVisibility = visibility;
+    }
+
+    public boolean isShow(){
+        return mVisibility == View.VISIBLE;
     }
 
 }
