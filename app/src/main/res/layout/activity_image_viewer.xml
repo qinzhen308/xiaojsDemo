@@ -3,7 +3,6 @@
              android:id="@+id/image_viewer_container"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@color/main_bg"
              android:orientation="vertical">
 
     <cn.xiaojs.xma.ui.widget.scaleimage.ScaleViewPager
