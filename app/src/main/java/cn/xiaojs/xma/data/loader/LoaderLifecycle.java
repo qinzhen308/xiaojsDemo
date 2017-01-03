@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.data;
+package cn.xiaojs.xma.data.loader;
 
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -8,15 +8,16 @@ import android.support.v4.content.Loader;
 import cn.xiaojs.xma.data.db.LoadDataCallback;
 
 /**
- * Created by maxiaobao on 2016/12/23.
+ * Created by maxiaobao on 2017/1/3.
  */
 
-public class DataLoader<T> implements LoaderManager.LoaderCallbacks<T> {
+
+public class LoaderLifecycle<T> implements LoaderManager.LoaderCallbacks<T> {
 
     private AsyncTaskLoader<T> loader;
     private LoadDataCallback<T> callback;
 
-    public DataLoader(AsyncTaskLoader<T> loader, LoadDataCallback<T> callback) {
+    public LoaderLifecycle(AsyncTaskLoader<T> loader, LoadDataCallback<T> callback) {
         this.loader = loader;
         this.callback = callback;
     }

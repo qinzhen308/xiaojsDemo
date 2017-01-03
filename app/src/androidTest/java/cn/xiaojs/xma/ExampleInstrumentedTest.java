@@ -13,6 +13,7 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.ClaimCompetency;
@@ -30,6 +31,8 @@ import cn.xiaojs.xma.model.RegisterInfo;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.util.APPUtils;
+import okhttp3.Cache;
+import okhttp3.Request;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +42,7 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
@@ -79,17 +83,21 @@ public class ExampleInstrumentedTest {
         //testT(appContext);
 
 
-        String json = "{\"1482891322185\":\"xiao peng you\"}";
+//        String json = "{\"1482891322185\":\"xiao peng you\"}";
+//
+//
+//        ObjectMapper o = new ObjectMapper();
+//        JsonNode x = o.readTree(json);
+//
+//
+//
+//        JSONObject jobject = new JSONObject(json);
+//        String cc = jobject.keys().next();
+//        System.out.println("===========:"+cc);
 
 
-        ObjectMapper o = new ObjectMapper();
-        JsonNode x = o.readTree(json);
 
 
-
-        JSONObject jobject = new JSONObject(json);
-        String cc = jobject.keys().next();
-        System.out.println("===========:"+cc);
     }
 
 

@@ -7,7 +7,7 @@ import android.widget.Toast;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.CategoriesDataManager;
+import cn.xiaojs.xma.data.CategoriesManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
@@ -62,7 +62,7 @@ public class TeachAbilityDemoActivity extends BaseActivity {
 
     private void getSubjects() {
 
-        CategoriesDataManager.requestGetSubject(this, new APIServiceCallback<CSubject>() {
+        CategoriesManager.requestGetSubject(this, new APIServiceCallback<CSubject>() {
             @Override
             public void onSuccess(CSubject object) {
 
