@@ -11,7 +11,7 @@ import cn.xiaojs.xma.model.Doc;
 /**
  * Created by maxiaobao on 2016/12/26.
  */
-
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Dynamic {
 
@@ -24,7 +24,7 @@ public class Dynamic {
     public DynStatus stats;
 
 
-
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DynOwner{
         public String account;
@@ -39,7 +39,7 @@ public class Dynamic {
         public boolean myself;
     }
 
-
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DynBody{
         public DynPhoto[] drawings;
@@ -48,13 +48,13 @@ public class Dynamic {
 
     }
 
-
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DynPhoto extends Dimension{
         public String name;
     }
 
-
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DynRef {
         public String snap;

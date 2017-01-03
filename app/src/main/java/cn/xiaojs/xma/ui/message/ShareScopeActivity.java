@@ -148,6 +148,8 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
                 return Social.ShareScope.CLASSES;
             case 3:
                 return Social.ShareScope.SPECIFIC;
+            case 4:
+                return Social.ShareScope.PRIVATE;
             default:
                 return Social.ShareScope.PUBLIC;
         }
