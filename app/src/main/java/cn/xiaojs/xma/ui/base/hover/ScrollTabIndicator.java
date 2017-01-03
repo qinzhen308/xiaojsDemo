@@ -76,7 +76,7 @@ public class ScrollTabIndicator extends HorizontalScrollView implements OnPageCh
     private boolean textAllCaps = true;
 
     private int scrollOffset = 52;
-    private int indicatorHeight = 4;
+    private int indicatorHeight = 3;
     private int underlineHeight = 1;
     private int dividerPadding = 12;
     private int tabPadding = 24;
@@ -139,8 +139,8 @@ public class ScrollTabIndicator extends HorizontalScrollView implements OnPageCh
 
         a = context.obtainStyledAttributes(attrs, R.styleable.ScrollTabIndicator);
 
-        indicatorColor = a.getColor(R.styleable.ScrollTabIndicator_pstsIndicatorColor, indicatorColor);
-        underlineColor = a.getColor(R.styleable.ScrollTabIndicator_pstsUnderlineColor, underlineColor);
+        indicatorColor = a.getColor(R.styleable.ScrollTabIndicator_pstsIndicatorColor, getResources().getColor(R.color.font_orange));
+        underlineColor = a.getColor(R.styleable.ScrollTabIndicator_pstsUnderlineColor, getResources().getColor(R.color.hor_divide_line));
         dividerColor = a.getColor(R.styleable.ScrollTabIndicator_pstsDividerColor, dividerColor);
         indicatorHeight = a
                 .getDimensionPixelSize(R.styleable.ScrollTabIndicator_pstsIndicatorHeight, indicatorHeight);
