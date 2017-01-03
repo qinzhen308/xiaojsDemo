@@ -16,8 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.internal.Util;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -51,6 +49,7 @@ public class ApiManager {
 
     private ApiManager(Context appContext) {
         this.appContext = appContext.getApplicationContext();
+        this.okHttpClient = createOkhttp();
     }
 
     public Context getAppContext() {
@@ -60,15 +59,16 @@ public class ApiManager {
 
     public XiaojsService getXiaojsService() {
 
-//        if (xiaojsService == null) {
-//            xiaojsService = createXiaojsService();
-//        }
-//
-//        return xiaojsService;
-
         return createXiaojsService();
 
     }
+
+    public Cache getCache() {
+        return okHttpClient.cache();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     private OkHttpClient createOkhttp() {
 
@@ -117,33 +117,6 @@ public class ApiManager {
     }
 
     private XiaojsService createXiaojsService() {
-
-//        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
-//        if (XiaojsConfig.DEBUG) {
-//            logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        } else {
-//
-//            logInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
-//        }
-//
-//
-//        int appType = getAPPType();
-//        String appVerion = APPUtils.getAPPFullVersion(appContext);
-//
-//        CommonHeaderInterceptor headerInterceptor = new CommonHeaderInterceptor(appType, appVerion);
-//
-//
-//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-//                .addInterceptor(logInterceptor)
-//                .addNetworkInterceptor(logInterceptor)
-//                .addInterceptor(headerInterceptor)
-//                .build();
-
-        if (okHttpClient == null) {
-            okHttpClient = createOkhttp();
-        }
-
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(XiaojsService.BASE_URL)
                 .addConverterFactory(JacksonConverterFactory.create())

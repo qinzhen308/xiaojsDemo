@@ -16,13 +16,12 @@ import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.CategoriesDataManager;
+import cn.xiaojs.xma.data.CategoriesManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
-import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.Account;
@@ -30,11 +29,9 @@ import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
-import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.Criteria;
-import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.Enroll;
 import cn.xiaojs.xma.model.Fee;
@@ -44,21 +41,20 @@ import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.LoginInfo;
 import cn.xiaojs.xma.model.LoginParams;
 import cn.xiaojs.xma.model.Pagination;
-import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.RegisterInfo;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.VerifyCode;
-import cn.xiaojs.xma.model.social.Comment;
-import cn.xiaojs.xma.model.social.DynPost;
-import cn.xiaojs.xma.model.social.DynUpdate;
-import cn.xiaojs.xma.model.social.Dynamic;
-import cn.xiaojs.xma.ui.message.ContactActivity;
-import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
+import okhttp3.Cache;
+import okhttp3.Request;
+import okhttp3.Response;
+
 import com.bumptech.glide.Glide;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 import com.tencent.bugly.crashreport.CrashReport;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 
 public class TestAPIActivity extends Activity {
@@ -105,8 +101,10 @@ public class TestAPIActivity extends Activity {
                 //testGetUpToken(this);
                 //testCenterData(this);
 
-                Intent i = new Intent(this,ContactActivity.class);
-                startActivity(i);
+//                Intent i = new Intent(this,ContactActivity.class);
+//                startActivity(i);
+
+                testCache();
 
                 break;
             }
@@ -143,16 +141,40 @@ public class TestAPIActivity extends Activity {
     }
 
 
+    public void testCache() {
+
+
+        Request request = new Request.Builder().url("http://192.168.100.3:3000/v1/categories/subjects/demo").method("GET",null).build();
+
+
+        Cache cache = ApiManager.getAPIManager(this).getCache();
+
+        Class cacheCls = cache.getClass();
+        try {
+            Method m = cacheCls.getDeclaredMethod("get", Request.class);
+            m.setAccessible(true);
+
+            Response res = (Response) m.invoke(cache,request);
+
+            String b = res.body().string();
+            ObjectMapper objectMapper = new ObjectMapper();
+            CSubject subject = objectMapper.readValue(b,CSubject.class);
+
+
+
+
+            Logger.d(subject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void testT(Context context){
 
-        Pagination pagination = new Pagination();
-        pagination.setPage(1);
-        pagination.setMaxNumOfObjectsPerPage(20);
-
-        SocialManager.getUpdates(context, pagination, new APIServiceCallback<CollectionPage<DynUpdate>>() {
+        CategoriesManager.requestGetSubject(context, new APIServiceCallback<CSubject>() {
             @Override
-            public void onSuccess(CollectionPage<DynUpdate> object) {
+            public void onSuccess(CSubject object) {
 
             }
 
@@ -161,6 +183,23 @@ public class TestAPIActivity extends Activity {
 
             }
         });
+
+
+//        Pagination pagination = new Pagination();
+//        pagination.setPage(1);
+//        pagination.setMaxNumOfObjectsPerPage(20);
+//
+//        SocialManager.getUpdates(context, pagination, new APIServiceCallback<CollectionPage<DynUpdate>>() {
+//            @Override
+//            public void onSuccess(CollectionPage<DynUpdate> object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 //        String cid = "5863a7de65894305bd4e8505";
 //        String reply = "r2=======";
@@ -603,7 +642,7 @@ public class TestAPIActivity extends Activity {
     //getSubject demo
     private void testGetSubject(Context context) {
 
-        CategoriesDataManager.requestGetSubject(context, new APIServiceCallback<CSubject>() {
+        CategoriesManager.requestGetSubject(context, new APIServiceCallback<CSubject>() {
             @Override
             public void onSuccess(CSubject object) {
 
