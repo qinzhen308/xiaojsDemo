@@ -72,12 +72,38 @@
         <View
                 style="@style/DividerHorizontal"/>
 
-        <!--学生人数-->
+        <!--报名方式-->
         <View
                 android:layout_marginTop="@dimen/px32"
                 style="@style/DividerHorizontal"/>
 
         <LinearLayout
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonCreateTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/enroll_mandatory"/>
+
+            <ToggleButton
+                    android:id="@+id/enroll_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_btn_selector"
+                    android:textOff=""
+                    android:textOn=""/>
+
+        </LinearLayout>
+
+        <!--学生人数-->
+        <View
+                android:id="@+id/stu_count_divide"
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px30"/>
+
+        <LinearLayout
+                android:id="@+id/stu_count_layout"
                 style="@style/LiveLessonItem">
 
             <TextView
@@ -104,32 +130,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/person"/>
         </LinearLayout>
-
-        <!--报名方式-->
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginLeft="@dimen/px30"/>
-
-
-        <LinearLayout
-                style="@style/LiveLessonItem">
-
-            <TextView
-                    style="@style/LiveLessonCreateTitle"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:text="@string/enroll_mandatory"/>
-
-            <ToggleButton
-                    android:id="@+id/enroll_switcher"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/toggle_btn_selector"
-                    android:textOff=""
-                    android:textOn=""/>
-
-        </LinearLayout>
-
 
         <View
                 style="@style/DividerHorizontal"

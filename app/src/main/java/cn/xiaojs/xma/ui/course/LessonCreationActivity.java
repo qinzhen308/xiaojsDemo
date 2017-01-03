@@ -81,6 +81,10 @@ public class LessonCreationActivity extends BaseActivity {
     TextView mTeachFormTv;
     @BindView(R.id.charge_layout)
     View mChargeLayout;
+    @BindView(R.id.stu_count_layout)
+    View mStuCountLayout;
+    @BindView(R.id.stu_count_divide)
+    View mStuCountDivide;
     @BindView(R.id.charge_way_switcher)
     ToggleButton mChargeWaySwitcher;
     @BindView(R.id.charge_way)
@@ -112,6 +116,7 @@ public class LessonCreationActivity extends BaseActivity {
     private final String TEST_SUBJECT = "计算机"; //test subject
     private final String TEST_SUBJECT_ID = "5820a10e101db0af4bcf2fd9";
     private int mBlackFont;
+    private int mGrayFont;
     private boolean mStuCountTipsFlag = true;
     private int mType = CourseConstant.TYPE_LESSON_CREATE;
     private String mLessonId;
@@ -142,7 +147,22 @@ public class LessonCreationActivity extends BaseActivity {
                 selectTeachForm();
                 break;
             case R.id.enroll_switcher:
-                mChargeLayout.setVisibility(((ToggleButton) v).isChecked() ? View.VISIBLE : View.GONE);
+                boolean checked = ((ToggleButton) v).isChecked();
+                int visibility = checked ? View.VISIBLE : View.GONE;
+                mChargeLayout.setVisibility(visibility);
+                mStuCountLayout.setVisibility(visibility);
+                mStuCountDivide.setVisibility(visibility);
+                if (!checked) {
+                    mTeachFormTv.setEnabled(false);
+                    mTeachFormTv.setTextColor(mBlackFont);
+                    mTeachFormTv.setText(getString(R.string.teach_form_lecture));
+                    mTeachFormTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                } else {
+                    mTeachFormTv.setEnabled(true);
+                    String s = mLessonStuCount.getText().toString();
+                    mLessonStuCount.setText(s);
+                    mTeachFormTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_entrance, 0);
+                }
                 break;
             case R.id.charge_way_switcher:
                 openOrCloseChargeWay(v);
@@ -295,6 +315,7 @@ public class LessonCreationActivity extends BaseActivity {
 
         //get color
         mBlackFont = getResources().getColor(R.color.font_black);
+        mGrayFont = getResources().getColor(R.color.font_gray);
 
         //TODO  //test
         mLessonSubjectTv.setText(TEST_SUBJECT);
@@ -369,6 +390,9 @@ public class LessonCreationActivity extends BaseActivity {
                         mTeachFormTv.setTextColor(mBlackFont);
                         mTeachFormTv.setText(R.string.teach_form_lecture);
                     }
+                } else {
+                    mTeachFormTv.setText(R.string.please_select);
+                    mTeachFormTv.setTextColor(mGrayFont);
                 }
             }
         });
