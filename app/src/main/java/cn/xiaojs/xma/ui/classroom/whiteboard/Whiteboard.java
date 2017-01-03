@@ -352,6 +352,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         canvas.concat(mDisplayMatrix);
         //1. draw doodle
         if (mDoodleBitmap != null) {
+            updateAllDoodleDisplayMatrix();
             canvas.drawBitmap(mDoodleBitmap, 0, 0, null);
         }
 
@@ -864,6 +865,14 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         for (int i = 0; i < mAllDoodles.size() - 1; i++) {
             drawDoodle(mDoodleCanvas, mAllDoodles.get(i));
+        }
+    }
+
+    private void updateAllDoodleDisplayMatrix() {
+        if (mAllDoodles != null) {
+            for (Doodle d : mAllDoodles) {
+                d.setDisplayMatrix(mDisplayMatrix);
+            }
         }
     }
 
