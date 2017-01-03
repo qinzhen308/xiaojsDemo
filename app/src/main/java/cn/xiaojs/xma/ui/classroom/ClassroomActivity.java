@@ -221,6 +221,21 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         WhiteboardCollection whiteboardCollection = new WhiteboardCollection();
         whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
         addToWhiteboardCollectionList(whiteboardCollection);
 
         mWhiteboardAdapter.setData(whiteboardCollection.getWhiteboardLayer());

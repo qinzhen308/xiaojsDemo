@@ -16,14 +16,9 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 
-import java.util.List;
-
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.classroom.whiteboard.core.ActionRecord;
-import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.UndoRedoListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;

@@ -67,7 +67,7 @@ public class WhiteboardAdapter extends PagerAdapter {
         if (object instanceof WhiteboardLayout) {
             WhiteboardLayout wbLayout = (WhiteboardLayout)object;
             Whiteboard wb = wbLayout.getWhiteboard();
-            wb.release();
+            wb.recycle();
             if (mOnWhiteboardListener != null) {
                 mOnWhiteboardListener.onWhiteboardRemove(wb);
             }

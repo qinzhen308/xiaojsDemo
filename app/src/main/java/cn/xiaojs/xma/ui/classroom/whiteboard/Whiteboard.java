@@ -45,6 +45,7 @@ import cn.xiaojs.xma.ui.classroom.ClassroomState;
 import cn.xiaojs.xma.ui.classroom.whiteboard.action.Selector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.ActionRecord;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.BitmapPool;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
@@ -155,6 +156,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private int mDoodleAction;
     private List<Integer> mUndoRecordIds;
     private List<Integer> mRedoRecordIds;
+
+    private BitmapPool mDoodleBitmapPool;
 
     public Whiteboard(Context context) {
         super(context);
@@ -328,6 +331,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         mUndoRecordIds = new ArrayList<Integer>();
         mRedoRecordIds = new ArrayList<Integer>();
+
+        mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
     }
 
     @Override
@@ -905,7 +910,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mDoodleCanvas == null) {
             int w = mBlackboardWidth;
             int h = mBlackboardHeight;
-            mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
+            mDoodleBitmap = mDoodleBitmapPool.getBitmap(w, h);
+            if (mDoodleBitmap == null) {
+                mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
+            }
             mDoodleCanvas = new Canvas(mDoodleBitmap);
 
             mBlackboardRect.set(0, 0, w, h);
@@ -1088,14 +1096,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
     }
 
-    public void release() {
-        //do something
-        if (mDoodleBitmap != null && !mDoodleBitmap.isRecycled()) {
-            //TODO 构建一个bitmap池，保证图片重用,回收的时候首先是把图片放到图片池,下次初始化时，可以从对象池中获取
-            //否则会报oom
-            mDoodleBitmap.recycle();
-            mDoodleBitmap = null;
-        }
+    public void recycle() {
+        mDoodleBitmapPool.recycle(mDoodleBitmap);
 
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
@@ -1121,6 +1123,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mInputMethodManager = null;
         mViewGestureListener = null;
         mClassroomGestureDetector = null;
+    }
+
+    public void release() {
+        recycle();
+        mDoodleBitmapPool.release();
     }
 
     public void transformation(MotionEvent event) {
