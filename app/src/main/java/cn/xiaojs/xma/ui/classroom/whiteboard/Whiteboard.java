@@ -140,6 +140,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     private Path mDrawingPath;
     private int mSelectionRectRegion;
+    private boolean onViewChanged;
     private boolean mSelectedOnPressed;
     private boolean mTransform;
     private boolean mCanMovable;
@@ -217,6 +218,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
         mViewGestureListener.onViewChanged(mViewWidth, mViewHeight, mBlackboardWidth, mBlackboardHeight);
         mMeasureFinished = mBlackboardHeight > 0 && mBlackboardWidth > 0;
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        
     }
 
     public void setEditText (final EditText editText) {
@@ -361,18 +367,21 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         canvas.restore();
 
         //3. draw border(selected doodle or selector)
-        if (mCurrentMode == MODE_SELECTION) {
-            drawDoodleBorder(canvas, mSelector);
-        } else {
-            canvas.save();
-            canvas.concat(mDisplayMatrix);
-            drawDoodleBorder(canvas, mDoodle);
-            canvas.restore();
+        if (!onViewChanged) {
+            if (mCurrentMode == MODE_SELECTION) {
+                drawDoodleBorder(canvas, mSelector);
+            } else {
+                canvas.save();
+                canvas.concat(mDisplayMatrix);
+                drawDoodleBorder(canvas, mDoodle);
+                canvas.restore();
+            }
         }
     }
 
     @Override
     public void onViewRectChanged() {
+        onViewChanged = true;
         postInvalidate();
     }
 
@@ -383,6 +392,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mDownPoint.y = event.getY();
 
             //reset status
+            onViewChanged = false;
             mDoodleAdded = false;
             mIsRecordedParams = false;
             mSelectionRectRegion = IntersectionHelper.RECT_NO_SELECTED;
