@@ -8,13 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.model.CSubject;
 import okhttp3.Cache;
 import okhttp3.Request;
-import retrofit2.Call;
 
 /**
  * Created by maxiaobao on 2016/12/26.
