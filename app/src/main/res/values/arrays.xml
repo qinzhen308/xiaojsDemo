@@ -119,5 +119,6 @@
         <item>仅好友</item>
         <item>班级圈</item>
         <item>部分人</item>
+        <item>仅自己可见</item>
     </string-array>
 </resources>

@@ -208,6 +208,8 @@ public class PostDynamicActivity extends BaseActivity {
                 int num = choosen == null ? 0 : choosen.size();
 
                 return String.format(getResources().getString(R.string.num_can_see), num);
+            case Social.ShareScope.PRIVATE:
+                return "仅自己可见";
             default:
                 return "所有人可见";
         }
