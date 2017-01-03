@@ -7,31 +7,21 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.Error;
-import cn.xiaojs.xma.model.social.Contact;
-import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.APPUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-import okhttp3.Cache;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -262,7 +252,11 @@ public class ServiceRequest<T> implements ContextLifecycle {
     //Resolve the Xiaojs service callback
     //
 
-    public final void enqueueRequest(final int apiType,final Call<T> call, int page,Class<T> pClass,Class... _class) {
+    public final void enqueueRequest(final int apiType,
+                                     final Call<T> call,
+                                     int page,
+                                     Class<T> pClass,
+                                     Class... _class) {
 
         if (page == 1 && createFrg) {
 
