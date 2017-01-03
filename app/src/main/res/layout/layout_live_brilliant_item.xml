@@ -23,13 +23,40 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/px220"/>
 
-            <ImageView
-                    android:id="@+id/live_brilliant_living"
-                    android:scaleType="fitXY"
+            <FrameLayout
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_direct"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                <View
+                        android:background="@drawable/trans_30_circle"
+                        android:layout_width="@dimen/px120"
+                        android:layout_height="@dimen/px120"/>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <cn.xiaojs.xma.ui.view.AnimationView
+                            android:id="@+id/animation"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/live_animation"/>
+
+                    <TextView
+                            android:layout_marginTop="@dimen/px10"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_26px"
+                            android:text="直播中"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+
+            </FrameLayout>
         </FrameLayout>
 
         <TextView

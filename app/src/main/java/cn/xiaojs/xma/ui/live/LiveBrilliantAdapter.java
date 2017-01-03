@@ -25,6 +25,7 @@ import cn.xiaojs.xma.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.xiaojs.xma.ui.view.AnimationView;
 
 public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdapter.Holder> {
 
@@ -58,6 +59,7 @@ public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdap
             mlp.rightMargin = SPACE / 2;
         }
         holder.wrapper.setLayoutParams(mlp);
+        holder.animation.start();
     }
 
     @Override
@@ -69,6 +71,8 @@ public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdap
 
         @BindView(R.id.live_brilliant_wrapper)
         LinearLayout wrapper;
+        @BindView(R.id.animation)
+        AnimationView animation;
 
         public Holder(View itemView) {
             super(itemView);

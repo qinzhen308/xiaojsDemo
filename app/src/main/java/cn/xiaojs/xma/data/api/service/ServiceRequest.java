@@ -7,22 +7,16 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.Error;
-import cn.xiaojs.xma.model.social.Contact;
-import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.APPUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -39,6 +33,7 @@ import retrofit2.Response;
 public class ServiceRequest<T> implements ContextLifecycle {
 
     protected static final int SUCCESS_CODE = 200;
+    protected static final int NOT_MODIFIED = 304;
 
     private ApiManager apiManager;
 
@@ -46,6 +41,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
     private Call<T> serviceCall;
 
     private Object requestObj;
+
+    protected boolean createFrg = false;
 
     public ServiceRequest(Context context, APIServiceCallback<T> callback) {
 
@@ -176,6 +173,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
             fm.beginTransaction()
                     .add(requestFragment, RequestFragment.FRAGMENT_TAG)
                     .commitAllowingStateLoss();
+
+            createFrg = true;
         }
 
         requestFragment.addLifecycle(this);
@@ -194,6 +193,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
             supportRequestFragment = new SupportRequestFragment();
             fm.beginTransaction().add(supportRequestFragment, SupportRequestFragment.FRAGMENT_TAG)
                     .commitAllowingStateLoss();
+
+            createFrg = true;
         }
 
         supportRequestFragment.addLifecycle(this);
@@ -251,6 +252,42 @@ public class ServiceRequest<T> implements ContextLifecycle {
     //Resolve the Xiaojs service callback
     //
 
+    public final void enqueueRequest(final int apiType,
+                                     final Call<T> call,
+                                     int page,
+                                     Class<T> pClass,
+                                     Class... _class) {
+
+        if (page == 1 && createFrg) {
+
+            ServiceCache<T> service = new ServiceCache<>(apiManager.getCache());
+            service.loadCache(call.request(), new ServiceCache.CacheCallback<T>() {
+                @Override
+                public void loadCacheCompleted(T entity) {
+
+                    if (serviceCallback != null) {
+
+                        if (entity !=null) {
+                            serviceCallback.onSuccess(entity);
+                        }
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("load from cache completed and begin request api");
+                        }
+
+                        enqueueRequest(apiType,call,true);
+                    }
+
+                }
+            },pClass,_class);
+
+
+        }else{
+            enqueueRequest(apiType,call);
+        }
+
+    }
+
     public final void enqueueRequest(final int apiType, Call<T> call) {
 
         if (call == null) {
@@ -263,8 +300,46 @@ public class ServiceRequest<T> implements ContextLifecycle {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
 
-                //okhttp3.Response res = response.raw().cacheResponse();
-                //okhttp3.Response res1 = response.raw().networkResponse();
+                onRespones(apiType, response);
+            }
+
+            @Override
+            public void onFailure(Call<T> call, Throwable t) {
+
+                onFailures(apiType, t);
+            }
+        });
+
+    }
+
+    private void enqueueRequest(final int apiType, Call<T> call, final boolean cache) {
+
+        if (call == null) {
+            return;
+        }
+
+        serviceCall = call;
+
+        serviceCall.enqueue(new Callback<T>() {
+            @Override
+            public void onResponse(Call<T> call, Response<T> response) {
+
+                if (cache) {
+
+                    okhttp3.Response res = response.raw().networkResponse();
+                    if (res.code() == NOT_MODIFIED) {
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("network data equals cache data,so return");
+                        }
+
+                        //if network data equals cache data, there is no need to callback the UI.
+                        //so delete the reference and return
+                        delRefrence();
+                        return;
+                    }
+
+                }
 
                 onRespones(apiType, response);
             }
@@ -338,6 +413,12 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
         delRefrence();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Load data from disk cache
+
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Response the context cyclelife

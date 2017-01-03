@@ -22,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsGridViewAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
@@ -29,11 +33,6 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshGridView;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.DeviceUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
 
 public class LiveAdapter extends AbsGridViewAdapter<LiveBean,LiveAdapter.Holder> {
 
@@ -71,10 +70,6 @@ public class LiveAdapter extends AbsGridViewAdapter<LiveBean,LiveAdapter.Holder>
 
         holder.item.setLayoutParams(mlp);
 
-
-//        ViewGroup.LayoutParams itemLp = holder.item.getLayoutParams();
-//        itemLp.width = getItemWidth();
-//        holder.item.setLayoutParams(itemLp);
 
         holder.portrait.setImageResource(R.drawable.default_portrait);
         holder.teacher.setText("冰冰");

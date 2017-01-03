@@ -519,7 +519,7 @@ public class BitmapUtils {
 
     public static String saveImage(Bitmap bitmap, String destPath, int quality, boolean recycle) {
         if (bitmap == null) {
-            return destPath;
+            return null;
         }
 
         try {
@@ -538,6 +538,7 @@ public class BitmapUtils {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
 
         return destPath;
