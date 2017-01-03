@@ -41,6 +41,7 @@ public class Selector extends Doodle {
     private Doodle mSelectedDoodle;
 
     private float[] mTransformCenter;
+    private boolean mBorderVisible;
 
     public Selector(Whiteboard whiteboard) {
         super(whiteboard, SELECTION);
@@ -113,7 +114,7 @@ public class Selector extends Doodle {
     }
 
     @Override
-    public void onDrawSelf(Canvas canvas) {
+    public void drawSelf(Canvas canvas) {
         if (mPoints.size() < 2) {
             return;
         }
@@ -138,8 +139,17 @@ public class Selector extends Doodle {
     }
 
     @Override
+    protected void onDrawSelf(Canvas canvas) {
+        //do nothing
+    }
+
+    @Override
     public void drawBorder(Canvas canvas) {
         try {
+            if (!mBorderVisible) {
+                return;
+            }
+
             if (mSelectedDoodle != null) {
                 canvas.save();
                 canvas.concat(mDisplayMatrix);
@@ -147,7 +157,7 @@ public class Selector extends Doodle {
                 canvas.restore();
                 return;
             } else {
-                if (mDoodleRect.isEmpty() || mState == Doodle.STATE_IDLE) {
+                if (mDoodleRect.isEmpty()) {
                     return;
                 }
 
@@ -460,4 +470,19 @@ public class Selector extends Doodle {
         return mSelectedDoodle;
     }
 
+    @Override
+    public void setVisibility(int visibility) {
+        ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+        if (allDoodles != null) {
+            for (Doodle d : allDoodles) {
+                if (d.getState() == STATE_EDIT) {
+                    d.setVisibility(visibility);
+                }
+            }
+        }
+    }
+
+    public void setBorderVisible(boolean visible) {
+        mBorderVisible = visible;
+    }
 }

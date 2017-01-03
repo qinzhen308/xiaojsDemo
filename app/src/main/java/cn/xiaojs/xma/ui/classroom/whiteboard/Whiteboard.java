@@ -391,8 +391,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
             switch (mCurrentMode) {
                 case MODE_SELECTION:
-                    if (mSelector != null && mSelector.getState() == Doodle.STATE_EDIT) {
-                        mSelectionRectRegion = mSelector.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
+                    if (mSelector != null) {
+                        mSelector.setBorderVisible(true);
+                        if (mSelector.getState() == Doodle.STATE_EDIT) {
+                            mSelectionRectRegion = mSelector.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
+                        }
                     }
                     break;
                 case MODE_TEXT:
@@ -421,6 +424,26 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     break;
                 case MODE_ERASER:
                     break;
+            }
+
+            if (mSelectionRectRegion == IntersectionHelper.LEFT_BOTTOM_CORNER) {
+                switch (mCurrentMode) {
+                    case MODE_SELECTION:
+                        mSelector.setVisibility(View.GONE);
+                        mSelector.setBorderVisible(false);
+                        mDoodleAction = Action.DELETE_ACTION;
+                        drawAllDoodlesCanvas();
+                        postInvalidate();
+                        break;
+                    case MODE_TEXT:
+                    case MODE_HAND_WRITING:
+                    case MODE_GEOMETRY:
+                        mDoodle.setVisibility(View.GONE);
+                        mDoodleAction = Action.DELETE_ACTION;
+                        drawAllDoodlesCanvas();
+                        postInvalidate();
+                        break;
+                }
             }
             return false;
         }
@@ -471,7 +494,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                 case IntersectionHelper.RIGHT_BOTTOM_CORNER:
                                 case IntersectionHelper.RECT_BODY:
                                 case IntersectionHelper.LEFT_TOP_CORNER:
-                                case IntersectionHelper.LEFT_BOTTOM_CORNER:
                                     //move
                                     mDoodle.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
                                     //move record
@@ -603,6 +625,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                         if (mDoodleAction != Action.NO_ACTION) {
                             //add action
                             addRecords(mDoodleAction);
+
+                            if (mDoodleAction == Action.DELETE_ACTION) {
+                                mSelector.reset();
+                            }
                         }
                     }
                     break;
@@ -1113,6 +1139,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                         mSelector.reset();
                     }
                 } else if (prevRecord != null){
+                    if (lastRecord.action == Action.DELETE_ACTION) {
+                        doodle.setVisibility(View.VISIBLE);
+                    }
                     doodle.setPoints(prevRecord.mPoints);
                     doodle.setDoodleRect(prevRecord.rect);
                     doodle.setTransformMatrix(prevRecord.mTransMatrix);
@@ -1168,6 +1197,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 }
 
                 hasRedo = true;
+                if (record.action == Action.DELETE_ACTION) {
+                    doodle.setVisibility(View.GONE);
+                }
                 doodle.setPoints(record.mPoints);
                 doodle.setDoodleRect(record.rect);
                 doodle.setTransformMatrix(record.mTransMatrix);
