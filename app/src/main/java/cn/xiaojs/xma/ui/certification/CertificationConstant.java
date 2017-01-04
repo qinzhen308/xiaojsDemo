@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.model;
+package cn.xiaojs.xma.ui.certification;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,13 +9,11 @@ package cn.xiaojs.xma.model;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2017/1/2
+ * Date:2017/1/4
  * Desc:
  *
  * ======================================================================================== */
 
-import java.io.Serializable;
-
-public class Publish implements Serializable{
-    public boolean accessible;
+public interface CertificationConstant {
+    public static final int REQUEST_SELECT_IMAGE = 1;
 }

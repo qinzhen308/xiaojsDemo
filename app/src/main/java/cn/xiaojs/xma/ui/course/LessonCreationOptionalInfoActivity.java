@@ -13,6 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.signature.StringSignature;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
@@ -20,13 +28,6 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -243,7 +244,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                     //upload cover to server and set lesson cover url
                     //mLesson.setCover(coverUrl);
                     if (data != null) {
-                        String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
+                        final String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
                         final Context c = LessonCreationOptionalInfoActivity.this;
                         showProgress(true);
                         LessonDataManager.requestUploadCover(c, mLessonId, cropImgPath, new QiniuService() {
@@ -253,8 +254,9 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                                 mCoverFileName = fileName;
                                 mCoverImgView.setVisibility(View.VISIBLE);
                                 Glide.with(c)
-                                        .load(fileUrl)
+                                        .load(cropImgPath)
                                         .error(mErrorDrawable)
+                                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                                         .into(mCoverImgView);
 
                                 if (mLesson != null) {
