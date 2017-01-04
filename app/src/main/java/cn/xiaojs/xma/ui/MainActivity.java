@@ -11,7 +11,7 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
-import cn.xiaojs.xma.ui.common.ImageViewActivity;
+import cn.xiaojs.xma.ui.certification.CertificationActivity;
 import cn.xiaojs.xma.ui.course.CourseConstant;
 import cn.xiaojs.xma.ui.course.LessonCreationActivity;
 import cn.xiaojs.xma.ui.home.HomeFragment;
@@ -76,15 +76,16 @@ public class MainActivity extends BaseTabActivity {
                 startActivity(new Intent(this,SearchActivity.class));
                 break;
             case 3:
-                ArrayList<String> urls = new ArrayList<>();
-                urls.add("http://c.hiphotos.baidu.com/image/pic/item/5bafa40f4bfbfbed91fbb0837ef0f736aec31faf.jpg");
-                urls.add("http://h.hiphotos.baidu.com/image/pic/item/4ec2d5628535e5dd2820232370c6a7efce1b623a.jpg");
-                urls.add("http://f.hiphotos.baidu.com/image/h%3D200/sign=368c40c7cbfc1e17e2bf8b317a91f67c/6c224f4a20a446237cd252b39c22720e0df3d7c3.jpg");
-                urls.add("http://h.hiphotos.baidu.com/image/pic/item/203fb80e7bec54e7f14e9ce2bf389b504ec26aa8.jpg");
-                urls.add("http://h.hiphotos.baidu.com/image/pic/item/203fb80e7bec54e7f14e9ce2bf389b504ec26aa8.jpg");
-                urls.add("http://h.hiphotos.baidu.com/image/pic/item/6609c93d70cf3bc798e14b10d700baa1cc112a6c.jpg");
-                startActivity(new Intent(this,ImageViewActivity.class)
-                .putExtra(ImageViewActivity.IMAGE_PATH_KEY,urls));
+//                ArrayList<String> urls = new ArrayList<>();
+//                urls.add("http://c.hiphotos.baidu.com/image/pic/item/5bafa40f4bfbfbed91fbb0837ef0f736aec31faf.jpg");
+//                urls.add("http://h.hiphotos.baidu.com/image/pic/item/4ec2d5628535e5dd2820232370c6a7efce1b623a.jpg");
+//                urls.add("http://f.hiphotos.baidu.com/image/h%3D200/sign=368c40c7cbfc1e17e2bf8b317a91f67c/6c224f4a20a446237cd252b39c22720e0df3d7c3.jpg");
+//                urls.add("http://h.hiphotos.baidu.com/image/pic/item/203fb80e7bec54e7f14e9ce2bf389b504ec26aa8.jpg");
+//                urls.add("http://h.hiphotos.baidu.com/image/pic/item/203fb80e7bec54e7f14e9ce2bf389b504ec26aa8.jpg");
+//                urls.add("http://h.hiphotos.baidu.com/image/pic/item/6609c93d70cf3bc798e14b10d700baa1cc112a6c.jpg");
+//                startActivity(new Intent(this,ImageViewActivity.class)
+//                .putExtra(ImageViewActivity.IMAGE_PATH_KEY,urls));
+                startActivity(new Intent(this, CertificationActivity.class));
                 break;
             case 4:
                 startActivity(new Intent(this,PersonHomeActivity.class));
