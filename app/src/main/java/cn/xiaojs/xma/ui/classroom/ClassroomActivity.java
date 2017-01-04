@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.classroom;
 import android.Manifest;
 import android.animation.Animator;
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.util.CacheUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -154,6 +156,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         initGestureDetector();
         //init whiteboard
         initWhiteboardData();
+        //init nav tips
+        showSettingNav();
+
         mTeacherVideo.setPath(Config.pathPush);
     }
 
@@ -243,6 +248,21 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mWhiteboardSv.setOffscreenPageLimit(2);
         mWhiteboardAdapter.notifyDataSetChanged();
         mWhiteboardAdapter.setOnWhiteboardListener(this);
+    }
+
+    /**
+     * 显示设置导航提示
+     */
+    private void showSettingNav() {
+        SharedPreferences sf = XjsUtils.getSharedPreferences();
+        boolean flag = sf.getBoolean(Constants.KEY_CLASSROOM_FIRST_USE, true);
+        if (flag) {
+            SettingDialog setDialog = new SettingDialog(this);
+            setDialog.show();
+
+            sf.edit().putBoolean(Constants.KEY_CLASSROOM_FIRST_USE, false).commit();
+        }
+
     }
 
     @Override
