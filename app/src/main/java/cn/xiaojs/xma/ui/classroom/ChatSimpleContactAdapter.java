@@ -31,7 +31,6 @@ public class ChatSimpleContactAdapter extends BaseAdapter {
 
     public ChatSimpleContactAdapter(Context context) {
         mContext = context;
-
         mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px5);
     }
 
