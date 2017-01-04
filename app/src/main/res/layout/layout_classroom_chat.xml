@@ -78,6 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/chat_tab"
+                android:listSelector="@android:color/transparent"
                 android:background="@color/classroom_chat_bg"
                 android:layout_above="@+id/msg_input_layout">
 
