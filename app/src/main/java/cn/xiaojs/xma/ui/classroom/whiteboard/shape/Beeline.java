@@ -139,8 +139,7 @@ public class Beeline extends TwoDimensionalShape {
     }
 
     @Override
-    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
-        updateRectOnChangeAreaByEdge(oldX, oldY, x, y, edge);
+    public void updatePointByRect() {
         ////update control points
         if (isForward()) {
             mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);

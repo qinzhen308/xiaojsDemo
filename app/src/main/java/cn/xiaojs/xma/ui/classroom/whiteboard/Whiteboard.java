@@ -522,7 +522,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                 case IntersectionHelper.RIGHT_EDGE:
                                 case IntersectionHelper.BOTTOM_EDGE:
                                 case IntersectionHelper.LEFT_EDGE:
-                                    mDoodle.changeAreaByEdge(mPreviousPoint.x, mPreviousPoint.y, x, y, mSelectionRectRegion);
+                                    mDoodle.changeByEdge(mPreviousPoint.x, mPreviousPoint.y, x, y, mSelectionRectRegion);
                                     //change area record
                                     mDoodleAction = Action.CHANGE_AREA_ACTION;
 
@@ -572,7 +572,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                 case IntersectionHelper.RIGHT_EDGE:
                                 case IntersectionHelper.BOTTOM_EDGE:
                                 case IntersectionHelper.LEFT_EDGE:
-                                    mSelector.changeAreaByEdge(mPreviousPoint.x, mPreviousPoint.y, x, y, mSelectionRectRegion);
+                                    mSelector.changeByEdge(mPreviousPoint.x, mPreviousPoint.y, x, y, mSelectionRectRegion);
                                     //change area record
                                     mDoodleAction = Action.CHANGE_AREA_ACTION;
                                     drawAllDoodlesCanvas();

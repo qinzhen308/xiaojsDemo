@@ -62,17 +62,20 @@ public abstract class GeometryShape extends Doodle {
     }
 
     @Override
-    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
-        updateRectOnChangeAreaByEdge(oldX, oldY, x, y, edge);
-
+    public void changeByEdge(float oldX, float oldY, float x, float y, int edge) {
+        updateDoodleRect(oldX, oldY, x, y, edge);
         //update control points
-        if (mPoints.size() >= 2) {
-            mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);
-            mPoints.get(1).set(mDoodleRect.right, mDoodleRect.bottom);
-        }
+        updatePointByRect();
     }
 
-    protected RectF updateRectOnChangeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
+    @Override
+    public void changeByEdge(float deltaX, float deltaY, int edge) {
+        updateDoodleRect(deltaX, deltaY, edge);
+        //update control points
+        updatePointByRect();
+    }
+
+    private void updateDoodleRect(float oldX, float oldY, float x, float y, int edge) {
         RectF drawingBounds = getWhiteboard().getParams().drawingBounds;
         PointF p = Utils.normalizeScreenPoint(x - oldX, y - oldY, drawingBounds);
         mCurrVector.x = p.x / mTotalScale;
@@ -92,6 +95,10 @@ public abstract class GeometryShape extends Doodle {
         float deltaX = (float) Utils.vectorProjection(mCurrVector, mHorizontalVector);
         float deltaY = (float) Utils.vectorProjection(mCurrVector, mVerticalVector);
 
+        updateDoodleRect(deltaX, deltaY, edge);
+    }
+
+    private void updateDoodleRect(float deltaX, float deltaY, int edge) {
         switch (edge) {
             case IntersectionHelper.TOP_EDGE:
                 float top = mDoodleRect.top + deltaY;
@@ -118,8 +125,13 @@ public abstract class GeometryShape extends Doodle {
                 }
                 break;
         }
+    }
 
-        return mDoodleRect;
+    protected void updatePointByRect() {
+        if (mPoints.size() >= 2) {
+            mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);
+            mPoints.get(1).set(mDoodleRect.right, mDoodleRect.bottom);
+        }
     }
 
 }

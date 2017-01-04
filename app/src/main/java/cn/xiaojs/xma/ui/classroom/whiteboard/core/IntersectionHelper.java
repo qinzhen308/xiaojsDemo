@@ -387,6 +387,9 @@ public class IntersectionHelper {
             LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments();
             for (LineSegment lineSegment : beeLineSeg) {
                 intersect = Utils.intersect(transRect, lineSegment);
+                if (intersect) {
+                    break;
+                }
             }
         } else {
             Path originalPath = d.getScreenPath();
@@ -396,7 +399,6 @@ public class IntersectionHelper {
 
             mRegion.setEmpty();
             intersect = mRegion.setPath(originalPath, mSelectorRegion);
-            mSelectorRegion.setEmpty();
         }
 
         if (intersect) {

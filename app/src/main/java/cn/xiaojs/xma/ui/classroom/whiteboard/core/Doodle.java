@@ -30,7 +30,7 @@ import java.util.Vector;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 
-public abstract class Doodle implements Action {
+public abstract class Doodle implements Transformation {
     public final static int SELECTION = 0;
     public final static int STYLE_HAND_WRITING = 1;
     public final static int STYLE_GEOMETRY = 2;
@@ -361,58 +361,6 @@ public abstract class Doodle implements Action {
         return false;
     }
 
-    @Override
-    public void move(float deltaX, float deltaY) {
-        Whiteboard.WhiteboardParams params = getWhiteboard().getParams();
-        float moveX = deltaX / params.scale;
-        float moveY = deltaY / params.scale;
-        mTranslateX += moveX;
-        mTranslateY += moveY;
-        mTransformMatrix.postTranslate(moveX, moveY);
-    }
-
-    @Override
-    public void scale(float oldX, float oldY, float x, float y) {
-        if (mPoints.size() > 1) {
-            mTransRect.set(mDoodleRect);
-            Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
-            float scale = Utils.calcRectScale(oldX, oldY, x, y, mTransRect, matrix);
-
-            computeCenterPoint(mTransRect);
-            scale(scale, mRectCenter[0], mRectCenter[1]);
-        }
-    }
-
-    @Override
-    public void rotate(float oldX, float oldY, float x, float y) {
-        if (mPoints.size() > 1) {
-            mTransRect.set(mDoodleRect);
-            Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
-            float degree = Utils.calcRectDegrees(oldX, oldY, x, y, mTransRect, matrix);
-
-            computeCenterPoint(mTransRect);
-            rotate(degree, mRectCenter[0], mRectCenter[1]);
-        }
-    }
-
-    public void scaleAndRotate(float oldX, float oldY, float x, float y) {
-        if (mPoints.size() > 1) {
-            mTransRect.set(mDoodleRect);
-            Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
-            float[] arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mTransRect, matrix);
-            float scale = arr[0];
-            float degree = arr[1];
-
-            computeCenterPoint(mTransRect);
-            scaleRotateByPoint(scale, degree, mRectCenter[0], mRectCenter[1]);
-        }
-    }
-
-    @Override
-    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
-
-    }
-
     protected void computeCenterPoint(RectF rect) {
         mRectCenter[0] = rect.centerX();
         mRectCenter[1] = rect.centerY();
@@ -430,21 +378,6 @@ public abstract class Doodle implements Action {
 
         mDisplayMatrix.mapRect(mTransRect);
         return mTransRect;
-    }
-
-    public void scale(float scale, float px, float py) {
-        mTotalScale = mTotalScale * scale;
-        mTransformMatrix.postScale(scale, scale, px, py);
-    }
-
-    public void rotate(float degree, float px, float py) {
-        mTotalDegree += degree;
-        mTransformMatrix.postRotate(degree, px, py);
-    }
-
-    public void scaleRotateByPoint(float scale, float degree, float px, float py) {
-        scale(scale, px, py);
-        rotate(degree, px, py);
     }
 
     public Matrix getTransformMatrix() {
@@ -528,6 +461,115 @@ public abstract class Doodle implements Action {
 
     public boolean isShow(){
         return mVisibility == View.VISIBLE;
+    }
+
+    @Override
+    public void move(float oldX, float oldY, float x, float y) {
+        move(x - oldX, y - oldY);
+    }
+
+    @Override
+    public void move(float deltaX, float deltaY) {
+        Whiteboard.WhiteboardParams params = getWhiteboard().getParams();
+        float moveX = deltaX / params.scale;
+        float moveY = deltaY / params.scale;
+        translate(moveX, moveY);
+    }
+
+    @Override
+    public void scale(float scale) {
+        if (mPoints.size() > 1) {
+            mTransRect.set(mDoodleRect);
+            computeCenterPoint(mTransRect);
+            scale(scale, mRectCenter[0], mRectCenter[1]);
+        }
+    }
+
+    @Override
+    public void scale(float oldX, float oldY, float x, float y) {
+        if (mPoints.size() > 1) {
+            mTransRect.set(mDoodleRect);
+            Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
+            float scale = Utils.calcRectScale(oldX, oldY, x, y, mTransRect, matrix);
+
+            computeCenterPoint(mTransRect);
+            scale(scale, mRectCenter[0], mRectCenter[1]);
+        }
+    }
+
+    @Override
+    public void rotate(float degree) {
+        if (mPoints.size() > 1) {
+            mTransRect.set(mDoodleRect);
+            computeCenterPoint(mTransRect);
+            rotate(degree, mRectCenter[0], mRectCenter[1]);
+        }
+    }
+
+    @Override
+    public void rotate(float oldX, float oldY, float x, float y) {
+        if (mPoints.size() > 1) {
+            mTransRect.set(mDoodleRect);
+            Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
+            float degree = Utils.calcRectDegrees(oldX, oldY, x, y, mTransRect, matrix);
+
+            computeCenterPoint(mTransRect);
+            rotate(degree, mRectCenter[0], mRectCenter[1]);
+        }
+    }
+
+    @Override
+    public void scaleAndRotate(float scale, float degree) {
+        if (mPoints.size() > 1) {
+            mTransRect.set(mDoodleRect);
+            computeCenterPoint(mTransRect);
+            scaleRotateByAnchor(scale, degree, mRectCenter[0], mRectCenter[1]);
+        }
+    }
+
+    @Override
+    public void scaleAndRotate(float oldX, float oldY, float x, float y) {
+        if (mPoints.size() > 1) {
+            mTransRect.set(mDoodleRect);
+            Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
+            float[] arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mTransRect, matrix);
+            float scale = arr[0];
+            float degree = arr[1];
+
+            computeCenterPoint(mTransRect);
+            scaleRotateByAnchor(scale, degree, mRectCenter[0], mRectCenter[1]);
+        }
+    }
+
+    @Override
+    public void changeByEdge(float oldX, float oldY, float x, float y, int edge) {
+        //empty
+    }
+
+    @Override
+    public void changeByEdge(float deltaX, float deltaY, int byEdge) {
+        //empty
+    }
+
+    public void translate(float moveX, float moveY) {
+        mTranslateX += moveX;
+        mTranslateY += moveY;
+        mTransformMatrix.postTranslate(moveX, moveY);
+    }
+
+    public void scale(float scale, float px, float py) {
+        mTotalScale = mTotalScale * scale;
+        mTransformMatrix.postScale(scale, scale, px, py);
+    }
+
+    public void rotate(float degree, float px, float py) {
+        mTotalDegree += degree;
+        mTransformMatrix.postRotate(degree, px, py);
+    }
+
+    public void scaleRotateByAnchor(float scale, float degree, float px, float py) {
+        scale(scale, px, py);
+        rotate(degree, px, py);
     }
 
 }

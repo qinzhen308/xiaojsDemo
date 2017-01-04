@@ -171,8 +171,8 @@ public class Triangle extends TwoDimensionalShape {
     }
 
     @Override
-    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
-        super.changeAreaByEdge(oldX, oldY, x, y, edge);
+    public void changeByEdge(float oldX, float oldY, float x, float y, int edge) {
+        super.changeByEdge(oldX, oldY, x, y, edge);
 
         //update triangle points
         updateTriangleCoordinates();

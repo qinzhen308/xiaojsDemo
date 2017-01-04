@@ -256,7 +256,7 @@ public class Selector extends Doodle {
 
                 for (Doodle d : allDoodles) {
                     if (d.getState() == Doodle.STATE_EDIT) {
-                        d.scaleRotateByPoint(scale, degree, mTransformCenter[0], mTransformCenter[1]);
+                        d.scaleRotateByAnchor(scale, degree, mTransformCenter[0], mTransformCenter[1]);
                     }
                 }
 
@@ -266,7 +266,7 @@ public class Selector extends Doodle {
                 degree = arr[1];
                 computeCenterPoint(mDoodleRect);
 
-                scaleRotateByPoint(scale, degree, mRectCenter[0], mRectCenter[1]);
+                scaleRotateByAnchor(scale, degree, mRectCenter[0], mRectCenter[1]);
 
             }
         }
@@ -307,9 +307,9 @@ public class Selector extends Doodle {
     }
 
     @Override
-    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
+    public void changeByEdge(float oldX, float oldY, float x, float y, int edge) {
         if (mSelectedDoodle instanceof GeometryShape) {
-            mSelectedDoodle.changeAreaByEdge(oldX, oldY, x, y, edge);
+            mSelectedDoodle.changeByEdge(oldX, oldY, x, y, edge);
         }
     }
 

@@ -23,12 +23,4 @@ public interface Action {
     public static final int SCALE_ROTATE_ACTION = 4;
     public static final int CHANGE_AREA_ACTION = 5;
     public static final int DELETE_ACTION = 6;
-
-    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge);
-
-    public void move(float deltaX, float deltaY);
-
-    public void scale(float oldX, float oldY, float x, float y);
-
-    public void rotate(float oldX, float oldY, float x, float y);
 }

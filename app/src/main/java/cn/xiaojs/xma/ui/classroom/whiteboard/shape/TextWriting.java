@@ -181,11 +181,6 @@ public class TextWriting extends Doodle {
     }
 
     @Override
-    public void changeAreaByEdge(float oldX, float oldY, float x, float y, int edge) {
-        //do nothing
-    }
-
-    @Override
     public int onCheckPressedRegion(float x, float y) {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
