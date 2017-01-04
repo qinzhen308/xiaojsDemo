@@ -12,13 +12,13 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:orientation="horizontal"
-            android:layout_marginRight="@dimen/px20"
             android:layout_marginBottom="@dimen/px20">
 
-        <ImageView
+        <cn.xiaojs.xma.ui.widget.MessageImageView
                 android:id="@+id/chat_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/px20"
                 android:layout_centerInParent="true"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/cr_msg"/>
@@ -121,7 +121,7 @@
                     android:layout_toLeftOf="@+id/notify_msg_btn"
                     android:src="@drawable/ic_cr_contact_book"/>
 
-            <ImageView
+            <cn.xiaojs.xma.ui.widget.MessageImageView
                     android:id="@+id/notify_msg_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

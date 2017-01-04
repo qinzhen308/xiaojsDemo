@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 /*  =======================================================================================
@@ -26,9 +27,12 @@ import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 public class ChatSimpleContactAdapter extends BaseAdapter {
     private Context mContext;
+    private int mOffset;
 
     public ChatSimpleContactAdapter(Context context) {
         mContext = context;
+
+        mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px5);
     }
 
     @Override
@@ -62,7 +66,11 @@ public class ChatSimpleContactAdapter extends BaseAdapter {
     private View createContentView() {
         View v = LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_chat_contact_item, null);
         Holder holder = new Holder();
-        holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
+        holder.portrait = (MessageImageView) v.findViewById(R.id.portrait);
+        //set type
+        holder.portrait.setType(MessageImageView.TYPE_NUM);
+        holder.portrait.setExtraOffsetX(mOffset);
+        holder.portrait.setExtraOffsetY(-mOffset);
 
         v.setTag(holder);
         return v;
@@ -70,10 +78,11 @@ public class ChatSimpleContactAdapter extends BaseAdapter {
 
     private void bindData(Holder holder) {
         holder.portrait.setImageResource(R.drawable.default_portrait);
+        holder.portrait.setCount(5);
     }
 
 
     private class Holder {
-        RoundedImageView portrait;
+        MessageImageView portrait;
     }
 }

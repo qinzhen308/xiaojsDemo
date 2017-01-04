@@ -5,16 +5,17 @@
         android:layout_width="@dimen/px90"
         android:layout_height="@dimen/px90">
 
-    <cn.xiaojs.xma.ui.widget.RoundedImageView
+    <cn.xiaojs.xma.ui.widget.MessageImageView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:roundimg="http://schemas.android.com/apk/res-auto"
             android:id="@+id/portrait"
             android:layout_gravity="center_horizontal"
-            android:layout_width="@dimen/px56"
-            android:layout_height="@dimen/px56"
+            android:layout_width="@dimen/px86"
+            android:layout_height="@dimen/px86"
             roundimg:oval="true"
+            roundimg:isCircle="true"
             roundimg:border_color="@color/white"
-            roundimg:border_width="@dimen/px2"
-            android:layout_margin="@dimen/px15"/>
+            android:padding="@dimen/px15"
+            roundimg:border_width="@dimen/px2"/>
 
 </FrameLayout>

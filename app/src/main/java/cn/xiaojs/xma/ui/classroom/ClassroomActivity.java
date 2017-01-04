@@ -41,6 +41,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
+import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.util.CacheUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
@@ -99,6 +100,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     SeekBar mLiveProgress;
     @BindView(R.id.whiteboard_coll_count)
     TextView mWhiteboardCollCountTv;
+    @BindView(R.id.chat_btn)
+    MessageImageView mChatImgBtn;
+    @BindView(R.id.notify_msg_btn)
+    MessageImageView mNotifyImgBtn;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
@@ -160,6 +165,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         showSettingNav();
 
         mTeacherVideo.setPath(Config.pathPush);
+
+        //init data
+        initData();
     }
 
     private void initParams() {
@@ -263,6 +271,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             sf.edit().putBoolean(Constants.KEY_CLASSROOM_FIRST_USE, false).commit();
         }
 
+    }
+
+    private void initData() {
+        mChatImgBtn.setType(MessageImageView.TYPE_NUM);
+        mNotifyImgBtn.setType(MessageImageView.TYPE_MARK);
+        int offsetY = getResources().getDimensionPixelOffset(R.dimen.px8);
+        mNotifyImgBtn.setExtraOffsetY(offsetY);
+        mChatImgBtn.setCount(5);
+        mNotifyImgBtn.setCount(10);
     }
 
     @Override

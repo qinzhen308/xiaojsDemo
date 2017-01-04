@@ -23,6 +23,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import cn.xiaojs.xma.R;
 
@@ -33,6 +34,9 @@ public class MessageImageView extends RoundedImageView {
     private boolean mIsCircle;
     private Paint mPlus;
     private int mType = TYPE_NUM;
+
+    private int mExtraOffsetX = 0;
+    private int mExtraOffsetY = 0;
 
     public static final int TYPE_NUM = 1;//显示数字
     public static final int TYPE_MARK = 2;//显示圆点
@@ -94,8 +98,8 @@ public class MessageImageView extends RoundedImageView {
                 value = "99+";
             }
             //bg: left, top
-            int bgLeft = getBgLeft();
-            int bgTop = getBgTop();
+            int bgLeft = getBgLeft() + mExtraOffsetX;
+            int bgTop = getBgTop() + mExtraOffsetY;
 
             //draw bg
             Rect src = new Rect(0, 0, mBackground.getWidth(), mBackground.getHeight());
@@ -116,12 +120,13 @@ public class MessageImageView extends RoundedImageView {
             canvas.drawText(value, x, baseline, mPaint);
         }else if (mType == TYPE_MARK){
             //bg: left, top
-            int bgLeft = getBgLeft();
-            int bgTop = getBgTop();
+            int bgLeft = getBgLeft() + mExtraOffsetX;
+            int bgTop = getBgTop() + mExtraOffsetY;
 
             //draw bg
             Rect src = new Rect(0, 0, mMark.getWidth(), mMark.getHeight());
             Rect dst = new Rect(bgLeft, bgTop, bgLeft + mMark.getWidth(), bgTop + mMark.getHeight());
+            //dst.offset(mExtraOffsetX, mExtraOffsetY);
             canvas.drawBitmap(mMark, src, dst, mPaint);
         }
 
@@ -168,5 +173,13 @@ public class MessageImageView extends RoundedImageView {
             return mMark;
         }
         return mBackground;
+    }
+
+    public void setExtraOffsetX(int offsetX) {
+        mExtraOffsetX = offsetX;
+    }
+
+    public void setExtraOffsetY(int offsetY) {
+        mExtraOffsetY = offsetY;
     }
 }
