@@ -15,8 +15,8 @@
             roundimg:oval="true"
             roundimg:isCircle="true"
             roundimg:border_color="@color/white"
-            android:paddingLeft="@dimen/px20"
-            android:paddingRight="@dimen/px20"
+            android:paddingLeft="@dimen/px15"
+            android:paddingRight="@dimen/px15"
             roundimg:border_width="@dimen/px2"/>
 
 </FrameLayout>

@@ -31,7 +31,7 @@ public class ChatSimpleContactAdapter extends BaseAdapter {
 
     public ChatSimpleContactAdapter(Context context) {
         mContext = context;
-        mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px5);
+        mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px4);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ChatSimpleContactAdapter extends BaseAdapter {
         //set type
         holder.portrait.setType(MessageImageView.TYPE_NUM);
         holder.portrait.setExtraOffsetX(mOffset);
-        holder.portrait.setExtraOffsetY(-mOffset);
+        holder.portrait.setExtraOffsetY(mOffset);
 
         v.setTag(holder);
         return v;
