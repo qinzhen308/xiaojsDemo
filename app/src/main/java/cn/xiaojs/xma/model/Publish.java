@@ -14,6 +14,8 @@ package cn.xiaojs.xma.model;
  *
  * ======================================================================================== */
 
-public class Publish {
+import java.io.Serializable;
+
+public class Publish implements Serializable{
     public boolean accessible;
 }

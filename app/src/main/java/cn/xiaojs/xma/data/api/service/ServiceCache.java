@@ -60,6 +60,9 @@ public class ServiceCache<T> {
         method.setAccessible(true);
 
         okhttp3.Response response = (okhttp3.Response) method.invoke(cache,request);
+        if (response == null)
+            return null;
+
         String resStr = response.body().string();
         ObjectMapper objectMapper = new ObjectMapper();
 
