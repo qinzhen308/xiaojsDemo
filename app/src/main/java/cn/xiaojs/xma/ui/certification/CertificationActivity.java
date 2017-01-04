@@ -72,6 +72,8 @@ public class CertificationActivity extends BaseActivity {
 
     private boolean mHasImage;
 
+    private int mApplyImageWidth;
+    private int mApplyImageHeight;
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_certification);
@@ -82,9 +84,9 @@ public class CertificationActivity extends BaseActivity {
     private void apply() {
         mApplyWrapper.setVisibility(View.VISIBLE);
         mStatusWrapper.setVisibility(View.GONE);
-        int applyImageWidth = (DeviceUtil.getScreenWidth(this) - getResources().getDimensionPixelSize(R.dimen.px90)) / 2;
-        int applyImageHeight = (int) (applyImageWidth * PERCENT);
-        mCerImageWrapper.getLayoutParams().height = applyImageHeight;
+        mApplyImageWidth = (DeviceUtil.getScreenWidth(this) - getResources().getDimensionPixelSize(R.dimen.px90)) / 2;
+        mApplyImageHeight = (int) (mApplyImageWidth * PERCENT);
+        mCerImageWrapper.getLayoutParams().height = mApplyImageHeight;
 
     }
 
@@ -129,6 +131,8 @@ public class CertificationActivity extends BaseActivity {
     private void selectImage() {
         Intent intent = new Intent(this, CropImageMainActivity.class);
         intent.putExtra(CropImageMainActivity.NEED_DELETE, mHasImage);
+        intent.putExtra(CropImagePath.CROP_IMAGE_WIDTH,mApplyImageWidth);
+        intent.putExtra(CropImagePath.CROP_IMAGE_HEIGHT,mApplyImageHeight);
         startActivityForResult(intent, CertificationConstant.REQUEST_SELECT_IMAGE);
 
     }
