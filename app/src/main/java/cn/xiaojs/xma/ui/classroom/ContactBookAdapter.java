@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 public class ContactBookAdapter extends BaseAdapter implements View.OnClickListener{
@@ -34,10 +35,12 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private boolean mContactManagementMode = false;
     private List<String> mChoiceList;
     private OnContactBookListener mListener;
+    private int mOffset;
 
     public ContactBookAdapter(Context context) {
         mContext = context;
         mChoiceList = new ArrayList<String>();
+        mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px5);
     }
 
     public void setOnContactBookListener(OnContactBookListener listener) {
@@ -76,7 +79,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         View v = LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_contact_item, null);
         Holder holder = new Holder();
         holder.checkbox = (ImageView) v.findViewById(R.id.checkbox);
-        holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
+        holder.portrait = (MessageImageView) v.findViewById(R.id.portrait);
         holder.name = (TextView) v.findViewById(R.id.name);
         holder.label = (TextView) v.findViewById(R.id.label);
         holder.video = (ImageView) v.findViewById(R.id.video);
@@ -91,6 +94,11 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.microphone.setTag(holder);
         holder.portrait.setTag(holder);
 
+        //set type
+        holder.portrait.setType(MessageImageView.TYPE_NUM);
+        holder.portrait.setExtraOffsetX(mOffset);
+        holder.portrait.setExtraOffsetY(-mOffset);
+
         v.setTag(holder);
         return v;
     }
@@ -99,6 +107,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.portrait.setImageResource(R.drawable.default_portrait);
         holder.position = position;
         if (mContactManagementMode) {
+            holder.portrait.setCount(0);
             holder.video.setVisibility(View.GONE);
             holder.microphone.setVisibility(View.GONE);
             holder.checkbox.setVisibility(View.VISIBLE);
@@ -107,6 +116,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.checkbox.setVisibility(View.GONE);
             holder.video.setVisibility(View.VISIBLE);
             holder.microphone.setVisibility(View.VISIBLE);
+            holder.portrait.setCount(9);
         }
     }
 
@@ -151,7 +161,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
     private class Holder {
         ImageView checkbox;
-        RoundedImageView portrait;
+        MessageImageView portrait;
         TextView name;
         TextView label;
         ImageView video;

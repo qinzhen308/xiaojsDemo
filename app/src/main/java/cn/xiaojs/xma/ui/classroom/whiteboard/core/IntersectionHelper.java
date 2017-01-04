@@ -121,7 +121,7 @@ public class IntersectionHelper {
      * @param y 按下点的y
      */
     public static int whichEdgePressed(float x, float y, float left, float top, float right, float bottom) {
-        int scope = WhiteboardConfigs.PRESSED_SCOPE;
+        int scope = WhiteboardConfigs.PRESSED_SCOPE + WhiteboardConfigs.BORDER_PADDING;
         //top edge
         mTransRect.set(left, top - scope, right, top + scope);
         if (mTransRect.contains(x, y)) {
