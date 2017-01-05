@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.classroom;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -52,6 +53,9 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
 
     private ImageView mOpenContact;
     private ImageView mDelChatTab;
+
+    private EditText mMsgInputEdt;
+    private TextView mMsgSendTv;
 
     private int mCurrentMode = MODE_CONTACT;
 
@@ -123,6 +127,9 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
         mKickOutTv = (TextView) root.findViewById(R.id.kick_out);
         mBackTv = (TextView) root.findViewById(R.id.back_manage_contact);
 
+        mMsgSendTv = (TextView) root.findViewById(R.id.msg_send);
+        mMsgInputEdt = (EditText) root.findViewById(R.id.msg_input);
+
         mOpenMsg.setOnClickListener(this);
         mOpenContact.setOnClickListener(this);
         mAddContact.setOnClickListener(this);
@@ -131,6 +138,7 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
         mBackTv.setOnClickListener(this);
         mManageContact.setOnClickListener(this);
         mDelChatTab.setOnClickListener(this);
+        mMsgSendTv.setOnClickListener(this);
     }
 
     @Override
@@ -161,6 +169,8 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
                 exitContactManagement();
                 break;
             case R.id.del_chat_tab:
+                break;
+            case R.id.msg_send:
                 break;
         }
     }
