@@ -30,6 +30,8 @@ public class DocumentActivity extends BaseActivity {
     TextView mMyDocumentTv;
     @BindView(R.id.class_document)
     TextView mClassDocumentTv;
+    @BindView(R.id.all)
+    TextView mAllTv;
     @BindView(R.id.ppt)
     TextView mPptTv;
     @BindView(R.id.word)
@@ -40,8 +42,6 @@ public class DocumentActivity extends BaseActivity {
     TextView mImageTv;
     @BindView(R.id.hand_writing)
     TextView mHandWritingTv;
-    @BindView(R.id.all)
-    TextView mAllTv;
     @BindView(R.id.search)
     EditText mSearchEdt;
     @BindView(R.id.doc_list)
@@ -57,7 +57,8 @@ public class DocumentActivity extends BaseActivity {
         initData();
     }
 
-    @OnClick({R.id.back, R.id.my_document, R.id.class_document, R.id.upload, R.id.new_folder})
+    @OnClick({R.id.back, R.id.my_document, R.id.class_document, R.id.upload, R.id.new_folder,
+            R.id.all, R.id.ppt, R.id.word, R.id.pdf, R.id.image, R.id.hand_writing})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
@@ -77,6 +78,15 @@ public class DocumentActivity extends BaseActivity {
 
             case R.id.new_folder:
                 break;
+
+            case R.id.all:
+            case R.id.ppt:
+            case R.id.word:
+            case R.id.pdf:
+            case R.id.image:
+            case R.id.hand_writing:
+                switchDocumentType(v);
+                break;
             default:
                 break;
         }
@@ -85,6 +95,8 @@ public class DocumentActivity extends BaseActivity {
     private void initData() {
         mDocumentAdapter = new DocumentAdapter(this, mDocListView, true);
         mDocListView.setAdapter(mDocumentAdapter);
+
+        mAllTv.setSelected(true);
     }
 
     private void switchMyDocument() {
@@ -99,5 +111,32 @@ public class DocumentActivity extends BaseActivity {
         mClassDocumentTv.setBackgroundResource(R.drawable.cr_class_doc_bg);
         mMyDocumentTv.setTextColor(getResources().getColor(R.color.font_blue));
         mClassDocumentTv.setTextColor(getResources().getColor(R.color.font_white));
+    }
+
+    private void switchDocumentType(View v) {
+        mAllTv.setSelected(false);
+        mPptTv.setSelected(false);
+        mWordTv.setSelected(false);
+        mPdfTv.setSelected(false);
+        mImageTv.setSelected(false);
+        mHandWritingTv.setSelected(false);
+
+        v.setSelected(true);
+        switch (v.getId()) {
+            case R.id.all:
+                break;
+            case R.id.ppt:
+                break;
+            case R.id.word:
+                break;
+            case R.id.pdf:
+                break;
+            case R.id.image:
+                break;
+            case R.id.hand_writing:
+                break;
+            default:
+                break;
+        }
     }
 }
