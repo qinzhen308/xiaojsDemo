@@ -50,6 +50,14 @@ import cn.xiaojs.xma.util.DeviceUtil;
  * @param <H> item的holder
  */
 public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapter implements StickyListHeadersAdapter {
+    /**
+     * 下拉刷新, 重新请求数据; 底部上拉刷新, 加载更多
+     */
+    public final static int MODE_DOWN_REFRESH_MORE = 0;
+    /**
+     * 下拉刷新, 加载更多; 底部上拉刷新, 重新请求数据
+     */
+    public final static int MODE_UP_REFRESH_MORE = 1;
 
     /**
      * 初始状态
@@ -104,18 +112,25 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private View mEmptyView;
     private View mFailedView;
     private boolean mRefreshOnLoad = true;
+    private int mRefreshMode = MODE_DOWN_REFRESH_MORE;
 
     public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView) {
-        mContext = context;
-        mInflater = LayoutInflater.from(context);
-        initParam();
-        initListView(listView);
+        this(context, listView, false);
     }
 
     public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView,boolean autoLoad) {
+        this(context, listView, autoLoad, MODE_DOWN_REFRESH_MORE);
+    }
+
+    public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView, int refreshMode) {
+        this(context, listView, true, refreshMode);
+    }
+
+    public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView,boolean autoLoad, int refreshMode) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mRefreshOnLoad = autoLoad;
+        mRefreshMode = refreshMode;
         initParam();
         initListView(listView);
     }
@@ -169,23 +184,44 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             });
         }
 
-        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<StickyListHeadersListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
-                mPagination.setPage(PAGE_FIRST);
-                mCurrentState = STATE_UP_REFRESH;
-                request();
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
-                mPagination.setPage(mPagination.getPage() + 1);
-                if (mCurrentState != STATE_DOWN_REFRESH){
-                    mCurrentState = STATE_DOWN_REFRESH;
+        if (mRefreshMode == MODE_UP_REFRESH_MORE) {
+            mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<StickyListHeadersListView>() {
+                @Override
+                public void onPullDownToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
+                    mPagination.setPage(mPagination.getPage() + 1);
+                    if (mCurrentState != STATE_DOWN_REFRESH){
+                        mCurrentState = STATE_DOWN_REFRESH;
+                    }
+                    request();
                 }
-                request();
-            }
-        });
+
+                @Override
+                public void onPullUpToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
+                    mPagination.setPage(PAGE_FIRST);
+                    mCurrentState = STATE_UP_REFRESH;
+                    request();
+                }
+            });
+        } else {
+            mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<StickyListHeadersListView>() {
+                @Override
+                public void onPullDownToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
+                    mPagination.setPage(PAGE_FIRST);
+                    mCurrentState = STATE_UP_REFRESH;
+                    request();
+                }
+
+                @Override
+                public void onPullUpToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
+                    mPagination.setPage(mPagination.getPage() + 1);
+                    if (mCurrentState != STATE_DOWN_REFRESH){
+                        mCurrentState = STATE_DOWN_REFRESH;
+                    }
+                    request();
+                }
+            });
+        }
+
         if (refreshOnLoad()){
             request();
         }
