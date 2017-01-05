@@ -83,12 +83,12 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 //            bean.setState(state);
 //        }
         holder.price.setVisibility(View.VISIBLE);
-        if (bean.getFee().isFree()) {
+        if (bean.getFee().free) {
             holder.price.setText(R.string.free);
         } else {
-            holder.price.setText(NumberUtil.getPrice(bean.getFee().getCharge()));
+            holder.price.setText(NumberUtil.getPrice(bean.getFee().charge));
         }
-        holder.desc.setText(mContext.getString(R.string.course_stu, bean.getEnroll().getCurrent(), bean.getEnroll().getMax()));
+        holder.desc.setText(mContext.getString(R.string.course_stu, bean.getEnroll().current, bean.getEnroll().max));
 
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
         Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);

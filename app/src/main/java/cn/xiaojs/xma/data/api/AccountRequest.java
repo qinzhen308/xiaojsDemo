@@ -11,11 +11,14 @@ import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
-import cn.xiaojs.xma.model.TokenResponse;
 
 
+import cn.xiaojs.xma.model.account.UpToken;
+import cn.xiaojs.xma.model.account.UpTokenParam;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+
+import static cn.xiaojs.xma.data.api.service.APIType.GET_UPTOKEN;
 
 /**
  * Created by maxiaobao on 2016/11/3.
@@ -62,19 +65,24 @@ public class AccountRequest extends ServiceRequest {
     }
 
 
-    protected void getAvatarUpToken(@NonNull String sessionID) {
+//    protected void getAvatarUpToken(@NonNull String sessionID) {
+//
+//        Call<TokenResponse> call = getService().getAvatarUpToken(sessionID);
+//        enqueueRequest(APIType.GET_UPTOKEN,call);
+//
+//    }
+//
+//
+//    protected void getCoverUpToken(@NonNull String sessionID, @NonNull String lesson) {
+//
+//        Call<TokenResponse> call = getService().getCoverUpToken(sessionID,lesson);
+//        enqueueRequest(APIType.GET_LESSON_COVER_UPTOKEN,call);
+//
+//    }
 
-        Call<TokenResponse> call = getService().getAvatarUpToken(sessionID);
-        enqueueRequest(APIType.GET_UPTOKEN,call);
-
-    }
-
-
-    protected void getCoverUpToken(@NonNull String sessionID, @NonNull String lesson) {
-
-        Call<TokenResponse> call = getService().getCoverUpToken(sessionID,lesson);
-        enqueueRequest(APIType.GET_LESSON_COVER_UPTOKEN,call);
-
+    protected void getUpToken(@NonNull String sessionID,UpTokenParam... upToken) {
+        Call<UpToken[]> call = getService().getUpToken(sessionID,upToken);
+        enqueueRequest(GET_UPTOKEN,call);
     }
 
     public void getCenterData(@NonNull String sessionID) {

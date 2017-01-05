@@ -6,6 +6,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import java.util.Date;
 
+import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.Price;
+import cn.xiaojs.xma.model.ctl.Statistic;
+
 /**
  * Created by maxiaobao on 2016/11/8.
  */
@@ -17,12 +21,15 @@ public class TeachLesson implements Serializable{
     //private String createdBy;
     private String title;
 //    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    private String subject;
+    private CSubject subject;
     private int mode;
-    private Ugc ugc;
+
+
+    //private Ugc ugc;
+    private Statistic stats;
     //private Promotion promotion;
     private Schedule schedule;
-    private Fee fee;
+    private Price fee;
     private Enroll enroll;
     private String id;
     private String cover;
@@ -39,6 +46,22 @@ public class TeachLesson implements Serializable{
 
     public Publish getPublish() {
         return publish;
+    }
+
+    public Statistic getStats() {
+        return stats;
+    }
+
+    public void setStats(Statistic stats) {
+        this.stats = stats;
+    }
+
+    public CSubject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(CSubject subject) {
+        this.subject = subject;
     }
 
     public void setPublish(Publish publish) {
@@ -76,13 +99,6 @@ public class TeachLesson implements Serializable{
         this.mode = mode;
     }
 
-    public Ugc getUgc() {
-        return ugc;
-    }
-
-    public void setUgc(Ugc ugc) {
-        this.ugc = ugc;
-    }
 
 //    public Promotion getPromotion() {
 //        return promotion;
@@ -109,11 +125,11 @@ public class TeachLesson implements Serializable{
         this.schedule = schedule;
     }
 
-    public Fee getFee() {
+    public Price getFee() {
         return fee;
     }
 
-    public void setFee(Fee fee) {
+    public void setFee(Price fee) {
         this.fee = fee;
     }
 

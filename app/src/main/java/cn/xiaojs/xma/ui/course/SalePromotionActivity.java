@@ -137,10 +137,10 @@ public class SalePromotionActivity extends BaseActivity {
 
         mUnitPriceStr = getString(R.string.per_hour);
         try {
-            mOriginalPrice = mLesson.getFee().getCharge();
-            mPricingType = mLesson.getFee().getType();
+            mOriginalPrice = mLesson.getFee().charge;
+            mPricingType = mLesson.getFee().type;
             mLessonStartTime = mLesson.getSchedule().getStart().getTime();
-            mLimit = mLesson.getEnroll().getMax();
+            mLimit = mLesson.getEnroll().max;
             mOriginalPriceTv.setText(formatPrice(mOriginalPrice, mPricingType));
         } catch (Exception e) {
 

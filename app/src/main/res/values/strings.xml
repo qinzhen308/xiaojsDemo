@@ -212,6 +212,7 @@
     <string name="promotion_discount_format_error">请填写正确的折扣值，如：9.7</string>
     <string name="promotion_info_empty">请填写促销信息</string>
     <string name="lesson_creation_success">创建直播课成功</string>
+    <string name="lesson_edit_success">修改成功</string>
     <string name="lesson_stu_exceed">该课的学生人数超过%1$d人，建议您选择公开课的形式</string>
 
     <!--live lesson detail-->
@@ -224,8 +225,8 @@
     <string name="live_lesson_cover">直播课封面</string>
     <string name="promotion_one">促销1</string>
     <string name="promotion_two">促销2</string>
-    <string name="enroll_before_promotion">报名前%1$s人，享受%2$s折，折后价<![CDATA[<font color="#cc0000">%3$s</font>]]></string>
-    <string name="lesson_before_promotion">上课前%1$s天，享受%2$s折，折后价<![CDATA[<font color="#cc0000">%3$s</font>]]></string>
+    <string name="enroll_before_promotion">报名前%1$d人，享受%2$s折，折后价<![CDATA[<font color="#cc0000">%3$s</font>]]></string>
+    <string name="lesson_before_promotion">上课前%1$d天，享受%2$s折，折后价<![CDATA[<font color="#cc0000">%3$s</font>]]></string>
 
     <string name="filter">筛选</string>
     <string name="time">时间</string>

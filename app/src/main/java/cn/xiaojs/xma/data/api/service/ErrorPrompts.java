@@ -110,7 +110,7 @@ public class ErrorPrompts {
                 errorMessage = "获取个人资料失败";
                 break;
             case APIType.GET_UPTOKEN:
-                errorMessage = "获取上传头像token失败";
+                errorMessage = "获取上传token失败";
                 break;
             case APIType.REGISTER:
 
@@ -185,9 +185,9 @@ public class ErrorPrompts {
             case APIType.GET_ENROLLED_LESSONS:
                 errorMessage = "获取已报名课程失败";
                 break;
-            case APIType.GET_LESSON_COVER_UPTOKEN:
-                errorMessage = "获取上传封面token失败";
-                break;
+//            case APIType.GET_LESSON_COVER_UPTOKEN:
+//                errorMessage = "获取上传封面token失败";
+//                break;
             case APIType.GET_LESSON_DATA:
                 errorMessage = "获取课程详情失败";
                 break;

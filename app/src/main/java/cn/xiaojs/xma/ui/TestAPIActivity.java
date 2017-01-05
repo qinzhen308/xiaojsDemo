@@ -14,7 +14,6 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CategoriesManager;
@@ -30,19 +29,14 @@ import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
-import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
-import cn.xiaojs.xma.model.Enroll;
-import cn.xiaojs.xma.model.Fee;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.LessonDetail;
-import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.LoginInfo;
 import cn.xiaojs.xma.model.LoginParams;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.RegisterInfo;
-import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import okhttp3.Cache;
@@ -471,40 +465,40 @@ public class TestAPIActivity extends Activity {
 
     private void testEditLesson(Context context) {
 
-        String lesson= "582d58353d73a5046fc24490";
-        Enroll enroll = new Enroll();
-        enroll.setMax(100);
-        enroll.setMandatory(false);
-
-        Fee fee = new Fee();
-        fee.setFree(false);
-        fee.setType(Finance.PricingType.TOTAL);
-        fee.setCharge(100);
-
-        Schedule sch = new Schedule();
-        sch.setStart(new Date(System.currentTimeMillis()));
-        sch.setDuration(1000);
-
-
-        LiveLesson ll = new LiveLesson();
-        ll.setTitle("无人驾驶课");
-        ll.setSubject(subject);
-        ll.setEnroll(enroll);
-        ll.setMode(Ctl.TeachingMode.ONE_2_ONE);
-        ll.setFee(fee);
-        ll.setSchedule(sch);
-
-        LessonDataManager.requestEditLesson(context, lesson, ll, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+//        String lesson= "582d58353d73a5046fc24490";
+//        Enroll enroll = new Enroll();
+//        enroll.setMax(100);
+//        enroll.setMandatory(false);
+//
+//        Fee fee = new Fee();
+//        fee.setFree(false);
+//        fee.setType(Finance.PricingType.TOTAL);
+//        fee.setCharge(100);
+//
+//        Schedule sch = new Schedule();
+//        sch.setStart(new Date(System.currentTimeMillis()));
+//        sch.setDuration(1000);
+//
+//
+//        LiveLesson ll = new LiveLesson();
+//        ll.setTitle("无人驾驶课");
+//        //ll.setSubject(subject);
+//        ll.setEnroll(enroll);
+//        ll.setMode(Ctl.TeachingMode.ONE_2_ONE);
+//        ll.setFee(fee);
+//        ll.setSchedule(sch);
+//
+//        LessonDataManager.requestEditLesson(context, lesson, ll, new APIServiceCallback() {
+//            @Override
+//            public void onSuccess(Object object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 
     }
@@ -723,44 +717,44 @@ public class TestAPIActivity extends Activity {
 
     //创建直播课
     private void testCreateLession(Context context) {
-
-        Enroll enroll = new Enroll();
-        enroll.setMax(100);
-        enroll.setMandatory(false);
-
-        Fee fee = new Fee();
-        fee.setFree(true);
-        fee.setType(Finance.PricingType.TOTAL);
-        fee.setCharge(100);
-
-        Schedule sch = new Schedule();
-        sch.setStart(new Date(System.currentTimeMillis()));
-        sch.setDuration(1000);
-
-
-        LiveLesson ll = new LiveLesson();
-        ll.setTitle("无人驾驶课");
-        ll.setSubject(subject);
-        ll.setEnroll(enroll);
-        ll.setMode(Ctl.TeachingMode.ONE_2_ONE);
-        ll.setFee(fee);
-        ll.setSchedule(sch);
-
-        CreateLesson cl = new CreateLesson();
-        cl.setData(ll);
-
-
-        LessonDataManager.requestCreateLiveLesson(context, cl, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-                Logger.d("onSuccess-----------");
-            }
-
-            @Override
-            public void onFailure(String errorCode,String errorMessage) {
-                Logger.d("onFailure-----------");
-            }
-        });
+//
+//        Enroll enroll = new Enroll();
+//        enroll.setMax(100);
+//        enroll.setMandatory(false);
+//
+//        Fee fee = new Fee();
+//        fee.setFree(true);
+//        fee.setType(Finance.PricingType.TOTAL);
+//        fee.setCharge(100);
+//
+//        Schedule sch = new Schedule();
+//        sch.setStart(new Date(System.currentTimeMillis()));
+//        sch.setDuration(1000);
+//
+//
+//        LiveLesson ll = new LiveLesson();
+//        ll.setTitle("无人驾驶课");
+//        //ll.setSubject(subject);
+//        ll.setEnroll(enroll);
+//        ll.setMode(Ctl.TeachingMode.ONE_2_ONE);
+//        ll.setFee(fee);
+//        ll.setSchedule(sch);
+//
+//        CreateLesson cl = new CreateLesson();
+//        cl.setData(ll);
+//
+//
+//        LessonDataManager.requestCreateLiveLesson(context, cl, new APIServiceCallback() {
+//            @Override
+//            public void onSuccess(Object object) {
+//                Logger.d("onSuccess-----------");
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode,String errorMessage) {
+//                Logger.d("onFailure-----------");
+//            }
+//        });
 
 
     }
