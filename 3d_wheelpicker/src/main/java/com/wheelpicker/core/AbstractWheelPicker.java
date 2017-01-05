@@ -338,11 +338,23 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 
 	protected abstract void onTouchCancel(MotionEvent event);
 	/** ==============abstract method============== */
+
+	protected void onWheelSelected(int index) {
+
+	}
 	
     class AdapterDataSetObserver extends DataSetObserver {
 
         @Override
         public void onChanged() {
+			int count = 0;
+			if (mAdapter != null) {
+				count = mAdapter.getCount();
+			}
+			if (mCurrItemIndex > count - 1) {
+				mCurrItemIndex = count - 1;
+			}
+			onWheelSelected(mCurrItemIndex);
         	requestComputeLayout();
         }
 

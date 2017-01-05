@@ -167,7 +167,8 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
 		mOnWheelPickedListener = listener;
 	}
 
-	private void onWheelSelected(int index) {
+	@Override
+	protected void onWheelSelected(int index) {
 		if (mAdapter != null && index > -1 && index < mAdapter.getCount()) {
 			if (mOnWheelPickedListener != null) {
 				mOnWheelPickedListener.onWheelSelected(this, index, mAdapter.getItemText(index));
