@@ -30,11 +30,11 @@
             android:id="@+id/common_dialog_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"/>
+            android:padding="@dimen/px30"/>
 
     <View
             style="@style/DividerHorizontal"
-            android:layout_marginTop="@dimen/px40"/>
+            android:layout_marginTop="@dimen/px10"/>
 
     <LinearLayout
             android:orientation="horizontal"

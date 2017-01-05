@@ -68,9 +68,7 @@ public class CommonDialog extends Dialog {
         int width = DeviceUtil.getScreenWidth(getContext()) - 2 * getContext().getResources().getDimensionPixelSize(R.dimen.px60);
         dialogWindow.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         dialogWindow.setAttributes(params);
-        dialogWindow.setLayout(
-                width,
-                android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialogWindow.setLayout(width, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(Gravity.CENTER);
         mLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +98,14 @@ public class CommonDialog extends Dialog {
 
 
 
+    }
+
+    public void setDialogLayout(int w, int h) {
+        Window dialogWindow = getWindow();
+        WindowManager.LayoutParams params = dialogWindow.getAttributes();
+        dialogWindow.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialogWindow.setAttributes(params);
+        dialogWindow.setLayout(w, h);
     }
 
     public void setCustomView(View customView) {

@@ -335,6 +335,8 @@
     <string name="class_chat_input">输入文字</string>
     <string name="cr_open_camera">是否默认开启摄像头</string>
     <string name="cr_open_microphone">上课时若要开启语音请上插上耳机</string>
+    <string name="exit_classroom">退出教室</string>
+    <string name="exit_classroom_tips">退出教室后，将结束本次课程</string>
     <!--whiteboard-->
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>

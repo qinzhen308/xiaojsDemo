@@ -41,8 +41,10 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.util.CacheUtil;
+import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
 /*  =======================================================================================
@@ -147,6 +149,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private String mWhiteboardSuffix;
     private AsyncTask mSaveTask;
     private Bundle mExtraData;
+
+    private CommonDialog mExitDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -327,10 +331,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
-                finish();
+                showExitDialog();
                 break;
             case R.id.exit_btn:
-                finish();
+                showExitDialog();
                 break;
             case R.id.blackboard_switcher_btn:
                 openWhiteBoardManager();
@@ -898,9 +902,41 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (mOpenedDrawer != null && mOpenedPanel != null) {
                 mOpenedPanel.close(mDrawerLayout, mOpenedDrawer);
                 return false;
+            } else {
+                showExitDialog();
+                return false;
             }
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    private void showExitDialog() {
+        if (mExitDialog == null) {
+            mExitDialog = new CommonDialog(this);
+            mExitDialog.setTitle(R.string.exit_classroom);
+            mExitDialog.setDesc(R.string.exit_classroom_tips);
+            int width = DeviceUtil.getScreenWidth(this) / 2;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mExitDialog.setDialogLayout(width, height);
+
+            mExitDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mExitDialog.dismiss();
+                }
+            });
+
+            mExitDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    ClassroomActivity.this.finish();
+                    mExitDialog.dismiss();
+                }
+            });
+        }
+
+        mExitDialog.show();
     }
 }
