@@ -658,11 +658,24 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                             }
                             postInvalidate();
                         }
+
+                        if (mDoodleAction != Action.NO_ACTION) {
+                            //add action
+                            addRecords(mDoodleAction);
+
+                            if (mDoodleAction == Action.DELETE_ACTION) {
+                                mSelector.reset();
+                            }
+                        }
                     }
                     break;
                 case MODE_GEOMETRY:
                 case MODE_HAND_WRITING:
                     if (mDoodle != null) {
+                        if (mDoodleAction != Action.NO_ACTION) {
+                            //add action
+                            addRecords(mDoodle, mDoodleAction);
+                        }
                         if (mDoodle.getStyle() != Doodle.STYLE_TEXT) {
                             if (mDoodle.getState() == Doodle.STATE_DRAWING) {
                                 if (mDoodle instanceof HandWriting) {
@@ -696,20 +709,15 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     break;
                 case MODE_TEXT:
                     if (mDoodle != null && mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
+                        if (mDoodleAction != Action.NO_ACTION) {
+                            //add action
+                            addRecords(mDoodle, mDoodleAction);
+                        }
                         hideInputMethod();
                     }
                     break;
                 case MODE_COLOR_PICKER:
                     break;
-            }
-
-            if (mDoodleAction != Action.NO_ACTION) {
-                //add action
-                addRecords(mDoodleAction);
-
-                if (mDoodleAction == Action.DELETE_ACTION && mSelector != null) {
-                    mSelector.reset();
-                }
             }
         }
 
