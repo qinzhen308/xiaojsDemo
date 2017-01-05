@@ -230,8 +230,6 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         mMode = to == mCurrYear ? MODE_BIRTHDAY : MODE_RANGE;
 
         updateYears(from, to);
-        setCurrentDate(mSelectedYear, mSelectedMonth, mSelectedDay);
-        setCurrentTime(mSelectedHour, mSelectedMinute, mSelectedSecond);
         mYearPickerAdapter.setData(mYears);
     }
 
@@ -255,14 +253,14 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
             updateMaxMonths(11);
         }
 
-        mMonthPickerAdapter.setData(mMonths);
-        mDayPickerAdapter.setData(mDays);
-
         int yearIndex = Math.max(0, mYears.indexOf(year + mYearStr));
         int monthIndex = Math.max(0, mMonths.indexOf((month + 1) + mMonthStr));
         int dayIndex = Math.max(0, mDays.indexOf(day + mDayStr));
 
         setDateItemIndex(yearIndex, monthIndex, dayIndex);
+
+        mMonthPickerAdapter.setData(mMonths);
+        mDayPickerAdapter.setData(mDays);
 
         if (mOnDatePickListener != null) {
             mOnDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay);
@@ -385,7 +383,6 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                 if (index == mYears.size() - 1 && mSelectedYear == mCurrYear) {
                     //current year
                     updateMaxMonths(mCurrMonth);
-                    changed = true;
                 } else {
                     changed = mMonths.size() != 12;
                     if (changed) {
@@ -393,20 +390,8 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                     }
                 }
 
-                if (changed) {
-                    //update month
-                    mMonthPickerAdapter.setData(mMonths);
-
-                    //update day
-                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth) {
-                        //current month
-                        updateMaxDays(mCurrDay);
-                    } else {
-                        correctDays();
-                    }
-                    mDayPickerAdapter.setData(mDays);
-                }
-
+                //update month
+                mMonthPickerAdapter.setData(mMonths);
                 break;
             case TYPE_MONTH:
                 int month = getCurrentMonth(data, mMonthStr);
@@ -414,7 +399,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                     mSelectedMonth = month;
                 }
                 if (index == mMonths.size() - 1 && mSelectedYear == mCurrYear) {
-                    //current month
+                    //current day
                     updateMaxDays(mCurrDay);
                 } else {
                     correctDays();
@@ -422,7 +407,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                 mDayPickerAdapter.setData(mDays);
                 break;
             case TYPE_DAY:
-                mSelectedDay = getCurrentMonth(data, mDayStr);
+                mSelectedDay = getCurrentDate(data, mDayStr);
                 break;
             default:
                 break;
@@ -435,14 +420,15 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 
 
     private void correctDays() {
-        if (mSelectedMonth == 2) {
+        int month = mSelectedMonth + 1;
+        if (month == 2) {
             if (isLeapYear(mSelectedYear)) {
                 updateMaxDays(29);
             } else {
                 updateMaxDays(28);
             }
         } else {
-            switch (mSelectedMonth) {
+            switch (month) {
                 case 1:
                 case 3:
                 case 5:

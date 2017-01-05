@@ -115,10 +115,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private int mRefreshMode = MODE_DOWN_REFRESH_MORE;
 
     public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView) {
-        this(context, listView, false);
+        this(context, listView, true);
     }
 
-    public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView,boolean autoLoad) {
+    public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView, boolean autoLoad) {
         this(context, listView, autoLoad, MODE_DOWN_REFRESH_MORE);
     }
 
@@ -126,7 +126,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         this(context, listView, true, refreshMode);
     }
 
-    public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView,boolean autoLoad, int refreshMode) {
+    public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView, boolean autoLoad, int refreshMode) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mRefreshOnLoad = autoLoad;
@@ -138,7 +138,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     /**
      * 子类可初始化接口参数
      */
-    protected void initParam(){
+    protected void initParam() {
 
     }
 
@@ -152,33 +152,33 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mPagination.setMaxNumOfObjectsPerPage(getPageSize());
         mListView = listView;
         mListView.setMode(PullToRefreshBase.Mode.BOTH);
-        if (leftSwipe()){
+        if (leftSwipe()) {
             mListView.enableLeftSwipe();
         }
         final SwipeListView list = mListView.getRefreshableView().getWrappedList();
-        if (list.isSwipeEnabled()){
-            list.setSwipeListViewListener(new BaseSwipeListViewListener(){
+        if (list.isSwipeEnabled()) {
+            list.setSwipeListViewListener(new BaseSwipeListViewListener() {
                 @Override
                 public void onClickFrontView(int position) {
                     int idx = position;
-                    if (list.getHeaderViewsCount() > 0 || list.getFooterViewsCount() > 0){
+                    if (list.getHeaderViewsCount() > 0 || list.getFooterViewsCount() > 0) {
                         idx = position - list.getHeaderViewsCount();
-                        if (idx >= 0 && idx < mBeanList.size()){
-                            onDataItemClick(idx,mBeanList.get(idx));
+                        if (idx >= 0 && idx < mBeanList.size()) {
+                            onDataItemClick(idx, mBeanList.get(idx));
                         }
                     }
                 }
             });
-        }else {
+        } else {
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     int idx = i;
-                    if (list.getHeaderViewsCount() > 0 || list.getFooterViewsCount() > 0){
+                    if (list.getHeaderViewsCount() > 0 || list.getFooterViewsCount() > 0) {
                         idx = i - list.getHeaderViewsCount();
                     }
-                    if (idx >= 0 && idx < mBeanList.size()){
-                        onDataItemClick(idx,mBeanList.get(idx));
+                    if (idx >= 0 && idx < mBeanList.size()) {
+                        onDataItemClick(idx, mBeanList.get(idx));
                     }
                 }
             });
@@ -189,7 +189,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 @Override
                 public void onPullDownToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
                     mPagination.setPage(mPagination.getPage() + 1);
-                    if (mCurrentState != STATE_DOWN_REFRESH){
+                    if (mCurrentState != STATE_DOWN_REFRESH) {
                         mCurrentState = STATE_DOWN_REFRESH;
                     }
                     request();
@@ -214,7 +214,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 @Override
                 public void onPullUpToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
                     mPagination.setPage(mPagination.getPage() + 1);
-                    if (mCurrentState != STATE_DOWN_REFRESH){
+                    if (mCurrentState != STATE_DOWN_REFRESH) {
                         mCurrentState = STATE_DOWN_REFRESH;
                     }
                     request();
@@ -222,26 +222,27 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             });
         }
 
-        if (refreshOnLoad()){
+        if (refreshOnLoad()) {
             request();
         }
     }
 
-    Handler mHandler = new Handler(){
+    Handler mHandler = new Handler() {
 
     };
 
-    protected final void request(){
+    protected final void request() {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mBeanList == null || mBeanList.size() == 0){
+                if (mBeanList == null || mBeanList.size() == 0) {
                     changeRequestStatus(STATE_LOADING);
                 }
                 doRequest();
             }
-        },500);
+        }, 500);
     }
+
     /**
      * 创建ListItem
      */
@@ -261,20 +262,20 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             contentFrame.addView(contentView);
             TextView delete = (TextView) templateView.findViewById(R.id.delete);
             TextView mark = (TextView) templateView.findViewById(R.id.mark);
-            setMarkListener(mark,position);
+            setMarkListener(mark, position);
             setDeleteListener(delete, position);
-            onAttachSwipe(mark,delete);
+            onAttachSwipe(mark, delete);
             return templateView;
         } else {
             return createContentView(position);
         }
     }
 
-    protected void onAttachSwipe(TextView mark,TextView del) {
+    protected void onAttachSwipe(TextView mark, TextView del) {
 
     }
 
-    protected final void setLeftOffset(float width){
+    protected final void setLeftOffset(float width) {
         SwipeListView swipe = mListView.getRefreshableView().getWrappedList();
         swipe.setOffsetLeft(DeviceUtil.getScreenWidth(mContext) - width);
     }
@@ -315,80 +316,78 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         });
     }
 
-    public void onSwipeMark(int position){
+    public void onSwipeMark(int position) {
 
     }
 
-    protected void onSwipeDelete(int position){
+    protected void onSwipeDelete(int position) {
 
     }
 
     /**
      * 改变状态
-     *
-     * @param statusLoading
      */
     protected void changeRequestStatus(int statusLoading) {
         mCurrentState = statusLoading;
         switch (mCurrentState) {
-            case STATE_NORMAL :
+            case STATE_NORMAL:
                 mListView.onRefreshComplete();
                 mListView.removeEmptyView(mEmptyView);
                 mListView.removeEmptyView(mFailedView);
-                if (mListView.getMode() == PullToRefreshBase.Mode.PULL_FROM_START){
+                if (mListView.getMode() == PullToRefreshBase.Mode.PULL_FROM_START) {
                     mListView.setMode(PullToRefreshBase.Mode.BOTH);
                 }
                 break;
-            case STATE_LOADING :
+            case STATE_LOADING:
                 mListView.setFirstLoading(true);
                 mListView.setRefreshing();
                 break;
-            case STATE_LOADING_ERROR :
+            case STATE_LOADING_ERROR:
                 mListView.onRefreshComplete();
                 mCurrentState = STATE_NORMAL;
                 addFailedView();
                 mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                 break;
-            case STATE_PARAM_ERROR :
+            case STATE_PARAM_ERROR:
                 mListView.onRefreshComplete();
                 mCurrentState = STATE_NORMAL;
                 break;
-            case STATE_UP_REFRESH :
+            case STATE_UP_REFRESH:
                 mListView.setRefreshing();
                 break;
-            case STATE_DOWN_REFRESH :
+            case STATE_DOWN_REFRESH:
 
                 break;
-            case STATE_UP_ERROR :
+            case STATE_UP_ERROR:
                 mListView.onRefreshComplete();
                 mCurrentState = STATE_NORMAL;
                 break;
-            case STATE_DOWN_ERROR :
-                if (mPagination.getPage() < 1){
+            case STATE_DOWN_ERROR:
+                if (mPagination.getPage() < 1) {
                     mPagination.setPage(PAGE_FIRST);
                 }
                 mListView.onRefreshComplete();
                 mCurrentState = STATE_NORMAL;
                 break;
-            case STATE_ALL_EMPTY :
+            case STATE_ALL_EMPTY:
                 mListView.onRefreshComplete();
                 mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                 addEmptyView();
                 mCurrentState = STATE_NORMAL;
                 break;
-            case STATE_SINGLE_EMPTY :
+            case STATE_SINGLE_EMPTY:
                 mListView.onRefreshComplete();
                 mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                 if (mBeanList == null || mBeanList.size() == 0) {
                     addEmptyView();
                 }
                 break;
-            default :
+            default:
                 break;
         }
     }
 
-    public void reset(){
+    public void reset() {
         mBeanList.clear();
         mPagination.setPage(PAGE_FIRST);
         mCurrentState = STATE_NORMAL;
@@ -397,22 +396,22 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     /**
      * 此方法模拟下拉刷新，回调onPullDownToRefresh的逻辑
      */
-    public void doRefresh(){
+    public void doRefresh() {
         changeRequestStatus(STATE_UP_REFRESH);
     }
 
-    protected void onDataItemClick(int position,B bean) {
+    protected void onDataItemClick(int position, B bean) {
 
     }
 
-    public boolean refreshOnLoad(){
+    public boolean refreshOnLoad() {
         return mRefreshOnLoad;
     }
 
     @Override
     public int getCount() {
         //当数据为空且不需要显示空view的时候，增加一个自定义view到列表确保header能够正常显示与操作
-        if (mBeanList.size() == 0 && patchedHeader() && !showEmptyView()){
+        if (mBeanList.size() == 0 && patchedHeader() && !showEmptyView()) {
             return 1;
         }
         return mBeanList.size() == 0 ? 0 : mBeanList.size();
@@ -420,7 +419,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     @Override
     public B getItem(int i) {
-        if (i >= 0 && mBeanList.size() > i){
+        if (i >= 0 && mBeanList.size() > i) {
             return mBeanList.get(i);
         }
         return null;
@@ -437,14 +436,14 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         }
         mBeanList.remove(position);
         notifyDataSetChanged();
-        if (mBeanList.size() == 0){
+        if (mBeanList.size() == 0) {
             addEmptyView();
         }
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if (mBeanList.size() > 0){
+        if (mBeanList.size() > 0) {
             H holder = null;
             if (view == null) {
                 view = createItem(i);
@@ -454,10 +453,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 holder = (H) view.getTag();
                 TextView delete = (TextView) view.findViewById(R.id.delete);
                 TextView mark = (TextView) view.findViewById(R.id.mark);
-                setMarkListener(mark,i);
+                setMarkListener(mark, i);
                 setDeleteListener(delete, i);
             }
-            if (holder == null){//view可能会传成下方的占位view
+            if (holder == null) {//view可能会传成下方的占位view
                 view = createItem(i);
                 holder = initHolder(view);
                 view.setTag(holder);
@@ -466,7 +465,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             return view;
         } else {//解决加了header后，header高度超过1屏无法下拉
             View v = new View(mContext);
-            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,1);
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
             v.setBackgroundResource(android.R.color.transparent);
             v.setLayoutParams(lp);
             return v;
@@ -497,13 +496,13 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     /**
      * 模拟下拉刷新，但不显示下拉转圈，从第一页数据拉取
      */
-    public void refresh(){
+    public void refresh() {
         mPagination.setPage(1);
         doRequest();
     }
 
     protected final void onSuccess(List<B> data) {
-        if (STATE_UP_REFRESH == mCurrentState || mPagination.getPage() == PAGE_FIRST){
+        if (STATE_UP_REFRESH == mCurrentState || mPagination.getPage() == PAGE_FIRST) {
             mBeanList.clear();
             notifyDataSetChanged();
         }
@@ -511,7 +510,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             mPagination.setPage(mPagination.getPage() - 1);
             if (mBeanList.isEmpty()) {//接口数据为空，本地数据也为空，则显示空视图
                 changeRequestStatus(STATE_ALL_EMPTY);
-            }else {
+            } else {
                 changeRequestStatus(STATE_SINGLE_EMPTY);
             }
             return;
@@ -521,20 +520,20 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             notifyDataSetChanged();
         }
 
-        if (mBeanList == null || mBeanList.size() == 0){
+        if (mBeanList == null || mBeanList.size() == 0) {
             changeRequestStatus(STATE_ALL_EMPTY);
-        }else {
+        } else {
             changeRequestStatus(STATE_NORMAL);
         }
     }
 
     protected final void onFailure(String errorCode, String msg) {
         mPagination.setPage(mPagination.getPage() - 1);
-        if (mCurrentState == STATE_DOWN_REFRESH){
+        if (mCurrentState == STATE_DOWN_REFRESH) {
             changeRequestStatus(STATE_DOWN_ERROR);
-        }else if (mCurrentState == STATE_UP_REFRESH){
+        } else if (mCurrentState == STATE_UP_REFRESH) {
             changeRequestStatus(STATE_UP_ERROR);
-        }else {
+        } else {
             changeRequestStatus(STATE_LOADING_ERROR);
         }
     }
@@ -548,18 +547,18 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     }
 
     private void addEmptyView() {
-        if (showEmptyView()){
+        if (showEmptyView()) {
             mListView.removeEmptyView(mFailedView);
             mListView.setEmptyView(mEmptyView);
             onDataEmpty();
         }
     }
 
-    private void addFailedView(){
+    private void addFailedView() {
         if (!showFailedView())
             return;
-        if (mFailedView == null){
-            mFailedView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty,null);
+        if (mFailedView == null) {
+            mFailedView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty, null);
             TextView desc = (TextView) mFailedView.findViewById(R.id.empty_desc);
             TextView desc1 = (TextView) mFailedView.findViewById(R.id.empty_desc1);
             Button click = (Button) mFailedView.findViewById(R.id.empty_click);
@@ -584,11 +583,11 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     }
 
-    protected void onDataFailed(){
+    protected void onDataFailed() {
 
     }
 
-    public List<B> getList(){
+    public List<B> getList() {
         return mBeanList;
     }
 
@@ -600,26 +599,25 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         return PAGE_SIZE;
     }
 
-    protected boolean showEmptyView(){
+    protected boolean showEmptyView() {
         return true;
     }
 
-    protected boolean showFailedView(){
+    protected boolean showFailedView() {
         return true;
     }
 
     /**
      * 如果顶部有header,建议返回true,以避免header超过1屏且无list数据时，不能正常向上滑动
-     * @return
      */
-    protected boolean patchedHeader(){
+    protected boolean patchedHeader() {
 
         return false;
     }
 
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null){
+        if (convertView == null) {
             convertView = new View(mContext);
         }
         return convertView;
@@ -636,9 +634,8 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     /**
      * 是否支持左滑
-     * @return
      */
-    protected boolean leftSwipe(){
+    protected boolean leftSwipe() {
         return false;
     }
 }

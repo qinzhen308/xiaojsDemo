@@ -58,7 +58,6 @@ public class DataPicker {
         picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
         picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
 
-        picker.setDateRange(dy - 100, dy);
         picker.setOnDatePickListener(new DateWheelPicker.OnDatePickListener() {
             @Override
             public void onDatePicked(int year, int month, int day) {
@@ -67,6 +66,8 @@ public class DataPicker {
                 mDay = day;
             }
         });
+
+        picker.setDateRange(dy - 100, dy);
         //after set onDatePickerLister
         if (birthday != null) {
             calendar.setTime(birthday);
