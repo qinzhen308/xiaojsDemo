@@ -19,12 +19,14 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CreateLesson;
-import cn.xiaojs.xma.model.Enroll;
-import cn.xiaojs.xma.model.Fee;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
+import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.Schedule;
+import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.Fee;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
@@ -245,22 +247,22 @@ public class LessonCreationActivity extends BaseActivity {
 
         Enroll enroll = lessonDetail.getEnroll();
         if (enroll != null) {
-            mLessonStuCount.setText(String.valueOf(enroll.getMax()));
-            mEnrollSwitcher.setChecked(enroll.isMandatory());
+            mLessonStuCount.setText(String.valueOf(enroll.max));
+            mEnrollSwitcher.setChecked(enroll.mandatory);
         }
 
         mTeachFormTv.setText(BaseBusiness.getTeachingMode(mContext, lessonDetail.getMode()));
 
         Fee fee = lessonDetail.getFee();
         if (fee != null) {
-            mChargeWaySwitcher.setChecked(!fee.isFree());
+            mChargeWaySwitcher.setChecked(!fee.free);
 
-            if (fee.getType() == Finance.PricingType.TOTAL) {
+            if (fee.type == Finance.PricingType.TOTAL) {
                 mByLiveTotalPriceTv.setSelected(true);
-                mByLiveTotalPriceEdt.setText(BaseBusiness.formatPrice(fee.getCharge()));
-            } else if (fee.getType() == Finance.PricingType.PAY_PER_HOUR) {
+                mByLiveTotalPriceEdt.setText(BaseBusiness.formatPrice(fee.charge));
+            } else if (fee.type == Finance.PricingType.PAY_PER_HOUR) {
                 mByLiveDurationTv.setSelected(true);
-                mByLiveDurationEdt.setText(BaseBusiness.formatPrice(fee.getCharge()));
+                mByLiveDurationEdt.setText(BaseBusiness.formatPrice(fee.charge));
             }
 
             openOrCloseChargeWay(mChargeWaySwitcher);
@@ -277,9 +279,9 @@ public class LessonCreationActivity extends BaseActivity {
         }
 
         //TODO publish person page, not implemented
-        LiveLesson.Publish publish = lessonDetail.getPublish();
+        Publish publish = lessonDetail.getPublish();
         if (publish != null) {
-            mPublicTv.setSelected(publish.isOnShelves());
+            mPublicTv.setSelected(publish.accessible);
         }
         //mOnShelvesTv
     }
@@ -530,14 +532,14 @@ public class LessonCreationActivity extends BaseActivity {
         }
 
         Enroll enroll = new Enroll();
-        enroll.setMax(limit);
-        enroll.setMandatory(mEnrollSwitcher.isChecked());
+        enroll.max = limit;
+        enroll.mandatory = mEnrollSwitcher.isChecked();
         Schedule sch = new Schedule();
         sch.setStart(new Date(mLessonStartTime));
         Fee fee = new Fee();
-        fee.setFree(!mChargeWaySwitcher.isChecked());
-        fee.setCharge(price);
-        fee.setType(pricingType);
+        fee.free = !mChargeWaySwitcher.isChecked();
+        fee.charge = price;
+        fee.type = pricingType;
         lesson.setEnroll(enroll);
         lesson.setSchedule(sch);
         lesson.setFee(fee);
@@ -645,26 +647,26 @@ public class LessonCreationActivity extends BaseActivity {
 
         Enroll enroll = new Enroll();
         int limitPeople = Integer.parseInt(mLessonStuCount.getText().toString());
-        enroll.setMax(limitPeople);
-        enroll.setMandatory(mEnrollSwitcher.isChecked());
+        enroll.max = limitPeople;
+        enroll.mandatory = mEnrollSwitcher.isChecked();
 
         Fee fee = new Fee();
         boolean isFree = !mChargeWaySwitcher.isChecked();
-        fee.setFree(isFree);
+        fee.free = isFree;
         if (isFree) {
-            fee.setType(Finance.PricingType.TOTAL);
+            fee.type = Finance.PricingType.TOTAL;
         } else {
             //charge
             int feeType = mByLiveTotalPriceTv.isSelected() ? Finance.PricingType.TOTAL : Finance.PricingType.PAY_PER_HOUR;
             try {
                 float feePrice = mByLiveTotalPriceTv.isSelected() ? Float.parseFloat(mByLiveTotalPriceEdt.getText().toString()) :
                         Float.parseFloat(mByLiveDurationEdt.getText().toString());
-                fee.setType(feeType);
-                fee.setCharge(feePrice);
+                fee.type = feeType;
+                fee.charge = feePrice;
             } catch (Exception e) {
                 e.printStackTrace();
-                fee.setType(Finance.PricingType.TOTAL);
-                fee.setCharge(0);
+                fee.type = Finance.PricingType.TOTAL;
+                fee.charge = 0;
             }
         }
 
@@ -675,14 +677,19 @@ public class LessonCreationActivity extends BaseActivity {
 
 
         LiveLesson ll = new LiveLesson();
-        String subject = mLessonSubjectTv.getText().toString();
+        //String subject = mLessonSubjectTv.getText().toString();
         ll.setTitle(mLessonNameEdt.getText().toString());
-        ll.setSubject(AccountDataManager.getSubject(this));
+
+        CSubject subject1 = new CSubject();
+        subject1.setId(AccountDataManager.getSubject(this));
+
+        ll.setSubject(subject1);
         ll.setEnroll(enroll);
         ll.setMode(BaseBusiness.getTeachingMode(mContext, mTeachFormTv.getText().toString()));
         ll.setFee(fee);
         ll.setSchedule(sch);
         ll.setAccessible(mPublicTv.isSelected());
+        ll.setAutoOnShelves(mOnShelvesTv.isSelected());
 
         //add optional info
         if (mLessonOptionalInfo != null) {
@@ -732,7 +739,7 @@ public class LessonCreationActivity extends BaseActivity {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress();
-                Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.lesson_edit_success, Toast.LENGTH_SHORT).show();
                 setResultOnFinish();
             }
 

@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Date;
 
+import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.Price;
+import cn.xiaojs.xma.model.ctl.Statistic;
+
 /**
  * Created by maxiaobao on 2016/11/11.
  */
@@ -16,23 +20,41 @@ public class LessonDetail {
     private Date createdOn;
     private String typeName;
     private String title;
-    private String subject;
+    private CSubject subject;
     private int mode;
+    private Statistic stats;
     private int __v;
-    private LiveLesson.Publish publish;
+    //private LiveLesson.Publish publish;
     private String[] tags;
     private LiveLesson.Audit audit;
     private LiveLesson.TeachersIntro teachersIntro;
     private LiveLesson.Overview overview;
     private Promotion[] promotion;
     private Schedule schedule;
-    private Fee fee;
+    private Price fee;
     private Enroll enroll;
     private String id;
     private String cover;
     private Teacher teacher;
     private String state;
+    private Publish publish;
 
+
+    public Statistic getStats() {
+        return stats;
+    }
+
+    public void setStats(Statistic stats) {
+        this.stats = stats;
+    }
+
+    public CSubject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(CSubject subject) {
+        this.subject = subject;
+    }
 
     public Teacher getTeacher() {
         return teacher;
@@ -74,14 +96,6 @@ public class LessonDetail {
         this.title = title;
     }
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
     public int getMode() {
         return mode;
     }
@@ -98,11 +112,11 @@ public class LessonDetail {
         this.__v = __v;
     }
 
-    public LiveLesson.Publish getPublish() {
+    public Publish getPublish() {
         return publish;
     }
 
-    public void setPublish(LiveLesson.Publish publish) {
+    public void setPublish(Publish publish) {
         this.publish = publish;
     }
 
@@ -154,11 +168,11 @@ public class LessonDetail {
         this.schedule = schedule;
     }
 
-    public Fee getFee() {
+    public Price getFee() {
         return fee;
     }
 
-    public void setFee(Fee fee) {
+    public void setFee(Price fee) {
         this.fee = fee;
     }
 

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
 
+import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.Fee;
+
 /**
  * Created by maxiaobao on 2016/11/4.
  */
@@ -13,7 +16,7 @@ import java.io.Serializable;
 public class LiveLesson implements Serializable {
 
     private String title;
-    private String subject;
+    private CSubject subject;
     private Enroll enroll;
     private int mode;
     private Fee fee;
@@ -68,11 +71,11 @@ public class LiveLesson implements Serializable {
         this.title = title;
     }
 
-    public String getSubject() {
+    public CSubject getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(CSubject subject) {
         this.subject = subject;
     }
 

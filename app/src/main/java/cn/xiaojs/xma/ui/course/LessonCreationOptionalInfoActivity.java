@@ -161,12 +161,12 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
         if (object instanceof LiveLesson) {
             mLesson = (LiveLesson) object;
             try {
-                mPrice = mLesson.getFee().getCharge();
-                mPricingType = mLesson.getFee().getType();
-                mIsFree = mLesson.getFee().isFree();
+                mPrice = mLesson.getFee().charge;
+                mPricingType = mLesson.getFee().type;
+                mIsFree = mLesson.getFee().free;
                 mLessonStartTime = mLesson.getSchedule().getStart().getTime();
-                mLimit = mLesson.getEnroll().getMax();
-                mIsMandatory = mLesson.getEnroll().isMandatory();
+                mLimit = mLesson.getEnroll().max;
+                mIsMandatory = mLesson.getEnroll().mandatory;
                 if (mIsFree || !mIsMandatory) {
                     findViewById(R.id.sale_promotion_divide_line).setVisibility(View.GONE);
                     findViewById(R.id.sale_promotion_layout).setVisibility(View.GONE);

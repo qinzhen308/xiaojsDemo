@@ -14,13 +14,13 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.Enroll;
-import cn.xiaojs.xma.model.Fee;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.Promotion;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
+import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -264,11 +264,11 @@ public class LiveLessonDetailActivity extends BaseActivity {
     private void setBaseData(LessonDetail lesson) {
         if (lesson != null) {
             mLessonNameTv.setText(lesson.getTitle());
-            mLessonSubjectTv.setText(lesson.getSubject());
+            mLessonSubjectTv.setText(lesson.getSubject().getName());
 
             //enroll
             Enroll enroll = lesson.getEnroll();
-            if (enroll != null && enroll.isMandatory()) {
+            if (enroll != null && enroll.mandatory) {
                 mEnrolledView.setVisibility(View.VISIBLE);
                 mEnrolledDivideLine.setVisibility(View.VISIBLE);
             } else {
@@ -277,19 +277,19 @@ public class LiveLessonDetailActivity extends BaseActivity {
             }
 
             String p = getString(R.string.person);
-            mLessonStuCountTv.setText(String.valueOf(enroll.getMax()) + p);
+            mLessonStuCountTv.setText(String.valueOf(enroll.max) + p);
             mTeachFormTv.setText(BaseBusiness.getTeachingMode(this, lesson.getMode()));
 
             //fee
-            Fee fee = lesson.getFee();
-            if (fee == null || fee.isFree()) {
+            Price fee = lesson.getFee();
+            if (fee == null || fee.free) {
                 mLessonFeeTv.setText(R.string.free);
             } else {
-                float charge = fee.getCharge();
-                if (fee.getType() == Finance.PricingType.TOTAL) {
+                float charge = fee.charge;
+                if (fee.type == Finance.PricingType.TOTAL) {
                     String byTotalPrice = getString(R.string.by_live_total_price);
                     mLessonFeeTv.setText(byTotalPrice + BaseBusiness.formatPrice(charge, true));
-                } else if (fee.getType() == Finance.PricingType.PAY_PER_HOUR) {
+                } else if (fee.type == Finance.PricingType.PAY_PER_HOUR) {
                     String byDuration = getString(R.string.by_live_duration);
                     mLessonFeeTv.setText(byDuration + BaseBusiness.formatPrice(charge, true));
                 }
@@ -354,8 +354,8 @@ public class LiveLessonDetailActivity extends BaseActivity {
             }
 
             //set sale promotion
-            Fee fee = lesson.getFee();
-            if (fee == null || fee.isFree()) {
+            Price fee = lesson.getFee();
+            if (fee == null || fee.free) {
                 mSalePromotionLayout.setVisibility(View.GONE);
                 return;
             }
@@ -364,7 +364,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 //set sale promotion title
                 int type = Finance.PricingType.TOTAL;
                 if (lesson.getFee() != null) {
-                    type = lesson.getFee().getType();
+                    type = lesson.getFee().type;
                     String suffix = "";
                     if (type == Finance.PricingType.PAY_PER_HOUR) {
                         suffix = "(" + getString(R.string.by_live_duration) + ")";
@@ -415,7 +415,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
         }
     }
 
-    private void setOnlyOnePromotion(Fee fee, Promotion promotion, int type) {
+    private void setOnlyOnePromotion(Price fee, Promotion promotion, int type) {
         if (promotion == null) {
             mSalePromotionLayout.setVisibility(View.GONE);
         } else {
@@ -435,7 +435,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
         }
     }
 
-    private void setSalePromotion(Fee fee, Promotion promotion, int type) {
+    private void setSalePromotion(Price fee, Promotion promotion, int type) {
         if (promotion == null) {
             return;
         }
@@ -443,7 +443,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
         if (promotion.getQuota() > 0) {
             //enroll before promotion
             String price = fee == null ? String.valueOf("0") :
-                    BaseBusiness.formatPrice(fee.getTotal() * promotion.getDiscount(), true);
+                    BaseBusiness.formatPrice(fee.total * promotion.getDiscount(), true);
             String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
             String s = getString(R.string.enroll_before_promotion, promotion.getQuota(), discount, price);
             if (type == Finance.PricingType.PAY_PER_HOUR) {
@@ -453,7 +453,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
         } else if (promotion.getBefore() > 0) {
             //lesson before promotion
             String price = fee == null ? String.valueOf("0") :
-                    BaseBusiness.formatPrice(fee.getTotal() * promotion.getDiscount(), true);
+                    BaseBusiness.formatPrice(fee.total * promotion.getDiscount(), true);
             String discount = BaseBusiness.formatDiscount(promotion.getDiscount());
             String s = getString(R.string.lesson_before_promotion, promotion.getBefore(), discount, price);
             if (type == Finance.PricingType.PAY_PER_HOUR) {

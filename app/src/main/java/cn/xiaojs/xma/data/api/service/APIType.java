@@ -32,7 +32,7 @@ public class APIType {
     public static final int EDIT_LESSON = 23;
     public static final int ENROLL_LESSON = 24;
     public static final int GET_ENROLLED_LESSONS = 25;
-    public static final int GET_LESSON_COVER_UPTOKEN = 26;
+    //public static final int GET_LESSON_COVER_UPTOKEN = 26;
     public static final int GET_LESSON_DATA = 27;
     public static final int GET_LESSON_DETAILS = 28;
     public static final int GET_LESSONS = 29;
