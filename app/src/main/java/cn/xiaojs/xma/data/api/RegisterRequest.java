@@ -7,7 +7,7 @@ import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.APIEntity;
-import cn.xiaojs.xma.model.RegisterInfo;
+import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
 
 import okhttp3.ResponseBody;

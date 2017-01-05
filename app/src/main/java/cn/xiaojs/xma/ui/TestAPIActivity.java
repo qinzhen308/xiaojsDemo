@@ -23,7 +23,7 @@ import cn.xiaojs.xma.data.RegisterDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.Account;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CenterData;
@@ -33,10 +33,9 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.LessonDetail;
-import cn.xiaojs.xma.model.LoginInfo;
-import cn.xiaojs.xma.model.LoginParams;
+import cn.xiaojs.xma.model.security.LoginInfo;
+import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.Pagination;
-import cn.xiaojs.xma.model.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import okhttp3.Cache;
@@ -834,27 +833,27 @@ public class TestAPIActivity extends Activity {
     //注册
     private void testRegister(final Context context) {
 
-        RegisterInfo registerInfo = new RegisterInfo();
-        registerInfo.setCode(vcode);
-        registerInfo.setMobile(mob);
-        registerInfo.setPassword("123456");
-        registerInfo.setUsername("m_test1");
-
-        RegisterDataManager.requestRegisterByAPI(context, registerInfo, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-
-                Logger.d("onSuccess-----------");
-                Toast.makeText(context, "register Ok", Toast.LENGTH_LONG).show();
-
-            }
-
-            @Override
-            public void onFailure(String errorCode,String errorMessage) {
-                Logger.d("onFailure-----------register");
-                Toast.makeText(context, "register error code:" + errorCode, Toast.LENGTH_LONG).show();
-            }
-        });
+//        RegisterInfo registerInfo = new RegisterInfo();
+//        registerInfo.setCode(vcode);
+//        registerInfo.setMobile(mob);
+//        registerInfo.setPassword("123456");
+//        registerInfo.setUsername("m_test1");
+//
+//        RegisterDataManager.requestRegisterByAPI(context, registerInfo, new APIServiceCallback() {
+//            @Override
+//            public void onSuccess(Object object) {
+//
+//                Logger.d("onSuccess-----------");
+//                Toast.makeText(context, "register Ok", Toast.LENGTH_LONG).show();
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode,String errorMessage) {
+//                Logger.d("onFailure-----------register");
+//                Toast.makeText(context, "register error code:" + errorCode, Toast.LENGTH_LONG).show();
+//            }
+//        });
 
     }
 

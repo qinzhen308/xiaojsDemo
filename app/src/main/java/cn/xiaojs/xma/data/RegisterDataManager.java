@@ -7,7 +7,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.data.api.RegisterRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.RegisterInfo;
+import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
 import com.orhanobut.logger.Logger;
 

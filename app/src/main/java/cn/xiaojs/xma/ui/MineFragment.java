@@ -29,7 +29,7 @@ import android.widget.TextView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.Account;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;

@@ -12,12 +12,12 @@ import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.data.preference.AccountPref;
-import cn.xiaojs.xma.model.Account;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
-import cn.xiaojs.xma.model.User;
+import cn.xiaojs.xma.model.account.User;
 import com.orhanobut.logger.Logger;
 
 /**

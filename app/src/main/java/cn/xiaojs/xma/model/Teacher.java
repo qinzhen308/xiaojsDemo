@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
 
+import cn.xiaojs.xma.model.account.Account;
+
 /**
  * Created by maxiaobao on 2016/11/11.
  */

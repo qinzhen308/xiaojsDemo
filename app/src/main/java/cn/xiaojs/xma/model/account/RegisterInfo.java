@@ -1,18 +1,19 @@
-package cn.xiaojs.xma.model;
+package cn.xiaojs.xma.model.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import cn.xiaojs.xma.model.account.Account;
-
 /**
- * Created by maxiaobao on 2016/11/13.
+ * Created by maxiaobao on 2016/10/25.
  */
-
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Initiator {
+public class RegisterInfo{
 
-    public String id;
-    public Account.Basic basic;
+    public long mobile;
+    public String password;
+    public String username;
+    public int code;
+    public int ct;
+
 }

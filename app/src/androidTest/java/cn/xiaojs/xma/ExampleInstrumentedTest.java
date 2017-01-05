@@ -18,10 +18,9 @@ import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
-import cn.xiaojs.xma.model.LoginInfo;
-import cn.xiaojs.xma.model.LoginParams;
+import cn.xiaojs.xma.model.security.LoginInfo;
+import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.Privilege;
-import cn.xiaojs.xma.model.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.util.APPUtils;
 
@@ -260,25 +259,25 @@ public class ExampleInstrumentedTest {
 
     private void testRegister(Context context) {
 
-        RegisterInfo registerInfo = new RegisterInfo();
-        registerInfo.setCode(4444);
-        registerInfo.setMobile(12222222222l);
-        registerInfo.setPassword("123456");
-        registerInfo.setUsername("m_test1");
-
-        RegisterDataManager.requestRegisterByAPI(context, registerInfo, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-
-                Logger.d("onSuccess-----------");
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                Logger.d("onFailure-----------");
-            }
-        });
+//        RegisterInfo registerInfo = new RegisterInfo();
+//        registerInfo.setCode(4444);
+//        registerInfo.setMobile(12222222222l);
+//        registerInfo.setPassword("123456");
+//        registerInfo.setUsername("m_test1");
+//
+//        RegisterDataManager.requestRegisterByAPI(context, registerInfo, new APIServiceCallback() {
+//            @Override
+//            public void onSuccess(Object object) {
+//
+//                Logger.d("onSuccess-----------");
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//                Logger.d("onFailure-----------");
+//            }
+//        });
 
     }
 

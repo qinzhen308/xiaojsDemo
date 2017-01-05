@@ -19,8 +19,8 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.RegisterDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.APIEntity;
-import cn.xiaojs.xma.model.LoginParams;
-import cn.xiaojs.xma.model.RegisterInfo;
+import cn.xiaojs.xma.model.security.LoginParams;
+import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.VerifyUtils;
@@ -169,10 +169,10 @@ public class RegisterActivity extends BaseActivity {
             int verifyCode = Integer.parseInt(mRegVerifyEdit.getText().toString().trim());
 
             final RegisterInfo regInfo = new RegisterInfo();
-            regInfo.setMobile(phone);
-            regInfo.setCode(verifyCode);
-            regInfo.setPassword(password);
-            regInfo.setUsername(userName);
+            regInfo.mobile = phone;
+            regInfo.code = verifyCode;
+            regInfo.password = password;
+            regInfo.username = userName;
 
             showProgress(true);
             RegisterDataManager.requestValidateCode(this, phone, verifyCode, new APIServiceCallback<APIEntity>() {
@@ -187,8 +187,8 @@ public class RegisterActivity extends BaseActivity {
                             //login immediately after successful registration
                             cancelProgress();
                             final LoginParams loginParams = new LoginParams();
-                            loginParams.setMobile(regInfo.getMobile());
-                            loginParams.setPassword(regInfo.getPassword());
+                            loginParams.setMobile(regInfo.mobile);
+                            loginParams.setPassword(regInfo.password);
                             AccountBusiness.login(mContext, loginParams, new AccountBusiness.OnLoginListener() {
                                 @Override
                                 public void onLogin(boolean succ) {
@@ -198,7 +198,7 @@ public class RegisterActivity extends BaseActivity {
                                         RegisterActivity.this.finish();
                                         Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                                         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        i.putExtra(XiaojsConfig.KEY_LOGIN_USERNAME, regInfo.getMobile());
+                                        i.putExtra(XiaojsConfig.KEY_LOGIN_USERNAME, regInfo.mobile);
                                         startActivity(i);
                                     }
                                 }

@@ -8,8 +8,8 @@ import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
-import cn.xiaojs.xma.model.LoginInfo;
-import cn.xiaojs.xma.model.LoginParams;
+import cn.xiaojs.xma.model.security.LoginInfo;
+import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.Privilege;
 
 import okhttp3.ResponseBody;
