@@ -256,6 +256,25 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 }
                 ((TextWriting)mDoodle).onTextChanged(text);
 
+                if (!TextUtils.isEmpty(text)) {
+                    if (mDoodle.getUndoRecords().isEmpty() && mDoodle.getRedoRecords().isEmpty())
+                    //add action
+                    addRecords(mDoodle, Action.ADD_ACTION);
+                } else {
+                    if (mDoodle.isCanRedo() || mDoodle.isCanUndo()){
+                        if (mAllDoodles != null) {
+                            mAllDoodles.remove(mDoodle);
+                        }
+                        if (mUndoRecordIds.size() > 0) {
+                            mUndoRecordIds.remove(mUndoRecordIds.size() - 1);
+                            if (mUndoRedoListener != null) {
+                                mUndoRedoListener.onUndoRedoStackChanged();
+                            }
+                        }
+                        mDoodle = null;
+                    }
+                }
+
                 drawAllDoodlesCanvas();
                 Whiteboard.this.invalidate();
             }
@@ -416,13 +435,15 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     break;
                 case MODE_TEXT:
                     if (mDoodle instanceof TextWriting) {
-                        if (TextUtils.isEmpty(((TextWriting)mDoodle).getTextString())) {
+                        if (!TextUtils.isEmpty(((TextWriting)mDoodle).getTextString())) {
+                            if (mDoodle.getState() == Doodle.STATE_EDIT) {
+                                mSelectionRectRegion = mDoodle.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
+                            }
+                        } else {
                             if (mAllDoodles != null) {
                                 mAllDoodles.remove(mDoodle);
                             }
                             mDoodle = null;
-                        } else if (mDoodle.getState() == Doodle.STATE_EDIT){
-                            mSelectionRectRegion = mDoodle.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
                         }
                     }
                     break;
@@ -637,25 +658,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                             }
                             postInvalidate();
                         }
-
-                        if (mDoodleAction != Action.NO_ACTION) {
-                            //add action
-                            addRecords(mDoodleAction);
-
-                            if (mDoodleAction == Action.DELETE_ACTION) {
-                                mSelector.reset();
-                            }
-                        }
                     }
                     break;
                 case MODE_GEOMETRY:
                 case MODE_HAND_WRITING:
                     if (mDoodle != null) {
-                        if (mDoodleAction != Action.NO_ACTION) {
-                            //add action
-                            addRecords(mDoodle, mDoodleAction);
-                        }
-
                         if (mDoodle.getStyle() != Doodle.STYLE_TEXT) {
                             if (mDoodle.getState() == Doodle.STATE_DRAWING) {
                                 if (mDoodle instanceof HandWriting) {
@@ -695,6 +702,15 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 case MODE_COLOR_PICKER:
                     break;
             }
+
+            if (mDoodleAction != Action.NO_ACTION) {
+                //add action
+                addRecords(mDoodleAction);
+
+                if (mDoodleAction == Action.DELETE_ACTION && mSelector != null) {
+                    mSelector.reset();
+                }
+            }
         }
 
         @Override
@@ -704,15 +720,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         @Override
         public void onDoubleTap(MotionEvent event) {
-            if (mCurrentMode == MODE_SELECTION && mSelector != null) {
-                mDoodle = mSelector.getSelectedDoodle();
-            }
-
-            if (mDoodle instanceof TextWriting && mDoodle.getState() == Doodle.STATE_EDIT) {
-                mEditText.requestFocus();
-                showInputMethod(mEditText);
-                mEditText.setText(((TextWriting)mDoodle).getTextString());
-            }
+            //edit again
+            //if (mCurrentMode == MODE_SELECTION && mSelector != null) {
+            //    mDoodle = mSelector.getSelectedDoodle();
+            //}
+            //
+            //if (mDoodle instanceof TextWriting && mDoodle.getState() == Doodle.STATE_EDIT) {
+            //    mEditText.requestFocus();
+            //    showInputMethod(mEditText);
+            //   mEditText.setText(((TextWriting)mDoodle).getTextString());
+            //}
         }
 
         @Override
@@ -722,13 +739,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 if (mDoodle != null) {
                     if (mDoodle.getState() == Doodle.STATE_EDIT || mDoodle.getState() == Doodle.STATE_DRAWING) {
                         if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
-                            List<ActionRecord> undoRecords = mDoodle.getUndoRecords();
-                            List<ActionRecord> redoRecords = mDoodle.getRedoRecords();
-                            if ((undoRecords == null || undoRecords.isEmpty() && (redoRecords == null || redoRecords.isEmpty()))) {
-                                //add action
-                                addRecords(mDoodle, Action.ADD_ACTION);
-                            }
-
                             mDoodle.setState(Doodle.STATE_IDLE);
                             mDoodle = null;
                             hideInputMethod();
@@ -1180,10 +1190,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                         ((Triangle)doodle).updateTriangleCoordinates();
                     }
 
-                    if (doodle instanceof TextWriting) {
+                    /*if (doodle instanceof TextWriting) {
                         ((TextWriting) doodle).setTextString(prevRecord.textStr);
                         ((TextWriting) doodle).onTextChanged(prevRecord.textStr);
-                    }
+                    }*/
                 }
 
                 hasUndo = true;
@@ -1239,8 +1249,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 }
 
                 if (doodle instanceof TextWriting) {
-                    ((TextWriting) doodle).setTextString(record.textStr);
-                    ((TextWriting) doodle).onTextChanged(record.textStr);
+                    //((TextWriting) doodle).setTextString(record.textStr);
+                    //((TextWriting) doodle).onTextChanged(record.textStr);
+                    TextWriting tw = (TextWriting)doodle;
+                    tw.onTextChanged(tw.getTextString());
                 }
 
                 if (!doodle.isCanRedo()) {

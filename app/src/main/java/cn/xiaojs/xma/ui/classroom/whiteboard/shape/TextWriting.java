@@ -351,10 +351,10 @@ public class TextWriting extends Doodle {
     @Override
     public void addRecords(int action, int groupId) {
         super.addRecords(action, groupId);
-        if (mUndoRecords != null && !mUndoRecords.isEmpty()) {
+        /*if (mUndoRecords != null && !mUndoRecords.isEmpty()) {
             ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 1);
             record.textStr = getTextString();
-        }
+        }*/
 
     }
 }
