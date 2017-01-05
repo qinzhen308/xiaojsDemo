@@ -24,11 +24,11 @@ import android.widget.Toast;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.Enroll;
-import cn.xiaojs.xma.model.Fee;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.Teacher;
+import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.BlockTabView;
@@ -173,31 +173,31 @@ public class LessonHomeActivity extends BaseActivity {
 
             //enroll
             Enroll enroll = lesson.getEnroll();
-            if (enroll != null && enroll.isMandatory()) {
+            if (enroll != null && enroll.mandatory) {
                 mEnrollmentCountTv.setVisibility(View.VISIBLE);
                 mEnrollmentCountTv.setText(getString(R.string.enrolled_count,
-                        enroll.getCurrent(), enroll.getMax()));
+                        enroll.current, enroll.max));
             } else {
                 mEnrollmentCountTv.setVisibility(View.GONE);
             }
 
             //fee
-            Fee fee = lesson.getFee();
-            if (fee == null || fee.isFree()) {
+            Price fee = lesson.getFee();
+            if (fee == null || fee.free) {
                 mLessonMoneyTv.setText(R.string.free);
                 mLessonOriMoneyTv.setVisibility(View.GONE);
                 mPromotionInfoTv.setVisibility(View.GONE);
             } else {
                 //mLessonOriMoneyTv.setVisibility(View.VISIBLE);
-                float originCharge = fee.getTotal();
-                Fee.Discounted discounted = fee.getDiscounted();
+                float originCharge = fee.total;
+                Price.Discounted discounted = fee.discounted;
                 if (discounted != null) {
-                    if (discounted.getRatio() == 10.0f) {
+                    if (discounted.ratio == 10.0f) {
                         mLessonOriMoneyTv.setVisibility(View.GONE);
                     } else {
                         mLessonOriMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
                     }
-                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(discounted.getSubtotal(), true));
+                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(discounted.subtotal, true));
                 } else {
                     mLessonOriMoneyTv.setVisibility(View.GONE);
                     mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
@@ -218,29 +218,29 @@ public class LessonHomeActivity extends BaseActivity {
         }
     }
 
-    private void setSalePromotion(Fee fee) {
-        Fee.Applied[] appliedArr = fee.getApplied();
+    private void setSalePromotion(Price fee) {
+        Price.Applied[] appliedArr = fee.discounted.applied;
         if (appliedArr == null || appliedArr.length == 0) {
             mPromotionInfoTv.setVisibility(View.GONE);
             return;
         }
 
-        Fee.Applied applied = appliedArr[0];
+        Price.Applied applied = appliedArr[0];
         if (applied == null) {
             mPromotionInfoTv.setVisibility(View.GONE);
             return;
         }
 
         String s = null;
-        double discPrice = fee.getDiscounted() != null ? fee.getDiscounted().getSubtotal() : 0;
-        if (applied.getQuota() > 0) {
+        double discPrice = fee.discounted != null ? fee.discounted.subtotal : 0;
+        if (applied.quota > 0) {
             //enroll before promotion
-            String discount = BaseBusiness.formatDiscount(applied.getDiscount());
-            s = getString(R.string.enroll_before_promotion, applied.getQuota(), discount, discPrice);
-        } else if (applied.getBefore() > 0) {
+            String discount = BaseBusiness.formatDiscount(applied.discount);
+            s = getString(R.string.enroll_before_promotion, applied.quota, discount, discPrice);
+        } else if (applied.before > 0) {
             //lesson before promotion
-            String discount = BaseBusiness.formatDiscount(applied.getDiscount());
-            s = getString(R.string.lesson_before_promotion, applied.getBefore(), discount, discPrice);
+            String discount = BaseBusiness.formatDiscount(applied.discount);
+            s = getString(R.string.lesson_before_promotion, applied.before, discount, discPrice);
         }
 
         if (!TextUtils.isEmpty(s)) {

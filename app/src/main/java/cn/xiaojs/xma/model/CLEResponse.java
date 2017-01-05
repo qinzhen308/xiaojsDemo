@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cn.xiaojs.xma.model.ctl.Price;
+
 /**
  * Created by maxiaobao on 2016/11/17.
  */
@@ -13,7 +15,7 @@ public class CLEResponse {
     private String id;
     private String title;
     private Schedule schedule;
-    private Fee fee;
+    private Price fee;
     private int gateway;
 
     public String getId() {
@@ -40,11 +42,11 @@ public class CLEResponse {
         this.schedule = schedule;
     }
 
-    public Fee getFee() {
+    public Price getFee() {
         return fee;
     }
 
-    public void setFee(Fee fee) {
+    public void setFee(Price fee) {
         this.fee = fee;
     }
 

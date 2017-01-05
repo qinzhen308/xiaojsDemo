@@ -37,12 +37,14 @@ public class QiniuRequest implements APIServiceCallback<TokenResponse>{
 
     public void uploadCover(@NonNull String sessionID, @NonNull String lesson) {
 
-        accountRequest.getCoverUpToken(sessionID,lesson);
+        // FIXME: 2017/1/5 
+        //accountRequest.getCoverUpToken(sessionID,lesson);
     }
 
     public void uploadAvatar(@NonNull String sessionID) {
 
-        accountRequest.getAvatarUpToken(sessionID);
+        //// FIXME: 2017/1/5 
+        //accountRequest.getAvatarUpToken(sessionID);
 
     }
 

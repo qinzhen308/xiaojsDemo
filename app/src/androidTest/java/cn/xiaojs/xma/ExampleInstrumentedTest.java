@@ -5,22 +5,16 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import cn.xiaojs.xma.common.xf_foundation.Su;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
-import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
-import cn.xiaojs.xma.model.CreateLesson;
-import cn.xiaojs.xma.model.Enroll;
-import cn.xiaojs.xma.model.Fee;
 import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
@@ -28,22 +22,13 @@ import cn.xiaojs.xma.model.LoginInfo;
 import cn.xiaojs.xma.model.LoginParams;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.RegisterInfo;
-import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.util.APPUtils;
-import okhttp3.Cache;
-import okhttp3.Request;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.lang.reflect.Method;
-import java.util.Date;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -180,43 +165,43 @@ public class ExampleInstrumentedTest {
 
     private void testCreateLession(Context context) {
 
-        Enroll enroll = new Enroll();
-        enroll.setMax(100);
-        //enroll.setType(Ctl.EnrollType.ONLINE);
-
-        Fee fee = new Fee();
-        fee.setFree(true);
-        fee.setType(Finance.PricingType.TOTAL);
-        fee.setCharge(100);
-
-        Schedule sch = new Schedule();
-        sch.setStart(new Date(System.currentTimeMillis()));
-        sch.setDuration(1000);
-
-
-        LiveLesson ll = new LiveLesson();
-        ll.setTitle("无人驾驶课");
-        ll.setSubject("开启AI之旅");
-        ll.setEnroll(enroll);
-        ll.setMode(Ctl.TeachingMode.ONE_2_ONE);
-        ll.setFee(fee);
-        ll.setSchedule(sch);
-
-        CreateLesson cl = new CreateLesson();
-        cl.setData(ll);
-
-
-        LessonDataManager.requestCreateLiveLesson(context, cl, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-                Logger.d("onSuccess-----------");
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                Logger.d("onFailure-----------");
-            }
-        });
+//        Enroll enroll = new Enroll();
+//        enroll.setMax(100);
+//        //enroll.setType(Ctl.EnrollType.ONLINE);
+//
+//        Fee fee = new Fee();
+//        fee.setFree(true);
+//        fee.setType(Finance.PricingType.TOTAL);
+//        fee.setCharge(100);
+//
+//        Schedule sch = new Schedule();
+//        sch.setStart(new Date(System.currentTimeMillis()));
+//        sch.setDuration(1000);
+//
+//
+//        LiveLesson ll = new LiveLesson();
+//        ll.setTitle("无人驾驶课");
+//        //ll.setSubject("开启AI之旅");
+//        ll.setEnroll(enroll);
+//        ll.setMode(Ctl.TeachingMode.ONE_2_ONE);
+//        ll.setFee(fee);
+//        ll.setSchedule(sch);
+//
+//        CreateLesson cl = new CreateLesson();
+//        cl.setData(ll);
+//
+//
+//        LessonDataManager.requestCreateLiveLesson(context, cl, new APIServiceCallback() {
+//            @Override
+//            public void onSuccess(Object object) {
+//                Logger.d("onSuccess-----------");
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//                Logger.d("onFailure-----------");
+//            }
+//        });
 
 
     }

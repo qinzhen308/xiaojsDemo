@@ -28,7 +28,6 @@ import cn.xiaojs.xma.model.LoginParams;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.RegisterInfo;
-import cn.xiaojs.xma.model.TokenResponse;
 import cn.xiaojs.xma.model.VerifyCode;
 
 import cn.xiaojs.xma.model.search.AccountSearch;
@@ -41,6 +40,8 @@ import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.FollowParam;
 import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.model.account.UpToken;
+import cn.xiaojs.xma.model.account.UpTokenParam;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -61,7 +62,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.3:3000";
+    String BASE_URL = "http://192.168.100.204:3000";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -98,13 +99,17 @@ public interface XiaojsService {
     Call<Account> getProfile(@Header("SessionID") String sessionID);
 
     //Get upToken
-    @GET("/v1/accounts/up_avatar_token")
-    Call<TokenResponse> getAvatarUpToken(@Header("SessionID") String sessionID);
+//    @GET("/v1/accounts/up_avatar_token")
+//    Call<TokenResponse> getAvatarUpToken(@Header("SessionID") String sessionID);
 
     //Get upToken
-    @GET("/v1/ctl/lessons/{lesson}/up_cover_token")
-    Call<TokenResponse> getCoverUpToken(@Header("SessionID") String sessionID,
-                                        @Path("lesson") String lesson);
+//    @GET("/v1/ctl/lessons/{lesson}/up_cover_token")
+//    Call<TokenResponse> getCoverUpToken(@Header("SessionID") String sessionID,
+//                                        @Path("lesson") String lesson);
+
+    //Get upToken
+    @GET("/v1/files/up_token")
+    Call<UpToken[]> getUpToken(@Header("SessionID") String sessionID, @Body UpTokenParam... tokenParam);
 
     //Get Center Data
     @GET("/v1/accounts/center")
