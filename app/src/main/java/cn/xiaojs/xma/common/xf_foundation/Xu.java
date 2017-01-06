@@ -10,5 +10,6 @@ public class Xu {
         public static final String AVATAR = "Avatar";
         public static final String LESSON_COVER = "LessonCover";
         public static final String LESSON_ASPECT = "LessonAspect";
+        public static final String SOCIAL = "Social";
     }
 }

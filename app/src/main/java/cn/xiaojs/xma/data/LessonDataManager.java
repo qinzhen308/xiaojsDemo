@@ -220,8 +220,8 @@ public class LessonDataManager extends DataManager {
 
         }
 
-        QiniuRequest qiniuRequest = new QiniuRequest(context, filePath, qiniuService);
-        qiniuRequest.uploadCover(session, lesson);
+        //QiniuRequest qiniuRequest = new QiniuRequest(context, filePath, qiniuService);
+        //qiniuRequest.uploadCover(session, lesson);
 
     }
 

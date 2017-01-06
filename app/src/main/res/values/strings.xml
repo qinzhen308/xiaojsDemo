@@ -361,6 +361,7 @@
     <string name="post_dyn_ok">发布动态成功</string>
     <string name="post_dyn_none">动态内容不能为空</string>
     <string name="num_can_see">%1$d人可见</string>
+    <string name="upload_pic_error">图片上传失败</string>
 
     <!-- live tab -->
     <string name="lesson_of_choiceness">精选课</string>

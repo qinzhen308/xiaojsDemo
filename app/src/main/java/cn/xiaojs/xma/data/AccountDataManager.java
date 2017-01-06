@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Xu;
 import cn.xiaojs.xma.data.api.AccountRequest;
 import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
@@ -17,6 +18,7 @@ import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
+import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.account.User;
 import com.orhanobut.logger.Logger;
 
@@ -259,9 +261,13 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
+        UpTokenParam param = new UpTokenParam();
+        param.type = Xu.TokenType.AVATAR;
+        param.quantity = 1;
+
 
         QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
-        qiniuRequest.uploadAvatar(session);
+        qiniuRequest.getToken(session,param);
 
 
     }

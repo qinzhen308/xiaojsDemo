@@ -108,7 +108,8 @@ public interface XiaojsService {
 //                                        @Path("lesson") String lesson);
 
     //Get upToken
-    @GET("/v1/files/up_token")
+    @Headers("Content-Type: application/json")
+    @POST("/v1/files/up_token")
     Call<UpToken[]> getUpToken(@Header("SessionID") String sessionID, @Body UpTokenParam... tokenParam);
 
     //Get Center Data

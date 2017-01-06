@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 
 import com.orhanobut.logger.Logger;
 
@@ -13,14 +14,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Xu;
+import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.SocialRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.data.db.ContactDao;
 import cn.xiaojs.xma.data.db.CursorTaskLoader;
 import cn.xiaojs.xma.data.db.LoadDataCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
@@ -30,6 +35,8 @@ import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.model.social.Relation;
 import okhttp3.ResponseBody;
+
+import static cn.xiaojs.xma.data.AccountDataManager.getSessionID;
 
 /**
  * Created by maxiaobao on 2016/12/23.
@@ -64,7 +71,7 @@ public class SocialManager extends DataManager {
                                        String groupName,
                                        APIServiceCallback<ResponseBody> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -86,7 +93,7 @@ public class SocialManager extends DataManager {
                                     DynPost post,
                                     @NonNull APIServiceCallback<Dynamic> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -109,7 +116,7 @@ public class SocialManager extends DataManager {
                                      Pagination pagination,
                                      APIServiceCallback<CollectionPage<Dynamic>> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -131,7 +138,7 @@ public class SocialManager extends DataManager {
                                        String commentContent,
                                        APIServiceCallback<Comment> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -154,7 +161,7 @@ public class SocialManager extends DataManager {
                                    Pagination pagination,
                                    APIServiceCallback<CollectionPage<Comment>> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -174,7 +181,7 @@ public class SocialManager extends DataManager {
                                     String activity,
                                     APIServiceCallback<Dynamic.DynStatus> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -196,7 +203,7 @@ public class SocialManager extends DataManager {
                                     String reply,
                                     APIServiceCallback<Comment> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -219,7 +226,7 @@ public class SocialManager extends DataManager {
                                    String reply,
                                    APIServiceCallback<Comment> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -240,7 +247,7 @@ public class SocialManager extends DataManager {
                                   Pagination pagination,
                                   APIServiceCallback<CollectionPage<DynUpdate>> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -262,7 +269,7 @@ public class SocialManager extends DataManager {
                                      int group,
                                      APIServiceCallback<Relation> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -280,7 +287,7 @@ public class SocialManager extends DataManager {
      * @param callback
      */
     public static void unfollowContact(Context context, String contact,APIServiceCallback callback) {
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -301,7 +308,7 @@ public class SocialManager extends DataManager {
                                           String activity,
                                           APIServiceCallback<DynamicDetail> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -325,7 +332,7 @@ public class SocialManager extends DataManager {
                                        APIServiceCallback<CollectionPage<LikedRecord>> callback) {
 
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -343,7 +350,7 @@ public class SocialManager extends DataManager {
     public static void getContacts(Context context,
                                    APIServiceCallback<ArrayList<ContactGroup>> callback) {
 
-        String session = AccountDataManager.getSessionID(context);
+        String session = getSessionID(context);
         if (checkSession(session, callback)) {
             return;
         }
@@ -374,6 +381,44 @@ public class SocialManager extends DataManager {
         }
 
         return contactGroup;
+    }
+
+
+
+    public static void uploadSocialPhoto(Context context,
+                                           @NonNull final String filePath,
+                                           @NonNull QiniuService qiniuService) {
+
+
+        if (qiniuService == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the request");
+            }
+            qiniuService.uploadFailure();
+            return;
+        }
+
+        String session = getSessionID(context);
+
+        if (TextUtils.isEmpty(session)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the sessionID is empty,so the request return failure");
+            }
+
+            qiniuService.uploadFailure();
+            return;
+        }
+
+        UpTokenParam param = new UpTokenParam();
+        param.type = Xu.TokenType.SOCIAL;
+        param.quantity = 1;
+
+
+        QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
+        qiniuRequest.getToken(session,param);
+
+
     }
 
 
