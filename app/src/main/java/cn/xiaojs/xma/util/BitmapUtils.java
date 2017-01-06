@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -764,6 +765,75 @@ public class BitmapUtils {
         // 把 drawable 内容画到画布中
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    private static File getSourcePhotoDirectory(Context context, Uri source) {
+        final File[] dir = new File[1];
+        if (ContentResolver.SCHEME_FILE.equals(source.getScheme())) {
+            return new File(source.getPath());
+        }
+        querySource(context, new String[] { MediaStore.Images.ImageColumns.DATA }, source, new ContentResolverQueryCallback () {
+
+            @Override
+            public void onCursorResult(Cursor cursor) {
+                dir[0] = cursor != null ? new File(cursor.getString(0)) : null;
+            }
+        });
+        return dir[0];
+    }
+
+    public static void querySource(Context context, String[] projection, Uri source, ContentResolverQueryCallback callback) {
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor cursor = null;
+        try {
+            if (ContentResolver.SCHEME_CONTENT.equals(source.getScheme())) {
+                cursor = contentResolver.query(source, projection, null, null, null);
+            } else if ((ContentResolver.SCHEME_FILE).equals(source.getScheme())) {
+                cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Images.ImageColumns.DATA + " = ? ", new String[]{source.getPath()}, null);
+            }
+            if ((cursor != null) && cursor.moveToNext()) {
+                callback.onCursorResult(cursor);
+            } else {
+                callback.onCursorResult(null);
+            }
+        } catch (Exception e) {
+            // Ignore error for lacking the data column from the source.
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public Point getImageSize(Context context, Uri uri) {
+        if (uri == null) {
+            Point p = new Point();
+            return p;
+        }
+
+        if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+            return getImageSize(uri.getPath());
+        } else if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+            String path = getSourcePhotoDirectory(context, uri).getAbsolutePath();
+            return getImageSize(path);
+        }
+
+        return new Point();
+
+    }
+
+    public Point getImageSize(String filePath) {
+        Point p = new Point();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+        p.set(options.outHeight, options.outHeight);
+        return p;
+    }
+
+    private interface ContentResolverQueryCallback {
+
+        void onCursorResult(Cursor cursor);
     }
 
 }
