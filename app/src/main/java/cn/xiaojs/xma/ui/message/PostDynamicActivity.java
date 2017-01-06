@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.message;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -30,6 +31,7 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.util.BitmapUtils;
 
 public class PostDynamicActivity extends BaseActivity {
 
@@ -70,6 +72,7 @@ public class PostDynamicActivity extends BaseActivity {
                 break;
             case R.id.chose_pic:
                 Intent i = new Intent(this, CropImageMainActivity.class);
+                i.putExtra(CropImagePath.CROP_NEVER,true);
                 startActivityForResult(i, REQUEST_PIC_CODE);
                 break;
             case R.id.btn_level:
@@ -213,12 +216,13 @@ public class PostDynamicActivity extends BaseActivity {
 
                 photoKey = fileUrl;
 
-//                if(photoDim == null){
-//                    photoDim = new Dimension();
-//                }
-//                photoDim.height = ;
-//                photoDim.width = ;
+                Point point = BitmapUtils.getImageSize(filePath);
 
+                if(photoDim == null){
+                    photoDim = new Dimension();
+                }
+                photoDim.height = point.x;
+                photoDim.width = point.y;
 
                 Glide.with(PostDynamicActivity.this).load(filePath).into(thumbnailView);
                 cancelProgress();

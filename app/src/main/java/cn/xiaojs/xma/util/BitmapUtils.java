@@ -822,12 +822,12 @@ public class BitmapUtils {
 
     }
 
-    public Point getImageSize(String filePath) {
+    public static Point getImageSize(String filePath) {
         Point p = new Point();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
-        p.set(options.outHeight, options.outHeight);
+        p.set(options.outWidth, options.outHeight);
         return p;
     }
 
