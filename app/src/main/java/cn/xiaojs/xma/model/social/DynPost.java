@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.model.Doc;
-import cn.xiaojs.xma.model.LiveLesson;
 
 /**
  * Created by maxiaobao on 2016/12/27.
@@ -20,6 +19,7 @@ import cn.xiaojs.xma.model.LiveLesson;
 public class DynPost {
     public String text;
     public String drawing;
+    public Dimension dimension;
     public Audience audience;
     public List<String> mentioned;
 

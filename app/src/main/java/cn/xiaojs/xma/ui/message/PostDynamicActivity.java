@@ -11,26 +11,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.crop.CropImageMainActivity;
-import cn.xiaojs.xma.common.crop.CropImagePath;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
-import cn.xiaojs.xma.data.SocialManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.data.api.service.APIType;
-import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.Doc;
-import cn.xiaojs.xma.model.social.Contact;
-import cn.xiaojs.xma.model.social.DynPost;
-import cn.xiaojs.xma.model.social.Dynamic;
-import cn.xiaojs.xma.ui.base.BaseActivity;
-
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.crop.CropImageMainActivity;
+import cn.xiaojs.xma.common.crop.CropImagePath;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.model.Doc;
+import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.social.Dimension;
+import cn.xiaojs.xma.model.social.DynPost;
+import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.ui.base.BaseActivity;
 
 public class PostDynamicActivity extends BaseActivity {
 
@@ -53,6 +52,7 @@ public class PostDynamicActivity extends BaseActivity {
     private ArrayList<Contact> atContacts;
 
     private String photoKey;
+    private Dimension photoDim;
 
     @Override
     protected void addViewContent() {
@@ -139,6 +139,10 @@ public class PostDynamicActivity extends BaseActivity {
             dynPost.drawing = photoKey;
         }
 
+        if (photoDim !=null) {
+            dynPost.dimension = photoDim;
+        }
+
         if (audience !=null && audience.type != Social.ShareScope.PUBLIC){
             dynPost.audience = audience;
         }
@@ -207,7 +211,14 @@ public class PostDynamicActivity extends BaseActivity {
             @Override
             public void uploadSuccess(String key, String fileUrl) {
 
-                photoKey = key;
+                photoKey = fileUrl;
+
+//                if(photoDim == null){
+//                    photoDim = new Dimension();
+//                }
+//                photoDim.height = ;
+//                photoDim.width = ;
+
 
                 Glide.with(PostDynamicActivity.this).load(filePath).into(thumbnailView);
                 cancelProgress();
