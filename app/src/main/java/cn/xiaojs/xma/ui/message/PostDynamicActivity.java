@@ -215,14 +215,13 @@ public class PostDynamicActivity extends BaseActivity {
             public void uploadSuccess(String key, String fileUrl) {
 
                 photoKey = fileUrl;
-
                 Point point = BitmapUtils.getImageSize(filePath);
 
                 if(photoDim == null){
                     photoDim = new Dimension();
                 }
-                photoDim.height = point.x;
-                photoDim.width = point.y;
+                photoDim.width = point.x;
+                photoDim.height = point.y;
 
                 Glide.with(PostDynamicActivity.this).load(filePath).into(thumbnailView);
                 cancelProgress();
