@@ -384,7 +384,12 @@ public class SocialManager extends DataManager {
     }
 
 
-
+    /**
+     * upload picture when post actiivty
+     * @param context
+     * @param filePath
+     * @param qiniuService
+     */
     public static void uploadSocialPhoto(Context context,
                                            @NonNull final String filePath,
                                            @NonNull QiniuService qiniuService) {

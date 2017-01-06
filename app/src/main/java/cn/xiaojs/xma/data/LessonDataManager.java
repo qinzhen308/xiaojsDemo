@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Xu;
 import cn.xiaojs.xma.data.api.LessonRequest;
 import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -22,6 +23,8 @@ import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.account.UpTokenParam;
+
 import com.orhanobut.logger.Logger;
 
 /**
@@ -220,8 +223,11 @@ public class LessonDataManager extends DataManager {
 
         }
 
-        //QiniuRequest qiniuRequest = new QiniuRequest(context, filePath, qiniuService);
-        //qiniuRequest.uploadCover(session, lesson);
+        UpTokenParam param = new UpTokenParam();
+        param.type = Xu.TokenType.LESSON_COVER;
+
+        QiniuRequest qiniuRequest = new QiniuRequest(context, filePath, qiniuService);
+        qiniuRequest.getToken(session,param);
 
     }
 
