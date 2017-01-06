@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.model.ctl;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -18,7 +19,7 @@ public class Price extends Fee implements Serializable{
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class Discounted implements Serializable{
+    public static class Discounted implements Serializable{
         public float subtotal;
         public float ratio;
         public float saved;
@@ -27,9 +28,10 @@ public class Price extends Fee implements Serializable{
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class Applied implements Serializable {
+    public static class Applied implements Serializable {
         public float discount;
         public int quota;
         public int before;
+
     }
 }
