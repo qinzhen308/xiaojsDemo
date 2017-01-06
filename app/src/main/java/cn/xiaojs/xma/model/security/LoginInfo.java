@@ -1,7 +1,11 @@
-package cn.xiaojs.xma.model;
+package cn.xiaojs.xma.model.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import cn.xiaojs.xma.model.APIEntity;
+import cn.xiaojs.xma.model.Upgrade;
+import cn.xiaojs.xma.model.account.User;
 
 /**
  * Created by maxiaobao on 2016/10/31.
@@ -11,8 +15,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginInfo extends APIEntity {
 
-    private User user;
-    private Upgrade upgrade;
+    public User user;
+    public Upgrade upgrade;
 
     public User getUser() {
         return user;

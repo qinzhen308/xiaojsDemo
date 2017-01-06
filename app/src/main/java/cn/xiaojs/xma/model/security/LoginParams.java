@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.model;
+package cn.xiaojs.xma.model.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

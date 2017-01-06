@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.LoginRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.LoginInfo;
-import cn.xiaojs.xma.model.LoginParams;
+import cn.xiaojs.xma.model.security.LoginInfo;
+import cn.xiaojs.xma.model.security.LoginParams;
 import com.orhanobut.logger.Logger;
 
 /**

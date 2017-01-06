@@ -1,6 +1,6 @@
 package cn.xiaojs.xma;
 
-import cn.xiaojs.xma.model.User;
+import cn.xiaojs.xma.model.account.User;
 
 /**
  * Created by maxiaobao on 2016/10/25.

@@ -3,7 +3,7 @@ package cn.xiaojs.xma.model.search;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import cn.xiaojs.xma.model.Account;
+import cn.xiaojs.xma.model.account.Account;
 
 /**
  * Created by maxiaobao on 2016/12/28.

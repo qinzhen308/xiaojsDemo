@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.model.LoginParams;
+import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.VerifyUtils;

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 import java.util.Date;
 
-import cn.xiaojs.xma.model.Account;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.Doc;
 
 /**

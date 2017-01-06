@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.ArrayList;
 
-import cn.xiaojs.xma.model.Account;
+import cn.xiaojs.xma.model.account.Account;
 
 /**
  * Created by maxiaobao on 2016/12/12.

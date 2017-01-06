@@ -20,7 +20,7 @@ import android.util.Log;
 
 import java.io.File;
 
-import cn.xiaojs.xma.model.User;
+import cn.xiaojs.xma.model.account.User;
 
 public class CacheUtil {
     private static final String APP_CACHE_DIR = "/xjs";

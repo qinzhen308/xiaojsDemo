@@ -18,6 +18,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
+import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.DynPost;
@@ -50,6 +51,8 @@ public class PostDynamicActivity extends BaseActivity {
     private ArrayList<String> mentioneds;
     private int checkedIndex = 0;
     private ArrayList<Contact> atContacts;
+
+    private String photoKey;
 
     @Override
     protected void addViewContent() {
@@ -118,7 +121,7 @@ public class PostDynamicActivity extends BaseActivity {
     private void postDynamic() {
 
         String postText = editText.getText().toString();
-        if (TextUtils.isEmpty(postText)) {
+        if (TextUtils.isEmpty(postText) && TextUtils.isEmpty(photoKey)) {
             Toast.makeText(this, R.string.post_dyn_none, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -126,7 +129,15 @@ public class PostDynamicActivity extends BaseActivity {
         showProgress(true);
 
         DynPost dynPost = new DynPost();
-        dynPost.text = postText;
+
+
+        if (!TextUtils.isEmpty(postText)){
+            dynPost.text = postText;
+        }
+
+        if (!TextUtils.isEmpty(photoKey)){
+            dynPost.drawing = photoKey;
+        }
 
         if (audience !=null && audience.type != Social.ShareScope.PUBLIC){
             dynPost.audience = audience;
@@ -169,7 +180,7 @@ public class PostDynamicActivity extends BaseActivity {
                 if (data != null) {
                     String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
                     if (cropImgPath != null) {
-                        Glide.with(this).load(cropImgPath).into(thumbnailView);
+                        uploadPic(cropImgPath);
                     }
                 }
 
@@ -186,6 +197,32 @@ public class PostDynamicActivity extends BaseActivity {
             }
         }
 
+    }
+
+    private void uploadPic(final String filePath) {
+
+        showProgress(false);
+
+        SocialManager.uploadSocialPhoto(this, filePath, new QiniuService() {
+            @Override
+            public void uploadSuccess(String key, String fileUrl) {
+
+                photoKey = key;
+
+                Glide.with(PostDynamicActivity.this).load(filePath).into(thumbnailView);
+                cancelProgress();
+            }
+
+            @Override
+            public void uploadFailure() {
+
+                cancelProgress();
+                Toast.makeText(PostDynamicActivity.this.getApplicationContext(),
+                        R.string.upload_pic_error,
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 
     private void updateScope() {

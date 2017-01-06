@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
-import cn.xiaojs.xma.model.Account;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CSubject;
@@ -23,11 +23,11 @@ import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.IgnoreNResponse;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
-import cn.xiaojs.xma.model.LoginInfo;
-import cn.xiaojs.xma.model.LoginParams;
+import cn.xiaojs.xma.model.security.LoginInfo;
+import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Privilege;
-import cn.xiaojs.xma.model.RegisterInfo;
+import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
 
 import cn.xiaojs.xma.model.search.AccountSearch;
@@ -108,7 +108,8 @@ public interface XiaojsService {
 //                                        @Path("lesson") String lesson);
 
     //Get upToken
-    @GET("/v1/files/up_token")
+    @Headers("Content-Type: application/json")
+    @POST("/v1/files/up_token")
     Call<UpToken[]> getUpToken(@Header("SessionID") String sessionID, @Body UpTokenParam... tokenParam);
 
     //Get Center Data

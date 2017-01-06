@@ -7,6 +7,9 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.TokenResponse;
+import cn.xiaojs.xma.model.account.UpToken;
+import cn.xiaojs.xma.model.account.UpTokenParam;
+
 import com.orhanobut.logger.Logger;
 import com.qiniu.android.common.ServiceAddress;
 import com.qiniu.android.common.Zone;
@@ -21,7 +24,7 @@ import org.json.JSONObject;
  * Created by maxiaobao on 2016/11/15.
  */
 
-public class QiniuRequest implements APIServiceCallback<TokenResponse>{
+public class QiniuRequest implements APIServiceCallback<UpToken[]>{
 
     private AccountRequest accountRequest;
     private String filePath;
@@ -35,16 +38,14 @@ public class QiniuRequest implements APIServiceCallback<TokenResponse>{
     }
 
 
-    public void uploadCover(@NonNull String sessionID, @NonNull String lesson) {
+//    public void uploadCover(@NonNull String sessionID, @NonNull String lesson) {
+//
+//        accountRequest.getCoverUpToken(sessionID,lesson);
+//    }
+//
+    public void getToken(@NonNull String sessionID, UpTokenParam... params) {
 
-        // FIXME: 2017/1/5 
-        //accountRequest.getCoverUpToken(sessionID,lesson);
-    }
-
-    public void uploadAvatar(@NonNull String sessionID) {
-
-        //// FIXME: 2017/1/5 
-        //accountRequest.getAvatarUpToken(sessionID);
+        accountRequest.getUpToken(sessionID,params);
 
     }
 
@@ -83,7 +84,6 @@ public class QiniuRequest implements APIServiceCallback<TokenResponse>{
                     if (callback != null) {
 
                         StringBuilder fileUrl = new StringBuilder(domain)
-                                .append("/")
                                 .append(key);
 
 
@@ -127,11 +127,43 @@ public class QiniuRequest implements APIServiceCallback<TokenResponse>{
     //
 
     @Override
-    public void onSuccess(TokenResponse tokenResponse) {
+    public void onSuccess(UpToken[] upTokens) {
 
-        String token = tokenResponse.getToken();
-        String key = tokenResponse.getKey();
-        String domain = tokenResponse.getDomain();
+
+
+        if(upTokens == null || upTokens.length <= 0) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("0 get upload for token is null or lenght == 0");
+            }
+
+            if (qiniuService!=null){
+                qiniuService.uploadFailure();
+            }
+
+            return;
+        }
+
+        UpToken upToken = upTokens[0];
+
+        UpToken.TokenValue[] values;
+
+        if (upToken ==null || (values = upToken.tokens) == null || values.length <= 0) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("1 get upload for token is null or lenght == 0");
+            }
+            if (qiniuService!=null){
+                qiniuService.uploadFailure();
+            }
+
+            return;
+        }
+
+        UpToken.TokenValue tokenValue = values[0];
+
+        String token = tokenValue.token;
+        String key = tokenValue.key;
+        String domain = upToken.domain;
 
         if (XiaojsConfig.DEBUG) {
             Logger.d("get upload for token onSuccess token=%s,key=%s,domain=%s",token,key,domain);
