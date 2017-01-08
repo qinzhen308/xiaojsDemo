@@ -229,11 +229,14 @@ public class MomentContent extends RelativeLayout {
     }
 
     private void showNormal(final Dynamic.DynBody body){
+        MarginLayoutParams mlp = (MarginLayoutParams) mNormalImage.getLayoutParams();
         if (TextUtils.isEmpty(body.text)){
             mNormalContent.setVisibility(GONE);
+            mlp.topMargin = 0;
         }else {
             mNormalContent.setVisibility(VISIBLE);
             mNormalContent.setText(body.text);
+            mlp.topMargin = getResources().getDimensionPixelSize(R.dimen.px30);
         }
         if (body.drawings != null && body.drawings.length > 0){
             Dynamic.DynPhoto photo = body.drawings[0];
