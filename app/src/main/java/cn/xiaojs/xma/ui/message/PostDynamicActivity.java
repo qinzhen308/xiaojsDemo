@@ -73,14 +73,14 @@ public class PostDynamicActivity extends BaseActivity {
                 break;
             case R.id.chose_pic:
                 Intent i = new Intent(this, CropImageMainActivity.class);
-                i.putExtra(CropImagePath.CROP_NEVER,true);
+                i.putExtra(CropImagePath.CROP_NEVER, true);
                 startActivityForResult(i, REQUEST_PIC_CODE);
                 break;
             case R.id.btn_level:
                 Intent intent = new Intent(this, ShareScopeActivity.class);
-                intent.putExtra(ShareScopeActivity.CHOOSE_INDEX,checkedIndex);
+                intent.putExtra(ShareScopeActivity.CHOOSE_INDEX, checkedIndex);
 
-                startActivityForResult(intent,REQUEST_SHARE_SCOPE_CODE);
+                startActivityForResult(intent, REQUEST_SHARE_SCOPE_CODE);
                 break;
             case R.id.chose_at:
 
@@ -103,7 +103,7 @@ public class PostDynamicActivity extends BaseActivity {
 
         SpannableStringBuilder ssb = new SpannableStringBuilder();
 
-        if (mentioneds == null){
+        if (mentioneds == null) {
             mentioneds = new ArrayList<>(atContacts.size());
         }
 
@@ -135,23 +135,23 @@ public class PostDynamicActivity extends BaseActivity {
         DynPost dynPost = new DynPost();
 
 
-        if (!TextUtils.isEmpty(postText)){
+        if (!TextUtils.isEmpty(postText)) {
             dynPost.text = postText;
         }
 
-        if (!TextUtils.isEmpty(photoKey)){
+        if (!TextUtils.isEmpty(photoKey)) {
             dynPost.drawing = photoKey;
         }
 
-        if (photoDim !=null) {
+        if (photoDim != null) {
             dynPost.dimension = photoDim;
         }
 
-        if (audience !=null && audience.type != Social.ShareScope.PUBLIC){
+        if (audience != null && audience.type != Social.ShareScope.PUBLIC) {
             dynPost.audience = audience;
         }
 
-        if (mentioneds != null){
+        if (mentioneds != null) {
             dynPost.mentioned = mentioneds;
         }
 
@@ -188,14 +188,17 @@ public class PostDynamicActivity extends BaseActivity {
                 if (data != null) {
                     String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
                     if (cropImgPath != null) {
-                        uploadPic(cropImgPath);
+
+                        int width = data.getIntExtra(CropImagePath.CROP_IMAGE_WIDTH, 0);
+                        int height = data.getIntExtra(CropImagePath.CROP_IMAGE_HEIGHT, 0);
+                        uploadPic(cropImgPath, width, height);
                     }
                 }
 
             } else if (requestCode == REQUEST_SHARE_SCOPE_CODE) {
 
                 audience = data.getParcelableExtra(ShareScopeActivity.CHOOSE_DATA);
-                checkedIndex = data.getIntExtra(ShareScopeActivity.CHOOSE_INDEX,0);
+                checkedIndex = data.getIntExtra(ShareScopeActivity.CHOOSE_INDEX, 0);
 
                 updateScope();
             } else if (requestCode == REQUEST_AT_CODE) {
@@ -207,7 +210,7 @@ public class PostDynamicActivity extends BaseActivity {
 
     }
 
-    private void uploadPic(final String filePath) {
+    private void uploadPic(final String filePath, final int photoWidth, final int photoHeight) {
 
         showProgress(false);
 
@@ -216,15 +219,18 @@ public class PostDynamicActivity extends BaseActivity {
             public void uploadSuccess(String key, String fileUrl) {
 
                 photoKey = fileUrl;
-                Point point = BitmapUtils.getImageSize(filePath);
-
-                if(photoDim == null){
+                //Point point = BitmapUtils.getImageSize(filePath);
+                if (photoDim == null) {
                     photoDim = new Dimension();
                 }
-                photoDim.width = point.x;
-                photoDim.height = point.y;
+                photoDim.width = photoWidth;
+                photoDim.height = photoHeight;
 
-                Glide.with(PostDynamicActivity.this).load(filePath).signature(new StringSignature(String.valueOf(System.currentTimeMillis()))).into(thumbnailView);
+                Glide.with(PostDynamicActivity.this)
+                        .load(filePath)
+                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                        .into(thumbnailView);
+
                 cancelProgress();
             }
 
