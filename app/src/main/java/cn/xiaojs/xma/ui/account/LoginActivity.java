@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.account;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -60,8 +61,13 @@ public class LoginActivity extends BaseActivity {
     protected void addViewContent() {
         mContext = this;
         addView(R.layout.activity_login);
+        needHeader(false);
+
         setMiddleTitle(R.string.login);
         setLeftImage(-1);
+
+        mLoginNamedEdit.setDelDrawable(R.drawable.ic_account_edit_text_del);
+        mLoginPwdEdit.setDelDrawable(R.drawable.ic_account_edit_text_del);
 
         initRegGuideStyle();
         initLoginInfo();
@@ -86,7 +92,7 @@ public class LoginActivity extends BaseActivity {
 
     private void initRegGuideStyle() {
         SpannableString spanString = new SpannableString(getString(R.string.register_guide));
-        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.font_gray));
+        ForegroundColorSpan span = new ForegroundColorSpan(Color.argb(255, 222, 238, 255));
         spanString.setSpan(span, 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         spanString.setSpan(new ClickableSpan() {
@@ -99,7 +105,8 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void updateDrawState(TextPaint ds) {
-                ds.setColor(getResources().getColor(R.color.link_hover));
+                ds.setColor(getResources().getColor(R.color.white));
+                ds.setFakeBoldText(true);
                 ds.setUnderlineText(false);
             }
         }, 6, 10, Spanned.SPAN_INCLUSIVE_INCLUSIVE);

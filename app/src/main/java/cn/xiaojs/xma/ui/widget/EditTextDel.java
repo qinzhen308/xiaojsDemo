@@ -125,4 +125,18 @@ public class EditTextDel extends EditText {
         super.onDetachedFromWindow();
     }
 
+    public void setDelDrawable(int resId) {
+        setDelDrawable(getResources().getDrawable(resId));
+    }
+
+    public void setDelDrawable(Drawable d) {
+        mDelDrawable = d;
+        Drawable[] drawable = getCompoundDrawables();
+        if (isNeedDelete && length() > 0 && isFocused() && isEnabled()) {
+            setCompoundDrawablesWithIntrinsicBounds(drawable[0], drawable[1], mDelDrawable, drawable[3]);
+        } else {
+            setCompoundDrawablesWithIntrinsicBounds(drawable[0], drawable[1], null, drawable[3]);
+        }
+    }
+
 }
