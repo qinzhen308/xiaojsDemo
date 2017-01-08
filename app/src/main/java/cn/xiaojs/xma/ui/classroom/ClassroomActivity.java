@@ -36,6 +36,8 @@ import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView;
+import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
@@ -46,6 +48,8 @@ import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.util.CacheUtil;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.XjsUtils;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -152,6 +156,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private CommonDialog mExitDialog;
 
+    private Socket mSocket;
+    private Boolean mSktConnected = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +179,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         //init data
         initData();
+
+        //init socket
+        initSocketIO();
     }
 
     private void initParams() {
@@ -567,6 +577,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mSavingWhiteboard = false;
             mSaveTask.cancel(true);
         }
+
+        disConnectIO();
     }
 
     public int getCurrentState() {
@@ -939,4 +951,85 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         mExitDialog.show();
     }
+
+    private void initSocketIO() {
+        mSocket = SocketManager.getSocket();
+        mSocket.on(Socket.EVENT_CONNECT, mOnConnect);
+        mSocket.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
+        mSocket.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
+        mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        mSocket.connect();
+        mSocket.on(Event.WELCOME, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                if (args != null && args.length > 0) {
+                    mSocket.emit(Event.JOIN, Constants.ROOM_DRAW);
+                    mSocket.emit(Event.BEGIN);
+                }
+            }
+        });
+
+        mSocket.on(Event.BOARD, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+            }
+        });
+
+    }
+
+    private void disConnectIO() {
+        if (mSocket == null) {
+            return;
+        }
+
+        mSocket.off(Socket.EVENT_CONNECT, mOnConnect);
+        mSocket.off(Socket.EVENT_DISCONNECT, mOnDisconnect);
+        mSocket.off(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
+        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        SocketManager.close();
+    }
+
+    private Emitter.Listener mOnConnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(!mSktConnected) {
+                        Toast.makeText(ClassroomActivity.this,
+                                R.string.socket_connect, Toast.LENGTH_LONG).show();
+                        mSktConnected = true;
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener mOnDisconnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mSktConnected = false;
+                    Toast.makeText(ClassroomActivity.this,
+                            R.string.socket_disconnect, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener mOnConnectError = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ClassroomActivity.this,
+                            R.string.socket_error_connect, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
+
 }

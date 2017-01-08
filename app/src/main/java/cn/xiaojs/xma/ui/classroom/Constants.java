@@ -22,4 +22,25 @@ public interface Constants {
 
     public final static String KEY_CAMERA_OPEN = "key_camera_open";
     public final static String KEY_MICROPHONE_OPEN = "key_microphone_open";
+
+    /**
+     * classroom url
+     */
+    public final static String CLASSROOM_BASE_URL = "192.168.100.3";
+    /**
+     * classroom port
+     */
+    public final static String CLASSROOM_PORT = "7000";
+    /**
+     * classroom path(namespace), which lesson id
+     */
+    public final static String CLASSROOM_PATH = "9689A606";
+    /**
+     * draw
+     */
+    public final static String ROOM_DRAW = "drawing";
+    /**
+     * chat
+     */
+    public final static String ROOM_CHAT = "聊天";
 }
