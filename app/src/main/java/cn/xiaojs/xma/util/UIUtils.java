@@ -25,7 +25,13 @@ package cn.xiaojs.xma.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+
+import java.util.ArrayList;
+
+import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.ui.common.ImageViewActivity;
 
 /**
  * Created by maxiaobao on 2016/10/26.
@@ -63,5 +69,17 @@ public class UIUtils {
 
 
 
+    }
+
+    public static void toImageViewActivity(Context context, Dynamic.DynPhoto[] photos){
+        if (photos != null && photos.length > 0){
+            ArrayList<String> us = new ArrayList<>();
+            for ( Dynamic.DynPhoto photo:photos) {
+                us.add(photo.name);
+            }
+            Intent intent = new Intent(context, ImageViewActivity.class);
+            intent.putExtra(ImageViewActivity.IMAGE_PATH_KEY,us);
+            context.startActivity(intent);
+        }
     }
 }
