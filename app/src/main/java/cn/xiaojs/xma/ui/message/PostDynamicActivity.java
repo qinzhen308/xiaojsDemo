@@ -188,7 +188,10 @@ public class PostDynamicActivity extends BaseActivity {
                 if (data != null) {
                     String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
                     if (cropImgPath != null) {
-                        uploadPic(cropImgPath);
+
+                        int width = data.getIntExtra(CropImagePath.CROP_IMAGE_WIDTH,0);
+                        int height = data.getIntExtra(CropImagePath.CROP_IMAGE_HEIGHT,0);
+                        uploadPic(cropImgPath,width,height);
                     }
                 }
 
@@ -207,7 +210,7 @@ public class PostDynamicActivity extends BaseActivity {
 
     }
 
-    private void uploadPic(final String filePath) {
+    private void uploadPic(final String filePath, final int photoWidth, final int photoHeight) {
 
         showProgress(false);
 
@@ -216,13 +219,12 @@ public class PostDynamicActivity extends BaseActivity {
             public void uploadSuccess(String key, String fileUrl) {
 
                 photoKey = fileUrl;
-                Point point = BitmapUtils.getImageSize(filePath);
-
+                //Point point = BitmapUtils.getImageSize(filePath);
                 if(photoDim == null){
                     photoDim = new Dimension();
                 }
-                photoDim.width = point.x;
-                photoDim.height = point.y;
+                photoDim.width = photoWidth;
+                photoDim.height = photoHeight;
 
                 Glide.with(PostDynamicActivity.this).load(fileUrl).into(thumbnailView);
                 cancelProgress();
