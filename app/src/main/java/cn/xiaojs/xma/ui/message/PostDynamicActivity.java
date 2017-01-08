@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 
 import java.util.ArrayList;
 
@@ -223,7 +224,7 @@ public class PostDynamicActivity extends BaseActivity {
                 photoDim.width = point.x;
                 photoDim.height = point.y;
 
-                Glide.with(PostDynamicActivity.this).load(filePath).into(thumbnailView);
+                Glide.with(PostDynamicActivity.this).load(fileUrl).into(thumbnailView);
                 cancelProgress();
             }
 
