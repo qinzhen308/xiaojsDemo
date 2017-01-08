@@ -97,19 +97,22 @@ public class CropImageActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.save:
-                new AsyncTask<Integer, Integer, String>() {
+                new AsyncTask<Integer, Integer, Intent>() {
 
                     @Override
-                    protected String doInBackground(Integer... params) {
-                        return BitmapUtils.saveImage(mCropImage.getCropImage(),
-                                FileUtil.SDCARD_PATH + CropImagePath.CROP_IMAGE_PATH, 90);
+                    protected Intent doInBackground(Integer... params) {
+                        Bitmap bmp = mCropImage.getCropImage();
+                        String path = BitmapUtils.saveImage(bmp, FileUtil.SDCARD_PATH + CropImagePath.CROP_IMAGE_PATH, 90);
+                        Intent i = new Intent();
+                        i.putExtra(CropImagePath.CROP_IMAGE_PATH_TAG, path);
+                        i.putExtra(CropImagePath.CROP_IMAGE_WIDTH, bmp != null ? bmp.getWidth() : 0);
+                        i.putExtra(CropImagePath.CROP_IMAGE_HEIGHT, bmp != null ? bmp.getHeight() : 0);
+                        return i;
                     }
 
                     @Override
-                    protected void onPostExecute(String result) {
-                        Intent mIntent = new Intent();
-                        mIntent.putExtra(CropImagePath.CROP_IMAGE_PATH_TAG, result);
-                        setResult(RESULT_OK, mIntent);
+                    protected void onPostExecute(Intent intent) {
+                        setResult(RESULT_OK, intent);
                         finish();
                     }
                 }.execute(0);
