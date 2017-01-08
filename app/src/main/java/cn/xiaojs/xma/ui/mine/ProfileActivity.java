@@ -19,6 +19,7 @@ import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.DataPicker;
 import cn.xiaojs.xma.util.TimeUtil;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -318,7 +319,7 @@ public class ProfileActivity extends BaseActivity {
         switch (resultCode) {
             case RESULT_OK:
                 if (data != null) {
-                    String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
+                    final String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
                     if (cropImgPath != null) {
                         mImgUploading = true;
                         showProgress(true);
@@ -330,7 +331,8 @@ public class ProfileActivity extends BaseActivity {
                                     public void uploadSuccess(String fileName, String fileUrl) {
                                         cancelProgress();
                                         Glide.with(ProfileActivity.this)
-                                                .load(fileUrl)
+                                                .load(cropImgPath)
+                                                .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                                                 .into(mPortraitImg);
                                         mAvatarUrl = fileUrl;
                                         mAvatarFileName = fileName;

@@ -805,7 +805,7 @@ public class BitmapUtils {
         }
     }
 
-    public Point getImageSize(Context context, Uri uri) {
+    public static Point getImageSize(Context context, Uri uri) {
         if (uri == null) {
             Point p = new Point();
             return p;
