@@ -226,7 +226,7 @@ public class PostDynamicActivity extends BaseActivity {
                 photoDim.width = photoWidth;
                 photoDim.height = photoHeight;
 
-                Glide.with(PostDynamicActivity.this).load(fileUrl).into(thumbnailView);
+                Glide.with(PostDynamicActivity.this).load(filePath).signature(new StringSignature(String.valueOf(System.currentTimeMillis()))).into(thumbnailView);
                 cancelProgress();
             }
 

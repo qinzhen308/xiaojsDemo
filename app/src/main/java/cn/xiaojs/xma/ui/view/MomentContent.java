@@ -18,6 +18,7 @@ import android.content.Context;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +35,7 @@ import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.UIUtils;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class MomentContent extends RelativeLayout {
@@ -226,8 +228,13 @@ public class MomentContent extends RelativeLayout {
 
     }
 
-    private void showNormal(Dynamic.DynBody body){
-        mNormalContent.setText(body.text);
+    private void showNormal(final Dynamic.DynBody body){
+        if (TextUtils.isEmpty(body.text)){
+            mNormalContent.setVisibility(GONE);
+        }else {
+            mNormalContent.setVisibility(VISIBLE);
+            mNormalContent.setText(body.text);
+        }
         if (body.drawings != null && body.drawings.length > 0){
             Dynamic.DynPhoto photo = body.drawings[0];
             if (photo.width > 0 && photo.height > 0){
@@ -240,6 +247,12 @@ public class MomentContent extends RelativeLayout {
                     load(photo.name).
                     error(R.drawable.default_lesson_cover).
                     into(mNormalImage);
+            mNormalImage.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UIUtils.toImageViewActivity(getContext(),body.drawings);
+                }
+            });
         }else {
             mNormalImage.setVisibility(GONE);
         }
