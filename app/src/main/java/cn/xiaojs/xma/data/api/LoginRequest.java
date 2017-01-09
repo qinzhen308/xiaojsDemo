@@ -35,9 +35,9 @@ public class LoginRequest extends ServiceRequest {
 
     }
 
-    public void logout(String sessionID) {
+    public void logout() {
 
-        Call<ResponseBody> call = getService().logout(sessionID);
+        Call<ResponseBody> call = getService().logout();
         enqueueRequest(APIType.LOGOUT, call);
 
     }

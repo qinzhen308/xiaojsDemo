@@ -29,18 +29,17 @@ public class PlatformRequest extends ServiceRequest {
 
     }
 
-    public void getNotificationsOverview(@NonNull String sessionID, @NonNull Pagination pagination) {
+    public void getNotificationsOverview(@NonNull Pagination pagination) {
 
         String paginationJson = objectToJsonString(pagination);
 
-        Call<GNOResponse> call = getService().getNotificationsOverview(sessionID, paginationJson);
+        Call<GNOResponse> call = getService().getNotificationsOverview(paginationJson);
         enqueueRequest(APIType.GET_NOTIFICATIONS_OVERVIEW, call);
 
     }
 
 
-    public void getNotifications(@NonNull String sessionID,
-                                 @NonNull NotificationCriteria criteria,
+    public void getNotifications(@NonNull NotificationCriteria criteria,
                                  @NonNull Pagination pagination) {
 
         String criteriaJson = objectToJsonString(criteria);
@@ -51,23 +50,21 @@ public class PlatformRequest extends ServiceRequest {
             Logger.json(paginationJson);
         }
 
-        Call<GENotificationsResponse> call = getService().getNotifications(sessionID,
-                criteriaJson,
+        Call<GENotificationsResponse> call = getService().getNotifications(criteriaJson,
                 paginationJson);
 
         enqueueRequest(APIType.GET_NOTIFICATIONS, call);
 
     }
 
-    public void deleteNotification(@NonNull String sessionID, @NonNull String notification) {
+    public void deleteNotification(@NonNull String notification) {
 
-        Call<ResponseBody> call = getService().deleteNotification(sessionID, notification);
+        Call<ResponseBody> call = getService().deleteNotification(notification);
         enqueueRequest(APIType.DELETE_NOTIFICATION, call);
 
     }
 
-    public void ignoreNotifications(@NonNull String sessionID,
-                                    @NonNull NotificationCriteria criteria) {
+    public void ignoreNotifications(@NonNull NotificationCriteria criteria) {
 
         String criteriaJson = objectToJsonString(criteria);
 
@@ -75,7 +72,7 @@ public class PlatformRequest extends ServiceRequest {
             Logger.json(criteriaJson);
         }
 
-        Call<IgnoreNResponse> call = getService().ignoreNotifications(sessionID, criteriaJson);
+        Call<IgnoreNResponse> call = getService().ignoreNotifications(criteriaJson);
         enqueueRequest(APIType.IGNORE_NOTIFICATIONS, call);
     }
 }

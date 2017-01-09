@@ -47,6 +47,10 @@ public class AccountDataManager extends DataManager{
         return AccountPref.getAuthToken(context);
     }
 
+    public static void saveSessionID(Context context,String session) {
+        AccountPref.setAuthToken(context,session);
+    }
+
     /**
      * 获取账户ID
      * @param context
@@ -80,8 +84,8 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String phone = user.getSessionID();
-        AccountPref.setAuthToken(context,phone);
+        //String phone = user.getSessionID();
+        //AccountPref.setAuthToken(context,phone);
 
         String id = user.getId();
         AccountPref.setAccountID(context,id);
@@ -114,13 +118,9 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String session = getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
 
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.getHomeData(session);
+        accountRequest.getHomeData();
     }
 
     /**
@@ -141,11 +141,11 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String session = getSessionID(context);
-
-        if (checkSession(session,callback)) {
-            return;
-        }
+//        String session = getSessionID(context);
+//
+//        if (checkSession(session,callback)) {
+//            return;
+//        }
 
         if (competencyParams == null) {
 
@@ -160,7 +160,7 @@ public class AccountDataManager extends DataManager{
 
 
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.claimCompetency(session,competencyParams);
+        accountRequest.claimCompetency(competencyParams);
     }
 
 
@@ -175,14 +175,9 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String session = getSessionID(context);
-
-        if (checkSession(session,callback)) {
-            return;
-        }
 
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.editProfile(session,basic);
+        accountRequest.editProfile(basic);
 
     }
 
@@ -195,14 +190,9 @@ public class AccountDataManager extends DataManager{
             }
             return;
         }
-        String session = getSessionID(context);
-
-        if (checkSession(session,callback)) {
-            return;
-        }
 
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.getProfile(session);
+        accountRequest.getProfile();
 
     }
 
@@ -249,17 +239,17 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String session = getSessionID(context);
-
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            qiniuService.uploadFailure();
-            return;
-        }
+//        String session = getSessionID(context);
+//
+//        if (TextUtils.isEmpty(session)) {
+//
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the sessionID is empty,so the request return failure");
+//            }
+//
+//            qiniuService.uploadFailure();
+//            return;
+//        }
 
         UpTokenParam param = new UpTokenParam();
         param.type = Xu.TokenType.AVATAR;
@@ -267,7 +257,7 @@ public class AccountDataManager extends DataManager{
 
 
         QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
-        qiniuRequest.getToken(session,param);
+        qiniuRequest.getToken(param);
 
 
     }
@@ -281,14 +271,14 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String session = getSessionID(context);
-
-        if (checkSession(session,callback)) {
-            return;
-        }
+//        String session = getSessionID(context);
+//
+//        if (checkSession(session,callback)) {
+//            return;
+//        }
 
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.getCenterData(session);
+        accountRequest.getCenterData();
 
     }
 

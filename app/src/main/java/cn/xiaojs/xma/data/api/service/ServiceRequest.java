@@ -420,7 +420,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
             if (apiType == APIType.CHECK_SESSION && responseCode == 401) {
                 T object = (T) readCSRFValue(errorBody);
 
-                saveCookie(response.headers());
+                //saveCookie(response.headers());
 
                 if (serviceCallback != null) {
                     serviceCallback.onSuccess(object);

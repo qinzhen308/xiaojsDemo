@@ -36,23 +36,22 @@ public class SocialRequest extends ServiceRequest {
         super(context, callback);
     }
 
-    public void addContactGroup(String sessionID,String name) {
+    public void addContactGroup(String name) {
 
         ContactGroup contactGroup = new ContactGroup();
         contactGroup.name = name;
 
-        Call<ResponseBody> call = getService().addContactGroup(sessionID,contactGroup);
+        Call<ResponseBody> call = getService().addContactGroup(contactGroup);
         enqueueRequest(APIType.ADD_CONTACT_GROUP,call);
 
     }
 
-    public void postActivity(String session, DynPost dynPost) {
-        Call<Dynamic> call = getService().postActivity(session,dynPost);
+    public void postActivity(DynPost dynPost) {
+        Call<Dynamic> call = getService().postActivity(dynPost);
         enqueueRequest(APIType.POST_ACTIVITY,call);
     }
 
-    public void getActivities(@NonNull String session,
-                              Criteria criteria,
+    public void getActivities(Criteria criteria,
                               Pagination pagination) {
 
         String criteriaJsonstr = objectToJsonString(criteria);
@@ -63,8 +62,7 @@ public class SocialRequest extends ServiceRequest {
             Logger.json(paginationJsonstr);
         }
 
-        Call<CollectionPage<Dynamic>> call = getService().getActivities(session,
-                criteriaJsonstr,
+        Call<CollectionPage<Dynamic>> call = getService().getActivities(criteriaJsonstr,
                 paginationJsonstr);
 
         enqueueRequest(APIType.GET_ACTIVITIES,
@@ -76,16 +74,16 @@ public class SocialRequest extends ServiceRequest {
 
     }
 
-    public void commentActivity(@NonNull String session,String activity,String commentContent) {
+    public void commentActivity(String activity,String commentContent) {
 
         Comment comment = new Comment();
         comment.comment = commentContent;
 
-        Call<Comment> call = getService().commentActivity(session,activity,comment);
+        Call<Comment> call = getService().commentActivity(activity,comment);
         enqueueRequest(APIType.COMMENT_ACTIVITY,call);
     }
 
-    public void getComments(@NonNull String session, Criteria criteria, Pagination pagination) {
+    public void getComments(Criteria criteria, Pagination pagination) {
 
         String criteriaJsonstr = objectToJsonString(criteria);
         String paginationJsonstr = objectToJsonString(pagination);
@@ -95,68 +93,67 @@ public class SocialRequest extends ServiceRequest {
             Logger.json(paginationJsonstr);
         }
 
-        Call<CollectionPage<Comment>> call = getService().getComments(session,
-                criteriaJsonstr,
+        Call<CollectionPage<Comment>> call = getService().getComments(criteriaJsonstr,
                 paginationJsonstr);
 
         enqueueRequest(APIType.GET_COMMENTS,call);
     }
 
-    public void likeActivity(@NonNull String session,String activity) {
-        Call<Dynamic.DynStatus> call = getService().likeActivity(session,activity);
+    public void likeActivity(String activity) {
+        Call<Dynamic.DynStatus> call = getService().likeActivity(activity);
         enqueueRequest(APIType.LIKE_ACTIVITY,call);
     }
 
-    public void replyComment(@NonNull String session, String commentID, String reply) {
+    public void replyComment(String commentID, String reply) {
 
         Comment replyComment = new Comment();
         replyComment.reply = reply;
 
-        Call<Comment> call = getService().replyComment(session,commentID,replyComment);
+        Call<Comment> call = getService().replyComment(commentID,replyComment);
         enqueueRequest(APIType.REPLAY_COMMENT,call);
     }
 
-    public void reply2Reply(@NonNull String session, String replyID, String reply) {
+    public void reply2Reply(String replyID, String reply) {
 
         Comment replyComment = new Comment();
         replyComment.reply = reply;
 
-        Call<Comment> call = getService().reply2Reply(session,replyID,replyComment);
+        Call<Comment> call = getService().reply2Reply(replyID,replyComment);
         enqueueRequest(APIType.REPLAY_2_REPLY,call);
     }
 
-    public void getUpdates(@NonNull String session, Pagination pagination) {
+    public void getUpdates(Pagination pagination) {
 
         String paginationJsonstr = objectToJsonString(pagination);
 
         if (XiaojsConfig.DEBUG) {
             Logger.json(paginationJsonstr);
         }
-        Call<CollectionPage<DynUpdate>> call = getService().getUpdates(session,paginationJsonstr);
+        Call<CollectionPage<DynUpdate>> call = getService().getUpdates(paginationJsonstr);
         enqueueRequest(APIType.GET_UPDATES,call);
     }
 
-    public void followContact(@NonNull String session, String contact, int group) {
+    public void followContact(String contact, int group) {
 
         FollowParam param = new FollowParam();
         param.contact = contact;
         param.group = group;
 
-        Call<Relation> call = getService().followContact(session,param);
+        Call<Relation> call = getService().followContact(param);
         enqueueRequest(APIType.FOLLOW_CONTACT,call);
     }
 
-    public void unfollowContact(@NonNull String session, String contact) {
-        Call<ResponseBody> call = getService().unfollowContact(session,contact);
+    public void unfollowContact(String contact) {
+        Call<ResponseBody> call = getService().unfollowContact(contact);
         enqueueRequest(APIType.UNFOLLOW_CONTACT,call);
     }
 
-    public void getActivityDetails(@NonNull String session, String activity) {
-        Call<DynamicDetail> call = getService().getActivityDetails(session,activity);
+    public void getActivityDetails(String activity) {
+        Call<DynamicDetail> call = getService().getActivityDetails(activity);
         enqueueRequest(APIType.GET_ACTIVITY_DETAILS,call);
     }
 
-    public void getLikedRecords(@NonNull String session, Criteria criteria, Pagination pagination) {
+    public void getLikedRecords(Criteria criteria, Pagination pagination) {
 
         String criteriaJsonstr = objectToJsonString(criteria);
         String paginationJsonstr = objectToJsonString(pagination);
@@ -165,14 +162,13 @@ public class SocialRequest extends ServiceRequest {
             Logger.json(criteriaJsonstr);
             Logger.json(paginationJsonstr);
         }
-        Call<CollectionPage<LikedRecord>> call = getService().getLikedRecords(session,
-                criteriaJsonstr,
+        Call<CollectionPage<LikedRecord>> call = getService().getLikedRecords(criteriaJsonstr,
                 paginationJsonstr);
         enqueueRequest(APIType.GET_LINKED_RECORDS,call);
     }
 
-    public void getContacts(@NonNull String session){
-        Call<ArrayList<ContactGroup>> call = getService().getContacts(session);
+    public void getContacts(){
+        Call<ArrayList<ContactGroup>> call = getService().getContacts();
         enqueueRequest(APIType.GET_CONTACTS,call);
     }
 

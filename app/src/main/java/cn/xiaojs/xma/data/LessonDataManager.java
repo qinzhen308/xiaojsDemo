@@ -48,13 +48,8 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.createLiveLesson(session, lesson);
+        lessonRequest.createLiveLesson(lesson);
 
     }
 
@@ -73,13 +68,8 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getLessons(session, criteria, pagination);
+        lessonRequest.getLessons(criteria, pagination);
 
     }
 
@@ -97,14 +87,8 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.putLessonOnShelves(session, lesson);
+        lessonRequest.putLessonOnShelves(lesson);
 
     }
 
@@ -122,15 +106,8 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-
-        if (checkSession(session, callback)) {
-            return;
-        }
-
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.cancelLessonOnShelves(session, lesson);
+        lessonRequest.cancelLessonOnShelves(lesson);
     }
 
     /**
@@ -148,13 +125,9 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getEnrolledLessons(session, criteria, pagination);
+        lessonRequest.getEnrolledLessons(criteria, pagination);
 
     }
 
@@ -172,15 +145,8 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-
-        if (checkSession(session, callback)) {
-            return;
-        }
-
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getLessonData(session, lesson);
+        lessonRequest.getLessonData(lesson);
     }
 
 
@@ -200,17 +166,17 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            qiniuService.uploadFailure();
-            return;
-        }
+//        String session = AccountDataManager.getSessionID(context);
+//
+//        if (TextUtils.isEmpty(session)) {
+//
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the sessionID is empty,so the request return failure");
+//            }
+//
+//            qiniuService.uploadFailure();
+//            return;
+//        }
 
         if (TextUtils.isEmpty(lesson)) {
 
@@ -227,7 +193,7 @@ public class LessonDataManager extends DataManager {
         param.type = Xu.TokenType.LESSON_COVER;
 
         QiniuRequest qiniuRequest = new QiniuRequest(context, filePath, qiniuService);
-        qiniuRequest.getToken(session,param);
+        qiniuRequest.getToken(param);
 
     }
 
@@ -262,13 +228,8 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.editLesson(session, lesson, liveLesson);
+        lessonRequest.editLesson(lesson, liveLesson);
     }
 
 
@@ -285,13 +246,8 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.enrollLesson(session, lesson, offlineRegistrant);
+        lessonRequest.enrollLesson(lesson, offlineRegistrant);
 
     }
 
@@ -308,14 +264,8 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.confirmLessonEnrollment(session, lesson, registrant);
+        lessonRequest.confirmLessonEnrollment(lesson, registrant);
     }
 
 
@@ -331,14 +281,8 @@ public class LessonDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.cancelLesson(session, lesson, reason);
+        lessonRequest.cancelLesson(lesson, reason);
 
     }
 
@@ -347,13 +291,8 @@ public class LessonDataManager extends DataManager {
                                                  boolean accessible,
                                                  @NonNull APIServiceCallback callback) {
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.toggleAccessLesson(session, lesson, accessible);
+        lessonRequest.toggleAccessLesson(lesson, accessible);
     }
 
 

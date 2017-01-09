@@ -43,9 +43,9 @@ public class QiniuRequest implements APIServiceCallback<UpToken[]>{
 //        accountRequest.getCoverUpToken(sessionID,lesson);
 //    }
 //
-    public void getToken(@NonNull String sessionID, UpTokenParam... params) {
+    public void getToken(UpTokenParam... params) {
 
-        accountRequest.getUpToken(sessionID,params);
+        accountRequest.getUpToken(params);
 
     }
 

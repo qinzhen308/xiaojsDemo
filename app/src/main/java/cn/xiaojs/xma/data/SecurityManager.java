@@ -96,14 +96,9 @@ public class SecurityManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
-
 
         SecurityRequest securityRequest = new SecurityRequest(context,callback);
-        securityRequest.havePrivileges(session,privileges);
+        securityRequest.havePrivileges(privileges);
 
     }
 
