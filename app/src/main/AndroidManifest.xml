@@ -151,6 +151,18 @@
         <activity
                 android:name=".ui.certification.CertificationActivity"
                 android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.grade.GradeHomeActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.grade.ScheduleActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.grade.RoomMatesActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.grade.MomentActivity"
+                android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

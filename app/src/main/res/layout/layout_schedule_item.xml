@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:orientation="vertical"
+             android:background="@drawable/white_grey_selector"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+    <RelativeLayout
+            android:layout_margin="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/white"
+                    android:paddingLeft="@dimen/px10"
+                    android:paddingRight="@dimen/px10"
+                    android:paddingTop="@dimen/px5"
+                    android:paddingBottom="@dimen/px5"
+                    android:background="@drawable/course_state_wait_bg"
+                    android:text="待上课"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:textColor="@color/font_blue"
+                    android:textSize="@dimen/font_28px"
+                    android:text="进入教室"
+                    android:layout_marginTop="@dimen/px60"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/left"
+                android:orientation="vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:textSize="@dimen/font_30px"
+                    android:textColor="@color/font_black"
+                    android:text="第3课 2016人力资源一级考试"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_28px"
+                    android:layout_marginTop="@dimen/px20"
+                    android:text="2016-11-11 11:11 90分钟"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/px20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <cn.xiaojs.xma.ui.widget.RoundedImageView
+                        app:oval="true"
+                        android:src="@drawable/default_portrait"
+                        android:scaleType="fitXY"
+                        android:layout_width="@dimen/px40"
+                        android:layout_height="@dimen/px40"/>
+
+                <TextView
+                        android:textColor="@color/common_text"
+                        android:textSize="@dimen/font_28px"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:text="林娇"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

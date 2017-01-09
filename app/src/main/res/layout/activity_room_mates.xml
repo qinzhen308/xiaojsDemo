@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.xiaojs.xma.ui.widget.AdapterGirdView xmlns:android="http://schemas.android.com/apk/res/android"
+                                         android:id="@+id/room_mates_grid"
+                                         android:listSelector="@android:color/transparent"
+                                         android:layout_marginLeft="@dimen/px15"
+                                         android:layout_marginRight="@dimen/px15"
+                                         android:layout_width="match_parent"
+                                         android:layout_height="wrap_content">
+
+</cn.xiaojs.xma.ui.widget.AdapterGirdView>

@@ -95,6 +95,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
 
     private void initHeader() {
         needHeaderDivider(false);
+        mBack.setImageResource(R.drawable.ic_white_back);
         Bitmap blur = FastBlur.smartBlur(BitmapUtils.getBitmap(this, R.drawable.default_portrait), 2, true);
         mBlur.setImageBitmap(blur);
         needHeader(false);
@@ -158,6 +159,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
             mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus, 0, 0, 0);
             mScrollRightText.setBackgroundResource(R.drawable.orange_stoke_bg);
             mScrollMiddleText.setText("林妙可");
+            mBack.setImageResource(R.drawable.back_arrow);
             needHeaderDivider(true);
         }else {
             mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
@@ -165,6 +167,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
             mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
             mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
             mScrollMiddleText.setText("");
+            mBack.setImageResource(R.drawable.ic_white_back);
             needHeaderDivider(false);
         }
     }
