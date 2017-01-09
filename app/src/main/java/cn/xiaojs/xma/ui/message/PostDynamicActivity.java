@@ -1,7 +1,6 @@
 package cn.xiaojs.xma.ui.message;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -32,13 +31,13 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.util.BitmapUtils;
 
 public class PostDynamicActivity extends BaseActivity {
 
     public static final int REQUEST_PIC_CODE = 0x3;
     public static final int REQUEST_SHARE_SCOPE_CODE = 0x4;
     public static final int REQUEST_AT_CODE = 0x5;
+    public static final String KEY_POST_TYPE = "key_post_type";
 
     @BindView(R.id.pic_thumbnail)
     ImageView thumbnailView;

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
+            android:id="@+id/grade_moment_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none"
+            android:divider="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:dividerHeight="@dimen/px20"
+            android:orientation="vertical"/>
+
+    <LinearLayout
+            android:background="@color/moment_write_comment_bg"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <cn.xiaojs.xma.ui.widget.RoundedImageView
+                app:oval="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/default_portrait"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginTop="@dimen/px15"
+                android:layout_marginBottom="@dimen/px15"
+                app:border_width="@dimen/px1"
+                app:border_color="@color/white"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/px60"
+                android:layout_height="@dimen/px60"/>
+
+        <TextView
+                android:id="@+id/grade_moment_post"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:background="@drawable/white_corner_bg"
+                android:paddingTop="@dimen/px15"
+                android:paddingBottom="@dimen/px15"
+                android:paddingLeft="@dimen/px15"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/common_text"
+                android:text="有什么新鲜事要跟大家分享吗？"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>
+
