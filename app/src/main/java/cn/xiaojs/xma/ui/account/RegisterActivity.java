@@ -23,6 +23,7 @@ import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.VerifyUtils;
 import cn.xiaojs.xma.util.XjsUtils;
 import com.orhanobut.logger.Logger;
@@ -51,15 +52,15 @@ public class RegisterActivity extends BaseActivity {
     private final int SMS_GETTING_TIME_OUT = 60;
 
     @BindView(R.id.reg_name)
-    EditText mRegNameEdit;
+    EditTextDel mRegNameEdit;
     @BindView(R.id.reg_phone)
-    EditText mRegPhoneEdit;
+    EditTextDel mRegPhoneEdit;
     @BindView(R.id.verify_code)
-    EditText mRegVerifyEdit;
+    EditTextDel mRegVerifyEdit;
     @BindView(R.id.get_verify_code)
     TextView mGetRegVerifyTv;
     @BindView(R.id.reg_pwd)
-    EditText mRegPwdEdit;
+    EditTextDel mRegPwdEdit;
 
     private Activity mContext;
     private int mCurrVerifyTime = 0;
@@ -69,14 +70,22 @@ public class RegisterActivity extends BaseActivity {
     protected void addViewContent() {
         mContext = this;
         addView(R.layout.activity_register);
+        needHeader(false);
+
+        mRegNameEdit.setDelDrawable(R.drawable.ic_account_edit_text_del);
+        mRegPhoneEdit.setDelDrawable(R.drawable.ic_account_edit_text_del);
+        mRegVerifyEdit.setDelDrawable(R.drawable.ic_account_edit_text_del);
+        mRegPwdEdit.setDelDrawable(R.drawable.ic_account_edit_text_del);
+
         setMiddleTitle(R.string.register);
     }
 
     @OnClick({R.id.left_view, R.id.get_verify_code, R.id.hide_show_pwd,
-            R.id.register_btn, R.id.register_protocol})
+            R.id.register_btn, R.id.register_protocol, R.id.reg_back})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_view:
+            case R.id.reg_back:
                 finish();
                 break;
             case R.id.get_verify_code:
@@ -285,12 +294,12 @@ public class RegisterActivity extends BaseActivity {
                 mGetRegVerifyTv.setEnabled(false);
                 mCurrVerifyTime--;
                 mHandler.sendEmptyMessageDelayed(MSG_RE_SEND, 1000);
-                mGetRegVerifyTv.setTextColor(getResources().getColor(R.color.font_gray));
+                //mGetRegVerifyTv.setTextColor(getResources().getColor(R.color.font_gray));
                 mGetRegVerifyTv.setText(Html.fromHtml(getString(R.string.verity_code_countdown,
                         mCurrVerifyTime)));
             } else {
                 mGetRegVerifyTv.setEnabled(true);
-                mGetRegVerifyTv.setTextColor(getResources().getColor(R.color.font_blue));
+                //mGetRegVerifyTv.setTextColor(getResources().getColor(R.color.font_blue));
                 mGetRegVerifyTv.setText(R.string.verity_code_re_send);
             }
         }

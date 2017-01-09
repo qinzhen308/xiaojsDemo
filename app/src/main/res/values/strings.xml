@@ -66,7 +66,7 @@
     <string name="verify_code_title">验证码</string>
     <string name="verify_code_send_hint">发送验证码</string>
     <string name="verity_code_countdown">%1$sS</string>
-    <string name="verity_code_re_send">重发</string>
+    <string name="verity_code_re_send">重新发送</string>
     <string name="pwd_hint">请输入6&#8211;16位密码</string>
     <string name="register_protocol">《小教室用户注册协议》</string>
     <string name="register_protocol_agree">点击注册默认您同意</string>

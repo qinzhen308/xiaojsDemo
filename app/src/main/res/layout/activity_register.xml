@@ -1,34 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:orientation="vertical"
-              android:layout_height="match_parent"
-              android:focusable="true"
-              android:focusableInTouchMode="true"
-              android:background="@color/main_bg">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:background="@drawable/login_reg_bg">
 
     <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/login_reg_cover"
+            android:alpha="0.8"/>
+
+    <ImageView
+            android:id="@+id/reg_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px15"
+            android:paddingLeft="@dimen/px20"
+            android:paddingRight="@dimen/px20"
             android:layout_marginTop="@dimen/px40"
-            style="@style/DividerHorizontal"/>
+            android:paddingTop="@dimen/px10"
+            android:paddingBottom="@dimen/px10"
+            android:src="@drawable/ic_white_back"/>
 
     <RelativeLayout
-            android:background="@color/white"
+            android:id="@+id/reg_name_info"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:paddingLeft="@dimen/px43"
-            android:paddingRight="@dimen/px43"
-            android:layout_height="wrap_content">
+            android:paddingLeft="@dimen/px57"
+            android:paddingRight="@dimen/px57"
+            android:layout_marginTop="@dimen/px18"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reg_back">
 
-        <TextView
-                android:id="@+id/reg_name_title"
-                android:layout_alignParentLeft="true"
+        <ImageView
+                android:id="@+id/reg_name_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:minWidth="@dimen/px170"
-                android:textColor="@color/font_dark_gray"
-                android:textSize="@dimen/font_28px"
-                android:text="@string/reg_name_title"/>
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_log_reg_name"
+                android:layout_centerInParent="true"/>
 
         <cn.xiaojs.xma.ui.widget.EditTextDel
                 android:id="@+id/reg_name"
@@ -37,38 +50,41 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/px30"
                 android:paddingBottom="@dimen/px30"
-                android:textColorHint="@color/font_gray"
-                android:textColor="@color/font_black"
+                android:layout_marginLeft="@dimen/px38"
+                android:textColorHint="@color/font_trans_white"
+                android:textColor="@color/font_white"
                 android:textSize="@dimen/font_28px"
                 android:hint="@string/name_empty"
                 android:lines="1"
                 android:maxLength="16"
-                android:layout_toRightOf="@+id/reg_name_title"/>
+                android:layout_toRightOf="@+id/reg_name_icon"/>
 
         <View
                 style="@style/DividerHorizontal"
-                android:layout_below="@+id/reg_name"/>
+                android:layout_marginLeft="@dimen/px73"
+                android:layout_below="@+id/reg_name"
+                android:background="@color/white"
+                android:alpha="0.4"/>
     </RelativeLayout>
 
 
     <RelativeLayout
-            android:background="@color/white"
+            android:id="@+id/reg_phone_info"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:paddingLeft="@dimen/px43"
-            android:paddingRight="@dimen/px43"
-            android:layout_height="wrap_content">
+            android:paddingLeft="@dimen/px57"
+            android:paddingRight="@dimen/px57"
+            android:layout_marginTop="@dimen/px18"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reg_name_info">
 
-        <TextView
-                android:id="@+id/reg_phone_title"
-                android:layout_alignParentLeft="true"
+        <ImageView
+                android:id="@+id/reg_phone_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:minWidth="@dimen/px170"
-                android:textColor="@color/font_dark_gray"
-                android:textSize="@dimen/font_28px"
-                android:text="@string/phone_num"/>
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_log_reg_phone"
+                android:layout_centerInParent="true"/>
 
         <cn.xiaojs.xma.ui.widget.EditTextDel
                 android:id="@+id/reg_phone"
@@ -77,42 +93,46 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/px30"
                 android:paddingBottom="@dimen/px30"
-                android:textColorHint="@color/font_gray"
-                android:textColor="@color/font_black"
+                android:layout_marginLeft="@dimen/px38"
+                android:textColorHint="@color/font_trans_white"
+                android:textColor="@color/font_white"
                 android:textSize="@dimen/font_28px"
                 android:imeOptions="actionNext"
                 android:inputType="phone"
                 android:maxLength="11"
                 android:hint="@string/phone_empty"
-                android:layout_toRightOf="@+id/reg_phone_title"/>
+                android:layout_toRightOf="@+id/reg_phone_icon"/>
 
         <View
                 style="@style/DividerHorizontal"
-                android:layout_below="@+id/reg_phone"/>
+                android:layout_marginLeft="@dimen/px73"
+                android:layout_below="@+id/reg_phone"
+                android:background="@color/white"
+                android:alpha="0.4"/>
     </RelativeLayout>
 
     <LinearLayout
-            android:background="@color/white"
+            android:id="@+id/verify_code_info"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:paddingLeft="@dimen/px43"
-            android:paddingRight="@dimen/px43"
-            android:layout_height="wrap_content">
+            android:paddingLeft="@dimen/px57"
+            android:paddingRight="@dimen/px57"
+            android:layout_marginTop="@dimen/px18"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reg_phone_info">
 
         <RelativeLayout
+                android:id="@+id/verify_code_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                    android:id="@+id/verify_code_title"
-                    android:layout_alignParentLeft="true"
+            <ImageView
+                    android:id="@+id/verify_code_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:minWidth="@dimen/px170"
-                    android:textColor="@color/font_dark_gray"
-                    android:textSize="@dimen/font_28px"
-                    android:text="@string/verify_code_title"/>
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_log_reg_verify"
+                    android:layout_centerInParent="true"/>
 
             <cn.xiaojs.xma.ui.widget.EditTextDel
                     android:id="@+id/verify_code"
@@ -123,11 +143,12 @@
                     android:imeOptions="actionNext"
                     android:paddingTop="@dimen/px30"
                     android:paddingBottom="@dimen/px30"
-                    android:textColorHint="@color/font_gray"
-                    android:textColor="@color/font_black"
+                    android:layout_marginLeft="@dimen/px38"
+                    android:textColorHint="@color/font_trans_white"
+                    android:textColor="@color/font_white"
                     android:textSize="@dimen/font_28px"
                     android:inputType="number"
-                    android:layout_toRightOf="@+id/verify_code_title"
+                    android:layout_toRightOf="@+id/verify_code_icon"
                     android:layout_toLeftOf="@+id/get_verify_code"
                     android:layout_marginRight="@dimen/px22"
                     android:layout_centerInParent="true"/>
@@ -137,36 +158,41 @@
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px10"
-                    android:paddingBottom="@dimen/px10"
+                    android:minWidth="@dimen/px160"
+                    android:padding="@dimen/px10"
                     android:textSize="@dimen/font_28px"
-                    android:textColor="@color/font_blue"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:background="@drawable/reg_verify_code_bg"
                     android:text="@string/verify_code_send_hint"
                     android:layout_centerInParent="true"/>
         </RelativeLayout>
 
 
         <View
-                style="@style/DividerHorizontal"/>
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px73"
+                android:layout_below="@+id/verify_code_layout"
+                android:background="@color/white"
+                android:alpha="0.4"/>
     </LinearLayout>
 
     <RelativeLayout
-            android:background="@color/white"
-            android:paddingLeft="@dimen/px43"
-            android:paddingRight="@dimen/px43"
+            android:id="@+id/reg_pwd_info"
+            android:paddingLeft="@dimen/px57"
+            android:paddingRight="@dimen/px57"
+            android:layout_marginTop="@dimen/px18"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/verify_code_info">
 
-        <TextView
-                android:id="@+id/reg_pwd_title"
-                android:layout_alignParentLeft="true"
+        <ImageView
+                android:id="@+id/login_pwd_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:minWidth="@dimen/px170"
-                android:textColor="@color/font_dark_gray"
-                android:textSize="@dimen/font_28px"
-                android:text="@string/pwd"/>
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_log_reg_pwd"
+                android:layout_centerInParent="true"/>
 
         <cn.xiaojs.xma.ui.widget.EditTextDel
                 android:id="@+id/reg_pwd"
@@ -176,15 +202,16 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/px30"
                 android:paddingBottom="@dimen/px30"
-                android:textColorHint="@color/font_gray"
-                android:textColor="@color/font_black"
-                android:textSize="@dimen/font_28px"
+                android:layout_marginLeft="@dimen/px38"
+                android:textColorHint="@color/font_trans_white"
+                android:textColor="@color/font_white"
                 android:hint="@string/pwd_hint"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:layout_marginRight="@dimen/px22"
+                android:textSize="@dimen/font_28px"
                 android:maxLength="16"
-                android:layout_toRightOf="@+id/reg_pwd_title"
+                android:layout_toRightOf="@+id/login_pwd_icon"
                 android:layout_toLeftOf="@+id/hide_show_pwd"/>
 
         <ImageView
@@ -196,42 +223,49 @@
                 android:padding="@dimen/px10"
                 android:src="@drawable/hide_pwd"
                 android:hint=""/>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px73"
+                android:layout_below="@+id/reg_pwd"
+                android:background="@color/white"
+                android:alpha="0.4"/>
     </RelativeLayout>
 
-    <View
-            style="@style/DividerHorizontal"/>
 
     <Button
             android:id="@+id/register_btn"
-            android:layout_marginTop="@dimen/px90"
+            android:layout_marginTop="@dimen/px88"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/BigSubmitBtn"
-            android:layout_marginLeft="@dimen/px40"
-            android:layout_marginRight="@dimen/px40"
-            android:text="@string/register"/>
+            android:layout_marginLeft="@dimen/px57"
+            android:layout_marginRight="@dimen/px57"
+            android:text="@string/register"
+            android:layout_below="@+id/reg_pwd_info"/>
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px42"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_below="@+id/register_btn">
 
         <TextView
                 android:id="@+id/register_protocol_agree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/font_gray"
+                android:textColor="#DFEEFF"
                 android:text="@string/register_protocol_agree"/>
 
         <TextView
                 android:id="@+id/register_protocol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/link_hover"
+                android:textColor="@color/white"
                 android:text="@string/register_protocol"/>
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

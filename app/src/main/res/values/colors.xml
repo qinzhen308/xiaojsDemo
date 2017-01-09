@@ -50,6 +50,7 @@
     <color name="font_error_red">#ff0000</color>
     <color name="font_red">#cc0000</color>
     <color name="font_white">#ffffff</color>
+    <color name="font_trans_white">#99ffffff</color>
     <color name="translucent_50_orange">#7dff9833</color>
     <!-- 二维码 -->
     <color name="viewfinder_mask">#60000000</color>
