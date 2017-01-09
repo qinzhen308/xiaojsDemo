@@ -43,6 +43,8 @@ public class PersonalInfoActivity extends BaseActivity {
     protected void addViewContent() {
         addView(R.layout.activity_personal_info);
         setMiddleTitle(R.string.personal_info);
+        mName.setText("陈哲");
+        mName.setIcon(R.drawable.ic_male);
     }
 
 
