@@ -9,6 +9,7 @@ import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.Privilege;
 import com.orhanobut.logger.Logger;
 
+import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import retrofit2.Call;
 
 /**
@@ -34,4 +35,9 @@ public class SecurityRequest extends ServiceRequest {
 
     }
 
+
+    public void checkSession() {
+        Call<AuthenticateStatus> call = getService().checkSession(null);
+        enqueueRequest(APIType.CHECK_SESSION,call);
+    }
 }

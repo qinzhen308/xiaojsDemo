@@ -10,6 +10,9 @@ import android.content.SharedPreferences;
 public class SecurityPref {
 
     private static final String PREF_PERMISSION_PREFIX = "permission_";
+    private static final String PREF_CSRF_TOKEN = "csrf_token";
+    private static final String PREF_CSRF_COOKIE = "csrf_cookie";
+
 
 
     private static String permissionKey(int permission) {
@@ -31,6 +34,29 @@ public class SecurityPref {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
         return sp.getBoolean(permissionKey(permission),false);
     }
+
+    public static void setCSRFToken(final Context context,String csrf_token) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_CSRF_TOKEN,csrf_token).apply();
+    }
+
+    public static String getCSRFToken(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_CSRF_TOKEN,"");
+    }
+
+
+    public static void setCSRFCookie(final Context context,String csrf_cookie) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_CSRF_COOKIE,csrf_cookie).apply();
+    }
+
+    public static String getCSRFCookie(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_CSRF_COOKIE,"");
+    }
+
+
 
 
 

@@ -2,6 +2,7 @@ package cn.xiaojs.xma.data.api.service;
 
 import android.text.TextUtils;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 
 /**
@@ -25,6 +26,11 @@ public class ErrorPrompts {
             return "请重新登陆";
         } else if (errorCode.equals(Errors.BAD_PARAMETER)) {
             return "参数错误";
+        } else if (errorCode.equals(Errors.BAD_CSRF)) {
+            if (XiaojsConfig.DEBUG) {
+                return "Bad CSRF token";
+            }
+            return "请求失败";
         }
 
         String errorMessage = "请求失败";

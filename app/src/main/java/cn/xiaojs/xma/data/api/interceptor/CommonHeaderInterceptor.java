@@ -23,8 +23,15 @@
 
 package cn.xiaojs.xma.data.api.interceptor;
 
-import java.io.IOException;
+import android.content.Context;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+
+import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.api.service.XiaojsService;
+import cn.xiaojs.xma.data.preference.SecurityPref;
+import cn.xiaojs.xma.util.APPUtils;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -36,12 +43,11 @@ import okhttp3.Response;
 
 public class CommonHeaderInterceptor implements Interceptor{
 
-    private int appType;
-    private String appVersion;
 
-    public CommonHeaderInterceptor(int appType, String appVersion){
-        this.appVersion = appVersion;
-        this.appType = appType;
+    private Context context;
+
+    public CommonHeaderInterceptor(Context context){
+        this.context = context.getApplicationContext();
     }
 
     @Override
@@ -51,8 +57,13 @@ public class CommonHeaderInterceptor implements Interceptor{
 
         // Request customization: add request headers
         Request.Builder requestBuilder = original.newBuilder()
-                .addHeader("XA", Integer.toString(appType))
-                .addHeader("XAV", appVersion);
+                .addHeader("XA", Integer.toString(APPUtils.getAPPType(context)))
+                .addHeader("XAV", APPUtils.getAPPFullVersion(context));
+
+        if (original.method() != XiaojsService.METHOD_GET) {
+            requestBuilder.addHeader("X-CSRF-Token", SecurityPref.getCSRFToken(context));
+            requestBuilder.addHeader("Cookie", SecurityPref.getCSRFCookie(context));
+        }
 
         Request request = requestBuilder.build();
         return chain.proceed(request);

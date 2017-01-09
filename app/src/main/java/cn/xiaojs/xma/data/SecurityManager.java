@@ -8,6 +8,8 @@ import cn.xiaojs.xma.data.api.SecurityRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.Privilege;
+import cn.xiaojs.xma.model.security.AuthenticateStatus;
+
 import com.orhanobut.logger.Logger;
 
 /**
@@ -38,6 +40,24 @@ public class SecurityManager extends DataManager {
             SecurityPref.setPermission(context,p.getPermission(),granted);
 
         }
+    }
+
+    /**
+     * save x-csrf-token
+     * @param context
+     * @param csrf_token
+     */
+    public static void saveCSRFToken(Context context, String csrf_token) {
+        SecurityPref.setCSRFToken(context,csrf_token);
+    }
+
+    /**
+     * get x-csrf-token
+     * @param context
+     * @return
+     */
+    public static String getCSRFToken(Context context) {
+        return SecurityPref.getCSRFToken(context);
     }
 
     public static void requestHavePrivilege(@NonNull Context context,
@@ -85,6 +105,19 @@ public class SecurityManager extends DataManager {
         SecurityRequest securityRequest = new SecurityRequest(context,callback);
         securityRequest.havePrivileges(session,privileges);
 
+    }
+
+    /**
+     * Returns authentication status for the current session.
+     * This API can be used to determine whether the current session is authenticated or not.
+     * @param context
+     * @param callback
+     */
+    public static void checkSession(@NonNull Context context,
+                                    APIServiceCallback<AuthenticateStatus> callback) {
+
+        SecurityRequest securityRequest = new SecurityRequest(context,callback);
+        securityRequest.checkSession();
     }
 
 }
