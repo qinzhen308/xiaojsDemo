@@ -144,6 +144,7 @@
                     android:layout_height="wrap_content">
 
                 <TextView
+                        android:id="@+id/grade_home_material"
                         android:layout_width="match_parent"
                         android:text="@string/data_bank"
                         style="@style/MinePageItem"

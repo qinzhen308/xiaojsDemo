@@ -131,24 +131,28 @@ public class GradeHomeActivity extends BaseActivity {
         mBack.setImageResource(R.drawable.ic_white_back);
     }
 
-    @OnClick({R.id.grade_home_left_image,R.id.grade_home_schedule,R.id.grade_home_student,
-            R.id.grade_home_moment})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.grade_home_left_image, R.id.grade_home_schedule, R.id.grade_home_student,
+            R.id.grade_home_moment, R.id.grade_home_material})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.grade_home_left_image:
                 finish();
                 break;
             case R.id.grade_home_schedule:
-                Intent intent = new Intent(this,ScheduleActivity.class);
+                Intent intent = new Intent(this, ScheduleActivity.class);
                 startActivity(intent);
                 break;
             case R.id.grade_home_student:
-                Intent stu = new Intent(this,RoomMatesActivity.class);
+                Intent stu = new Intent(this, RoomMatesActivity.class);
                 startActivity(stu);
                 break;
             case R.id.grade_home_moment:
-                Intent moment = new Intent(this,MomentActivity.class);
+                Intent moment = new Intent(this, MomentActivity.class);
                 startActivity(moment);
+                break;
+            case R.id.grade_home_material:
+                Intent material = new Intent(this, MaterialActivity.class);
+                startActivity(material);
                 break;
         }
     }

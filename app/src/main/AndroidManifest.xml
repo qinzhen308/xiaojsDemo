@@ -61,9 +61,10 @@
                 android:name=".common.crop.CropImageMainActivity"
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-        <activity android:name=".ui.account.RegisterActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+        <activity
+                android:name=".ui.account.RegisterActivity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity android:name=".ui.mine.SettingsActivity"/>
         <activity
                 android:name=".ui.course.MyLessonActivity"
@@ -167,6 +168,9 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.grade.MomentActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.grade.MaterialActivity"
                 android:screenOrientation="portrait"/>
     </application>
 

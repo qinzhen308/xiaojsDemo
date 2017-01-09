@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/course_search_wrapper"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/my_course_search"
+                android:layout_width="match_parent"
+                android:drawableLeft="@drawable/ic_search"
+                android:paddingLeft="@dimen/px15"
+                android:paddingRight="@dimen/px15"
+                android:maxLines="1"
+                android:hint="搜索资料名/上传者"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:drawablePadding="@dimen/px10"
+                android:gravity="center_vertical"
+                android:background="@drawable/common_edittext_bg"
+                android:paddingBottom="@dimen/px15"
+                android:paddingTop="@dimen/px15"
+                android:layout_marginTop="@dimen/px15"
+                android:layout_marginBottom="@dimen/px15"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <View style="@style/DividerHorizontal"/>
+
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/material_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:divider="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:dividerHeight="@dimen/px1"
+            android:orientation="vertical"/>
+</LinearLayout>
