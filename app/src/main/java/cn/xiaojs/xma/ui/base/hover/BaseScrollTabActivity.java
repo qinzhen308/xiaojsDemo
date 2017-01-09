@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,6 +51,8 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
     protected TextView mScrollRightText;
     @BindView(R.id.scroll_tab_title_bar)
     protected RelativeLayout mScrollTitleBar;
+    @BindView(R.id.scroll_tab_left_image)
+    protected ImageView mBack;
     private View mTitleDivider;
 
     private boolean reLocation = false;

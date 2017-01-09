@@ -14,13 +14,13 @@ import cn.xiaojs.xma.ui.base.BaseTabActivity;
 import cn.xiaojs.xma.ui.certification.CertificationActivity;
 import cn.xiaojs.xma.ui.course.CourseConstant;
 import cn.xiaojs.xma.ui.course.LessonCreationActivity;
+import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.home.HomeFragment;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.NotificationFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
-import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import okhttp3.OkHttpClient;
 
@@ -73,7 +73,7 @@ public class MainActivity extends BaseTabActivity {
                 }
                 break;
             case 2:
-                startActivity(new Intent(this,SearchActivity.class));
+                startActivity(new Intent(this,GradeHomeActivity.class));
                 break;
             case 3:
 //                ArrayList<String> urls = new ArrayList<>();
