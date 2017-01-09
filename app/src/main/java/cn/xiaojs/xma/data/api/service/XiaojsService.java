@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
+import cn.xiaojs.xma.model.LiveSession.CtlSession;
+import cn.xiaojs.xma.model.LiveSession.Ticket;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
@@ -381,5 +383,24 @@ public interface XiaojsService {
     Call<CollectionPage<LikedRecord>> getLikedRecords(@Header("SessionID") String sessionID,
                                                       @Path("criteria") String criteria,
                                                       @Path("pagination") String pagination);
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Live Sessions
+    //Provides access to live session interfaces accessible to the Xiaojs client applications.
+
+    //Generate Ticket
+    @GET("/v1/live/ticket/{cs}")
+    Call<Ticket> generateTicket(@Path("cs") String cs);
+
+
+    //Boot Session
+    @Headers("Content-Type: application/json")
+    @POST("/v1/live/{ticket}")
+    Call<CtlSession> bootSession(@Header("SessionID") String sessionID, @Path("ticket") String ticket);
+
+
+
 
 }
