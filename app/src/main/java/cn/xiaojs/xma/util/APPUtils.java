@@ -28,6 +28,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Looper;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
+
 /**
  * Created by maxiaobao on 2016/10/26.
  */
@@ -111,5 +113,19 @@ public class APPUtils {
 
         return versionName;
 
+    }
+
+    /**
+     * return current APP client type
+     * @param context
+     * @return
+     */
+    public static int getAPPType(Context context) {
+
+        if (UIUtils.isTablet(context)) {
+            return Platform.AppType.TABLET_ANDROID;
+        }
+
+        return Platform.AppType.MOBILE_ANDROID;
     }
 }

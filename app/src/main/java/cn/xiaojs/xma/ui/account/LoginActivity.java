@@ -19,7 +19,11 @@ import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginParams;
+import cn.xiaojs.xma.ui.SplashActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.VerifyUtils;
@@ -65,6 +69,9 @@ public class LoginActivity extends BaseActivity {
 
         initRegGuideStyle();
         initLoginInfo();
+
+        //FIXME 临时做法，先调试开发用
+        checkSession();
     }
 
     @OnClick({R.id.left_view, R.id.login_btn, R.id.hide_show_pwd})
@@ -179,5 +186,34 @@ public class LoginActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+    private void checkSession() {
+
+        SecurityManager.checkSession(this, new APIServiceCallback<AuthenticateStatus>() {
+            @Override
+            public void onSuccess(AuthenticateStatus status) {
+
+                String csrf;
+
+                if (status == null || TextUtils.isEmpty(csrf = status.csrf)) {
+                    return;
+                }
+
+                SecurityManager.saveCSRFToken(LoginActivity.this, csrf);
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(LoginActivity.this,
+                            errorCode + errorMessage,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+        });
     }
 }

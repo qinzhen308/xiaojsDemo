@@ -10,6 +10,11 @@ public class Errors {
     public static final String NO_ERROR = "OK";
 
     //
+    // A different app connects to specific session.
+    //
+    public static final String BAD_CSRF = "0x0000000D";
+
+    //
     // Illegal request or invocation.
     //
     public static final String ILLEGAL_CALL = "0x00000001";

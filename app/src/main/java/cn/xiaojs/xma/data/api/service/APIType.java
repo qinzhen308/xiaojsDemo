@@ -68,6 +68,7 @@ public class APIType {
     public static final int VALIDATE_CODE = 51;
     public static final int VERIFY_MOBILE = 52;
     public static final int HAVE_PROVILEGES = 53;
+    public static final int CHECK_SESSION = 54;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

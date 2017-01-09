@@ -57,6 +57,9 @@
     <methods>;
 }
 
+-keep class cn.xiaojs.xma.common.permissiongen.** { *; }
+-keep class cn.xiaojs.xma.common.crop.** {*;}
+
 # Use reflection to invoke get method,so keep method
 -keep class okhttp3.Cache {
     <methods>;

@@ -3,9 +3,11 @@ package cn.xiaojs.xma.data.api;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
+import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
@@ -28,6 +30,7 @@ public class RegisterRequest extends ServiceRequest {
     public void register(@NonNull RegisterInfo registerInfo) {
 
         Call<ResponseBody> call = getService().accountRegister(registerInfo);
+
         enqueueRequest(APIType.REGISTER, call);
     }
 

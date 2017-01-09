@@ -7,16 +7,22 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.Error;
+import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.util.APPUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -25,6 +31,7 @@ import java.util.TimeZone;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Headers;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -44,7 +51,11 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
     protected boolean createFrg = false;
 
+    private Context context;
+
     public ServiceRequest(Context context, APIServiceCallback<T> callback) {
+
+        this.context = context.getApplicationContext();
 
         this.serviceCallback = callback;
         apiManager = ApiManager.getAPIManager(context);
@@ -59,13 +70,15 @@ public class ServiceRequest<T> implements ContextLifecycle {
     public XiaojsService getService() {
         return apiManager.getXiaojsService();
     }
+    public Context getContext() {
+        return context;
+    }
 
     public APIServiceCallback<T> getServiceCallback() {
         return serviceCallback;
     }
 
-    public void doTask(int apiType, T responseBody) {
-    }
+    public void doTask(int apiType, T responseBody) {}
 
     //Convert object to JSON string
     public String objectToJsonString(Object object) {
@@ -83,6 +96,30 @@ public class ServiceRequest<T> implements ContextLifecycle {
         return jsonStr;
 
     }
+
+    private AuthenticateStatus readCSRFValue(String json) {
+
+        AuthenticateStatus status = null;
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            status = mapper.readValue(json, AuthenticateStatus.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return status;
+
+    }
+
+    private void saveCookie(okhttp3.Headers headers) {
+        String cookie = headers.get("set-cookie");
+        if (!TextUtils.isEmpty(cookie)) {
+            SecurityPref.setCSRFCookie(context,cookie);
+        }
+    }
+
+
 
 
     //解析error body json
@@ -243,7 +280,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
         return getDefaultErrorCode();
     }
 
-    private final String getDefaultErrorCode() {
+    public static String getDefaultErrorCode() {
         return Errors.NO_ERROR;
     }
 
@@ -379,18 +416,29 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 e.printStackTrace();
             }
 
-            Error error = getError(errorBody);
-            String errorCode = "-1";
+            //check session api always return 401 code
+            if (apiType == APIType.CHECK_SESSION && responseCode == 401) {
+                T object = (T) readCSRFValue(errorBody);
 
-            if (error != null){
-                errorCode = error.ec;
+                saveCookie(response.headers());
+
+                if (serviceCallback != null) {
+                    serviceCallback.onSuccess(object);
+                }
+            }else{
+
+                Error error = getError(errorBody);
+                String errorCode = "-1";
+
+                if (error != null){
+                    errorCode = error.ec;
+                }
+                String errorMessage = ErrorPrompts.getErrorMessage(apiType, errorCode);
+
+                if (serviceCallback != null) {
+                    serviceCallback.onFailure(errorCode, errorMessage);
+                }
             }
-            String errorMessage = ErrorPrompts.getErrorMessage(apiType, errorCode);
-
-            if (serviceCallback != null) {
-                serviceCallback.onFailure(errorCode, errorMessage);
-            }
-
         }
 
         delRefrence();
