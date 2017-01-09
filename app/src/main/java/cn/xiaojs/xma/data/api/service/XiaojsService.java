@@ -23,6 +23,7 @@ import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.IgnoreNResponse;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
+import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.OfflineRegistrant;
@@ -66,6 +67,7 @@ public interface XiaojsService {
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
+    String METHOD_GET = "GET";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,6 +257,11 @@ public interface XiaojsService {
     //
     //Security
     //
+
+    //Check Session
+    @GET("/v1/security/session")
+    Call<AuthenticateStatus> checkSession(@Header("SessionID") String sessionID);
+
 
     //Login
     @Headers("Content-Type: application/json")

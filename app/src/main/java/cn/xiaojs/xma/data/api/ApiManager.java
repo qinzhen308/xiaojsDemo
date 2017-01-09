@@ -4,6 +4,8 @@ import android.content.Context;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
+import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.interceptor.CommonHeaderInterceptor;
 import cn.xiaojs.xma.data.api.service.XiaojsService;
 
@@ -12,9 +14,16 @@ import cn.xiaojs.xma.util.UIUtils;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.File;
+import java.net.CookieManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -80,21 +89,32 @@ public class ApiManager {
             logInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
 
-
-        int appType = getAPPType();
-        String appVerion = APPUtils.getAPPFullVersion(appContext);
-
-        CommonHeaderInterceptor headerInterceptor = new CommonHeaderInterceptor(appType, appVerion);
-
-
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(logInterceptor)
-                .addInterceptor(headerInterceptor)
+                .addNetworkInterceptor(logInterceptor)
+                .addInterceptor(new CommonHeaderInterceptor(appContext))
                 //.addInterceptor(new CacheInterceptor())
                 .cache(createCache(appContext))
                 .connectTimeout(20,TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20,TimeUnit.SECONDS);
+//                .cookieJar(new CookieJar() {
+//                    //private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
+//
+//                    private List<Cookie> cookieStore;
+//
+//                    @Override
+//                    public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+//                        //cookieStore.put(url, cookies);
+//                        cookieStore = cookies;
+//                    }
+//
+//                    @Override
+//                    public List<Cookie> loadForRequest(HttpUrl url) {
+//                        //List<Cookie> cookies = cookieStore.get(url);
+//                        return cookieStore != null ? cookieStore : new ArrayList<Cookie>();
+//                    }
+//                });
 
 
         if (XiaojsConfig.DEBUG) {
@@ -127,17 +147,5 @@ public class ApiManager {
     }
 
 
-    private int getAPPType() {
-
-        if (UIUtils.isTablet(appContext)) {
-            return Platform.AppType.TABLET_ANDROID;
-        }
-
-        return Platform.AppType.MOBILE_ANDROID;
-    }
-
-//    private static String urlToKey(Request request) {
-//        return Util.md5Hex(request.url().toString());
-//    }
 
 }

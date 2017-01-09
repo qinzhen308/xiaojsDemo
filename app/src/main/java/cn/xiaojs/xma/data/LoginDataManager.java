@@ -32,7 +32,6 @@ public class LoginDataManager extends DataManager{
             return;
         }
 
-
         LoginRequest loginRequest = new LoginRequest(context,callback);
         loginRequest.login(params);
 
