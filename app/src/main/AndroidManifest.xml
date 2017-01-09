@@ -172,6 +172,9 @@
         <activity
                 android:name=".ui.grade.MaterialActivity"
                 android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.grade.PersonalInfoActivity"
+                android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

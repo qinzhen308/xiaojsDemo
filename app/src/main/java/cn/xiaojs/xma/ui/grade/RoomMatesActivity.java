@@ -14,7 +14,9 @@ package cn.xiaojs.xma.ui.grade;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -68,6 +70,13 @@ public class RoomMatesActivity extends BaseActivity {
         PersonalProfileAdapter adapter = new PersonalProfileAdapter(dates, this);
 
         mGrid.setAdapter(adapter);
+        mGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), PersonalInfoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @OnClick({R.id.left_image})

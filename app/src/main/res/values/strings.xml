@@ -393,6 +393,7 @@
     <string name="lesson">课</string>
     <string name="personal">个人</string>
     <string name="organization">机构</string>
+    <string name="personal_info">个人资料</string>
 
     <!-- certification -->
     <string name="certification">实名认证</string>
