@@ -71,13 +71,8 @@ public class SocialManager extends DataManager {
                                        String groupName,
                                        APIServiceCallback<ResponseBody> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.addContactGroup(session, groupName);
+        socialRequest.addContactGroup(groupName);
 
 
     }
@@ -93,13 +88,8 @@ public class SocialManager extends DataManager {
                                     DynPost post,
                                     @NonNull APIServiceCallback<Dynamic> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.postActivity(session, post);
+        socialRequest.postActivity(post);
     }
 
     /**
@@ -116,13 +106,9 @@ public class SocialManager extends DataManager {
                                      Pagination pagination,
                                      APIServiceCallback<CollectionPage<Dynamic>> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.getActivities(session, criteria, pagination);
+        socialRequest.getActivities(criteria, pagination);
     }
 
     /**
@@ -138,13 +124,9 @@ public class SocialManager extends DataManager {
                                        String commentContent,
                                        APIServiceCallback<Comment> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.commentActivity(session,activity,commentContent);
+        socialRequest.commentActivity(activity,commentContent);
 
     }
 
@@ -161,13 +143,8 @@ public class SocialManager extends DataManager {
                                    Pagination pagination,
                                    APIServiceCallback<CollectionPage<Comment>> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.getComments(session, criteria, pagination);
+        socialRequest.getComments(criteria, pagination);
     }
 
     /**
@@ -181,13 +158,9 @@ public class SocialManager extends DataManager {
                                     String activity,
                                     APIServiceCallback<Dynamic.DynStatus> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.likeActivity(session,activity);
+        socialRequest.likeActivity(activity);
     }
 
     /**
@@ -203,13 +176,8 @@ public class SocialManager extends DataManager {
                                     String reply,
                                     APIServiceCallback<Comment> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.replyComment(session,commentID,reply);
+        socialRequest.replyComment(commentID,reply);
     }
 
 
@@ -226,13 +194,9 @@ public class SocialManager extends DataManager {
                                    String reply,
                                    APIServiceCallback<Comment> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.reply2Reply(session,replyID,reply);
+        socialRequest.reply2Reply(replyID,reply);
     }
 
 
@@ -247,12 +211,8 @@ public class SocialManager extends DataManager {
                                   Pagination pagination,
                                   APIServiceCallback<CollectionPage<DynUpdate>> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.getUpdates(session,pagination);
+        socialRequest.getUpdates(pagination);
 
     }
 
@@ -269,13 +229,9 @@ public class SocialManager extends DataManager {
                                      int group,
                                      APIServiceCallback<Relation> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.followContact(session,contact,group);
+        socialRequest.followContact(contact,group);
     }
 
 
@@ -287,13 +243,10 @@ public class SocialManager extends DataManager {
      * @param callback
      */
     public static void unfollowContact(Context context, String contact,APIServiceCallback callback) {
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
+
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.unfollowContact(session,contact);
+        socialRequest.unfollowContact(contact);
 
     }
 
@@ -308,13 +261,8 @@ public class SocialManager extends DataManager {
                                           String activity,
                                           APIServiceCallback<DynamicDetail> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.getActivityDetails(session,activity);
+        socialRequest.getActivityDetails(activity);
 
     }
 
@@ -331,13 +279,8 @@ public class SocialManager extends DataManager {
                                        Pagination pagination,
                                        APIServiceCallback<CollectionPage<LikedRecord>> callback) {
 
-
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.getLikedRecords(session,criteria,pagination);
+        socialRequest.getLikedRecords(criteria,pagination);
 
     }
 
@@ -350,13 +293,8 @@ public class SocialManager extends DataManager {
     public static void getContacts(Context context,
                                    APIServiceCallback<ArrayList<ContactGroup>> callback) {
 
-        String session = getSessionID(context);
-        if (checkSession(session, callback)) {
-            return;
-        }
-
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.getContacts(session);
+        socialRequest.getContacts();
 
     }
 
@@ -403,17 +341,17 @@ public class SocialManager extends DataManager {
             return;
         }
 
-        String session = getSessionID(context);
-
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            qiniuService.uploadFailure();
-            return;
-        }
+//        String session = getSessionID(context);
+//
+//        if (TextUtils.isEmpty(session)) {
+//
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the sessionID is empty,so the request return failure");
+//            }
+//
+//            qiniuService.uploadFailure();
+//            return;
+//        }
 
         UpTokenParam param = new UpTokenParam();
         param.type = Xu.TokenType.SOCIAL;
@@ -421,7 +359,7 @@ public class SocialManager extends DataManager {
 
 
         QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
-        qiniuRequest.getToken(session,param);
+        qiniuRequest.getToken(param);
 
 
     }

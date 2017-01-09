@@ -23,21 +23,21 @@ public class SecurityRequest extends ServiceRequest {
         super(context,callback);
     }
 
-    public void havePrivileges(String session,Privilege[] privileges) {
+    public void havePrivileges(Privilege[] privileges) {
 
         String privilegesPath = objectToJsonString(privileges);
         if (XiaojsConfig.DEBUG) {
             Logger.d("privilegesPath: %s",privilegesPath);
         }
 
-        Call<Privilege[]> call = getService().havePrivileges(session,privilegesPath);
+        Call<Privilege[]> call = getService().havePrivileges(privilegesPath);
         enqueueRequest(APIType.HAVE_PROVILEGES,call);
 
     }
 
 
     public void checkSession() {
-        Call<AuthenticateStatus> call = getService().checkSession(null);
+        Call<AuthenticateStatus> call = getService().checkSession();
         enqueueRequest(APIType.CHECK_SESSION,call);
     }
 }

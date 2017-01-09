@@ -13,9 +13,9 @@ import retrofit2.Call;
  * Created by maxiaobao on 2017/1/9.
  */
 
-public class LiveSessionRequest extends ServiceRequest{
+public class LiveRequest extends ServiceRequest{
 
-    public LiveSessionRequest(Context context, APIServiceCallback callback) {
+    public LiveRequest(Context context, APIServiceCallback callback) {
         super(context, callback);
     }
 
@@ -23,9 +23,9 @@ public class LiveSessionRequest extends ServiceRequest{
         Call<Ticket> call = getService().generateTicket(cs);
         enqueueRequest(APIType.GENERATE_TICKET,call);
     }
-    public void bootSession(String session,String ticket) {
+    public void bootSession(String ticket) {
 
-        Call<CtlSession> call = getService().bootSession(session,ticket);
+        Call<CtlSession> call = getService().bootSession(ticket);
         enqueueRequest(APIType.BOOT_SESSION,call);
     }
 }

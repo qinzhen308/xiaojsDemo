@@ -9,4 +9,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class AuthenticateStatus {
     public boolean auth;
     public String csrf;
+    public String sessionID;
 }

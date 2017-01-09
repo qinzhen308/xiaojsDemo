@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
 
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.XiaojsService;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.util.APPUtils;
 import okhttp3.Interceptor;
@@ -58,11 +59,12 @@ public class CommonHeaderInterceptor implements Interceptor{
         // Request customization: add request headers
         Request.Builder requestBuilder = original.newBuilder()
                 .addHeader("XA", Integer.toString(APPUtils.getAPPType(context)))
-                .addHeader("XAV", APPUtils.getAPPFullVersion(context));
+                .addHeader("XAV", APPUtils.getAPPFullVersion(context))
+                .addHeader("SessionID", AccountPref.getAuthToken(context));
 
         if (original.method() != XiaojsService.METHOD_GET) {
             requestBuilder.addHeader("X-CSRF-Token", SecurityPref.getCSRFToken(context));
-            requestBuilder.addHeader("Cookie", SecurityPref.getCSRFCookie(context));
+            //requestBuilder.addHeader("Cookie", SecurityPref.getCSRFCookie(context));
         }
 
         Request request = requestBuilder.build();

@@ -50,13 +50,7 @@ public class LoginDataManager extends DataManager{
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
-
-
         LoginRequest loginRequest = new LoginRequest(context,callback);
-        loginRequest.logout(session);
+        loginRequest.logout();
     }
 }

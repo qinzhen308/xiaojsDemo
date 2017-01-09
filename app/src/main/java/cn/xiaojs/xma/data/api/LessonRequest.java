@@ -38,16 +38,15 @@ public class LessonRequest extends ServiceRequest {
 
     }
 
-    public void createLiveLesson(String sessionID, CreateLesson lesson) {
+    public void createLiveLesson(CreateLesson lesson) {
 
-        Call<CLResponse> call = getService().createLiveLesson(sessionID, lesson);
+        Call<CLResponse> call = getService().createLiveLesson(lesson);
         enqueueRequest(APIType.CREATE_LESSON, call);
 
     }
 
 
-    public void getLessons(@NonNull String sessionID,
-                           @NonNull Criteria criteria,
+    public void getLessons(@NonNull Criteria criteria,
                            @NonNull Pagination pagination) {
 
 
@@ -60,8 +59,7 @@ public class LessonRequest extends ServiceRequest {
         }
 
 
-        Call<GetLessonsResponse> call = getService().getLessons(sessionID,
-                criteriaJsonstr,
+        Call<GetLessonsResponse> call = getService().getLessons(criteriaJsonstr,
                 paginationJsonstr);
 
         enqueueRequest(APIType.GET_LESSONS, call);
@@ -69,21 +67,20 @@ public class LessonRequest extends ServiceRequest {
     }
 
 
-    public void putLessonOnShelves(@NonNull String sessionID, @NonNull String lesson) {
+    public void putLessonOnShelves(@NonNull String lesson) {
 
-        Call<ResponseBody> call = getService().putLessonOnShelves(sessionID, lesson);
+        Call<ResponseBody> call = getService().putLessonOnShelves(lesson);
         enqueueRequest(APIType.PUT_LESSON_ON_SHELVES, call);
 
     }
 
-    public void cancelLessonOnShelves(@NonNull String sessionID, @NonNull String lesson) {
+    public void cancelLessonOnShelves(@NonNull String lesson) {
 
-        Call<ResponseBody> call = getService().cancelLessonOnShelves(sessionID, lesson);
+        Call<ResponseBody> call = getService().cancelLessonOnShelves(lesson);
         enqueueRequest(APIType.CANCEL_LESSON_ON_SHELVES, call);
     }
 
-    public void getEnrolledLessons(@NonNull String sessionID,
-                                   @NonNull Criteria criteria,
+    public void getEnrolledLessons(@NonNull Criteria criteria,
                                    @NonNull Pagination pagination) {
 
 
@@ -95,16 +92,15 @@ public class LessonRequest extends ServiceRequest {
             Logger.json(paginationJsonstr);
         }
 
-        Call<GELessonsResponse> call = getService().getEnrolledLessons(sessionID,
-                criteriaJsonstr,
+        Call<GELessonsResponse> call = getService().getEnrolledLessons(criteriaJsonstr,
                 paginationJsonstr);
         enqueueRequest(APIType.GET_ENROLLED_LESSONS, call);
 
     }
 
-    public void getLessonData(@NonNull String sessionID, @NonNull String lesson) {
+    public void getLessonData(@NonNull String lesson) {
 
-        Call<LessonDetail> call = getService().getLessonData(sessionID, lesson);
+        Call<LessonDetail> call = getService().getLessonData(lesson);
         enqueueRequest(APIType.GET_LESSON_DATA, call);
 
     }
@@ -117,51 +113,46 @@ public class LessonRequest extends ServiceRequest {
 
     }
 
-    public void editLesson(@NonNull String sessionID,
-                           @NonNull String lesson,
+    public void editLesson(@NonNull String lesson,
                            @NonNull LiveLesson liveLesson) {
 
-        Call<ResponseBody> call = getService().editLesson(sessionID, lesson, liveLesson);
+        Call<ResponseBody> call = getService().editLesson(lesson, liveLesson);
         enqueueRequest(APIType.EDIT_LESSON, call);
 
     }
 
 
-    public void enrollLesson(@NonNull String sessionID,
-                             @NonNull String lesson,
+    public void enrollLesson(@NonNull String lesson,
                              @Nullable OfflineRegistrant offlineRegistrant) {
 
-        Call<ELResponse> call = getService().enrollLesson(sessionID, lesson, offlineRegistrant);
+        Call<ELResponse> call = getService().enrollLesson(lesson, offlineRegistrant);
         enqueueRequest(APIType.ENROLL_LESSON, call);
 
     }
 
-    public void confirmLessonEnrollment(@NonNull String sessionID,
-                                        @NonNull String lesson,
+    public void confirmLessonEnrollment(@NonNull String lesson,
                                         @NonNull String registrant) {
 
-        Call<CLEResponse> call = getService().confirmLessonEnrollment(sessionID, lesson, registrant);
+        Call<CLEResponse> call = getService().confirmLessonEnrollment(lesson, registrant);
         enqueueRequest(APIType.CONFIRM_LESSON_ENROLLMENT, call);
     }
 
-    public void cancelLesson(@NonNull String sessionID,
-                             @NonNull String lesson,
+    public void cancelLesson(@NonNull String lesson,
                              @NonNull CancelReason reason) {
 
-        Call<ResponseBody> call = getService().cancelLesson(sessionID, lesson, reason);
+        Call<ResponseBody> call = getService().cancelLesson(lesson, reason);
         enqueueRequest(APIType.CANCEL_LESSON, call);
 
     }
 
 
-    public void toggleAccessLesson(@NonNull String sessionID,
-                                   @NonNull String lesson,
+    public void toggleAccessLesson(@NonNull String lesson,
                                    final boolean accessible) {
 
         AccessLesson accessLesson = new AccessLesson();
         accessLesson.setAccessible(accessible);
 
-        Call<ResponseBody> call = getService().toggleAccessLesson(sessionID, lesson, accessLesson);
+        Call<ResponseBody> call = getService().toggleAccessLesson(lesson, accessLesson);
         enqueueRequest(APIType.TOGGLE_ACCESS_TO_LESSON, call);
 
     }
