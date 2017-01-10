@@ -484,6 +484,25 @@ public class FileUtil {
     }
 
     /**
+     * clear all file and dir which in root directory
+     * @param directory
+     */
+    public static void clearDirFiles(File directory) {
+
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
+            if (file.isDirectory()) {
+                clearDirFiles(file);
+            }
+
+            file.delete();
+        }
+    }
+
+    /**
      * 字符串转流
      */
     public static InputStream String2InputStream(String str) {

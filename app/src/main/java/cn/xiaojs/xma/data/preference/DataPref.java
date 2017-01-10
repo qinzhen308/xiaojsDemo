@@ -4,13 +4,36 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by maxiaobao on 2016/12/4.
  */
 
 public class DataPref {
 
+    //private static final String PREF_CONTACT_GROUP = "self_groups";
+
     protected static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
+//    public static void setContactGroup(final Context context,String group) {
+//
+//        Set<String> groups = getContactGroup(context);
+//        if (groups ==null) {
+//            groups = new HashSet<>();
+//        }
+//
+//        groups.add(group);
+//
+//        SharedPreferences sp = DataPref.getSharedPreferences(context);
+//        sp.edit().putStringSet(PREF_CONTACT_GROUP,groups).apply();
+//    }
+//
+//    public static Set<String> getContactGroup(final Context context) {
+//        SharedPreferences sp = DataPref.getSharedPreferences(context);
+//        return sp.getStringSet(PREF_CONTACT_GROUP,null);
+//    }
+
 }

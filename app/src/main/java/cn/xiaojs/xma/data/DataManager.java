@@ -1,14 +1,19 @@
 package cn.xiaojs.xma.data;
 
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ErrorPrompts;
+import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.SecurityUtil;
 import com.orhanobut.logger.Logger;
+
+import java.io.File;
 
 /**
  * Created by maxiaobao on 2016/10/25.
@@ -51,6 +56,17 @@ public class DataManager{
         }
 
         return false;
+    }
+
+    /**
+     * clear cache data which create by api service
+     * @param context
+     */
+    public static void clearAPICache(Context context) {
+
+        File cacheDir = new File(context.getCacheDir(),XiaojsConfig.HTTP_CACHE_DIR);
+        FileUtil.clearDirFiles(cacheDir);
+
     }
 
 }

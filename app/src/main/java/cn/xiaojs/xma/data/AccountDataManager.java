@@ -93,11 +93,16 @@ public class AccountDataManager extends DataManager{
 
     }
 
+    /**
+     * clear the login user data and cache
+     * @param context
+     */
     public static void clearUserInfo(Context context) {
 
         AccountPref.setAuthToken(context,"");
         AccountPref.setAccountID(context,"");
-
+        SecurityManager.saveCSRFToken(context,"");
+        DataManager.clearAPICache(context);
     }
 
 
