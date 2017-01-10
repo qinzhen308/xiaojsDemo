@@ -544,18 +544,18 @@ public class TestAPIActivity extends Activity {
 
 
 
-                        LessonDataManager.requestUploadCover(TestAPIActivity.this,"",cropImgPath,new QiniuService(){
-
-                            @Override
-                            public void uploadSuccess(String fileName, String fileUrl) {
-
-                            }
-
-                            @Override
-                            public void uploadFailure() {
-
-                            }
-                        });
+//                        LessonDataManager.requestUploadCover(TestAPIActivity.this,"",cropImgPath,new QiniuService(){
+//
+//                            @Override
+//                            public void uploadSuccess(String fileName, String fileUrl) {
+//
+//                            }
+//
+//                            @Override
+//                            public void uploadFailure() {
+//
+//                            }
+//                        });
 
 //                        AccountDataManager.requestUploadAvatar(TestAPIActivity.this, sessionid, id, cropImgPath, new QiniuService() {
 //                            @Override
@@ -804,29 +804,29 @@ public class TestAPIActivity extends Activity {
     //登陆
     private void testLogin(final Context context) {
 
-        LoginParams params = new LoginParams();
-        params.setPassword("123456");
-        params.setCt(Security.CredentialType.PERSION);
-        params.setMobile(mob);
-
-        LoginDataManager.requestLoginByAPI(context, params, new APIServiceCallback<LoginInfo>() {
-            @Override
-            public void onSuccess(LoginInfo object) {
-
-                Logger.d("onSuccess-----------");
-
-                sessionid = object.getUser().getSessionID();
-
-                Toast.makeText(context, "login Ok:" + sessionid, Toast.LENGTH_LONG).show();
-
-            }
-
-            @Override
-            public void onFailure(String errorCode,String errorMessage) {
-
-                Logger.d("onFailure-----------");
-            }
-        });
+//        LoginParams params = new LoginParams();
+//        params.setPassword("123456");
+//        params.setCt(Security.CredentialType.PERSION);
+//        params.setMobile(mob);
+//
+//        LoginDataManager.requestLoginByAPI(context, params, new APIServiceCallback<LoginInfo>() {
+//            @Override
+//            public void onSuccess(LoginInfo object) {
+//
+//                Logger.d("onSuccess-----------");
+//
+//                sessionid = object.getUser().getSessionID();
+//
+//                Toast.makeText(context, "login Ok:" + sessionid, Toast.LENGTH_LONG).show();
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode,String errorMessage) {
+//
+//                Logger.d("onFailure-----------");
+//            }
+//        });
     }
 
 

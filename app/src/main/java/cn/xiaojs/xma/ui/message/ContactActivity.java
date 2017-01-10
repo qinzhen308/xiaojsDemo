@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Contact;
@@ -83,7 +85,7 @@ public class ContactActivity extends BaseActivity {
         requestContactData();
     }
 
-    @OnClick({R.id.left_image,R.id.right_image})
+    @OnClick({R.id.left_image, R.id.right_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -98,20 +100,19 @@ public class ContactActivity extends BaseActivity {
     }
 
 
-
     private void expandALL() {
 
         int groupCount = contactAdapter.getGroupCount();
-        for (int i=0; i<groupCount; i++) {
+        for (int i = 0; i < groupCount; i++) {
 
-            listView.expandGroup(i,false);
+            listView.expandGroup(i, false);
 
         }
     }
 
     private void toSearch(String query) {
 
-        if (contactAdapter ==null)
+        if (contactAdapter == null)
             return;
 
         contactAdapter.filterDta(query);
@@ -126,11 +127,11 @@ public class ContactActivity extends BaseActivity {
         View view = LayoutInflater.from(this).inflate(R.layout.layout_dlg_list, null);
         ListView groupListView = (ListView) view;
 
-        String[] payArray = getResources().getStringArray(R.array.lesson_pay_methods);
-        ArrayAdapter<String> payAdapter = new ArrayAdapter<>(this,
+
+        MoveAdapter payAdapter = new MoveAdapter(this,
                 R.layout.layout_single_select_item,
                 R.id.title,
-                payArray);
+                contactAdapter.getGroupData());
 
         groupListView.setAdapter(payAdapter);
         groupListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -162,16 +163,16 @@ public class ContactActivity extends BaseActivity {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Unfollow contact
 
-    private void requestUnfollow(final ContactGroup contactGroup, final Contact contact,final int groupPosition,final int childPosition) {
+    private void requestUnfollow(final ContactGroup contactGroup, final Contact contact, final int groupPosition, final int childPosition) {
 
         showProgress(true);
-        SocialManager.unfollowContact(this,contact.account, new APIServiceCallback() {
+        SocialManager.unfollowContact(this, contact.account, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
 
                 cancelProgress();
 
-                removeContact(contactGroup,contact,groupPosition,childPosition);
+                removeContact(contactGroup, contact, groupPosition, childPosition);
 
             }
 
@@ -186,7 +187,7 @@ public class ContactActivity extends BaseActivity {
         if (contactAdapter == null)
             return;
 
-        contactAdapter.removeData(contactGroup,contact);
+        contactAdapter.removeData(contactGroup, contact);
 
     }
 
@@ -199,13 +200,12 @@ public class ContactActivity extends BaseActivity {
         dialog.setTitle(R.string.create_new_group);
 
 
-
         final EditText editText = new EditText(this);
         editText.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 getResources().getDimensionPixelSize(R.dimen.px100)));
         editText.setHint(R.string.group_name);
         editText.setGravity(Gravity.CENTER_VERTICAL);
-        editText.setPadding(10,0,10,0);
+        editText.setPadding(10, 0, 10, 0);
         editText.setTextColor(getResources().getColor(R.color.common_text));
         editText.setBackgroundResource(R.drawable.common_edittext_bg);
         //editText.requestFocus();
@@ -225,13 +225,17 @@ public class ContactActivity extends BaseActivity {
 
 
                 String inputText = editText.getText().toString().trim();
-                if (!TextUtils.isEmpty(inputText)){
+                if (!TextUtils.isEmpty(inputText)) {
 
-                    // TODO 检测重复 and 添加
+                    if (isExistGroup(inputText)) {
 
+                        Toast.makeText(ContactActivity.this,
+                                R.string.group_has_exist,
+                                Toast.LENGTH_SHORT)
+                                .show();
+                        return;
+                    }
                     requestAddGroup(inputText);
-
-
                 }
 
                 dialog.dismiss();
@@ -239,6 +243,26 @@ public class ContactActivity extends BaseActivity {
         });
 
         dialog.show();
+
+    }
+
+
+    private boolean isExistGroup(String groupName) {
+
+        if (contactAdapter == null) {
+            return false;
+        }
+
+        List<ContactGroup> groups = contactAdapter.getGroupData();
+        if (groups != null) {
+            for (ContactGroup contactGroup : groups) {
+                if (groupName.equals(contactGroup.name)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
 
     }
 
@@ -252,13 +276,15 @@ public class ContactActivity extends BaseActivity {
                 try {
 
                     String j = object.string();
-                    ContactGroup newGroup= SocialManager.parseAddGroup(j);
+                    ContactGroup newGroup = SocialManager.parseAddGroup(j);
 
-                    if (contactAdapter !=null) {
+                    DataManager.addGroupData(ContactActivity.this, newGroup);
+
+                    if (contactAdapter != null) {
                         contactAdapter.appendData(newGroup);
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -270,12 +296,11 @@ public class ContactActivity extends BaseActivity {
             public void onFailure(String errorCode, String errorMessage) {
 
                 cancelProgress();
-                Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
 
             }
         });
     }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -299,7 +324,7 @@ public class ContactActivity extends BaseActivity {
                 bindDataView(null);
                 listView.onRefreshComplete();
 
-                Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -312,12 +337,12 @@ public class ContactActivity extends BaseActivity {
             contactData = new ArrayList<>();
         }
 
-        addDefaultGroup(contactData);
+        addDefaultGroup(this, contactData);
 
-        if(contactAdapter ==null) {
+        if (contactAdapter == null) {
             contactAdapter = new ContactAdapter(this, contactData);
             listView.setAdapter(contactAdapter);
-        }else{
+        } else {
 
             contactAdapter.changeData(contactData);
         }
@@ -326,53 +351,32 @@ public class ContactActivity extends BaseActivity {
     }
 
 
-    public static void addDefaultGroup(ArrayList<ContactGroup> contactData) {
+    public static void addDefaultGroup(Context context, ArrayList<ContactGroup> contactData) {
 
-        Map<Long, ContactGroup> map = getDefaultGroup();
+        Map<Long, ContactGroup> cacheMap = DataManager.getGroupCache(context);
+
+        if (cacheMap == null)
+            return;
+
+        Map<Long, ContactGroup> tempMap = new HashMap<>(cacheMap);
 
         for (ContactGroup contactGroup : contactData) {
 
             long id = contactGroup.group;
 
-            if (map.get(id) != null){
-                map.remove(id);
+            if (tempMap.get(id) != null) {
+                tempMap.remove(id);
 
-                contactGroup.name = Social.getContactName((int)id);
+                contactGroup.name = Social.getContactName((int) id);
             }
 
-            if (map.isEmpty()){
+            if (tempMap.isEmpty()) {
                 break;
             }
 
         }
 
-        contactData.addAll(map.values());
-
-    }
-
-
-    public static Map<Long, ContactGroup> getDefaultGroup() {
-
-        Map<Long, ContactGroup> map = new HashMap<>();
-
-        map.put((long)Social.ContactGroup.TEACHERS,createGroup(Social.ContactGroup.TEACHERS));
-        map.put((long)Social.ContactGroup.STUDENTS,createGroup(Social.ContactGroup.STUDENTS));
-        map.put((long)Social.ContactGroup.CLASSMATES,createGroup(Social.ContactGroup.CLASSMATES));
-        map.put((long)Social.ContactGroup.FRIENDS,createGroup(Social.ContactGroup.FRIENDS));
-        map.put((long)Social.ContactGroup.ORGANIZATIONS,createGroup(Social.ContactGroup.ORGANIZATIONS));
-        map.put((long)Social.ContactGroup.COLLEAGUES,createGroup(Social.ContactGroup.COLLEAGUES));
-        map.put((long)Social.ContactGroup.STRANGERS,createGroup(Social.ContactGroup.STRANGERS));
-
-        return map;
-    }
-
-    public static ContactGroup createGroup(int groupId) {
-
-        ContactGroup group = new ContactGroup();
-        group.group = groupId;
-        group.name = Social.getContactName(groupId);
-        group.collection = new ArrayList<>(0);
-        return group;
+        contactData.addAll(tempMap.values());
 
     }
 
@@ -398,6 +402,10 @@ public class ContactActivity extends BaseActivity {
 
         }
 
+        public List<ContactGroup> getGroupData() {
+            return originData;
+        }
+
         public void changeData(ArrayList<ContactGroup> contactData) {
             this.originData = contactData;
             this.groupData.clear();
@@ -413,7 +421,7 @@ public class ContactActivity extends BaseActivity {
             notifyDataSetChanged();
         }
 
-        public void removeData(ContactGroup contactGroup,Contact ocontact) {
+        public void removeData(ContactGroup contactGroup, Contact ocontact) {
             //this.groupData.get(groupPosition).collection.remove(childPosition);
 
             if (filterChanges != null) {
@@ -474,14 +482,14 @@ public class ContactActivity extends BaseActivity {
                 holder.countView = (TextView) convertView.findViewById(R.id.group_count);
                 convertView.setTag(holder);
 
-            }else{
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             holder.nameView.setText(getGroup(groupPosition).name);
 
 
-            String gcount = String.format(defaultCountFromat,getChildrenCount(groupPosition));
+            String gcount = String.format(defaultCountFromat, getChildrenCount(groupPosition));
             holder.countView.setText(gcount);
 
             return convertView;
@@ -489,7 +497,7 @@ public class ContactActivity extends BaseActivity {
 
 
         @Override
-        public View getChildView(final int groupPosition,final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
             ViewHolder holder;
 
@@ -526,7 +534,7 @@ public class ContactActivity extends BaseActivity {
                     ContactGroup cg = getGroup(groupPosition);
 
 
-                    requestUnfollow(cg,c,groupPosition,childPosition);
+                    requestUnfollow(cg, c, groupPosition, childPosition);
                 }
             });
 
@@ -539,7 +547,7 @@ public class ContactActivity extends BaseActivity {
         }
 
 
-        private Map<ContactGroup,ContactGroup> filterChanges;
+        private Map<ContactGroup, ContactGroup> filterChanges;
 
         public void filterDta(String query) {
 
@@ -549,22 +557,22 @@ public class ContactActivity extends BaseActivity {
                 filterChanges.clear();
             }
 
-            if (TextUtils.isEmpty(query)){
+            if (TextUtils.isEmpty(query)) {
                 groupData.addAll(originData);
 
-            }else{
+            } else {
                 query = query.trim().toLowerCase();
-                for (ContactGroup group :originData) {
+                for (ContactGroup group : originData) {
 
                     ArrayList<Contact> newList = new ArrayList<Contact>();
-                    for(Contact contact :group.collection) {
+                    for (Contact contact : group.collection) {
                         String name = contact.alias.toLowerCase();
-                        if (name.contains(query)){
+                        if (name.contains(query)) {
                             newList.add(contact);
                         }
                     }
 
-                    if (newList.size()>0){
+                    if (newList.size() > 0) {
                         ContactGroup contactGroup = new ContactGroup();
                         contactGroup.name = group.name;
                         contactGroup.collection = newList;
@@ -575,7 +583,7 @@ public class ContactActivity extends BaseActivity {
                             filterChanges = new HashMap<>();
                         }
 
-                        filterChanges.put(contactGroup,group);
+                        filterChanges.put(contactGroup, group);
                     }
 
                 }
@@ -594,6 +602,20 @@ public class ContactActivity extends BaseActivity {
     }
 
 
+    private class MoveAdapter extends ArrayAdapter<ContactGroup> {
+        public MoveAdapter(Context context, int resource,int tid, List<ContactGroup> objects) {
+            super(context, resource,tid,objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = super.getView(position, convertView, parent);
+            TextView textView = (TextView) v.findViewById(R.id.title);
+
+            textView.setText(getItem(position).name);
+            return v;
+        }
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //test data
 

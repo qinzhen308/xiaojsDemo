@@ -14,7 +14,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/10/31.
  */
 
-public class LoginDataManager extends DataManager{
+public class LoginDataManager {
 
     /**
      * 调用登陆API，进行登陆
@@ -50,13 +50,7 @@ public class LoginDataManager extends DataManager{
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
-
-
         LoginRequest loginRequest = new LoginRequest(context,callback);
-        loginRequest.logout(session);
+        loginRequest.logout();
     }
 }

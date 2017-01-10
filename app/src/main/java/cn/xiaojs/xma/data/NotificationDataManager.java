@@ -17,7 +17,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/13.
  */
 
-public class NotificationDataManager extends DataManager {
+public class NotificationDataManager {
 
     public static void requestNotificationsOverview(Context context,
                            @NonNull Pagination pagination,
@@ -31,14 +31,9 @@ public class NotificationDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
-
 
         PlatformRequest platformRequest = new PlatformRequest(context,callback);
-        platformRequest.getNotificationsOverview(session,pagination);
+        platformRequest.getNotificationsOverview(pagination);
     }
 
     public static void requestNotifications(Context context,
@@ -54,14 +49,8 @@ public class NotificationDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
-
-
         PlatformRequest platformRequest = new PlatformRequest(context,callback);
-        platformRequest.getNotifications(session,criteria,pagination);
+        platformRequest.getNotifications(criteria,pagination);
 
 
     }
@@ -77,13 +66,8 @@ public class NotificationDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
-
         PlatformRequest platformRequest = new PlatformRequest(context,callback);
-        platformRequest.deleteNotification(session,notification);
+        platformRequest.deleteNotification(notification);
 
     }
 
@@ -98,12 +82,8 @@ public class NotificationDataManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
 
         PlatformRequest platformRequest = new PlatformRequest(context,callback);
-        platformRequest.ignoreNotifications(session,criteria);
+        platformRequest.ignoreNotifications(criteria);
     }
 }

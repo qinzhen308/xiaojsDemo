@@ -247,7 +247,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                         final String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
                         final Context c = LessonCreationOptionalInfoActivity.this;
                         showProgress(true);
-                        LessonDataManager.requestUploadCover(c, mLessonId, cropImgPath, new QiniuService() {
+                        LessonDataManager.requestUploadCover(c, cropImgPath, new QiniuService() {
                             @Override
                             public void uploadSuccess(String fileName, String fileUrl) {
                                 cancelProgress();

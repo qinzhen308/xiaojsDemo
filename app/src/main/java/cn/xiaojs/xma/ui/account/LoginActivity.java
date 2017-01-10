@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
@@ -208,6 +209,7 @@ public class LoginActivity extends BaseActivity {
                 }
 
                 SecurityManager.saveCSRFToken(LoginActivity.this, csrf);
+                AccountDataManager.saveSessionID(LoginActivity.this,status.sessionID);
 
             }
 

@@ -16,7 +16,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/12/4.
  */
 
-public class SecurityManager extends DataManager {
+public class SecurityManager {
 
 
     public static boolean checkPermission(Context context,int permission) {
@@ -96,14 +96,9 @@ public class SecurityManager extends DataManager {
             return;
         }
 
-        String session = AccountDataManager.getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
-
 
         SecurityRequest securityRequest = new SecurityRequest(context,callback);
-        securityRequest.havePrivileges(session,privileges);
+        securityRequest.havePrivileges(privileges);
 
     }
 

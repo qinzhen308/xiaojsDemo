@@ -20,13 +20,15 @@ import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.account.User;
+import okhttp3.ResponseBody;
+
 import com.orhanobut.logger.Logger;
 
 /**
  * Created by maxiaobao on 2016/11/4.
  */
 
-public class AccountDataManager extends DataManager{
+public class AccountDataManager {
 
     //保存已声明的能力
     public static void saveSubject(Context context,String subject) {
@@ -45,6 +47,10 @@ public class AccountDataManager extends DataManager{
      */
     public static String getSessionID(Context context) {
         return AccountPref.getAuthToken(context);
+    }
+
+    public static void saveSessionID(Context context,String session) {
+        AccountPref.setAuthToken(context,session);
     }
 
     /**
@@ -80,8 +86,8 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String phone = user.getSessionID();
-        AccountPref.setAuthToken(context,phone);
+        //String phone = user.getSessionID();
+        //AccountPref.setAuthToken(context,phone);
 
         String id = user.getId();
         AccountPref.setAccountID(context,id);
@@ -89,23 +95,27 @@ public class AccountDataManager extends DataManager{
 
     }
 
+    /**
+     * clear the login user data and cache
+     * @param context
+     */
     public static void clearUserInfo(Context context) {
 
         AccountPref.setAuthToken(context,"");
         AccountPref.setAccountID(context,"");
-
+        SecurityManager.saveCSRFToken(context,"");
+        DataManager.clearAPICache(context);
+        DataManager.clearDBData(context);
     }
 
 
     /**
      * 获取个人主页数据API
      * @param context
-     * @param sessionID
      * @param callback
      */
-    public static void requestHomeData(Context context,
-                                       @NonNull String sessionID,
-                                       @NonNull APIServiceCallback<HomeData> callback) {
+    public static void getHomeData(Context context,
+                                       @NonNull APIServiceCallback<ResponseBody> callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
@@ -113,14 +123,8 @@ public class AccountDataManager extends DataManager{
             }
             return;
         }
-
-        String session = getSessionID(context);
-        if (checkSession(session,callback)) {
-            return;
-        }
-
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.getHomeData(session);
+        accountRequest.getHomeData();
     }
 
     /**
@@ -141,11 +145,11 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String session = getSessionID(context);
-
-        if (checkSession(session,callback)) {
-            return;
-        }
+//        String session = getSessionID(context);
+//
+//        if (checkSession(session,callback)) {
+//            return;
+//        }
 
         if (competencyParams == null) {
 
@@ -160,7 +164,7 @@ public class AccountDataManager extends DataManager{
 
 
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.claimCompetency(session,competencyParams);
+        accountRequest.claimCompetency(competencyParams);
     }
 
 
@@ -175,14 +179,9 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String session = getSessionID(context);
-
-        if (checkSession(session,callback)) {
-            return;
-        }
 
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.editProfile(session,basic);
+        accountRequest.editProfile(basic);
 
     }
 
@@ -195,14 +194,9 @@ public class AccountDataManager extends DataManager{
             }
             return;
         }
-        String session = getSessionID(context);
-
-        if (checkSession(session,callback)) {
-            return;
-        }
 
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.getProfile(session);
+        accountRequest.getProfile();
 
     }
 
@@ -249,17 +243,17 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String session = getSessionID(context);
-
-        if (TextUtils.isEmpty(session)) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the sessionID is empty,so the request return failure");
-            }
-
-            qiniuService.uploadFailure();
-            return;
-        }
+//        String session = getSessionID(context);
+//
+//        if (TextUtils.isEmpty(session)) {
+//
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the sessionID is empty,so the request return failure");
+//            }
+//
+//            qiniuService.uploadFailure();
+//            return;
+//        }
 
         UpTokenParam param = new UpTokenParam();
         param.type = Xu.TokenType.AVATAR;
@@ -267,7 +261,7 @@ public class AccountDataManager extends DataManager{
 
 
         QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
-        qiniuRequest.getToken(session,param);
+        qiniuRequest.getToken(param);
 
 
     }
@@ -281,14 +275,14 @@ public class AccountDataManager extends DataManager{
             return;
         }
 
-        String session = getSessionID(context);
-
-        if (checkSession(session,callback)) {
-            return;
-        }
+//        String session = getSessionID(context);
+//
+//        if (checkSession(session,callback)) {
+//            return;
+//        }
 
         AccountRequest accountRequest = new AccountRequest(context,callback);
-        accountRequest.getCenterData(session);
+        accountRequest.getCenterData();
 
     }
 

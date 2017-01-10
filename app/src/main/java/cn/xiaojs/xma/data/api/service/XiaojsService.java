@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
+import cn.xiaojs.xma.model.LiveSession.CtlSession;
+import cn.xiaojs.xma.model.LiveSession.Ticket;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
@@ -63,7 +65,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.204:3000";
+    String BASE_URL = "http://192.168.100.3:3000";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -78,8 +80,7 @@ public interface XiaojsService {
     //Claim Competency
     @Headers("Content-Type: application/json")
     @POST("/v1/accounts/competencies")
-    Call<ClaimCompetency> claimCompetency(@Header("SessionID") String sessionID,
-                                          @Body CompetencyParams competencyParams);
+    Call<ClaimCompetency> claimCompetency(@Body CompetencyParams competencyParams);
 
     //Register
     @Headers("Content-Type: application/json")
@@ -88,17 +89,16 @@ public interface XiaojsService {
 
     //Get Home Data
     @GET("/v1/accounts/home")
-    Call<HomeData> getHomeData(@Header("SessionID") String sessionID);
+    Call<ResponseBody> getHomeData();
 
     //Edit Profile
     @Headers("Content-Type: application/json")
     @PATCH("/v1/accounts/profile")
-    Call<ResponseBody> editProfile(@Header("SessionID") String sessionID,
-                            @Body Account account);
+    Call<ResponseBody> editProfile(@Body Account account);
 
     //Get Profile
     @GET("/v1/accounts/profile")
-    Call<Account> getProfile(@Header("SessionID") String sessionID);
+    Call<Account> getProfile();
 
     //Get upToken
 //    @GET("/v1/accounts/up_avatar_token")
@@ -106,17 +106,17 @@ public interface XiaojsService {
 
     //Get upToken
 //    @GET("/v1/ctl/lessons/{lesson}/up_cover_token")
-//    Call<TokenResponse> getCoverUpToken(@Header("SessionID") String sessionID,
+//    Call<TokenResponse> getCoverUpToken(
 //                                        @Path("lesson") String lesson);
 
     //Get upToken
     @Headers("Content-Type: application/json")
     @POST("/v1/files/up_token")
-    Call<UpToken[]> getUpToken(@Header("SessionID") String sessionID, @Body UpTokenParam... tokenParam);
+    Call<UpToken[]> getUpToken(@Body UpTokenParam... tokenParam);
 
     //Get Center Data
     @GET("/v1/accounts/center")
-    Call<CenterData> getCenterData(@Header("SessionID") String sessionID);
+    Call<CenterData> getCenterData();
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,35 +127,30 @@ public interface XiaojsService {
     //Create Lesson
     @Headers("Content-Type: application/json")
     @POST("/v1/ctl/lessons")
-    Call<CLResponse> createLiveLesson(@Header("SessionID") String sessionID,
-                                      @Body CreateLesson lesson);
+    Call<CLResponse> createLiveLesson(@Body CreateLesson lesson);
 
     //Get Lessons
     @GET("/v1/ctl/lessons/{criteria}/{pagination}")
-    Call<GetLessonsResponse> getLessons(@Header("SessionID") String sessionID,
-                                        @Path("criteria") String criteria,
+    Call<GetLessonsResponse> getLessons(@Path("criteria") String criteria,
                                         @Path("pagination") String pagination);
 
     //Put Lesson On Shelves
     @POST("/v1/ctl/lessons/{lesson}/onshelves")
-    Call<ResponseBody> putLessonOnShelves(@Header("SessionID") String sessionID,
-                                   @Path("lesson") String lesson);
+    Call<ResponseBody> putLessonOnShelves(@Path("lesson") String lesson);
 
     //Cancel Lesson-On-Shelves
     @DELETE("/v1/ctl/lessons/{lesson}/onshelves")
-    Call<ResponseBody> cancelLessonOnShelves(@Header("SessionID") String sessionID,
-                                      @Path("lesson") String lesson);
+    Call<ResponseBody> cancelLessonOnShelves(@Path("lesson") String lesson);
 
     //Get Enrolled Lessons
     @GET("/v1/ctl/lessons/enrolled/{criteria}/{pagination}")
-    Call<GELessonsResponse> getEnrolledLessons(@Header("SessionID") String sessionID,
+    Call<GELessonsResponse> getEnrolledLessons(
                                                @Path("criteria") String criteria,
                                                @Path("pagination") String pagination);
 
     //Get Lesson Data
     @GET("/v1/ctl/lessons/{lesson}")
-    Call<LessonDetail> getLessonData(@Header("SessionID") String sessionID,
-                                     @Path("lesson") String lesson);
+    Call<LessonDetail> getLessonData(@Path("lesson") String lesson);
 
     //Get Lesson Details
     @GET("/v1/ctl/lessons/{lesson}/home")
@@ -164,35 +159,28 @@ public interface XiaojsService {
 
     //Confirm Lesson Enrollment
     @GET("/v1/ctl/lessons/{lesson}/enroll/{registrant}")
-    Call<CLEResponse> confirmLessonEnrollment(@Header("SessionID") String sessionID,
-                                              @Path("lesson") String lesson,
+    Call<CLEResponse> confirmLessonEnrollment(@Path("lesson") String lesson,
                                               @Path("registrant") String registrant);
 
     //Enroll Lesson
     @Headers("Content-Type: application/json")
     @POST("/v1/ctl/lessons/{lesson}/enroll")
-    Call<ELResponse> enrollLesson(@Header("SessionID") String sessionID,
-                                  @Path("lesson") String lesson,
+    Call<ELResponse> enrollLesson(@Path("lesson") String lesson,
                                   @Body OfflineRegistrant offlineRegistrant);
 
     //Edit Lesson
     @Headers("Content-Type: application/json")
     @PUT("/v1/ctl/lessons/{lesson}")
-    Call<ResponseBody> editLesson(@Header("SessionID") String sessionID,
-                                @Path("lesson") String lesson,
-                                @Body LiveLesson liveLesson);
+    Call<ResponseBody> editLesson(@Path("lesson") String lesson, @Body LiveLesson liveLesson);
 
     //Cancel Lesson
     @Headers("Content-Type: application/json")
     @POST("/v1/ctl/lessons/{lesson}/cancel")
-    Call<ResponseBody> cancelLesson(@Header("SessionID") String sessionID,
-                                  @Path("lesson") String lesson,
-                                  @Body CancelReason reason);
+    Call<ResponseBody> cancelLesson(@Path("lesson") String lesson, @Body CancelReason reason);
 
     //Toggle Access-To-Lesson
     @PATCH("/v1/ctl/lessons/{lesson}/accessible")
-    Call<ResponseBody> toggleAccessLesson(@Header("SessionID") String sessionID,
-                                          @Path("lesson") String lesson,
+    Call<ResponseBody> toggleAccessLesson(@Path("lesson") String lesson,
                                           @Body AccessLesson accessLesson);
 
 
@@ -218,24 +206,24 @@ public interface XiaojsService {
 
     //Get Notifications Overview
     @GET("/v1/platform/notifications/overview/{pagination}")
-    Call<GNOResponse> getNotificationsOverview(@Header("SessionID") String sessionID,
+    Call<GNOResponse> getNotificationsOverview(
                                                @Path("pagination") String pagination);
 
     //Get Notifications
     @GET("/v1/platform/notifications/{criteria}/{pagination}")
-    Call<GENotificationsResponse> getNotifications(@Header("SessionID") String sessionID,
+    Call<GENotificationsResponse> getNotifications(
                                                    @Path("criteria") String criteria,
                                                    @Path("pagination") String pagination);
 
     //Delete Notification
     @DELETE("/v1/platform/notifications/{notification}")
-    Call<ResponseBody> deleteNotification(@Header("SessionID") String sessionID,
+    Call<ResponseBody> deleteNotification(
                                    @Path("notification") String notification);
 
 
     //Ignore Notifications
     @PATCH("/v1/platform/notifications/{criteria}")
-    Call<IgnoreNResponse> ignoreNotifications(@Header("SessionID") String sessionID,
+    Call<IgnoreNResponse> ignoreNotifications(
                                               @Path("criteria") String criteria);
 
 
@@ -260,7 +248,7 @@ public interface XiaojsService {
 
     //Check Session
     @GET("/v1/security/session")
-    Call<AuthenticateStatus> checkSession(@Header("SessionID") String sessionID);
+    Call<AuthenticateStatus> checkSession();
 
 
     //Login
@@ -271,7 +259,7 @@ public interface XiaojsService {
     //Logout
     @Headers("Content-Type: application/json")
     @DELETE("/v1/security/logout")
-    Call<ResponseBody> logout(@Header("SessionID") String sessionID);
+    Call<ResponseBody> logout();
 
     //Validate Code
     @GET("/v1/security/validate/{method}/{mobile}/{code}")
@@ -285,8 +273,7 @@ public interface XiaojsService {
 
     //Does User Have Privileges
     @GET("/v1/security/privileges/{privileges}")
-    Call<Privilege[]>havePrivileges(@Header("SessionID") String sessionID,
-                                    @Path("privileges") String privileges);
+    Call<Privilege[]>havePrivileges(@Path("privileges") String privileges);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -297,33 +284,28 @@ public interface XiaojsService {
     //Add Contact Group
     @Headers("Content-Type: application/json")
     @POST("/v1/social/contactgroups")
-    Call<ResponseBody> addContactGroup(@Header("SessionID") String sessionID,
-                                       @Body ContactGroup group);
+    Call<ResponseBody> addContactGroup(@Body ContactGroup group);
 
     //Comment Activity
     @Headers("Content-Type: application/json")
     @POST("/v1/social/activities/{activity}/comments")
-    Call<Comment> commentActivity(@Header("SessionID") String sessionID,
-                                  @Path("activity") String activity,
+    Call<Comment> commentActivity(@Path("activity") String activity,
                                   @Body Comment comment);
 
     // Get Activities
     @GET("/v1/social/activities/{criteria}/{pagination}")
-    Call<CollectionPage<Dynamic>> getActivities(@Header("SessionID") String sessionID,
-                                                @Path("criteria") String criteria,
+    Call<CollectionPage<Dynamic>> getActivities(@Path("criteria") String criteria,
                                                 @Path("pagination") String pagination);
 
     // Get Activity Details
     @GET("/v1/social/activities/{activity}")
-    Call<DynamicDetail> getActivityDetails(@Header("SessionID") String sessionID,
-                                           @Path("activity") String activity);
+    Call<DynamicDetail> getActivityDetails(@Path("activity") String activity);
 
 
 
     //Get Comments
     @GET("/v1/social/comments/{criteria}/{pagination}")
-    Call<CollectionPage<Comment>> getComments(@Header("SessionID") String sessionID,
-                                              @Path("criteria") String criteria,
+    Call<CollectionPage<Comment>> getComments(@Path("criteria") String criteria,
                                               @Path("pagination") String pagination);
 
 
@@ -331,55 +313,68 @@ public interface XiaojsService {
 
     // Get Updates
     @GET("/v1/social/updates/{pagination}")
-    Call<CollectionPage<DynUpdate>> getUpdates(@Header("SessionID") String sessionID,
-                                               @Path("pagination") String pagination);
+    Call<CollectionPage<DynUpdate>> getUpdates(@Path("pagination") String pagination);
 
     //Like Activity
     @POST("/v1/social/activities/{activity}/liked")
-    Call<Dynamic.DynStatus> likeActivity(@Header("SessionID") String sessionID,
-                                         @Path("activity") String activity);
+    Call<Dynamic.DynStatus> likeActivity(@Path("activity") String activity);
 
     // Post Activity
     @Headers("Content-Type: application/json")
     @POST("/v1/social/activities")
-    Call<Dynamic> postActivity(@Header("SessionID") String sessionID, @Body DynPost post);
+    Call<Dynamic> postActivity(@Body DynPost post);
 
     //Reply To Comment
     @Headers("Content-Type: application/json")
     @POST("/v1/social/comments/{comment}/replies")
-    Call<Comment> replyComment(@Header("SessionID") String sessionID,
-                              @Path("comment") String commentID,
-                              @Body Comment comment);
+    Call<Comment> replyComment(@Path("comment") String commentID,
+                               @Body Comment comment);
 
 
     //Reply To Reply
     @Headers("Content-Type: application/json")
     @POST("/v1/social/replies/{reply}/replies")
-    Call<Comment> reply2Reply(@Header("SessionID") String sessionID,
-                              @Path("reply") String replyID,
+    Call<Comment> reply2Reply(@Path("reply") String replyID,
                               @Body Comment comment);
 
 
     //Follow Contact
     @Headers("Content-Type: application/json")
     @POST("/v1/social/contacts")
-    Call<Relation> followContact(@Header("SessionID") String sessionID, @Body FollowParam param);
+    Call<Relation> followContact(@Body FollowParam param);
 
 
     //Unfollow Contact
     @DELETE("/v1/social/contacts/{contact}")
-    Call<ResponseBody> unfollowContact(@Header("SessionID") String sessionID,
-                                       @Path("contact") String contact);
+    Call<ResponseBody> unfollowContact(@Path("contact") String contact);
 
     //Get Contacts
     @GET("/v1/social/contacts")
-    Call<ArrayList<ContactGroup>> getContacts(@Header("SessionID") String sessionID);
+    Call<ArrayList<ContactGroup>> getContacts();
 
 
     // Get Liked Records
     @GET("/v1/social/liked/{criteria}/{pagination}")
-    Call<CollectionPage<LikedRecord>> getLikedRecords(@Header("SessionID") String sessionID,
-                                                      @Path("criteria") String criteria,
+    Call<CollectionPage<LikedRecord>> getLikedRecords(@Path("criteria") String criteria,
                                                       @Path("pagination") String pagination);
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Live Sessions
+    //Provides access to live session interfaces accessible to the Xiaojs client applications.
+
+    //Generate Ticket
+    @GET("/v1/live/ticket/{cs}")
+    Call<Ticket> generateTicket(@Path("cs") String cs);
+
+
+    //Boot Session
+    @Headers("Content-Type: application/json")
+    @POST("/v1/live/{ticket}")
+    Call<CtlSession> bootSession(@Path("ticket") String ticket);
+
+
+
 
 }

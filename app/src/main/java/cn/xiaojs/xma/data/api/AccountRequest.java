@@ -33,33 +33,33 @@ public class AccountRequest extends ServiceRequest {
 
     }
 
-    public void getHomeData(@NonNull String sessionID) {
+    public void getHomeData() {
 
-        Call<HomeData> call = getService().getHomeData(sessionID);
+        Call<ResponseBody> call = getService().getHomeData();
         enqueueRequest(APIType.GET_HOME_DATA,call);
 
     }
 
-    public void claimCompetency(String sessionID, CompetencyParams competencyParams) {
+    public void claimCompetency(CompetencyParams competencyParams) {
 
-        Call<ClaimCompetency> call = getService().claimCompetency(sessionID, competencyParams);
+        Call<ClaimCompetency> call = getService().claimCompetency(competencyParams);
         enqueueRequest(APIType.CLAIM_COMPETENCY,call);
 
     }
 
-    public void editProfile(@NonNull String sessionID, @NonNull Account.Basic basic) {
+    public void editProfile(@NonNull Account.Basic basic) {
 
         Account account = new Account();
         account.setBasic(basic);
 
-        Call<ResponseBody> call = getService().editProfile(sessionID, account);
+        Call<ResponseBody> call = getService().editProfile(account);
         enqueueRequest(APIType.EDIT_PROFILE,call);
 
     }
 
-    public void getProfile(@NonNull String sessionID) {
+    public void getProfile() {
 
-        Call<Account> call = getService().getProfile(sessionID);
+        Call<Account> call = getService().getProfile();
         enqueueRequest(APIType.GET_PROFILE,call);
 
     }
@@ -80,14 +80,14 @@ public class AccountRequest extends ServiceRequest {
 //
 //    }
 
-    protected void getUpToken(@NonNull String sessionID,UpTokenParam... upToken) {
-        Call<UpToken[]> call = getService().getUpToken(sessionID,upToken);
+    protected void getUpToken(UpTokenParam... upToken) {
+        Call<UpToken[]> call = getService().getUpToken(upToken);
         enqueueRequest(GET_UPTOKEN,call);
     }
 
-    public void getCenterData(@NonNull String sessionID) {
+    public void getCenterData() {
 
-        Call<CenterData> call = getService().getCenterData(sessionID);
+        Call<CenterData> call = getService().getCenterData();
         enqueueRequest(APIType.GET_CENTER_DATA,call);
 
     }

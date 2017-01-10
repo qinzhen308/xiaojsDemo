@@ -231,19 +231,19 @@ public class ExampleInstrumentedTest {
 
     private void testGetHomeData(Context context) {
 
-        String seesionId = "fqlt0Xmwcp16-m2Qt8LgmhWUMN9O6i5G";
-
-        AccountDataManager.requestHomeData(context, seesionId, new APIServiceCallback<HomeData>() {
-            @Override
-            public void onSuccess(HomeData object) {
-                Logger.d("onSuccess-----------");
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                Logger.d("onFailure-----------");
-            }
-        });
+//        String seesionId = "fqlt0Xmwcp16-m2Qt8LgmhWUMN9O6i5G";
+//
+//        AccountDataManager.requestHomeData(context, seesionId, new APIServiceCallback<HomeData>() {
+//            @Override
+//            public void onSuccess(HomeData object) {
+//                Logger.d("onSuccess-----------");
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//                Logger.d("onFailure-----------");
+//            }
+//        });
 
     }
 

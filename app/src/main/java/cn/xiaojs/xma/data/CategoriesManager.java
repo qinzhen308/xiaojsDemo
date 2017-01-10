@@ -13,7 +13,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/10.
  */
 
-public class CategoriesManager extends DataManager {
+public class CategoriesManager {
 
     public static void requestGetSubject(@NonNull Context context,
                                          @NonNull APIServiceCallback<CSubject> callback){

@@ -56,12 +56,23 @@ public class PostDynamicActivity extends BaseActivity {
     private String photoKey;
     private Dimension photoDim;
 
+    private int specifyScope;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_post_dynamic);
         setMiddleTitle(R.string.post_dyn);
         setRightText(R.string.post);
         setRightTextColor(getResources().getColor(R.color.font_orange));
+
+        specifyScope = getIntent().getIntExtra(KEY_POST_TYPE,Social.ShareScope.PUBLIC);
+        if (specifyScope == Social.ShareScope.CLASSES) {
+            audience = new DynPost.Audience();
+            audience.type = specifyScope;
+            updateScope();
+        }
+
+
     }
 
     @OnClick({R.id.left_image, R.id.chose_pic, R.id.chose_at, R.id.btn_level, R.id.right_image})
@@ -76,12 +87,19 @@ public class PostDynamicActivity extends BaseActivity {
                 startActivityForResult(i, REQUEST_PIC_CODE);
                 break;
             case R.id.btn_level:
+
+                if (specifyScope == Social.ShareScope.CLASSES) {
+                    return;
+                }
+
                 Intent intent = new Intent(this, ShareScopeActivity.class);
                 intent.putExtra(ShareScopeActivity.CHOOSE_INDEX, checkedIndex);
 
                 startActivityForResult(intent, REQUEST_SHARE_SCOPE_CODE);
                 break;
             case R.id.chose_at:
+
+                //TODO when specifyScope equals Social.ShareScope.CLASSES ,start classes activity only
 
                 startActivityForResult(new Intent(this, ChoiceContactActivity.class),
                         REQUEST_AT_CODE);
@@ -246,15 +264,13 @@ public class PostDynamicActivity extends BaseActivity {
     }
 
     private void updateScope() {
-        String name = getScopeName();
+        String name = getScopeName(audience.type);
         scopeButton.setText(name);
     }
 
-    private String getScopeName() {
+    private String getScopeName(int scopeType) {
 
-        int type = audience.type;
-
-        switch (type) {
+        switch (scopeType) {
             case Social.ShareScope.FRIENDS:
                 return "仅好友可见";
             case Social.ShareScope.CLASSES:

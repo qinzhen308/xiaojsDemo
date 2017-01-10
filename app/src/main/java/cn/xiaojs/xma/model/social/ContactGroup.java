@@ -23,4 +23,5 @@ public class ContactGroup {
     public long group;
     public Account.SimpleAccount subject;
     public ArrayList<Contact> collection;
+
 }
