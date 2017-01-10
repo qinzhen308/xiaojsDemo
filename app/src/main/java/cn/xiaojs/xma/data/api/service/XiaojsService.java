@@ -89,7 +89,7 @@ public interface XiaojsService {
 
     //Get Home Data
     @GET("/v1/accounts/home")
-    Call<HomeData> getHomeData();
+    Call<ResponseBody> getHomeData();
 
     //Edit Profile
     @Headers("Content-Type: application/json")

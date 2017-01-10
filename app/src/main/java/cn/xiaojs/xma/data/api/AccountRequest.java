@@ -35,7 +35,7 @@ public class AccountRequest extends ServiceRequest {
 
     public void getHomeData() {
 
-        Call<HomeData> call = getService().getHomeData();
+        Call<ResponseBody> call = getService().getHomeData();
         enqueueRequest(APIType.GET_HOME_DATA,call);
 
     }

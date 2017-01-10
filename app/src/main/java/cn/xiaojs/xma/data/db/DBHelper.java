@@ -75,7 +75,24 @@ public final class DBHelper extends SQLiteOpenHelper {
 
     private void createTables(SQLiteDatabase db) {
 
-        createContactTable(db);
+        //createContactTable(db);
+        createGroupTable(db);
+    }
+
+    private void createGroupTable(SQLiteDatabase db) {
+        final String CREATE_TABLE_SQL = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
+                .append(DBTables.TGroup.TABLE_NAME)
+                .append(" (")
+                .append(TContact._ID)
+                .append(" INTEGER PRIMARY KEY AUTOINCREMENT,")
+                .append(DBTables.TGroup.GID)
+                .append(" INTEGER, ")
+                .append(DBTables.TGroup.NAME)
+                .append(" TEXT NOT NULL")
+                .append("); ")
+                .toString();
+
+        db.execSQL(CREATE_TABLE_SQL);
     }
 
     private void createContactTable(SQLiteDatabase db) {
@@ -89,10 +106,12 @@ public final class DBHelper extends SQLiteOpenHelper {
                 .append(TContact.NAME)
                 .append(" TEXT NOT NULL, ")
                 .append(TContact.AVATOR)
-                .append(" TEXT, ")
+                .append(" TEXT")
                 .append("); ")
                 .toString();
 
         db.execSQL(CREATE_TABLE_SQL);
     }
+
+
 }

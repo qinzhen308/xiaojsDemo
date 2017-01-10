@@ -544,18 +544,18 @@ public class TestAPIActivity extends Activity {
 
 
 
-                        LessonDataManager.requestUploadCover(TestAPIActivity.this,"",cropImgPath,new QiniuService(){
-
-                            @Override
-                            public void uploadSuccess(String fileName, String fileUrl) {
-
-                            }
-
-                            @Override
-                            public void uploadFailure() {
-
-                            }
-                        });
+//                        LessonDataManager.requestUploadCover(TestAPIActivity.this,"",cropImgPath,new QiniuService(){
+//
+//                            @Override
+//                            public void uploadSuccess(String fileName, String fileUrl) {
+//
+//                            }
+//
+//                            @Override
+//                            public void uploadFailure() {
+//
+//                            }
+//                        });
 
 //                        AccountDataManager.requestUploadAvatar(TestAPIActivity.this, sessionid, id, cropImgPath, new QiniuService() {
 //                            @Override

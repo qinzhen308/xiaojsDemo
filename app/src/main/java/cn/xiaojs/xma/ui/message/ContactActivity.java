@@ -23,6 +23,7 @@ import android.widget.Toast;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Contact;
@@ -254,6 +255,8 @@ public class ContactActivity extends BaseActivity {
                     String j = object.string();
                     ContactGroup newGroup= SocialManager.parseAddGroup(j);
 
+                    DataManager.addGroupData(ContactActivity.this,newGroup);
+
                     if (contactAdapter !=null) {
                         contactAdapter.appendData(newGroup);
                     }
@@ -312,7 +315,7 @@ public class ContactActivity extends BaseActivity {
             contactData = new ArrayList<>();
         }
 
-        addDefaultGroup(contactData);
+        addDefaultGroup(this,contactData);
 
         if(contactAdapter ==null) {
             contactAdapter = new ContactAdapter(this, contactData);
@@ -326,53 +329,32 @@ public class ContactActivity extends BaseActivity {
     }
 
 
-    public static void addDefaultGroup(ArrayList<ContactGroup> contactData) {
+    public static void addDefaultGroup(Context context,ArrayList<ContactGroup> contactData) {
 
-        Map<Long, ContactGroup> map = getDefaultGroup();
+        Map<Long, ContactGroup> cacheMap = DataManager.getGroupCache(context);
+
+        if (cacheMap==null)
+            return;
+
+        Map<Long, ContactGroup> tempMap = new HashMap<>(cacheMap);
 
         for (ContactGroup contactGroup : contactData) {
 
             long id = contactGroup.group;
 
-            if (map.get(id) != null){
-                map.remove(id);
+            if (tempMap.get(id) != null){
+                tempMap.remove(id);
 
                 contactGroup.name = Social.getContactName((int)id);
             }
 
-            if (map.isEmpty()){
+            if (tempMap.isEmpty()){
                 break;
             }
 
         }
 
-        contactData.addAll(map.values());
-
-    }
-
-
-    public static Map<Long, ContactGroup> getDefaultGroup() {
-
-        Map<Long, ContactGroup> map = new HashMap<>();
-
-        map.put((long)Social.ContactGroup.TEACHERS,createGroup(Social.ContactGroup.TEACHERS));
-        map.put((long)Social.ContactGroup.STUDENTS,createGroup(Social.ContactGroup.STUDENTS));
-        map.put((long)Social.ContactGroup.CLASSMATES,createGroup(Social.ContactGroup.CLASSMATES));
-        map.put((long)Social.ContactGroup.FRIENDS,createGroup(Social.ContactGroup.FRIENDS));
-        map.put((long)Social.ContactGroup.ORGANIZATIONS,createGroup(Social.ContactGroup.ORGANIZATIONS));
-        map.put((long)Social.ContactGroup.COLLEAGUES,createGroup(Social.ContactGroup.COLLEAGUES));
-        map.put((long)Social.ContactGroup.STRANGERS,createGroup(Social.ContactGroup.STRANGERS));
-
-        return map;
-    }
-
-    public static ContactGroup createGroup(int groupId) {
-
-        ContactGroup group = new ContactGroup();
-        group.group = groupId;
-        group.name = Social.getContactName(groupId);
-        group.collection = new ArrayList<>(0);
-        return group;
+        contactData.addAll(tempMap.values());
 
     }
 
