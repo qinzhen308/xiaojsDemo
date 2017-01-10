@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView
+            android:id="@+id/chat_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none"
+            android:visibility="visible"
+            android:divider="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:orientation="vertical"/>
+
+    <LinearLayout
+            android:id="@+id/bottom"
+            android:orientation="horizontal"
+            android:background="@color/moment_write_comment_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/chat_input"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginTop="@dimen/px15"
+                android:layout_marginBottom="@dimen/px15"
+                android:background="@drawable/white_corner_bg"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/px15"
+                android:maxLines="3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+        <Button
+                android:id="@+id/chat_send"
+                android:text="@string/send"
+                android:background="@drawable/big_submit_btn_selector"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/white"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

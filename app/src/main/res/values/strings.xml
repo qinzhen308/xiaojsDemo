@@ -366,6 +366,8 @@
     <string name="post_dyn_none">动态内容不能为空</string>
     <string name="num_can_see">%1$d人可见</string>
     <string name="upload_pic_error">图片上传失败</string>
+    <string name="message_error_tip">消息未发送成功，重新发送</string>
+    <string name="send_again">重新发送</string>
 
     <!-- live tab -->
     <string name="lesson_of_choiceness">精选课</string>
