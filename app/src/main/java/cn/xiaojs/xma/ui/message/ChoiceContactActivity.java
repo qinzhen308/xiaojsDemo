@@ -114,7 +114,7 @@ public class ChoiceContactActivity extends BaseActivity {
             contactData = new ArrayList<>();
         }
 
-        ContactActivity.addDefaultGroup(contactData);
+        ContactActivity.addDefaultGroup(this,contactData);
 
         if (choiceAdapter == null) {
             choiceAdapter = new ChoiceAdapter(this, contactData);
