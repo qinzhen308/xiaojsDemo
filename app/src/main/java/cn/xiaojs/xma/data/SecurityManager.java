@@ -16,7 +16,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/12/4.
  */
 
-public class SecurityManager extends DataManager {
+public class SecurityManager {
 
 
     public static boolean checkPermission(Context context,int permission) {

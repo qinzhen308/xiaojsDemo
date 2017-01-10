@@ -27,8 +27,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by maxiaobao on 2016/10/25.
@@ -50,6 +52,17 @@ public class DataManager {
         }
 
 
+    }
+
+    /**
+     * Clear the cache data
+     * @param context
+     */
+    public static void clearDBData(Context context) {
+
+        //clear contact group data
+        ContactDao contactDao = new ContactDao();
+        contactDao.clearGroup(context);
     }
 
     /**
@@ -96,12 +109,11 @@ public class DataManager {
 
                 try {
                     Map<Long, ContactGroup> map = parseGroupIntoMap(object.string());
+                    //update group data cache
+                    MemCache cache = MemCache.getDataCache(context);
+                    cache.refreshGroupData(map);
+
                     if (map != null) {
-
-                        //update group data cache
-                        MemCache cache = MemCache.getDataCache(context);
-                        cache.refreshGroupData(map);
-
                         //update group data to DB
                         ContactGroup[] groups = new ContactGroup[map.size()];
                         map.values().toArray(groups);
@@ -243,9 +255,10 @@ public class DataManager {
             }
         }
 
-        public Map<Long, ContactGroup> getGroupData() {
+        protected Map<Long, ContactGroup> getGroupData() {
             return groupMap;
         }
+
 
         ///////////////////////////////////////////////////////////////
         //Contact group

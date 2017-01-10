@@ -31,7 +31,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/4.
  */
 
-public class LessonDataManager extends DataManager {
+public class LessonDataManager {
 
 
     /**

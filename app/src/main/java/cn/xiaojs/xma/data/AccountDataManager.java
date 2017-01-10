@@ -28,7 +28,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/4.
  */
 
-public class AccountDataManager extends DataManager{
+public class AccountDataManager {
 
     //保存已声明的能力
     public static void saveSubject(Context context,String subject) {
@@ -105,6 +105,7 @@ public class AccountDataManager extends DataManager{
         AccountPref.setAccountID(context,"");
         SecurityManager.saveCSRFToken(context,"");
         DataManager.clearAPICache(context);
+        DataManager.clearDBData(context);
     }
 
 
