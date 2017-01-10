@@ -18,7 +18,13 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.List;
+
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
+import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.Parser;
+import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.UndoRedoListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
@@ -29,6 +35,8 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.setting.HandwritingPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class WhiteboardController implements
         EraserPop.EraserChangeListener,
@@ -62,6 +70,7 @@ public class WhiteboardController implements
 
     private int mGeometryId;
     private int mPanelWidth;
+    private Socket mSocket;
 
     public WhiteboardController(Context context, View root) {
         mContext = context;
@@ -82,6 +91,9 @@ public class WhiteboardController implements
         mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
         mPanel.measure(0, 0);
         mPanelWidth = mPanel.getMeasuredWidth();
+
+        mSocket = SocketManager.getSocket();
+        mSocket.on(Event.BOARD, mOnBoard);
     }
 
     public void handlePanelItemClick(View v) {
@@ -364,4 +376,11 @@ public class WhiteboardController implements
     public void onUndoRedoStackChanged() {
         setUndoRedoStyle();
     }
+
+    private Emitter.Listener mOnBoard = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            List<CommendLine> commendLineList = Parser.unpacking(args);
+        }
+    };
 }

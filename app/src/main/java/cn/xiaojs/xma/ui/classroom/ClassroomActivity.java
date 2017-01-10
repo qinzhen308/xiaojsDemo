@@ -170,18 +170,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         initDrawer();
         initLiveProgress();
         initGestureDetector();
-        //init whiteboard
-        initWhiteboardData();
         //init nav tips
         showSettingNav();
-
-        mTeacherVideo.setPath(Config.pathPush);
-
-        //init data
-        initData();
-
         //init socket
         initSocketIO();
+        //init whiteboard
+        initWhiteboardData();
+        mTeacherVideo.setPath(Config.pathPush);
+        //init data
+        initData();
     }
 
     private void initParams() {
@@ -958,23 +955,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mSocket.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        mSocket.on(Event.WELCOME, mOnWelcome);
         mSocket.connect();
-        mSocket.on(Event.WELCOME, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                if (args != null && args.length > 0) {
-                    mSocket.emit(Event.JOIN, Constants.ROOM_DRAW);
-                    mSocket.emit(Event.BEGIN);
-                }
-            }
-        });
-
-        mSocket.on(Event.BOARD, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-            }
-        });
-
     }
 
     private void disConnectIO() {
@@ -982,10 +964,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             return;
         }
 
-        mSocket.off(Socket.EVENT_CONNECT, mOnConnect);
-        mSocket.off(Socket.EVENT_DISCONNECT, mOnDisconnect);
-        mSocket.off(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
-        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        //mSocket.off(Socket.EVENT_CONNECT, mOnConnect);
+        //mSocket.off(Socket.EVENT_DISCONNECT, mOnDisconnect);
+        //mSocket.off(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
+        //mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        //mSocket.off(Event.WELCOME, mOnWelcome);
+
+        //off all
+        mSocket.off();
         SocketManager.close();
     }
 
@@ -1029,6 +1015,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             R.string.socket_error_connect, Toast.LENGTH_LONG).show();
                 }
             });
+        }
+    };
+
+    private Emitter.Listener mOnWelcome = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            if (args != null && args.length > 0) {
+                mSocket.emit(Event.JOIN, Constants.ROOM_DRAW);
+                mSocket.emit(Event.BEGIN);
+            }
         }
     };
 
