@@ -69,6 +69,7 @@ public class PostDynamicActivity extends BaseActivity {
         if (specifyScope == Social.ShareScope.CLASSES) {
             audience = new DynPost.Audience();
             audience.type = specifyScope;
+            updateScope();
         }
 
 
