@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,6 +46,7 @@ import cn.xiaojs.xma.ui.classroom.ClassroomState;
 import cn.xiaojs.xma.ui.classroom.socketio.Commend;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
 import cn.xiaojs.xma.ui.classroom.socketio.Receiver;
 import cn.xiaojs.xma.ui.classroom.socketio.Sender;
@@ -854,14 +856,14 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
     }
 
-    private void buildDoodle() {
-        buildDoodle(null);
+    private Doodle buildDoodle() {
+        return buildDoodle(null, mCurrentMode);
     }
 
-    private void buildDoodle(String doodleId) {
+    private Doodle buildDoodle(String doodleId, int mode) {
         Paint paint = null;
         mDoodle = null;
-        switch (mCurrentMode) {
+        switch (mode) {
             case MODE_SELECTION:
                 //mSelector = new Selector(this);
                 break;
@@ -908,6 +910,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             }
             mAllDoodles.add(mDoodle);
         }
+
+        return mDoodle;
     }
 
     private void addLastPointIntoDoodle() {
@@ -957,6 +961,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void drawAllDoodlesCanvas() {
+        long ss = System.currentTimeMillis();
         createDoodleCanvas();
 
         eraserAllDoodle();
@@ -969,6 +974,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 d.drawSelf(mDoodleCanvas);
             }
         }
+        Log.i("aaa", "================draw============"+(System.currentTimeMillis()-ss) +"   size="+mAllDoodles.size());
     }
 
     private void createDoodleCanvas() {
@@ -1052,6 +1058,38 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mDoodle.setState(Doodle.STATE_IDLE);
             mDoodle = null;
             postInvalidate();
+        }
+
+        //test
+        if (mBlackboardWidth > 0 && mBlackboardHeight > 0) {
+            /*String[] params = new String[5];
+            long s = System.currentTimeMillis();
+
+            for (int i = 0; i < 100; i ++) {
+                mGeometryShapeId = GeometryShape.RECTANGLE;
+                int m = MODE_GEOMETRY;
+                //int r = (int)(Math.random() * 255);
+                //int g = (int)(Math.random() * 255);
+                //int b = (int)(Math.random() * 255);
+                ///mPaintColor = Color.argb(255, r, g, b);
+                mPaintColor = Color.RED;
+                Doodle d = buildDoodle(null, m);
+                d.setState(Doodle.STATE_EDIT);
+                //addRecords(d, Action.ADD_ACTION);
+                params[0] = "rect";
+                params[1] = String.valueOf((int)(Math.random() * 800));
+                params[2] = String.valueOf((int)(Math.random() * 600));
+                params[3] = String.valueOf((int)(Math.random() * 800));
+                params[4] = String.valueOf((int)(Math.random() * 600));
+
+                fillDoodlePoints(params, d);
+            }
+            Log.i("aaa", "================build data============"+(System.currentTimeMillis()-s));
+
+            drawAllDoodlesCanvas();
+            Log.i("aaa", "================take============"+(System.currentTimeMillis()-s) +"  "+mAllDoodles.size());
+
+            postInvalidate();*/
         }
     }
 
@@ -1412,14 +1450,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             for (CommendLine cmdl : data) {
                 List<Commend> cmdList = cmdl.whiteboardCommends;
                 if (cmdList != null && !cmdList.isEmpty()) {
+                    Log.i("aaa", "====size="+cmdList.size());
                     for (Commend cmd : cmdList) {
-                        handleReceiveCmd(cmd);
+                        Log.i("aaa", "====cmd="+cmd.toString());
+                        //handleReceiveCmd(cmd);
                     }
                 }
             }
 
             //draw
-            postInvalidate();
+            //postInvalidate();
         }
     }
 
@@ -1438,25 +1478,36 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         String[] params = cmd.params != null ? cmd.params.split(",") : null;
         if (ProtocolConfigs.NEW.equals(cmd.cm)) {
             //new doodle
-            updateShapeId(params);
-            buildDoodle(cmd.id);
-            addRecords(Action.ADD_ACTION);
-            fillDoodlePoints(params, mDoodle);
+            int shapeId = Parser.getShapeId(params);
+            if (shapeId > 0) {
+                mGeometryShapeId = shapeId;
+            }
+            int mode = Parser.getDoodleMode(params);
+            Doodle d = buildDoodle(cmd.id, mode);
+            d.setState(Doodle.STATE_EDIT);
+            addRecords(d, Action.ADD_ACTION);
+            fillDoodlePoints(params, d);
+            drawAllDoodlesCanvas();
+            if (d != null) {
+                d.setState(Doodle.STATE_IDLE);
+            }
         } else if (ProtocolConfigs.DEL.equals(cmd.cm)) {
             //del doodle
-            Doodle doodle = findDoodleById(cmd.id);
-            if (doodle != null) {
-                doodle.setVisibility(View.GONE);
-                addRecords(Action.DELETE_ACTION);
+            Doodle d = findDoodleById(cmd.id);
+            if (d != null) {
+                d.setVisibility(View.GONE);
+                addRecords(d, Action.DELETE_ACTION);
                 //mAllDoodles.remove(doodle);
             }
+            drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.MOVE_A.equalsIgnoreCase(cmd.cm)) {
             //move doodle: absolute or relative
-            Doodle doodle = findDoodleById(cmd.id);
-            boolean succ = moveDoodle(params, doodle, ProtocolConfigs.MOVE_A.equals(cmd.cm));
+            Doodle d = findDoodleById(cmd.id);
+            boolean succ = moveDoodle(params, d, ProtocolConfigs.MOVE_A.equals(cmd.cm));
             if (succ) {
-                addRecords(Action.MOVE_ACTION);
+                addRecords(d, Action.MOVE_ACTION);
             }
+            drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.ROTATE_A.equalsIgnoreCase(cmd.cm)) {
             //rotate doodle: by doodle center
             if (ProtocolConfigs.ROTATE_A.equals(cmd.cm)) {
@@ -1478,36 +1529,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 int c = Utils.getColor(params[0], mPaintColor);
                 doodle.getPaint().setColor(c);
             }
+            drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.PAINT.equals(cmd.cm)) {
             //change stroke and color
             changePaintStyle(params);
         } else if (ProtocolConfigs.ADJUST.equals(cmd.cm)) {
             //do nothing, not implemented
         }
-    }
-
-    private boolean updateShapeId(String[] params) {
-        if (params == null || params.length == 0) {
-            return false;
-        }
-
-        String p = params[0];
-
-        if (ProtocolConfigs.SHAPE_RECT.equals(p)) {
-            mGeometryShapeId = GeometryShape.RECTANGLE;
-            return true;
-        } else if (ProtocolConfigs.SHAPE_BEELINE.equals(p)) {
-            mGeometryShapeId = GeometryShape.BEELINE;
-            return true;
-        } else if (ProtocolConfigs.SHAPE_OVAL.equals(p)) {
-            mGeometryShapeId = GeometryShape.OVAL;
-            return true;
-        } else if (ProtocolConfigs.SHAPE_TRIANGLE.equals(p)) {
-            mGeometryShapeId = GeometryShape.TRIANGLE;
-            return true;
-        }
-
-        return false;
     }
 
     private void fillDoodlePoints(String[] params, Doodle doodle) {

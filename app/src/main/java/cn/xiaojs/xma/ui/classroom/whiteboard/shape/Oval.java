@@ -52,7 +52,9 @@ public class Oval extends TwoDimensionalShape {
             mPoints.add(point);
         } else if(mPoints.size() >= 2){
             mPoints.set(1, point);
+        }
 
+        if (mPoints.size() > 1) {
             float x1 = Math.min(mPoints.get(0).x, mPoints.get(1).x);
             float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
             float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);

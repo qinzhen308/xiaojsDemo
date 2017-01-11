@@ -85,7 +85,18 @@ public class Packer {
      * 封装改变画笔样式命令
      */
     public static String getChangePaintCmd(float paintWidth, int paintColor) {
-        return "$" + ProtocolConfigs.PAINT + "|" + paintWidth + "," + Integer.toHexString(paintColor);
+        return "$:" + ProtocolConfigs.PAINT + "|" + paintWidth + "," + Integer.toHexString(paintColor);
+    }
+
+    /**
+     * 封装删除命令
+     */
+    public static String getDeleteCmd(Doodle doodle) {
+        if (doodle == null) {
+            return null;
+        }
+
+        return "$" + ProtocolConfigs.DEL + ":" + doodle.getDoodleId() + "|";
     }
 
     /**

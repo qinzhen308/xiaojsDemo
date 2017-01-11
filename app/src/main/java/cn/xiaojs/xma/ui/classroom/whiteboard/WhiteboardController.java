@@ -389,13 +389,7 @@ public class WhiteboardController implements
         @Override
         public void call(Object... args) {
             List<CommendLine> commendLineList = Parser.unpacking(args);
-            if (mReceiveRunnable == null) {
-                mReceiveRunnable = new ReceiveRunnable(commendLineList);
-            } else {
-                mReceiveRunnable.setData(commendLineList);
-            }
-
-            mHandler.post(mReceiveRunnable);
+            mHandler.post(new ReceiveRunnable(commendLineList));
         }
     };
 
