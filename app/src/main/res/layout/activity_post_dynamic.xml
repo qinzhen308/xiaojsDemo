@@ -59,17 +59,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10dp">
-            <EditText
+            <cn.xiaojs.xma.ui.view.RecipientEditText
                     android:id="@+id/input_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:background="@android:color/transparent"
                     android:hint="@string/input_dyn_hint"
+                    android:textColor="@color/blur_float_up_bg"
                     android:minHeight="100dp"
                     >
                 <requestFocus/>
-            </EditText>
+            </cn.xiaojs.xma.ui.view.RecipientEditText>
             <ImageView
                     android:id="@+id/pic_thumbnail"
                     android:layout_width="@dimen/dyn_thumbnail_size"

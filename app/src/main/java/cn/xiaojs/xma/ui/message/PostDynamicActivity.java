@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -31,6 +32,7 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.view.RecipientEditText;
 
 public class PostDynamicActivity extends BaseActivity {
 
@@ -43,13 +45,12 @@ public class PostDynamicActivity extends BaseActivity {
     ImageView thumbnailView;
 
     @BindView(R.id.input_edit)
-    EditText editText;
+    RecipientEditText editText;
 
     @BindView(R.id.btn_level)
     Button scopeButton;
 
     private DynPost.Audience audience;
-    private ArrayList<String> mentioneds;
     private int checkedIndex = 0;
     private ArrayList<Contact> atContacts;
 
@@ -114,28 +115,14 @@ public class PostDynamicActivity extends BaseActivity {
 
     private void showAt() {
 
-
         if (atContacts == null)
             return;
 
-        SpannableStringBuilder ssb = new SpannableStringBuilder();
-
-        if (mentioneds == null) {
-            mentioneds = new ArrayList<>(atContacts.size());
-        }
-
-        //FIXME 如果用户删除了之前的@,需要将mentioneds中的account也要删除。
-
+        String prefix = " @";
         for (Contact contact : atContacts) {
-            ssb.append("@").append(contact.alias).append(" ");
-            mentioneds.add(contact.account);
+            String display = new StringBuilder(prefix).append(contact.alias).toString();
+            editText.addRecipient(contact.account,display);
         }
-
-        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.input_at));
-        ssb.setSpan(span, 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        editText.append(ssb);
-
     }
 
 
@@ -168,6 +155,7 @@ public class PostDynamicActivity extends BaseActivity {
             dynPost.audience = audience;
         }
 
+        List<String> mentioneds = editText.getRecipientIds();
         if (mentioneds != null) {
             dynPost.mentioned = mentioneds;
         }

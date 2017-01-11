@@ -217,16 +217,22 @@ public class ExampleUnitTest {
 //        }
 //    }
 
-        String j = "{\"free\":false,\"type\":2,\"charge\":200,\"total\":400,\"discounted\":{\"applied\":[{\"discount\":9.8,\"quota\":2,\"before\":3}],\"subtotal\":392,\"ratio\":9.8,\"saved\":8}}";
-
-        ObjectMapper mapper = new ObjectMapper();
-        Price price = mapper.readValue(j, Price.class);
-
-        System.out.println("=============="+price.charge);
+//        String j = "{\"free\":false,\"type\":2,\"charge\":200,\"total\":400,\"discounted\":{\"applied\":[{\"discount\":9.8,\"quota\":2,\"before\":3}],\"subtotal\":392,\"ratio\":9.8,\"saved\":8}}";
+//
 //        ObjectMapper mapper = new ObjectMapper();
-        String e = "{\"discount\":9.8,\"quota\":2,\"before\":3}";
-//        Price.Applied p = mapper.readValue(e, Price.Applied.class);
-//        System.out.println("=============="+p.quota);
+//        Price price = mapper.readValue(j, Price.class);
+//
+//        System.out.println("=============="+price.charge);
+////        ObjectMapper mapper = new ObjectMapper();
+//        String e = "{\"discount\":9.8,\"quota\":2,\"before\":3}";
+////        Price.Applied p = mapper.readValue(e, Price.Applied.class);
+////        System.out.println("=============="+p.quota);
+
+
+        int a = 5;
+        int b = ++a;
+        System.out.println("=============="+b);
+
     }
 
 
