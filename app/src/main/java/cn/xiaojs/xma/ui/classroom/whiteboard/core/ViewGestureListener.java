@@ -19,7 +19,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -285,7 +284,6 @@ public class ViewGestureListener {
             float focusX = (event.getX(0) + event.getX(1)) * 0.5f;
             float focusY = (event.getY(0) + event.getY(1)) * 0.5f;
             if (mFakeScale) {
-                Log.i("aaa", "==========================mFakeScale= focusX="+focusX+"  focusY="+focusY);
                 scaling(focusX, focusY, 1.0f);
             } else {
                 mFakeScale = true;
@@ -315,7 +313,6 @@ public class ViewGestureListener {
         if (mDstRect.height() >= mVisibleHeight || mHasOverflow) {
             translateY = (focusY - mOldFocusY);
             scaleOffsetY = (focusY - mImageCenterY) * (1 - scale / mOldScale);
-            Log.i("aaa", "==================translateY="+translateY + "  scaleOffsetY="+scaleOffsetY);
         }
 
         if (mScale > MAX_SCALE || mScale < MIN_SCALE) {
