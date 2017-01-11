@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -70,7 +71,10 @@ public class WhiteboardController implements
 
     private int mGeometryId;
     private int mPanelWidth;
+
     private Socket mSocket;
+    private Handler mHandler;
+    private ReceiveRunnable mReceiveRunnable;
 
     public WhiteboardController(Context context, View root) {
         mContext = context;
@@ -94,6 +98,7 @@ public class WhiteboardController implements
 
         mSocket = SocketManager.getSocket();
         mSocket.on(Event.BOARD, mOnBoard);
+        mHandler = new Handler();
     }
 
     public void handlePanelItemClick(View v) {
@@ -316,6 +321,12 @@ public class WhiteboardController implements
         if (mWhiteboard != null) {
             mWhiteboard.release();
         }
+
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mReceiveRunnable);
+            mHandler = null;
+            mReceiveRunnable = null;
+        }
     }
 
     public void setWhiteboard(Whiteboard whiteboard) {
@@ -381,6 +392,32 @@ public class WhiteboardController implements
         @Override
         public void call(Object... args) {
             List<CommendLine> commendLineList = Parser.unpacking(args);
+            if (mReceiveRunnable == null) {
+                mReceiveRunnable = new ReceiveRunnable(commendLineList);
+            } else {
+                mReceiveRunnable.setData(commendLineList);
+            }
+
+            mHandler.post(mReceiveRunnable);
         }
     };
+
+    private class ReceiveRunnable implements Runnable {
+        private List<CommendLine> mCommendList;
+
+        public ReceiveRunnable(List<CommendLine> list) {
+            mCommendList = list;
+        }
+
+        public void setData(List<CommendLine> list) {
+            mCommendList = list;
+        }
+
+        @Override
+        public void run() {
+            if (mWhiteboard != null) {
+                mWhiteboard.onReceive(mCommendList);
+            }
+        }
+    }
 }

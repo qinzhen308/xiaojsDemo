@@ -116,9 +116,4 @@ public class Rectangle extends TwoDimensionalShape {
         return false;
     }
 
-    @Override
-    public void scale(float oldX, float oldY, float x, float y) {
-        super.scale(oldX, oldY, x, y);
-    }
-
 }

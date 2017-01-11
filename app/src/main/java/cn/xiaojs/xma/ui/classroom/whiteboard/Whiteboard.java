@@ -30,7 +30,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -42,6 +42,13 @@ import java.util.List;
 
 import cn.xiaojs.xma.ui.classroom.ClassroomGestureDetector;
 import cn.xiaojs.xma.ui.classroom.ClassroomState;
+import cn.xiaojs.xma.ui.classroom.socketio.Commend;
+import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
+import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
+import cn.xiaojs.xma.ui.classroom.socketio.Receiver;
+import cn.xiaojs.xma.ui.classroom.socketio.Sender;
+import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.action.Selector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.ActionRecord;
@@ -60,8 +67,10 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Oval;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
+import io.socket.client.Socket;
 
-public class Whiteboard extends View implements ViewGestureListener.ViewRectChangedListener {
+public class Whiteboard extends View implements ViewGestureListener.ViewRectChangedListener,
+        Receiver<List<CommendLine>>, Sender<String> {
     /**
      * blackboard mode
      * */
@@ -136,7 +145,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     /**
      * edit text
      */
-    private EditText mEditText;
+    private SpecialEditText mEditText;
     private int mTextOrientation = TextWriting.TEXT_HORIZONTAL;
 
     private Path mDrawingPath;
@@ -158,6 +167,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private List<Integer> mRedoRecordIds;
 
     private BitmapPool mDoodleBitmapPool;
+    private Socket mSocket;
 
     public Whiteboard(Context context) {
         super(context);
@@ -228,12 +238,14 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         
     }
 
-    public void setEditText (final EditText editText) {
+    public void setEditText (final SpecialEditText editText) {
         mEditText = editText;
         mEditText.setVisibility(View.VISIBLE);
         mEditText.setAlpha(0);
 
         mEditText.addTextChangedListener(mTextWatcher);
+        mEditText.setOnImeBackListener(onImeBackListener);
+        mEditText.setOnKeyListener(mEditTextKeyListener);
     }
 
     private TextWatcher mTextWatcher = new TextWatcher() {
@@ -256,30 +268,55 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 }
                 ((TextWriting)mDoodle).onTextChanged(text);
 
-                if (!TextUtils.isEmpty(text)) {
-                    if (mDoodle.getUndoRecords().isEmpty() && mDoodle.getRedoRecords().isEmpty())
-                    //add action
-                    addRecords(mDoodle, Action.ADD_ACTION);
-                } else {
-                    if (mDoodle.isCanRedo() || mDoodle.isCanUndo()){
-                        if (mAllDoodles != null) {
-                            mAllDoodles.remove(mDoodle);
-                        }
-                        if (mUndoRecordIds.size() > 0) {
-                            mUndoRecordIds.remove(mUndoRecordIds.size() - 1);
-                            if (mUndoRedoListener != null) {
-                                mUndoRedoListener.onUndoRedoStackChanged();
-                            }
-                        }
-                        mDoodle = null;
-                    }
-                }
-
                 drawAllDoodlesCanvas();
                 Whiteboard.this.invalidate();
             }
         }
     };
+
+    private OnImeBackListener onImeBackListener = new OnImeBackListener() {
+        @Override
+        public void onImeBackPressed() {
+            handleEditOnImeHide();
+        }
+    };
+
+    private OnKeyListener mEditTextKeyListener = new OnKeyListener() {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_UP &&
+                    keyCode == KeyEvent.KEYCODE_ENTER && event.getFlags() == 0x16) {
+                handleEditOnImeHide();
+            }
+            return false;
+        }
+    };
+
+    private void handleEditOnImeHide() {
+        if (mDoodle instanceof TextWriting) {
+            String text = ((TextWriting)mDoodle).getTextString();
+            if (!TextUtils.isEmpty(text)) {
+                if (mDoodle.getUndoRecords().isEmpty() && mDoodle.getRedoRecords().isEmpty()) {
+                    //add action
+                    addRecords(mDoodle, Action.ADD_ACTION);
+                }
+            } else {
+                if (mDoodle.isCanRedo() || mDoodle.isCanUndo()){
+                    boolean remove = false;
+                    if (mAllDoodles != null) {
+                       remove = mAllDoodles.remove(mDoodle);
+                    }
+                    if (mUndoRecordIds.size() > 0 && remove) {
+                        mUndoRecordIds.remove(mUndoRecordIds.size() - 1);
+                        if (mUndoRedoListener != null) {
+                            mUndoRedoListener.onUndoRedoStackChanged();
+                        }
+                    }
+                    mDoodle = null;
+                }
+            }
+        }
+    }
 
     public void setSourceBmp(Bitmap srcBmp) {
         mSrcBmp = srcBmp;
@@ -352,6 +389,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mRedoRecordIds = new ArrayList<Integer>();
 
         mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
+        mSocket = SocketManager.getSocket();
     }
 
     @Override
@@ -713,7 +751,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                             //add action
                             addRecords(mDoodle, mDoodleAction);
                         }
-                        hideInputMethod();
                     }
                     break;
                 case MODE_COLOR_PICKER:
@@ -747,9 +784,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 if (mDoodle != null) {
                     if (mDoodle.getState() == Doodle.STATE_EDIT || mDoodle.getState() == Doodle.STATE_DRAWING) {
                         if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
+                            hideInputMethod();
+                            handleEditOnImeHide();
                             mDoodle.setState(Doodle.STATE_IDLE);
                             mDoodle = null;
-                            hideInputMethod();
                             postInvalidate();
                         }
                     }
@@ -815,6 +853,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void buildDoodle() {
+        buildDoodle(null);
+    }
+
+    private void buildDoodle(String doodleId) {
         Paint paint = null;
         mDoodle = null;
         switch (mCurrentMode) {
@@ -823,7 +865,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 break;
             case MODE_HAND_WRITING:
                 paint = Utils.createPaint(mPaintColor, mPaintStrokeWidth, Paint.Style.STROKE);
-                mDoodle = new HandWriting(this, paint, mLastPoint.x, mLastPoint.y);
+                mDoodle = new HandWriting(this, paint);
                 break;
             case MODE_GEOMETRY:
                 paint = Utils.createPaint(mPaintColor, mPaintStrokeWidth, Paint.Style.STROKE);
@@ -859,6 +901,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         if (mDoodle != null && mDoodle.getState() == Doodle.STATE_IDLE && mAllDoodles != null) {
             mDoodle.setState(Doodle.STATE_DRAWING);
+            if (!TextUtils.isEmpty(doodleId)) {
+                mDoodle.setDoodleId(doodleId);
+            }
             mAllDoodles.add(mDoodle);
         }
     }
@@ -942,7 +987,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     private void addEditText(float x, float y, boolean center) {
         if (!(mDoodle instanceof TextWriting)) {
-            Log.i("aaa", "please init the text doodle");
             return;
         }
 
@@ -1133,6 +1177,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         if (mEditText != null) {
             mEditText.removeTextChangedListener(mTextWatcher);
+            mEditText.setOnImeBackListener(null);
+            mEditText.setOnKeyListener(null);
         }
 
         mContext = null;
@@ -1141,6 +1187,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mInputMethodManager = null;
         mViewGestureListener = null;
         mClassroomGestureDetector = null;
+        mSocket = null;
     }
 
     public void release() {
@@ -1353,5 +1400,205 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         return mLayer;
     }
 
+    @Override
+    public void onReceive(List<CommendLine> data) {
+        if (data != null && !data.isEmpty()) {
+            for (CommendLine cmdl : data) {
+                List<Commend> cmdList = cmdl.whiteboardCommends;
+                if (cmdList != null && !cmdList.isEmpty()) {
+                    for (Commend cmd : cmdList) {
+                        handleReceiveCmd(cmd);
+                    }
+                }
+            }
+
+            //draw
+            postInvalidate();
+        }
+    }
+
+    @Override
+    public void onSend(String cmd) {
+        if (mSocket != null && !TextUtils.isEmpty(cmd)) {
+            mSocket.emit(Event.BOARD, cmd);
+        }
+    }
+
+    private synchronized void handleReceiveCmd(Commend cmd) {
+        if (cmd == null) {
+            return;
+        }
+
+        String[] params = cmd.params != null ? cmd.params.split(",") : null;
+        if (ProtocolConfigs.NEW.equals(cmd.cm)) {
+            //new doodle
+            updateShapeId(params);
+            buildDoodle(cmd.id);
+            addRecords(Action.ADD_ACTION);
+            fillDoodlePoints(params, mDoodle);
+        } else if (ProtocolConfigs.DEL.equals(cmd.cm)) {
+            //del doodle
+            Doodle doodle = findDoodleById(cmd.id);
+            if (doodle != null) {
+                doodle.setVisibility(View.GONE);
+                addRecords(Action.DELETE_ACTION);
+                //mAllDoodles.remove(doodle);
+            }
+        } else if (ProtocolConfigs.MOVE_A.equalsIgnoreCase(cmd.cm)) {
+            //move doodle: absolute or relative
+            Doodle doodle = findDoodleById(cmd.id);
+            boolean succ = moveDoodle(params, doodle, ProtocolConfigs.MOVE_A.equals(cmd.cm));
+            if (succ) {
+                addRecords(Action.MOVE_ACTION);
+            }
+        } else if (ProtocolConfigs.ROTATE_A.equalsIgnoreCase(cmd.cm)) {
+            //rotate doodle: by doodle center
+            if (ProtocolConfigs.ROTATE_A.equals(cmd.cm)) {
+
+            } else {
+
+            }
+        } else if (ProtocolConfigs.ZOOM_A.equalsIgnoreCase(cmd.cm)) {
+            //scale doodle: by doodle center
+            if (ProtocolConfigs.ZOOM_A.equals(cmd.cm)) {
+
+            } else {
+
+            }
+        } else if (ProtocolConfigs.CHANGE_COLOR.equals(cmd.cm)){
+            //change color
+            Doodle doodle = findDoodleById(cmd.id);
+            if (doodle != null && params.length > 0) {
+                doodle.getPaint().setColor(getColor(params[0]));
+            }
+        } else if (ProtocolConfigs.PAINT.equals(cmd.cm)) {
+            //change stroke and color
+            changePaintStyle(params);
+        } else if (ProtocolConfigs.ADJUST.equals(cmd.cm)) {
+            //do nothing, not implemented
+        }
+    }
+
+    private boolean updateShapeId(String[] params) {
+        if (params == null || params.length == 0) {
+            return false;
+        }
+
+        String p = params[0];
+
+        if (ProtocolConfigs.SHAPE_RECT.equals(p)) {
+            mGeometryShapeId = GeometryShape.RECTANGLE;
+            return true;
+        } else if (ProtocolConfigs.SHAPE_BEELINE.equals(p)) {
+            mGeometryShapeId = GeometryShape.BEELINE;
+            return true;
+        } else if (ProtocolConfigs.SHAPE_OVAL.equals(p)) {
+            mGeometryShapeId = GeometryShape.OVAL;
+            return true;
+        } else if (ProtocolConfigs.SHAPE_TRIANGLE.equals(p)) {
+            mGeometryShapeId = GeometryShape.TRIANGLE;
+            return true;
+        }
+
+        return false;
+    }
+
+    private void fillDoodlePoints(String[] params, Doodle doodle) {
+        if (params == null || doodle == null || params.length < 1) {
+            return;
+        }
+        int j = 0;
+        float x = 0;
+        float y = 0;
+        try {
+            for (int i = 1; i < params.length; i++) {
+                j++;
+                switch (j % 2) {
+                    case 1:
+                        x = (Integer.parseInt(params[i]) * mBlackboardWidth) / ProtocolConfigs.VIRTUAL_WIDTH;
+                        break;
+                    case 0:
+                        y = (Integer.parseInt(params[i]) * mBlackboardHeight) / ProtocolConfigs.VIRTUAL_HEIGHT;
+                        Utils.mapScreenToDoodlePoint(x, y, mDoodleBounds, mLastPoint);
+                        doodle.addControlPoint(mLastPoint.x, mLastPoint.y);
+                        break;
+                }
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    private Doodle findDoodleById(String id) {
+        if (TextUtils.isEmpty(id) || mAllDoodles == null) {
+            return null;
+        }
+
+        for (Doodle doodle : mAllDoodles) {
+            if (id.equals(doodle.getDoodleId())) {
+                return doodle;
+            }
+        }
+
+        return null;
+    }
+
+    private int getColor(String color) {
+        try {
+            if (TextUtils.isEmpty(color)) {
+                return mPaintColor;
+            }
+
+            mPaintColor = Integer.parseInt(color, 16);
+        } catch (Exception e) {
+
+        }
+
+        return mPaintColor;
+
+    }
+
+    private void changePaintStyle(String[] params) {
+        if (params == null) {
+            return;
+        }
+
+        try {
+            if (params.length == 1) {
+                mPaintStrokeWidth = Integer.parseInt(params[0]);
+            } else if (params.length > 1) {
+                mPaintStrokeWidth = Integer.parseInt(params[0]);
+                mPaintColor = Integer.parseInt(params[1], 16);
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    private boolean moveDoodle(String[] params, Doodle doodle, boolean absolute) {
+        if (params == null || doodle == null) {
+            return false;
+        }
+
+        try {
+            int x = 0;
+            int y = 0;
+            if (!absolute) {
+                if (params.length == 1) {
+                    x= (Integer.parseInt(params[0]) * mBlackboardWidth) / ProtocolConfigs.VIRTUAL_WIDTH;
+                } else if (params.length > 1) {
+                    x = (Integer.parseInt(params[0]) * mBlackboardWidth) / ProtocolConfigs.VIRTUAL_WIDTH;
+                    y = (Integer.parseInt(params[1]) * mBlackboardHeight) / ProtocolConfigs.VIRTUAL_HEIGHT;
+                }
+            }
+
+            doodle.move(x, y);
+            return true;
+        } catch (Exception e) {
+
+        }
+
+        return false;
+    }
 }
 

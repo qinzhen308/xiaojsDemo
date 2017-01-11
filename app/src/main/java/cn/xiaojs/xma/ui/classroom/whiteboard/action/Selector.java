@@ -219,10 +219,9 @@ public class Selector extends Doodle {
     }
 
     @Override
-    public void scaleAndRotate(float oldX, float oldY, float x, float y) {
+    public float[] scaleAndRotate(float oldX, float oldY, float x, float y) {
         if (mSelectedDoodle != null) {
-            mSelectedDoodle.scaleAndRotate(oldX, oldY, x, y);
-            return;
+           return mSelectedDoodle.scaleAndRotate(oldX, oldY, x, y);
         }
 
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
@@ -268,8 +267,15 @@ public class Selector extends Doodle {
 
                 scaleRotateByAnchor(scale, degree, mRectCenter[0], mRectCenter[1]);
 
+                float[] result = new float[2];
+                result[0] = scale;
+                result[1] = degree;
+
+                return result;
             }
         }
+
+        return null;
     }
 
     @Override

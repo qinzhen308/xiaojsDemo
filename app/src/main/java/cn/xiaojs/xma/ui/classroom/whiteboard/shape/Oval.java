@@ -106,11 +106,6 @@ public class Oval extends TwoDimensionalShape {
     }
 
     @Override
-    public void scale(float oldX, float oldY, float x, float y) {
-        super.scale(oldX, oldY, x, y);
-    }
-
-    @Override
     public boolean onCheckSelected(float x, float y) {
         if (mPoints.size() > 1) {
             mTransRect.set(mDoodleRect);

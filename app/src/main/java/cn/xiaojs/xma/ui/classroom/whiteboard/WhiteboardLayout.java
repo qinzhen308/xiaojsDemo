@@ -1,12 +1,9 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-
-import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -44,7 +41,7 @@ public class WhiteboardLayout extends FrameLayout {
 
     private void init() {
         Context context = getContext();
-        EditText edt = new EditText(context);
+        SpecialEditText edt = new SpecialEditText(context);
         Whiteboard wb = new Whiteboard(context);
         wb.setEditText(edt);
 

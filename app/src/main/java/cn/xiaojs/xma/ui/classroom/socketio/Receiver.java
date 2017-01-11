@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.whiteboard.core;
+package cn.xiaojs.xma.ui.classroom.socketio;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,19 +9,11 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.core;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2016/12/6
+ * Date:2017/1/10
  * Desc:
  *
  * ======================================================================================== */
 
-public interface Action {
-    public static final int NO_ACTION = -1;
-    public static final int ADD_ACTION = 0;
-    public static final int MOVE_ACTION = 1;
-    public static final int SCALE_ACTION = 2;
-    public static final int ROTATE_ACTION = 3;
-    public static final int SCALE_ROTATE_ACTION = 4;
-    public static final int CHANGE_AREA_ACTION = 5;
-    public static final int DELETE_ACTION = 6;
-    public static final int CHANGE_PAINT = 7;
+public interface Receiver<T> {
+    public void onReceive(T data);
 }

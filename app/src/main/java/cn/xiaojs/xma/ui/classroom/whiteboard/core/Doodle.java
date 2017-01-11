@@ -486,7 +486,7 @@ public abstract class Doodle implements Transformation {
     }
 
     @Override
-    public void scale(float oldX, float oldY, float x, float y) {
+    public float scale(float oldX, float oldY, float x, float y) {
         if (mPoints.size() > 1) {
             mTransRect.set(mDoodleRect);
             Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
@@ -494,7 +494,10 @@ public abstract class Doodle implements Transformation {
 
             computeCenterPoint(mTransRect);
             scale(scale, mRectCenter[0], mRectCenter[1]);
+            return scale;
         }
+
+        return 1;
     }
 
     @Override
@@ -507,7 +510,7 @@ public abstract class Doodle implements Transformation {
     }
 
     @Override
-    public void rotate(float oldX, float oldY, float x, float y) {
+    public float rotate(float oldX, float oldY, float x, float y) {
         if (mPoints.size() > 1) {
             mTransRect.set(mDoodleRect);
             Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
@@ -515,7 +518,10 @@ public abstract class Doodle implements Transformation {
 
             computeCenterPoint(mTransRect);
             rotate(degree, mRectCenter[0], mRectCenter[1]);
+            return degree;
         }
+
+        return 0;
     }
 
     @Override
@@ -528,7 +534,7 @@ public abstract class Doodle implements Transformation {
     }
 
     @Override
-    public void scaleAndRotate(float oldX, float oldY, float x, float y) {
+    public float[] scaleAndRotate(float oldX, float oldY, float x, float y) {
         if (mPoints.size() > 1) {
             mTransRect.set(mDoodleRect);
             Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
@@ -538,7 +544,15 @@ public abstract class Doodle implements Transformation {
 
             computeCenterPoint(mTransRect);
             scaleRotateByAnchor(scale, degree, mRectCenter[0], mRectCenter[1]);
+
+            float[] result = new float[2];
+            result[0] = scale;
+            result[1] = degree;
+
+            return result;
         }
+
+        return null;
     }
 
     @Override
