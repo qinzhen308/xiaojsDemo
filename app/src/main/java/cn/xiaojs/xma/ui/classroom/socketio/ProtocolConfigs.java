@@ -73,13 +73,17 @@ public class ProtocolConfigs {
 
     //=======================constants for shape=========================
     /**
+     * 随意涂鸦(手绘)
+     */
+    public final static String SHAPE_HAND_WRITING = "write";
+    /**
      * 矩形
      */
     public final static String SHAPE_RECT = "rect";
     /**
      * 圆，椭圆
      */
-    public final static String SHAPE_CIRCLE = "circ";
+    public final static String SHAPE_OVAL = "circ";
     /**
      * 三角形
      */
@@ -88,5 +92,9 @@ public class ProtocolConfigs {
      * 直线
      */
     public final static String SHAPE_BEELINE = "line";
+    /**
+     * 文字
+     */
+    public final static String SHAPE_TEXT_WRITING = "text";
 
 }

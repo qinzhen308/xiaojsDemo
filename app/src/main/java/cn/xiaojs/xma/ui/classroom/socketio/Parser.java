@@ -15,12 +15,14 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  * ======================================================================================== */
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 
 public class Parser {
 
@@ -61,11 +63,21 @@ public class Parser {
                                 Commend cmd = new Commend();
                                 cmd.src = result;
 
-                                //$N:jb8g|rect,20,30,30,98,测试";
-                                //$D:fae4";
-                                //$M|20,30";
-                                //$m:jb8g|-20,-30";
-                                String pattern = "^\\$(\\w{1})((\\:(.{4}))*)((\\|([[-]\\S|\\,]*))*)(.*)";
+                                //非标准格式  冒号: 竖线| 可能不存在
+                                //$N:jb8g|rect,20,30,30,98,测试;
+                                //$D:fae4;
+                                //$M|20,30;
+                                //$m:jb8g|-20,-30;
+                                //String pattern = "^\\$(\\w{1})((\\:(.{4}))*)((\\|([[-]\\S|\\,]*))*)(.*)";
+                                //1 = cm, 4 = id, 7 = params
+
+                                //标准格式  冒号: 竖线|同时存在
+                                //$m:jb8g|-20,-30;
+                                //$D:jb8g;
+                                //$P:|2,FF00FF;
+                                //$T:|
+                                String pattern = "^\\$(\\w{1})\\:(.{4})*\\|([[-]\\S|\\,]*)(.*)";
+                                //1 = cm, 2 = id, 3 = params
                                 Pattern r = Pattern.compile(pattern);
                                 Matcher m = r.matcher(result);
                                 if (m.find()) {
@@ -76,10 +88,10 @@ public class Parser {
                                             case 1:
                                                 cmd.cm = s;
                                                 break;
-                                            case 4:
+                                            case 2:
                                                 cmd.id = s;
                                                 break;
-                                            case 7:
+                                            case 3:
                                                 cmd.params = s;
                                                 break;
                                         }
@@ -98,7 +110,7 @@ public class Parser {
         }
 
         //test: print
-        if (commends != null) {
+        /*if (commends != null) {
             for (CommendLine d : commends) {
                 Log.i("aaa", "cmd_line" + d.toString());
                 if (d.whiteboardCommends != null) {
@@ -107,8 +119,49 @@ public class Parser {
                     }
                 }
             }
-        }
+        }*/
         return commends;
+    }
+
+
+    public static int getShapeId(String[] params) {
+        if (params == null || params.length == 0) {
+            return -1;
+        }
+
+        String p = params[0];
+
+        if (ProtocolConfigs.SHAPE_RECT.equals(p)) {
+            return GeometryShape.RECTANGLE;
+        } else if (ProtocolConfigs.SHAPE_BEELINE.equals(p)) {
+            return GeometryShape.BEELINE;
+        } else if (ProtocolConfigs.SHAPE_OVAL.equals(p)) {
+            return GeometryShape.OVAL;
+        } else if (ProtocolConfigs.SHAPE_TRIANGLE.equals(p)) {
+            return GeometryShape.TRIANGLE;
+        }
+
+        return -1;
+    }
+
+    public static int getDoodleMode(String[] params) {
+        if (params == null || params.length == 0) {
+            return Whiteboard.MODE_NONE;
+        }
+
+        String p = params[0];
+
+        if (ProtocolConfigs.SHAPE_RECT.equals(p)) {
+            return Whiteboard.MODE_GEOMETRY;
+        } else if (ProtocolConfigs.SHAPE_BEELINE.equals(p)) {
+            return Whiteboard.MODE_GEOMETRY;
+        } else if (ProtocolConfigs.SHAPE_OVAL.equals(p)) {
+            return Whiteboard.MODE_GEOMETRY;
+        } else if (ProtocolConfigs.SHAPE_TRIANGLE.equals(p)) {
+            return Whiteboard.MODE_GEOMETRY;
+        }
+
+        return Whiteboard.MODE_NONE;
     }
 
 }

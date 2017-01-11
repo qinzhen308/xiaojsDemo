@@ -33,21 +33,17 @@ public class HandWriting extends Doodle {
         super(whiteboard, Doodle.STYLE_HAND_WRITING);
     }
 
-    public HandWriting(Whiteboard whiteboard, Paint paint, float x, float y) {
+    public HandWriting(Whiteboard whiteboard, Paint paint) {
         this(whiteboard);
         setPaint(paint);
         init();
-
-        setFirstPoint(x, y);
     }
 
-    public HandWriting(Whiteboard whiteboard, Paint paint, float x, float y, String doodleId) {
+    public HandWriting(Whiteboard whiteboard, Paint paint, String doodleId) {
         this(whiteboard);
         setDoodleId(doodleId);
         setPaint(paint);
         init();
-
-        setFirstPoint(x, y);
     }
 
     private void init() {
@@ -69,6 +65,8 @@ public class HandWriting extends Doodle {
             PointF last = mPoints.get(mPoints.size() - 1);
             mNormalizedPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);
             mNormalizedPath.computeBounds(mDoodleRect, true);
+        } else {
+            mNormalizedPath.moveTo(point.x, point.y);
         }
         mPoints.add(point);
     }

@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.OnColorChangeListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
 
 public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickListener {
@@ -27,16 +28,11 @@ public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickL
 
     private static int[] COLORS;
 
-    public ColorChangeListener mListener;
+    public OnColorChangeListener mListener;
 
     private CircleView mColorButtons[];
     //private ImageView mColorPickerBtn;
 
-    public interface ColorChangeListener {
-        public void onColorChange(int color);
-
-        public void onColorPick();
-    }
 
     public ColorPickerPop(Context context) {
         super(context);
@@ -98,7 +94,7 @@ public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickL
         super.showAsAnchorTop(anchor);
     }
 
-    public void setOnColorChangeListener(ColorChangeListener listener) {
+    public void setOnColorChangeListener(OnColorChangeListener listener) {
         mListener = listener;
     }
 
@@ -108,7 +104,7 @@ public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickL
         for (int i = 0; i <= n; i++) {
             if (v == mColorButtons[i]) {
                 if (mListener != null) {
-                    mListener.onColorChange(COLORS[i]);
+                    mListener.onColorChanged(COLORS[i]);
                 }
                 break;
             }

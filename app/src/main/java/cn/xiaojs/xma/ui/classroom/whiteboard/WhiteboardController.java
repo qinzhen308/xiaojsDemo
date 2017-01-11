@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -26,6 +27,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.OnColorChangeListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.UndoRedoListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.ColorPickerPop;
@@ -42,7 +44,7 @@ public class WhiteboardController implements
         EraserPop.EraserChangeListener,
         HandwritingPop.PaintChangeListener,
         GeometryPop.GeometryChangeListener,
-        ColorPickerPop.ColorChangeListener,
+        OnColorChangeListener,
         TextPop.TextChangeListener,
         UndoRedoListener {
 
@@ -70,7 +72,10 @@ public class WhiteboardController implements
 
     private int mGeometryId;
     private int mPanelWidth;
+
     private Socket mSocket;
+    private Handler mHandler;
+    private ReceiveRunnable mReceiveRunnable;
 
     public WhiteboardController(Context context, View root) {
         mContext = context;
@@ -94,6 +99,7 @@ public class WhiteboardController implements
 
         mSocket = SocketManager.getSocket();
         mSocket.on(Event.BOARD, mOnBoard);
+        mHandler = new Handler();
     }
 
     public void handlePanelItemClick(View v) {
@@ -241,16 +247,11 @@ public class WhiteboardController implements
     }
 
     @Override
-    public void onColorChange(int color) {
+    public void onColorChanged(int color) {
         if (mWhiteboard != null) {
             mColorPicker.setPaintColor(color);
             mWhiteboard.setPaintColor(color);
         }
-    }
-
-    @Override
-    public void onColorPick() {
-
     }
 
     @Override
@@ -316,6 +317,12 @@ public class WhiteboardController implements
         if (mWhiteboard != null) {
             mWhiteboard.release();
         }
+
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mReceiveRunnable);
+            mHandler = null;
+            mReceiveRunnable = null;
+        }
     }
 
     public void setWhiteboard(Whiteboard whiteboard) {
@@ -325,6 +332,7 @@ public class WhiteboardController implements
                 mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
                 mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
                 mWhiteboard.setUndoRedoListener(this);
+                mWhiteboard.setOnColorChangeListener(this);
                 reset(whiteboard);
             }
         }
@@ -337,7 +345,7 @@ public class WhiteboardController implements
         whiteboard.switchMode(Whiteboard.MODE_NONE);
 
         onGeometryChange(GeometryShape.RECTANGLE);
-        onColorChange(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
+        onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
         onTextOrientation(TextWriting.TEXT_HORIZONTAL);
 
         mSelection.setSelected(false);
@@ -381,6 +389,26 @@ public class WhiteboardController implements
         @Override
         public void call(Object... args) {
             List<CommendLine> commendLineList = Parser.unpacking(args);
+            mHandler.post(new ReceiveRunnable(commendLineList));
         }
     };
+
+    private class ReceiveRunnable implements Runnable {
+        private List<CommendLine> mCommendList;
+
+        public ReceiveRunnable(List<CommendLine> list) {
+            mCommendList = list;
+        }
+
+        public void setData(List<CommendLine> list) {
+            mCommendList = list;
+        }
+
+        @Override
+        public void run() {
+            if (mWhiteboard != null) {
+                mWhiteboard.onReceive(mCommendList);
+            }
+        }
+    }
 }

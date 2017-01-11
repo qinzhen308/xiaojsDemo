@@ -24,6 +24,7 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -698,6 +699,34 @@ public class Utils {
         borderDrawingPath.transform(matrix);
         mDelBtnPaint.setStrokeWidth(WhiteboardConfigs.DEL_BTN_STROKE_WIDTH / params.scale);
         canvas.drawPath(borderDrawingPath, mDelBtnPaint);
+    }
+
+
+    public static int getColor(String color, int defaultColor) {
+        int c = defaultColor;
+        try {
+            if (TextUtils.isEmpty(color)) {
+                return c;
+            }
+
+            if (color.length() == 6) {
+                //not alpha
+                int r = Integer.parseInt(color.substring(0, 2), 16);
+                int g = Integer.parseInt(color.substring(2, 4), 16);
+                int b = Integer.parseInt(color.substring(4, 6), 16);
+                c = Color.argb(255, r, g, b);
+            } else if (color.length() == 8) {
+                int a = Integer.parseInt(color.substring(0, 2), 16);
+                int r = Integer.parseInt(color.substring(2, 4), 16);
+                int g = Integer.parseInt(color.substring(4, 6), 16);
+                int b = Integer.parseInt(color.substring(6, 8), 16);
+                c = Color.argb(a, r, g, b);
+            }
+        } catch (Exception e) {
+
+        }
+
+        return c;
     }
 
 }
