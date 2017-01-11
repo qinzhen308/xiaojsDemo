@@ -382,7 +382,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mScreenWidth = dm.widthPixels;
         mScreenHeight = dm.heightPixels;
 
-        mViewGestureListener = new ViewGestureListener(context, this, new TouchEventListener());
+        mViewGestureListener = new ViewGestureListener(context, this, new TouchEventListener(), true);
         mInputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         mPreviousPoint = new PointF();
