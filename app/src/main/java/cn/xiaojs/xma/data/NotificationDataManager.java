@@ -17,7 +17,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/13.
  */
 
-public class NotificationDataManager extends DataManager {
+public class NotificationDataManager {
 
     public static void requestNotificationsOverview(Context context,
                            @NonNull Pagination pagination,

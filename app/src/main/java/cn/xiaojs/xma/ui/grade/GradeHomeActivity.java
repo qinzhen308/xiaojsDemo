@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +34,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshScrollView;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.chat.ChatActivity;
 import cn.xiaojs.xma.ui.widget.CustomScrollView;
 import cn.xiaojs.xma.util.DeviceUtil;
 
@@ -91,6 +93,13 @@ public class GradeHomeActivity extends BaseActivity {
         mTeacherGrid.setNumColumns(numColumns);
         PersonalProfileAdapter adapter = new PersonalProfileAdapter(dates, this);
         mTeacherGrid.setAdapter(adapter);
+        mTeacherGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                startActivity(intent);
+            }
+        });
 
         List<Date> dates1 = new ArrayList<>();
         dates1.add(new Date());

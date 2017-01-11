@@ -42,19 +42,19 @@ public abstract class BaseCheckSoftInputActivity extends BaseActivity{
                 }
                 if (h < oldh){
                     //输入法弹出
-                    onImShow();
+                    onImShow(oldh - h);
                 }else if (h > oldh){
                     //输入法关闭
-                    onImHide();
+                    onImHide(h - oldh);
                 }
             }
         });
         load();
     }
 
-    protected abstract void onImShow();
+    protected abstract void onImShow(int imHeight);
 
-    protected abstract void onImHide();
+    protected abstract void onImHide(int imHeight);
     /**
      * 调用loadView加载布局
      */

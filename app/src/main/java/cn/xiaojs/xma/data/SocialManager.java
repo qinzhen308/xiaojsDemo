@@ -42,7 +42,7 @@ import static cn.xiaojs.xma.data.AccountDataManager.getSessionID;
  * Created by maxiaobao on 2016/12/23.
  */
 
-public class SocialManager extends DataManager {
+public class SocialManager {
 
 //    public static void getContacts(final Context context, final LoadDataCallback<Cursor> callback) {
 //

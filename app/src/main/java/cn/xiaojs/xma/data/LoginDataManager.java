@@ -14,7 +14,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/10/31.
  */
 
-public class LoginDataManager extends DataManager{
+public class LoginDataManager {
 
     /**
      * 调用登陆API，进行登陆

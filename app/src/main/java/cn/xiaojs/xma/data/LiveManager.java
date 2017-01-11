@@ -11,7 +11,7 @@ import cn.xiaojs.xma.model.LiveSession.Ticket;
  * Created by maxiaobao on 2017/1/9.
  */
 
-public class LiveManager extends DataManager {
+public class LiveManager {
 
     public void generateTicket(Context context, String cs, APIServiceCallback<Ticket> callback) {
 

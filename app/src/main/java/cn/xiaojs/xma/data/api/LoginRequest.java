@@ -3,6 +3,7 @@ package cn.xiaojs.xma.data.api;
 import android.content.Context;
 
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -60,6 +61,12 @@ public class LoginRequest extends ServiceRequest {
 
     }
 
+//    private void initDataCache(Context context) {
+//
+//        DataManager.init(context);
+//    }
+
+
 
     @Override
     public void doTask(int apiType, Object responseBody) {
@@ -68,6 +75,8 @@ public class LoginRequest extends ServiceRequest {
             AccountDataManager.saveUserInfo(getApiManager().getAppContext(), info.getUser());
 
             initPermission();
+            DataManager.refreshGroupData(getContext());
+
         }
     }
 }

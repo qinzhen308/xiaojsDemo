@@ -31,7 +31,7 @@ import com.orhanobut.logger.Logger;
  * Created by maxiaobao on 2016/11/4.
  */
 
-public class LessonDataManager extends DataManager {
+public class LessonDataManager {
 
 
     /**
@@ -150,11 +150,7 @@ public class LessonDataManager extends DataManager {
     }
 
 
-    /**
-     * @param lesson 可为空
-     */
     public static void requestUploadCover(Context context,
-                                          @Nullable String lesson,
                                           @NonNull final String filePath,
                                           @NonNull QiniuService qiniuService) {
 
@@ -177,17 +173,6 @@ public class LessonDataManager extends DataManager {
 //            qiniuService.uploadFailure();
 //            return;
 //        }
-
-        if (TextUtils.isEmpty(lesson)) {
-
-            lesson = DataManager.generateLessonKey();
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the lesson is empty,so auto generate lesson key=%s", lesson);
-            }
-
-
-        }
 
         UpTokenParam param = new UpTokenParam();
         param.type = Xu.TokenType.LESSON_COVER;

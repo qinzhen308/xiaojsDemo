@@ -38,12 +38,12 @@ public class MomentCommentActivity extends BaseCheckSoftInputActivity {
     private String mReplyId;
 
     @Override
-    protected void onImShow() {
+    protected void onImShow(int h) {
 
     }
 
     @Override
-    protected void onImHide() {
+    protected void onImHide(int h) {
         finish();
     }
 

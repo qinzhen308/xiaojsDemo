@@ -2,6 +2,7 @@ package cn.xiaojs.xma;
 
 import android.app.Application;
 
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.util.XjsUtils;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
@@ -35,6 +36,9 @@ public class XiaojsApplication extends Application {
         //发布Release版本时，需要引入crash report
         String appid = "900060174";
         CrashReport.initCrashReport(getApplicationContext(), appid, false);
+
+        //init data cache
+        DataManager.init(this);
 
         //init xiaojs utils
         XjsUtils.init(this);

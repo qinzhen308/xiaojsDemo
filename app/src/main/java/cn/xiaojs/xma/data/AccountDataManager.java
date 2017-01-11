@@ -20,13 +20,15 @@ import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.account.User;
+import okhttp3.ResponseBody;
+
 import com.orhanobut.logger.Logger;
 
 /**
  * Created by maxiaobao on 2016/11/4.
  */
 
-public class AccountDataManager extends DataManager{
+public class AccountDataManager {
 
     //保存已声明的能力
     public static void saveSubject(Context context,String subject) {
@@ -103,18 +105,17 @@ public class AccountDataManager extends DataManager{
         AccountPref.setAccountID(context,"");
         SecurityManager.saveCSRFToken(context,"");
         DataManager.clearAPICache(context);
+        DataManager.clearDBData(context);
     }
 
 
     /**
      * 获取个人主页数据API
      * @param context
-     * @param sessionID
      * @param callback
      */
-    public static void requestHomeData(Context context,
-                                       @NonNull String sessionID,
-                                       @NonNull APIServiceCallback<HomeData> callback) {
+    public static void getHomeData(Context context,
+                                       @NonNull APIServiceCallback<ResponseBody> callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
@@ -122,8 +123,6 @@ public class AccountDataManager extends DataManager{
             }
             return;
         }
-
-
         AccountRequest accountRequest = new AccountRequest(context,callback);
         accountRequest.getHomeData();
     }

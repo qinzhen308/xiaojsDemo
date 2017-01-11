@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_marginRight="@dimen/px20"
+            android:layout_marginTop="@dimen/px15"
+            android:layout_marginBottom="@dimen/px15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/chat_item_message_top"
+                android:background="@drawable/course_state_end_bg"
+                android:text="李明加入的班级"
+                android:paddingLeft="@dimen/px5"
+                android:paddingRight="@dimen/px5"
+                android:paddingTop="@dimen/px3"
+                android:paddingBottom="@dimen/px3"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_24px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <LinearLayout
+                android:id="@+id/chat_item_other_wrapper"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <cn.xiaojs.xma.ui.widget.RoundedImageView
+                    android:id="@+id/chat_item_image_other"
+                    android:src="@drawable/default_portrait"
+                    android:scaleType="fitXY"
+                    app:oval="true"
+                    android:layout_width="@dimen/px80"
+                    android:layout_height="@dimen/px80"/>
+
+            <LinearLayout
+                    android:layout_marginLeft="@dimen/px10"
+                    android:layout_marginRight="@dimen/px100"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:id="@+id/chat_mark_other"
+                            android:background="@drawable/course_state_wait_bg"
+                            android:paddingTop="@dimen/px2"
+                            android:paddingBottom="@dimen/px2"
+                            android:paddingLeft="@dimen/px5"
+                            android:paddingRight="@dimen/px5"
+                            android:textSize="@dimen/font_20px"
+                            android:layout_gravity="center_vertical"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="@dimen/px10"
+                            android:textColor="@color/font_white"
+                            android:text="主讲"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:id="@+id/chat_name_other"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:text="卓文君"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/px10"
+                            android:textColor="@color/common_text"
+                            android:textSize="@dimen/font_24px"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <TextView
+                        android:id="@+id/chat_content_other"
+                        android:background="@drawable/ic_chat_other"
+                        android:layout_marginTop="@dimen/px20"
+                        android:textSize="@dimen/font_30px"
+                        android:textColor="@color/font_black"
+                        android:gravity="center|left"
+                        android:padding="@dimen/px20"
+                        android:text="同学们，可与辅导课资料已经上传到资料库了，请记得去下载，如果有问题随时问我！"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/chat_item_me_wrapper"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <cn.xiaojs.xma.ui.widget.RoundedImageView
+                        android:id="@+id/chat_item_image_me"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:src="@drawable/default_portrait"
+                        android:scaleType="fitXY"
+                        app:oval="true"
+                        android:layout_width="@dimen/px80"
+                        android:layout_height="@dimen/px80"/>
+
+                <TextView
+                        android:id="@+id/chat_content_me"
+                        android:layout_toLeftOf="@id/chat_item_image_me"
+                        android:layout_marginRight="@dimen/px10"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/ic_chat_me"
+                        android:layout_marginLeft="@dimen/px100"
+                        android:textSize="@dimen/font_30px"
+                        android:textColor="@color/font_white"
+                        android:gravity="center|left"
+                        android:padding="@dimen/px20"
+                        android:text="同学们，可与辅导课资料已经上传到资料库了，请记得去下载，如果有问题随时问我！"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+            <TextView
+                    android:id="@+id/chat_item_me_send_tips"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_24px"
+                    android:drawablePadding="@dimen/px10"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="@dimen/px100"
+                    android:layout_marginTop="@dimen/px20"
+                    android:gravity="center"
+                    android:drawableLeft="@drawable/ic_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>
