@@ -27,6 +27,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.OnColorChangeListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.UndoRedoListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.ColorPickerPop;
@@ -43,7 +44,7 @@ public class WhiteboardController implements
         EraserPop.EraserChangeListener,
         HandwritingPop.PaintChangeListener,
         GeometryPop.GeometryChangeListener,
-        ColorPickerPop.ColorChangeListener,
+        OnColorChangeListener,
         TextPop.TextChangeListener,
         UndoRedoListener {
 
@@ -246,16 +247,11 @@ public class WhiteboardController implements
     }
 
     @Override
-    public void onColorChange(int color) {
+    public void onColorChanged(int color) {
         if (mWhiteboard != null) {
             mColorPicker.setPaintColor(color);
             mWhiteboard.setPaintColor(color);
         }
-    }
-
-    @Override
-    public void onColorPick() {
-
     }
 
     @Override
@@ -336,6 +332,7 @@ public class WhiteboardController implements
                 mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
                 mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
                 mWhiteboard.setUndoRedoListener(this);
+                mWhiteboard.setOnColorChangeListener(this);
                 reset(whiteboard);
             }
         }
@@ -348,7 +345,7 @@ public class WhiteboardController implements
         whiteboard.switchMode(Whiteboard.MODE_NONE);
 
         onGeometryChange(GeometryShape.RECTANGLE);
-        onColorChange(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
+        onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
         onTextOrientation(TextWriting.TEXT_HORIZONTAL);
 
         mSelection.setSelected(false);

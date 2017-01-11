@@ -53,6 +53,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.action.Selector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.ActionRecord;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.BitmapPool;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.OnColorChangeListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
@@ -161,6 +162,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private ClassroomGestureDetector mClassroomGestureDetector;
 
     private UndoRedoListener mUndoRedoListener;
+    private OnColorChangeListener mColorChangeListener;
     private int mRecordGroupId;
     private int mDoodleAction;
     private List<Integer> mUndoRecordIds;
@@ -1392,6 +1394,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mUndoRedoListener = listener;
     }
 
+    public void setOnColorChangeListener(OnColorChangeListener listener) {
+        mColorChangeListener = listener;
+    }
+
     public Bitmap getWhiteboardBitmap() {
         return mDoodleBitmap;
     }
@@ -1469,7 +1475,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             //change color
             Doodle doodle = findDoodleById(cmd.id);
             if (doodle != null && params.length > 0) {
-                doodle.getPaint().setColor(getColor(params[0]));
+                int c = Utils.getColor(params[0], mPaintColor);
+                doodle.getPaint().setColor(c);
             }
         } else if (ProtocolConfigs.PAINT.equals(cmd.cm)) {
             //change stroke and color
@@ -1543,21 +1550,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         return null;
     }
 
-    private int getColor(String color) {
-        try {
-            if (TextUtils.isEmpty(color)) {
-                return mPaintColor;
-            }
-
-            mPaintColor = Integer.parseInt(color, 16);
-        } catch (Exception e) {
-
-        }
-
-        return mPaintColor;
-
-    }
-
     private void changePaintStyle(String[] params) {
         if (params == null) {
             return;
@@ -1568,7 +1560,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 mPaintStrokeWidth = Integer.parseInt(params[0]);
             } else if (params.length > 1) {
                 mPaintStrokeWidth = Integer.parseInt(params[0]);
-                mPaintColor = Integer.parseInt(params[1], 16);
+                mPaintColor = Utils.getColor(params[1], mPaintColor);
+                if (mColorChangeListener != null) {
+                    mColorChangeListener.onColorChanged(mPaintColor);
+                }
             }
         } catch (Exception e) {
 
