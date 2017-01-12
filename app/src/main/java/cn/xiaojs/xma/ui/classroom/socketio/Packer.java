@@ -15,14 +15,14 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  * ======================================================================================== */
 
 import android.graphics.PointF;
-import android.graphics.RectF;
+import android.text.TextUtils;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
-import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 
 public class Packer {
@@ -30,7 +30,18 @@ public class Packer {
     /**
      * 封装新建形状（手写，几何图形，文字）的命令
      */
-    public String getBuildDoodleCmd(Doodle doodle, int blackboardW, int blackboardH, RectF doodleBounds) {
+    public static String getBuildDoodleCmd(Doodle doodle, boolean whitTime) {
+        if (doodle == null) {
+            return null;
+        }
+
+        return getBuildDoodleCmd(doodle, doodle.getDoodleId(), whitTime);
+    }
+
+    /**
+     * 封装新建形状（手写，几何图形，文字）的命令
+     */
+    public static String getBuildDoodleCmd(Doodle doodle, String doodleId, boolean whitTime) {
         if (doodle == null) {
             return null;
         }
@@ -39,7 +50,7 @@ public class Packer {
         sb.append("$");
         sb.append(ProtocolConfigs.NEW);
         sb.append(":");
-        sb.append(doodle.getDoodleId());
+        sb.append(doodleId);
         sb.append("|");
         List<PointF> points = doodle.getPoints();
 
@@ -47,30 +58,35 @@ public class Packer {
         String shape = "";
         switch (style) {
             case Doodle.STYLE_HAND_WRITING:
+                shape = ProtocolConfigs.SHAPE_HAND_WRITING;
                 break;
             case Doodle.STYLE_GEOMETRY:
                 shape = transformToProtocolShape(((GeometryShape) doodle).getGeometryId());
                 break;
             case Doodle.STYLE_TEXT:
+                shape = ProtocolConfigs.SHAPE_TEXT_WRITING;
                 break;
         }
+        if (TextUtils.isEmpty(shape)) {
+            return null;
+        }
+
         sb.append(shape);
         if (doodle instanceof TextWriting) {
-            PointF p = Utils.reNormalizeScreenPoint(points.get(0).x, points.get(0).y, doodleBounds);
-            int w = (int) ((p.x * ProtocolConfigs.VIRTUAL_WIDTH) / blackboardW);
-            int h = (int) ((p.y * ProtocolConfigs.VIRTUAL_HEIGHT) / blackboardH);
+            int w = (int) (points.get(0).x * ProtocolConfigs.VIRTUAL_WIDTH);
+            int h = (int) (points.get(0).y * ProtocolConfigs.VIRTUAL_HEIGHT);
             sb.append(",");
             sb.append(String.valueOf(w));
             sb.append(",");
             sb.append(String.valueOf(h));
             sb.append(",");
             String text = ((TextWriting)doodle).getTextString();
+            text = java.net.URLDecoder.decode(text);
             sb.append(text);
         } else {
             for (int i = 0; i < points.size(); i++) {
-                PointF p = Utils.reNormalizeScreenPoint(points.get(i).x, points.get(i).y, doodleBounds);
-                int w = (int) ((p.x * ProtocolConfigs.VIRTUAL_WIDTH) / blackboardW);
-                int h = (int) ((p.y * ProtocolConfigs.VIRTUAL_HEIGHT) / blackboardH);
+                int w = (int) (points.get(i).x * ProtocolConfigs.VIRTUAL_WIDTH);
+                int h = (int) (points.get(i).y * ProtocolConfigs.VIRTUAL_HEIGHT);
                 sb.append(",");
                 sb.append(String.valueOf(w));
                 sb.append(",");
@@ -78,31 +94,52 @@ public class Packer {
             }
         }
 
+        if (whitTime) {
+            sb.append(" #" + System.currentTimeMillis());
+        }
         return sb.toString();
     }
 
     /**
      * 封装改变画笔样式命令
      */
-    public static String getChangePaintCmd(float paintWidth, int paintColor) {
-        return "$:" + ProtocolConfigs.PAINT + "|" + paintWidth + "," + Integer.toHexString(paintColor);
+    public static String getChangePaintCmd(float paintWidth, int paintColor, boolean whitTime) {
+        String s = "$:" + ProtocolConfigs.PAINT + "|" + paintWidth + "," + Integer.toHexString(paintColor);
+        if (whitTime) {
+            return s + " #" + System.currentTimeMillis();
+        }
+
+        return s;
     }
 
     /**
      * 封装删除命令
      */
-    public static String getDeleteCmd(Doodle doodle) {
+    public static String getDeleteCmd(Doodle doodle, boolean whitTime) {
         if (doodle == null) {
             return null;
         }
 
-        return "$" + ProtocolConfigs.DEL + ":" + doodle.getDoodleId() + "|";
+        String s = "$" + ProtocolConfigs.DEL + ":" + doodle.getDoodleId() + "|";
+
+        if (whitTime) {
+            return s + " #" + System.currentTimeMillis();
+        }
+
+        return s;
+    }
+
+    /**
+     * 封装删除命令
+     */
+    public static String getClearCmd() {
+        return  "$" + ProtocolConfigs.CLEAR + ":| #" + System.currentTimeMillis();
     }
 
     /**
      * 封装改变颜色命令
      */
-    public static String getChangeColorCmd(Doodle doodle) {
+    public static String getChangeColorCmd(Doodle doodle, boolean whitTime) {
         if (doodle == null) {
             return null;
         }
@@ -115,20 +152,23 @@ public class Packer {
         sb.append("|");
         sb.append(Integer.toHexString(doodle.getPaint().getColor()));
 
+        if (whitTime) {
+            sb.append(" #" + System.currentTimeMillis());
+        }
+
         return sb.toString();
     }
 
     /**
      * 封装移动命令(相对移动)
      */
-    public static String getMoveCmd(Doodle doodle, int blackboardW, int blackboardH, float deltaX, float deltaY) {
-        String cmd = null;
+    public static String getMoveCmd(Doodle doodle, float deltaX, float deltaY, int blackboardW, int blackboardH, boolean whitTime) {
         if (doodle == null) {
             return null;
         }
 
-        deltaX = (int) ((deltaX * ProtocolConfigs.VIRTUAL_WIDTH) / blackboardW);
-        deltaY = (int) ((deltaY * ProtocolConfigs.VIRTUAL_HEIGHT) / blackboardH);
+        deltaX = (deltaX * ProtocolConfigs.VIRTUAL_WIDTH) / blackboardW;
+        deltaY = (deltaY * ProtocolConfigs.VIRTUAL_HEIGHT) / blackboardH;
 
         StringBuilder sb = new StringBuilder();
         sb.append("$");
@@ -140,27 +180,83 @@ public class Packer {
         sb.append(",");
         sb.append(String.valueOf((int) deltaY));
 
-        return cmd;
+        if (whitTime) {
+            sb.append(" #" + System.currentTimeMillis());
+        }
+
+        return sb.toString();
     }
 
     /**
      * 封装缩放，旋转命令(相对移动)
      */
-    public static String getScaleOrRotateCmd(Doodle doodle, int action, float delta) {
-        String cmd = null;
+    public static String getScaleCmd(Doodle doodle, float scale, boolean whitTime) {
         if (doodle == null) {
             return null;
         }
 
         StringBuilder sb = new StringBuilder();
         sb.append("$");
-        sb.append(action == Action.SCALE_ACTION ? ProtocolConfigs.ZOOM_R : ProtocolConfigs.ROTATE_R);
+        sb.append(ProtocolConfigs.ZOOM_R);
         sb.append(":");
         sb.append(doodle.getDoodleId());
         sb.append("|");
-        sb.append(String.valueOf(delta));
+        String s = new DecimalFormat("#.###").format(scale);
+        sb.append(s);
 
-        return cmd;
+        if (whitTime) {
+            sb.append(" #" + System.currentTimeMillis());
+        }
+
+        return sb.toString();
+    }
+
+
+    /**
+     * 封装缩放，旋转命令(相对移动)
+     */
+    public static String getRotateCmd(Doodle doodle, float degree, boolean whitTime) {
+        if (doodle == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("$");
+        sb.append(ProtocolConfigs.ROTATE_R);
+        sb.append(":");
+        sb.append(doodle.getDoodleId());
+        sb.append("|");
+        String d = new DecimalFormat("#.###").format(degree);
+        sb.append(d);
+
+        if (whitTime) {
+            sb.append(" #" + System.currentTimeMillis());
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * 封装缩放和旋转命令(相对移动)
+     */
+    public static String getScaleAndRotateCmd(Doodle doodle, float scale, float degree, boolean whitTime) {
+        if (doodle == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        String scaleCmd = getScaleCmd(doodle, scale, false);
+        String rotateCmd = getRotateCmd(doodle, degree, false);
+
+        sb.append(scaleCmd);
+        sb.append(" ");
+        sb.append(rotateCmd);
+
+        if (whitTime) {
+            sb.append(" #" + System.currentTimeMillis());
+        }
+
+        return sb.toString();
     }
 
     /**
@@ -168,7 +264,6 @@ public class Packer {
      */
     public static String getScaleOrRotateCmd(Doodle doodle, int action, int blackboardW, int blackboardH,
                                             float oldX, float oldY, float x, float y) {
-        String cmd = null;
         if (doodle == null) {
             return null;
         }
@@ -189,7 +284,9 @@ public class Packer {
         sb.append(String.valueOf(x));
         sb.append(String.valueOf(y));
 
-        return cmd;
+        sb.append(" #" + System.currentTimeMillis());
+
+        return sb.toString();
     }
 
     public static String transformToProtocolShape(int shapeId) {

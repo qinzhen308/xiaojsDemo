@@ -28,6 +28,9 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
+import java.util.Random;
+
+import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 
 public class Utils {
@@ -42,6 +45,8 @@ public class Utils {
     private final static float[] mPointArr = new float[2];
     public final static Paint mDelBtnPaint = buildDelBtnPaint();
     public final static Paint mControllerPaint = buildControllerPaint();
+
+    private final static String CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /**
      * map the point of specified canvas to screen point
@@ -727,6 +732,16 @@ public class Utils {
         }
 
         return c;
+    }
+
+    public static String buildDoodleId() {
+        int size = CHARACTERS.length() - 1;
+        StringBuilder sb = new StringBuilder(ProtocolConfigs.SHAPE_ID_LENGTH);
+        sb.append(CHARACTERS.charAt((int)(Math.random() * size)));
+        sb.append(CHARACTERS.charAt((int)(Math.random() * size)));
+        sb.append(CHARACTERS.charAt((int)(Math.random() * size)));
+        sb.append(CHARACTERS.charAt((int)(Math.random() * size)));
+        return sb.toString();
     }
 
 }
