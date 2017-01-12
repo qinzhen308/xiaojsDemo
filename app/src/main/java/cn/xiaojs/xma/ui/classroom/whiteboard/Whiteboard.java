@@ -750,11 +750,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     }
                     break;
                 case MODE_TEXT:
-                    if (mDoodle != null && mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
-                        if (mDoodleAction != Action.NO_ACTION) {
-                            //add action
-                            addRecords(mDoodle, mDoodleAction);
-                        }
+                    if (mDoodleAction != Action.NO_ACTION) {
+                        //add action
+                        addRecords(mDoodle, mDoodleAction);
                     }
                     break;
                 case MODE_COLOR_PICKER:
