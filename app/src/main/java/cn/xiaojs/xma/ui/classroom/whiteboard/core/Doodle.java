@@ -21,6 +21,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -606,7 +607,7 @@ public abstract class Doodle implements Transformation {
         }
 
         ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 2);
-        return mTotalScale - record.scale;
+        return mTotalScale / record.scale;
     }
 
     /**
