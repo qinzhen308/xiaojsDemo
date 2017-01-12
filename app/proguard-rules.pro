@@ -52,6 +52,8 @@
 }
 
 #
+-keep class cn.xiaojs.xma.ui.classroom.whiteboard.core.ViewGestureListener$* {*;}
+
 -keep class cn.xiaojs.xma.ui.widget.GooeyMenu$* {
     <fields>;
     <methods>;
