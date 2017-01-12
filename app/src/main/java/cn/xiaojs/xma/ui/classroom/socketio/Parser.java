@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *
  * ======================================================================================== */
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -92,7 +93,11 @@ public class Parser {
                                                 cmd.id = s;
                                                 break;
                                             case 3:
-                                                cmd.params = s;
+                                                if (ProtocolConfigs.SHAPE_TEXT_WRITING.equals(cmd.cm)) {
+                                                    cmd.params = java.net.URLDecoder.decode(s);
+                                                } else {
+                                                    cmd.params = s;
+                                                }
                                                 break;
                                         }
                                     }
@@ -109,17 +114,6 @@ public class Parser {
             }
         }
 
-        //test: print
-        /*if (commends != null) {
-            for (CommendLine d : commends) {
-                Log.i("aaa", "cmd_line" + d.toString());
-                if (d.whiteboardCommends != null) {
-                    for (Commend c : d.whiteboardCommends) {
-                        Log.i("aaa", "cmd=" + c.toString());
-                    }
-                }
-            }
-        }*/
         return commends;
     }
 

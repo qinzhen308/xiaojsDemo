@@ -24,4 +24,5 @@ public interface Action {
     public static final int CHANGE_AREA_ACTION = 5;
     public static final int DELETE_ACTION = 6;
     public static final int CHANGE_PAINT = 7;
+    public static final int CLEAR_ACTION = 8;
 }
