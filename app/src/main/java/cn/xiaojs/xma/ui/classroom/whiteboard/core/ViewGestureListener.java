@@ -30,6 +30,9 @@ public class ViewGestureListener {
     public static final float MAX_SCALE = WhiteboardConfigs.WHITE_BOARD_MAX_SCALE;
     public static final float MIN_SCALE = WhiteboardConfigs.WHITE_BOARD_MIN_SCALE;
 
+    private final static int OVERFLOW_X = 200; //200px
+    private final static int OVERFLOW_Y = 200; //200px
+
     private int mVisibleWidth;
     private int mVisibleHeight;
 
@@ -73,6 +76,7 @@ public class ViewGestureListener {
 
     private float mRelativeX;
     private float mRelativeY;
+    private boolean mHasOverflow = false;
     //private float mScreenSwitchScale;
 
     public interface ViewRectChangedListener {
@@ -100,7 +104,12 @@ public class ViewGestureListener {
     }
 
     public ViewGestureListener(Context context, ViewRectChangedListener rectChangedlistener,
-            onTouchEventListener touchListener) {
+                               onTouchEventListener touchListener) {
+        this(context, rectChangedlistener, touchListener, false);
+    }
+
+    public ViewGestureListener(Context context, ViewRectChangedListener rectChangedlistener,
+            onTouchEventListener touchListener, boolean hasOverflow) {
         mTranslateX = 0;
         mTranslateY = 0;
 
@@ -120,6 +129,7 @@ public class ViewGestureListener {
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         mGestureDetector = new GestureDetector(context, new GestureListener());
         mDownUpDetector = new DownUpDetector();
+        mHasOverflow = hasOverflow;
     }
 
     public void onViewChanged(int width, int height, int imageW, int imageH) {
@@ -295,12 +305,12 @@ public class ViewGestureListener {
         float scaleOffsetX = 0;
         float scaleOffsetY = 0;
 
-        if (mDstRect.width() >= mVisibleWidth) {
+        if (mDstRect.width() >= mVisibleWidth || mHasOverflow) {
             translateX = (focusX - mOldFocusX);
             scaleOffsetX = (focusX - mImageCenterX) * (1 - scale / mOldScale);
         }
 
-        if (mDstRect.height() >= mVisibleHeight) {
+        if (mDstRect.height() >= mVisibleHeight || mHasOverflow) {
             translateY = (focusY - mOldFocusY);
             scaleOffsetY = (focusY - mImageCenterY) * (1 - scale / mOldScale);
         }
@@ -361,28 +371,45 @@ public class ViewGestureListener {
         }
 
         // the offset of moving two pointer
-        if (height >= mVisibleHeight) {
-            if (bottom < mVisibleHeight) {
-                offsetY = mVisibleHeight - bottom;
+        if (!mHasOverflow) {
+            if (height >= mVisibleHeight) {
+                if (bottom < mVisibleHeight) {
+                    offsetY = mVisibleHeight - bottom;
+                }
+                if (top > 0) {
+                    offsetY = -top;
+                }
+            } else {
+                offsetY = mVisibleHeight / 2.0f - mImageCenterY;
             }
-            if (top > 0) {
-                offsetY = -top;
+
+            if (width >= mVisibleWidth) {
+                if (right < mVisibleWidth) {
+                    offsetX = mVisibleWidth - right;
+                }
+                if (left > 0) {
+                    offsetX = -left;
+                }
+            } else {
+                offsetX = mVisibleWidth / 2.0f - mImageCenterX;
             }
         } else {
-            offsetY = mVisibleHeight / 2.0f - mImageCenterY;
+            // the offset of moving two pointer with overflow
+            if (bottom + OVERFLOW_Y < mVisibleHeight) {
+                offsetY = mVisibleHeight - bottom - OVERFLOW_Y;
+            }
+            if (top > OVERFLOW_Y) {
+                offsetY = OVERFLOW_Y - top;
+            }
+
+            if (right + OVERFLOW_X < mVisibleWidth) {
+                offsetX = mVisibleWidth - right - OVERFLOW_X;
+            }
+            if (left > OVERFLOW_X) {
+                offsetX = OVERFLOW_X - left;
+            }
         }
 
-        if (width >= mVisibleWidth) {
-            if (right < mVisibleWidth) {
-                offsetX = mVisibleWidth - right;
-            }
-            if (left > 0) {
-                offsetX = -left;
-            }
-        } else {
-            offsetX = mVisibleWidth / 2.0f - mImageCenterX;
-        }
-        
          //mImageCenterX += offsetX + scaleOffsetX;
          //mImageCenterY += offsetY + scaleOffsetY;
          //mScale = scale;
