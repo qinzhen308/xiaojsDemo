@@ -23,6 +23,10 @@ public class WhiteboardLayer {
     public static final float DOODLE_CANVAS_RATIO = 4 / 3.0F; // w:h = 4:3
     private String mWhiteboardId;
     private String mWhiteboardName;
+    /**
+     * 是否是直播白板
+     */
+    private boolean isLive;
 
     private ArrayList<Doodle> mAllDoodles;
     private ArrayList<Doodle> mReDoStack;
@@ -58,4 +62,11 @@ public class WhiteboardLayer {
         return mWhiteboardName;
     }
 
+    public boolean isLive() {
+        return isLive;
+    }
+
+    public void setIsLive(boolean live) {
+        isLive = live;
+    }
 }

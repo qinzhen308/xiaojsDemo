@@ -54,7 +54,7 @@ public class BitmapPool {
     // Put a Bitmap into the pool, if the Bitmap has a proper size. Otherwise
     // the Bitmap will be recycled. If the pool is full, an old Bitmap will be
     // recycled.
-    public void recycle(Bitmap bitmap) {
+    public synchronized void recycle(Bitmap bitmap) {
         if (bitmap == null) return;
         
         synchronized(this) {
@@ -80,7 +80,7 @@ public class BitmapPool {
         mPool.clear();
     }
 
-    public void release() {
+    public synchronized void release() {
         for (int i = mPool.size() - 1; i >= 0; --i) {
             WeakReference<Bitmap> ref = mPool.get(i);
             if (ref.get() != null) {

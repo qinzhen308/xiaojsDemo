@@ -273,6 +273,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/px20"
+                android:layout_marginRight="@dimen/px40"
                 android:src="@drawable/cr_main_screen"/>
 
         <ImageView
@@ -281,7 +282,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/px20"
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/px80"/>
+                android:layout_marginRight="@dimen/px40"/>
 
         <ImageView
                 android:id="@+id/share_white_board_btn"
@@ -289,15 +290,14 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/px20"
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/px80"/>
+                android:layout_marginRight="@dimen/px40"/>
 
         <ImageView
                 android:id="@+id/save_white_board_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/cr_save_whiteboard"
-                android:padding="@dimen/px20"
-                android:layout_marginLeft="@dimen/px40"/>
+                android:padding="@dimen/px20"/>
 
     </LinearLayout>
 
