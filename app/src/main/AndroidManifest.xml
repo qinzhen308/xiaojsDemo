@@ -179,6 +179,10 @@
                 android:name=".ui.chat.ChatActivity"
                 android:windowSoftInputMode="stateHidden|adjustResize"
                 android:screenOrientation="portrait"/>
+
+
+        <service android:name=".data.loader.SyncService"
+                 android:exported="false"/>
     </application>
 
 </manifest>

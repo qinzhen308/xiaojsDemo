@@ -174,6 +174,8 @@ public class ContactActivity extends BaseActivity {
 
                 removeContact(contactGroup, contact, groupPosition, childPosition);
 
+                DataManager.removeContact(ContactActivity.this,contact.account);
+
             }
 
             @Override
@@ -308,21 +310,21 @@ public class ContactActivity extends BaseActivity {
 
     private void requestContactData() {
 
-        listView.setRefreshing();
+        //listView.setRefreshing();
 
         SocialManager.getContacts(this, new APIServiceCallback<ArrayList<ContactGroup>>() {
             @Override
             public void onSuccess(ArrayList<ContactGroup> object) {
 
                 bindDataView(object);
-                listView.onRefreshComplete();
+                //listView.onRefreshComplete();
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
 
                 bindDataView(null);
-                listView.onRefreshComplete();
+                //listView.onRefreshComplete();
 
                 Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
             }
@@ -353,7 +355,7 @@ public class ContactActivity extends BaseActivity {
 
     public static void addDefaultGroup(Context context, ArrayList<ContactGroup> contactData) {
 
-        Map<Long, ContactGroup> cacheMap = DataManager.getGroupCache(context);
+        Map<Long, ContactGroup> cacheMap = DataManager.getGroupData(context);
 
         if (cacheMap == null)
             return;

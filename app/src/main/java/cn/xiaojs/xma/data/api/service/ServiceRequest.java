@@ -12,6 +12,8 @@ import android.text.TextUtils;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.data.db.BaseDao;
+import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
@@ -288,6 +290,31 @@ public class ServiceRequest<T> implements ContextLifecycle {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Resolve the Xiaojs service callback
     //
+
+    public final void enqueueRequest(final int apiType, final Call<T> call, BaseDao dao, Object... params) {
+
+        DataLoder dataLoder = new DataLoder(getContext(), dao);
+        dataLoder.load(new DataLoder.DataLoaderCallback() {
+            @Override
+            public void loadCompleted(Object object) {
+
+
+                if (serviceCallback != null) {
+                    if (object !=null) {
+                        serviceCallback.onSuccess((T)object);
+                    }
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("load from db completed and begin request api");
+                    }
+
+                    enqueueRequest(apiType,call,true);
+                }
+            }
+        }, params);
+
+    }
+
 
     public final void enqueueRequest(final int apiType,
                                      final Call<T> call,

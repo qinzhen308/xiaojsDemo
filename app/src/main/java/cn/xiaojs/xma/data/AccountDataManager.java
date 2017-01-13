@@ -20,9 +20,12 @@ import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.account.User;
+import cn.xiaojs.xma.model.social.ContactGroup;
 import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
+
+import java.util.Map;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -104,8 +107,8 @@ public class AccountDataManager {
         AccountPref.setAuthToken(context,"");
         AccountPref.setAccountID(context,"");
         SecurityManager.saveCSRFToken(context,"");
-        DataManager.clearAPICache(context);
-        DataManager.clearDBData(context);
+
+        DataManager.clearCacheData(context);
     }
 
 
@@ -126,6 +129,18 @@ public class AccountDataManager {
         AccountRequest accountRequest = new AccountRequest(context,callback);
         accountRequest.getHomeData();
     }
+
+    public static Map<Long, ContactGroup> getHomeData(Context context) throws Exception{
+
+        AccountRequest accountRequest = new AccountRequest(context,null);
+        ResponseBody responseBody = accountRequest.getHomeDataSync();
+        if (responseBody != null) {
+            return DataManager.parseGroupIntoMap(responseBody.string());
+        }
+
+        return null;
+    }
+
 
     /**
      * 声明教学能力API

@@ -24,7 +24,7 @@ public class CursorTaskLoader extends AsyncTaskLoader<Cursor> {
 
     @Override
     public Cursor loadInBackground() {
-        return baseDao.getCursor(context);
+        return null; //baseDao.getCursor(context);
     }
 
     @Override

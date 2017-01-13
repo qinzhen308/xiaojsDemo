@@ -2,6 +2,7 @@ package cn.xiaojs.xma.data;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
@@ -12,6 +13,8 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.db.ContactDao;
+import cn.xiaojs.xma.data.loader.SyncService;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.SecurityUtil;
@@ -38,41 +41,53 @@ import java.util.Set;
 
 public class DataManager {
 
+    public static final String SYNC_TYPE = "stype";
+    public static final int TYPE_CONTACT = 0x2;
+
+    public static final String EXTRA_CONTACT = "econtact";
+
+    private static MemCache getCache(Context context) {
+        return MemCache.getDataCache(context);
+    }
+
+
     /**
      * init memory data cache when the user already logined
      */
     public static void init(Context context) {
 
         if (AccountDataManager.isLogin(context)) {
-
-            MemCache cache = MemCache.getDataCache(context);
             //init data cache
-            cache.init();
-
+            getCache(context).init();
         }
+    }
 
+    public static Map<Long, ContactGroup> getGroupData(Context context) {
+        return getCache(context).getGroupData();
+    }
 
+//    public static ArrayList<ContactGroup> getContactGroupData(Context context) {
+//        return getCache(context).getContactGroupData();
+//    }
+
+    public static void syncData(Context context,Intent intent) {
+
+        //intent.setClass(context,SyncService.class);
+        context.startService(intent);
     }
 
     /**
-     * Clear the cache data
+     * Clear the cache and local data
      * @param context
      */
-    public static void clearDBData(Context context) {
+    public static void clearCacheData(Context context) {
 
-        //clear contact group data
-        ContactDao contactDao = new ContactDao();
-        contactDao.clearGroup(context);
-    }
+        //cache data
+        clearAPICache(context);
+        MemCache.getDataCache(context).clear();
 
-    /**
-     * return groups from mem cache
-     * @param context
-     * @return
-     */
-    public static Map<Long, ContactGroup> getGroupCache(Context context) {
-        MemCache cache = MemCache.getDataCache(context);
-        return cache.getGroupData();
+        //local data
+        ContactDao.clear(context);
     }
 
     /**
@@ -95,36 +110,103 @@ public class DataManager {
 
     }
 
+    public static void syncGroupData(Context context,Map<Long, ContactGroup> map) {
+
+        if (map == null) {
+            return;
+        }
+
+        DataManager.MemCache cache = getCache(context);
+        cache.syncGroupData(map);
+
+        ContactGroup[] groups = new ContactGroup[map.size()];
+        map.values().toArray(groups);
+        ContactDao contactDao = new ContactDao();
+        contactDao.clearGroups(context);
+        contactDao.addGroup(context, groups);
+
+    }
+
+    public static void syncContactData(Context context,ArrayList<ContactGroup> contactGroups) {
+
+        if (contactGroups == null) {
+            return;
+        }
+
+//        DataManager.MemCache cache = getCache(context);
+//        cache.syncContactData(contactGroups);
+
+        ContactDao contactDao = new ContactDao();
+        contactDao.syncData(context, contactGroups);
+    }
+
+//    public static void removeContact(Context context, long gid, String cid) {
+//
+//        getCache(context).removeContact(gid,cid);
+//
+//        ContactDao contactDao = new ContactDao();
+//        contactDao.deleteContact(context,cid);
+//
+//    }
+
+    public static void removeContact(Context context, String cid) {
+
+        ContactDao contactDao = new ContactDao();
+        contactDao.deleteContact(context,cid);
+
+    }
+
+    public static void addContact(Context context,long gid,Contact contact) {
+
+        ContactDao contactDao = new ContactDao();
+        contactDao.addGroup(context,gid,contact);
+    }
+
     /**
      * Refresh group data by remote api service, then to update cache and DB
      */
-    public static void refreshGroupData(final Context context) {
+//    public static void refreshGroupData(final Context context) {
+//
+//        AccountDataManager.getHomeData(context, new APIServiceCallback<ResponseBody>() {
+//            @Override
+//            public void onSuccess(ResponseBody object) {
+//
+//                if (object == null)
+//                    return;
+//
+//                try {
+//                    Map<Long, ContactGroup> map = parseGroupIntoMap(object.string());
+//                    //update group data cache
+//                    MemCache cache = MemCache.getDataCache(context);
+//                    cache.refreshGroupData(map);
+//
+//                    if (map != null) {
+//                        //update group data to DB
+//                        ContactGroup[] groups = new ContactGroup[map.size()];
+//                        map.values().toArray(groups);
+//                        ContactDao contactDao = new ContactDao();
+//                        contactDao.clearGroups(context);
+//                        contactDao.addGroup(context, groups);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+//    }
 
-        AccountDataManager.getHomeData(context, new APIServiceCallback<ResponseBody>() {
+    public static void refreshContact(Context context) {
+
+        SocialManager.getContacts(context, new APIServiceCallback<ArrayList<ContactGroup>>() {
             @Override
-            public void onSuccess(ResponseBody object) {
-
-                if (object == null)
-                    return;
-
-                try {
-                    Map<Long, ContactGroup> map = parseGroupIntoMap(object.string());
-                    //update group data cache
-                    MemCache cache = MemCache.getDataCache(context);
-                    cache.refreshGroupData(map);
-
-                    if (map != null) {
-                        //update group data to DB
-                        ContactGroup[] groups = new ContactGroup[map.size()];
-                        map.values().toArray(groups);
-                        ContactDao contactDao = new ContactDao();
-                        contactDao.clearGroup(context);
-                        contactDao.addGroup(context, groups);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+            public void onSuccess(ArrayList<ContactGroup> object) {
 
             }
 
@@ -226,6 +308,7 @@ public class DataManager {
 
         private Context context;
         private Map<Long, ContactGroup> groupMap;
+        //private ArrayList<ContactGroup> contactGroups;
 
         private MemCache(Context context) {
             this.context = context.getApplicationContext();
@@ -234,40 +317,52 @@ public class DataManager {
         private static MemCache getDataCache(Context context) {
 
             if (cache == null) {
-
                 synchronized (ApiManager.class) {
                     if (cache == null) {
                         cache = new MemCache(context);
                     }
                 }
             }
-
             return cache;
         }
 
         public void init() {
-
+            //FIXME if has a lot of groups, need to work background thread to avoid ANR
             //init group cache data
             initGroupData();
+
+            //initContact(groupMap);
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("MemCache has init...");
             }
         }
 
+
+        protected void clear() {
+
+            if (groupMap !=null) {
+                groupMap.clear();
+            }
+        }
+
+
         protected Map<Long, ContactGroup> getGroupData() {
             return groupMap;
         }
 
+//        protected ArrayList<ContactGroup> getContactGroupData() {
+//            return contactGroups;
+//        }
+
 
         ///////////////////////////////////////////////////////////////
-        //Contact group
+        //Contact
 
         private void initGroupData() {
 
             addDefaultGroup();
 
-            //FIXME if has a lot of groups, need to work background thread to avoid ANR
             //load from db
             ContactDao contactDao = new ContactDao();
             Map<Long, ContactGroup> map = contactDao.getGroups(context);
@@ -277,7 +372,33 @@ public class DataManager {
 
         }
 
-        private void refreshGroupData(Map<Long, ContactGroup> map) {
+//        private void initContact(Map<Long, ContactGroup> map) {
+//
+//            if (map ==null)
+//                return;
+//
+//            ContactDao contactDao = new ContactDao();
+//            ArrayList<ContactGroup> contacts = contactDao.getContacts(context,map);
+//            if (contacts!=null) {
+//                if (contactGroups == null) {
+//                    contactGroups = new ArrayList<>(contacts.size());
+//                }
+//                contactGroups.addAll(contacts);
+//            }
+//        }
+
+//        public void syncContactData(ArrayList<ContactGroup> contacts) {
+//
+//            if (contactGroups == null) {
+//                contactGroups = new ArrayList<>(contacts);
+//            }else{
+//                contacts.clear();
+//                contacts.addAll(contacts);
+//            }
+//
+//        }
+
+        public void syncGroupData(Map<Long, ContactGroup> map) {
 
             if (groupMap != null) {
                 groupMap.clear();
@@ -290,6 +411,43 @@ public class DataManager {
             }
 
         }
+
+//        private void removeContact(long gid,String cid) {
+//            if (groupMap == null) {
+//                return;
+//            }
+//
+//            ContactGroup contactGroup = groupMap.get(gid);
+//
+//            if (contactGroup != null) {
+//                Contact rc = null;
+//                for (Contact c : contactGroup.collection) {
+//                    if (c.account.equals(cid)) {
+//                        rc = c;
+//                        break;
+//                    }
+//                }
+//
+//                if (rc != null) {
+//                    contactGroup.collection.remove(rc);
+//                }
+//            }
+//        }
+
+//        private void addContact(long gid,Contact contact) {
+//
+//            if (contact == null)
+//                return;
+//
+//            ContactGroup contactGroup = groupMap.get(gid);
+//            contactGroup.collection.add(contact);
+//
+//            if (contactGroups == null) {
+//                contactGroups = new ArrayList<>();
+//                contactGroups.add(contactGroup);
+//            }
+//
+//        }
 
         private void addDefaultGroup() {
 
