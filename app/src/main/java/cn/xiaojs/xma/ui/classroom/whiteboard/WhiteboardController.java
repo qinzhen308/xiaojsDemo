@@ -262,7 +262,7 @@ public class WhiteboardController implements
     @Override
     public void onClearDoodles() {
         if (mWhiteboard != null) {
-            mWhiteboard.clearWhiteboard();
+            mWhiteboard.onClearWhiteboard();
         }
     }
 

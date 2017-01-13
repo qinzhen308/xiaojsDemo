@@ -21,11 +21,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.Vector;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
@@ -78,7 +78,7 @@ public abstract class Doodle implements Transformation {
     private int mVisibility = View.VISIBLE;
 
     protected Doodle(Whiteboard whiteboard, int style) {
-        mDoodleId = UUID.randomUUID().toString();
+        mDoodleId = Utils.buildDoodleId();
         mWhiteboard = whiteboard;
         mStyle = style;
         mState = STATE_IDLE;
@@ -301,7 +301,7 @@ public abstract class Doodle implements Transformation {
         Utils.drawDelBtn(canvas, mBorderRect, mBorderDrawingPath, mDrawingMatrix, params);
     }
 
-    protected void computeBorderPadding(){
+    protected void computeBorderPadding() {
         Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
         float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
 
@@ -322,7 +322,7 @@ public abstract class Doodle implements Transformation {
 
     public int checkPressedRegion(float x, float y) {
         if (isShow()) {
-           return onCheckPressedRegion(x, y);
+            return onCheckPressedRegion(x, y);
         }
 
         return IntersectionHelper.RECT_NO_SELECTED;
@@ -369,7 +369,6 @@ public abstract class Doodle implements Transformation {
 
     /**
      * 返回doodle映射到屏幕上的rect
-     * @return
      */
     public RectF getDoodleScreenRect() {
         if (mPoints.size() > 1) {
@@ -455,11 +454,11 @@ public abstract class Doodle implements Transformation {
         return mRedoRecords != null && !mRedoRecords.isEmpty();
     }
 
-    public void setVisibility( int visibility) {
+    public void setVisibility(int visibility) {
         mVisibility = visibility;
     }
 
-    public boolean isShow(){
+    public boolean isShow() {
         return mVisibility == View.VISIBLE;
     }
 
@@ -494,6 +493,7 @@ public abstract class Doodle implements Transformation {
 
             computeCenterPoint(mTransRect);
             scale(scale, mRectCenter[0], mRectCenter[1]);
+
             return scale;
         }
 
@@ -548,7 +548,6 @@ public abstract class Doodle implements Transformation {
             float[] result = new float[2];
             result[0] = scale;
             result[1] = degree;
-
             return result;
         }
 
@@ -564,6 +563,7 @@ public abstract class Doodle implements Transformation {
     public void changeByEdge(float deltaX, float deltaY, int byEdge) {
         //empty
     }
+
 
     public void translate(float moveX, float moveY) {
         mTranslateX += moveX;
@@ -586,4 +586,51 @@ public abstract class Doodle implements Transformation {
         rotate(degree, px, py);
     }
 
+    /**
+     * 获取距上一次变换的旋转变化值
+     */
+    public float getDeltaDegree() {
+        if (mUndoRecords == null || mUndoRecords.size() < 1) {
+            return 0;
+        }
+
+        ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 2);
+        return mTotalDegree - record.degree;
+    }
+
+    /**
+     * 获取距上一次变换的缩放变化值
+     */
+    public float getDeltaScale() {
+        if (mUndoRecords == null || mUndoRecords.size() < 1) {
+            return 1;
+        }
+
+        ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 2);
+        return mTotalScale / record.scale;
+    }
+
+    /**
+     * 获取距上一次变换的平移变换值X
+     */
+    public float getDeltaTransX() {
+        if (mUndoRecords == null || mUndoRecords.size() < 1) {
+            return 0;
+        }
+
+        ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 2);
+        return mTranslateX - record.translateX;
+    }
+
+    /**
+     * 获取距上一次变换的平移变换值y
+     */
+    public float getDeltaTransY() {
+        if (mUndoRecords == null || mUndoRecords.size() < 1) {
+            return 0;
+        }
+
+        ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 2);
+        return mTranslateY - record.translateY;
+    }
 }

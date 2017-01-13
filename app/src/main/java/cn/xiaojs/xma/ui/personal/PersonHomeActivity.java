@@ -136,17 +136,12 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.left_image})
+    @OnClick({R.id.scroll_tab_left_image})
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.left_image:
-                if (mMaterial.getVisibility() == View.VISIBLE) {
-                    mMaterial.setVisibility(View.GONE);
-                } else {
-                    mMaterial.setVisibility(View.VISIBLE);
-                }
-
+            case R.id.scroll_tab_left_image:
+                finish();
                 break;
         }
     }

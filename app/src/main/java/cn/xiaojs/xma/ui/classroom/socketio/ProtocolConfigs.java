@@ -23,6 +23,10 @@ public class ProtocolConfigs {
      * 白板虚拟高
      */
     public final static int VIRTUAL_HEIGHT = 600;
+    /**
+     * 图形的id的长度
+     */
+    public final static int SHAPE_ID_LENGTH = 4;
 
     //=======================constants for commend======================
     /**
@@ -32,7 +36,11 @@ public class ProtocolConfigs {
     /**
      * 删除图形
      */
-    public final static String DEL = "D";
+    public final static String DEL = "d";
+    /**
+     * 删除所有图形(清楚动作)
+     */
+    public final static String CLEAR = "D";
     /**
      * 移动（绝对值）
      */
@@ -75,7 +83,7 @@ public class ProtocolConfigs {
     /**
      * 随意涂鸦(手绘)
      */
-    public final static String SHAPE_HAND_WRITING = "write";
+    public final static String SHAPE_HAND_WRITING = "cyls";
     /**
      * 矩形
      */

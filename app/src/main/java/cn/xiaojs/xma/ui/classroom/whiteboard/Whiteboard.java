@@ -46,6 +46,7 @@ import cn.xiaojs.xma.ui.classroom.ClassroomState;
 import cn.xiaojs.xma.ui.classroom.socketio.Commend;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.Packer;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
 import cn.xiaojs.xma.ui.classroom.socketio.Receiver;
@@ -55,10 +56,10 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.action.Selector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.ActionRecord;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.BitmapPool;
-import cn.xiaojs.xma.ui.classroom.whiteboard.core.OnColorChangeListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.OnColorChangeListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.SimpleTouchEventListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.UndoRedoListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
@@ -959,7 +960,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 d.drawSelf(mDoodleCanvas);
             }
         }
-        Log.i("aaa", "================draw============"+(System.currentTimeMillis()-ss) +"   size="+mAllDoodles.size());
+        //Log.i("aaa", "================draw============"+(System.currentTimeMillis()-ss) +"   size="+mAllDoodles.size());
     }
 
     private void createDoodleCanvas() {
@@ -1087,18 +1088,30 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mGeometryShapeId = shapeId;
     }
 
-    public void setPaintStrokeWidth(float strokeWidth) {
+    public void setPaintStrokeWidth(final float strokeWidth) {
         mPaintStrokeWidth = strokeWidth;
+        onSend(Packer.getChangePaintCmd(strokeWidth, mPaintColor, true));
     }
 
     public void setPaintColor(int color) {
         mPaintColor = color;
+        StringBuilder sb = new StringBuilder();
         switch (mCurrentMode) {
             case MODE_SELECTION:
                 if (mSelector != null) {
                     mSelector.updateDoodleColor(color);
                     drawAllDoodlesCanvas();
                     postInvalidate();
+
+                    if (mAllDoodles != null) {
+                        for (Doodle d : mAllDoodles) {
+                            if (d.getState() == Doodle.STATE_EDIT) {
+                                String cmd = Packer.getChangeColorCmd(d, false);
+                                sb.append(cmd);
+                                sb.append(" ");
+                            }
+                        }
+                    }
                 }
                 break;
             default:
@@ -1106,9 +1119,24 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     mDoodle.getPaint().setColor(color);
                     drawAllDoodlesCanvas();
                     postInvalidate();
+
+                    String cmd = Packer.getChangeColorCmd(mDoodle, false);
+                    sb.append(cmd);
+                    sb.append(" ");
                 }
                 break;
         }
+
+        String cmd = null;
+        if (sb.length() > 0) {
+            sb.append("#");
+            sb.append(System.currentTimeMillis());
+            cmd = sb.toString();
+        } else {
+            cmd = Packer.getChangePaintCmd(mPaintStrokeWidth, color, true);
+        }
+
+        onSend(cmd);
     }
 
     public int getPaintColor() {
@@ -1156,7 +1184,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         return mReDoStack;
     }
 
-    public void clearWhiteboard() {
+    public void onClearWhiteboard() {
+        clearWhiteboard();
+        onSend(Packer.getClearCmd());
+    }
+
+    private void clearWhiteboard() {
         if (mAllDoodles != null) {
             mAllDoodles.clear();
             mReDoStack.clear();
@@ -1240,6 +1273,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             Iterator<Doodle> it = allDoodles.iterator();
             boolean hasUndo = false;
             int groupId = mUndoRecordIds.get(mUndoRecordIds.size() - 1);
+            StringBuilder sb = new StringBuilder();
             while(it.hasNext()) {
                 Doodle doodle = it.next();
                 ActionRecord[] records = doodle.undo(groupId);
@@ -1269,17 +1303,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     if (doodle instanceof Triangle) {
                         ((Triangle)doodle).updateTriangleCoordinates();
                     }
-
-                    /*if (doodle instanceof TextWriting) {
-                        ((TextWriting) doodle).setTextString(prevRecord.textStr);
-                        ((TextWriting) doodle).onTextChanged(prevRecord.textStr);
-                    }*/
                 }
 
                 hasUndo = true;
                 if (!mReDoStack.contains(doodle)) {
                     mReDoStack.add(doodle);
                 }
+
+                String cmd = getUndoRedoSendCommend(doodle, lastRecord, true, false);
+                sb.append(cmd);
+                sb.append(" ");
             }
 
             if (hasUndo) {
@@ -1296,6 +1329,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     mUndoRedoListener.onUndoRedoStackChanged();
                 }
             }
+
+            if (hasUndo) {
+                sb.append("#");
+                sb.append(System.currentTimeMillis());
+                onSend(sb.toString());
+            }
         }
     }
 
@@ -1305,6 +1344,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             Iterator<Doodle> it = reDoStack.iterator();
             boolean hasRedo = false;
             int groupId = mRedoRecordIds.get(mRedoRecordIds.size() - 1);
+            StringBuilder sb = new StringBuilder();
             while(it.hasNext()) {
                 Doodle doodle = it.next();
                 ActionRecord record = doodle.redo(groupId);
@@ -1329,8 +1369,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 }
 
                 if (doodle instanceof TextWriting) {
-                    //((TextWriting) doodle).setTextString(record.textStr);
-                    //((TextWriting) doodle).onTextChanged(record.textStr);
                     TextWriting tw = (TextWriting)doodle;
                     tw.onTextChanged(tw.getTextString());
                 }
@@ -1342,6 +1380,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 if (!mAllDoodles.contains(doodle)) {
                     mAllDoodles.add(doodle);
                 }
+
+                String cmd = getUndoRedoSendCommend(doodle, record, false, false);
+                sb.append(cmd);
+                sb.append(" ");
             }
 
             if (hasRedo) {
@@ -1359,6 +1401,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     mUndoRedoListener.onUndoRedoStackChanged();
                 }
             }
+
+            if (hasRedo) {
+                sb.append("#");
+                sb.append(System.currentTimeMillis());
+                onSend(sb.toString());
+            }
         }
     }
 
@@ -1375,6 +1423,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mUndoRedoListener != null) {
             mUndoRedoListener.onUndoRedoStackChanged();
         }
+
+        onSend(getSendCommend(doodle, action, true));
     }
 
     private void addRecords(int action) {
@@ -1384,11 +1434,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         List<Doodle> allDoodles = getAllDoodles();
         boolean hasRecords = false;
+        StringBuilder sb = new StringBuilder();
         if (allDoodles != null && !allDoodles.isEmpty()) {
             for (Doodle doodle : allDoodles) {
                 if (doodle.getState() == Doodle.STATE_EDIT) {
                     hasRecords = true;
                     doodle.addRecords(action, mRecordGroupId);
+
+                    String cmd = getSendCommend(doodle, action, false);
+                    sb.append(cmd);
+                    sb.append(" ");
                 }
             }
 
@@ -1402,7 +1457,86 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 mRecordGroupId++;
                 mUndoRedoListener.onUndoRedoStackChanged();
             }
+
+            if (hasRecords) {
+                sb.append("#");
+                sb.append(System.currentTimeMillis());
+                onSend(sb.toString());;
+            }
         }
+    }
+
+    private String getSendCommend(final Doodle d, int action, boolean whitTime) {
+        if (d == null) {
+            return null;
+        }
+
+        String cmd = null;
+        switch (action) {
+            case Action.ADD_ACTION:
+                cmd = Packer.getBuildDoodleCmd(d, whitTime);
+                break;
+            case Action.DELETE_ACTION:
+                cmd = Packer.getDeleteCmd(d, whitTime);
+                break;
+            case Action.MOVE_ACTION:
+                float deltaX = d.getDeltaTransX();
+                float deltaY = d.getDeltaTransY();
+                cmd = Packer.getMoveCmd(d, deltaX, deltaY, mBlackboardWidth, mBlackboardHeight, whitTime);
+                break;
+            case Action.SCALE_ROTATE_ACTION:
+                cmd = Packer.getScaleAndRotateCmd(d, d.getDeltaScale(), d.getDeltaDegree(), whitTime);
+                break;
+            case Action.SCALE_ACTION:
+                cmd = Packer.getScaleCmd(d, d.getDeltaScale(), whitTime);
+                break;
+            case Action.ROTATE_ACTION:
+                cmd = Packer.getRotateCmd(d, d.getDeltaDegree(), whitTime);
+                break;
+        }
+
+        return cmd;
+    }
+
+    private String getUndoRedoSendCommend(final Doodle d, ActionRecord actRd, boolean undo, boolean whitTime) {
+        if (d == null || actRd == null) {
+            return null;
+        }
+
+        String cmd = null;
+        switch (actRd.action) {
+            case Action.ADD_ACTION:
+                if (undo) {
+                    cmd = Packer.getDeleteCmd(d, whitTime);
+                } else {
+                    cmd = Packer.getBuildDoodleCmd(d, whitTime);
+                }
+                break;
+            case Action.DELETE_ACTION:
+                if (!undo) {
+                    cmd = Packer.getDeleteCmd(d, whitTime);
+                } else {
+                    cmd = Packer.getBuildDoodleCmd(d, whitTime);
+                }
+                break;
+            case Action.MOVE_ACTION:
+                float moveX = undo ? -actRd.translateX : actRd.translateX;
+                float moveY = undo ? -actRd.translateY : actRd.translateY;
+                cmd = Packer.getMoveCmd(d, moveX, moveY, mBlackboardWidth, mBlackboardHeight, whitTime);
+                break;
+            case Action.SCALE_ROTATE_ACTION:
+                cmd = Packer.getScaleAndRotateCmd(d, undo ? 1.f / actRd.scale : actRd.scale,
+                        undo ? -actRd.degree : actRd.degree, whitTime);
+                break;
+            case Action.SCALE_ACTION:
+                cmd = Packer.getScaleCmd(d, undo ? 1.f / actRd.scale : actRd.scale, whitTime);
+                break;
+            case Action.ROTATE_ACTION:
+                cmd = Packer.getRotateCmd(d, undo ? -actRd.degree : actRd.degree, whitTime);
+                break;
+        }
+
+        return cmd;
     }
 
     public boolean isCanUndo() {
@@ -1435,22 +1569,21 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             for (CommendLine cmdl : data) {
                 List<Commend> cmdList = cmdl.whiteboardCommends;
                 if (cmdList != null && !cmdList.isEmpty()) {
-                    Log.i("aaa", "====size="+cmdList.size());
                     for (Commend cmd : cmdList) {
-                        Log.i("aaa", "====cmd="+cmd.toString());
-                        //handleReceiveCmd(cmd);
+                        handleReceiveCmd(cmd);
                     }
                 }
             }
 
             //draw
-            //postInvalidate();
+            postInvalidate();
         }
     }
 
     @Override
     public void onSend(String cmd) {
         if (mSocket != null && !TextUtils.isEmpty(cmd)) {
+            Log.i("aaa", "************ send="+cmd);
             mSocket.emit(Event.BOARD, cmd);
         }
     }
@@ -1483,6 +1616,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 //mAllDoodles.remove(doodle);
             }
             drawAllDoodlesCanvas();
+        } else if (ProtocolConfigs.CLEAR.equals(cmd.cm)) {
+            //clear all doodle
+            clearWhiteboard();
         } else if (ProtocolConfigs.MOVE_A.equalsIgnoreCase(cmd.cm)) {
             //move doodle: absolute or relative
             Doodle d = findDoodleById(cmd.id);
@@ -1530,12 +1666,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 j++;
                 switch (j % 2) {
                     case 1:
-                        x = (Integer.parseInt(params[i]) * mBlackboardWidth) / ProtocolConfigs.VIRTUAL_WIDTH;
+                        x = Integer.parseInt(params[i]) / ProtocolConfigs.VIRTUAL_WIDTH;
                         break;
                     case 0:
-                        y = (Integer.parseInt(params[i]) * mBlackboardHeight) / ProtocolConfigs.VIRTUAL_HEIGHT;
-                        Utils.mapScreenToDoodlePoint(x, y, mDoodleBounds, mLastPoint);
-                        doodle.addControlPoint(mLastPoint.x, mLastPoint.y);
+                        y = Integer.parseInt(params[i]) / ProtocolConfigs.VIRTUAL_HEIGHT;
+                        doodle.addControlPoint(x, y);
                         break;
                 }
             }

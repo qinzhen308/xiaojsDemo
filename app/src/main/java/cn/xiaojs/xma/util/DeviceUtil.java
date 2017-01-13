@@ -15,7 +15,9 @@ package cn.xiaojs.xma.util;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.TouchDelegate;
 import android.view.View;
@@ -31,16 +33,17 @@ public class DeviceUtil {
         return metrics.heightPixels;
     }
 
-    public static int dip2px(Context context,float dip){
+    public static int dip2px(Context context, float dip) {
         return (int) (context.getResources().getDisplayMetrics().density * dip + 0.5f);
     }
 
     /**
      * 扩大控件的点击范围
-     * @param view 需要扩大点击范围的控件
+     *
+     * @param view        需要扩大点击范围的控件
      * @param expandWidth 向四周扩大的值
      */
-    public static void expandViewTouch(final View view, final int expandWidth){
+    public static void expandViewTouch(final View view, final int expandWidth) {
 
         ((View) view.getParent()).post(new Runnable() {
             @Override
@@ -61,5 +64,14 @@ public class DeviceUtil {
                 }
             }
         });
+    }
+
+    public static int getColor(Context context, int resId) {
+        Resources res = context.getResources();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return res.getColor(resId);
+        } else {
+            return res.getColor(resId, null);
+        }
     }
 }

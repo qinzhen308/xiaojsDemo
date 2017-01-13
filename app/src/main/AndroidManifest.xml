@@ -131,7 +131,7 @@
         </activity>
         <activity
                 android:name=".ui.message.PostDynamicActivity"
-                android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
+                android:windowSoftInputMode="stateAlwaysVisible|adjustPan">
         </activity>
         <activity android:name=".ui.message.SecurityLevelActivity">
         </activity>
