@@ -1,63 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+    <EditText
+            android:id="@+id/input_edit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px330"
+            android:gravity="left"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/px30"
+            android:hint="@string/input_dyn_hint"
+            >
+
+        <requestFocus/>
+    </EditText>
+
+    <FrameLayout
+            android:id="@+id/post_dynamic_add_picture"
+            android:background="@drawable/white_bolder_bg"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_width="@dimen/px160"
+            android:layout_height="@dimen/px160">
+
+        <ImageView
+                android:id="@+id/post_dynamic_picture"
+                android:src="@drawable/ic_add_lesson_cover"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <ImageView
+                android:id="@+id/pic_thumbnail"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:background="@color/main_bg"/>
+
+    <RelativeLayout
+            android:id="@+id/who_can_see_wrapper"
+            android:background="@drawable/white_grey_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/who_can_see"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_28px"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="@dimen/px30"
+                android:drawableRight="@drawable/ic_entrance"
+                android:drawablePadding="@dimen/px10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:layout_toLeftOf="@+id/who_can_see"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px"
+                android:paddingTop="@dimen/font_30px"
+                android:paddingBottom="@dimen/px30"
+                android:text="@string/who_can_see_me"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
     <LinearLayout
+            android:id="@+id/remind_wrapper"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-        <EditText
-                android:id="@+id/input_edit"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/px330"
-                android:gravity="left"
-                android:background="@android:color/transparent"
-                android:padding="@dimen/px30"
-                android:hint="@string/input_dyn_hint"
-                >
-
-            <requestFocus/>
-        </EditText>
-
-        <FrameLayout
-                android:id="@+id/post_dynamic_add_picture"
-                android:background="@drawable/white_bolder_bg"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_width="@dimen/px160"
-                android:layout_height="@dimen/px160">
-
-            <ImageView
-                    android:id="@+id/post_dynamic_picture"
-                    android:src="@drawable/ic_add_lesson_cover"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            <ImageView
-                    android:id="@+id/pic_thumbnail"
-                    android:scaleType="fitXY"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-        </FrameLayout>
+            android:layout_height="wrap_content">
 
         <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/px30"
-                android:layout_marginTop="@dimen/px30"
-                android:background="@color/main_bg"/>
+                android:layout_marginLeft="@dimen/px30"
+                style="@style/DividerHorizontal"/>
 
         <RelativeLayout
-                android:id="@+id/who_can_see_wrapper"
+                android:id="@+id/remind_somebody_wrapper"
                 android:background="@drawable/white_grey_selector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             <TextView
-                    android:id="@+id/who_can_see"
+                    android:id="@+id/remind_somebody"
                     android:textColor="@color/common_text"
                     android:textSize="@dimen/font_28px"
                     android:layout_alignParentRight="true"
@@ -69,62 +107,19 @@
                     android:layout_height="wrap_content"/>
 
             <TextView
-                    android:layout_toLeftOf="@+id/who_can_see"
+                    android:layout_toLeftOf="@+id/remind_somebody"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_30px"
                     android:paddingTop="@dimen/font_30px"
                     android:paddingBottom="@dimen/px30"
-                    android:text="@string/who_can_see_me"
+                    android:text="@string/remind_somebody"
                     android:layout_marginRight="@dimen/px30"
                     android:layout_marginLeft="@dimen/px30"
                     android:layout_alignParentLeft="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
         </RelativeLayout>
-
-        <LinearLayout
-                android:id="@+id/remind_wrapper"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <View
-                    android:layout_marginLeft="@dimen/px30"
-                    style="@style/DividerHorizontal"/>
-
-            <RelativeLayout
-                    android:id="@+id/remind_somebody_wrapper"
-                    android:background="@drawable/white_grey_selector"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <TextView
-                        android:id="@+id/remind_somebody"
-                        android:textColor="@color/common_text"
-                        android:textSize="@dimen/font_28px"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerInParent="true"
-                        android:layout_marginRight="@dimen/px30"
-                        android:drawableRight="@drawable/ic_entrance"
-                        android:drawablePadding="@dimen/px10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                <TextView
-                        android:layout_toLeftOf="@+id/remind_somebody"
-                        android:textColor="@color/font_black"
-                        android:textSize="@dimen/font_30px"
-                        android:paddingTop="@dimen/font_30px"
-                        android:paddingBottom="@dimen/px30"
-                        android:text="@string/remind_somebody"
-                        android:layout_marginRight="@dimen/px30"
-                        android:layout_marginLeft="@dimen/px30"
-                        android:layout_alignParentLeft="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-            </RelativeLayout>
-        </LinearLayout>
-
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>
 
