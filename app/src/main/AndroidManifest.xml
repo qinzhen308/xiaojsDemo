@@ -67,35 +67,35 @@
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity android:name=".ui.mine.SettingsActivity"/>
         <activity
-                android:name=".ui.course.MyLessonActivity"
+                android:name=".ui.lesson.MyLessonActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.course.LessonCreationActivity"/>
+        <activity android:name=".ui.lesson.LessonCreationActivity"/>
         <activity android:name=".ui.mine.ProfileActivity"/>
         <activity
-                android:name=".ui.course.LessonSearchActivity"
+                android:name=".ui.lesson.LessonSearchActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.course.LessonCreationOptionalInfoActivity"/>
+        <activity android:name=".ui.lesson.LessonCreationOptionalInfoActivity"/>
         <activity android:name=".ui.mine.TeachingAbilityActivity">
         </activity>
         <activity android:name=".ui.mine.EditTeachingAbilityActivity">
         </activity>
-        <activity android:name=".ui.course.LessonHomeActivity">
+        <activity android:name=".ui.lesson.LessonHomeActivity">
         </activity>
         <activity android:name=".ui.TestAPIActivity">
         </activity>
-        <activity android:name=".ui.course.LiveLessonBriefActivity"/>
-        <activity android:name=".ui.course.SalePromotionActivity"/>
-        <activity android:name=".ui.course.LiveLessonLabelActivity"/>
-        <activity android:name=".ui.course.AuditActivity"/>
-        <activity android:name=".ui.course.TeacherIntroductionActivity"/>
-        <activity android:name=".ui.course.LiveLessonDetailActivity"/>
+        <activity android:name=".ui.lesson.LiveLessonBriefActivity"/>
+        <activity android:name=".ui.lesson.SalePromotionActivity"/>
+        <activity android:name=".ui.lesson.LiveLessonLabelActivity"/>
+        <activity android:name=".ui.lesson.AuditActivity"/>
+        <activity android:name=".ui.lesson.TeacherIntroductionActivity"/>
+        <activity android:name=".ui.lesson.LiveLessonDetailActivity"/>
         <activity android:name=".ui.mine.TeachAbilityDemoActivity">
         </activity>
         <activity
-                android:name=".ui.course.ModifyLessonActivity"
+                android:name=".ui.lesson.ModifyLessonActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.course.CancelLessonActivity"
+                android:name=".ui.lesson.CancelLessonActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.message.NotificationCategoryListActivity"

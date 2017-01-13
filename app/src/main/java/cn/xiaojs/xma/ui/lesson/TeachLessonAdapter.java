@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.course;
+package cn.xiaojs.xma.ui.lesson;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *

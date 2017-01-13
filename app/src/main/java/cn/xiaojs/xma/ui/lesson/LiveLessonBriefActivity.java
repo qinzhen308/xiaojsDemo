@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.course;
+package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Intent;
 import android.text.Editable;
@@ -33,8 +33,8 @@ import butterknife.OnClick;
  *
  * ======================================================================================== */
 
-public class TeacherIntroductionActivity extends BaseActivity {
-    private final static int MAX_CHAR = 400;
+public class LiveLessonBriefActivity extends BaseActivity {
+    private final static int MAX_CHAR = 500;
     @BindView(R.id.input_content)
     EditText mInputContentEdt;
     @BindView(R.id.input_tips)
@@ -44,7 +44,7 @@ public class TeacherIntroductionActivity extends BaseActivity {
 
     @Override
     protected void addViewContent() {
-        setMiddleTitle(R.string.teacher_introduction_title);
+        setMiddleTitle(R.string.live_lesson_brief);
         addView(R.layout.layout_edit_info);
 
         init();
@@ -52,7 +52,7 @@ public class TeacherIntroductionActivity extends BaseActivity {
 
     private void init() {
         mInputContentEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_CHAR)});
-        mInputContentEdt.setHint(R.string.teacher_introduction_hint);
+        mInputContentEdt.setHint(R.string.live_lesson_brief_hint);
 
         mInputTipsTv.setText(Html.fromHtml(String.format(getString(R.string.input_tips), 0, MAX_CHAR)));
         mInputContentEdt.addTextChangedListener(new TextWatcher() {
@@ -76,8 +76,8 @@ public class TeacherIntroductionActivity extends BaseActivity {
         Object object = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO);
         if (object instanceof LiveLesson) {
             mLesson = (LiveLesson) object;
-            if (mLesson.getTeachersIntro() != null) {
-                String text = mLesson.getTeachersIntro().getText();
+            if (mLesson.getOverview() != null) {
+                String text = mLesson.getOverview().getText();
                 mInputContentEdt.setText(text);
                 mInputContentEdt.setSelection(text.length());
             }
@@ -93,9 +93,9 @@ public class TeacherIntroductionActivity extends BaseActivity {
             case R.id.sub_btn:
                 String content = mInputContentEdt.getText().toString().trim();
                 if (!TextUtils.isEmpty(content) && mLesson != null) {
-                    LiveLesson.TeachersIntro intro = new LiveLesson.TeachersIntro();
-                    intro.setText(content);
-                    mLesson.setTeachersIntro(intro);
+                    LiveLesson.Overview overview = new LiveLesson.Overview();
+                    overview.setText(content);
+                    mLesson.setOverview(overview);
                     Intent i = new Intent();
                     i.putExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO, mLesson);
                     setResult(RESULT_OK, i);

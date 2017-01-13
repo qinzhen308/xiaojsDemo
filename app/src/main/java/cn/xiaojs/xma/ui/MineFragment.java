@@ -33,7 +33,7 @@ import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.course.MyLessonActivity;
+import cn.xiaojs.xma.ui.lesson.MyLessonActivity;
 import cn.xiaojs.xma.ui.mine.MyEnrollActivity;
 import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
