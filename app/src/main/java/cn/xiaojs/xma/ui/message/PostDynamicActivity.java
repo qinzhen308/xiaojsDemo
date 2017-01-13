@@ -6,9 +6,10 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -47,8 +48,12 @@ public class PostDynamicActivity extends BaseActivity {
     @BindView(R.id.input_edit)
     RecipientEditText editText;
 
-    @BindView(R.id.btn_level)
-    Button scopeButton;
+    @BindView(R.id.who_can_see)
+    TextView scope;
+    @BindView(R.id.remind_somebody)
+    TextView remind;
+    @BindView(R.id.remind_wrapper)
+    LinearLayout remindWrapper;
 
     private DynPost.Audience audience;
     private int checkedIndex = 0;
@@ -66,7 +71,7 @@ public class PostDynamicActivity extends BaseActivity {
         setRightText(R.string.post);
         setRightTextColor(getResources().getColor(R.color.font_orange));
 
-        specifyScope = getIntent().getIntExtra(KEY_POST_TYPE,Social.ShareScope.PUBLIC);
+        specifyScope = getIntent().getIntExtra(KEY_POST_TYPE, Social.ShareScope.PUBLIC);
         if (specifyScope == Social.ShareScope.CLASSES) {
             audience = new DynPost.Audience();
             audience.type = specifyScope;
@@ -76,18 +81,18 @@ public class PostDynamicActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_image, R.id.chose_pic, R.id.chose_at, R.id.btn_level, R.id.right_image})
+    @OnClick({R.id.left_image, R.id.post_dynamic_add_picture, R.id.remind_somebody_wrapper, R.id.who_can_see_wrapper, R.id.right_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 finish();
                 break;
-            case R.id.chose_pic:
+            case R.id.post_dynamic_add_picture:
                 Intent i = new Intent(this, CropImageMainActivity.class);
                 i.putExtra(CropImagePath.CROP_NEVER, true);
                 startActivityForResult(i, REQUEST_PIC_CODE);
                 break;
-            case R.id.btn_level:
+            case R.id.who_can_see_wrapper://谁可以见
 
                 if (specifyScope == Social.ShareScope.CLASSES) {
                     return;
@@ -98,7 +103,7 @@ public class PostDynamicActivity extends BaseActivity {
 
                 startActivityForResult(intent, REQUEST_SHARE_SCOPE_CODE);
                 break;
-            case R.id.chose_at:
+            case R.id.remind_somebody_wrapper://提醒谁看
 
                 //TODO when specifyScope equals Social.ShareScope.CLASSES ,start classes activity only
 
@@ -253,7 +258,7 @@ public class PostDynamicActivity extends BaseActivity {
 
     private void updateScope() {
         String name = getScopeName(audience.type);
-        scopeButton.setText(name);
+        //scopeButton.setText(name);
     }
 
     private String getScopeName(int scopeType) {
