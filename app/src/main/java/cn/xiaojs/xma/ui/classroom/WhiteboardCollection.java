@@ -26,6 +26,10 @@ public class WhiteboardCollection implements Parcelable{
     public final static int DEFAULT = 1;
     public final static int COURSE_WARE = 2;
 
+    /**
+     * 是否是直播白板
+     */
+    private boolean isLive;
     private int style;
     private String id;
     private String name;
@@ -65,7 +69,12 @@ public class WhiteboardCollection implements Parcelable{
     }
 
     public void setWhiteboardLayer(List<WhiteboardLayer> layers) {
-        this.whiteboardLayer = layers;
+        whiteboardLayer = layers;
+        if (whiteboardLayer != null) {
+            for (WhiteboardLayer layer : whiteboardLayer) {
+                layer.setIsLive(isLive);
+            }
+        }
     }
 
     public String getId() {
@@ -89,7 +98,23 @@ public class WhiteboardCollection implements Parcelable{
     }
 
     public void addWhiteboardLayer(WhiteboardLayer layer) {
+        if (layer != null) {
+            layer.setIsLive(isLive);
+        }
         whiteboardLayer.add(layer);
+    }
+
+    public boolean isLive() {
+        return isLive;
+    }
+
+    public void setLive(boolean live) {
+        isLive = live;
+        if (whiteboardLayer != null) {
+            for (WhiteboardLayer layer : whiteboardLayer) {
+                layer.setIsLive(live);
+            }
+        }
     }
 
     @Override

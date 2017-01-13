@@ -328,7 +328,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mSrcBmpWidth = srcBmp.getWidth();
         mSrcBmpHeight = srcBmp.getHeight();
 
-        if (mDoodleCanvas == null) {
+        /*if (mDoodleCanvas == null) {
             mDoodleBitmap = Bitmap.createBitmap(mSrcBmpWidth, mSrcBmpHeight, Bitmap.Config.ARGB_8888);
             mDoodleCanvas = new Canvas(mDoodleBitmap);
         }
@@ -340,7 +340,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mBlackboardRect.set(0, 0, mSrcBmpWidth, mSrcBmpHeight);
         mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
         mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
-        mViewGestureListener.onViewChanged(mViewWidth, mViewHeight, mSrcBmpWidth, mSrcBmpHeight);
+        mViewGestureListener.onViewChanged(mViewWidth, mViewHeight, mSrcBmpWidth, mSrcBmpHeight);*/
 
         postInvalidate();
     }

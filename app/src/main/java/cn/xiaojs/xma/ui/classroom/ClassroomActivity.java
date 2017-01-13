@@ -94,6 +94,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     MainPanel mMainPanel;
     @BindView(R.id.top_panel)
     View mTopPanel;
+    @BindView(R.id.left_panel)
+    View mLeftPanel;
     @BindView(R.id.title_bar)
     View mTitleBar;
     @BindView(R.id.bottom_panel)
@@ -110,6 +112,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     MessageImageView mChatImgBtn;
     @BindView(R.id.notify_msg_btn)
     MessageImageView mNotifyImgBtn;
+
+    //lesson info
+    @BindView(R.id.lesson_title)
+    TextView mLessonTitle;
+    @BindView(R.id.lesson_duration)
+    TextView mLessonDuration;
+
+    //panel btn
+    @BindView(R.id.main_screen_setting)
+    ImageView mMainScreenSettingBtn;
+    @BindView(R.id.more_btn)
+    ImageView mWhiteboardMoreBtn;
+    @BindView(R.id.play_pause_btn)
+    ImageView mPlayPauseBtn;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
@@ -159,6 +175,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Socket mSocket;
     private Boolean mSktConnected = false;
 
+    private Constants.ClassroomClient mClassroomClient = Constants.ClassroomClient.STUDENT;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,6 +185,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         //init params
         initParams();
 
+        initPanel();
         initDrawer();
         initLiveProgress();
         initGestureDetector();
@@ -187,6 +206,29 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mPanelAnimListener = new PanelAnimListener();
         mWhiteboardCollectionList = new ArrayList<WhiteboardCollection>();
         mWhiteboardSuffix = getString(R.string.white_board);
+    }
+
+
+    private void initPanel() {
+        switch(mClassroomClient) {
+            case TEACHER:
+                //教室的权限最大，所以都可以使用
+                break;
+            case STUDENT:
+                mWhiteboardMoreBtn.setVisibility(View.GONE);
+                mMainScreenSettingBtn.setVisibility(View.GONE);
+                break;
+            case ADMIN:
+                mLeftPanel.setVisibility(View.GONE);
+                mMainScreenSettingBtn.setVisibility(View.GONE);
+                mPlayPauseBtn.setVisibility(View.GONE);
+                break;
+            case AUDIT:
+                mLeftPanel.setVisibility(View.GONE);
+                mMainScreenSettingBtn.setVisibility(View.GONE);
+                mPlayPauseBtn.setVisibility(View.GONE);
+                break;
+        }
     }
 
     /**
@@ -244,21 +286,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
 
         WhiteboardCollection whiteboardCollection = new WhiteboardCollection();
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        whiteboardCollection.setLive(true);
         whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
         addToWhiteboardCollectionList(whiteboardCollection);
 
@@ -314,6 +342,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (whiteboard != null) {
                 whiteboard.setGestureDetector(null);
             }
+        }
+    }
+
+    public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
+        if (wbColl != null) {
+            mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
+            mWhiteboardAdapter.notifyDataSetChanged();
+            mLessonTitle.setText(wbColl.getName());
         }
     }
 

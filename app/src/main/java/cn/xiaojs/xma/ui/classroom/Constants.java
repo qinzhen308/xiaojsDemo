@@ -43,4 +43,14 @@ public interface Constants {
      * chat
      */
     public final static String ROOM_CHAT = "聊天";
+
+    /**
+     * 教室客户端
+     */
+    public static enum ClassroomClient {
+        TEACHER, //老师
+        STUDENT, //学生
+        ADMIN, //监管
+        AUDIT //旁听
+    }
 }

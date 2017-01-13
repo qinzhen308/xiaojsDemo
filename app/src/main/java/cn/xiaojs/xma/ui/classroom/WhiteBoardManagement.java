@@ -63,6 +63,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
     private int mCOverHeight;
 
     private ArrayList<WhiteboardCollection> mCollections;
+    private String mLiveWhiteboardName;
 
 
     @Override
@@ -87,6 +88,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         mTransparentBg = new ColorDrawable(Color.TRANSPARENT);
+        mLiveWhiteboardName = mContext.getResources().getString(R.string.live_whiteboard);
     }
 
     @Nullable
@@ -157,7 +159,11 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Object obj = mWbAdapter.getItem(position);
+        if (obj instanceof WhiteboardCollection) {
+            ((ClassroomActivity)mContext).onSwitchWhiteboardCollection((WhiteboardCollection)obj);
+            WhiteBoardManagement.this.dismiss();
+        }
     }
 
     private View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -289,7 +295,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
 
         private void bindData(Holder holder, int pos) {
             WhiteboardCollection wbColl = mWbCollList.get(pos);
-            holder.title.setText(wbColl.getName());
+            holder.title.setText(wbColl.isLive() ? mLiveWhiteboardName : wbColl.getName());
             holder.cover.setBackgroundColor(Color.GRAY);
 
             if (mRemoveMode) {
