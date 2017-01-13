@@ -1,10 +1,7 @@
 package cn.xiaojs.xma.ui.message;
 
 import android.content.Intent;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -33,7 +29,6 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.view.RecipientEditText;
 
 public class PostDynamicActivity extends BaseActivity {
 
@@ -46,7 +41,7 @@ public class PostDynamicActivity extends BaseActivity {
     ImageView thumbnailView;
 
     @BindView(R.id.input_edit)
-    RecipientEditText editText;
+    EditText editText;
 
     @BindView(R.id.who_can_see)
     TextView scope;
@@ -126,7 +121,7 @@ public class PostDynamicActivity extends BaseActivity {
         String prefix = " @";
         for (Contact contact : atContacts) {
             String display = new StringBuilder(prefix).append(contact.alias).toString();
-            editText.addRecipient(contact.account,display);
+            //editText.addRecipient(contact.account,display);
         }
     }
 
@@ -160,10 +155,10 @@ public class PostDynamicActivity extends BaseActivity {
             dynPost.audience = audience;
         }
 
-        List<String> mentioneds = editText.getRecipientIds();
-        if (mentioneds != null) {
-            dynPost.mentioned = mentioneds;
-        }
+//        List<String> mentioneds = editText.getRecipientIds();
+//        if (mentioneds != null) {
+//            dynPost.mentioned = mentioneds;
+//        }
 
         SocialManager.postActivity(this, dynPost, new APIServiceCallback<Dynamic>() {
             @Override
