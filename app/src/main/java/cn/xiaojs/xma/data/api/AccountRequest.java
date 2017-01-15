@@ -3,6 +3,8 @@ package cn.xiaojs.xma.data.api;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.io.IOException;
+
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
@@ -10,13 +12,13 @@ import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
-import cn.xiaojs.xma.model.HomeData;
 
 
 import cn.xiaojs.xma.model.account.UpToken;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 import static cn.xiaojs.xma.data.api.service.APIType.GET_UPTOKEN;
 
@@ -38,6 +40,15 @@ public class AccountRequest extends ServiceRequest {
         Call<ResponseBody> call = getService().getHomeData();
         enqueueRequest(APIType.GET_HOME_DATA,call);
 
+    }
+
+    public ResponseBody getHomeDataSync() throws IOException{
+
+        Response<ResponseBody> response = getService().getHomeData().execute();
+        if (response != null) {
+            return response.body();
+        }
+        return null;
     }
 
     public void claimCompetency(CompetencyParams competencyParams) {

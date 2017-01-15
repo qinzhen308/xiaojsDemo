@@ -29,10 +29,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SearchManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.search.AccountSearch;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
@@ -131,7 +133,7 @@ public class SearchActivity extends BaseActivity {
                 break;
             case R.id.search_organization_result:
                 if (mOrganization != null){
-                    follow(mOrganization._id);
+                    follow(mOrganization._id,null);
                 }
                 break;
         }
@@ -210,7 +212,7 @@ public class SearchActivity extends BaseActivity {
                 @Override
                 public void onItemClick(View view, int position) {
                     AccountSearch search = people.get(position);
-                    follow(search._id);
+                    follow(search._id,search._source.basic.getName());
                 }
             });
         } else {
@@ -231,11 +233,20 @@ public class SearchActivity extends BaseActivity {
         }
     }
 
-    private void follow(String id){
+    private void follow(final String id, final String alias){
         SocialManager.followContact(SearchActivity.this, id, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
             @Override
             public void onSuccess(Relation object) {
                 ToastUtil.showToast(SearchActivity.this,R.string.followed);
+                if (TextUtils.isEmpty(alias)){
+                    return;
+                }
+
+                Contact contact = new Contact();
+                contact.alias = alias;
+                contact.account = id;
+
+                DataManager.addContact(SearchActivity.this,Social.ContactGroup.FRIENDS,contact);
             }
 
             @Override

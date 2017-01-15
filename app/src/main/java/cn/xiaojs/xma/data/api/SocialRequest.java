@@ -1,16 +1,21 @@
 package cn.xiaojs.xma.data.api;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.orhanobut.logger.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
+import cn.xiaojs.xma.data.db.ContactDao;
+import cn.xiaojs.xma.data.loader.SyncService;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
@@ -25,6 +30,7 @@ import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.model.social.Relation;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by maxiaobao on 2016/12/27.
@@ -169,7 +175,34 @@ public class SocialRequest extends ServiceRequest {
 
     public void getContacts(){
         Call<ArrayList<ContactGroup>> call = getService().getContacts();
-        enqueueRequest(APIType.GET_CONTACTS,call);
+
+        enqueueRequest(APIType.GET_CONTACTS,
+                call,
+                new ContactDao(),
+                DataManager.getGroupData(getContext()));
     }
 
+    public ArrayList<ContactGroup> getContactsSync() throws IOException{
+        Response<ArrayList<ContactGroup>> response = getService().getContacts().execute();
+        if (response != null) {
+            return response.body();
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public void doTask(int apiType, Object responseBody) {
+        if (apiType == APIType.GET_CONTACTS) {
+            ArrayList<ContactGroup> result = (ArrayList<ContactGroup>) responseBody;
+
+            if (result != null) {
+                Intent i = new Intent(getContext(), SyncService.class);
+                i.putExtra(DataManager.SYNC_TYPE,DataManager.TYPE_CONTACT);
+                i.putParcelableArrayListExtra(DataManager.EXTRA_CONTACT,result);
+                DataManager.syncData(getContext(),i);
+            }
+        }
+    }
 }

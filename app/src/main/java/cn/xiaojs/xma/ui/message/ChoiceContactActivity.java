@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.message;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -101,9 +102,9 @@ public class ChoiceContactActivity extends BaseActivity {
             @Override
             public void onFailure(String errorCode, String errorMessage) {
 
-                bindDataView(null);
+                //bindDataView(null);
 
-                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -148,6 +149,7 @@ public class ChoiceContactActivity extends BaseActivity {
             ArrayList<Contact> contacts = choiceAdapter.getCheckedContacts();
             Intent i = new Intent();
             i.putParcelableArrayListExtra(CHOOSE_CONTACT_EXTRA,contacts);
+           // bundle.putSparseParcelableArray(CHOOSE_CONTACT_INDEX,choiceAdapter.getCheckedPositions());
 
             setResult(RESULT_OK,i);
         }else{
@@ -319,6 +321,7 @@ public class ChoiceContactActivity extends BaseActivity {
                     SparseBooleanArray checkedChildPositionsMultiple = checkedPositions.get(groupPosition);
                     // if in the group there was not any child checked
                     if (checkedChildPositionsMultiple == null) {
+
                         checkedChildPositionsMultiple = new SparseBooleanArray();
                         // By default, the status of a child is not checked
                         // So a click will enable it
