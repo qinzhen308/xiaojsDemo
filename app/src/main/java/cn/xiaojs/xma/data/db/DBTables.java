@@ -14,7 +14,7 @@ public class DBTables {
      * Update log:
      *
      * version 1
-     * Init base columns: name,avator
+     * Init base columns: cid, gid, name, avator, followType
      */
     public static final class TContact implements BaseColumns {
         //Table name
@@ -22,10 +22,16 @@ public class DBTables {
 
         // Table columns
 
+        //contact id
+        public static final String CID = "cid";
+        //group id which contact belong to
+        public static final String GID = "gid";
         //contact name
         public static final String NAME = "name";
         //contact avator's url
         public static final String AVATOR = "avator";
+        //contact follow type
+        public static final String FOLLOW_TYPE = "followType";
 
     }
 

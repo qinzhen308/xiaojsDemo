@@ -152,8 +152,8 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.common.ImageViewActivity"
-                android:theme="@style/CustomerDialog"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:theme="@style/CustomerDialog"/>
         <activity
                 android:name=".ui.certification.CertificationActivity"
                 android:screenOrientation="portrait"/>
@@ -177,8 +177,16 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.chat.ChatActivity"
-                android:windowSoftInputMode="stateHidden|adjustResize"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity android:name=".ui.message.CloseFriendActivity"/>
+
+        <!--service-->
+        <service
+                android:name=".data.loader.SyncService"
+                android:exported="false"/>
+
+
     </application>
 
 </manifest>

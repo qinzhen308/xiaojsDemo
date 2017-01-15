@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.data.api;
 
 import android.content.Context;
+import android.content.Intent;
 
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.DataManager;
@@ -75,7 +76,9 @@ public class LoginRequest extends ServiceRequest {
             AccountDataManager.saveUserInfo(getApiManager().getAppContext(), info.getUser());
 
             initPermission();
-            DataManager.refreshGroupData(getContext());
+
+            Intent i = new Intent();
+            DataManager.syncData(getContext(),i);
 
         }
     }

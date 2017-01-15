@@ -24,6 +24,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
 
     public static final String CHOOSE_INDEX = "cindex";
     public static final String CHOOSE_DATA = "cdata";
+    public static final String CHOOSE_C = "ccontact";
 
 
     @BindView(R.id.lv)
@@ -31,6 +32,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
 
     private ArrayAdapter<String> adapter;
     private ArrayList<Doc> docs;
+    private ArrayList<Contact> choiceContacts;
 
     @Override
     protected void addViewContent() {
@@ -89,6 +91,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
         Intent data = new Intent();
         data.putExtra(CHOOSE_DATA, audience);
         data.putExtra(CHOOSE_INDEX, checkedPos);
+        data.putExtra(CHOOSE_C,choiceContacts);
         setResult(RESULT_OK, data);
 
         finish();
@@ -115,18 +118,18 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CHOOSE_CONTACT_CODE) {
             if (resultCode == RESULT_OK) {
-                ArrayList<Contact> contacts = data.getParcelableArrayListExtra(
+                choiceContacts = data.getParcelableArrayListExtra(
                         ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
 
-                if (contacts != null && contacts.size()>0) {
+                if (choiceContacts != null && choiceContacts.size()>0) {
 
                     if (docs == null) {
-                        docs = new ArrayList<>(contacts.size());
+                        docs = new ArrayList<>(choiceContacts.size());
                     }else{
                         docs.clear();
                     }
 
-                    for (Contact contact : contacts) {
+                    for (Contact contact : choiceContacts) {
                         Doc doc = new Doc();
                         doc.id = contact.account;
                         doc.subtype = contact.subtype;
