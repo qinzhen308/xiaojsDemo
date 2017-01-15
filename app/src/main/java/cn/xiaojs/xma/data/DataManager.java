@@ -13,6 +13,7 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.db.ContactDao;
+import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.data.loader.SyncService;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
@@ -64,6 +65,13 @@ public class DataManager {
 
     public static Map<Long, ContactGroup> getGroupData(Context context) {
         return getCache(context).getGroupData();
+    }
+
+    public static void getFriendsByType(Context context,
+                                        int followType,
+                                        DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
+        DataLoder dataLoder = new DataLoder(context,new ContactDao());
+        dataLoder.load(callback,followType);
     }
 
 //    public static ArrayList<ContactGroup> getContactGroupData(Context context) {
@@ -137,7 +145,8 @@ public class DataManager {
 //        cache.syncContactData(contactGroups);
 
         ContactDao contactDao = new ContactDao();
-        contactDao.syncData(context, contactGroups);
+        contactDao.clearContacts(context);
+        contactDao.addContact(context, contactGroups);
     }
 
 //    public static void removeContact(Context context, long gid, String cid) {

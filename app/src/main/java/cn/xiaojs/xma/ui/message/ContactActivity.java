@@ -323,10 +323,10 @@ public class ContactActivity extends BaseActivity {
             @Override
             public void onFailure(String errorCode, String errorMessage) {
 
-                bindDataView(null);
+                //bindDataView(null);
                 //listView.onRefreshComplete();
 
-                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
 

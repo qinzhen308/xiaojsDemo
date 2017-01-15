@@ -28,8 +28,10 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.widget.IconTextView;
@@ -119,6 +121,12 @@ public class MomentHeader extends RelativeLayout {
             public void onSuccess(Relation object) {
                 ToastUtil.showToast(getContext(),R.string.followed);
                 mFollow.setVisibility(GONE);
+
+                Contact contact = new Contact();
+                contact.alias = mOwner.alias;
+                contact.account = mOwner.id;
+
+                DataManager.addContact(getContext(),Social.ContactGroup.FRIENDS,contact);
             }
 
             @Override

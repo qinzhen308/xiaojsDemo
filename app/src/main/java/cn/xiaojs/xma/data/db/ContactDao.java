@@ -8,8 +8,10 @@ import android.database.sqlite.SQLiteStatement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 
@@ -30,8 +32,13 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
     public ArrayList<ContactGroup> loadData(Context context, Object... params) {
 
         if (params != null && params.length >0){
-            Map<Long, ContactGroup> map = (Map<Long, ContactGroup>) params[0];
-            return getContacts(context,map);
+            if (params[0] instanceof Map) {
+                Map<Long, ContactGroup> map = (Map<Long, ContactGroup>) params[0];
+                return getContacts(context, map);
+            }else if (params[0] instanceof Integer) {
+                int type = (int)params[0];
+                return getContacts(context, type);
+            }
         }
 
         return null;
@@ -107,6 +114,74 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
      * @param context
      * @return
      */
+    public ArrayList<ContactGroup> getContacts(Context context, int followType) {
+
+        SQLiteDatabase db = DBHelper.getReadDatabase(context);
+        ArrayList<ContactGroup> contactGroups = null;
+        Cursor cursor = null;
+        try{
+
+            String sql = new StringBuilder("select * from ")
+                    .append(DBTables.TContact.TABLE_NAME)
+                    .append(" where ")
+                    .append(DBTables.TContact.FOLLOW_TYPE)
+                    .append(" = '")
+                    .append(followType)
+                    .append("'")
+                    .toString();
+
+            cursor = db.rawQuery(sql, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                ArrayList<Contact> contacts = new ArrayList<>(cursor.getCount());
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+
+//                    long gid = cursor.getLong(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.GID));
+                    String id = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.CID));
+//                    int followType = cursor.getInt(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.FOLLOW_TYPE));
+                    String name = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.NAME));
+
+                    String avatar = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.AVATOR));
+
+                    Contact contact = new Contact();
+                    contact.account = id;
+                    contact.alias = name;
+                    contact.followType = followType;
+                    contact.avatar = avatar;
+
+                    contacts.add(contact);
+
+                    cursor.moveToNext();
+                }
+
+                ContactGroup contactGroup = new ContactGroup();
+                contactGroup.collection = contacts;
+
+                contactGroups = new ArrayList<>(1);
+                contactGroups.add(contactGroup);
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (cursor !=null) {
+                cursor.close();
+            }
+        }
+
+        return contactGroups;
+    }
+
+
+    /**
+     * @param context
+     * @return
+     */
     public ArrayList<ContactGroup> getContacts(Context context,Map<Long, ContactGroup> map) {
 
         SQLiteDatabase db = DBHelper.getReadDatabase(context);
@@ -115,6 +190,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
         try{
             cursor = db.rawQuery("select * from " + DBTables.TContact.TABLE_NAME, null);
             if (cursor != null && cursor.getCount() > 0) {
+                Map<Long, ContactGroup> temp = new HashMap<>();
                 cursor.moveToFirst();
                 while (!cursor.isAfterLast()) {
 
@@ -138,14 +214,30 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
 
                     ContactGroup group = map.get(gid);
                     if (group != null) {
-                        group.collection.add(contact);
+
+                        ContactGroup  tempGroup = temp.get(gid);
+                        if (tempGroup == null) {
+
+                            ContactGroup nGroup = new ContactGroup();
+                            nGroup.group = group.group;
+                            nGroup.id = group.id;
+                            nGroup.collection = new ArrayList<>();
+                            nGroup.collection.add(contact);
+                            temp.put(gid,nGroup);
+
+                        }else {
+                            tempGroup.collection.add(contact);
+                        }
+
+
+
                     }
 
                     cursor.moveToNext();
                 }
 
                 contactGroups = new ArrayList<>();
-                for(ContactGroup group : map.values()) {
+                for(ContactGroup group : temp.values()) {
                     if (group.collection.size()>0) {
                         contactGroups.add(group);
                     }
