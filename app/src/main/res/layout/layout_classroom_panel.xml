@@ -247,7 +247,7 @@
                 android:visibility="gone"/>
 
         <ImageView
-                android:id="@+id/more_btn"
+                android:id="@+id/wb_toolbar_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/cr_more"

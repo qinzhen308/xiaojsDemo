@@ -73,9 +73,6 @@ public class WhiteboardController implements
     private int mGeometryId;
     private int mPanelWidth;
 
-    private Socket mSocket;
-    private Handler mHandler;
-    private ReceiveRunnable mReceiveRunnable;
 
     public WhiteboardController(Context context, View root) {
         mContext = context;
@@ -96,10 +93,6 @@ public class WhiteboardController implements
         mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
         mPanel.measure(0, 0);
         mPanelWidth = mPanel.getMeasuredWidth();
-
-        mSocket = SocketManager.getSocket();
-        mSocket.on(Event.BOARD, mOnBoard);
-        mHandler = new Handler();
     }
 
     public void handlePanelItemClick(View v) {
@@ -317,12 +310,6 @@ public class WhiteboardController implements
         if (mWhiteboard != null) {
             mWhiteboard.release();
         }
-
-        if (mHandler != null) {
-            mHandler.removeCallbacks(mReceiveRunnable);
-            mHandler = null;
-            mReceiveRunnable = null;
-        }
     }
 
     public void setWhiteboard(Whiteboard whiteboard) {
@@ -383,32 +370,5 @@ public class WhiteboardController implements
     @Override
     public void onUndoRedoStackChanged() {
         setUndoRedoStyle();
-    }
-
-    private Emitter.Listener mOnBoard = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            List<CommendLine> commendLineList = Parser.unpacking(args);
-            mHandler.post(new ReceiveRunnable(commendLineList));
-        }
-    };
-
-    private class ReceiveRunnable implements Runnable {
-        private List<CommendLine> mCommendList;
-
-        public ReceiveRunnable(List<CommendLine> list) {
-            mCommendList = list;
-        }
-
-        public void setData(List<CommendLine> list) {
-            mCommendList = list;
-        }
-
-        @Override
-        public void run() {
-            if (mWhiteboard != null) {
-                mWhiteboard.onReceive(mCommendList);
-            }
-        }
     }
 }

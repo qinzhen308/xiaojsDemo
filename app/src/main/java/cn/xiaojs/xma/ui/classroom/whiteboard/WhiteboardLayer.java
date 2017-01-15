@@ -31,6 +31,15 @@ public class WhiteboardLayer {
     private ArrayList<Doodle> mAllDoodles;
     private ArrayList<Doodle> mReDoStack;
 
+    /**
+     * 是否能接受服务器发来的白板绘制命令
+     */
+    private boolean isCanReceive;
+    /**
+     * 是否可以向服务器发送白板绘制命令
+     */
+    private boolean isCanSend;
+
     public WhiteboardLayer() {
         mWhiteboardId = UUID.randomUUID().toString();
         init();
@@ -68,5 +77,21 @@ public class WhiteboardLayer {
 
     public void setIsLive(boolean live) {
         isLive = live;
+    }
+
+    public boolean isCanSend() {
+        return isCanSend;
+    }
+
+    public void setCanSend(boolean canSend) {
+        isCanSend = canSend;
+    }
+
+    public boolean isCanReceive() {
+        return isCanReceive;
+    }
+
+    public void setCanReceive(boolean canReceive) {
+        isCanReceive = canReceive;
     }
 }

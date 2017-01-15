@@ -31,6 +31,8 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,8 +43,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import cn.xiaojs.xma.ui.classroom.ClassroomGestureDetector;
-import cn.xiaojs.xma.ui.classroom.ClassroomState;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.InteractiveLevel;
 import cn.xiaojs.xma.ui.classroom.socketio.Commend;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -161,8 +163,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private boolean mIsRecordedParams;
     private boolean mMeasureFinished = false;
     private boolean mInitLayer = false;
+    private boolean mNeedBitmapPool = true;
 
-    private ClassroomGestureDetector mClassroomGestureDetector;
+    private GestureDetector mClassroomGestureDetector;
 
     private UndoRedoListener mUndoRedoListener;
     private OnColorChangeListener mColorChangeListener;
@@ -195,14 +198,14 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         initParams(context);
     }
 
-    public void setGestureDetector(ClassroomGestureDetector gestureDetector) {
+    public void setGestureDetector(GestureDetector gestureDetector) {
         mClassroomGestureDetector = gestureDetector;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mClassroomGestureDetector != null) {
-            if (ClassroomState.STATE_WHITE_BOARD == mClassroomGestureDetector.getState()) {
+            if (InteractiveLevel.WHITE_BOARD == getInteractiveLevel()) {
                 mClassroomGestureDetector.onTouchEvent(event);
                 mViewGestureListener.onTouchEvent(event);
                 return true;
@@ -212,6 +215,15 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         } else {
             return false;
         }
+    }
+
+    private int getInteractiveLevel() {
+        Context cxt = getContext();
+        if (cxt instanceof ClassroomActivity) {
+            return ((ClassroomActivity) cxt).getInteractiveLevel();
+        }
+
+        return InteractiveLevel.MAIN_PANEL;
     }
 
     @Override
@@ -345,6 +357,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         postInvalidate();
     }
 
+    public void setNeedBitmapPool(boolean needBitmapPool) {
+        mNeedBitmapPool = needBitmapPool;
+    }
+
     public void setLayer(WhiteboardLayer layer) {
         mLayer = layer;
         mAllDoodles = layer.getAllDoodles();
@@ -353,6 +369,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             for (Doodle d : mAllDoodles) {
                 d.setWhiteboard(this);
             }
+        }
+        if (mNeedBitmapPool) {
+            mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
         }
         invalidate();
     }
@@ -392,9 +411,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         mUndoRecordIds = new ArrayList<Integer>();
         mRedoRecordIds = new ArrayList<Integer>();
-
-        mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
-        mSocket = SocketManager.getSocket();
     }
 
     @Override
@@ -967,7 +983,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mDoodleCanvas == null) {
             int w = mBlackboardWidth;
             int h = mBlackboardHeight;
-            mDoodleBitmap = mDoodleBitmapPool.getBitmap(w, h);
+            mDoodleBitmap = mDoodleBitmapPool != null ? mDoodleBitmapPool.getBitmap(w, h) : null;
             if (mDoodleBitmap == null) {
                 mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
             }
@@ -980,7 +996,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void addEditText(float x, float y, boolean center) {
-        if (!(mDoodle instanceof TextWriting)) {
+        if (!(mDoodle instanceof TextWriting) || mEditText == null) {
             return;
         }
 
@@ -1217,7 +1233,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     public void recycle() {
-        mDoodleBitmapPool.recycle(mDoodleBitmap);
+        if (mDoodleBitmapPool != null) {
+            mDoodleBitmapPool.recycle(mDoodleBitmap);
+        } else {
+            if (mDoodleBitmap != null && !mDoodleBitmap.isRecycled()) {
+                mDoodleBitmap.recycle();
+            }
+        }
 
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
@@ -1250,7 +1272,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public void release() {
         recycle();
-        mDoodleBitmapPool.release();
+        if (mDoodleBitmapPool != null) {
+            mDoodleBitmapPool.release();
+        }
     }
 
     public void transformation(MotionEvent event) {
@@ -1565,11 +1589,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     @Override
     public void onReceive(List<CommendLine> data) {
-        if (data != null && !data.isEmpty()) {
+        if (data != null && !data.isEmpty() && (mLayer != null && mLayer.isCanReceive())) {
             for (CommendLine cmdl : data) {
                 List<Commend> cmdList = cmdl.whiteboardCommends;
                 if (cmdList != null && !cmdList.isEmpty()) {
                     for (Commend cmd : cmdList) {
+                        Log.i("aaa", ">>>>>>>>>>>>>> receive="+cmd);
                         handleReceiveCmd(cmd);
                     }
                 }
@@ -1582,7 +1607,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     @Override
     public void onSend(String cmd) {
-        if (mSocket != null && !TextUtils.isEmpty(cmd)) {
+        mSocket = SocketManager.getSocket();
+        if (!TextUtils.isEmpty(cmd)&& (mLayer != null && mLayer.isCanSend())) {
             Log.i("aaa", "************ send="+cmd);
             mSocket.emit(Event.BOARD, cmd);
         }
@@ -1613,7 +1639,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             Doodle d = findDoodleById(cmd.id);
             if (d != null) {
                 d.setVisibility(View.GONE);
-                //mAllDoodles.remove(doodle);
+                mAllDoodles.remove(d);
             }
             drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.CLEAR.equals(cmd.cm)) {
@@ -1666,10 +1692,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 j++;
                 switch (j % 2) {
                     case 1:
-                        x = Integer.parseInt(params[i]) / ProtocolConfigs.VIRTUAL_WIDTH;
+                        x = Integer.parseInt(params[i]) / (float)ProtocolConfigs.VIRTUAL_WIDTH;
                         break;
                     case 0:
-                        y = Integer.parseInt(params[i]) / ProtocolConfigs.VIRTUAL_HEIGHT;
+                        y = Integer.parseInt(params[i]) / (float)ProtocolConfigs.VIRTUAL_HEIGHT;
                         doodle.addControlPoint(x, y);
                         break;
                 }
@@ -1704,9 +1730,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             } else if (params.length > 1) {
                 mPaintStrokeWidth = Integer.parseInt(params[0]);
                 mPaintColor = Utils.getColor(params[1], mPaintColor);
-                if (mColorChangeListener != null) {
-                    mColorChangeListener.onColorChanged(mPaintColor);
-                }
             }
         } catch (Exception e) {
 

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -36,7 +37,9 @@ import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView;
+import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
@@ -122,14 +125,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     //panel btn
     @BindView(R.id.main_screen_setting)
     ImageView mMainScreenSettingBtn;
-    @BindView(R.id.more_btn)
-    ImageView mWhiteboardMoreBtn;
+    @BindView(R.id.wb_toolbar_btn)
+    ImageView mWhiteboardToolbarBtn;
     @BindView(R.id.play_pause_btn)
     ImageView mPlayPauseBtn;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mWhiteboardSv;
+    @BindView(R.id.stu_receive_wb)
+    Whiteboard mSyncWhiteboard;
     @BindView(R.id.teacher_video)
     LiveRecordView mTeacherVideo;
     @BindView(R.id.player_container)
@@ -150,13 +155,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private DialogFragment mWhiteBoardManagePanel;
 
     //gesture
-    private ClassroomGestureDetector mMainPanelGestureDetector;
-    private ClassroomGestureDetector mWhiteboardGestureDetector;
+    private GestureDetector mMainPanelGestureDetector;
+    private GestureDetector mWhiteboardGestureDetector;
+    private GestureDetector mSyncWhitboardGestureDetector;
 
     private ViewGroup mOpenedDrawer;
     private Panel mOpenedPanel;
 
-    private int mCurrentState = ClassroomState.STATE_MAIN_PANEL;
+    private int mCurrentControllerLevel = InteractiveLevel.MAIN_PANEL;
     private boolean mAnimating = false;
     private PanelAnimListener mPanelAnimListener;
     private boolean mNeedOpenWhiteBoardPanel = false;
@@ -177,6 +183,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private Constants.ClassroomClient mClassroomClient = Constants.ClassroomClient.STUDENT;
 
+    private WhiteboardCollection mCurrWhiteboardColl;
+    private Handler mHandler;
+    private ReceiveRunnable mSyncRunnable;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,13 +201,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         initGestureDetector();
         //init nav tips
         showSettingNav();
-        //init socket
-        initSocketIO();
         //init whiteboard
         initWhiteboardData();
         mTeacherVideo.setPath(Config.pathPush);
         //init data
         initData();
+        //init socket
+        initSocketIO();
     }
 
     private void initParams() {
@@ -206,6 +216,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mPanelAnimListener = new PanelAnimListener();
         mWhiteboardCollectionList = new ArrayList<WhiteboardCollection>();
         mWhiteboardSuffix = getString(R.string.white_board);
+        mHandler = new Handler();
     }
 
 
@@ -215,7 +226,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 //教室的权限最大，所以都可以使用
                 break;
             case STUDENT:
-                mWhiteboardMoreBtn.setVisibility(View.GONE);
+                mLeftDrawer.setVisibility(View.GONE);
                 mMainScreenSettingBtn.setVisibility(View.GONE);
                 break;
             case ADMIN:
@@ -236,10 +247,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * Whiteboard的OnTouchEvent来控制事件分发
      */
     private void initGestureDetector() {
-        mMainPanelGestureDetector = new ClassroomGestureDetector(this, new MainPanelGestureListener());
-        mWhiteboardGestureDetector = new ClassroomGestureDetector(this, new WhiteBoardGestureListener());
+        mMainPanelGestureDetector = new GestureDetector(this, new MainPanelGestureListener());
+        mWhiteboardGestureDetector = new GestureDetector(this, new WhiteBoardGestureListener());
+        mSyncWhitboardGestureDetector = new GestureDetector(this, new SyncWhiteBoardGestureListener());
 
-        mMainPanel.setGestureDetector(mMainPanelGestureDetector);
+        mMainPanel.setMainPanelGestureDetector(mMainPanelGestureDetector);
+        mMainPanel.setSyncWhiteboardGestureDetector(mSyncWhitboardGestureDetector);
         mMainPanel.setWhiteboardSv(mWhiteboardSv);
     }
 
@@ -285,16 +298,31 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mWhiteboardController = new WhiteboardController(this, mContentRoot);
         }
 
-        WhiteboardCollection whiteboardCollection = new WhiteboardCollection();
-        whiteboardCollection.setLive(true);
-        whiteboardCollection.addWhiteboardLayer(new WhiteboardLayer());
+        WhiteboardCollection whiteboardCollection = null;
+        if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
+            whiteboardCollection = new WhiteboardCollection();
+            whiteboardCollection.setLive(true);
+            WhiteboardLayer layer = new WhiteboardLayer();
+            layer.setCanSend(false);
+            layer.setCanReceive(true);
+            whiteboardCollection.addWhiteboardLayer(layer);
+            mSyncWhiteboard.setNeedBitmapPool(false);
+            mSyncWhiteboard.setLayer(layer);
+        } else {
+            whiteboardCollection = new WhiteboardCollection();
+            WhiteboardLayer layer = new WhiteboardLayer();
+            layer.setCanSend(true);
+            whiteboardCollection.addWhiteboardLayer(layer);
+            addToWhiteboardCollectionList(whiteboardCollection);
+        }
+
+        mWhiteboardSv.setOffscreenPageLimit(2);
+        mWhiteboardSv.setAdapter(mWhiteboardAdapter);
+        mWhiteboardAdapter.setOnWhiteboardListener(this);
+
+        onSwitchWhiteboardCollection(whiteboardCollection);
         addToWhiteboardCollectionList(whiteboardCollection);
 
-        mWhiteboardAdapter.setData(whiteboardCollection.getWhiteboardLayer());
-        mWhiteboardSv.setAdapter(mWhiteboardAdapter);
-        mWhiteboardSv.setOffscreenPageLimit(2);
-        mWhiteboardAdapter.notifyDataSetChanged();
-        mWhiteboardAdapter.setOnWhiteboardListener(this);
     }
 
     /**
@@ -347,8 +375,26 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
         if (wbColl != null) {
-            mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
-            mWhiteboardAdapter.notifyDataSetChanged();
+            mCurrWhiteboardColl = wbColl;
+            if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
+                if (wbColl.isLive()) {
+                    mWhiteBoardPanel.setVisibility(View.GONE);
+                    mSyncWhiteboard.setVisibility(View.VISIBLE);
+                    mWhiteboardSv.setVisibility(View.GONE);
+                    mCurrWhiteboard = mSyncWhiteboard;
+                } else {
+                    if (mCurrentControllerLevel == InteractiveLevel.WHITE_BOARD && (!mBottomPanel.isShown() && !mTopPanel.isShown())) {
+                        mWhiteBoardPanel.setVisibility(View.VISIBLE);
+                    }
+                    mSyncWhiteboard.setVisibility(View.GONE);
+                    mWhiteboardSv.setVisibility(View.VISIBLE);
+                    mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
+                    mWhiteboardAdapter.notifyDataSetChanged();
+                }
+            } else {
+                mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
+                mWhiteboardAdapter.notifyDataSetChanged();
+            }
             mLessonTitle.setText(wbColl.getName());
         }
     }
@@ -368,9 +414,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private boolean m = false;
 
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.course_ware_btn, R.id.setting_btn,
-            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.more_btn, R.id.play_pause_btn,
+            R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.chat_btn, R.id.wb_toolbar_btn, R.id.play_pause_btn,
             R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.color_picker_btn,
-            R.id.exit_btn, R.id.main_screen_setting, R.id.save_white_board_btn, R.id.undo, R.id.redo})
+            R.id.exit_btn, R.id.main_screen_setting, R.id.save_white_board_btn, R.id.undo, R.id.redo, R.id.stu_receive_wb})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -417,13 +463,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case R.id.chat_btn:
                 openChat(ChatPanel.MODE_CHAT);
                 break;
-            case R.id.more_btn:
-                switchWhiteBoardPanel();
+            case R.id.wb_toolbar_btn:
+                switchWhiteBoardToolbar();
                 break;
             case R.id.main_screen_setting:
+                setWhiteboardMainScreen();
                 break;
             case R.id.save_white_board_btn:
                 saveWhiteboard();
+                break;
+            case R.id.stu_receive_wb:
+                enterMainPanelIfNeed();
                 break;
             case R.id.select_btn:
             case R.id.handwriting_btn:
@@ -450,6 +500,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
         mWhiteBoardManagePanel.show(getSupportFragmentManager(), "white_board_management");
         mExtraData.putParcelableArrayList(WhiteBoardManagement.WHITE_BOARD_COLL, mWhiteboardCollectionList);
+        mExtraData.putSerializable(WhiteBoardManagement.WHITE_BOARD_CLIENT, mClassroomClient);
         mWhiteBoardManagePanel.setArguments(mExtraData);
     }
 
@@ -527,29 +578,29 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     /**
-     * 打开关闭白板操作面板 若正在动画，直接返回 1.若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板 否则，直接隐藏或显示白板操作面板
+     * 打开关闭白板工具栏 若正在动画，直接返回 1.若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板 否则，直接隐藏或显示白板操作面板
      */
-    private void switchWhiteBoardPanel() {
+    private void switchWhiteBoardToolbar() {
         if (mAnimating) {
             return;
         }
 
-        if (mCurrentState == ClassroomState.STATE_MAIN_PANEL) {
-            if (mBottomPanel.getVisibility() == View.VISIBLE) {
-                //若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板
-                mNeedOpenWhiteBoardPanel = true;
-                hideTopBottomPanel();
-            } else {
-                if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
-                    hideWhiteBoardPanel();
-                } else {
-                    showWhiteBoardPanel(true);
-                }
-            }
+        if (mClassroomClient == Constants.ClassroomClient.STUDENT && mCurrWhiteboardColl.isLive()) {
+            Toast.makeText(this, R.string.wb_toolbar_unable_tips, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (mBottomPanel.getVisibility() == View.VISIBLE && mTopPanel.getVisibility() == View.VISIBLE) {
+            //若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板
+            mNeedOpenWhiteBoardPanel = true;
+            mCurrentControllerLevel = InteractiveLevel.WHITE_BOARD;
+            hideTopBottomPanel();
         } else {
             if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
+                mCurrentControllerLevel = InteractiveLevel.MAIN_PANEL;
                 hideWhiteBoardPanel();
             } else {
+                mCurrentControllerLevel = InteractiveLevel.WHITE_BOARD;
                 showWhiteBoardPanel(true);
             }
         }
@@ -559,8 +610,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("aaa", "========MainPanelGestureListener====onSingleTapConfirmed=============" + mCurrentState);
-            if (mCurrentState == ClassroomState.STATE_MAIN_PANEL && !mAnimating) {
+            Log.i("aaa", "========MainPanelGestureListener====onSingleTapConfirmed=============" + mCurrentControllerLevel);
+            if (mCurrentControllerLevel == InteractiveLevel.MAIN_PANEL && !mAnimating) {
                 if (mBottomPanel.getVisibility() == View.VISIBLE) {
                     mNeedOpenWhiteBoardPanel = false;
                     hideTopBottomPanel();
@@ -577,7 +628,25 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("aaa", "=========WhiteBoardGestureListener===onSingleTapConfirmed=============" + mCurrentState);
+            Log.i("aaa", "=========WhiteBoardGestureListener===onSingleTapConfirmed=============" + mCurrentControllerLevel);
+            return super.onSingleTapConfirmed(e);
+        }
+
+    }
+
+    private class SyncWhiteBoardGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.i("aaa", "=========SyncWhiteBoardGestureListener===onSingleTapConfirmed=============" + mCurrentControllerLevel);
+            if (!mAnimating) {
+                if (mBottomPanel.getVisibility() == View.VISIBLE) {
+                    mNeedOpenWhiteBoardPanel = false;
+                    hideTopBottomPanel();
+                } else {
+                    showTopBottomPanel();
+                }
+            }
             return super.onSingleTapConfirmed(e);
         }
 
@@ -604,6 +673,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mWhiteboardController.release();
         }
 
+        if (mSyncWhiteboard != null) {
+            mSyncWhiteboard.release();
+        }
+
         cancelAllAnim();
 
         if (mSaveTask != null) {
@@ -612,10 +685,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
 
         disConnectIO();
+
+        //recycle handler
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mSyncRunnable);
+            mHandler = null;
+            mSyncRunnable = null;
+        }
     }
 
-    public int getCurrentState() {
-        return mCurrentState;
+    public int getInteractiveLevel() {
+        return mCurrentControllerLevel;
     }
 
     private void saveWhiteboard() {
@@ -624,11 +704,37 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
 
         mSavingWhiteboard = true;
-        //save to local
-        //PermissionGen.needPermission(ClassroomActivity.this, REQUEST_GALLERY_PERMISSION, PERMISSIONS);
-
         //save to server
         //TODO
+
+        /*if (mCurrWhiteboardColl != null) {
+            if (mCurrWhiteboardColl.isLive() && mClassroomClient == Constants.ClassroomClient.STUDENT) {
+                PermissionGen.needPermission(ClassroomActivity.this, REQUEST_GALLERY_PERMISSION, PERMISSIONS);
+            } else {
+
+            }
+        }*/
+    }
+
+    public void setWhiteboardMainScreen() {
+        if (mClassroomClient == Constants.ClassroomClient.TEACHER) {
+            if(!mCurrWhiteboardColl.isLive() && mWhiteboardCollectionList != null) {
+                for (WhiteboardCollection coll : mWhiteboardCollectionList) {
+                    coll.setLive(false);
+                }
+
+                mCurrWhiteboardColl.setLive(true);
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    private void enterMainPanelIfNeed() {
+        if (mCurrentControllerLevel != InteractiveLevel.MAIN_PANEL && !mAnimating) {
+            showTopBottomPanel();
+        }
     }
 
     /**
@@ -813,7 +919,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             break;
                         case R.id.white_board_panel:
                             if (mWhiteBoardPanel != null) {
-                                mCurrentState = ClassroomState.STATE_WHITE_BOARD;
                                 showWhiteBoardPanel(false);
                             }
                             break;
@@ -831,14 +936,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                                 mBottomPanel.setVisibility(View.GONE);
                                 if (mNeedOpenWhiteBoardPanel) {
                                     mNeedOpenWhiteBoardPanel = false;
-                                    mCurrentState = ClassroomState.STATE_WHITE_BOARD;
                                     showWhiteBoardPanel(false);
                                 }
                             }
                             break;
                         case R.id.white_board_panel:
                             if (mWhiteBoardPanel != null) {
-                                mCurrentState = ClassroomState.STATE_MAIN_PANEL;
                                 mWhiteBoardPanel.setVisibility(View.GONE);
                             }
                             break;
@@ -867,8 +970,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     }
 
-    public int getState() {
-        return mCurrentState;
+    public boolean isSyncWhiteboard () {
+        return  (mClassroomClient == Constants.ClassroomClient.STUDENT)
+                && mCurrWhiteboardColl != null && mCurrWhiteboardColl.isLive();
     }
 
     private void addToWhiteboardCollectionList(WhiteboardCollection collection) {
@@ -992,6 +1096,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mSocket.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
         mSocket.on(Event.WELCOME, mOnWelcome);
+        mSocket.on(Event.BOARD, mOnBoard);
         mSocket.connect();
     }
 
@@ -1063,5 +1168,32 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             }
         }
     };
+
+    private Emitter.Listener mOnBoard = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            List<CommendLine> commendLineList = Parser.unpacking(args);
+            mHandler.post(new ReceiveRunnable(commendLineList));
+        }
+    };
+
+    private class ReceiveRunnable implements Runnable {
+        private List<CommendLine> mCommendList;
+
+        public ReceiveRunnable(List<CommendLine> list) {
+            mCommendList = list;
+        }
+
+        public void setData(List<CommendLine> list) {
+            mCommendList = list;
+        }
+
+        @Override
+        public void run() {
+            if (mSyncWhiteboard != null) {
+                mSyncWhiteboard.onReceive(mCommendList);
+            }
+        }
+    }
 
 }

@@ -14,17 +14,17 @@ package cn.xiaojs.xma.ui.classroom;
  *
  * ======================================================================================== */
 
-public class ClassroomState {
+public class InteractiveLevel {
     /**
-     * 教室主面板状态
+     * 教室主面板交互层
      */
-    public final static int STATE_MAIN_PANEL = 0;
+    public final static int MAIN_PANEL = 0;
     /**
-     * 直播状态
+     * 直播交互层
      */
-    public final static int STATE_LIVE = 1;
+    public final static int LIVE = 1;
     /**
-     * 白板状态
+     * 白板交互层
      */
-    public final static int STATE_WHITE_BOARD = 2;
+    public final static int WHITE_BOARD = 2;
 }
