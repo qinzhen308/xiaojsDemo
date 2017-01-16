@@ -208,8 +208,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mTeacherVideo.setPath(Config.pathPush);
         //init data
         initData();
-        //init socket
-        initSocketIO();
+
+        listenSocket();
     }
 
     private void initParams() {
@@ -219,6 +219,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mWhiteboardCollectionList = new ArrayList<WhiteboardCollection>();
         mWhiteboardSuffix = getString(R.string.white_board);
         mHandler = new Handler();
+
+        //init socket
+        initSocketIO();
     }
 
 
@@ -401,11 +404,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             }
             mLessonTitle.setText(wbColl.getName());
         }
-    }
-
-    private void updateWhiteboardData(List<WhiteboardLayer> layers) {
-        mWhiteboardAdapter.setData(layers);
-        mWhiteboardAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -1095,13 +1093,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private void initSocketIO() {
         mSocket = SocketManager.getSocket();
+        mSocket.connect();
+    }
+
+    private void listenSocket() {
         mSocket.on(Socket.EVENT_CONNECT, mOnConnect);
         mSocket.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
         mSocket.on(Event.WELCOME, mOnWelcome);
         mSocket.on(Event.BOARD, mOnBoard);
-        mSocket.connect();
     }
 
     private void disConnectIO() {
