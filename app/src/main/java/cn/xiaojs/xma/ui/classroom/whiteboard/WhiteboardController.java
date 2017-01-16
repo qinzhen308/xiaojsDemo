@@ -32,7 +32,6 @@ import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
-import cn.xiaojs.xma.ui.classroom.InteractiveLevel;
 import cn.xiaojs.xma.ui.classroom.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -60,7 +59,7 @@ public class WhiteboardController implements
         OnColorChangeListener,
         TextPop.TextChangeListener,
         UndoRedoListener,
-        WhiteboardAdapter.OnWhiteboardListener{
+        WhiteboardAdapter.OnWhiteboardListener {
 
     private static final int REQUEST_GALLERY_PERMISSION = 1000;
     private static final String[] PERMISSIONS = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -118,7 +117,7 @@ public class WhiteboardController implements
         mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
         mWhiteboardSuffix = context.getString(R.string.white_board);
 
-        mWhiteboardSv = (WhiteboardScrollerView)root.findViewById(R.id.white_board_scrollview);
+        mWhiteboardSv = (WhiteboardScrollerView) root.findViewById(R.id.white_board_scrollview);
         mSyncWhiteboard = (Whiteboard) root.findViewById(R.id.stu_receive_wb);
         mPanel = root.findViewById(R.id.white_board_panel);
         mSelection = (ImageView) root.findViewById(R.id.select_btn);
@@ -171,24 +170,6 @@ public class WhiteboardController implements
 
         onSwitchWhiteboardCollection(whiteboardCollection);
         addToWhiteboardCollectionList(whiteboardCollection);
-    }
-
-    public int addToWhiteboardCollectionList(WhiteboardCollection collection) {
-        if (collection != null) {
-            if (TextUtils.isEmpty(collection.getName())) {
-                int count = 0;
-                for (WhiteboardCollection coll : mWhiteboardCollectionList) {
-                    if (coll.isDefaultWhiteboard()) {
-                        count++;
-                    }
-                }
-                String name = mWhiteboardSuffix + "_" + (count + 1);
-                collection.setName(name);
-            }
-            mWhiteboardCollectionList.add(collection);
-        }
-
-        return mWhiteboardCollectionList != null ? mWhiteboardCollectionList.size() : 0;
     }
 
     public void handlePanelItemClick(View v) {
@@ -402,6 +383,9 @@ public class WhiteboardController implements
         }
     }
 
+    /**
+     * 释放资源
+     */
     public void release() {
         if (mWhiteboard != null) {
             mWhiteboard.release();
@@ -424,7 +408,10 @@ public class WhiteboardController implements
         }
     }
 
-    public void setWhiteboard(Whiteboard whiteboard) {
+    /**
+     * 设置白板
+     */
+    private void setWhiteboard(Whiteboard whiteboard) {
         mCurrWhiteboard = whiteboard;
         if (mOldWhiteboard != whiteboard) {
             mWhiteboard = whiteboard;
@@ -442,6 +429,9 @@ public class WhiteboardController implements
         mOldWhiteboard = whiteboard;
     }
 
+    /**
+     * 重置白板工具栏样式
+     */
     private void reset() {
         onGeometryChange(GeometryShape.RECTANGLE);
         onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
@@ -454,12 +444,18 @@ public class WhiteboardController implements
         mEraser.setSelected(false);
     }
 
+    /**
+     * 退出白板模式
+     */
     public void exitWhiteboard() {
         if (mWhiteboard != null) {
             mWhiteboard.exit();
         }
     }
 
+    /**
+     * 设置撤销反撤销按钮样式
+     */
     public void setUndoRedoStyle() {
         if (mWhiteboard != null) {
             mUndo.setEnabled(mWhiteboard.isCanUndo());
@@ -484,11 +480,37 @@ public class WhiteboardController implements
         setUndoRedoStyle();
     }
 
+    /**
+     * 添加到白板集合
+     */
+    public int addToWhiteboardCollectionList(WhiteboardCollection collection) {
+        if (collection != null) {
+            if (TextUtils.isEmpty(collection.getName())) {
+                int count = 0;
+                for (WhiteboardCollection coll : mWhiteboardCollectionList) {
+                    if (coll.isDefaultWhiteboard()) {
+                        count++;
+                    }
+                }
+                String name = mWhiteboardSuffix + "_" + (count + 1);
+                collection.setName(name);
+            }
+            mWhiteboardCollectionList.add(collection);
+        }
+
+        return mWhiteboardCollectionList != null ? mWhiteboardCollectionList.size() : 0;
+    }
+
+    /**
+     * 获取所有的白板集
+     */
     public ArrayList<WhiteboardCollection> getWhiteboardCollectionList() {
         return mWhiteboardCollectionList;
     }
 
-
+    /**
+     * 切换白板集合
+     */
     public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
         if (wbColl != null) {
             mCurrWhiteboardColl = wbColl;
@@ -512,9 +534,12 @@ public class WhiteboardController implements
         }
     }
 
+    /**
+     * 设置白板为主屏
+     */
     public void setWhiteboardMainScreen() {
         if (mClassroomClient == Constants.ClassroomClient.TEACHER) {
-            if(!mCurrWhiteboardColl.isLive() && mWhiteboardCollectionList != null) {
+            if (!mCurrWhiteboardColl.isLive() && mWhiteboardCollectionList != null) {
                 for (WhiteboardCollection coll : mWhiteboardCollectionList) {
                     coll.setLive(false);
                 }
@@ -524,15 +549,24 @@ public class WhiteboardController implements
         }
     }
 
-    public boolean isSyncWhiteboard () {
-        return  (mClassroomClient == Constants.ClassroomClient.STUDENT)
+    /**
+     * 是否是同步的白板
+     */
+    public boolean isSyncWhiteboard() {
+        return (mClassroomClient == Constants.ClassroomClient.STUDENT)
                 && mCurrWhiteboardColl != null && mCurrWhiteboardColl.isLive();
     }
 
+    /**
+     * 是否是直播白板
+     */
     public boolean isLiveWhiteboard() {
         return mCurrWhiteboardColl.isLive();
     }
 
+    /**
+     * 保存白板
+     */
     public void saveWhiteboard() {
         if (mSavingWhiteboard) {
             return;
@@ -555,7 +589,7 @@ public class WhiteboardController implements
     public void onWhiteboardSelected(Whiteboard whiteboard) {
         setWhiteboard(whiteboard);
         if (mContext instanceof ClassroomActivity) {
-            ((ClassroomActivity)mContext).onWhiteboardSelected(whiteboard);
+            ((ClassroomActivity) mContext).onWhiteboardSelected(whiteboard);
         }
     }
 
@@ -563,7 +597,7 @@ public class WhiteboardController implements
     public void onWhiteboardRemove(Whiteboard whiteboard) {
         setWhiteboard(null);
         if (mContext instanceof ClassroomActivity) {
-            ((ClassroomActivity)mContext).onWhiteboardRemove(whiteboard);
+            ((ClassroomActivity) mContext).onWhiteboardRemove(whiteboard);
         }
     }
 
