@@ -169,7 +169,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     private UndoRedoListener mUndoRedoListener;
     private OnColorChangeListener mColorChangeListener;
-    private int mRecordGroupId;
     private int mDoodleAction;
     private List<Integer> mUndoRecordIds;
     private List<Integer> mRedoRecordIds;
@@ -365,6 +364,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mLayer = layer;
         mAllDoodles = layer.getAllDoodles();
         mReDoStack = layer.getReDoStack();
+        mUndoRecordIds = layer.getUndoRecordIds();
+        mRedoRecordIds = layer.getRedoRecordIds();
+
+        if (mUndoRedoListener != null) {
+            mUndoRedoListener.onUndoRedoStackChanged();
+        }
+
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
                 d.setWhiteboard(this);
@@ -413,9 +419,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mPreviousPoint = new PointF();
 
         WhiteboardConfigs.init(getContext());
-
-        mUndoRecordIds = new ArrayList<Integer>();
-        mRedoRecordIds = new ArrayList<Integer>();
     }
 
     @Override
@@ -1444,11 +1447,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             return;
         }
 
-        doodle.addRecords(action, mRecordGroupId);
+        doodle.addRecords(action, mLayer.getRecordGroupId());
         mReDoStack.clear();
         mRedoRecordIds.clear();
-        mUndoRecordIds.add(mRecordGroupId);
-        mRecordGroupId++;
+        mUndoRecordIds.add(mLayer.getRecordGroupId());
+        mLayer.incrementGroupId();
         if (mUndoRedoListener != null) {
             mUndoRedoListener.onUndoRedoStackChanged();
         }
@@ -1468,7 +1471,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             for (Doodle doodle : allDoodles) {
                 if (doodle.getState() == Doodle.STATE_EDIT) {
                     hasRecords = true;
-                    doodle.addRecords(action, mRecordGroupId);
+                    doodle.addRecords(action, mLayer.getRecordGroupId());
 
                     String cmd = getSendCommend(doodle, action, false);
                     sb.append(cmd);
@@ -1482,8 +1485,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             }
 
             if (mUndoRedoListener != null && hasRecords) {
-                mUndoRecordIds.add(mRecordGroupId);
-                mRecordGroupId++;
+                mUndoRecordIds.add(mLayer.getRecordGroupId());
+                mLayer.incrementGroupId();
                 mUndoRedoListener.onUndoRedoStackChanged();
             }
 

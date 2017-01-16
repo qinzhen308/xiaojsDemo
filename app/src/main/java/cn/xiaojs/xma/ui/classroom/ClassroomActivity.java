@@ -710,9 +710,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         } else {
             mWhiteBoardPanel.setAlpha(1.0f);
             mWhiteBoardPanel.setVisibility(View.VISIBLE);
-            if (mWhiteboardController != null) {
-                mWhiteboardController.setUndoRedoStyle();
-            }
         }
     }
 

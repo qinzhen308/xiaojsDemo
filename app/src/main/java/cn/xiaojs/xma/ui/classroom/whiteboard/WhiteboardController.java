@@ -437,6 +437,7 @@ public class WhiteboardController implements
             }
         }
 
+        setUndoRedoStyle();
         mOldWhiteboard = whiteboard;
     }
 

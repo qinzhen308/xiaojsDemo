@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class WhiteboardLayer {
@@ -30,6 +31,11 @@ public class WhiteboardLayer {
 
     private ArrayList<Doodle> mAllDoodles;
     private ArrayList<Doodle> mReDoStack;
+
+    private List<Integer> mUndoRecordIds;
+    private List<Integer> mRedoRecordIds;
+
+    private int mRecordGroupId;
 
     /**
      * 是否能接受服务器发来的白板绘制命令
@@ -53,6 +59,8 @@ public class WhiteboardLayer {
     private void init() {
         mAllDoodles = new ArrayList<Doodle>();
         mReDoStack = new ArrayList<Doodle>();
+        mUndoRecordIds = new ArrayList<Integer>();
+        mRedoRecordIds = new ArrayList<Integer>();
     }
 
     public ArrayList<Doodle> getAllDoodles() {
@@ -93,5 +101,25 @@ public class WhiteboardLayer {
 
     public void setCanReceive(boolean canReceive) {
         isCanReceive = canReceive;
+    }
+
+    public List<Integer> getRedoRecordIds() {
+        return mRedoRecordIds;
+    }
+
+    public List<Integer> getUndoRecordIds() {
+        return mUndoRecordIds;
+    }
+
+    public int getRecordGroupId() {
+        return mRecordGroupId;
+    }
+
+    public void setRecordGroupId(int groupId) {
+        mRecordGroupId = groupId;
+    }
+
+    public void incrementGroupId() {
+        mRecordGroupId++;
     }
 }
