@@ -14,14 +14,26 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
  *
  * ======================================================================================== */
 
+import android.Manifest;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionFail;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.InteractiveLevel;
+import cn.xiaojs.xma.ui.classroom.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
@@ -37,6 +49,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.setting.HandwritingPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
+import cn.xiaojs.xma.util.CacheUtil;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -46,7 +59,16 @@ public class WhiteboardController implements
         GeometryPop.GeometryChangeListener,
         OnColorChangeListener,
         TextPop.TextChangeListener,
-        UndoRedoListener {
+        UndoRedoListener,
+        WhiteboardAdapter.OnWhiteboardListener{
+
+    private static final int REQUEST_GALLERY_PERMISSION = 1000;
+    private static final String[] PERMISSIONS = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    private WhiteboardScrollerView mWhiteboardSv;
+    //whiteboard adapter
+    private WhiteboardAdapter mWhiteboardAdapter;
 
     private ImageView mSelection;
     private ImageView mHandWriting;
@@ -73,11 +95,31 @@ public class WhiteboardController implements
     private int mGeometryId;
     private int mPanelWidth;
 
+    private boolean mSavingWhiteboard = false;
+    private AsyncTask mSaveTask;
 
-    public WhiteboardController(Context context, View root) {
+    private Constants.ClassroomClient mClassroomClient = Constants.ClassroomClient.TEACHER;
+
+    private ArrayList<WhiteboardCollection> mWhiteboardCollectionList;
+    private WhiteboardCollection mCurrWhiteboardColl;
+
+    private Whiteboard mSyncWhiteboard;
+    private Whiteboard mCurrWhiteboard;
+    private String mWhiteboardSuffix;
+
+    private Socket mSocket;
+    private Handler mHandler;
+    private ReceiveRunnable mSyncRunnable;
+
+
+    public WhiteboardController(Context context, View root, Constants.ClassroomClient client) {
         mContext = context;
+        mClassroomClient = client;
         mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        mWhiteboardSuffix = context.getString(R.string.white_board);
 
+        mWhiteboardSv = (WhiteboardScrollerView)root.findViewById(R.id.white_board_scrollview);
+        mSyncWhiteboard = (Whiteboard) root.findViewById(R.id.stu_receive_wb);
         mPanel = root.findViewById(R.id.white_board_panel);
         mSelection = (ImageView) root.findViewById(R.id.select_btn);
         mHandWriting = (ImageView) root.findViewById(R.id.handwriting_btn);
@@ -93,6 +135,60 @@ public class WhiteboardController implements
         mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
         mPanel.measure(0, 0);
         mPanelWidth = mPanel.getMeasuredWidth();
+
+        mSocket = SocketManager.getSocket();
+        mSocket.on(Event.BOARD, mOnBoard);
+        mHandler = new Handler();
+
+        initWhiteboardData(context);
+    }
+
+    private void initWhiteboardData(Context context) {
+        mWhiteboardCollectionList = new ArrayList<WhiteboardCollection>();
+        mWhiteboardAdapter = new WhiteboardAdapter(context);
+
+        WhiteboardCollection whiteboardCollection = null;
+        if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
+            whiteboardCollection = new WhiteboardCollection();
+            whiteboardCollection.setLive(true);
+            WhiteboardLayer layer = new WhiteboardLayer();
+            layer.setCanSend(false);
+            layer.setCanReceive(true);
+            whiteboardCollection.addWhiteboardLayer(layer);
+            mSyncWhiteboard.setNeedBitmapPool(false);
+            mSyncWhiteboard.setLayer(layer);
+        } else {
+            whiteboardCollection = new WhiteboardCollection();
+            WhiteboardLayer layer = new WhiteboardLayer();
+            layer.setCanSend(true);
+            layer.setCanReceive(false);
+            whiteboardCollection.addWhiteboardLayer(layer);
+        }
+
+        mWhiteboardSv.setOffscreenPageLimit(2);
+        mWhiteboardSv.setAdapter(mWhiteboardAdapter);
+        mWhiteboardAdapter.setOnWhiteboardListener(this);
+
+        onSwitchWhiteboardCollection(whiteboardCollection);
+        addToWhiteboardCollectionList(whiteboardCollection);
+    }
+
+    public int addToWhiteboardCollectionList(WhiteboardCollection collection) {
+        if (collection != null) {
+            if (TextUtils.isEmpty(collection.getName())) {
+                int count = 0;
+                for (WhiteboardCollection coll : mWhiteboardCollectionList) {
+                    if (coll.isDefaultWhiteboard()) {
+                        count++;
+                    }
+                }
+                String name = mWhiteboardSuffix + "_" + (count + 1);
+                collection.setName(name);
+            }
+            mWhiteboardCollectionList.add(collection);
+        }
+
+        return mWhiteboardCollectionList != null ? mWhiteboardCollectionList.size() : 0;
     }
 
     public void handlePanelItemClick(View v) {
@@ -310,9 +406,26 @@ public class WhiteboardController implements
         if (mWhiteboard != null) {
             mWhiteboard.release();
         }
+
+        if (mSyncWhiteboard != null) {
+            mSyncWhiteboard.release();
+        }
+
+        //recycle handler
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mSyncRunnable);
+            mHandler = null;
+            mSyncRunnable = null;
+        }
+
+        if (mSaveTask != null) {
+            mSavingWhiteboard = false;
+            mSaveTask.cancel(true);
+        }
     }
 
     public void setWhiteboard(Whiteboard whiteboard) {
+        mCurrWhiteboard = whiteboard;
         if (mOldWhiteboard != whiteboard) {
             mWhiteboard = whiteboard;
             if (mWhiteboard != null) {
@@ -370,5 +483,151 @@ public class WhiteboardController implements
     @Override
     public void onUndoRedoStackChanged() {
         setUndoRedoStyle();
+    }
+
+    public ArrayList<WhiteboardCollection> getWhiteboardCollectionList() {
+        return mWhiteboardCollectionList;
+    }
+
+
+    public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
+        if (wbColl != null) {
+            mCurrWhiteboardColl = wbColl;
+            if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
+                if (wbColl.isLive()) {
+                    mSyncWhiteboard.setVisibility(View.VISIBLE);
+                    mWhiteboardSv.setVisibility(View.GONE);
+                    mCurrWhiteboard = mSyncWhiteboard;
+                } else {
+                    mSyncWhiteboard.setVisibility(View.GONE);
+                    mWhiteboardSv.setVisibility(View.VISIBLE);
+                    mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
+                    mWhiteboardAdapter.notifyDataSetChanged();
+                }
+            } else {
+                mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
+                mWhiteboardAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    public void setWhiteboardMainScreen() {
+        if (mClassroomClient == Constants.ClassroomClient.TEACHER) {
+            if(!mCurrWhiteboardColl.isLive() && mWhiteboardCollectionList != null) {
+                for (WhiteboardCollection coll : mWhiteboardCollectionList) {
+                    coll.setLive(false);
+                }
+
+                mCurrWhiteboardColl.setLive(true);
+            }
+        }
+    }
+
+    public boolean isSyncWhiteboard () {
+        return  (mClassroomClient == Constants.ClassroomClient.STUDENT)
+                && mCurrWhiteboardColl != null && mCurrWhiteboardColl.isLive();
+    }
+
+    public boolean isLiveWhiteboard() {
+        return mCurrWhiteboardColl.isLive();
+    }
+
+    public void saveWhiteboard() {
+        if (mSavingWhiteboard) {
+            return;
+        }
+
+        mSavingWhiteboard = true;
+        //save to server
+        //TODO
+
+        /*if (mCurrWhiteboardColl != null) {
+            if (mCurrWhiteboardColl.isLive() && mClassroomClient == Constants.ClassroomClient.STUDENT) {
+                PermissionGen.needPermission(ClassroomActivity.this, REQUEST_GALLERY_PERMISSION, PERMISSIONS);
+            } else {
+
+            }
+        }*/
+    }
+
+    @Override
+    public void onWhiteboardSelected(Whiteboard whiteboard) {
+        setWhiteboard(whiteboard);
+        if (mContext instanceof ClassroomActivity) {
+            ((ClassroomActivity)mContext).onWhiteboardSelected(whiteboard);
+        }
+    }
+
+    @Override
+    public void onWhiteboardRemove(Whiteboard whiteboard) {
+        setWhiteboard(null);
+        if (mContext instanceof ClassroomActivity) {
+            ((ClassroomActivity)mContext).onWhiteboardRemove(whiteboard);
+        }
+    }
+
+    private Emitter.Listener mOnBoard = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            List<CommendLine> commendLineList = Parser.unpacking(args);
+            mHandler.post(new ReceiveRunnable(commendLineList));
+        }
+    };
+
+    private class ReceiveRunnable implements Runnable {
+        private List<CommendLine> mCommendList;
+
+        public ReceiveRunnable(List<CommendLine> list) {
+            mCommendList = list;
+        }
+
+        public void setData(List<CommendLine> list) {
+            mCommendList = list;
+        }
+
+        @Override
+        public void run() {
+            if (mSyncWhiteboard != null) {
+                mSyncWhiteboard.onReceive(mCommendList);
+            }
+        }
+    }
+
+    @PermissionSuccess(requestCode = REQUEST_GALLERY_PERMISSION)
+    public void getGallerySuccess() {
+        if (mSavingWhiteboard) {
+            if (mCurrWhiteboard == null) {
+                mSavingWhiteboard = false;
+                return;
+            }
+
+            final Bitmap bmp = mCurrWhiteboard.getWhiteboardBitmap();
+            final WhiteboardLayer layer = mCurrWhiteboard.getLayer();
+            if (layer != null) {
+                CacheUtil.saveWhiteboard(bmp, layer.getWhiteboardId());
+                mSaveTask = new AsyncTask<Integer, Integer, String>() {
+
+                    @Override
+                    protected String doInBackground(Integer... params) {
+                        return CacheUtil.saveWhiteboard(bmp, layer.getWhiteboardId());
+                    }
+
+                    @Override
+                    protected void onPostExecute(String result) {
+                        mSavingWhiteboard = false;
+                        String tips = mContext.getString(!TextUtils.isEmpty(result) ? R.string.save_white_board_succ :
+                                R.string.save_white_board_fail);
+                        Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
+                    }
+                }.execute(0);
+            } else {
+                mSavingWhiteboard = false;
+            }
+        }
+    }
+
+    @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
+    public void getGalleryFailure() {
+
     }
 }
