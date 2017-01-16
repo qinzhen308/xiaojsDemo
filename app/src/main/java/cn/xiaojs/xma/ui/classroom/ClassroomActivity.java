@@ -309,7 +309,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mWhiteboardSv.setVisibility(View.GONE);
                 } else {
                     if (mCurrentControllerLevel == InteractiveLevel.WHITE_BOARD &&
-                            (!mBottomPanel.isShown() && !mTopPanel.isShown())) {
+                            (mBottomPanel.getVisibility() != View.VISIBLE)) {
                         mWhiteBoardPanel.setVisibility(View.VISIBLE);
                     }
                     mWhiteboardSv.setVisibility(View.VISIBLE);
