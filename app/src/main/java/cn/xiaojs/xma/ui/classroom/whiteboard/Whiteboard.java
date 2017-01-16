@@ -370,10 +370,15 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 d.setWhiteboard(this);
             }
         }
+
+        if (mDoodleCanvas != null) {
+            drawAllDoodlesCanvas();
+        }
+
         if (mNeedBitmapPool) {
             mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
         }
-        invalidate();
+        postInvalidate();
     }
 
     public void setCourseUri(Uri uri) {

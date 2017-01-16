@@ -129,6 +129,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     ImageView mWhiteboardToolbarBtn;
     @BindView(R.id.play_pause_btn)
     ImageView mPlayPauseBtn;
+    @BindView(R.id.course_ware_btn)
+    ImageView mCourseWareBtn;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
@@ -181,7 +183,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Socket mSocket;
     private Boolean mSktConnected = false;
 
-    private Constants.ClassroomClient mClassroomClient = Constants.ClassroomClient.STUDENT;
+    private Constants.ClassroomClient mClassroomClient = Constants.ClassroomClient.TEACHER;
 
     private WhiteboardCollection mCurrWhiteboardColl;
     private Handler mHandler;
@@ -223,10 +225,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void initPanel() {
         switch(mClassroomClient) {
             case TEACHER:
-                //教室的权限最大，所以都可以使用
+                //老师的权限最大，所以都可以使用
                 break;
             case STUDENT:
-                mLeftDrawer.setVisibility(View.GONE);
+                mPlayPauseBtn.setVisibility(View.GONE);
+                mCourseWareBtn.setVisibility(View.GONE);
                 mMainScreenSettingBtn.setVisibility(View.GONE);
                 break;
             case ADMIN:
@@ -312,8 +315,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             whiteboardCollection = new WhiteboardCollection();
             WhiteboardLayer layer = new WhiteboardLayer();
             layer.setCanSend(true);
+            layer.setCanReceive(false);
             whiteboardCollection.addWhiteboardLayer(layer);
-            addToWhiteboardCollectionList(whiteboardCollection);
         }
 
         mWhiteboardSv.setOffscreenPageLimit(2);
@@ -383,7 +386,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mWhiteboardSv.setVisibility(View.GONE);
                     mCurrWhiteboard = mSyncWhiteboard;
                 } else {
-                    if (mCurrentControllerLevel == InteractiveLevel.WHITE_BOARD && (!mBottomPanel.isShown() && !mTopPanel.isShown())) {
+                    if (mCurrentControllerLevel == InteractiveLevel.WHITE_BOARD &&
+                            (!mBottomPanel.isShown() && !mTopPanel.isShown())) {
                         mWhiteBoardPanel.setVisibility(View.VISIBLE);
                     }
                     mSyncWhiteboard.setVisibility(View.GONE);
