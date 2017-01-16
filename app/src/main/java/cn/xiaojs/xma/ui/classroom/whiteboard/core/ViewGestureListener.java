@@ -138,10 +138,7 @@ public class ViewGestureListener {
 
     public void onViewChanged(int width, int height, int imageW, int imageH, boolean changed) {
         if (mImageWidth == 0 || mImageHeight == 0) {
-            updateViewInfo(width, height, imageW, imageH);
-            float offsetX = (mVisibleWidth - mImageWidth) / 2.0f;
-            float offsetY = (mVisibleHeight - mImageHeight) / 2.0f;
-            mDstRect.set(offsetX, offsetY, mVisibleWidth - offsetX, mVisibleHeight - offsetY);
+            init(width, height, imageW, imageH);
         } else if (changed || imageW != mImageWidth || imageH != mImageHeight) {
             // ConfigurationChanged
             // 屏幕上的点映射到图片上的相对图片的偏移比例value<0，1>的点
@@ -222,6 +219,15 @@ public class ViewGestureListener {
             scale = MIN_SCALE;
         }
         mScale = scale;
+    }
+
+    private void init(int width, int height, int imageW, int imageH) {
+        updateViewInfo(width, height, imageW, imageH);
+        float offsetX = (mVisibleWidth - mImageWidth) / 2.0f;
+        float offsetY = (mVisibleHeight - mImageHeight) / 2.0f;
+        mDstRect.set(offsetX, offsetY, mVisibleWidth - offsetX, mVisibleHeight - offsetY);
+        mScale = 1.0F;
+        mInverseScale = 1.0f;
     }
 
     public float getInverseScale() {

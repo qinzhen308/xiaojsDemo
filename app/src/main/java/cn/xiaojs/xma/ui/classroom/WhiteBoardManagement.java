@@ -184,16 +184,18 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                 case R.id.add_white_board:
                     //add default board
                     WhiteboardCollection wbColl = new WhiteboardCollection();
-                    WhiteboardLayer layer = new WhiteboardLayer();
-                    if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
-                        layer.setCanSend(false);
-                        layer.setCanReceive(true);
-                    } else {
-                        layer.setCanSend(true);
-                        layer.setCanReceive(false);
+                    //TODO test
+                    for (int i = 0; i < count; i++) {
+                        WhiteboardLayer layer = new WhiteboardLayer();
+                        if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
+                            layer.setCanSend(false);
+                            layer.setCanReceive(true);
+                        } else {
+                            layer.setCanSend(true);
+                            layer.setCanReceive(false);
+                        }
+                        wbColl.addWhiteboardLayer(layer);
                     }
-                    wbColl.addWhiteboardLayer(layer);
-
                     if (mContext instanceof ClassroomActivity) {
                         ((ClassroomActivity)mContext).onAddWhiteboardCollection(wbColl);
                     }

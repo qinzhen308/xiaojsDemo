@@ -429,11 +429,12 @@ public class WhiteboardController implements
         if (mOldWhiteboard != whiteboard) {
             mWhiteboard = whiteboard;
             if (mWhiteboard != null) {
-                mWhiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
                 mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
                 mWhiteboard.setUndoRedoListener(this);
                 mWhiteboard.setOnColorChangeListener(this);
-                reset(whiteboard);
+                mWhiteboard.onWhiteboardSelected();
+
+                reset();
             }
         }
 
@@ -441,10 +442,7 @@ public class WhiteboardController implements
         mOldWhiteboard = whiteboard;
     }
 
-    private void reset(Whiteboard whiteboard) {
-        whiteboard.setGeometryShapeId(GeometryShape.RECTANGLE);
-        whiteboard.switchMode(Whiteboard.MODE_NONE);
-
+    private void reset() {
         onGeometryChange(GeometryShape.RECTANGLE);
         onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
         onTextOrientation(TextWriting.TEXT_HORIZONTAL);
@@ -504,10 +502,12 @@ public class WhiteboardController implements
                     mWhiteboardSv.setVisibility(View.VISIBLE);
                     mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
                     mWhiteboardAdapter.notifyDataSetChanged();
+                    mWhiteboardSv.setAdapter(mWhiteboardAdapter);
                 }
             } else {
                 mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
                 mWhiteboardAdapter.notifyDataSetChanged();
+                mWhiteboardSv.setAdapter(mWhiteboardAdapter);
             }
         }
     }

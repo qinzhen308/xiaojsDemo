@@ -367,6 +367,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mUndoRecordIds = layer.getUndoRecordIds();
         mRedoRecordIds = layer.getRedoRecordIds();
 
+        forceCenter();
+
         if (mUndoRedoListener != null) {
             mUndoRedoListener.onUndoRedoStackChanged();
         }
@@ -387,6 +389,20 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
         }
         postInvalidate();
+    }
+
+    /**
+     * 强制是白板居中
+     */
+    private void forceCenter() {
+        if (mBlackboardWidth > 0 && mBlackboardHeight > 0 && mViewWidth > 0 && mViewHeight > 0) {
+            mViewGestureListener.reset();
+        }
+    }
+
+    public void onWhiteboardSelected() {
+        setGeometryShapeId(GeometryShape.RECTANGLE);
+        switchMode(Whiteboard.MODE_NONE);
     }
 
     public void setCourseUri(Uri uri) {
