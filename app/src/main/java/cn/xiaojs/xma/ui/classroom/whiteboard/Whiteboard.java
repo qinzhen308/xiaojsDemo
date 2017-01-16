@@ -370,6 +370,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mUndoRedoListener != null) {
             mUndoRedoListener.onUndoRedoStackChanged();
         }
+        mSelector.reset();
+        mDoodle = null;
 
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
@@ -417,7 +419,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mInputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         mPreviousPoint = new PointF();
-
+        mSelector = new Selector(this);
         WhiteboardConfigs.init(getContext());
     }
 
@@ -493,11 +495,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
             switch (mCurrentMode) {
                 case MODE_SELECTION:
-                    if (mSelector != null) {
-                        mSelector.setBorderVisible(true);
-                        if (mSelector.getState() == Doodle.STATE_EDIT) {
-                            mSelectionRectRegion = mSelector.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
-                        }
+                    mSelector.setBorderVisible(true);
+                    if (mSelector.getState() == Doodle.STATE_EDIT) {
+                        mSelectionRectRegion = mSelector.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
                     }
                     break;
                 case MODE_TEXT:
@@ -635,7 +635,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     }
                     break;
                 case MODE_SELECTION:
-                    if (mCanMovable && mSelector != null) {
+                    if (mCanMovable) {
                         if (!mIsRecordedParams) {
                             mIsRecordedParams = true;
                             mPreviousPoint.x = x;
@@ -700,26 +700,24 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             //update current doodle state
             switch (mCurrentMode) {
                 case MODE_SELECTION:
-                    if (mSelector != null) {
-                        if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
-                            int intersectCount = mCanMovable ? mSelector.checkIntersect() :
-                                    mSelector.checkSingleIntersect(event.getX(), event.getY());
-                            if (intersectCount <= 0) {
-                                mSelector.reset();
-                            } else {
-                                mSelector.setState(Doodle.STATE_EDIT);
-                                mSelectionRectRegion = IntersectionHelper.RECT_BODY;
-                            }
-                            postInvalidate();
+                    if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
+                        int intersectCount = mCanMovable ? mSelector.checkIntersect() :
+                                mSelector.checkSingleIntersect(event.getX(), event.getY());
+                        if (intersectCount <= 0) {
+                            mSelector.reset();
+                        } else {
+                            mSelector.setState(Doodle.STATE_EDIT);
+                            mSelectionRectRegion = IntersectionHelper.RECT_BODY;
                         }
+                        postInvalidate();
+                    }
 
-                        if (mDoodleAction != Action.NO_ACTION) {
-                            //add action
-                            addRecords(mDoodleAction);
+                    if (mDoodleAction != Action.NO_ACTION) {
+                        //add action
+                        addRecords(mDoodleAction);
 
-                            if (mDoodleAction == Action.DELETE_ACTION) {
-                                mSelector.reset();
-                            }
+                        if (mDoodleAction == Action.DELETE_ACTION) {
+                            mSelector.reset();
                         }
                     }
                     break;
@@ -976,7 +974,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         eraserAllDoodle();
         //draw background
-        mDoodleCanvas.drawColor(Color.argb(255, 230, 230, 230));
+        mDoodleCanvas.drawColor(Color.argb(255, 255, 255, 255));
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
                 d.setDrawingMatrix(mDrawingMatrix);
@@ -1052,23 +1050,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public void switchMode(int mode) {
         mCurrentMode = mode;
 
-        if (mode == MODE_SELECTION) {
-            if (mSelector == null) {
-                mSelector = new Selector(this);
-            }
-        } else {
-            if (mSelector != null) {
-                mSelector.reset();
-                postInvalidate();
-            }
-        }
-
+        mSelector.reset();
         if (mDoodle != null) {
             drawToDoodleCanvas();
             mDoodle.setState(Doodle.STATE_IDLE);
             mDoodle = null;
-            postInvalidate();
         }
+        postInvalidate();
 
         //test
         if (mBlackboardWidth > 0 && mBlackboardHeight > 0) {
@@ -1122,18 +1110,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         StringBuilder sb = new StringBuilder();
         switch (mCurrentMode) {
             case MODE_SELECTION:
-                if (mSelector != null) {
-                    mSelector.updateDoodleColor(color);
-                    drawAllDoodlesCanvas();
-                    postInvalidate();
+                mSelector.updateDoodleColor(color);
+                drawAllDoodlesCanvas();
+                postInvalidate();
 
-                    if (mAllDoodles != null) {
-                        for (Doodle d : mAllDoodles) {
-                            if (d.getState() == Doodle.STATE_EDIT) {
-                                String cmd = Packer.getChangeColorCmd(d, false);
-                                sb.append(cmd);
-                                sb.append(" ");
-                            }
+                if (mAllDoodles != null) {
+                    for (Doodle d : mAllDoodles) {
+                        if (d.getState() == Doodle.STATE_EDIT) {
+                            String cmd = Packer.getChangeColorCmd(d, false);
+                            sb.append(cmd);
+                            sb.append(" ");
                         }
                     }
                 }
@@ -1317,9 +1303,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
                 if (lastRecord.action == Action.ADD_ACTION) {
                     it.remove();
-                    if (mSelector != null) {
-                        mSelector.reset();
-                    }
+                    mSelector.reset();
                 } else if (prevRecord != null){
                     if (lastRecord.action == Action.DELETE_ACTION) {
                         doodle.setVisibility(View.VISIBLE);
@@ -1349,9 +1333,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
             if (hasUndo) {
                 mDoodle = null;
-                if (mSelector != null) {
-                    mSelector.reset();
-                }
+                mSelector.reset();
                 mUndoRecordIds.remove(mUndoRecordIds.size() - 1);
                 mRedoRecordIds.add(groupId);
                 drawAllDoodlesCanvas();
@@ -1420,9 +1402,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
             if (hasRedo) {
                 mDoodle = null;
-                if (mSelector != null) {
-                    mSelector.reset();
-                }
+                mSelector.reset();
 
                 mRedoRecordIds.remove(mRedoRecordIds.size() - 1);
                 mUndoRecordIds.add(groupId);

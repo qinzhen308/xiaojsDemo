@@ -8,7 +8,7 @@
             android:id="@+id/drawer_content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="@color/classroom_white_bg">
 
         <!--白板列表-->
         <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView
