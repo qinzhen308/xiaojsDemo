@@ -1656,18 +1656,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.ROTATE_A.equalsIgnoreCase(cmd.cm)) {
             //rotate doodle: by doodle center
-            if (ProtocolConfigs.ROTATE_A.equals(cmd.cm)) {
-
-            } else {
-
-            }
+            Doodle d = findDoodleById(cmd.id);
+            boolean absolute = ProtocolConfigs.ROTATE_A.equals(cmd.cm);
+            rotateDoodle(params, d, absolute);
+            drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.ZOOM_A.equalsIgnoreCase(cmd.cm)) {
             //scale doodle: by doodle center
-            if (ProtocolConfigs.ZOOM_A.equals(cmd.cm)) {
-
-            } else {
-
-            }
+            Doodle d = findDoodleById(cmd.id);
+            boolean absolute = ProtocolConfigs.ZOOM_A.equals(cmd.cm);
+            scaleDoodle(params, d, absolute);
+            drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.CHANGE_COLOR.equals(cmd.cm)){
             //change color
             Doodle doodle = findDoodleById(cmd.id);
@@ -1724,7 +1722,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void changePaintStyle(String[] params) {
-        if (params == null) {
+        if (params == null || params.length == 0) {
             return;
         }
 
@@ -1741,7 +1739,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private boolean moveDoodle(String[] params, Doodle doodle, boolean absolute) {
-        if (params == null || doodle == null) {
+        if (params == null || params.length == 0 || doodle == null) {
             return false;
         }
 
@@ -1759,6 +1757,57 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
             doodle.move(x, y);
             return true;
+        } catch (Exception e) {
+
+        }
+
+        return false;
+    }
+
+    private boolean scaleDoodle(String[] params, Doodle doodle, boolean absolute) {
+        if (params == null || params.length == 0 || doodle == null) {
+            return false;
+        }
+
+        try {
+            RectF rectF = doodle.getDoodleRect();
+            int oldW = (int)(rectF.width() * ProtocolConfigs.VIRTUAL_WIDTH);
+            int oldH = (int)(rectF.height() * ProtocolConfigs.VIRTUAL_HEIGHT);
+            int w = oldW;
+            int h = oldH;
+            if (absolute) {
+                if (params.length == 1) {
+                    w = Integer.parseInt(params[0]);
+                } else if (params.length > 1) {
+                    w = Integer.parseInt(params[0]);
+                    h = Integer.parseInt(params[1]);
+                }
+                float scale = w / (float)oldW;
+                doodle.scale(scale);
+            } else {
+                float scale = Float.parseFloat(params[0]);
+                doodle.scale(scale);
+            }
+        } catch (Exception e) {
+
+        }
+
+        return false;
+    }
+
+    private boolean rotateDoodle(String[] params, Doodle doodle, boolean absolute) {
+        if (params == null || params.length == 0 || doodle == null) {
+            return false;
+        }
+
+        try {
+            float degree = Float.parseFloat(params[0]);
+            if (absolute) {
+                float oldDegree = doodle.getTotalDegree();
+                doodle.rotate(degree - oldDegree);
+            } else {
+                doodle.scale(degree);
+            }
         } catch (Exception e) {
 
         }
