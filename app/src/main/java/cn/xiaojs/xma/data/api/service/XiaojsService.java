@@ -4,8 +4,14 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
+import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.LiveSession.Attendee;
 import cn.xiaojs.xma.model.LiveSession.CtlSession;
+import cn.xiaojs.xma.model.LiveSession.LiveCollection;
+import cn.xiaojs.xma.model.LiveSession.LiveCriteria;
+import cn.xiaojs.xma.model.LiveSession.TalkItem;
 import cn.xiaojs.xma.model.LiveSession.Ticket;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
@@ -374,7 +380,15 @@ public interface XiaojsService {
     @POST("/v1/live/{ticket}")
     Call<CtlSession> bootSession(@Path("ticket") String ticket);
 
+    //Get Talks
+    @GET("/v1/live/{ticket}/talks/{criteria}/{pagination}")
+    Call<CollectionPage<TalkItem>> getTalks(@Path("ticket") String ticket,
+                                            @Path("criteria") String criteria,
+                                            @Path("pagination") String pagination);
 
 
+    //Get Attendees
+    @GET("/v1/live/{ticket}/attendees")
+    Call<LiveCollection<Attendee>> getAttendees(@Path("ticket") String ticket);
 
 }

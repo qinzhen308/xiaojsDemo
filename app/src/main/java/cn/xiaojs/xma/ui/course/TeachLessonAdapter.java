@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.course;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +39,8 @@ import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.RedTipImageView;
@@ -291,7 +294,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     //进入教室
     private void enterClass(TeachLesson bean) {
-
+        Intent i = new Intent();
+        i.setClass(mContext, ClassroomActivity.class);
+        i.putExtra(Constants.KEY_TICKET, bean.getTicket());
+        mContext.startActivity(i);
     }
 
     private void modifyLesson(TeachLesson bean) {
