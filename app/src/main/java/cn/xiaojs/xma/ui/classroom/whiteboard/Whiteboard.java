@@ -1615,6 +1615,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (!TextUtils.isEmpty(cmd)&& (mLayer != null && mLayer.isCanSend())) {
             Log.i("aaa", "************ send="+cmd);
             mSocket.emit(Event.BOARD, cmd);
+            mSocket.emit(Event.SYNC);
         }
     }
 

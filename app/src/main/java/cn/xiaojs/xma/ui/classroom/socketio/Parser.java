@@ -14,8 +14,8 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *
  * ======================================================================================== */
 
-import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +77,9 @@ public class Parser {
                                 //$D:jb8g;
                                 //$P:|2,FF00FF;
                                 //$T:|
-                                String pattern = "^\\$(\\w{1})\\:(.{4})*\\|([[-]\\S|\\,]*)(.*)";
+                                String pattern = "^\\$(\\w{1})\\:([\\w{4}\\,?]+)*\\|([[-]\\S|\\,]*)(.*)";
                                 //1 = cm, 2 = id, 3 = params
+                                Log.i("aaa", "result=" + result);
                                 Pattern r = Pattern.compile(pattern);
                                 Matcher m = r.matcher(result);
                                 if (m.find()) {
