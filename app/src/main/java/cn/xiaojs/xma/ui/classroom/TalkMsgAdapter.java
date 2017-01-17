@@ -24,13 +24,13 @@ import android.widget.TextView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
-public class ChatMsgAdapter extends BaseAdapter{
+public class TalkMsgAdapter extends BaseAdapter{
     public final static int TYPE_MY_SPEAKER = 0;
     public final static int TYPE_OTHER_SPEAKER = 1;
 
     private Context mContext;
 
-    public ChatMsgAdapter(Context context) {
+    public TalkMsgAdapter(Context context) {
         mContext = context;
     }
 

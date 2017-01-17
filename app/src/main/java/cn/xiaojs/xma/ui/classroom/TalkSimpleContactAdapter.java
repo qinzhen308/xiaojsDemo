@@ -25,11 +25,11 @@ import cn.xiaojs.xma.ui.widget.RoundedImageView;
  *
  * ======================================================================================== */
 
-public class ChatSimpleContactAdapter extends BaseAdapter {
+public class TalkSimpleContactAdapter extends BaseAdapter {
     private Context mContext;
     private int mOffset;
 
-    public ChatSimpleContactAdapter(Context context) {
+    public TalkSimpleContactAdapter(Context context) {
         mContext = context;
         mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px4);
     }

@@ -28,11 +28,36 @@ public class Su {
     }
 
 
+    public class EventCategory {
+        //Server-side in-class events (emitted by XLS-Live runtime)
+        public static final int LIVE = 6000;
+        //Class-side in-class events (emitted by classroom clients)
+        public static final int CLASSROOM = 6001;
+    }
 
+    public class EventType {
+        //教室交流
+        public static final int TALK = 690001;
+        //绘制
+        public static final int DRAW = 680001;
+        //同步绘制
+        public static final int SYNC_DRAW = 680002;
 
+        // Live/Classroom events
+        public static final int SAVE_MEDIA_DEVICES = 670005;
+        public static final int SET_PRIMARY = 610001;
+        public static final int STREAMING_STARTED = 670008;
+        public static final int STREAMING_STOPPED = 670009;
 
+        // Live/Classroom events (StartMedia, StartStreaming)
+        public static final int OPEN_MEDIA = 670001;
+        // Live/Classroom events (StopStreaming, StopMedia)
+        public static final int CLOSE_MEDIA = 670002;
 
-
-
+        //进入教室
+        public static final int JOIN = 660000;
+        //离开教室
+        public static final int LEAVE = 660001;
+    }
 
 }

@@ -132,7 +132,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private MessagePanel mMessagePanel;
     private InviteFriendPanel mInviteFriendPanel;
     private SettingPanel mSettingPanel;
-    private ChatPanel mChatPanel;
+    private TalkPanel mTalkPanel;
     private Dialog mQuestionAnswerPanel;
     private DialogFragment mWhiteBoardManagePanel;
 
@@ -197,6 +197,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void initPanel() {
         switch(mUser) {
             case TEACHER:
+            case ASSISTANT:
+            case REMOTE_ASSISTANT:
                 //老师的权限最大，所以都可以使用
                 break;
             case STUDENT:
@@ -204,12 +206,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 mCourseWareBtn.setVisibility(View.GONE);
                 mMainScreenSettingBtn.setVisibility(View.GONE);
                 break;
-            case ADMIN:
-                mLeftPanel.setVisibility(View.GONE);
-                mMainScreenSettingBtn.setVisibility(View.GONE);
-                mPlayPauseBtn.setVisibility(View.GONE);
-                break;
-            case AUDIT:
+            case ADMINISTRATOR:
+            case AUDITOR:
+            case MANAGER:
                 mLeftPanel.setVisibility(View.GONE);
                 mMainScreenSettingBtn.setVisibility(View.GONE);
                 mPlayPauseBtn.setVisibility(View.GONE);
@@ -370,13 +369,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 openAllMessage();
                 break;
             case R.id.contact_btn:
-                openChat(ChatPanel.MODE_CONTACT);
+                openChat(TalkPanel.MODE_CONTACT);
                 break;
             case R.id.qa_btn:
                 openQuestionAnswer();
                 break;
             case R.id.chat_btn:
-                openChat(ChatPanel.MODE_CHAT);
+                openChat(TalkPanel.MODE_CHAT);
                 break;
             case R.id.wb_toolbar_btn:
                 switchWhiteBoardToolbar();
@@ -443,18 +442,18 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * 打开聊天
      */
     private void openChat(int mode) {
-        if (mChatPanel == null) {
-            mChatPanel = new ChatPanel(this);
-            mChatPanel.setPanelCallback(new PanelCallback() {
+        if (mTalkPanel == null) {
+            mTalkPanel = new TalkPanel(this);
+            mTalkPanel.setPanelCallback(new PanelCallback() {
                 @Override
                 public void onOpenPanel(int panel) {
-                    mChatPanel.close(mDrawerLayout, mRightDrawer, false);
+                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
                     openInviteFriend();
                 }
             });
         }
-        mChatPanel.with(mode).show(mDrawerLayout, mRightDrawer);
-        mOpenedPanel = mChatPanel;
+        mTalkPanel.with(mode).show(mDrawerLayout, mRightDrawer);
+        mOpenedPanel = mTalkPanel;
     }
 
     /**
