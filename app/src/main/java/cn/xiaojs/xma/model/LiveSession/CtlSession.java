@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class CtlSession {
 
     public String secret;
-    public String cs;
     public Ctl ctl;
     public boolean accessible;
     public ConnectType connected;
+    public String psType;
 
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
