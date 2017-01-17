@@ -2,11 +2,18 @@ package cn.xiaojs.xma.data.api;
 
 import android.content.Context;
 
+import com.orhanobut.logger.Logger;
+
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.LiveSession.CtlSession;
+import cn.xiaojs.xma.model.LiveSession.LiveCriteria;
+import cn.xiaojs.xma.model.LiveSession.TalkItem;
 import cn.xiaojs.xma.model.LiveSession.Ticket;
+import cn.xiaojs.xma.model.Pagination;
 import retrofit2.Call;
 
 /**
@@ -27,5 +34,23 @@ public class LiveRequest extends ServiceRequest{
 
         Call<CtlSession> call = getService().bootSession(ticket);
         enqueueRequest(APIType.BOOT_SESSION,call);
+    }
+
+    public void getTalks(String ticket, LiveCriteria criteria, Pagination pagination) {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+        Call<CollectionPage<TalkItem>> call = getService().getTalks(ticket,
+                criteriaJsonstr,
+                paginationJsonstr);
+
+        enqueueRequest(APIType.GET_TALKS,call);
+
     }
 }

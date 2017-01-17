@@ -101,6 +101,7 @@ public class APIType {
     //
     public static final int GENERATE_TICKET = 8;
     public static final int BOOT_SESSION = 80;
+    public static final int GET_TALKS = 81;
 
 
 }
