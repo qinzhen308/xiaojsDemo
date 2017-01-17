@@ -43,6 +43,15 @@ public class TeachLesson implements Serializable{
     private String state;
     private String initiator;
     private Publish publish;
+    private String ticket;
+
+    public String getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
+    }
 
     public Publish getPublish() {
         return publish;
