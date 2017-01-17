@@ -25,6 +25,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.LiveSession.CtlSession;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -158,6 +161,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Socket mSocket;
     private Boolean mSktConnected = false;
 
+    private String mTicket = "";
     private Constants.User mUser = Constants.User.STUDENT;
 
     @Override
@@ -185,6 +189,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mBinder = ButterKnife.bind(this);
         mUser = Constants.User.STUDENT;
 
+        mTicket = getIntent().getStringExtra(Constants.KEY_TICKET);
         mPanelAnimListener = new PanelAnimListener();
         //init whiteboard
         mWhiteboardController = new WhiteboardController(this, mContentRoot, mUser);
@@ -278,12 +283,24 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     private void initData() {
-        mChatImgBtn.setType(MessageImageView.TYPE_NUM);
+        /*mChatImgBtn.setType(MessageImageView.TYPE_NUM);
         mNotifyImgBtn.setType(MessageImageView.TYPE_MARK);
         int offsetY = getResources().getDimensionPixelOffset(R.dimen.px8);
         mNotifyImgBtn.setExtraOffsetY(offsetY);
         mChatImgBtn.setCount(5);
-        mNotifyImgBtn.setCount(10);
+        mNotifyImgBtn.setCount(10);*/
+
+        LiveManager.bootSession(this, mTicket, new APIServiceCallback<CtlSession>() {
+            @Override
+            public void onSuccess(CtlSession object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 
     @Override
@@ -936,8 +953,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 @Override
                 public void run() {
                     if(!mSktConnected) {
-                        Toast.makeText(ClassroomActivity.this,
-                                R.string.socket_connect, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
                         mSktConnected = true;
                     }
                 }
@@ -952,8 +968,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 @Override
                 public void run() {
                     mSktConnected = false;
-                    Toast.makeText(ClassroomActivity.this,
-                            R.string.socket_disconnect, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -965,8 +980,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(ClassroomActivity.this,
-                            R.string.socket_error_connect, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
                 }
             });
         }
