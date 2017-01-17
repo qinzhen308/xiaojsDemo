@@ -25,17 +25,20 @@ import java.util.List;
 public class WhiteboardAdapter extends PagerAdapter {
     private Context mContext;
     private List<WhiteboardLayer> mLayers;
-    private List<Whiteboard> mWhiteboards;
     private OnWhiteboardListener mOnWhiteboardListener;
+    private Whiteboard mCurrWhiteboard;
 
     public WhiteboardAdapter(Context context) {
         mContext = context;
-        mWhiteboards = new ArrayList<>();
     }
 
     public void setData(List<WhiteboardLayer> layers) {
+        setData(layers, 0);
+    }
+
+    public void setData(List<WhiteboardLayer> layers, int index) {
         mLayers = layers;
-        mWhiteboards.clear();
+        refreshData(layers, index);
     }
 
     @Override
@@ -84,6 +87,7 @@ public class WhiteboardAdapter extends PagerAdapter {
             WhiteboardLayout wbLayout = (WhiteboardLayout)object;
             Whiteboard wb = wbLayout.getWhiteboard();
             if (mOnWhiteboardListener != null) {
+                mCurrWhiteboard = wb;
                 mOnWhiteboardListener.onWhiteboardSelected(wb);
             }
         }
@@ -91,6 +95,12 @@ public class WhiteboardAdapter extends PagerAdapter {
 
     public void setOnWhiteboardListener(OnWhiteboardListener listener) {
         mOnWhiteboardListener = listener;
+    }
+
+    private void refreshData(List<WhiteboardLayer> layers, int index) {
+        if (mCurrWhiteboard != null && layers != null && layers.size() > index) {
+            mCurrWhiteboard.setLayer(layers.get(0));
+        }
     }
 
     public interface OnWhiteboardListener{

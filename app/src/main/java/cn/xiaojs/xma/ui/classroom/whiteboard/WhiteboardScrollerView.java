@@ -2,14 +2,11 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.ClassroomGestureDetector;
-import cn.xiaojs.xma.ui.classroom.ClassroomState;
+import cn.xiaojs.xma.ui.classroom.InteractiveLevel;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -46,7 +43,7 @@ public class WhiteboardScrollerView extends ViewPager {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mContext instanceof ClassroomActivity) {
-            if (((ClassroomActivity)mContext).getState() == ClassroomState.STATE_WHITE_BOARD) {
+            if (((ClassroomActivity)mContext).getInteractiveLevel() == InteractiveLevel.WHITE_BOARD) {
                 return false;
             }
         }

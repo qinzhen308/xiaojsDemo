@@ -31,4 +31,8 @@ public class Event {
      * Constant for begin
      */
     public final static String BEGIN = "begin";
+    /**
+     * Constant for sync
+     */
+    public final static String SYNC = "board:sync";
 }

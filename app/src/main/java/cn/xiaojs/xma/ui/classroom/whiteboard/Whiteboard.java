@@ -31,6 +31,8 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,8 +43,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import cn.xiaojs.xma.ui.classroom.ClassroomGestureDetector;
-import cn.xiaojs.xma.ui.classroom.ClassroomState;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.InteractiveLevel;
 import cn.xiaojs.xma.ui.classroom.socketio.Commend;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -161,12 +163,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private boolean mIsRecordedParams;
     private boolean mMeasureFinished = false;
     private boolean mInitLayer = false;
+    private boolean mNeedBitmapPool = true;
 
-    private ClassroomGestureDetector mClassroomGestureDetector;
+    private GestureDetector mClassroomGestureDetector;
 
     private UndoRedoListener mUndoRedoListener;
     private OnColorChangeListener mColorChangeListener;
-    private int mRecordGroupId;
     private int mDoodleAction;
     private List<Integer> mUndoRecordIds;
     private List<Integer> mRedoRecordIds;
@@ -195,14 +197,14 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         initParams(context);
     }
 
-    public void setGestureDetector(ClassroomGestureDetector gestureDetector) {
+    public void setGestureDetector(GestureDetector gestureDetector) {
         mClassroomGestureDetector = gestureDetector;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mClassroomGestureDetector != null) {
-            if (ClassroomState.STATE_WHITE_BOARD == mClassroomGestureDetector.getState()) {
+            if (InteractiveLevel.WHITE_BOARD == getInteractiveLevel()) {
                 mClassroomGestureDetector.onTouchEvent(event);
                 mViewGestureListener.onTouchEvent(event);
                 return true;
@@ -212,6 +214,15 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         } else {
             return false;
         }
+    }
+
+    private int getInteractiveLevel() {
+        Context cxt = getContext();
+        if (cxt instanceof ClassroomActivity) {
+            return ((ClassroomActivity) cxt).getInteractiveLevel();
+        }
+
+        return InteractiveLevel.MAIN_PANEL;
     }
 
     @Override
@@ -345,16 +356,53 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         postInvalidate();
     }
 
+    public void setNeedBitmapPool(boolean needBitmapPool) {
+        mNeedBitmapPool = needBitmapPool;
+    }
+
     public void setLayer(WhiteboardLayer layer) {
         mLayer = layer;
         mAllDoodles = layer.getAllDoodles();
         mReDoStack = layer.getReDoStack();
+        mUndoRecordIds = layer.getUndoRecordIds();
+        mRedoRecordIds = layer.getRedoRecordIds();
+
+        forceCenter();
+
+        if (mUndoRedoListener != null) {
+            mUndoRedoListener.onUndoRedoStackChanged();
+        }
+        mSelector.reset();
+        mDoodle = null;
+
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
                 d.setWhiteboard(this);
             }
         }
-        invalidate();
+
+        if (mDoodleCanvas != null) {
+            drawAllDoodlesCanvas();
+        }
+
+        if (mNeedBitmapPool) {
+            mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
+        }
+        postInvalidate();
+    }
+
+    /**
+     * 强制是白板居中
+     */
+    private void forceCenter() {
+        if (mBlackboardWidth > 0 && mBlackboardHeight > 0 && mViewWidth > 0 && mViewHeight > 0) {
+            mViewGestureListener.reset();
+        }
+    }
+
+    public void onWhiteboardSelected() {
+        setGeometryShapeId(GeometryShape.RECTANGLE);
+        switchMode(Whiteboard.MODE_NONE);
     }
 
     public void setCourseUri(Uri uri) {
@@ -387,14 +435,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mInputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         mPreviousPoint = new PointF();
-
+        mSelector = new Selector(this);
         WhiteboardConfigs.init(getContext());
-
-        mUndoRecordIds = new ArrayList<Integer>();
-        mRedoRecordIds = new ArrayList<Integer>();
-
-        mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
-        mSocket = SocketManager.getSocket();
     }
 
     @Override
@@ -469,11 +511,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
             switch (mCurrentMode) {
                 case MODE_SELECTION:
-                    if (mSelector != null) {
-                        mSelector.setBorderVisible(true);
-                        if (mSelector.getState() == Doodle.STATE_EDIT) {
-                            mSelectionRectRegion = mSelector.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
-                        }
+                    mSelector.setBorderVisible(true);
+                    if (mSelector.getState() == Doodle.STATE_EDIT) {
+                        mSelectionRectRegion = mSelector.checkPressedRegion(mDownPoint.x ,mDownPoint.y);
                     }
                     break;
                 case MODE_TEXT:
@@ -611,7 +651,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     }
                     break;
                 case MODE_SELECTION:
-                    if (mCanMovable && mSelector != null) {
+                    if (mCanMovable) {
                         if (!mIsRecordedParams) {
                             mIsRecordedParams = true;
                             mPreviousPoint.x = x;
@@ -676,26 +716,24 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             //update current doodle state
             switch (mCurrentMode) {
                 case MODE_SELECTION:
-                    if (mSelector != null) {
-                        if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
-                            int intersectCount = mCanMovable ? mSelector.checkIntersect() :
-                                    mSelector.checkSingleIntersect(event.getX(), event.getY());
-                            if (intersectCount <= 0) {
-                                mSelector.reset();
-                            } else {
-                                mSelector.setState(Doodle.STATE_EDIT);
-                                mSelectionRectRegion = IntersectionHelper.RECT_BODY;
-                            }
-                            postInvalidate();
+                    if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
+                        int intersectCount = mCanMovable ? mSelector.checkIntersect() :
+                                mSelector.checkSingleIntersect(event.getX(), event.getY());
+                        if (intersectCount <= 0) {
+                            mSelector.reset();
+                        } else {
+                            mSelector.setState(Doodle.STATE_EDIT);
+                            mSelectionRectRegion = IntersectionHelper.RECT_BODY;
                         }
+                        postInvalidate();
+                    }
 
-                        if (mDoodleAction != Action.NO_ACTION) {
-                            //add action
-                            addRecords(mDoodleAction);
+                    if (mDoodleAction != Action.NO_ACTION) {
+                        //add action
+                        addRecords(mDoodleAction);
 
-                            if (mDoodleAction == Action.DELETE_ACTION) {
-                                mSelector.reset();
-                            }
+                        if (mDoodleAction == Action.DELETE_ACTION) {
+                            mSelector.reset();
                         }
                     }
                     break;
@@ -952,7 +990,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         eraserAllDoodle();
         //draw background
-        mDoodleCanvas.drawColor(Color.argb(255, 230, 230, 230));
+        mDoodleCanvas.drawColor(Color.argb(255, 255, 255, 255));
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
                 d.setDrawingMatrix(mDrawingMatrix);
@@ -967,7 +1005,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mDoodleCanvas == null) {
             int w = mBlackboardWidth;
             int h = mBlackboardHeight;
-            mDoodleBitmap = mDoodleBitmapPool.getBitmap(w, h);
+            mDoodleBitmap = mDoodleBitmapPool != null ? mDoodleBitmapPool.getBitmap(w, h) : null;
             if (mDoodleBitmap == null) {
                 mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
             }
@@ -980,7 +1018,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void addEditText(float x, float y, boolean center) {
-        if (!(mDoodle instanceof TextWriting)) {
+        if (!(mDoodle instanceof TextWriting) || mEditText == null) {
             return;
         }
 
@@ -1028,23 +1066,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public void switchMode(int mode) {
         mCurrentMode = mode;
 
-        if (mode == MODE_SELECTION) {
-            if (mSelector == null) {
-                mSelector = new Selector(this);
-            }
-        } else {
-            if (mSelector != null) {
-                mSelector.reset();
-                postInvalidate();
-            }
-        }
-
+        mSelector.reset();
         if (mDoodle != null) {
             drawToDoodleCanvas();
             mDoodle.setState(Doodle.STATE_IDLE);
             mDoodle = null;
-            postInvalidate();
         }
+        postInvalidate();
 
         //test
         if (mBlackboardWidth > 0 && mBlackboardHeight > 0) {
@@ -1098,18 +1126,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         StringBuilder sb = new StringBuilder();
         switch (mCurrentMode) {
             case MODE_SELECTION:
-                if (mSelector != null) {
-                    mSelector.updateDoodleColor(color);
-                    drawAllDoodlesCanvas();
-                    postInvalidate();
+                mSelector.updateDoodleColor(color);
+                drawAllDoodlesCanvas();
+                postInvalidate();
 
-                    if (mAllDoodles != null) {
-                        for (Doodle d : mAllDoodles) {
-                            if (d.getState() == Doodle.STATE_EDIT) {
-                                String cmd = Packer.getChangeColorCmd(d, false);
-                                sb.append(cmd);
-                                sb.append(" ");
-                            }
+                if (mAllDoodles != null) {
+                    for (Doodle d : mAllDoodles) {
+                        if (d.getState() == Doodle.STATE_EDIT) {
+                            String cmd = Packer.getChangeColorCmd(d, false);
+                            sb.append(cmd);
+                            sb.append(" ");
                         }
                     }
                 }
@@ -1202,7 +1228,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             }
 
             //draw background
-            mDoodleCanvas.drawColor(Color.argb(255, 230, 230, 230));
+            mDoodleCanvas.drawColor(Color.argb(255, 255, 255, 255));
 
             if (mSelector != null) {
                 mSelector.reset();
@@ -1217,7 +1243,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     public void recycle() {
-        mDoodleBitmapPool.recycle(mDoodleBitmap);
+        if (mDoodleBitmapPool != null) {
+            mDoodleBitmapPool.recycle(mDoodleBitmap);
+        } else {
+            if (mDoodleBitmap != null && !mDoodleBitmap.isRecycled()) {
+                mDoodleBitmap.recycle();
+            }
+        }
 
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
@@ -1250,7 +1282,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public void release() {
         recycle();
-        mDoodleBitmapPool.release();
+        if (mDoodleBitmapPool != null) {
+            mDoodleBitmapPool.release();
+        }
     }
 
     public void transformation(MotionEvent event) {
@@ -1285,9 +1319,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
                 if (lastRecord.action == Action.ADD_ACTION) {
                     it.remove();
-                    if (mSelector != null) {
-                        mSelector.reset();
-                    }
+                    mSelector.reset();
                 } else if (prevRecord != null){
                     if (lastRecord.action == Action.DELETE_ACTION) {
                         doodle.setVisibility(View.VISIBLE);
@@ -1317,9 +1349,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
             if (hasUndo) {
                 mDoodle = null;
-                if (mSelector != null) {
-                    mSelector.reset();
-                }
+                mSelector.reset();
                 mUndoRecordIds.remove(mUndoRecordIds.size() - 1);
                 mRedoRecordIds.add(groupId);
                 drawAllDoodlesCanvas();
@@ -1388,9 +1418,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
             if (hasRedo) {
                 mDoodle = null;
-                if (mSelector != null) {
-                    mSelector.reset();
-                }
+                mSelector.reset();
 
                 mRedoRecordIds.remove(mRedoRecordIds.size() - 1);
                 mUndoRecordIds.add(groupId);
@@ -1415,11 +1443,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             return;
         }
 
-        doodle.addRecords(action, mRecordGroupId);
+        doodle.addRecords(action, mLayer.getRecordGroupId());
         mReDoStack.clear();
         mRedoRecordIds.clear();
-        mUndoRecordIds.add(mRecordGroupId);
-        mRecordGroupId++;
+        mUndoRecordIds.add(mLayer.getRecordGroupId());
+        mLayer.incrementGroupId();
         if (mUndoRedoListener != null) {
             mUndoRedoListener.onUndoRedoStackChanged();
         }
@@ -1439,7 +1467,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             for (Doodle doodle : allDoodles) {
                 if (doodle.getState() == Doodle.STATE_EDIT) {
                     hasRecords = true;
-                    doodle.addRecords(action, mRecordGroupId);
+                    doodle.addRecords(action, mLayer.getRecordGroupId());
 
                     String cmd = getSendCommend(doodle, action, false);
                     sb.append(cmd);
@@ -1453,8 +1481,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             }
 
             if (mUndoRedoListener != null && hasRecords) {
-                mUndoRecordIds.add(mRecordGroupId);
-                mRecordGroupId++;
+                mUndoRecordIds.add(mLayer.getRecordGroupId());
+                mLayer.incrementGroupId();
                 mUndoRedoListener.onUndoRedoStackChanged();
             }
 
@@ -1565,11 +1593,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     @Override
     public void onReceive(List<CommendLine> data) {
-        if (data != null && !data.isEmpty()) {
+        if (data != null && !data.isEmpty() && (mLayer != null && mLayer.isCanReceive())) {
             for (CommendLine cmdl : data) {
                 List<Commend> cmdList = cmdl.whiteboardCommends;
                 if (cmdList != null && !cmdList.isEmpty()) {
                     for (Commend cmd : cmdList) {
+                        Log.i("aaa", ">>>>>>>>>>>>>> receive="+cmd);
                         handleReceiveCmd(cmd);
                     }
                 }
@@ -1582,9 +1611,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     @Override
     public void onSend(String cmd) {
-        if (mSocket != null && !TextUtils.isEmpty(cmd)) {
+        mSocket = SocketManager.getSocket();
+        if (!TextUtils.isEmpty(cmd)&& (mLayer != null && mLayer.isCanSend())) {
             Log.i("aaa", "************ send="+cmd);
             mSocket.emit(Event.BOARD, cmd);
+            mSocket.emit(Event.SYNC);
         }
     }
 
@@ -1613,7 +1644,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             Doodle d = findDoodleById(cmd.id);
             if (d != null) {
                 d.setVisibility(View.GONE);
-                //mAllDoodles.remove(doodle);
+                mAllDoodles.remove(d);
             }
             drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.CLEAR.equals(cmd.cm)) {
@@ -1626,18 +1657,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.ROTATE_A.equalsIgnoreCase(cmd.cm)) {
             //rotate doodle: by doodle center
-            if (ProtocolConfigs.ROTATE_A.equals(cmd.cm)) {
-
-            } else {
-
-            }
+            Doodle d = findDoodleById(cmd.id);
+            boolean absolute = ProtocolConfigs.ROTATE_A.equals(cmd.cm);
+            rotateDoodle(params, d, absolute);
+            drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.ZOOM_A.equalsIgnoreCase(cmd.cm)) {
             //scale doodle: by doodle center
-            if (ProtocolConfigs.ZOOM_A.equals(cmd.cm)) {
-
-            } else {
-
-            }
+            Doodle d = findDoodleById(cmd.id);
+            boolean absolute = ProtocolConfigs.ZOOM_A.equals(cmd.cm);
+            scaleDoodle(params, d, absolute);
+            drawAllDoodlesCanvas();
         } else if (ProtocolConfigs.CHANGE_COLOR.equals(cmd.cm)){
             //change color
             Doodle doodle = findDoodleById(cmd.id);
@@ -1666,10 +1695,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 j++;
                 switch (j % 2) {
                     case 1:
-                        x = Integer.parseInt(params[i]) / ProtocolConfigs.VIRTUAL_WIDTH;
+                        x = Integer.parseInt(params[i]) / (float)ProtocolConfigs.VIRTUAL_WIDTH;
                         break;
                     case 0:
-                        y = Integer.parseInt(params[i]) / ProtocolConfigs.VIRTUAL_HEIGHT;
+                        y = Integer.parseInt(params[i]) / (float)ProtocolConfigs.VIRTUAL_HEIGHT;
                         doodle.addControlPoint(x, y);
                         break;
                 }
@@ -1694,7 +1723,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void changePaintStyle(String[] params) {
-        if (params == null) {
+        if (params == null || params.length == 0) {
             return;
         }
 
@@ -1704,9 +1733,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             } else if (params.length > 1) {
                 mPaintStrokeWidth = Integer.parseInt(params[0]);
                 mPaintColor = Utils.getColor(params[1], mPaintColor);
-                if (mColorChangeListener != null) {
-                    mColorChangeListener.onColorChanged(mPaintColor);
-                }
             }
         } catch (Exception e) {
 
@@ -1714,7 +1740,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private boolean moveDoodle(String[] params, Doodle doodle, boolean absolute) {
-        if (params == null || doodle == null) {
+        if (params == null || params.length == 0 || doodle == null) {
             return false;
         }
 
@@ -1732,6 +1758,57 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
             doodle.move(x, y);
             return true;
+        } catch (Exception e) {
+
+        }
+
+        return false;
+    }
+
+    private boolean scaleDoodle(String[] params, Doodle doodle, boolean absolute) {
+        if (params == null || params.length == 0 || doodle == null) {
+            return false;
+        }
+
+        try {
+            RectF rectF = doodle.getDoodleRect();
+            int oldW = (int)(rectF.width() * ProtocolConfigs.VIRTUAL_WIDTH);
+            int oldH = (int)(rectF.height() * ProtocolConfigs.VIRTUAL_HEIGHT);
+            int w = oldW;
+            int h = oldH;
+            if (absolute) {
+                if (params.length == 1) {
+                    w = Integer.parseInt(params[0]);
+                } else if (params.length > 1) {
+                    w = Integer.parseInt(params[0]);
+                    h = Integer.parseInt(params[1]);
+                }
+                float scale = w / (float)oldW;
+                doodle.scale(scale);
+            } else {
+                float scale = Float.parseFloat(params[0]);
+                doodle.scale(scale);
+            }
+        } catch (Exception e) {
+
+        }
+
+        return false;
+    }
+
+    private boolean rotateDoodle(String[] params, Doodle doodle, boolean absolute) {
+        if (params == null || params.length == 0 || doodle == null) {
+            return false;
+        }
+
+        try {
+            float degree = Float.parseFloat(params[0]);
+            if (absolute) {
+                float oldDegree = doodle.getTotalDegree();
+                doodle.rotate(degree - oldDegree);
+            } else {
+                doodle.scale(degree);
+            }
         } catch (Exception e) {
 
         }

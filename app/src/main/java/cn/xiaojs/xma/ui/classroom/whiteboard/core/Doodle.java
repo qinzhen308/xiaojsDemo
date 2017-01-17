@@ -165,7 +165,7 @@ public abstract class Doodle implements Transformation {
         mTotalDegree = degree;
     }
 
-    public RectF getRect() {
+    public RectF getTransRect() {
         return mTransRect;
     }
 
@@ -205,6 +205,10 @@ public abstract class Doodle implements Transformation {
         if (rect != null) {
             mDoodleRect.set(rect);
         }
+    }
+
+    public RectF getDoodleRect() {
+        return mDoodleRect;
     }
 
     //==========================getter and setter==========================================

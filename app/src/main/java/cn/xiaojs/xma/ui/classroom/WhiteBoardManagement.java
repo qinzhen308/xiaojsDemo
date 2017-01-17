@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.document.DocumentActivity;
-import retrofit2.http.PUT;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -43,6 +43,8 @@ import retrofit2.http.PUT;
 
 public class WhiteBoardManagement extends DialogFragment implements AdapterView.OnItemClickListener {
     public static final String WHITE_BOARD_COLL = "white_board_coll";
+    public static final String WHITE_BOARD_CLIENT = "white_board_client";
+
     private static final int NUM_COLUMN = 4;
     private static final int MAX_COUNT = 8;
 
@@ -64,6 +66,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
 
     private ArrayList<WhiteboardCollection> mCollections;
     private String mLiveWhiteboardName;
+    private Constants.User mUser = Constants.User.TEACHER;
 
 
     @Override
@@ -152,6 +155,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         Bundle data = getArguments();
         if (data != null) {
             mCollections = data.getParcelableArrayList(WHITE_BOARD_COLL);
+            mUser = (Constants.User) data.getSerializable(WHITE_BOARD_CLIENT);
             mWbAdapter.setData(mCollections);
         }
 
@@ -180,6 +184,18 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                 case R.id.add_white_board:
                     //add default board
                     WhiteboardCollection wbColl = new WhiteboardCollection();
+                    //TODO test
+                    for (int i = 0; i < count; i++) {
+                        WhiteboardLayer layer = new WhiteboardLayer();
+                        if (mUser == Constants.User.STUDENT) {
+                            layer.setCanSend(false);
+                            layer.setCanReceive(true);
+                        } else {
+                            layer.setCanSend(true);
+                            layer.setCanReceive(false);
+                        }
+                        wbColl.addWhiteboardLayer(layer);
+                    }
                     if (mContext instanceof ClassroomActivity) {
                         ((ClassroomActivity)mContext).onAddWhiteboardCollection(wbColl);
                     }
@@ -298,11 +314,11 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
             holder.title.setText(wbColl.isLive() ? mLiveWhiteboardName : wbColl.getName());
             holder.cover.setBackgroundColor(Color.GRAY);
 
-            if (mRemoveMode) {
+            if (!mRemoveMode || (wbColl.isLive() && mUser == Constants.User.STUDENT)) {
+                holder.removeBtn.setVisibility(View.GONE);
+            } else {
                 holder.removeBtn.setVisibility(View.VISIBLE);
                 holder.removeBtn.setTag(wbColl);
-            } else {
-                holder.removeBtn.setVisibility(View.GONE);
             }
         }
 
