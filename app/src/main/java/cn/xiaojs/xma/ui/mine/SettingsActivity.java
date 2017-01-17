@@ -46,7 +46,7 @@ public class SettingsActivity extends BaseActivity {
         setMiddleTitle(R.string.settings);
     }
 
-    @OnClick({R.id.left_view, R.id.exit_login, R.id.mobile_network_set_layout, R.id.message_notify_set,
+    @OnClick({R.id.left_view, R.id.exit_login, R.id.message_notify_set,
             R.id.account_safe, R.id.clear_cache_layout, R.id.feedback_help, R.id.about_us})
     public void onClick(View v) {
         switch (v.getId()) {
@@ -55,8 +55,6 @@ public class SettingsActivity extends BaseActivity {
                 break;
             case R.id.exit_login:
                 exitLogin();
-                break;
-            case R.id.mobile_network_set_layout:
                 break;
             case R.id.message_notify_set:
                 break;

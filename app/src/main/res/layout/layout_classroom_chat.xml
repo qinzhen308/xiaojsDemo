@@ -19,13 +19,13 @@
                 android:orientation="horizontal">
 
             <LinearLayout
+                    android:id="@+id/discussion_tab"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:gravity="center_vertical"
                     android:layout_height="@dimen/px80"
                     android:paddingLeft="@dimen/px20"
-                    android:paddingRight="@dimen/px20"
-                    android:background="@color/classroom_chat_bg">
+                    android:paddingRight="@dimen/px20">
 
                 <TextView
                         android:layout_weight="1"
@@ -45,6 +45,7 @@
             </LinearLayout>
 
             <LinearLayout
+                    android:id="@+id/single_chat_tab"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:gravity="center_vertical"

@@ -9,7 +9,8 @@
             android:id="@+id/mobile_network_set_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/MinePageItem">
+            style="@style/MinePageItem"
+            android:background="@color/white">
 
         <TextView
                 android:layout_alignParentLeft="true"

@@ -158,7 +158,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Socket mSocket;
     private Boolean mSktConnected = false;
 
-    private Constants.User mUser = Constants.User.TEACHER;
+    private Constants.User mUser = Constants.User.STUDENT;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
