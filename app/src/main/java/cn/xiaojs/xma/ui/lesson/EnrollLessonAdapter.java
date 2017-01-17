@@ -56,8 +56,8 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
-    public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView, boolean autoLoad) {
-        super(context, listView, autoLoad);
+    public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView) {
+        super(context, listView);
         bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_portrait);
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
