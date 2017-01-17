@@ -36,6 +36,10 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.BOOT_SESSION:
+                break;
+            case APIType.GENERATE_TICKET:
+                break;
             case APIType.UNFOLLOW_CONTACT:
                 if (errorCode.equals(Errors.INVALID_OPERATION)) {
                     errorMessage = "您未关注此人";

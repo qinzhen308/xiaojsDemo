@@ -142,6 +142,28 @@ public class Errors {
 
     //endregion
 
+    //region CTL & Live Sessions
+
+    // Teacher rejected or not invited.
+    public static final String TEACHER_NOT_INVITED = "0x30000001";
+
+    // Class inaccessible now.
+    public static final String CLASS_NOT_READY = "0x30000002";
+
+    // Not involved in a class.
+    public static final String CLASS_NOT_INVOLVED = "0x30000003";
+
+    // Recipient not connected or is invalid.
+    public static final String RECIPIENT_NOT_FOUND = "0x30000004";
+
+    // Content contains illegal words or phrases.
+    public static final String CONTENT_VIOLATION = "0x30000005";
+
+    // Not attended the live session.
+    public static final String ABSENT_FROM_CLASS = "0x30000006";
+
+    //endregion
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
