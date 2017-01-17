@@ -31,6 +31,9 @@ public class CloseFriendActivity extends BaseActivity {
     @BindView(R.id.lv)
     ListView listView;
 
+    @BindView(R.id.v_empty)
+    View emptyView;
+
     private ChoiceAdapter adapter;
 
     @Override
@@ -90,7 +93,8 @@ public class CloseFriendActivity extends BaseActivity {
 
     private void updateAdapter(ArrayList<Contact> contacts) {
 
-        if (contacts == null) {
+        if (contacts == null || contacts.size() == 0) {
+            showEmptyView();
             return;
         }
 
@@ -114,6 +118,10 @@ public class CloseFriendActivity extends BaseActivity {
 
     }
 
+    private void showEmptyView() {
+        emptyView.setVisibility(View.VISIBLE);
+    }
+
     private void getCloseFriend(ArrayList<Contact> econtacts) {
 
         ArrayList<Contact> contacts = new ArrayList<>();
@@ -135,8 +143,10 @@ public class CloseFriendActivity extends BaseActivity {
 
             @Override
             public void loadCompleted(ArrayList<ContactGroup> contacts) {
-                if (contacts == null || contacts.size()==0)
+                if (contacts == null || contacts.size()==0){
+                    showEmptyView();
                     return;
+                }
                 updateAdapter(contacts.get(0).collection);
             }
         });

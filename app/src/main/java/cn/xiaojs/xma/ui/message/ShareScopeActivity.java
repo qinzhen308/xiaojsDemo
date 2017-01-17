@@ -67,6 +67,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
                 R.id.title,
                 shareScopes);
 
+        listView.setBackgroundColor(getResources().getColor(R.color.white));
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
