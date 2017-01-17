@@ -5,7 +5,9 @@ import android.content.Context;
 import cn.xiaojs.xma.data.api.LiveRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.LiveSession.Attendee;
 import cn.xiaojs.xma.model.LiveSession.CtlSession;
+import cn.xiaojs.xma.model.LiveSession.LiveCollection;
 import cn.xiaojs.xma.model.LiveSession.LiveCriteria;
 import cn.xiaojs.xma.model.LiveSession.TalkItem;
 import cn.xiaojs.xma.model.LiveSession.Ticket;
@@ -66,5 +68,18 @@ public class LiveManager {
 
         LiveRequest request = new LiveRequest(context,callback);
         request.getTalks(ticket,criteria,pagination);
+    }
+
+    /**
+     * Returns participants currently joined the specific live session.
+     * @param context
+     * @param ticket
+     * @param callback
+     */
+    public static void getAttendees(Context context,
+                                    String ticket,
+                                    APIServiceCallback<LiveCollection<Attendee>> callback) {
+        LiveRequest request = new LiveRequest(context,callback);
+        request.getAttendees(ticket);
     }
 }

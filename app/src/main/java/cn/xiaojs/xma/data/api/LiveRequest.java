@@ -9,7 +9,9 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.LiveSession.Attendee;
 import cn.xiaojs.xma.model.LiveSession.CtlSession;
+import cn.xiaojs.xma.model.LiveSession.LiveCollection;
 import cn.xiaojs.xma.model.LiveSession.LiveCriteria;
 import cn.xiaojs.xma.model.LiveSession.TalkItem;
 import cn.xiaojs.xma.model.LiveSession.Ticket;
@@ -52,5 +54,10 @@ public class LiveRequest extends ServiceRequest{
 
         enqueueRequest(APIType.GET_TALKS,call);
 
+    }
+
+    public void getAttendees(String ticket) {
+        Call<LiveCollection<Attendee>> call = getService().getAttendees(ticket);
+        enqueueRequest(APIType.GET_ATTENDEES,call);
     }
 }
