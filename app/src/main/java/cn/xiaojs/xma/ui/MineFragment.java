@@ -85,7 +85,7 @@ public class MineFragment extends BaseFragment {
         loadData();
     }
 
-    @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout,
+    @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,
             R.id.my_favorites_layout, R.id.teach_ability_layout, R.id.name_auth_layout, R.id.person_home})
     public void onClick(View v) {
         switch (v.getId()) {

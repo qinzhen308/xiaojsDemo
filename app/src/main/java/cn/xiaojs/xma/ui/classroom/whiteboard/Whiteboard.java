@@ -1228,7 +1228,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             }
 
             //draw background
-            mDoodleCanvas.drawColor(Color.argb(255, 230, 230, 230));
+            mDoodleCanvas.drawColor(Color.argb(255, 255, 255, 255));
 
             if (mSelector != null) {
                 mSelector.reset();
