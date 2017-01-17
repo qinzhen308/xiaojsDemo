@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 
-public class ChatPanel extends Panel implements View.OnClickListener, ContactBookAdapter.OnContactBookListener {
+public class TalkPanel extends Panel implements View.OnClickListener, ContactBookAdapter.OnContactBookListener {
     public final static int MODE_CONTACT = 0;
     public final static int MODE_CHAT = 1;
 
@@ -32,10 +32,10 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
     private ContactBookAdapter mContactBookAdapter;
 
     private ListView mChatContactLv;
-    private ChatSimpleContactAdapter mChatContactAdapter;
+    private TalkSimpleContactAdapter mChatContactAdapter;
 
     private ListView mChatMsgLv;
-    private ChatMsgAdapter mChatMsgAdapter;
+    private TalkMsgAdapter mTalkMsgAdapter;
 
     private View mContactView;
     private View mChatView;
@@ -61,16 +61,16 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
 
     private PanelCallback mCallback;
 
-    public ChatPanel(Context context) {
+    public TalkPanel(Context context) {
         super(context);
     }
 
-    public ChatPanel with(int mode) {
+    public TalkPanel with(int mode) {
         mCurrentMode = mode;
         return this;
     }
 
-    public ChatPanel setPanelCallback(PanelCallback callback) {
+    public TalkPanel setPanelCallback(PanelCallback callback) {
         mCallback = callback;
         return this;
     }
@@ -201,7 +201,7 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
 
     private void setChatSimpleContactData(boolean dataChanged) {
         if (mChatContactAdapter == null) {
-            mChatContactAdapter = new ChatSimpleContactAdapter(mContext);
+            mChatContactAdapter = new TalkSimpleContactAdapter(mContext);
             mChatContactLv.setAdapter(mChatContactAdapter);
             mChatContactLv.setDividerHeight(0);
         } else {
@@ -213,14 +213,14 @@ public class ChatPanel extends Panel implements View.OnClickListener, ContactBoo
     }
 
     private void setChatMsgData(boolean dataChanged) {
-        if (mChatMsgAdapter == null) {
-            mChatMsgAdapter = new ChatMsgAdapter(mContext);
-            mChatMsgLv.setAdapter(mChatMsgAdapter);
+        if (mTalkMsgAdapter == null) {
+            mTalkMsgAdapter = new TalkMsgAdapter(mContext);
+            mChatMsgLv.setAdapter(mTalkMsgAdapter);
             mChatMsgLv.setDividerHeight(0);
         } else {
             //TODO set data
             if (dataChanged) {
-                mChatMsgAdapter.notifyDataSetChanged();
+                mTalkMsgAdapter.notifyDataSetChanged();
             }
         }
     }
