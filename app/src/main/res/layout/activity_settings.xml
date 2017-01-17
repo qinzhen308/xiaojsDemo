@@ -4,6 +4,113 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <!--设置-->
+    <RelativeLayout
+            android:id="@+id/mobile_network_set_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/MinePageItem">
+
+        <TextView
+                android:layout_alignParentLeft="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/px26"
+                android:text="@string/mobile_network_watch_live"/>
+
+
+        <ToggleButton
+                android:layout_alignParentRight="true"
+                android:id="@+id/mobile_network_watch_live"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/toggle_btn_selector"
+                android:textOff=""
+                android:textOn=""/>
+    </RelativeLayout>
+
+    <View
+            style="@style/DividerHorizontal2"/>
+
+    <!--消息提醒设置-->
+    <TextView
+            android:id="@+id/message_notify_set"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_notify_set"
+            android:textStyle="normal"
+            style="@style/MinePageItem"/>
+
+    <View
+            style="@style/DividerHorizontal2"/>
+
+    <!--账号安全-->
+    <TextView
+            android:id="@+id/account_safe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/account_safe"
+            android:textStyle="normal"
+            style="@style/MinePageItem"/>
+
+    <View
+            style="@style/DividerHorizontal2"/>
+
+    <!--清除缓存-->
+    <RelativeLayout
+            android:id="@+id/clear_cache_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/MinePageItem">
+
+        <TextView
+                android:layout_alignParentLeft="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/px26"
+                android:text="@string/clear_cache"/>
+
+        <TextView
+                android:id="@+id/clear_cache"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/enter_clear_cache"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/px26"
+                android:layout_marginRight="@dimen/px20"/>
+
+        <ImageView
+                android:id="@+id/enter_clear_cache"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_entrance"/>
+    </RelativeLayout>
+
+
+    <!--反馈帮助-->
+    <TextView
+            android:id="@+id/feedback_help"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/feedback_help"
+            android:textStyle="normal"
+            style="@style/MinePageItem"/>
+
+    <View
+            style="@style/DividerHorizontal2"/>
+
+    <!--关于我们-->
+    <TextView
+            android:id="@+id/about_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_us"
+            android:textStyle="normal"
+            style="@style/MinePageItem"/>
 
     <Button
             android:id="@+id/exit_login"
@@ -11,8 +118,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/BigSubmitBtn"
-            android:layout_marginLeft="@dimen/px80"
-            android:layout_marginRight="@dimen/px80"
+            android:layout_marginLeft="@dimen/px57"
+            android:layout_marginRight="@dimen/px57"
             android:text="@string/exit_login"/>
 
 </LinearLayout>
