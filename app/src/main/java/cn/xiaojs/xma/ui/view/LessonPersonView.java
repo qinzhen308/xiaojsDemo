@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.widget;
+package cn.xiaojs.xma.ui.view;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,7 +9,7 @@ package cn.xiaojs.xma.ui.widget;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/12/19
+ * Date:2017/1/15
  * Desc:
  *
  * ======================================================================================== */
@@ -18,70 +18,62 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.Date;
-
 import butterknife.BindView;
-import cn.xiaojs.xma.R;
-
 import butterknife.ButterKnife;
-import cn.xiaojs.xma.ui.view.AnimationView;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
-public class LiveProgress extends LinearLayout {
+public class LessonPersonView extends LinearLayout {
 
-    @BindView(R.id.live_progress_cur_time)
-    TextView curTime;
-    @BindView(R.id.live_progress_total_time)
-    TextView totalTime;
-    @BindView(R.id.live_progress)
-    ProgressBar progress;
+    @BindView(R.id.image1)
+    RoundedImageView image1;
+    @BindView(R.id.image2)
+    RoundedImageView image2;
+    @BindView(R.id.image3)
+    RoundedImageView image3;
 
-    @BindView(R.id.animation)
-    AnimationView animation;
-    @BindView(R.id.live_progress_cur_state)
-    TextView state;
+    @BindView(R.id.name1)
+    TextView name1;
+    @BindView(R.id.name2)
+    TextView name2;
+    @BindView(R.id.name3)
+    TextView name3;
 
-    public LiveProgress(Context context) {
+    @BindView(R.id.desc1)
+    TextView desc1;
+    @BindView(R.id.desc2)
+    TextView desc2;
+    @BindView(R.id.desc3)
+    TextView desc3;
+
+    public LessonPersonView(Context context) {
         super(context);
         init();
     }
 
-    public LiveProgress(Context context, AttributeSet attrs) {
+    public LessonPersonView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public LiveProgress(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LessonPersonView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(21)
-    public LiveProgress(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public LessonPersonView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
     private void init() {
         setOrientation(HORIZONTAL);
-        inflate(getContext(), R.layout.layout_live_progress, this);
+        inflate(getContext(), R.layout.layout_lesson_person_view, this);
         ButterKnife.bind(this);
     }
 
 
-    public void animation(boolean enable) {
-        if (enable) {
-            animation.setVisibility(VISIBLE);
-            state.setVisibility(VISIBLE);
-        } else {
-            animation.setVisibility(GONE);
-            state.setVisibility(GONE);
-        }
-    }
-
-    public void show(Date cur,Date total){
-
-    }
 }
