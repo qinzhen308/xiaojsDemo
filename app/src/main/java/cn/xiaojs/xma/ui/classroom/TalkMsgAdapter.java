@@ -17,36 +17,43 @@ package cn.xiaojs.xma.ui.classroom;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.AbsListView;
 import android.widget.TextView;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TalkMsgAdapter extends BaseAdapter{
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
+import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.ui.classroom.im.TalkBean;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.TimeUtil;
+
+public class TalkMsgAdapter extends AbsChatAdapter<TalkBean, TalkMsgAdapter.Holder> {
     public final static int TYPE_MY_SPEAKER = 0;
     public final static int TYPE_OTHER_SPEAKER = 1;
 
     private Context mContext;
 
-    public TalkMsgAdapter(Context context) {
+    public TalkMsgAdapter(Context context, PullToRefreshListView listView) {
+        super(context, listView);
         mContext = context;
     }
 
-    @Override
-    public int getCount() {
-        return 10;
+    public TalkMsgAdapter(Context context, PullToRefreshListView listView, AbsListView.OnScrollListener listener) {
+        super(context, listView);
+        mContext = context;
+        scrollListener = listener;
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+    protected void setViewContent(Holder holder, TalkBean bean, int position) {
+        holder.portrait.setImageResource(R.drawable.default_portrait);
+        holder.name.setText(bean.name);
+        holder.msg.setText(bean.content);
+        holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_HH_MM_SS));
     }
 
     @Override
@@ -55,19 +62,7 @@ public class TalkMsgAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Holder holder = null;
-        if (convertView == null) {
-            convertView = createContentView(position);
-        }
-        holder = (Holder)convertView.getTag();
-
-        bindData(holder);
-
-        return convertView;
-    }
-
-    private View createContentView(int position) {
+    protected View createContentView(int position) {
         int type = getItemViewType(position);
         View v = null;
         switch (type) {
@@ -78,25 +73,50 @@ public class TalkMsgAdapter extends BaseAdapter{
                 v = LayoutInflater.from(mContext).inflate(R.layout.layout_chat_other_speaker_item, null);
                 break;
         }
+        return v;
+    }
 
-        Holder holder = new Holder();
+    @Override
+    protected Holder initHolder(View v) {
+        Holder holder = new Holder(v);
         holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
         holder.name = (TextView) v.findViewById(R.id.name);
         holder.time = (TextView) v.findViewById(R.id.time);
         holder.msg = (TextView) v.findViewById(R.id.msg);
-        v.setTag(holder);
-        return v;
+        return holder;
     }
 
-
-    private void bindData(Holder holder) {
-        holder.portrait.setImageResource(R.drawable.default_portrait);
+    @Override
+    protected void doRequest() {
+        onSuccess(getTalkList());
     }
 
-    private class Holder {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    class Holder extends BaseHolder {
         RoundedImageView portrait;
         TextView name;
         TextView time;
         TextView msg;
+
+        public Holder(View view) {
+            super(view);
+        }
+    }
+
+    private List<TalkBean> getTalkList() {
+        List<TalkBean> talkBeanList = new ArrayList<TalkBean>();
+        for (int i = 0; i < 10; i++) {
+            TalkBean talkBean = new TalkBean();
+            talkBean.name = "学生" + i;
+            talkBean.time = System.currentTimeMillis();
+            talkBean.content = "今天要上课e" + i;
+            talkBeanList.add(talkBean);
+        }
+
+        return talkBeanList;
     }
 }

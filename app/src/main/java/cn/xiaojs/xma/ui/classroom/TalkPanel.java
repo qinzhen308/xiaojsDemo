@@ -15,18 +15,25 @@ package cn.xiaojs.xma.ui.classroom;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 
 public class TalkPanel extends Panel implements View.OnClickListener, ContactBookAdapter.OnContactBookListener {
     public final static int MODE_CONTACT = 0;
     public final static int MODE_CHAT = 1;
+
+    private final static int MULTI_TALK = 1;
+    private final static int TEACHING_TALK = 2;
+    private final static int SINGLE_TALK = 3;
 
     private ListView mContactBook;
     private ContactBookAdapter mContactBookAdapter;
@@ -34,7 +41,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private ListView mChatContactLv;
     private TalkSimpleContactAdapter mChatContactAdapter;
 
-    private ListView mChatMsgLv;
+    private PullToRefreshListView mChatMsgLv;
     private TalkMsgAdapter mTalkMsgAdapter;
 
     private View mContactView;
@@ -52,10 +59,19 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private TextView mBackTv;
 
     private ImageView mOpenContact;
-    private ImageView mDelChatTab;
+    private ImageView mDelSingleTalkBtn;
 
     private EditText mMsgInputEdt;
     private TextView mMsgSendTv;
+
+    private View mMultiTalkTab;
+    private View mSingleTalkTab;
+    private TextView mTeachTalkTab;
+    private TextView mMultiTalkTitle;
+    private TextView mSingleTalkTitle;
+
+    private int mWhiteColor;
+    private int mBlackFont;
 
     private int mCurrentMode = MODE_CONTACT;
 
@@ -63,6 +79,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
     public TalkPanel(Context context) {
         super(context);
+        initParams(context);
     }
 
     public TalkPanel with(int mode) {
@@ -73,6 +90,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     public TalkPanel setPanelCallback(PanelCallback callback) {
         mCallback = callback;
         return this;
+    }
+
+    private void initParams(Context context) {
+        mWhiteColor = context.getResources().getColor(R.color.white);
+        mBlackFont = context.getResources().getColor(R.color.font_black);
     }
 
     @Override
@@ -111,10 +133,10 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
         mContactBook = (ListView) root.findViewById(R.id.contact_book);
         mChatContactLv = (ListView) root.findViewById(R.id.chat_simple_contact);
-        mChatMsgLv = (ListView)root.findViewById(R.id.chat_msg);
+        mChatMsgLv = (PullToRefreshListView)root.findViewById(R.id.chat_msg);
 
         mOpenContact = (ImageView) root.findViewById(R.id.open_contact);
-        mDelChatTab = (ImageView) root.findViewById(R.id.del_chat_tab);
+        mDelSingleTalkBtn = (ImageView) root.findViewById(R.id.del_single_talk_btn);
 
         mDefaultContactAction = root.findViewById(R.id.default_contact_action);
         mManageContactAction = root.findViewById(R.id.manage_contact_action);
@@ -130,6 +152,16 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         mMsgSendTv = (TextView) root.findViewById(R.id.msg_send);
         mMsgInputEdt = (EditText) root.findViewById(R.id.msg_input);
 
+        mMultiTalkTab = root.findViewById(R.id.multi_talk_tab);
+        mSingleTalkTab = root.findViewById(R.id.single_talk_tab);
+        mTeachTalkTab = (TextView)root.findViewById(R.id.teaching_talk_tab);
+        mMultiTalkTitle = (TextView)root.findViewById(R.id.multi_talk_title);
+        mSingleTalkTitle = (TextView)root.findViewById(R.id.single_talk_title);
+
+        mChatMsgLv.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
+        mChatMsgLv.getRefreshableView().setScrollBarStyle(AbsListView.SCROLLBARS_INSIDE_INSET);
+        mChatMsgLv.getRefreshableView().setFastScrollEnabled(true);
+
         mOpenMsg.setOnClickListener(this);
         mOpenContact.setOnClickListener(this);
         mAddContact.setOnClickListener(this);
@@ -137,8 +169,13 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         mKickOutTv.setOnClickListener(this);
         mBackTv.setOnClickListener(this);
         mManageContact.setOnClickListener(this);
-        mDelChatTab.setOnClickListener(this);
+        mDelSingleTalkBtn.setOnClickListener(this);
+        mMultiTalkTab.setOnClickListener(this);
+        mTeachTalkTab.setOnClickListener(this);
+        mSingleTalkTab.setOnClickListener(this);
         mMsgSendTv.setOnClickListener(this);
+
+        switchTalkTab(MULTI_TALK);
     }
 
     @Override
@@ -168,9 +205,18 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             case R.id.back_manage_contact:
                 exitContactManagement();
                 break;
-            case R.id.del_chat_tab:
+            case R.id.del_single_talk_btn:
                 break;
             case R.id.msg_send:
+                break;
+            case R.id.multi_talk_tab:
+                switchTalkTab(MULTI_TALK);
+                break;
+            case R.id.teaching_talk_tab:
+                switchTalkTab(TEACHING_TALK);
+                break;
+            case R.id.single_talk_tab:
+                switchTalkTab(SINGLE_TALK);
                 break;
         }
     }
@@ -186,6 +232,30 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             if (dataChanged) {
                 mContactBookAdapter.notifyDataSetChanged();
             }
+        }
+    }
+
+
+    private void switchTalkTab(int with) {
+        mMultiTalkTab.setBackgroundColor(Color.TRANSPARENT);
+        mTeachTalkTab.setBackgroundColor(Color.TRANSPARENT);
+        mSingleTalkTab.setBackgroundColor(Color.TRANSPARENT);
+        mMultiTalkTitle.setTextColor(mWhiteColor);
+        mTeachTalkTab.setTextColor(mWhiteColor);
+        mSingleTalkTitle.setTextColor(mWhiteColor);
+        switch (with) {
+            case MULTI_TALK:
+                mMultiTalkTab.setBackgroundColor(mWhiteColor);
+                mMultiTalkTitle.setTextColor(mBlackFont);
+                break;
+            case TEACHING_TALK:
+                mTeachTalkTab.setBackgroundColor(mWhiteColor);
+                mTeachTalkTab.setTextColor(mBlackFont);
+                break;
+            case SINGLE_TALK:
+                mSingleTalkTab.setBackgroundColor(mWhiteColor);
+                mSingleTalkTitle.setTextColor(mBlackFont);
+                break;
         }
     }
 
@@ -214,9 +284,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
     private void setChatMsgData(boolean dataChanged) {
         if (mTalkMsgAdapter == null) {
-            mTalkMsgAdapter = new TalkMsgAdapter(mContext);
+            mTalkMsgAdapter = new TalkMsgAdapter(mContext, mChatMsgLv);
             mChatMsgLv.setAdapter(mTalkMsgAdapter);
-            mChatMsgLv.setDividerHeight(0);
+            mChatMsgLv.getRefreshableView().setDividerHeight(0);
         } else {
             //TODO set data
             if (dataChanged) {

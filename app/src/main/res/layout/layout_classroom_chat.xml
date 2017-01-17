@@ -2,34 +2,35 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/chat"
-        android:layout_width="@dimen/px540"
+        android:layout_width="@dimen/px640"
         android:layout_height="match_parent"
-        android:background="@color/classroom_main_gray"
         android:visibility="gone"
         android:orientation="horizontal">
 
     <RelativeLayout
-            android:layout_width="@dimen/px460"
+            android:layout_width="@dimen/px560"
             android:layout_height="match_parent">
 
         <LinearLayout
                 android:id="@+id/chat_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@color/classroom_main_gray">
 
             <LinearLayout
-                    android:id="@+id/discussion_tab"
-                    android:layout_weight="1"
+                    android:id="@+id/multi_talk_tab"
+                    android:layout_weight="1.4"
                     android:layout_width="0dp"
                     android:gravity="center_vertical"
                     android:layout_height="@dimen/px80"
                     android:paddingLeft="@dimen/px20"
-                    android:paddingRight="@dimen/px20">
+                    android:paddingRight="@dimen/px20"
+                    android:orientation="horizontal">
 
                 <TextView
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
+                        android:id="@+id/multi_talk_title"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/classroom_discussion"
                         android:textColor="@color/font_white"
@@ -39,13 +40,27 @@
                         android:id="@+id/discussion_switcher"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px10"
                         android:background="@drawable/toggle_btn_selector"
                         android:textOff=""
                         android:textOn=""/>
             </LinearLayout>
 
+            <TextView
+                    android:id="@+id/teaching_talk_tab"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px80"
+                    android:text="教学组"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/font_white"
+                    android:textSize="@dimen/font_30px"/>
+
             <LinearLayout
-                    android:id="@+id/single_chat_tab"
+                    android:id="@+id/single_talk_tab"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:gravity="center_vertical"
@@ -53,6 +68,7 @@
                     android:paddingLeft="@dimen/px20">
 
                 <TextView
+                        android:id="@+id/single_talk_title"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -63,7 +79,7 @@
                         android:textSize="@dimen/font_30px"/>
 
                 <ImageView
-                        android:id="@+id/del_chat_tab"
+                        android:id="@+id/del_single_talk_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingRight="@dimen/px20"
@@ -74,22 +90,27 @@
 
         </LinearLayout>
 
-        <ListView
+        <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView
                 android:id="@+id/chat_msg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/chat_tab"
+                android:background="@color/white"
+                android:layout_above="@+id/msg_input_layout"
+                android:scrollbars="none"
+                android:visibility="visible"
+                android:divider="@android:color/transparent"
                 android:listSelector="@android:color/transparent"
-                android:background="@color/classroom_chat_bg"
-                android:layout_above="@+id/msg_input_layout">
+                android:dividerHeight="0dp"
+                android:orientation="vertical">
 
-        </ListView>
+        </cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView>
 
         <LinearLayout
                 android:id="@+id/msg_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/classroom_chat_bg"
+                android:background="@color/white"
                 android:layout_alignParentBottom="true"
                 android:paddingLeft="@dimen/px20"
                 android:paddingRight="@dimen/px20"
@@ -134,7 +155,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:background="@color/classroom_main_gray">
 
         <ListView
                 android:id="@+id/chat_simple_contact"
