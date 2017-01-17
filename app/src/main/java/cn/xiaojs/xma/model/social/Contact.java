@@ -53,9 +53,11 @@ public class Contact implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(avatar);
         dest.writeString(account);
         dest.writeString(alias);
         dest.writeString(subtype);
+        dest.writeInt(followType);
     }
 
     public Contact() {
@@ -63,9 +65,11 @@ public class Contact implements Parcelable{
     }
 
     private Contact(Parcel in){
+        avatar = in.readString();
         account = in.readString();
         alias = in.readString();
         subtype = in.readString();
+        followType = in.readInt();
     }
 
     public static final Parcelable.Creator<Contact> CREATOR = new Parcelable.Creator<Contact>() {

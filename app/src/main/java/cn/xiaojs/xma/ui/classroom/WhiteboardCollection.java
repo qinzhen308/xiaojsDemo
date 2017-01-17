@@ -27,9 +27,13 @@ public class WhiteboardCollection implements Parcelable{
     public final static int COURSE_WARE = 2;
 
     /**
-     * 是否是直播白板
+     * 是否是直播白板, 学生端只有能有一块正在直播的白板集；
+     * 而老是端则可以切换不同的直播白板集，也就是设置主屏
      */
     private boolean isLive;
+    /**
+     * 默认版本，课件白板
+     */
     private int style;
     private String id;
     private String name;
@@ -49,6 +53,7 @@ public class WhiteboardCollection implements Parcelable{
 
     public WhiteboardCollection(String name, int style) {
         whiteboardLayer = new ArrayList<WhiteboardLayer>();
+        this.style = style;
         this.name = name;
     }
 

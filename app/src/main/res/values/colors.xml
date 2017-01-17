@@ -30,6 +30,7 @@
     <color name="classroom_gray_1">#eeeeee</color>
     <color name="classroom_chat_bg">#686868</color>
     <color name="classroom_black_bg">#191919</color>
+    <color name="classroom_white_bg">#f6f6f6</color>
     <!--disable color, eg btn-->
     <color name="disable_btn">#999999</color>
     <!--horizontal divide line-->

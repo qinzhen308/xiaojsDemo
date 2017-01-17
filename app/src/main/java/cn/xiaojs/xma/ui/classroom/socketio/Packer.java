@@ -73,12 +73,12 @@ public class Packer {
 
         sb.append(shape);
         if (doodle instanceof TextWriting) {
-            int w = (int) (points.get(0).x * ProtocolConfigs.VIRTUAL_WIDTH);
-            int h = (int) (points.get(0).y * ProtocolConfigs.VIRTUAL_HEIGHT);
+            int x = (int) (points.get(0).x * ProtocolConfigs.VIRTUAL_WIDTH);
+            int y = (int) (points.get(0).y * ProtocolConfigs.VIRTUAL_HEIGHT);
             sb.append(",");
-            sb.append(String.valueOf(w));
+            sb.append(String.valueOf(x));
             sb.append(",");
-            sb.append(String.valueOf(h));
+            sb.append(String.valueOf(y));
             sb.append(",");
             String text = ((TextWriting)doodle).getTextString();
             text = java.net.URLDecoder.decode(text);

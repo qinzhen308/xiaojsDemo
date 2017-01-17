@@ -62,7 +62,8 @@
                 android:drawableRight="@drawable/ic_entrance"
                 android:drawablePadding="@dimen/px10"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/publish"/>
 
         <TextView
                 android:layout_toLeftOf="@+id/who_can_see"

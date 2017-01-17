@@ -56,8 +56,11 @@ public class PostDynamicActivity extends BaseActivity {
 
     private String photoKey;
     private Dimension photoDim;
+    private long[] atCheckedPos;
 
     private int specifyScope;
+
+    private ArrayList<Contact> chooseContacts;
 
     @Override
     protected void addViewContent() {
@@ -76,7 +79,8 @@ public class PostDynamicActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_image, R.id.post_dynamic_add_picture, R.id.remind_somebody_wrapper, R.id.who_can_see_wrapper, R.id.right_image})
+    @OnClick({R.id.left_image, R.id.post_dynamic_add_picture,
+            R.id.remind_somebody_wrapper, R.id.who_can_see_wrapper, R.id.right_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -102,8 +106,17 @@ public class PostDynamicActivity extends BaseActivity {
 
                 //TODO when specifyScope equals Social.ShareScope.CLASSES ,start classes activity only
 
-                startActivityForResult(new Intent(this, ChoiceContactActivity.class),
-                        REQUEST_AT_CODE);
+                Intent iat = new Intent(this, CloseFriendActivity.class);
+                if (atCheckedPos != null && atCheckedPos.length>0) {
+                    iat.putExtra(CloseFriendActivity.CHECKED_POS,atCheckedPos);
+                }
+
+                if (audience != null && audience.type == Social.ShareScope.SPECIFIC) {
+                    iat.putParcelableArrayListExtra(CloseFriendActivity.EXTRA_CONTACT,
+                            chooseContacts);
+                }
+
+                startActivityForResult(iat,REQUEST_AT_CODE);
                 break;
             case R.id.right_image:
                 postDynamic();
@@ -115,14 +128,32 @@ public class PostDynamicActivity extends BaseActivity {
 
     private void showAt() {
 
-        if (atContacts == null)
+        if (atContacts == null) {
+            clearRemid();
             return;
-
-        String prefix = " @";
-        for (Contact contact : atContacts) {
-            String display = new StringBuilder(prefix).append(contact.alias).toString();
-            //editText.addRecipient(contact.account,display);
         }
+
+        StringBuilder builder = new StringBuilder();
+        int size = atContacts.size();
+        for (int i = 0; i < size; i++) {
+//            String display = new StringBuilder(prefix).append(contact.alias).toString();
+//
+            //editText.addRecipient(contact.account,display);
+
+            Contact c = atContacts.get(i);
+            builder.append(c.alias);
+            if (i != size-1){
+                builder.append(", ");
+            }
+        }
+
+        remind.setText(builder.toString());
+    }
+
+    private void clearRemid() {
+        remind.setText("");
+        atCheckedPos = null;
+        //weizhi
     }
 
 
@@ -204,11 +235,14 @@ public class PostDynamicActivity extends BaseActivity {
 
                 audience = data.getParcelableExtra(ShareScopeActivity.CHOOSE_DATA);
                 checkedIndex = data.getIntExtra(ShareScopeActivity.CHOOSE_INDEX, 0);
+                chooseContacts = data.getParcelableArrayListExtra(ShareScopeActivity.CHOOSE_C);
 
                 updateScope();
             } else if (requestCode == REQUEST_AT_CODE) {
                 atContacts = data.getParcelableArrayListExtra(
                         ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
+                atCheckedPos = data.getLongArrayExtra(CloseFriendActivity.CHECKED_POS);
+
                 showAt();
             }
         }
@@ -253,7 +287,15 @@ public class PostDynamicActivity extends BaseActivity {
 
     private void updateScope() {
         String name = getScopeName(audience.type);
-        //scopeButton.setText(name);
+        scope.setText(name);
+
+        if (audience.type == Social.ShareScope.CLASSES
+                || audience.type == Social.ShareScope.PRIVATE) {
+            remindWrapper.setVisibility(View.GONE);
+        }else{
+            clearRemid();
+            remindWrapper.setVisibility(View.VISIBLE);
+        }
     }
 
     private String getScopeName(int scopeType) {

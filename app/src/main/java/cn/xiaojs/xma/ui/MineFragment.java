@@ -17,29 +17,14 @@ package cn.xiaojs.xma.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.account.Account;
-import cn.xiaojs.xma.model.CenterData;
-import cn.xiaojs.xma.ui.base.BaseFragment;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.lesson.MyLessonActivity;
-import cn.xiaojs.xma.ui.mine.MyEnrollActivity;
-import cn.xiaojs.xma.ui.mine.ProfileActivity;
-import cn.xiaojs.xma.ui.mine.SettingsActivity;
-import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.util.FastBlur;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -48,28 +33,35 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CenterData;
+import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.lesson.MyLessonActivity;
+import cn.xiaojs.xma.ui.mine.MyEnrollActivity;
+import cn.xiaojs.xma.ui.mine.ProfileActivity;
+import cn.xiaojs.xma.ui.mine.SettingsActivity;
+import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+import cn.xiaojs.xma.ui.widget.EvaluationStar;
+import cn.xiaojs.xma.ui.widget.IconTextView;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.FastBlur;
 
 public class MineFragment extends BaseFragment {
     private final static int REQUEST_EDIT = 1000;
 
-    @BindView(R.id.personal_info)
-    View mPersonalInfo;
     @BindView(R.id.portrait)
     RoundedImageView mPortraitView;
     @BindView(R.id.blur_portrait)
     ImageView mBlurPortraitView;
-    @BindView(R.id.profile_cover)
-    ImageView mProfileBgView;
-    @BindView(R.id.authenticate)
-    ImageView mNameAuthView;
-    @BindView(R.id.base_info)
-    LinearLayout mBaseInfo;
-    @BindView(R.id.authentication_info)
-    LinearLayout mAuthenticationInfo;
     @BindView(R.id.user_name)
-    TextView mUserName;
-    @BindView(R.id.user_title)
-    TextView mUserTitle;
+    IconTextView mUserName;
+    @BindView(R.id.evaluation_star)
+    EvaluationStar mEvaluation;
 
     //ugc
     @BindView(R.id.fans)
@@ -89,45 +81,35 @@ public class MineFragment extends BaseFragment {
         //initProfileBg();
 
         mBlurFloatUpBg = new ColorDrawable(getResources().getColor(R.color.blur_float_up_bg));
+        mEvaluation.setGrading(EvaluationStar.Grading.THREE_HALF);
         loadData();
     }
 
-    @OnClick({R.id.settings, R.id.edit_profile, R.id.my_page, R.id.my_course, R.id.my_course_schedule, R.id.my_enrollment,
-            R.id.my_ask_questions, R.id.recharge, R.id.withdrawals, R.id.teach_ability_layout, R.id.my_collections,
-            R.id.eval_management, R.id.feedback_help})
+    @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,
+            R.id.my_favorites_layout, R.id.teach_ability_layout, R.id.name_auth_layout, R.id.person_home})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.edit_profile:
-                editProfile();
-                break;
-            case R.id.my_page:
-                startActivity(new Intent(mContext, ClassroomActivity.class));
-                break;
-            case R.id.my_course:
+            case R.id.my_teaching_layout:
                 startActivity(new Intent(mContext, MyLessonActivity.class));
                 break;
-            case R.id.my_course_schedule:
-                break;
-            case R.id.my_enrollment:
+            case R.id.my_enrollment_layout:
                 startActivity(new Intent(mContext, MyEnrollActivity.class));
                 break;
-            case R.id.my_ask_questions:
+            case R.id.my_document_layout:
+                startActivity(new Intent(mContext, ClassroomActivity.class));
                 break;
-            case R.id.recharge:
-                break;
-            case R.id.withdrawals:
+            case R.id.my_favorites_layout:
                 break;
             case R.id.teach_ability_layout:
                 startActivity(new Intent(mContext, TeachingAbilityActivity.class));
                 break;
-            case R.id.my_collections:
+            case R.id.name_auth_layout:
                 break;
-            case R.id.eval_management:
-                break;
-            case R.id.feedback_help:
-                break;
-            case R.id.settings:
+            case R.id.settings_layout:
                 startActivity(new Intent(mContext, SettingsActivity.class));
+                break;
+            case R.id.person_home:
+                startActivity(new Intent(mContext, PersonHomeActivity.class));
                 break;
             default:
                 break;
@@ -152,8 +134,8 @@ public class MineFragment extends BaseFragment {
     private void setUgc(CenterData centerData) {
         if (centerData != null && centerData.getUgc() != null) {
             CenterData.PersonUgc personUgc = centerData.getUgc();
-            mFansTv.setText(String.valueOf(personUgc.getLikedCount()));
-            mFollowingTv.setText(String.valueOf(personUgc.getFollowedCount()));
+            //mFansTv.setText(String.valueOf(personUgc.getLikedCount()));
+            //mFollowingTv.setText(String.valueOf(personUgc.getFollowedCount()));
         }
     }
 
@@ -170,20 +152,27 @@ public class MineFragment extends BaseFragment {
         if (basic != null) {
             String title = basic.getTitle();
             if (TextUtils.isEmpty(title)) {
-                mUserTitle.setText(R.string.my_profile_txt);
+                //mUserTitle.setText(R.string.my_profile_txt);
             } else {
-                mUserTitle.setText(basic.getTitle());
+                //mUserTitle.setText(basic.getTitle());
             }
         } else {
-            mUserTitle.setText(R.string.my_profile_txt);
+            //mUserTitle.setText(R.string.my_profile_txt);
         }
-
-        mNameAuthView.setImageResource(R.drawable.ic_name_authed);
     }
 
     private void setAvatar(Account.Basic basic) {
         mPortraitView.setBorderColor(getResources().getColor(R.color.round_img_border));
-        mPortraitView.setBorderWidth(R.dimen.px5);
+        mPortraitView.setBorderWidth(R.dimen.px2);
+
+        //TODO test
+        if (true) {
+            mPortraitView.setImageResource(R.drawable.mine_portrait);
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.mine_portrait);
+            setupBlurPortraitView(bmp);
+            return;
+        }
+
         //set avatar
         if (basic != null) {
             Glide.with(mContext).load(basic.getAvatar())
@@ -211,7 +200,6 @@ public class MineFragment extends BaseFragment {
     }
 
     private void initProfileBg() {
-        mProfileBgView.setBackgroundDrawable(null);
         mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
     }
 
@@ -221,13 +209,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
-        mProfileBgView.setBackgroundDrawable(mBlurFloatUpBg);
-        Bitmap blurBitmap = FastBlur.smartBlur(portrait, 2, true);
-        int h = mPersonalInfo.getHeight();
-        ViewGroup.LayoutParams params = mBlurPortraitView.getLayoutParams();
-        if (params != null) {
-            params.height = h;
-        }
+        Bitmap blurBitmap = FastBlur.smartBlur(portrait, 4, true);
         mBlurPortraitView.setImageBitmap(blurBitmap);
     }
 

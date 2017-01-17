@@ -8,7 +8,7 @@
             android:id="@+id/drawer_content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="@color/classroom_white_bg">
 
         <!--白板列表-->
         <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView
@@ -17,6 +17,13 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center">
         </cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView>
+
+        <!--学生端用来绘制老师端发送来的白板命令-->
+        <cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard
+                android:id="@+id/stu_receive_wb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
 
         <!--控制面板, 直播-->
         <include

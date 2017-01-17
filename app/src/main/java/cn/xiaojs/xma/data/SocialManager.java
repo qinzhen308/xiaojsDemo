@@ -11,6 +11,7 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.XiaojsConfig;
@@ -291,10 +292,17 @@ public class SocialManager {
      * @param callback
      */
     public static void getContacts(Context context,
-                                   APIServiceCallback<ArrayList<ContactGroup>> callback) {
+                                    APIServiceCallback<ArrayList<ContactGroup>> callback) {
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
         socialRequest.getContacts();
+
+    }
+
+    public static ArrayList<ContactGroup> getContacts(Context context) throws IOException{
+
+        SocialRequest socialRequest = new SocialRequest(context,null);
+        return socialRequest.getContactsSync();
 
     }
 
