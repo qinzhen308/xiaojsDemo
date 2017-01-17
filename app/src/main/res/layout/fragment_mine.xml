@@ -12,257 +12,146 @@
 
         <!--个人资料-->
         <FrameLayout
-                android:id="@+id/personal_info"
+                android:id="@+id/personal_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             <ImageView
                     android:id="@+id/blur_portrait"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"/>
+                    android:layout_height="match_parent"/>
 
             <ImageView
                     android:id="@+id/profile_cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/blur_float_up_bg"/>
+                    android:background="#77000000"/>
+
+            <TextView
+                    android:id="@+id/person_home"
+                    android:layout_gravity="right|top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/personal_home"
+                    android:textColor="@color/white"
+                    android:paddingLeft="@dimen/px36"
+                    android:paddingRight="@dimen/px36"
+                    android:paddingTop="@dimen/px30"
+                    android:paddingBottom="@dimen/px30"
+                    android:textSize="@dimen/font_28px"/>
 
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/px116">
+                    android:layout_height="wrap_content">
 
-                <RelativeLayout
-                        android:orientation="horizontal"
+                <cn.xiaojs.xma.ui.widget.RoundedImageView
+                        android:id="@+id/portrait"
+                        android:scaleType="fitXY"
+                        roundimg:oval="true"
+                        roundimg:border_color="@color/white"
+                        roundimg:border_width="@dimen/px1"
+                        android:layout_marginTop="@dimen/px100"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/px100"
+                        android:layout_height="@dimen/px100"/>
+
+                <cn.xiaojs.xma.ui.widget.IconTextView
+                        android:id="@+id/user_name"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/px10"
+                        android:text="刘墉"
+                        android:textSize="@dimen/font_30px"
+                        android:textColor="@color/white"
+                        roundimg:gravity="center"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/px15"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                    <LinearLayout
-                            android:id="@+id/base_info"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal"
+                    <TextView
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_26px"
+                            android:text="初级学员"
+                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true">
+                            android:layout_height="wrap_content"/>
 
-                        <cn.xiaojs.xma.ui.widget.RoundedImageView
-                                android:id="@+id/portrait"
-                                roundimg:oval="true"
-                                android:layout_width="@dimen/px160"
-                                android:layout_height="@dimen/px160"/>
-
-                        <LinearLayout
-                                android:orientation="horizontal"
-                                android:layout_gravity="center_horizontal"
-                                android:gravity="center"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/px20">
-
-                            <TextView
-                                    android:id="@+id/user_name"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/white"
-                                    android:textSize="@dimen/font_28px"/>
-
-                            <ImageView
-                                    android:layout_marginLeft="@dimen/px10"
-                                    android:id="@+id/authenticate"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_name_authed"/>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:id="@+id/authentication_info"
-                            android:layout_toRightOf="@+id/base_info"
-                            android:orientation="vertical"
+                    <cn.xiaojs.xma.ui.widget.EvaluationStar
+                            android:id="@+id/evaluation_star"
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone">
-
-                        <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-
-                            <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </RelativeLayout>
+                            android:layout_height="wrap_content"/>
+                </LinearLayout>
 
                 <TextView
-                        android:id="@+id/user_title"
-                        android:layout_marginTop="@dimen/px40"
-                        android:layout_width="wrap_content"
-                        android:paddingLeft="@dimen/px60"
-                        android:paddingRight="@dimen/px88"
-                        android:text="@string/my_profile_txt"
-                        android:layout_marginBottom="@dimen/px60"
-                        android:textSize="@dimen/font_22px"
-                        android:layout_gravity="center_horizontal"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/font_26px"
+                        android:text="疯狂是个儿童，在理智的花园里，做着美好的游戏"
+                        android:layout_marginTop="@dimen/px15"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/px15"
+                        android:layout_marginBottom="@dimen/px30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:id="@+id/following"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_26px"
+                            android:text="35 关注"
+                            android:layout_gravity="center_vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <View
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_width="@dimen/px1"
+                            android:layout_height="@dimen/px30"
+                            android:layout_gravity="center_vertical"
+                            android:background="@color/white"/>
+
+                    <TextView
+                            android:id="@+id/fans"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_26px"
+                            android:layout_marginLeft="@dimen/px30"
+                            android:text="660005 粉丝"
+                            android:layout_gravity="center_vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <View
+                            android:layout_marginLeft="@dimen/px30"
+                            android:layout_width="@dimen/px1"
+                            android:layout_height="@dimen/px30"
+                            android:layout_gravity="center_vertical"
+                            android:background="@color/white"/>
+
+                    <TextView
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_26px"
+                            android:layout_marginLeft="@dimen/px30"
+                            android:text="230教学时长"
+                            android:layout_gravity="center_vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </LinearLayout>
             </LinearLayout>
-
-
-            <ImageView
-                    android:id="@+id/edit_profile"
-                    android:layout_gravity="right"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
-                    android:paddingBottom="@dimen/px20"
-                    android:paddingTop="@dimen/px20"
-                    android:src="@drawable/edit_profiles_selector"
-                    android:clickable="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
         </FrameLayout>
-
-
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <!--粉丝，关注，课时，学分-->
-        <LinearLayout
-                android:background="@color/white"
-                android:paddingTop="@dimen/px24"
-                android:paddingBottom="@dimen/px24"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20">
-
-                <TextView
-                        android:id="@+id/fans"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/font_black"
-                        android:textSize="@dimen/font_26px"/>
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/fans"
-                        android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_26px"
-                        android:layout_marginTop="@dimen/px24"/>
-            </LinearLayout>
-
-            <View
-                    style="@style/DividerVertical"/>
-
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20">
-
-                <TextView
-                        android:id="@+id/following"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/font_black"
-                        android:textSize="@dimen/font_26px"/>
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/follows"
-                        android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_26px"
-                        android:layout_marginTop="@dimen/px24"/>
-            </LinearLayout>
-
-            <View
-                    style="@style/DividerVertical"/>
-
-            <!--课时-->
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20">
-
-                <TextView
-                        android:id="@+id/my_course_duration"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/font_black"
-                        android:textSize="@dimen/font_26px"/>
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/my_course_duration"
-                        android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_26px"
-                        android:layout_marginTop="@dimen/px24"/>
-
-            </LinearLayout>
-
-            <View
-                    style="@style/DividerVertical"/>
-
-            <!--学分-->
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20">
-
-                <TextView
-                        android:id="@+id/course_credit"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/font_black"
-                        android:textSize="@dimen/font_26px"/>
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/course_credit"
-                        android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_26px"
-                        android:layout_marginTop="@dimen/px24"/>
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <View
-                style="@style/DividerHorizontal"/>
 
         <!--我的账户-->
         <RelativeLayout
@@ -274,7 +163,8 @@
                 android:layout_marginTop="@dimen/px20"
                 android:layout_width="match_parent"
                 android:clickable="true"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
             <LinearLayout
                     android:orientation="vertical"
@@ -345,64 +235,49 @@
                     android:layout_height="wrap_content"/>
         </RelativeLayout>
 
-        <!--我的主页-->
-        <TextView
-                android:id="@+id/my_page"
-                android:layout_marginTop="@dimen/px20"
-                android:layout_width="match_parent"
-                android:text="@string/my_page"
-                style="@style/MinePageItem"/>
-
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <!--我的课-->
-        <TextView
-                android:id="@+id/my_course"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/my_course_mine_page"
-                style="@style/MinePageItem"/>
-
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <!--我的课程-->
-        <TextView
-                android:id="@+id/my_course_schedule"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/my_course_schedule"
-                style="@style/MinePageItem"/>
-
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <!--我的报名-->
-        <TextView
-                android:id="@+id/my_enrollment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/my_enrollment"
-                style="@style/MinePageItem"/>
-
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <!--我的提问-->
-        <TextView
-                android:id="@+id/my_ask_questions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/my_ask_questions"
-                style="@style/MinePageItem"/>
-
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <!--教学能力-->
+        <!--我授的课-->
         <RelativeLayout
-                android:id="@+id/teach_ability_layout"
+                android:id="@+id/my_teaching_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px20"
+                style="@style/MinePageItem">
+
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:textStyle="bold"
+                    android:drawableLeft="@drawable/ic_teaching"
+                    android:drawablePadding="@dimen/px20"
+                    android:text="@string/my_teaching"/>
+
+            <TextView
+                    android:id="@+id/my_teaching"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/enter_my_teaching"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:layout_marginRight="@dimen/px20"/>
+
+            <ImageView
+                    android:id="@+id/enter_my_teaching"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
+        </RelativeLayout>
+
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <!--我报的名-->
+        <RelativeLayout
+                android:id="@+id/my_enrollment_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/MinePageItem">
@@ -414,6 +289,122 @@
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/px26"
                     android:textStyle="bold"
+                    android:drawableLeft="@drawable/ic_my_class"
+                    android:drawablePadding="@dimen/px20"
+                    android:text="@string/my_enrollment"/>
+
+            <TextView
+                    android:id="@+id/my_enrollment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/enter_my_enrollment"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:layout_marginRight="@dimen/px20"/>
+
+            <ImageView
+                    android:id="@+id/enter_my_enrollment"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
+        </RelativeLayout>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+
+        <!--资料库-->
+        <RelativeLayout
+                android:id="@+id/my_document_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/MinePageItem">
+
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:textStyle="bold"
+                    android:drawableLeft="@drawable/ic_my_doc"
+                    android:drawablePadding="@dimen/px20"
+                    android:text="@string/my_documents"/>
+
+            <TextView
+                    android:id="@+id/my_document"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/enter_my_document"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:layout_marginRight="@dimen/px20"/>
+
+            <ImageView
+                    android:id="@+id/enter_my_document"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
+        </RelativeLayout>
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <!--我的收藏-->
+        <RelativeLayout
+                android:id="@+id/my_favorites_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/MinePageItem">
+
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:textStyle="bold"
+                    android:drawableLeft="@drawable/ic_my_favorites"
+                    android:drawablePadding="@dimen/px20"
+                    android:text="@string/my_collections"/>
+
+            <TextView
+                    android:id="@+id/my_favorites"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/enter_my_favorites"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:layout_marginRight="@dimen/px20"/>
+
+            <ImageView
+                    android:id="@+id/enter_my_favorites"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
+        </RelativeLayout>
+
+
+        <!--教学能力-->
+        <RelativeLayout
+                android:id="@+id/teach_ability_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px20"
+                style="@style/MinePageItem">
+
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:textStyle="bold"
+                    android:drawableLeft="@drawable/ic_teaching_ability"
+                    android:drawablePadding="@dimen/px20"
                     android:text="@string/teach_ability"/>
 
             <TextView
@@ -436,47 +427,70 @@
         <View
                 style="@style/DividerHorizontal"/>
 
-        <!--我的收藏-->
-        <TextView
-                android:id="@+id/my_collections"
+        <!--实名认证-->
+        <RelativeLayout
+                android:id="@+id/name_auth_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/my_collections"
-                style="@style/MinePageItem"/>
+                style="@style/MinePageItem">
 
-        <View
-                style="@style/DividerHorizontal"/>
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:drawableLeft="@drawable/ic_name_auth"
+                    android:drawablePadding="@dimen/px20"
+                    android:textStyle="bold"
+                    android:text="@string/name_verify"/>
 
-        <!--评价管理-->
-        <TextView
-                android:id="@+id/eval_management"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/eval_management"
-                style="@style/MinePageItem"/>
+            <TextView
+                    android:id="@+id/name_auth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/enter_name_auth"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:layout_marginRight="@dimen/px20"/>
 
+            <ImageView
+                    android:id="@+id/enter_name_auth"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
+        </RelativeLayout>
 
-        <!--反馈帮助-->
-        <TextView
-                android:id="@+id/feedback_help"
-                android:layout_marginTop="@dimen/px20"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/feedback_help"
-                style="@style/MinePageItem"/>
-
-        <View
-                style="@style/DividerHorizontal"/>
 
         <!--设置-->
-        <TextView
-                android:id="@+id/settings"
+        <RelativeLayout
+                android:id="@+id/settings_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/settings"
                 style="@style/MinePageItem"
-                android:layout_marginBottom="@dimen/px185"/>
+                android:layout_marginTop="@dimen/px20"
+                android:layout_marginBottom="@dimen/px185">
 
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/px26"
+                    android:drawableLeft="@drawable/ic_setting"
+                    android:drawablePadding="@dimen/px20"
+                    android:textStyle="bold"
+                    android:text="@string/settings"/>
+
+
+            <ImageView
+                    android:id="@+id/enter_settings"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
+        </RelativeLayout>
 
     </LinearLayout>
 </ScrollView>
