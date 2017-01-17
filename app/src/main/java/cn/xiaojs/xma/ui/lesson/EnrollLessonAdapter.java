@@ -52,13 +52,13 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView, LessonFragment fragment) {
         super(context, listView);
         mFragment = fragment;
-        bitmap = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.default_portrait);
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_portrait);
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
     public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView, boolean autoLoad) {
-        super(context, listView,autoLoad);
-        bitmap = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.default_portrait);
+        super(context, listView, autoLoad);
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_portrait);
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
@@ -77,68 +77,83 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     protected void setViewContent(Holder holder, final EnrolledLesson bean, int position) {
         holder.reset();
         holder.name.setText(bean.getTitle());
-//        holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
-//        if(bean.getTeacher() != null){
-//            if (bean.getTeacher().getBasic() != null){
-//                holder.desc.setText(bean.getTeacher().getBasic().getName());
-//            }
-//        }
 
-        //holder.clsFunction.setVisibility(View.VISIBLE);
-//        holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
-//            @Override
-//            public void onClick(View view) {
-//                circle(bean);
-//            }
-//        });
-//        holder.enter.setOnClickListener(new View.OnClickListener() {//进入教室
-//            @Override
-//            public void onClick(View view) {
-//                enterClass(bean);
-//            }
-//        });
         //Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
-//        if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
-//            holder.databank.setVisibility(View.VISIBLE);
-//            holder.databank.setOnClickListener(new View.OnClickListener() {
+        if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
+            holder.status.setVisibility(View.VISIBLE);
+            holder.status.show(bean);
+            holder.operation.setVisibility(View.GONE);
+//            String[] items = new String[]{mContext.getString(R.string.data_bank)};
+//            holder.operation.setItems(items);
+//            holder.operation.enableMore(false);
+//            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
 //                @Override
-//                public void onClick(View v) {
+//                public void onClick(int position) {
 //                    databank(bean);
 //                }
 //            });
-//            holder.courseState.setText(R.string.course_state_cancel);
-//            holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
-//        } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-//            holder.more.setVisibility(View.VISIBLE);
-//            holder.more.setOnClickListener(new View.OnClickListener() {//更多
-//                @Override
-//                public void onClick(View view) {
-//                    more(bean);
-//                }
-//            });
-//            holder.courseState.setText(R.string.course_state_end);
-//            holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
-//        } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
-//            holder.databank.setVisibility(View.VISIBLE);
-//            holder.databank.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    databank(bean);
-//                }
-//            });
-//            holder.courseState.setText(R.string.living);
-//            holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
-//        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
-//            holder.more.setVisibility(View.VISIBLE);
-//            holder.more.setOnClickListener(new View.OnClickListener() {//更多
-//                @Override
-//                public void onClick(View view) {
-//                    more(bean);
-//                }
-//            });
-//            holder.courseState.setText(R.string.pending_for_course);
-//            holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
-//        }
+        } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+            holder.operation.setVisibility(View.GONE);
+            holder.status.setVisibility(View.VISIBLE);
+            holder.status.show(bean);
+            String[] items = new String[]{mContext.getString(R.string.schedule), mContext.getString(R.string.data_bank)};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1:
+                            schedule(bean);
+                            break;
+                        case 2:
+                            databank(bean);
+                            break;
+                    }
+                }
+            });
+        } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
+            holder.operation.setVisibility(View.VISIBLE);
+            holder.status.setVisibility(View.GONE);
+            holder.progressWrapper.setVisibility(View.VISIBLE);
+            String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    databank(bean);
+                }
+            });
+        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
+            holder.operation.setVisibility(View.VISIBLE);
+            holder.status.setVisibility(View.VISIBLE);
+            holder.status.show(bean);
+            String[] items = new String[]{mContext.getString(R.string.schedule), mContext.getString(R.string.data_bank)};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1:
+                            schedule(bean);
+                            break;
+                        case 2:
+                            databank(bean);
+                            break;
+                    }
+                }
+            });
+        } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
+            holder.status.setVisibility(View.VISIBLE);
+            holder.status.show(bean);
+            holder.operation.setVisibility(View.GONE);
+        }
+    }
+
+    private void schedule(EnrolledLesson bean) {
+
     }
 
     //班级圈
@@ -148,21 +163,21 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     //进入教室
     private void enterClass(EnrolledLesson bean) {
-        
+
     }
 
     //资料库
-    private void databank(EnrolledLesson bean){
+    private void databank(EnrolledLesson bean) {
 
     }
 
     //退课
-    private void dropClass(EnrolledLesson bean){
+    private void dropClass(EnrolledLesson bean) {
 
     }
 
     //评价
-    private void evaluate(EnrolledLesson bean){
+    private void evaluate(EnrolledLesson bean) {
 
     }
 
@@ -223,7 +238,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     }
 
     @Override
-    protected void onDataItemClick(int position,EnrolledLesson bean) {
+    protected void onDataItemClick(int position, EnrolledLesson bean) {
         Intent i = new Intent(mContext, LessonHomeActivity.class);
         i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_ENROLL_LESSON);
         i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
@@ -263,7 +278,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     @Override
     protected void onDataFailed() {
-        if (mFragment != null){
+        if (mFragment != null) {
             mFragment.showTop();
         }
     }
@@ -296,9 +311,11 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         @BindView(R.id.enroll_lesson_item_opera)
         LessonOperationView operation;
 
-        public void reset(){
-
+        public void reset() {
+            status.setVisibility(View.GONE);
+            progressWrapper.setVisibility(View.GONE);
         }
+
         public Holder(View view) {
             super(view);
         }

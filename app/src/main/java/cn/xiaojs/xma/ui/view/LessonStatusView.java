@@ -24,6 +24,8 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.model.EnrolledLesson;
 
 public class LessonStatusView extends RelativeLayout {
 
@@ -69,5 +71,33 @@ public class LessonStatusView extends RelativeLayout {
     private void init() {
         inflate(getContext(), R.layout.layout_lesson_status, this);
         ButterKnife.bind(this);
+        reset();
+    }
+
+    public void show(EnrolledLesson bean) {
+        if (bean == null)
+            return;
+        reset();
+        if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
+            this.status.setVisibility(VISIBLE);
+            this.status.setText(R.string.course_state_cancel);
+            this.status.setBackgroundResource(R.drawable.course_state_cancel_bg);
+        } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+            end.setVisibility(VISIBLE);
+        } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
+            this.status.setVisibility(VISIBLE);
+            this.status.setText(R.string.pending_for_course);
+            this.status.setBackgroundResource(R.drawable.course_state_wait_bg);
+        }else{
+
+        }
+    }
+
+    private void reset(){
+        status.setVisibility(GONE);
+        end.setVisibility(GONE);
+        distance.setVisibility(GONE);
+        evaluate.setVisibility(GONE);
+        review.setVisibility(GONE);
     }
 }
