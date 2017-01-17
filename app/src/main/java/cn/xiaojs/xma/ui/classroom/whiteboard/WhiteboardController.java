@@ -97,7 +97,7 @@ public class WhiteboardController implements
     private boolean mSavingWhiteboard = false;
     private AsyncTask mSaveTask;
 
-    private Constants.ClassroomClient mClassroomClient = Constants.ClassroomClient.TEACHER;
+    private Constants.User mUser = Constants.User.TEACHER;
 
     private ArrayList<WhiteboardCollection> mWhiteboardCollectionList;
     private WhiteboardCollection mCurrWhiteboardColl;
@@ -111,9 +111,9 @@ public class WhiteboardController implements
     private ReceiveRunnable mSyncRunnable;
 
 
-    public WhiteboardController(Context context, View root, Constants.ClassroomClient client) {
+    public WhiteboardController(Context context, View root, Constants.User client) {
         mContext = context;
-        mClassroomClient = client;
+        mUser = client;
         mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
         mWhiteboardSuffix = context.getString(R.string.white_board);
 
@@ -147,7 +147,7 @@ public class WhiteboardController implements
         mWhiteboardAdapter = new WhiteboardAdapter(context);
 
         WhiteboardCollection whiteboardCollection = null;
-        if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
+        if (mUser == Constants.User.STUDENT) {
             whiteboardCollection = new WhiteboardCollection();
             whiteboardCollection.setLive(true);
             WhiteboardLayer layer = new WhiteboardLayer();
@@ -514,7 +514,7 @@ public class WhiteboardController implements
     public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
         if (wbColl != null) {
             mCurrWhiteboardColl = wbColl;
-            if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
+            if (mUser == Constants.User.STUDENT) {
                 if (wbColl.isLive()) {
                     mSyncWhiteboard.setVisibility(View.VISIBLE);
                     mWhiteboardSv.setVisibility(View.GONE);
@@ -538,7 +538,7 @@ public class WhiteboardController implements
      * 设置白板为主屏
      */
     public void setWhiteboardMainScreen() {
-        if (mClassroomClient == Constants.ClassroomClient.TEACHER) {
+        if (mUser == Constants.User.TEACHER) {
             if (!mCurrWhiteboardColl.isLive() && mWhiteboardCollectionList != null) {
                 for (WhiteboardCollection coll : mWhiteboardCollectionList) {
                     coll.setLive(false);
@@ -553,7 +553,7 @@ public class WhiteboardController implements
      * 是否是同步的白板
      */
     public boolean isSyncWhiteboard() {
-        return (mClassroomClient == Constants.ClassroomClient.STUDENT)
+        return (mUser == Constants.User.STUDENT)
                 && mCurrWhiteboardColl != null && mCurrWhiteboardColl.isLive();
     }
 
@@ -577,7 +577,7 @@ public class WhiteboardController implements
         //TODO
 
         /*if (mCurrWhiteboardColl != null) {
-            if (mCurrWhiteboardColl.isLive() && mClassroomClient == Constants.ClassroomClient.STUDENT) {
+            if (mCurrWhiteboardColl.isLive() && mUser == Constants.User.STUDENT) {
                 PermissionGen.needPermission(ClassroomActivity.this, REQUEST_GALLERY_PERMISSION, PERMISSIONS);
             } else {
 

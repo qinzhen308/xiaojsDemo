@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui.classroom;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -159,7 +158,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Socket mSocket;
     private Boolean mSktConnected = false;
 
-    private Constants.ClassroomClient mClassroomClient = Constants.ClassroomClient.TEACHER;
+    private Constants.User mUser = Constants.User.TEACHER;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -184,11 +183,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private void initParams() {
         mBinder = ButterKnife.bind(this);
-        mClassroomClient = Constants.ClassroomClient.STUDENT;
+        mUser = Constants.User.STUDENT;
 
         mPanelAnimListener = new PanelAnimListener();
         //init whiteboard
-        mWhiteboardController = new WhiteboardController(this, mContentRoot, mClassroomClient);
+        mWhiteboardController = new WhiteboardController(this, mContentRoot, mUser);
 
         //init socket
         initSocketIO();
@@ -196,7 +195,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
 
     private void initPanel() {
-        switch(mClassroomClient) {
+        switch(mUser) {
             case TEACHER:
                 //老师的权限最大，所以都可以使用
                 break;
@@ -303,7 +302,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
         if (wbColl != null) {
-            if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
+            if (mUser == Constants.User.STUDENT) {
                 if (wbColl.isLive()) {
                     mWhiteBoardPanel.setVisibility(View.GONE);
                     mWhiteboardSv.setVisibility(View.GONE);
@@ -414,7 +413,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mWhiteBoardManagePanel.show(getSupportFragmentManager(), "white_board_management");
         mExtraData.putParcelableArrayList(WhiteBoardManagement.WHITE_BOARD_COLL,
                 mWhiteboardController.getWhiteboardCollectionList());
-        mExtraData.putSerializable(WhiteBoardManagement.WHITE_BOARD_CLIENT, mClassroomClient);
+        mExtraData.putSerializable(WhiteBoardManagement.WHITE_BOARD_CLIENT, mUser);
         mWhiteBoardManagePanel.setArguments(mExtraData);
     }
 
@@ -499,7 +498,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             return;
         }
 
-        if (mClassroomClient == Constants.ClassroomClient.STUDENT && mWhiteboardController.isLiveWhiteboard()) {
+        if (mUser == Constants.User.STUDENT && mWhiteboardController.isLiveWhiteboard()) {
             Toast.makeText(this, R.string.wb_toolbar_unable_tips, Toast.LENGTH_SHORT).show();
             return;
         }

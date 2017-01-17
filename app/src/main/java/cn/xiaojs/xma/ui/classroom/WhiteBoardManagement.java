@@ -66,7 +66,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
 
     private ArrayList<WhiteboardCollection> mCollections;
     private String mLiveWhiteboardName;
-    private Constants.ClassroomClient mClassroomClient = Constants.ClassroomClient.TEACHER;
+    private Constants.User mUser = Constants.User.TEACHER;
 
 
     @Override
@@ -155,7 +155,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         Bundle data = getArguments();
         if (data != null) {
             mCollections = data.getParcelableArrayList(WHITE_BOARD_COLL);
-            mClassroomClient = (Constants.ClassroomClient) data.getSerializable(WHITE_BOARD_CLIENT);
+            mUser = (Constants.User) data.getSerializable(WHITE_BOARD_CLIENT);
             mWbAdapter.setData(mCollections);
         }
 
@@ -187,7 +187,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                     //TODO test
                     for (int i = 0; i < count; i++) {
                         WhiteboardLayer layer = new WhiteboardLayer();
-                        if (mClassroomClient == Constants.ClassroomClient.STUDENT) {
+                        if (mUser == Constants.User.STUDENT) {
                             layer.setCanSend(false);
                             layer.setCanReceive(true);
                         } else {
@@ -314,7 +314,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
             holder.title.setText(wbColl.isLive() ? mLiveWhiteboardName : wbColl.getName());
             holder.cover.setBackgroundColor(Color.GRAY);
 
-            if (!mRemoveMode || (wbColl.isLive() && mClassroomClient == Constants.ClassroomClient.STUDENT)) {
+            if (!mRemoveMode || (wbColl.isLive() && mUser == Constants.User.STUDENT)) {
                 holder.removeBtn.setVisibility(View.GONE);
             } else {
                 holder.removeBtn.setVisibility(View.VISIBLE);

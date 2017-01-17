@@ -47,7 +47,7 @@ public interface Constants {
     /**
      * 教室客户端
      */
-    public static enum ClassroomClient {
+    public static enum User {
         TEACHER, //老师
         STUDENT, //学生
         ADMIN, //监管
