@@ -240,7 +240,6 @@
                 android:id="@+id/my_teaching_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px20"
                 style="@style/MinePageItem">
 
             <TextView
@@ -273,7 +272,7 @@
 
 
         <View
-                style="@style/DividerHorizontal"/>
+                style="@style/DividerHorizontal2"/>
 
         <!--我报的名-->
         <RelativeLayout
@@ -311,7 +310,7 @@
         </RelativeLayout>
 
         <View
-                style="@style/DividerHorizontal"/>
+                style="@style/DividerHorizontal2"/>
 
 
         <!--资料库-->
@@ -350,7 +349,7 @@
         </RelativeLayout>
 
         <View
-                style="@style/DividerHorizontal"/>
+                style="@style/DividerHorizontal2"/>
 
         <!--我的收藏-->
         <RelativeLayout
@@ -425,7 +424,7 @@
         </RelativeLayout>
 
         <View
-                style="@style/DividerHorizontal"/>
+                style="@style/DividerHorizontal2"/>
 
         <!--实名认证-->
         <RelativeLayout
