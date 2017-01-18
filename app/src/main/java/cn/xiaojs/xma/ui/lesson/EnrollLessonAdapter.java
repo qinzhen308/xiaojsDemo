@@ -96,6 +96,16 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 //                    databank(bean);
 //                }
 //            });
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case ENTER:
+                            enterClass(bean);
+                            break;
+                    }
+                }
+            });
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
             holder.operation.setVisibility(View.GONE);
             holder.status.setVisibility(View.VISIBLE);
@@ -114,6 +124,9 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
                         case 2:
                             databank(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -127,7 +140,14 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
-                    databank(bean);
+                    switch (position) {
+                        case 1:
+                            databank(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
+                    }
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
@@ -148,6 +168,9 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
                         case 2:
                             databank(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -155,6 +178,16 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
             holder.operation.setVisibility(View.GONE);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case ENTER:
+                            enterClass(bean);
+                            break;
+                    }
+                }
+            });
         }
     }
 

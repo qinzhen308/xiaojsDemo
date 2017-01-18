@@ -132,6 +132,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 3://查看详情
                             detail(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -157,6 +160,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 3://删除
                             delete(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -176,6 +182,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             break;
                         case 2://删除
                             delete(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
                             break;
                     }
                 }
@@ -201,6 +210,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 3://删除
                             delete(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -221,6 +233,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             break;
                         case 2://查看详情
                             detail(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
                             break;
                     }
                 }
@@ -256,6 +271,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             break;
                         case MORE:
                             more(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
                             break;
                     }
                 }

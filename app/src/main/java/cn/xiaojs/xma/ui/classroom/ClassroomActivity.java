@@ -300,7 +300,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mCtlSession = ctlSession;
                     mUser = getUser(ctlSession.psType);
                     mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
-                    mAppType = ctlSession.connected.app;
+                    mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
 
                     //init socket
                     initSocketIO(mTicket, ctlSession.secret);
