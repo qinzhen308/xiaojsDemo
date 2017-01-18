@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.model.LiveSession;
+package cn.xiaojs.xma.model.live;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

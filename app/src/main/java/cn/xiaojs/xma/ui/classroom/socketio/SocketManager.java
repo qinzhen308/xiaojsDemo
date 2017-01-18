@@ -16,13 +16,15 @@ package cn.xiaojs.xma.ui.classroom.socketio;
 
 import java.net.URISyntaxException;
 
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.api.service.LiveService;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class SocketManager {
-    private final static String SCHEME = "http";
-    private final static String SCHEME_SSL = "https";
+    private final static String SCHEME = "http://";
+    private final static String SCHEME_SSL = "https://";
 
     private static Socket mSocket;
 
@@ -41,7 +43,11 @@ public class SocketManager {
     }
 
     public static String getClassroomSocketUrl() {
-        return SCHEME + "://" + Constants.CLASSROOM_BASE_URL + ":" + Constants.CLASSROOM_PORT + "/" + Constants.CLASSROOM_PATH;
+        return SCHEME + Constants.CLASSROOM_BASE_URL + ":" + Constants.CLASSROOM_PORT + "/" + Constants.CLASSROOM_PATH;
+    }
+
+    public static String getClassroomSocketUrl(String ticket, String secret) {
+        return SCHEME + XiaojsConfig.BASE_URL + ":" + LiveService.SERVICE_PORT + "/" + ticket + "?" + "secret=" + secret;
     }
 
     public static void close() {

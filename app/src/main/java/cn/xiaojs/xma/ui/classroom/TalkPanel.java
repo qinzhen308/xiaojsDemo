@@ -14,8 +14,10 @@ package cn.xiaojs.xma.ui.classroom;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -23,19 +25,39 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.live.LiveCriteria;
+import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom.talk.TalkBean;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.TalkSimpleContactAdapter;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class TalkPanel extends Panel implements View.OnClickListener, ContactBookAdapter.OnContactBookListener {
     public final static int MODE_CONTACT = 0;
-    public final static int MODE_CHAT = 1;
+    public final static int MODE_TALK = 1;
 
     private final static int MULTI_TALK = 1;
     private final static int TEACHING_TALK = 2;
-    private final static int SINGLE_TALK = 3;
+    private final static int PEER_TALK = 3;
 
     private ListView mContactBook;
     private ContactBookAdapter mContactBookAdapter;
@@ -44,7 +66,12 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private TalkSimpleContactAdapter mTalkContactAdapter;
 
     private PullToRefreshListView mTalkMsgLv;
-    private TalkMsgAdapter mTalkMsgAdapter;
+    private TalkMsgAdapter mPeerTalkMsgAdapter;
+    private TalkMsgAdapter mMultiTalkAdapter;
+    private TalkMsgAdapter mTeachingTalkAdapter;
+    private LiveCriteria mMultiLiveCriteria;
+    private LiveCriteria mTeachingCriteria;
+    private LiveCriteria mPeerCriteria;
 
     private View mContactView;
     private View mTalkView;
@@ -61,7 +88,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private TextView mKickOutTv;
     private TextView mBackTv;
 
-    private ImageView mToggleMsgLv;
+    private ImageView mCloseMsgLv;
     private ImageView mDelSingleTalkBtn;
 
     private EditText mMsgInputEdt;
@@ -78,11 +105,19 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
     private int mCurrentMode = MODE_CONTACT;
 
+    private LiveCollection<Attendee> mLiveCollection;
     private PanelCallback mCallback;
+    private final Object LOCK = new Object();
+    private String mTicket;
+    private Socket mSocket;
+    private int mTalkCriteria = MULTI_TALK;
+    private Attendee mTalkAttendee;
+    private String mPeerTalkAccountId = "";
+    private String mMyAccountId = "";
 
-    public TalkPanel(Context context) {
+    public TalkPanel(Context context, String ticket) {
         super(context);
-        initParams(context);
+        initParams(context, ticket);
     }
 
     public TalkPanel with(int mode) {
@@ -95,7 +130,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         return this;
     }
 
-    private void initParams(Context context) {
+    private void initParams(Context context, String ticket) {
+        mTicket = ticket;
         mWhiteColor = context.getResources().getColor(R.color.white);
         mBlackFont = context.getResources().getColor(R.color.font_black);
     }
@@ -111,7 +147,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             case MODE_CONTACT:
                 switchToContact();
                 break;
-            case MODE_CHAT:
+            case MODE_TALK:
                 switchToTalk();
                 break;
         }
@@ -119,12 +155,21 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
     @Override
     public void initData() {
+        mSocket = SocketManager.getSocket();
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), mOnSendTalk);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
+
+        mMyAccountId = AccountDataManager.getAccountID(mContext);
+
         switch (mCurrentMode) {
             case MODE_CONTACT:
-                setContactBookData(false);
+                getContactBookData();
                 break;
-            case MODE_CHAT:
-                setTalkSimpleContactData(false);
+            case MODE_TALK:
+                getTalkMsgData(MULTI_TALK);
+                getTalkSimpleContactData();
                 break;
         }
     }
@@ -137,9 +182,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
         mContactBook = (ListView) root.findViewById(R.id.contact_book);
         mTalkContactLv = (ListView) root.findViewById(R.id.talk_simple_contact);
-        mTalkMsgLv = (PullToRefreshListView)root.findViewById(R.id.chat_msg);
+        mTalkMsgLv = (PullToRefreshListView) root.findViewById(R.id.chat_msg);
 
-        mToggleMsgLv = (ImageView) root.findViewById(R.id.toggle_msg_list_view);
+        mCloseMsgLv = (ImageView) root.findViewById(R.id.close_msg_list_view);
         mDelSingleTalkBtn = (ImageView) root.findViewById(R.id.del_single_talk_btn);
 
         mDefaultContactAction = root.findViewById(R.id.default_contact_action);
@@ -158,16 +203,17 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
         mMultiTalkTab = root.findViewById(R.id.multi_talk_tab);
         mSingleTalkTab = root.findViewById(R.id.single_talk_tab);
-        mTeachTalkTab = (TextView)root.findViewById(R.id.teaching_talk_tab);
-        mMultiTalkTitle = (TextView)root.findViewById(R.id.multi_talk_title);
-        mSingleTalkTitle = (TextView)root.findViewById(R.id.single_talk_title);
+        mTeachTalkTab = (TextView) root.findViewById(R.id.teaching_talk_tab);
+        mMultiTalkTitle = (TextView) root.findViewById(R.id.multi_talk_title);
+        mSingleTalkTitle = (TextView) root.findViewById(R.id.single_talk_title);
 
         mTalkMsgLv.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
         mTalkMsgLv.getRefreshableView().setScrollBarStyle(AbsListView.SCROLLBARS_INSIDE_INSET);
         mTalkMsgLv.getRefreshableView().setFastScrollEnabled(true);
+        mTalkMsgLv.getRefreshableView().setDividerHeight(0);
 
         mOpenMsg.setOnClickListener(this);
-        mToggleMsgLv.setOnClickListener(this);
+        mCloseMsgLv.setOnClickListener(this);
         mAddContact.setOnClickListener(this);
         mSetAssistantTv.setOnClickListener(this);
         mKickOutTv.setOnClickListener(this);
@@ -187,14 +233,12 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         switch (v.getId()) {
             case R.id.open_talk:
                 switchToTalk();
-                setTalkSimpleContactData(false);
-                setTalkMsgData(false);
+                getTalkSimpleContactData();
+                getTalkMsgData(MULTI_TALK);
                 break;
-            case R.id.toggle_msg_list_view:
-                if (mTalkMsgView.getVisibility() == View.VISIBLE) {
-                    mTalkMsgView.setVisibility(View.GONE);
-                } else {
-                    mTalkMsgView.setVisibility(View.VISIBLE);
+            case R.id.close_msg_list_view:
+                if (mCallback != null) {
+                    mCallback.onClosePanel(PanelCallback.TALK_PANEL_MSG);
                 }
                 break;
             case R.id.add_contact:
@@ -215,6 +259,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             case R.id.del_single_talk_btn:
                 break;
             case R.id.msg_send:
+                sendMsg();
                 break;
             case R.id.multi_talk_tab:
                 switchTalkTab(MULTI_TALK);
@@ -223,34 +268,23 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 switchTalkTab(TEACHING_TALK);
                 break;
             case R.id.single_talk_tab:
-                switchTalkTab(SINGLE_TALK);
+                switchTalkTab(PEER_TALK);
                 break;
         }
     }
 
-    private void setContactBookData(boolean dataChanged) {
-        if (mContactBookAdapter == null) {
-            mContactBookAdapter = new ContactBookAdapter(mContext);
-            mContactBookAdapter.setOnContactBookListener(this);
-            mContactBook.setAdapter(mContactBookAdapter);
-            mContactBook.setDividerHeight(0);
-        } else {
-            //TODO set data
-            if (dataChanged) {
-                mContactBookAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-
-    private void switchTalkTab(int with) {
+    /**
+     * 切换不同的talk tab
+     */
+    private void switchTalkTab(int criteria) {
         mMultiTalkTab.setBackgroundColor(Color.TRANSPARENT);
         mTeachTalkTab.setBackgroundColor(Color.TRANSPARENT);
         mSingleTalkTab.setBackgroundColor(Color.TRANSPARENT);
         mMultiTalkTitle.setTextColor(mWhiteColor);
         mTeachTalkTab.setTextColor(mWhiteColor);
         mSingleTalkTitle.setTextColor(mWhiteColor);
-        switch (with) {
+
+        switch (criteria) {
             case MULTI_TALK:
                 mMultiTalkTab.setBackgroundColor(mWhiteColor);
                 mMultiTalkTitle.setTextColor(mBlackFont);
@@ -259,49 +293,163 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 mTeachTalkTab.setBackgroundColor(mWhiteColor);
                 mTeachTalkTab.setTextColor(mBlackFont);
                 break;
-            case SINGLE_TALK:
+            case PEER_TALK:
                 mSingleTalkTab.setBackgroundColor(mWhiteColor);
                 mSingleTalkTitle.setTextColor(mBlackFont);
                 break;
         }
+
+        getTalkMsgData(criteria);
     }
 
+    /**
+     * 切换到talk页面
+     */
     private void switchToTalk() {
         mContactView.setVisibility(View.GONE);
         mTalkView.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 切换到联系人页面
+     */
     private void switchToContact() {
         mContactView.setVisibility(View.VISIBLE);
         mTalkView.setVisibility(View.GONE);
     }
 
-    private void setTalkSimpleContactData(boolean dataChanged) {
+    /**
+     * 获取联系人信息
+     */
+    private void getContactBookData() {
+        if (mContactBookAdapter == null) {
+            mContactBookAdapter = new ContactBookAdapter(mContext);
+            mContactBookAdapter.setOnContactBookListener(this);
+            mContactBook.setAdapter(mContactBookAdapter);
+            mContactBook.setDividerHeight(0);
+
+            if (mLiveCollection != null) {
+                mContactBookAdapter.setData(mLiveCollection);
+            } else {
+                LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
+                    @Override
+                    public void onSuccess(LiveCollection<Attendee> liveCollection) {
+                        mLiveCollection = liveCollection;
+                        mContactBookAdapter.setData(mLiveCollection);
+                        Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * 设置talk右边联系人缩略面板
+     */
+    private void getTalkSimpleContactData() {
         if (mTalkContactAdapter == null) {
             mTalkContactAdapter = new TalkSimpleContactAdapter(mContext);
             mTalkContactLv.setAdapter(mTalkContactAdapter);
             mTalkContactLv.setDividerHeight(0);
-        } else {
-            //TODO set data
-            if (dataChanged) {
-                mTalkContactAdapter.notifyDataSetChanged();
+
+            if (mLiveCollection != null) {
+                mTalkContactAdapter.setData(mLiveCollection);
+            } else {
+                LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
+                    @Override
+                    public void onSuccess(LiveCollection<Attendee> liveCollection) {
+                        Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
+                        mLiveCollection = liveCollection;
+                        mTalkContactAdapter.setData(liveCollection);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }
 
-    private void setTalkMsgData(boolean dataChanged) {
-        if (mTalkMsgAdapter == null) {
-            mTalkMsgAdapter = new TalkMsgAdapter(mContext, mTalkMsgLv);
-            mTalkMsgLv.setAdapter(mTalkMsgAdapter);
-            mTalkMsgLv.getRefreshableView().setDividerHeight(0);
-        } else {
-            //TODO set data
-            if (dataChanged) {
-                mTalkMsgAdapter.notifyDataSetChanged();
-            }
+    /**
+     * 获取talk消息数据
+     */
+    private void getTalkMsgData(int criteria) {
+        mTalkCriteria = criteria;
+        switch (criteria) {
+            case MULTI_TALK:
+                if (mMultiTalkAdapter == null) {
+                    mMultiLiveCriteria = new LiveCriteria();
+                    mMultiLiveCriteria.to = Communications.TalkType.OPEN;
+                    mMultiTalkAdapter = new TalkMsgAdapter(mContext, mTicket, mMultiLiveCriteria, mTalkMsgLv);
+                    mTalkMsgLv.setAdapter(mMultiTalkAdapter);
+                } else {
+                    mTalkMsgLv.setAdapter(mMultiTalkAdapter);
+                }
+                break;
+            case TEACHING_TALK:
+                if (mTeachingTalkAdapter == null) {
+                    mTeachingCriteria = new LiveCriteria();
+                    mTeachingCriteria.to = Communications.TalkType.FACULTY;
+                    mTeachingTalkAdapter = new TalkMsgAdapter(mContext, mTicket, mTeachingCriteria, mTalkMsgLv);
+                    mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
+                } else {
+                    mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
+                }
+                break;
+            case PEER_TALK:
+                if (mPeerCriteria == null) {
+                    mPeerCriteria = new LiveCriteria();
+                }
+
+                try {
+                    mPeerCriteria.to = Integer.parseInt(mPeerTalkAccountId);
+                } catch (Exception e) {
+
+                }
+
+                //重新装载数据
+                mPeerTalkMsgAdapter = new TalkMsgAdapter(mContext, mTicket, mPeerCriteria, mTalkMsgLv);
+                mTalkMsgLv.setAdapter(mPeerTalkMsgAdapter);
+                break;
         }
     }
 
+    /**
+     * 获取talk消息数据
+     */
+    private void updateTalkMsgData(int criteria, TalkItem talkItem) {
+        switch (criteria) {
+            case MULTI_TALK:
+                if (mMultiTalkAdapter != null) {
+                    mMultiTalkAdapter.add(talkItem);
+                    mTalkMsgLv.setAdapter(mMultiTalkAdapter);
+                }
+                break;
+            case TEACHING_TALK:
+                if (mTeachingTalkAdapter != null) {
+                    mTeachingTalkAdapter.add(talkItem);
+                    mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
+                }
+                break;
+            case PEER_TALK:
+                if (mPeerTalkMsgAdapter != null) {
+                    mPeerTalkMsgAdapter.add(talkItem);
+                    mTalkMsgLv.setAdapter(mPeerTalkMsgAdapter);
+                }
+                break;
+        }
+    }
+
+    /**
+     * 进入联系人管理
+     */
     private void enterContactManagement() {
         mDefaultContactAction.setVisibility(View.GONE);
         mManageContactAction.setVisibility(View.VISIBLE);
@@ -310,6 +458,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         }
     }
 
+    /**
+     * 退出联系人管理
+     */
     private void exitContactManagement() {
         mDefaultContactAction.setVisibility(View.VISIBLE);
         mManageContactAction.setVisibility(View.GONE);
@@ -319,10 +470,204 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     }
 
     @Override
-    public void onPortraitClick() {
+    public void onPortraitClick(Attendee attendee) {
         switchToTalk();
-        setTalkSimpleContactData(false);
-        setTalkMsgData(false);
+        getTalkSimpleContactData();
+        mTalkAttendee = attendee;
+        mPeerTalkAccountId = attendee != null ? attendee.accountId : "";
+        getTalkMsgData(PEER_TALK);
+    }
+
+    /**
+     * 加入事件
+     */
+    private Emitter.Listener mOnJoin = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if (mContext instanceof Activity && args != null && args.length > 0) {
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateContactList(true, args);
+                    }
+                });
+            }
+        }
+    };
+
+    /**
+     * 退出事件
+     */
+    private Emitter.Listener mOnLeave = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if (mContext instanceof Activity && args != null && args.length > 0) {
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateContactList(false, args);
+                    }
+                });
+            }
+        }
+    };
+
+    /**
+     * 更新联系人列表
+     */
+    private void updateContactList(boolean add, Object... args) {
+        if (args == null || args.length == 0) {
+            return;
+        }
+
+        if (!(args[0] instanceof String)) {
+            return;
+        }
+
+        String result = (String) args[0];
+        Attendee attendee = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            attendee = mapper.readValue(result, Attendee.class);
+        } catch (Exception e) {
+
+        }
+
+        if (attendee != null && mLiveCollection != null) {
+            if (mLiveCollection.attendees == null) {
+                mLiveCollection.attendees = new ArrayList<Attendee>();
+            }
+
+            //refresh list
+            synchronized (LOCK) {
+                if (add) {
+                    //add
+                    mLiveCollection.attendees.add(attendee);
+                } else {
+                    //remove
+                    mLiveCollection.attendees.remove(attendee);
+                }
+
+                if (mTalkContactAdapter != null) {
+                    mTalkContactAdapter.setData(mLiveCollection);
+                }
+
+                if (mContactBookAdapter != null) {
+                    mContactBookAdapter.setData(mLiveCollection);
+                }
+            }
+        }
+    }
+
+    /**
+     * 加入事件
+     */
+    private Emitter.Listener mOnReceiveTalk = new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+                    if (mContext instanceof Activity && args != null && args.length > 0) {
+                        ((Activity) mContext).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateMsgList(args);
+                            }
+                        });
+                    }
+                }
+            };
+
+    /**
+     * 退出事件
+     */
+    private Emitter.Listener mOnSendTalk = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if (mContext instanceof Activity && args != null && args.length > 0) {
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateMsgList(args);
+                    }
+                });
+            }
+        }
+    };
+
+    private void updateMsgList(Object... args) {
+        if (args == null || args.length == 0) {
+            return;
+        }
+
+        if (!(args[0] instanceof String)) {
+            return;
+        }
+
+        String result = (String) args[0];
+        TalkItem talkItem = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            talkItem = mapper.readValue(result, TalkItem.class);
+        } catch (Exception e) {
+
+        }
+
+        if (talkItem != null) {
+            updateTalkMsgData(mTalkCriteria, talkItem);
+        }
+    }
+
+    private void sendMsg() {
+        String text = mMsgInputEdt.getText().toString();
+        TalkItem talkItem = new TalkItem();
+
+        TalkItem.TalkPerson person = new TalkItem.TalkPerson();
+        //myself info
+        person.accountId = mMyAccountId;
+        //person.name = mTalkAttendee.name;
+        //person.avatar = mTalkAttendee.avatar;
+        talkItem.from = person;
+
+        TalkItem.TalkContent talkContent = new TalkItem.TalkContent();
+        talkContent.text = text;
+        talkItem.body = talkContent;
+
+        long sendTime = System.currentTimeMillis();
+        talkItem.time = new Date(sendTime);
+
+        updateTalkMsgData(mTalkCriteria, talkItem);
+
+        TalkBean talkBean = new TalkBean();
+        TalkBean.TalkContent sendContent = new TalkBean.TalkContent();
+        talkBean.time = sendTime;
+        talkBean.body = sendContent;
+        switch (mTalkCriteria) {
+            case MULTI_TALK:
+                talkBean.to = Communications.TalkType.OPEN;
+                break;
+            case PEER_TALK:
+                talkBean.to = Communications.TalkType.FACULTY;
+                break;
+            case TEACHING_TALK:
+                try {
+                    talkBean.to = Integer.parseInt(mPeerTalkAccountId);
+                } catch (Exception e) {
+
+                }
+                break;
+        }
+        String sendJson = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            sendJson = mapper.writeValueAsString(talkBean);
+        } catch (Exception e) {
+
+        }
+        if (!TextUtils.isEmpty(sendJson)) {
+            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), sendJson);
+        }
+
+        //reset text
+        mMsgInputEdt.setText("");
     }
 }
 
