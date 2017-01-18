@@ -579,17 +579,17 @@ public class LessonCreationActivity extends BaseActivity {
             }
 
             String limitPeople = mLessonStuCount.getText().toString().trim();
-            if (TextUtils.isEmpty(limitPeople)) {
+            if (mEnrollSwitcher.isChecked() && TextUtils.isEmpty(limitPeople)) {
                 Toast.makeText(mContext, R.string.lesson_people_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
-            int limit = Integer.parseInt(limitPeople);
+            int limit = TextUtils.isEmpty(limitPeople) ? 0 : Integer.parseInt(limitPeople);
             /*if (limit > MAX_STUDENT_COUNT) {
                 String tips = String.format(getString(R.string.enroll_people_must_be_less_than), MAX_STUDENT_COUNT);
                 Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return false;
             }*/
-            if (limit <= 0) {
+            if (mEnrollSwitcher.isChecked() && limit <= 0) {
                 Toast.makeText(mContext, R.string.lesson_people_must_be_positive, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -646,7 +646,11 @@ public class LessonCreationActivity extends BaseActivity {
         }
 
         Enroll enroll = new Enroll();
-        int limitPeople = Integer.parseInt(mLessonStuCount.getText().toString());
+
+        String studentNum = mLessonStuCount.getText().toString();
+
+        //FIXME 测试临时用：当不需要报名的课程时，报名位数默认为100，如果为0 ，接口回报参数错误
+        int limitPeople = TextUtils.isEmpty(studentNum) ? 100: Integer.parseInt(studentNum);
         enroll.max = limitPeople;
         enroll.mandatory = mEnrollSwitcher.isChecked();
 
