@@ -5,15 +5,13 @@ import android.content.Context;
 import cn.xiaojs.xma.data.api.LiveRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
-import cn.xiaojs.xma.model.LiveSession.Attendee;
-import cn.xiaojs.xma.model.LiveSession.CtlSession;
-import cn.xiaojs.xma.model.LiveSession.LiveCollection;
-import cn.xiaojs.xma.model.LiveSession.LiveCriteria;
-import cn.xiaojs.xma.model.LiveSession.TalkItem;
-import cn.xiaojs.xma.model.LiveSession.Ticket;
+import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.live.LiveCriteria;
+import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.live.Ticket;
 import cn.xiaojs.xma.model.Pagination;
-import cn.xiaojs.xma.model.social.Contact;
-import retrofit2.Call;
 
 /**
  * Created by maxiaobao on 2017/1/9.
@@ -60,7 +58,7 @@ public class LiveManager {
      * @param pagination
      * @param callback
      */
-    public void getTalks(Context context,
+    public static void getTalks(Context context,
                          String ticket,
                          LiveCriteria criteria,
                          Pagination pagination,

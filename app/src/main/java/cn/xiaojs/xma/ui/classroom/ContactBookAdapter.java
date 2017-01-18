@@ -21,20 +21,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 public class ContactBookAdapter extends BaseAdapter implements View.OnClickListener{
     private Context mContext;
     private boolean mContactManagementMode = false;
     private List<String> mChoiceList;
     private OnContactBookListener mListener;
+    private LiveCollection<Attendee> mLiveCollection;
+    private ArrayList<Attendee> mAttendeeList;
     private int mOffset;
 
     public ContactBookAdapter(Context context) {
@@ -47,15 +49,24 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         mListener = listener;
     }
 
-    @Override
-    public int getCount() {
-        //TODO test count
-        return 10;
+    public void setData(LiveCollection<Attendee> liveCollection) {
+        mLiveCollection = liveCollection;
+        mAttendeeList = liveCollection != null ? liveCollection.attendees : null;
+        notifyDataSetChanged();
+    }
+
+    public LiveCollection<Attendee> getLiveCollection() {
+        return mLiveCollection;
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public int getCount() {
+        return mAttendeeList != null ? mAttendeeList.size() : 0;
+    }
+
+    @Override
+    public Attendee getItem(int position) {
+        return mAttendeeList != null ? mAttendeeList.get(position) : null;
     }
 
     @Override
@@ -107,7 +118,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.portrait.setImageResource(R.drawable.default_portrait);
         holder.position = position;
         if (mContactManagementMode) {
-            holder.portrait.setCount(0);
+            //holder.portrait.setCount(0);
             holder.video.setVisibility(View.GONE);
             holder.microphone.setVisibility(View.GONE);
             holder.checkbox.setVisibility(View.VISIBLE);
@@ -116,7 +127,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.checkbox.setVisibility(View.GONE);
             holder.video.setVisibility(View.VISIBLE);
             holder.microphone.setVisibility(View.VISIBLE);
-            holder.portrait.setCount(9);
+            //holder.portrait.setCount(9);
         }
     }
 
@@ -143,7 +154,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                         s = "portrait";
                         //enter chat
                         if (mListener != null) {
-                            mListener.onPortraitClick();
+                            mListener.onPortraitClick(mAttendeeList.get(pos));
                         }
                         break;
                     case R.id.video:
@@ -183,6 +194,6 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     }
 
     public interface OnContactBookListener {
-        public void onPortraitClick();
+        public void onPortraitClick(Attendee attendee);
     }
 }

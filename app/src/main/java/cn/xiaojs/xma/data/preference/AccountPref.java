@@ -5,7 +5,13 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.model.account.User;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
+
+import java.io.IOException;
 
 /**
  * Created by maxiaobao on 2016/11/21.
@@ -19,6 +25,7 @@ public class AccountPref{
     private static final String PREF_ID = "active_id";
 
     private static final String PREF_SUBJECT = "acc_subject";
+    private static final String PREF_USER = "active_u";
     //private static final String PREF_NAME = "active_name";
 
 
@@ -28,6 +35,37 @@ public class AccountPref{
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
+
+    public static void setUser(final Context context, User user) {
+
+        String userJson = "";
+        try {
+            userJson =  new ObjectMapper().writeValueAsString(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_USER, userJson).apply();
+
+    }
+
+    public static User getUser(final Context context) {
+
+        User user = null;
+
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        String userJson = sp.getString(PREF_USER,"");
+        if (!TextUtils.isEmpty(userJson)){
+            try {
+                user = new ObjectMapper().readValue(userJson,User.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return user;
+    }
 
 
     public static void setSubject(final Context context,String subject) {

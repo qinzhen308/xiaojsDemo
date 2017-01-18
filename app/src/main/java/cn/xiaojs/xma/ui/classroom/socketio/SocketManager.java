@@ -16,32 +16,40 @@ package cn.xiaojs.xma.ui.classroom.socketio;
 
 import java.net.URISyntaxException;
 
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.api.service.LiveService;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class SocketManager {
-    private final static String SCHEME = "http";
-    private final static String SCHEME_SSL = "https";
+    private final static String SCHEME = "http://";
+    private final static String SCHEME_SSL = "https://";
 
     private static Socket mSocket;
 
+    public synchronized static void init(String ticket, String secret) {
+        if (mSocket == null) {
+            try {
+                mSocket = IO.socket(getClassroomSocketUrl(ticket, secret));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException("Only one socket may be created!");
+        }
+    }
+
     public synchronized static Socket getSocket() {
-        if (mSocket != null) {
-            return mSocket;
-        }
-
-        try {
-            mSocket = IO.socket(getClassroomSocketUrl());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-
         return mSocket;
     }
 
     public static String getClassroomSocketUrl() {
-        return SCHEME + "://" + Constants.CLASSROOM_BASE_URL + ":" + Constants.CLASSROOM_PORT + "/" + Constants.CLASSROOM_PATH;
+        return SCHEME + Constants.CLASSROOM_BASE_URL + ":" + Constants.CLASSROOM_PORT + "/" + Constants.CLASSROOM_PATH;
+    }
+
+    public static String getClassroomSocketUrl(String ticket, String secret) {
+        return XiaojsConfig.BASE_URL + ":" + LiveService.SERVICE_PORT + "/" + ticket + "?" + "secret=" + secret;
     }
 
     public static void close() {

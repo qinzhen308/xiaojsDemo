@@ -1,11 +1,11 @@
 package cn.xiaojs.xma.data.api.service;
 
 import cn.xiaojs.xma.model.CollectionPage;
-import cn.xiaojs.xma.model.LiveSession.Attendee;
-import cn.xiaojs.xma.model.LiveSession.CtlSession;
-import cn.xiaojs.xma.model.LiveSession.LiveCollection;
-import cn.xiaojs.xma.model.LiveSession.TalkItem;
-import cn.xiaojs.xma.model.LiveSession.Ticket;
+import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.live.Ticket;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;

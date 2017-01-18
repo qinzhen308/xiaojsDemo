@@ -16,12 +16,14 @@ package cn.xiaojs.xma.ui.classroom;
 
 public interface PanelCallback {
     public final static int COURSE_PANEL = 1;
-    public final static int CHAT_PANEL_MSG = 2;
-    public final static int CHAT_PANEL_CONTACT = 3;
+    public final static int TALK_PANEL_MSG = 2;
+    public final static int TALK_PANEL_CONTACT = 3;
     public final static int MESSAGE_PANEL = 4;
     public final static int SETTING_PANEL = 5;
     public final static int INVITE_FRIEND_PANEL = 6;
     public final static int QUESTION_ANSWER_PANEL = 7;
 
     public void onOpenPanel(int panel);
+
+    public void onClosePanel(int panel);
 }

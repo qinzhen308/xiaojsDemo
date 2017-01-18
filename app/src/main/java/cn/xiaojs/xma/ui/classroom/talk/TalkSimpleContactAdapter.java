@@ -6,7 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.util.ArrayList;
+
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 
 /*  =======================================================================================
@@ -27,21 +31,32 @@ import cn.xiaojs.xma.ui.widget.MessageImageView;
 public class TalkSimpleContactAdapter extends BaseAdapter {
     private Context mContext;
     private int mOffset;
+    private LiveCollection<Attendee> mLiveCollection;
+    private ArrayList<Attendee> mAttendeeList;
 
     public TalkSimpleContactAdapter(Context context) {
         mContext = context;
         mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px4);
     }
 
-    @Override
-    public int getCount() {
-        //TODO test count
-        return 10;
+    public void setData(LiveCollection<Attendee> liveCollection) {
+        mLiveCollection = liveCollection;
+        mAttendeeList = liveCollection != null ? liveCollection.attendees : null;
+        notifyDataSetChanged();
+    }
+
+    public LiveCollection<Attendee> getLiveCollection() {
+        return mLiveCollection;
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public int getCount() {
+        return mAttendeeList != null ? mAttendeeList.size() : 0;
+    }
+
+    @Override
+    public Attendee getItem(int position) {
+        return mAttendeeList != null ? mAttendeeList.get(position) : null;
     }
 
     @Override
@@ -76,7 +91,7 @@ public class TalkSimpleContactAdapter extends BaseAdapter {
 
     private void bindData(Holder holder) {
         holder.portrait.setImageResource(R.drawable.default_portrait);
-        holder.portrait.setCount(5);
+        //holder.portrait.setCount(5);
     }
 
 
