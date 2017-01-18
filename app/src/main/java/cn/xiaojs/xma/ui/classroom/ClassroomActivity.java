@@ -996,8 +996,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private void initSocketIO(String ticket, String secret) {
         SocketManager.init(ticket, secret);
+        mSocket = SocketManager.getSocket();
         if (mSocket != null) {
-            mSocket = SocketManager.getSocket();
             mSocket.connect();
         }
     }
