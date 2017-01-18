@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
@@ -92,6 +94,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
         holder.name.setText(bean.getTitle());
         //Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
+        if (TextUtils.isEmpty(bean.getState()))
+            return;
         if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)) {
             String[] items = new String[]{mContext.getString(R.string.shelves),
                     mContext.getString(R.string.edit),
@@ -207,11 +211,11 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
                 || bean.getState().equalsIgnoreCase(LessonState.LIVE)
                 || bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-            String[] items = new String[]{mContext.getString(R.string.prepare_lesson),
+            String[] items = new String[]{/*mContext.getString(R.string.prepare_lesson),*/
                     mContext.getString(R.string.class_home)};
-            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-                items[0] = mContext.getString(R.string.lesson_again);
-            }
+//            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+//                items[0] = mContext.getString(R.string.lesson_again);
+//            }
             holder.operation.enableMore(true);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -219,11 +223,12 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 public void onClick(int position) {
                     switch (position) {
                         case 1://备课
-                            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-                                lessonAgain(bean);
-                            } else {
-                                prepare(bean);
-                            }
+//                            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+//                                lessonAgain(bean);
+//                            } else {
+//                                prepare(bean);
+//                            }
+                            home(bean);
                             break;
                         case 2://班级主页
                             home(bean);
@@ -372,7 +377,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     //班级主页
     private void home(TeachLesson bean) {
-
+        Intent intent = new Intent(mContext, GradeHomeActivity.class);
+        mContext.startActivity(intent);
     }
 
     //分享
@@ -631,7 +637,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     @Override
     protected View createContentView(int position) {
-        View v = mInflater.inflate(R.layout.layout_my_course, null);
+        View v = mInflater.inflate(R.layout.layout_teach_lesson_item, null);
         return v;
     }
 

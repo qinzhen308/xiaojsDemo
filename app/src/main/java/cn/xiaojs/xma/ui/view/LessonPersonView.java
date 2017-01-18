@@ -23,6 +23,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 public class LessonPersonView extends LinearLayout {
@@ -75,5 +76,18 @@ public class LessonPersonView extends LinearLayout {
         ButterKnife.bind(this);
     }
 
+    public void show(EnrolledLesson bean){
+        if (bean == null)
+            return;
+        name1.setText(bean.getTeacher().getBasic().getName());
+        desc1.setText("主讲");
+
+        image2.setVisibility(GONE);
+        name2.setVisibility(GONE);
+        desc2.setVisibility(GONE);
+        image3.setVisibility(GONE);
+        name3.setVisibility(GONE);
+        desc3.setVisibility(GONE);
+    }
 
 }

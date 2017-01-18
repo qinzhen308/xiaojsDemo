@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,6 +27,9 @@ import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.model.EnrolledLesson;
+import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.TimeUtil;
 
 public class LessonStatusView extends RelativeLayout {
 
@@ -46,6 +50,9 @@ public class LessonStatusView extends RelativeLayout {
 
     @BindView(R.id.lesson_end)
     ImageView end;
+
+    @BindView(R.id.mark)
+    View mark;
 
     public LessonStatusView(Context context) {
         super(context);
@@ -79,25 +86,36 @@ public class LessonStatusView extends RelativeLayout {
             return;
         reset();
         if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
+            time.setText(TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
+            title.setText("因老师个人原因，该班已取消");
             this.status.setVisibility(VISIBLE);
             this.status.setText(R.string.course_state_cancel);
             this.status.setBackgroundResource(R.drawable.course_state_cancel_bg);
+            mark.setBackgroundResource(R.color.hor_divide_line);
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+            time.setText(TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
+            title.setText("累计学时2小时，获得了50积分");
             end.setVisibility(VISIBLE);
+            evaluate.setVisibility(VISIBLE);
+            review.setVisibility(VISIBLE);
+            mark.setBackgroundResource(R.color.hor_divide_line);
         } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
             this.status.setVisibility(VISIBLE);
-            this.status.setText(R.string.pending_for_course);
-            this.status.setBackgroundResource(R.drawable.course_state_wait_bg);
-        }else{
-
+            this.status.setText(R.string.force_stop);
+            this.status.setBackgroundResource(R.drawable.course_state_stop_bg);
+        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
+            time.setText(TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
+            String s = "距离上课还有3天";
+            title.setText(StringUtil.getSpecialString(s, String.valueOf(3), DeviceUtil.getColor(getContext(), R.color.font_orange)));
         }
     }
 
-    private void reset(){
+    private void reset() {
         status.setVisibility(GONE);
         end.setVisibility(GONE);
         distance.setVisibility(GONE);
         evaluate.setVisibility(GONE);
         review.setVisibility(GONE);
+        mark.setBackgroundResource(R.color.font_orange);
     }
 }

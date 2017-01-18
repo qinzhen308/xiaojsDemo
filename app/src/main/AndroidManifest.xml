@@ -184,6 +184,12 @@
                 android:name=".TestActivity"
                 android:screenOrientation="landscape"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+        <activity
+                android:name=".ui.lesson.TeachLessonActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.lesson.EnrollLessonActivity"
+                android:screenOrientation="portrait"/>
         <!--service-->
         <service
                 android:name=".data.loader.SyncService"

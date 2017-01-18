@@ -273,7 +273,7 @@
     <string name="examine_failure">审核失败</string>
     <string name="force_stop">强制停止</string>
     <string name="examining">审核中</string>
-    <string name="pending_for_course">待上课</string>
+    <string name="pending_for_course">待开课</string>
     <string name="living">上课中</string>
     <string name="course_stu">已报名&#160;%1$d/%2$d</string>
     <string name="shelves_need_examine">您提交的上架申请正在审核中，请耐心等待</string>

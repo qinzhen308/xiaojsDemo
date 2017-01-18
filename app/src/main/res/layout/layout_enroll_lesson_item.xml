@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:background="@drawable/white_grey_selector"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
@@ -37,6 +38,7 @@
             android:id="@+id/enroll_lesson_item_persons"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

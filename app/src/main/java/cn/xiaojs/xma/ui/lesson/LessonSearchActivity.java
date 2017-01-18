@@ -50,7 +50,7 @@ public class LessonSearchActivity extends BaseActivity {
         if (isTeacher){
             adapter = new TeachLessonAdapter(this,mList,false);
         }else {
-            adapter = new EnrollLessonAdapter(this,mList,false);
+            adapter = new EnrollLessonAdapter(this,mList);
         }
         mList.setAdapter(adapter);
     }

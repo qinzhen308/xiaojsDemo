@@ -25,6 +25,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public class LessonOperationView extends RelativeLayout {
 
@@ -85,7 +86,7 @@ public class LessonOperationView extends RelativeLayout {
         listener = l;
     }
 
-    public void enableMore(boolean b){
+    public void enableMore(boolean b) {
         enable = b;
     }
 
@@ -95,24 +96,39 @@ public class LessonOperationView extends RelativeLayout {
         if (items == null || items.length <= 0)
             return;
         if (items.length == 1) {
+            if (enable) {
+                more.setVisibility(VISIBLE);
+                divider1.setVisibility(VISIBLE);
+            } else {
+                more.setVisibility(GONE);
+                divider1.setVisibility(GONE);
+            }
             opera1.setVisibility(VISIBLE);
             opera2.setVisibility(GONE);
             opera3.setVisibility(GONE);
-            divider1.setVisibility(GONE);
+
             divider2.setVisibility(GONE);
-            more.setVisibility(GONE);
+            opera1.setText(items[0]);
         } else if (items.length == 2) {
+            if (enable) {
+                more.setVisibility(VISIBLE);
+                divider2.setVisibility(VISIBLE);
+            } else {
+                more.setVisibility(GONE);
+                divider2.setVisibility(GONE);
+            }
             opera1.setVisibility(VISIBLE);
             opera2.setVisibility(VISIBLE);
             opera3.setVisibility(GONE);
             divider1.setVisibility(VISIBLE);
-            divider2.setVisibility(GONE);
-            more.setVisibility(GONE);
+
+            opera1.setText(items[0]);
+            opera2.setText(items[1]);
         } else if (items.length == 3) {
-            if (enable){
+            if (enable) {
                 opera3.setVisibility(GONE);
                 more.setVisibility(VISIBLE);
-            }else {
+            } else {
                 opera3.setVisibility(VISIBLE);
                 more.setVisibility(GONE);
             }
@@ -120,14 +136,12 @@ public class LessonOperationView extends RelativeLayout {
             opera2.setVisibility(VISIBLE);
             divider1.setVisibility(VISIBLE);
             divider2.setVisibility(VISIBLE);
-
-        } else {
-            opera1.setVisibility(VISIBLE);
-            opera2.setVisibility(VISIBLE);
-            divider1.setVisibility(VISIBLE);
-            divider2.setVisibility(VISIBLE);
-            opera3.setVisibility(GONE);
-            more.setVisibility(VISIBLE);
+            opera1.setText(items[0]);
+            opera2.setText(items[1]);
+            opera3.setText(items[2]);
+        }
+        if (more.getVisibility() == VISIBLE){
+            DeviceUtil.expandViewTouch(more,50);
         }
     }
 
