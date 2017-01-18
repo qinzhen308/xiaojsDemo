@@ -564,7 +564,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     }
 
     /**
-     * 加入事件
+     * 接收到消息
      */
     private Emitter.Listener mOnReceiveTalk = new Emitter.Listener() {
                 @Override
@@ -573,7 +573,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                         ((Activity) mContext).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(mContext, "消息发送", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
                                 updateMsgList(args);
                             }
                         });
@@ -582,7 +582,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             };
 
     /**
-     * 退出事件
+     * 消息发送
      */
     private Emitter.Listener mOnSendTalk = new Emitter.Listener() {
         @Override
@@ -591,7 +591,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "消息发送", Toast.LENGTH_SHORT).show();
                         updateMsgList(args);
                     }
                 });
