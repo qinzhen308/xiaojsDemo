@@ -148,7 +148,7 @@
         </RelativeLayout>
 
         <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
-                android:id="@+id/teacher_video"
+                android:id="@+id/my_video"
                 android:layout_width="@dimen/px144"
                 android:layout_height="@dimen/px81"
                 android:layout_below="@+id/title_bar"
