@@ -96,7 +96,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
     private void initHeader() {
         needHeaderDivider(false);
         mBack.setImageResource(R.drawable.ic_white_back);
-        Bitmap blur = FastBlur.smartBlur(BitmapUtils.getBitmap(this, R.drawable.default_portrait), 2, true);
+        Bitmap blur = FastBlur.smartBlur(BitmapUtils.getBitmap(this, R.drawable.por_58), 2, true);
         mBlur.setImageBitmap(blur);
         needHeader(false);
         mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
@@ -114,7 +114,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         int width = DeviceUtil.getScreenWidth(this);
         int height = (int) (width * mCoverScale);
         mFreeCover.getLayoutParams().height = height;
-
+        mFreeCover.setImageResource(DeviceUtil.getLesson());
         List<Bitmap> lists = new ArrayList<>();
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));

@@ -33,7 +33,7 @@
                     app:oval="true"
                     app:border_color="@color/white"
                     app:border_width="@dimen/px1"
-                    android:src="@drawable/default_portrait"
+                    android:src="@drawable/por_58"
                     android:layout_marginTop="@dimen/px100"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="@dimen/px100"

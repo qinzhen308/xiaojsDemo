@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.personal;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.ui.lesson.LessonBusiness;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public class PersonHomeLessonAdapter extends AbsSwipeAdapter<LessonBusiness,PersonHomeLessonAdapter.Holder> {
     public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, boolean isNeedPreLoading) {
@@ -41,6 +43,7 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<LessonBusiness,Pers
     @Override
     protected void setViewContent(Holder holder, LessonBusiness bean, int position) {
         holder.title.setText("重要的化妆防晒手册 " + position);
+        holder.image.setImageResource(DeviceUtil.getLesson());
     }
 
     @Override
@@ -76,6 +79,8 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<LessonBusiness,Pers
 
         @BindView(R.id.lesson_adapter_name)
         TextView title;
+        @BindView(R.id.lesson_adapter_image)
+        ImageView image;
         public Holder(View view) {
             super(view);
         }

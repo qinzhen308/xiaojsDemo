@@ -19,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import cn.xiaojs.xma.R;
@@ -26,6 +27,7 @@ import cn.xiaojs.xma.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.ui.view.AnimationView;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdapter.Holder> {
 
@@ -60,6 +62,7 @@ public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdap
         }
         holder.wrapper.setLayoutParams(mlp);
         holder.animation.start();
+        holder.cover.setImageResource(DeviceUtil.getLesson());
     }
 
     @Override
@@ -73,6 +76,8 @@ public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdap
         LinearLayout wrapper;
         @BindView(R.id.animation)
         AnimationView animation;
+        @BindView(R.id.live_brilliant_image)
+        ImageView cover;
 
         public Holder(View itemView) {
             super(itemView);
