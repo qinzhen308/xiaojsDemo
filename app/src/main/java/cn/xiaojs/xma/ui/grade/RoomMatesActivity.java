@@ -67,7 +67,7 @@ public class RoomMatesActivity extends BaseActivity {
         dates.add(new Date());
         dates.add(new Date());
         dates.add(new Date());
-        PersonalProfileAdapter adapter = new PersonalProfileAdapter(dates, this);
+        PersonalProfileAdapter adapter = new PersonalProfileAdapter(dates, this,false);
 
         mGrid.setAdapter(adapter);
         mGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {

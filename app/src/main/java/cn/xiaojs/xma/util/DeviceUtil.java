@@ -22,6 +22,8 @@ import android.util.DisplayMetrics;
 import android.view.TouchDelegate;
 import android.view.View;
 
+import java.util.Random;
+
 public class DeviceUtil {
     public static int getScreenWidth(Context context) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
@@ -73,5 +75,15 @@ public class DeviceUtil {
         } else {
             return res.getColor(resId, null);
         }
+    }
+
+    public static int getPor(){
+        Random random = new Random();
+        return SourceConfig.pors[random.nextInt(72) + 1];
+    }
+
+    public static int getLesson(){
+        Random random = new Random();
+        return SourceConfig.lessons[random.nextInt(56) + 1];
     }
 }

@@ -28,10 +28,12 @@ public class PersonalProfileAdapter extends BaseAdapter {
 
     private List<Date> dates;
     private Context context;
+    private boolean mIsTeacher;
 
-    public PersonalProfileAdapter(List<Date> dates,Context context) {
+    public PersonalProfileAdapter(List<Date> dates,Context context,boolean isTeacher) {
         this.dates = dates;
         this.context = context;
+        mIsTeacher = isTeacher;
     }
 
     @Override
@@ -60,6 +62,7 @@ public class PersonalProfileAdapter extends BaseAdapter {
         }else {
             holder = (Holder) convertView.getTag();
         }
+        holder.profile.show(mIsTeacher);
 
         return convertView;
     }

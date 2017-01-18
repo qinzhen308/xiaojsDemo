@@ -135,6 +135,8 @@ public class MomentContent extends RelativeLayout {
     }
 
     public void show(Dynamic dynamic){
+        mSpecialImage.setImageResource(DeviceUtil.getLesson());
+        mLessonImage.setImageResource(DeviceUtil.getLesson());
         if (dynamic == null || TextUtils.isEmpty(dynamic.typeName))
             return;
         //个人动态
@@ -164,7 +166,7 @@ public class MomentContent extends RelativeLayout {
                     mSpecialImage.setVisibility(VISIBLE);
                     Glide.with(getContext())
                             .load(dynamic.body.ref.snap)
-                            .error(R.drawable.default_lesson_cover)
+                            .error(DeviceUtil.getLesson())
                             .into(mSpecialImage);
                 }
             }
@@ -185,7 +187,7 @@ public class MomentContent extends RelativeLayout {
             mSpecialContent.setText(span);
             Glide.with(getContext())
                     .load(dynamic.body.ref.snap)
-                    .error(R.drawable.default_lesson_cover)
+                    .error(DeviceUtil.getLesson())
                     .into(mLessonImage);
             mLessonDuration.setText(dynamic.body.ref.duration);
             if (dynamic.body.ref.free){
@@ -220,7 +222,7 @@ public class MomentContent extends RelativeLayout {
                     mSpecialImage.setVisibility(VISIBLE);
                     Glide.with(getContext())
                             .load(dynamic.body.ref.snap)
-                            .error(R.drawable.default_lesson_cover)
+                            .error(DeviceUtil.getLesson())
                             .into(mSpecialImage);
                 }
             }
@@ -248,7 +250,7 @@ public class MomentContent extends RelativeLayout {
             }
             Glide.with(getContext()).
                     load(photo.name).
-                    error(R.drawable.default_lesson_cover).
+                    error(DeviceUtil.getLesson()).
                     into(mNormalImage);
             mNormalImage.setOnClickListener(new OnClickListener() {
                 @Override

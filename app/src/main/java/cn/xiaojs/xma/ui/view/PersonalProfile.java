@@ -24,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public class PersonalProfile extends LinearLayout {
 
@@ -33,6 +34,9 @@ public class PersonalProfile extends LinearLayout {
     TextView mType;
     @BindView(R.id.personal_profile_name)
     TextView mName;
+
+
+    private boolean teacher;
 
     public PersonalProfile(Context context) {
         super(context);
@@ -59,5 +63,14 @@ public class PersonalProfile extends LinearLayout {
         setOrientation(VERTICAL);
         inflate(getContext(), R.layout.layout_personal_profile, this);
         ButterKnife.bind(this);
+    }
+
+    public void show(boolean isTeacher) {
+        if (isTeacher) {
+            mType.setVisibility(VISIBLE);
+        } else {
+            mType.setVisibility(GONE);
+        }
+        mImage.setImageResource(DeviceUtil.getPor());
     }
 }

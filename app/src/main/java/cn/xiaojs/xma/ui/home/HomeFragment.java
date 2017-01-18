@@ -81,16 +81,16 @@ public class HomeFragment extends BaseFragment {
         BannerBean b2 = new BannerBean();
         BannerBean b3 = new BannerBean();
         BannerBean b4 = new BannerBean();
-        b1.resId = R.drawable.ic_ad;
-        b2.resId = R.drawable.ic_ad;
-        b3.resId = R.drawable.ic_ad;
-        b4.resId = R.drawable.ic_ad;
+        b1.resId = R.drawable.ic_ad_i;
+        b2.resId = R.drawable.ic_ad_ii;
+        b3.resId = R.drawable.ic_ad_iii;
+//        b4.resId = R.drawable.ic_ad;
 
         List<BannerBean> beanList = new ArrayList<>();
         beanList.add(b1);
         beanList.add(b2);
         beanList.add(b3);
-        beanList.add(b4);
+        //beanList.add(b4);
         BannerAdapter adapter = new BannerAdapter(mContext,beanList);
         mBanner.setAdapter(adapter);
 

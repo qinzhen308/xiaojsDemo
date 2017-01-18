@@ -36,6 +36,7 @@ import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
@@ -84,7 +85,12 @@ public class MomentHeader extends RelativeLayout {
     }
 
     public void setData(Dynamic dynamic) {
+        mHead.setImageResource(DeviceUtil.getPor());
+        if (dynamic == null)
+            return;
+
         mOwner = dynamic.owner;
+
         if (mOwner.myself || VerifyUtils.isMyself(mOwner.account)){
             mName.setText(XiaojsConfig.mLoginUser.getName());
             mTag.setText("自己");

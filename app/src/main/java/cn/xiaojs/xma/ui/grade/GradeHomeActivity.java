@@ -35,6 +35,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshScrollView;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.chat.ChatActivity;
+import cn.xiaojs.xma.ui.view.MomentContent;
+import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.widget.CustomScrollView;
 import cn.xiaojs.xma.util.DeviceUtil;
 
@@ -64,6 +66,12 @@ public class GradeHomeActivity extends BaseActivity {
     @BindView(R.id.grade_home_left_image)
     ImageView mBack;
 
+    @BindView(R.id.moment_header)
+    MomentHeader mMomentHeader;
+    @BindView(R.id.moment_content)
+    MomentContent mContent;
+
+
     private int mHeaderHeight;
 
     @Override
@@ -82,6 +90,7 @@ public class GradeHomeActivity extends BaseActivity {
                 }
             }
         });
+        mCover.setImageResource(DeviceUtil.getLesson());
 
         List<Date> dates = new ArrayList<>();
         dates.add(new Date());
@@ -91,7 +100,7 @@ public class GradeHomeActivity extends BaseActivity {
         int gridWidth = DeviceUtil.getScreenWidth(this) - getResources().getDimensionPixelSize(R.dimen.px30);
         int numColumns = gridWidth / getResources().getDimensionPixelSize(R.dimen.px130);
         mTeacherGrid.setNumColumns(numColumns);
-        PersonalProfileAdapter adapter = new PersonalProfileAdapter(dates, this);
+        PersonalProfileAdapter adapter = new PersonalProfileAdapter(dates, this,true);
         mTeacherGrid.setAdapter(adapter);
         mTeacherGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -118,7 +127,7 @@ public class GradeHomeActivity extends BaseActivity {
         if (dates1.size() > numColumns) {
             dates1 = dates1.subList(0, numColumns);
         }
-        PersonalProfileAdapter stu = new PersonalProfileAdapter(dates1, this);
+        PersonalProfileAdapter stu = new PersonalProfileAdapter(dates1, this,false);
         mStudentGrid.setAdapter(stu);
 
         mScroller.setOnScrollChangedListener(new PullToRefreshScrollView.onScrollChangedListener() {
@@ -138,6 +147,9 @@ public class GradeHomeActivity extends BaseActivity {
             }
         });
         mBack.setImageResource(R.drawable.ic_white_back);
+
+        mMomentHeader.setData(null);
+        mContent.show(null);
     }
 
     @OnClick({R.id.grade_home_left_image, R.id.grade_home_schedule, R.id.grade_home_student,
