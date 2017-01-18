@@ -28,6 +28,7 @@ public class EnrolledLesson implements Serializable{
     private Teacher teacher;
     private Assistant[] assistants;
     private String cover;
+    private String ticket;
 
     public String getCover() {
         return cover;
@@ -123,5 +124,13 @@ public class EnrolledLesson implements Serializable{
 
     public void setAssistants(Assistant[] assistants) {
         this.assistants = assistants;
+    }
+
+    public String getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
     }
 }

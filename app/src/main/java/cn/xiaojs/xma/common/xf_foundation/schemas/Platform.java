@@ -12,7 +12,10 @@ public class Platform {
     public static class AppType {
         public static final int MOBILE_WEB = 2;
         public static final int MOBILE_ANDROID = 3;
+        public static final int MOBILE_IOS = 4;
+        public static final int MOBILE_WP = 5;
         public static final int TABLET_ANDROID = 6;
+        public static final int TABLET_IOS = 7;
         public static final int UNKNOWN = 10;
         public static final int WEB_CLASSROOM = 11;
     }

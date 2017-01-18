@@ -36,6 +36,8 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.model.GELessonsResponse;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.view.LessonPersonView;
@@ -167,7 +169,10 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     //进入教室
     private void enterClass(EnrolledLesson bean) {
-
+        Intent i = new Intent();
+        i.putExtra(Constants.KEY_TICKET, bean.getTicket());
+        i.setClass(mContext, ClassroomActivity.class);
+        mContext.startActivity(i);
     }
 
     //资料库

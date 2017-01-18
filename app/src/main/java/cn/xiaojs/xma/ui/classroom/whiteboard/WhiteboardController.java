@@ -27,12 +27,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.WhiteboardCollection;
+import cn.xiaojs.xma.ui.classroom.live.view.CutView;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
@@ -65,9 +68,15 @@ public class WhiteboardController implements
     private static final String[] PERMISSIONS = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
+    private static final String TEST_VIDEO = "rtmp://demo.srs.tongchia.me:1935/live/livestream";
+
     private WhiteboardScrollerView mWhiteboardSv;
     //whiteboard adapter
     private WhiteboardAdapter mWhiteboardAdapter;
+
+    private View mLiveLayout;
+    private CutView mWhiteboardVideo;
+    private CutView mTeacherVideo;
 
     private ImageView mSelection;
     private ImageView mHandWriting;
@@ -98,6 +107,7 @@ public class WhiteboardController implements
     private AsyncTask mSaveTask;
 
     private Constants.User mUser = Constants.User.TEACHER;
+    private int mAppType = Platform.AppType.UNKNOWN;
 
     private ArrayList<WhiteboardCollection> mWhiteboardCollectionList;
     private WhiteboardCollection mCurrWhiteboardColl;
@@ -111,11 +121,16 @@ public class WhiteboardController implements
     private ReceiveRunnable mSyncRunnable;
 
 
-    public WhiteboardController(Context context, View root, Constants.User client) {
+    public WhiteboardController(Context context, View root, Constants.User client, int appType) {
         mContext = context;
         mUser = client;
+        mAppType = appType;
         mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
         mWhiteboardSuffix = context.getString(R.string.white_board);
+
+        mLiveLayout = root.findViewById(R.id.live_layout);
+        mWhiteboardVideo = (CutView) root.findViewById(R.id.whiteboard_video);
+        mTeacherVideo = (CutView) root.findViewById(R.id.teacher_video);
 
         mWhiteboardSv = (WhiteboardScrollerView) root.findViewById(R.id.white_board_scrollview);
         mSyncWhiteboard = (Whiteboard) root.findViewById(R.id.stu_receive_wb);
@@ -148,15 +163,37 @@ public class WhiteboardController implements
 
         WhiteboardCollection whiteboardCollection = null;
         if (mUser == Constants.User.STUDENT) {
-            whiteboardCollection = new WhiteboardCollection();
-            whiteboardCollection.setLive(true);
-            WhiteboardLayer layer = new WhiteboardLayer();
-            layer.setCanSend(false);
-            layer.setCanReceive(true);
-            whiteboardCollection.addWhiteboardLayer(layer);
-            mSyncWhiteboard.setNeedBitmapPool(false);
-            mSyncWhiteboard.setLayer(layer);
+            if (mAppType == Platform.AppType.MOBILE_ANDROID ||
+                    mAppType == Platform.AppType.MOBILE_IOS ||
+                    mAppType == Platform.AppType.TABLET_ANDROID ||
+                    mAppType == Platform.AppType.TABLET_IOS) {
+                //mobile, tablet
+                whiteboardCollection = new WhiteboardCollection();
+                whiteboardCollection.setLive(true);
+                WhiteboardLayer layer = new WhiteboardLayer();
+                layer.setCanSend(false);
+                layer.setCanReceive(true);
+                whiteboardCollection.addWhiteboardLayer(layer);
+                mSyncWhiteboard.setNeedBitmapPool(false);
+                mSyncWhiteboard.setLayer(layer);
+            } else {
+                mLiveLayout.setVisibility(View.VISIBLE);
+                mWhiteboardSv.setVisibility(View.GONE);
+                mSyncWhiteboard.setVisibility(View.GONE);
+                mTeacherVideo.setPath(TEST_VIDEO, false);
+                mWhiteboardVideo.setPath(TEST_VIDEO, true);
+                onResumeVideo();
+
+                //TODO test hold collection
+                whiteboardCollection = new WhiteboardCollection();
+                whiteboardCollection.setLive(true);
+                WhiteboardLayer layer = new WhiteboardLayer();
+                layer.setCanSend(false);
+                layer.setCanReceive(true);
+                whiteboardCollection.addWhiteboardLayer(layer);
+            }
         } else {
+            mLiveLayout.setVisibility(View.GONE);
             whiteboardCollection = new WhiteboardCollection();
             WhiteboardLayer layer = new WhiteboardLayer();
             layer.setCanSend(true);
@@ -168,6 +205,7 @@ public class WhiteboardController implements
         mWhiteboardSv.setAdapter(mWhiteboardAdapter);
         mWhiteboardAdapter.setOnWhiteboardListener(this);
 
+        //第一次初始化调用
         onSwitchWhiteboardCollection(whiteboardCollection);
         addToWhiteboardCollectionList(whiteboardCollection);
     }
@@ -383,6 +421,33 @@ public class WhiteboardController implements
         }
     }
 
+    public void onResumeVideo() {
+        if (mTeacherVideo != null) {
+            mTeacherVideo.resume();
+        }
+        if (mWhiteboardVideo != null) {
+            mWhiteboardVideo.resume();
+        }
+    }
+
+    public void onPauseVideo() {
+        if (mTeacherVideo != null) {
+            mTeacherVideo.pause();
+        }
+        if (mWhiteboardVideo != null) {
+            mWhiteboardVideo.pause();
+        }
+    }
+
+    public void onDestroyVideo() {
+        if (mTeacherVideo != null) {
+            mTeacherVideo.destroy();
+        }
+        if (mWhiteboardVideo != null) {
+            mWhiteboardVideo.destroy();
+        }
+    }
+
     /**
      * 释放资源
      */
@@ -516,10 +581,17 @@ public class WhiteboardController implements
             mCurrWhiteboardColl = wbColl;
             if (mUser == Constants.User.STUDENT) {
                 if (wbColl.isLive()) {
-                    mSyncWhiteboard.setVisibility(View.VISIBLE);
+                    if (isWebApp(mAppType)) {
+                        mLiveLayout.setVisibility(View.VISIBLE);
+                        mSyncWhiteboard.setVisibility(View.GONE);
+                    } else {
+                        mSyncWhiteboard.setVisibility(View.VISIBLE);
+                        mLiveLayout.setVisibility(View.GONE);
+                        mCurrWhiteboard = mSyncWhiteboard;
+                    }
                     mWhiteboardSv.setVisibility(View.GONE);
-                    mCurrWhiteboard = mSyncWhiteboard;
                 } else {
+                    mLiveLayout.setVisibility(View.GONE);
                     mSyncWhiteboard.setVisibility(View.GONE);
                     mWhiteboardSv.setVisibility(View.VISIBLE);
                     mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
@@ -664,5 +736,9 @@ public class WhiteboardController implements
     @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
     public void getGalleryFailure() {
 
+    }
+
+    private boolean isWebApp(int app) {
+        return app == Platform.AppType.WEB_CLASSROOM || app == Platform.AppType.MOBILE_WEB;
     }
 }

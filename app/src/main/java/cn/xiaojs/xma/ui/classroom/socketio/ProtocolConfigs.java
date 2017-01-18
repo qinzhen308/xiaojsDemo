@@ -18,11 +18,11 @@ public class ProtocolConfigs {
     /**
      * 白板虚拟宽
      */
-    public final static int VIRTUAL_WIDTH = 800;
+    public final static int VIRTUAL_WIDTH = 1280;
     /**
      * 白板虚拟高
      */
-    public final static int VIRTUAL_HEIGHT = 600;
+    public final static int VIRTUAL_HEIGHT = 720;
     /**
      * 图形的id的长度
      */

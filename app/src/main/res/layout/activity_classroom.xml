@@ -10,6 +10,28 @@
             android:layout_height="wrap_content"
             android:background="@color/classroom_white_bg">
 
+        <FrameLayout
+                android:id="@+id/live_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+            <cn.xiaojs.xma.ui.classroom.live.view.CutView
+                    android:id="@+id/whiteboard_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"/>
+
+            <cn.xiaojs.xma.ui.classroom.live.view.CutView
+                    android:id="@+id/teacher_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right|top"
+                    android:layout_marginTop="@dimen/px100"
+                    android:layout_marginRight="@dimen/px10"/>
+
+        </FrameLayout>
+
         <!--白板列表-->
         <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView
                 android:id="@+id/white_board_scrollview"
