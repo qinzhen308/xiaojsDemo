@@ -14,6 +14,8 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *
  * ======================================================================================== */
 
+import android.util.Log;
+
 import java.net.URISyntaxException;
 
 import cn.xiaojs.xma.XiaojsConfig;
@@ -29,7 +31,7 @@ public class SocketManager {
     private static Socket mSocket;
 
     public synchronized static void init(String ticket, String secret) {
-        if (mSocket == null) {
+        /*if (mSocket == null) {
             try {
                 mSocket = IO.socket(getClassroomSocketUrl(ticket, secret));
             } catch (URISyntaxException e) {
@@ -37,6 +39,12 @@ public class SocketManager {
             }
         } else {
             throw new RuntimeException("Only one socket may be created!");
+        }*/
+
+        try {
+            mSocket = IO.socket(getClassroomSocketUrl(ticket, secret));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -49,7 +57,9 @@ public class SocketManager {
     }
 
     public static String getClassroomSocketUrl(String ticket, String secret) {
-        return XiaojsConfig.BASE_URL + ":" + LiveService.SERVICE_PORT + "/" + ticket + "?" + "secret=" + secret;
+        String url = XiaojsConfig.BASE_URL + ":" + LiveService.SERVICE_PORT + "/" + ticket + "?" + "secret=" + secret;
+        Log.i("aaa", "socket=" + url);
+        return url;
     }
 
     public static void close() {
