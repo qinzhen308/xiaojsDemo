@@ -132,7 +132,6 @@
                 android:id="@+id/teach_lesson_item_end"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_lesson_end"
-                android:layout_marginRight="-5dp"
                 android:layout_gravity="right|top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

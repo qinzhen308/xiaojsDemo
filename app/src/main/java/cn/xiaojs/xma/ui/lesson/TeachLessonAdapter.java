@@ -83,6 +83,19 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 //        if (!TextUtils.isEmpty(state)){
 //            bean.setState(state);
 //        }
+        /*if (position == 0){
+            bean.setState(LessonState.FINISHED);
+        }else if (position == 1){
+            bean.setState(LessonState.CANCELLED);
+        }else if (position == 2){
+            bean.setState(LessonState.DRAFT);
+        }else if (position == 3){
+            bean.setState(LessonState.LIVE);
+        }else if (position == 4){
+            bean.setState(LessonState.PENDING_FOR_APPROVAL);
+        }else if (position == 5){
+            bean.setState(LessonState.REJECTED);
+        }*/
         holder.price.setVisibility(View.VISIBLE);
         if (bean.getFee().free) {
             holder.price.setText(R.string.free);
@@ -121,6 +134,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
+            holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.edit),
                     mContext.getString(R.string.look_detail),
                     mContext.getString(R.string.delete)};
@@ -189,6 +203,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
+            holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.cancel_examine),
                     mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.examining);
@@ -211,6 +226,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
                 || bean.getState().equalsIgnoreCase(LessonState.LIVE)
                 || bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+            holder.assistants.setVisibility(View.VISIBLE);
+//            List<Bitmap> l = new ArrayList<>();
+//            l.add(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_ad));
+//            holder.assistants.show(l);
             String[] items = new String[]{/*mContext.getString(R.string.prepare_lesson),*/
                     mContext.getString(R.string.class_home)};
 //            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
