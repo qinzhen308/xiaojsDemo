@@ -118,7 +118,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         tl2.setTitle("灵枢针灸-中医入门");
         tl2.setFee(price);
         tl2.setEnroll(enroll);
-        tl2.setState(LessonState.PENDING_FOR_LIVE);
+        tl2.setState(LessonState.LIVE);
         tl2.setSchedule(schedule);
         tl2.setPublish(publish);
         teachLessons.add(tl2);
