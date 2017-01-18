@@ -299,11 +299,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mUser = getUser(ctlSession.psType);
                     mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
 
+                    //init socket
+                    initSocketIO(mTicket, ctlSession.secret);
+                    listenSocket();
                     //init whiteboard
                     mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser);
-                    //init socket
-                    initSocketIO();
-                    listenSocket();
                 }
             }
 
@@ -979,7 +979,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mExitDialog.show();
     }
 
-    private void initSocketIO() {
+    private void initSocketIO(String ticket, String secret) {
+        SocketManager.init(ticket, secret);
         mSocket = SocketManager.getSocket();
         mSocket.connect();
     }

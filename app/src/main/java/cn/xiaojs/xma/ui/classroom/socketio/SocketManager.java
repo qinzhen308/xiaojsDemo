@@ -28,17 +28,19 @@ public class SocketManager {
 
     private static Socket mSocket;
 
+    public synchronized static void init(String ticket, String secret) {
+        if (mSocket == null) {
+            try {
+                mSocket = IO.socket(getClassroomSocketUrl(ticket, secret));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException("Only one socket may be created!");
+        }
+    }
+
     public synchronized static Socket getSocket() {
-        if (mSocket != null) {
-            return mSocket;
-        }
-
-        try {
-            mSocket = IO.socket(getClassroomSocketUrl());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-
         return mSocket;
     }
 
@@ -47,7 +49,7 @@ public class SocketManager {
     }
 
     public static String getClassroomSocketUrl(String ticket, String secret) {
-        return SCHEME + XiaojsConfig.BASE_URL + ":" + LiveService.SERVICE_PORT + "/" + ticket + "?" + "secret=" + secret;
+        return XiaojsConfig.BASE_URL + ":" + LiveService.SERVICE_PORT + "/" + ticket + "?" + "secret=" + secret;
     }
 
     public static void close() {
