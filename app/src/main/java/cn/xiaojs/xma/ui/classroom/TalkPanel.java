@@ -156,10 +156,12 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     @Override
     public void initData() {
         mSocket = SocketManager.getSocket();
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), mOnSendTalk);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
+        if (mSocket != null) {
+            mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
+            mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
+            mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), mOnSendTalk);
+            mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
+        }
 
         mMyAccountId = AccountDataManager.getAccountID(mContext);
 
@@ -327,24 +329,24 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             mContactBookAdapter.setOnContactBookListener(this);
             mContactBook.setAdapter(mContactBookAdapter);
             mContactBook.setDividerHeight(0);
+        }
 
-            if (mLiveCollection != null) {
-                mContactBookAdapter.setData(mLiveCollection);
-            } else {
-                LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
-                    @Override
-                    public void onSuccess(LiveCollection<Attendee> liveCollection) {
-                        mLiveCollection = liveCollection;
-                        mContactBookAdapter.setData(mLiveCollection);
-                        Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
-                    }
+        if (mLiveCollection != null) {
+            mContactBookAdapter.setData(mLiveCollection);
+        } else {
+            LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
+                @Override
+                public void onSuccess(LiveCollection<Attendee> liveCollection) {
+                    mLiveCollection = liveCollection;
+                    mContactBookAdapter.setData(mLiveCollection);
+                    Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
+                }
 
-                    @Override
-                    public void onFailure(String errorCode, String errorMessage) {
-                        Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -356,24 +358,24 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             mTalkContactAdapter = new TalkSimpleContactAdapter(mContext);
             mTalkContactLv.setAdapter(mTalkContactAdapter);
             mTalkContactLv.setDividerHeight(0);
+        }
 
-            if (mLiveCollection != null) {
-                mTalkContactAdapter.setData(mLiveCollection);
-            } else {
-                LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
-                    @Override
-                    public void onSuccess(LiveCollection<Attendee> liveCollection) {
-                        Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
-                        mLiveCollection = liveCollection;
-                        mTalkContactAdapter.setData(liveCollection);
-                    }
+        if (mLiveCollection != null) {
+            mTalkContactAdapter.setData(mLiveCollection);
+        } else {
+            LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
+                @Override
+                public void onSuccess(LiveCollection<Attendee> liveCollection) {
+                    Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
+                    mLiveCollection = liveCollection;
+                    mTalkContactAdapter.setData(liveCollection);
+                }
 
-                    @Override
-                    public void onFailure(String errorCode, String errorMessage) {
-                        Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -488,6 +490,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Toast.makeText(mContext, "有人加入", Toast.LENGTH_SHORT).show();
                         updateContactList(true, args);
                     }
                 });
@@ -505,6 +508,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Toast.makeText(mContext, "有人退出", Toast.LENGTH_SHORT).show();
                         updateContactList(false, args);
                     }
                 });
@@ -569,6 +573,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                         ((Activity) mContext).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                Toast.makeText(mContext, "消息发送", Toast.LENGTH_SHORT).show();
                                 updateMsgList(args);
                             }
                         });
@@ -586,6 +591,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
                         updateMsgList(args);
                     }
                 });
@@ -662,7 +668,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         } catch (Exception e) {
 
         }
-        if (!TextUtils.isEmpty(sendJson)) {
+        if (!TextUtils.isEmpty(sendJson) && mSocket != null) {
             mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), sendJson);
         }
 

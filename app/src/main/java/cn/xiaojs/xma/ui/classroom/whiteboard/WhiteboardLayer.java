@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
  *
  * ======================================================================================== */
 
+import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class WhiteboardLayer {
-    public static final float DOODLE_CANVAS_RATIO = 4 / 3.0F; // w:h = 4:3
+    public static final float DOODLE_CANVAS_RATIO = ProtocolConfigs.VIRTUAL_WIDTH / (float)ProtocolConfigs.VIRTUAL_HEIGHT; // w:h
     private String mWhiteboardId;
     private String mWhiteboardName;
     /**

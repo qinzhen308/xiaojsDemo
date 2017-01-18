@@ -37,6 +37,8 @@ import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -130,6 +132,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 3://查看详情
                             detail(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -155,6 +160,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 3://删除
                             delete(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -174,6 +182,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             break;
                         case 2://删除
                             delete(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
                             break;
                     }
                 }
@@ -199,6 +210,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 3://删除
                             delete(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -219,6 +233,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             break;
                         case 2://查看详情
                             detail(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
                             break;
                     }
                 }
@@ -254,6 +271,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             break;
                         case MORE:
                             more(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
                             break;
                     }
                 }
@@ -353,7 +373,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     //进入教室
     private void enterClass(TeachLesson bean) {
-
+        Intent i = new Intent();
+        i.putExtra(Constants.KEY_TICKET, bean.getTicket());
+        i.setClass(mContext, ClassroomActivity.class);
+        mContext.startActivity(i);
     }
 
     private void modifyLesson(TeachLesson bean) {

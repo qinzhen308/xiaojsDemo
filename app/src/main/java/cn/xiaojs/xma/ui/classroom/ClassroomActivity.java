@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -124,8 +125,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mWhiteboardSv;
-    @BindView(R.id.teacher_video)
-    LiveRecordView mTeacherVideo;
+    @BindView(R.id.my_video)
+    LiveRecordView mMyVideo;
     @BindView(R.id.player_container)
     MediaContainerView mContainer;
 
@@ -167,6 +168,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private String mTicket = "";
     private CtlSession mCtlSession;
     private Constants.User mUser = Constants.User.STUDENT;
+    private int mAppType = Platform.AppType.UNKNOWN;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -182,7 +184,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         initGestureDetector();
         //init nav tips
         showSettingNav();
-        mTeacherVideo.setPath(Config.pathPush);
+        mMyVideo.setPath(Config.pathPush);
         //init data
         initData();
 
@@ -298,12 +300,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mCtlSession = ctlSession;
                     mUser = getUser(ctlSession.psType);
                     mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
+                    mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
 
                     //init socket
                     initSocketIO(mTicket, ctlSession.secret);
                     listenSocket();
                     //init whiteboard
-                    mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser);
+                    mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
                 }
             }
 
@@ -371,8 +374,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @Override
     protected void onResume() {
         super.onResume();
-        //mTeacherVideo.resume();
-        //mContainer.resume();
+        mMyVideo.resume();
+        mContainer.resume();
+
+        if (mWhiteboardController != null) {
+            mWhiteboardController.onResumeVideo();
+        }
     }
 
     private boolean m = false;
@@ -627,18 +634,26 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @Override
     protected void onPause() {
         super.onPause();
-        mTeacherVideo.pause();
+        mMyVideo.pause();
         mContainer.pause();
+
+        if (mWhiteboardController != null) {
+            mWhiteboardController.onPauseVideo();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mTeacherVideo.destroy();
+        mMyVideo.destroy();
         mContainer.destroy();
 
         if (mBinder != null) {
             mBinder.unbind();
+        }
+
+        if (mWhiteboardController != null) {
+            mWhiteboardController.onDestroyVideo();
         }
 
         if (mWhiteboardController != null) {
@@ -981,11 +996,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private void initSocketIO(String ticket, String secret) {
         SocketManager.init(ticket, secret);
-        mSocket = SocketManager.getSocket();
-        mSocket.connect();
+        if (mSocket != null) {
+            mSocket = SocketManager.getSocket();
+            mSocket.connect();
+        }
     }
 
     private void listenSocket() {
+        if (mSocket == null) {
+            return;
+        }
+
         mSocket.on(Socket.EVENT_CONNECT, mOnConnect);
         mSocket.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
@@ -1052,7 +1073,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Emitter.Listener mOnWelcome = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            if (args != null && args.length > 0) {
+            if (args != null && args.length > 0 && mSocket != null) {
                 mSocket.emit(Event.JOIN, Constants.ROOM_DRAW);
                 mSocket.emit(Event.BEGIN);
             }

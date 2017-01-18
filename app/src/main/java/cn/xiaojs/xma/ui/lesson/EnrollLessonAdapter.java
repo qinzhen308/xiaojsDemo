@@ -36,6 +36,8 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.model.GELessonsResponse;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.view.LessonPersonView;
@@ -94,6 +96,16 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 //                    databank(bean);
 //                }
 //            });
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case ENTER:
+                            enterClass(bean);
+                            break;
+                    }
+                }
+            });
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
             holder.operation.setVisibility(View.GONE);
             holder.status.setVisibility(View.VISIBLE);
@@ -112,6 +124,9 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
                         case 2:
                             databank(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -125,7 +140,14 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
-                    databank(bean);
+                    switch (position) {
+                        case 1:
+                            databank(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
+                    }
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
@@ -146,6 +168,9 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
                         case 2:
                             databank(bean);
                             break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
                     }
                 }
             });
@@ -153,6 +178,16 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
             holder.operation.setVisibility(View.GONE);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case ENTER:
+                            enterClass(bean);
+                            break;
+                    }
+                }
+            });
         }
     }
 
@@ -167,7 +202,10 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     //进入教室
     private void enterClass(EnrolledLesson bean) {
-
+        Intent i = new Intent();
+        i.putExtra(Constants.KEY_TICKET, bean.getTicket());
+        i.setClass(mContext, ClassroomActivity.class);
+        mContext.startActivity(i);
     }
 
     //资料库
