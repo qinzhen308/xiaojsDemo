@@ -44,6 +44,8 @@ public class ErrorPrompts {
                     errorMessage = "Class not involved";
                 } else if (errorCode.equals(Errors.BAD_GATEWAY)){
                     errorMessage = "Bad gateway";
+                } else {
+                    errorMessage = "进入教室失败";
                 }
                 break;
             case APIType.GENERATE_TICKET:
