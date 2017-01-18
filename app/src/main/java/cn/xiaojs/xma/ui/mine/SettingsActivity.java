@@ -89,7 +89,6 @@ public class SettingsActivity extends BaseActivity {
         Toast.makeText(mContext, R.string.logout_tips, Toast.LENGTH_SHORT).show();
         XiaojsConfig.mLoginUser = null;
         AccountDataManager.clearUserInfo(mContext);
-        CacheUtil.saveLoginInfo(null);
 
         //jump login page
         Intent i = new Intent(mContext, LoginActivity.class);

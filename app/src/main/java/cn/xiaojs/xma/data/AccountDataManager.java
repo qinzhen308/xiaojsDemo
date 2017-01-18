@@ -100,6 +100,10 @@ public class AccountDataManager {
         AccountPref.setUser(context,user);
     }
 
+    public static User getUserInfo(Context context) {
+        return AccountPref.getUser(context);
+    }
+
     /**
      * clear the login user data and cache
      * @param context
