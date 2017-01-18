@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.talk;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -27,7 +27,6 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
-import cn.xiaojs.xma.ui.classroom.im.TalkBean;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.TimeUtil;
 

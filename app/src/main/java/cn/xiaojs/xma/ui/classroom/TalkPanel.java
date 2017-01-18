@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
+import cn.xiaojs.xma.ui.classroom.talk.TalkSimpleContactAdapter;
 
 public class TalkPanel extends Panel implements View.OnClickListener, ContactBookAdapter.OnContactBookListener {
     public final static int MODE_CONTACT = 0;

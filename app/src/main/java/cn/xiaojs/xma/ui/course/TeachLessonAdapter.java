@@ -95,6 +95,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
         Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
+        if (TextUtils.isEmpty(bean.getState())) {
+            return;
+        }
         if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)) {
             holder.clsFunction.setVisibility(View.VISIBLE);
             holder.circle.setText(R.string.shelves);
