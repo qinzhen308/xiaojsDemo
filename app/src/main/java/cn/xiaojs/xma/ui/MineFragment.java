@@ -39,6 +39,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.certification.CertificationActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.lesson.MyLessonActivity;
 import cn.xiaojs.xma.ui.mine.MyEnrollActivity;
@@ -104,6 +105,7 @@ public class MineFragment extends BaseFragment {
                 startActivity(new Intent(mContext, TeachingAbilityActivity.class));
                 break;
             case R.id.name_auth_layout:
+                startActivity(new Intent(mContext, CertificationActivity.class));
                 break;
             case R.id.settings_layout:
                 startActivity(new Intent(mContext, SettingsActivity.class));

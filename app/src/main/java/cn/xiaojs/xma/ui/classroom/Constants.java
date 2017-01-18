@@ -23,6 +23,8 @@ public interface Constants {
     public final static String KEY_CAMERA_OPEN = "key_camera_open";
     public final static String KEY_MICROPHONE_OPEN = "key_microphone_open";
 
+    public final static String KEY_TICKET = "key_ticket";
+
     /**
      * classroom url
      */
@@ -48,9 +50,23 @@ public interface Constants {
      * 客户端用户
      */
     public static enum User {
-        TEACHER, //老师
-        STUDENT, //学生
-        ADMIN, //监管
-        AUDIT //旁听
+        TEACHER("LeadSession"),                        //老师
+        ASSISTANT("AssistantSession"),                 //助教
+        REMOTE_ASSISTANT("RemoteAssistantSession"),    //远程助教
+        STUDENT("StudentSession"),                     //学生
+        MANAGER("ManagerSession"),                     //监管
+        AUDITOR("AuditorSession"),                     //旁听
+        ADMINISTRATOR("AdministrationSession");        //管理员
+
+        private final String text;
+
+        private User(final String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return text;
+        }
     }
 }

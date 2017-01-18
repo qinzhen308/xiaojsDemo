@@ -33,6 +33,7 @@ public abstract class BaseMediaView extends FrameLayout {
     protected FrameLayout mLoadingView;
     private GestureDetector mGesture;
     private String mPath;
+    private boolean touchable = true;
 
     public BaseMediaView(Context context) {
         super(context);
@@ -63,8 +64,13 @@ public abstract class BaseMediaView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mGesture.onTouchEvent(event);
-        return true;
+        if (touchable){
+            mGesture.onTouchEvent(event);
+            return true;
+        }else {
+            return false;
+        }
+
     }
 
     private class CustomerOnGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -105,6 +111,10 @@ public abstract class BaseMediaView extends FrameLayout {
         public boolean onDown(MotionEvent e) {
             return true;
         }
+    }
+
+    public void setTouchable(boolean touchable){
+        this.touchable = touchable;
     }
 
     public void setPath(String path) {

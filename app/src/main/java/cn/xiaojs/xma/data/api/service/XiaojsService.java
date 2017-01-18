@@ -4,8 +4,14 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
+import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.LiveSession.Attendee;
 import cn.xiaojs.xma.model.LiveSession.CtlSession;
+import cn.xiaojs.xma.model.LiveSession.LiveCollection;
+import cn.xiaojs.xma.model.LiveSession.LiveCriteria;
+import cn.xiaojs.xma.model.LiveSession.TalkItem;
 import cn.xiaojs.xma.model.LiveSession.Ticket;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
@@ -65,7 +71,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.3:3000";
+    String SERVICE_PORT = "3000";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -357,22 +363,6 @@ public interface XiaojsService {
     @GET("/v1/social/liked/{criteria}/{pagination}")
     Call<CollectionPage<LikedRecord>> getLikedRecords(@Path("criteria") String criteria,
                                                       @Path("pagination") String pagination);
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //Live Sessions
-    //Provides access to live session interfaces accessible to the Xiaojs client applications.
-
-    //Generate Ticket
-    @GET("/v1/live/ticket/{cs}")
-    Call<Ticket> generateTicket(@Path("cs") String cs);
-
-
-    //Boot Session
-    @Headers("Content-Type: application/json")
-    @POST("/v1/live/{ticket}")
-    Call<CtlSession> bootSession(@Path("ticket") String ticket);
 
 
 

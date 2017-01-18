@@ -3,34 +3,34 @@ package cn.xiaojs.xma.model.LiveSession;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.Date;
+
 /**
- * Created by maxiaobao on 2017/1/9.
+ * Created by maxiaobao on 2017/1/17.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CtlSession {
+public class TalkItem {
 
-    public String secret;
-    public Ctl ctl;
-    public boolean accessible;
-    public ConnectType connected;
-    public String psType;
+    public Date time;
+    public TalkPerson from;
+    public TalkContent body;
 
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Ctl {
-        public String id;
-        public String subtype;
-        public String subject;
-        public String title;
-        public String state;
-        public String startedOn;
+    public static class TalkPerson {
+
+        public String name;
+        public String avatar;
+        public String accountId;
+
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class ConnectType {
-        public int app;
+    public static class TalkContent{
+        public String text;
     }
 }
+

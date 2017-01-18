@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.talk;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -25,11 +24,11 @@ import cn.xiaojs.xma.ui.widget.RoundedImageView;
  *
  * ======================================================================================== */
 
-public class ChatSimpleContactAdapter extends BaseAdapter {
+public class TalkSimpleContactAdapter extends BaseAdapter {
     private Context mContext;
     private int mOffset;
 
-    public ChatSimpleContactAdapter(Context context) {
+    public TalkSimpleContactAdapter(Context context) {
         mContext = context;
         mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px4);
     }

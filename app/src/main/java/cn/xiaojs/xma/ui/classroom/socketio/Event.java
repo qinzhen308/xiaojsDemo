@@ -35,4 +35,11 @@ public class Event {
      * Constant for sync
      */
     public final static String SYNC = "board:sync";
+
+    /**
+     * Returns the signature for an app event with the specified event category and type.
+     */
+    public static String getEventSignature(int eventCategory, int eventType) {
+        return eventCategory + ":" + eventType;
+    }
 }

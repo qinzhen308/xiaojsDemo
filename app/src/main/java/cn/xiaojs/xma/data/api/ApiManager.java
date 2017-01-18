@@ -7,6 +7,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.interceptor.CommonHeaderInterceptor;
+import cn.xiaojs.xma.data.api.service.LiveService;
 import cn.xiaojs.xma.data.api.service.XiaojsService;
 
 import cn.xiaojs.xma.util.APPUtils;
@@ -70,6 +71,10 @@ public class ApiManager {
 
         return createXiaojsService();
 
+    }
+
+    public LiveService getLiveService() {
+        return createLiveService();
     }
 
     public Cache getCache() {
@@ -138,12 +143,28 @@ public class ApiManager {
 
     private XiaojsService createXiaojsService() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(XiaojsService.BASE_URL)
+                .baseUrl(new StringBuilder(XiaojsConfig.BASE_URL)
+                        .append(":")
+                        .append(XiaojsService.SERVICE_PORT)
+                        .toString())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
 
         return retrofit.create(XiaojsService.class);
+    }
+
+    private LiveService createLiveService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(new StringBuilder(XiaojsConfig.BASE_URL)
+                        .append(":")
+                        .append(LiveService.SERVICE_PORT)
+                        .toString())
+                .addConverterFactory(JacksonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+
+        return retrofit.create(LiveService.class);
     }
 
 

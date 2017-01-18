@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.im;
+package cn.xiaojs.xma.ui.classroom.talk;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *

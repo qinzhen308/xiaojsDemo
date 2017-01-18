@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
+import cn.xiaojs.xma.model.Error;
 
 /**
  * Created by maxiaobao on 2016/11/7.
@@ -36,6 +37,19 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.BOOT_SESSION:
+                if (errorCode.equals(Errors.CLASS_NOT_READY)){
+                    errorMessage = "教室没准备好或着无法访问";
+                } else if (errorCode.equals(Errors.CLASS_NOT_INVOLVED)){
+                    errorMessage = "Class not involved";
+                } else if (errorCode.equals(Errors.BAD_GATEWAY)){
+                    errorMessage = "Bad gateway";
+                } else {
+                    errorMessage = "进入教室失败";
+                }
+                break;
+            case APIType.GENERATE_TICKET:
+                break;
             case APIType.UNFOLLOW_CONTACT:
                 if (errorCode.equals(Errors.INVALID_OPERATION)) {
                     errorMessage = "您未关注此人";

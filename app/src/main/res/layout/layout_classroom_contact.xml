@@ -59,7 +59,7 @@
                 android:orientation="horizontal">
 
             <ImageView
-                    android:id="@+id/open_chat"
+                    android:id="@+id/open_talk"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -97,6 +97,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/font_white"
+                    android:visibility="gone"
                     android:textSize="@dimen/font_28px"
                     android:text="@string/set_assistant"/>
 

@@ -72,6 +72,10 @@ public class ServiceRequest<T> implements ContextLifecycle {
     public XiaojsService getService() {
         return apiManager.getXiaojsService();
     }
+    public LiveService getLiveService() {
+        return apiManager.getLiveService();
+    }
+
     public Context getContext() {
         return context;
     }
