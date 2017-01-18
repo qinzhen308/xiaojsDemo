@@ -10,7 +10,7 @@ package cn.xiaojs.xma.ui.classroom;
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
  * Date:2016/11/29
- * Desc: 教室班级交流界面
+ * Desc: 教室班级交流界面 (聊天, 联系人)
  *
  * ======================================================================================== */
 
@@ -40,14 +40,15 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private ListView mContactBook;
     private ContactBookAdapter mContactBookAdapter;
 
-    private ListView mChatContactLv;
-    private TalkSimpleContactAdapter mChatContactAdapter;
+    private ListView mTalkContactLv;
+    private TalkSimpleContactAdapter mTalkContactAdapter;
 
-    private PullToRefreshListView mChatMsgLv;
+    private PullToRefreshListView mTalkMsgLv;
     private TalkMsgAdapter mTalkMsgAdapter;
 
     private View mContactView;
-    private View mChatView;
+    private View mTalkView;
+    private View mTalkMsgView;
 
     private View mDefaultContactAction;
     private View mManageContactAction;
@@ -60,7 +61,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private TextView mKickOutTv;
     private TextView mBackTv;
 
-    private ImageView mOpenContact;
+    private ImageView mToggleMsgLv;
     private ImageView mDelSingleTalkBtn;
 
     private EditText mMsgInputEdt;
@@ -111,7 +112,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 switchToContact();
                 break;
             case MODE_CHAT:
-                switchToChat();
+                switchToTalk();
                 break;
         }
     }
@@ -123,7 +124,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 setContactBookData(false);
                 break;
             case MODE_CHAT:
-                setChatSimpleContactData(false);
+                setTalkSimpleContactData(false);
                 break;
         }
     }
@@ -131,19 +132,20 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     @Override
     public void initChildView(View root) {
         mContactView = root.findViewById(R.id.contact);
-        mChatView = root.findViewById(R.id.chat);
+        mTalkView = root.findViewById(R.id.talk);
+        mTalkMsgView = root.findViewById(R.id.talk_msg_layout);
 
         mContactBook = (ListView) root.findViewById(R.id.contact_book);
-        mChatContactLv = (ListView) root.findViewById(R.id.chat_simple_contact);
-        mChatMsgLv = (PullToRefreshListView)root.findViewById(R.id.chat_msg);
+        mTalkContactLv = (ListView) root.findViewById(R.id.talk_simple_contact);
+        mTalkMsgLv = (PullToRefreshListView)root.findViewById(R.id.chat_msg);
 
-        mOpenContact = (ImageView) root.findViewById(R.id.open_contact);
+        mToggleMsgLv = (ImageView) root.findViewById(R.id.toggle_msg_list_view);
         mDelSingleTalkBtn = (ImageView) root.findViewById(R.id.del_single_talk_btn);
 
         mDefaultContactAction = root.findViewById(R.id.default_contact_action);
         mManageContactAction = root.findViewById(R.id.manage_contact_action);
 
-        mOpenMsg = (ImageView) root.findViewById(R.id.open_chat);
+        mOpenMsg = (ImageView) root.findViewById(R.id.open_talk);
         mAddContact = (ImageView) root.findViewById(R.id.add_contact);
         mManageContact = (ImageView) root.findViewById(R.id.manage_contact);
 
@@ -160,12 +162,12 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         mMultiTalkTitle = (TextView)root.findViewById(R.id.multi_talk_title);
         mSingleTalkTitle = (TextView)root.findViewById(R.id.single_talk_title);
 
-        mChatMsgLv.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
-        mChatMsgLv.getRefreshableView().setScrollBarStyle(AbsListView.SCROLLBARS_INSIDE_INSET);
-        mChatMsgLv.getRefreshableView().setFastScrollEnabled(true);
+        mTalkMsgLv.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
+        mTalkMsgLv.getRefreshableView().setScrollBarStyle(AbsListView.SCROLLBARS_INSIDE_INSET);
+        mTalkMsgLv.getRefreshableView().setFastScrollEnabled(true);
 
         mOpenMsg.setOnClickListener(this);
-        mOpenContact.setOnClickListener(this);
+        mToggleMsgLv.setOnClickListener(this);
         mAddContact.setOnClickListener(this);
         mSetAssistantTv.setOnClickListener(this);
         mKickOutTv.setOnClickListener(this);
@@ -183,14 +185,17 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.open_chat:
-                switchToChat();
-                setChatSimpleContactData(false);
-                setChatMsgData(false);
+            case R.id.open_talk:
+                switchToTalk();
+                setTalkSimpleContactData(false);
+                setTalkMsgData(false);
                 break;
-            case R.id.open_contact:
-                switchToContact();
-                setContactBookData(false);
+            case R.id.toggle_msg_list_view:
+                if (mTalkMsgView.getVisibility() == View.VISIBLE) {
+                    mTalkMsgView.setVisibility(View.GONE);
+                } else {
+                    mTalkMsgView.setVisibility(View.VISIBLE);
+                }
                 break;
             case R.id.add_contact:
                 if (mCallback != null) {
@@ -261,34 +266,34 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         }
     }
 
-    private void switchToChat() {
+    private void switchToTalk() {
         mContactView.setVisibility(View.GONE);
-        mChatView.setVisibility(View.VISIBLE);
+        mTalkView.setVisibility(View.VISIBLE);
     }
 
     private void switchToContact() {
         mContactView.setVisibility(View.VISIBLE);
-        mChatView.setVisibility(View.GONE);
+        mTalkView.setVisibility(View.GONE);
     }
 
-    private void setChatSimpleContactData(boolean dataChanged) {
-        if (mChatContactAdapter == null) {
-            mChatContactAdapter = new TalkSimpleContactAdapter(mContext);
-            mChatContactLv.setAdapter(mChatContactAdapter);
-            mChatContactLv.setDividerHeight(0);
+    private void setTalkSimpleContactData(boolean dataChanged) {
+        if (mTalkContactAdapter == null) {
+            mTalkContactAdapter = new TalkSimpleContactAdapter(mContext);
+            mTalkContactLv.setAdapter(mTalkContactAdapter);
+            mTalkContactLv.setDividerHeight(0);
         } else {
             //TODO set data
             if (dataChanged) {
-                mChatContactAdapter.notifyDataSetChanged();
+                mTalkContactAdapter.notifyDataSetChanged();
             }
         }
     }
 
-    private void setChatMsgData(boolean dataChanged) {
+    private void setTalkMsgData(boolean dataChanged) {
         if (mTalkMsgAdapter == null) {
-            mTalkMsgAdapter = new TalkMsgAdapter(mContext, mChatMsgLv);
-            mChatMsgLv.setAdapter(mTalkMsgAdapter);
-            mChatMsgLv.getRefreshableView().setDividerHeight(0);
+            mTalkMsgAdapter = new TalkMsgAdapter(mContext, mTalkMsgLv);
+            mTalkMsgLv.setAdapter(mTalkMsgAdapter);
+            mTalkMsgLv.getRefreshableView().setDividerHeight(0);
         } else {
             //TODO set data
             if (dataChanged) {
@@ -315,9 +320,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
     @Override
     public void onPortraitClick() {
-        switchToChat();
-        setChatSimpleContactData(false);
-        setChatMsgData(false);
+        switchToTalk();
+        setTalkSimpleContactData(false);
+        setTalkMsgData(false);
     }
 }
 
