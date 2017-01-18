@@ -15,13 +15,11 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 public class TalkBean {
-    public static final int TYPE_MINE = 1;
-    public static final int TYPE_OTHER = 2;
-    public static final int TYPE_DESC = 3;
-
-    public String name;
-    public String portrait;
-    public String content;
+    public int to;
     public long time;
-    public int messageType;
+    public TalkContent body;
+
+    public static class TalkContent{
+        public String text;
+    }
 }

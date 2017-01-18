@@ -168,7 +168,7 @@
                 android:listSelector="@android:color/transparent"/>
 
         <ImageView
-                android:id="@+id/toggle_msg_list_view"
+                android:id="@+id/close_msg_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px70"
                 android:scaleType="center"

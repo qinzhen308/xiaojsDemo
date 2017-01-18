@@ -19,6 +19,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,37 +31,67 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.live.LiveCriteria;
+import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.TimeUtil;
 
-public class TalkMsgAdapter extends AbsChatAdapter<TalkBean, TalkMsgAdapter.Holder> {
+public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Holder> {
     public final static int TYPE_MY_SPEAKER = 0;
     public final static int TYPE_OTHER_SPEAKER = 1;
 
     private Context mContext;
+    private String mTicket;
+    private LiveCriteria mLiveCriteria;
 
-    public TalkMsgAdapter(Context context, PullToRefreshListView listView) {
+    public TalkMsgAdapter(Context context, String ticket, LiveCriteria liveCriteria, PullToRefreshListView listView) {
         super(context, listView);
         mContext = context;
+        mTicket = ticket;
+        mLiveCriteria = liveCriteria;
     }
 
-    public TalkMsgAdapter(Context context, PullToRefreshListView listView, AbsListView.OnScrollListener listener) {
+    public TalkMsgAdapter(Context context, String ticket, LiveCriteria liveCriteria, PullToRefreshListView listView, AbsListView.OnScrollListener listener) {
         super(context, listView);
         mContext = context;
         scrollListener = listener;
+        mTicket = ticket;
+        mLiveCriteria = liveCriteria;
+    }
+
+    public void addData(TalkItem talkItem) {
+
     }
 
     @Override
-    protected void setViewContent(Holder holder, TalkBean bean, int position) {
-        holder.portrait.setImageResource(R.drawable.default_portrait);
-        holder.name.setText(bean.name);
-        holder.msg.setText(bean.content);
+    protected void setViewContent(Holder holder, TalkItem bean, int position) {
+        //TODO test
+        //holder.portrait.setImageResource(R.drawable.default_portrait);
+        Glide.with(mContext).load(bean.from.avatar).into(holder.portrait);
+        holder.name.setText(bean.from.name);
+        holder.msg.setText(bean.body != null ? bean.body.text : null);
         holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_HH_MM_SS));
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position % 2 == 0 ? TYPE_MY_SPEAKER : TYPE_OTHER_SPEAKER;
+        List<TalkItem> talkItems = getList();
+        TalkItem item = null;
+        if (talkItems == null || (item = talkItems.get(position)) == null) {
+            Logger.i("task items is empty");
+            return TYPE_MY_SPEAKER;
+        }
+
+        if (item == null || item.from == null) {
+            Logger.i("item is empty");
+            return TYPE_MY_SPEAKER;
+        }
+
+        return isMyself(item.from.accountId) ? TYPE_MY_SPEAKER : TYPE_OTHER_SPEAKER;
     }
 
     @Override
@@ -87,7 +121,19 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkBean, TalkMsgAdapter.Hold
 
     @Override
     protected void doRequest() {
-        onSuccess(getTalkList());
+        //onSuccess(getTalkList());
+        LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>> () {
+            @Override
+            public void onSuccess(CollectionPage<TalkItem> object) {
+                TalkMsgAdapter.this.onSuccess(object.objectsOfPage);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                Toast.makeText(mContext, "获取消息失败", Toast.LENGTH_SHORT).show();
+                TalkMsgAdapter.this.onFailure(errorCode, errorMessage);
+            }
+        });
     }
 
     @Override
@@ -106,16 +152,8 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkBean, TalkMsgAdapter.Hold
         }
     }
 
-    private List<TalkBean> getTalkList() {
-        List<TalkBean> talkBeanList = new ArrayList<TalkBean>();
-        for (int i = 0; i < 10; i++) {
-            TalkBean talkBean = new TalkBean();
-            talkBean.name = "学生" + i;
-            talkBean.time = System.currentTimeMillis();
-            talkBean.content = "今天要上课e" + i;
-            talkBeanList.add(talkBean);
-        }
-
-        return talkBeanList;
+    private boolean isMyself(String currAccountId) {
+        String accountId = AccountDataManager.getAccountID(mContext);
+        return accountId != null && accountId.equals(currAccountId);
     }
 }
