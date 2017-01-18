@@ -23,6 +23,8 @@ import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import okhttp3.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
 import java.util.Map;
@@ -95,7 +97,7 @@ public class AccountDataManager {
         String id = user.getId();
         AccountPref.setAccountID(context,id);
 
-
+        AccountPref.setUser(context,user);
     }
 
     /**
@@ -106,7 +108,9 @@ public class AccountDataManager {
 
         AccountPref.setAuthToken(context,"");
         AccountPref.setAccountID(context,"");
+        AccountPref.setUser(context,null);
         SecurityManager.saveCSRFToken(context,"");
+
 
         DataManager.clearCacheData(context);
     }
