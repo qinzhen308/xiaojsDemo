@@ -15,7 +15,7 @@ public class XiaojsConfig {
     public static final String LOG_TAG = "XiaoJS-Log";
 
     //BASE_URL
-    public static final String BASE_URL = "http://192.168.100.54";
+    public static final String BASE_URL = "http://192.168.100.3";
 
     //HTTP缓存目录
     public static final String HTTP_CACHE_DIR = "hcache";
