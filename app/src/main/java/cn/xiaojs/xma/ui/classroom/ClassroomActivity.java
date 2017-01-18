@@ -996,11 +996,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private void initSocketIO(String ticket, String secret) {
         SocketManager.init(ticket, secret);
-        mSocket = SocketManager.getSocket();
-        mSocket.connect();
+        if (mSocket != null) {
+            mSocket = SocketManager.getSocket();
+            mSocket.connect();
+        }
     }
 
     private void listenSocket() {
+        if (mSocket == null) {
+            return;
+        }
+
         mSocket.on(Socket.EVENT_CONNECT, mOnConnect);
         mSocket.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
@@ -1067,7 +1073,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Emitter.Listener mOnWelcome = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            if (args != null && args.length > 0) {
+            if (args != null && args.length > 0 && mSocket != null) {
                 mSocket.emit(Event.JOIN, Constants.ROOM_DRAW);
                 mSocket.emit(Event.BEGIN);
             }
