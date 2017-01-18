@@ -41,8 +41,8 @@ import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.certification.CertificationActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.course.MyLessonActivity;
-import cn.xiaojs.xma.ui.mine.MyEnrollActivity;
+import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
+import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
@@ -91,10 +91,10 @@ public class MineFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_teaching_layout:
-                startActivity(new Intent(mContext, MyLessonActivity.class));
+                startActivity(new Intent(mContext, TeachLessonActivity.class));
                 break;
             case R.id.my_enrollment_layout:
-                startActivity(new Intent(mContext, MyEnrollActivity.class));
+                startActivity(new Intent(mContext, EnrollLessonActivity.class));
                 break;
             case R.id.my_document_layout:
                 startActivity(new Intent(mContext, ClassroomActivity.class));

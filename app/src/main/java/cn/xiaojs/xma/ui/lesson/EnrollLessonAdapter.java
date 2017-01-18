@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.course;
+package cn.xiaojs.xma.ui.lesson;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -19,10 +19,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
+import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
@@ -35,16 +36,13 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.model.GELessonsResponse;
+import cn.xiaojs.xma.ui.grade.MaterialActivity;
+import cn.xiaojs.xma.ui.view.LessonOperationView;
+import cn.xiaojs.xma.ui.view.LessonPersonView;
+import cn.xiaojs.xma.ui.view.LessonStatusView;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
-import cn.xiaojs.xma.ui.widget.RedTipImageView;
-import cn.xiaojs.xma.ui.widget.RedTipTextView;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
+import cn.xiaojs.xma.ui.widget.LiveProgress;
 import cn.xiaojs.xma.util.TimeUtil;
-import com.bumptech.glide.Glide;
-import com.orhanobut.logger.Logger;
-
-import butterknife.BindView;
 
 public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.Holder> {
     private Criteria mCriteria;
@@ -55,13 +53,13 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView, LessonFragment fragment) {
         super(context, listView);
         mFragment = fragment;
-        bitmap = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.default_portrait);
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_portrait);
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
-    public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView, boolean autoLoad) {
-        super(context, listView,autoLoad);
-        bitmap = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.default_portrait);
+    public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView) {
+        super(context, listView);
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_portrait);
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
@@ -80,68 +78,86 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     protected void setViewContent(Holder holder, final EnrolledLesson bean, int position) {
         holder.reset();
         holder.name.setText(bean.getTitle());
-        holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
-        if(bean.getTeacher() != null){
-            if (bean.getTeacher().getBasic() != null){
-                holder.desc.setText(bean.getTeacher().getBasic().getName());
-            }
-        }
-
-        holder.clsFunction.setVisibility(View.VISIBLE);
-        holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
-            @Override
-            public void onClick(View view) {
-                circle(bean);
-            }
-        });
-        holder.enter.setOnClickListener(new View.OnClickListener() {//进入教室
-            @Override
-            public void onClick(View view) {
-                enterClass(bean);
-            }
-        });
-        Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
+        holder.lessonCount.setText("共1节");
+        holder.persons.show(bean);
+        //Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
         if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
-            holder.databank.setVisibility(View.VISIBLE);
-            holder.databank.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    databank(bean);
-                }
-            });
-            holder.courseState.setText(R.string.course_state_cancel);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
+            holder.status.setVisibility(View.VISIBLE);
+            holder.status.show(bean);
+            holder.operation.setVisibility(View.GONE);
+//            String[] items = new String[]{mContext.getString(R.string.data_bank)};
+//            holder.operation.setItems(items);
+//            holder.operation.enableMore(false);
+//            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+//                @Override
+//                public void onClick(int position) {
+//                    databank(bean);
+//                }
+//            });
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-            holder.more.setVisibility(View.VISIBLE);
-            holder.more.setOnClickListener(new View.OnClickListener() {//更多
+            holder.operation.setVisibility(View.GONE);
+            holder.status.setVisibility(View.VISIBLE);
+            holder.status.show(bean);
+            String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
-                public void onClick(View view) {
-                    more(bean);
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1:
+                            //schedule(bean);
+                            databank(bean);
+                            break;
+                        case 2:
+                            databank(bean);
+                            break;
+                    }
                 }
             });
-            holder.courseState.setText(R.string.course_state_end);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
-            holder.databank.setVisibility(View.VISIBLE);
-            holder.databank.setOnClickListener(new View.OnClickListener() {
+            holder.operation.setVisibility(View.VISIBLE);
+            holder.status.setVisibility(View.GONE);
+            holder.progressWrapper.setVisibility(View.VISIBLE);
+            String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(int position) {
                     databank(bean);
                 }
             });
-            holder.courseState.setText(R.string.living);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
-            holder.more.setVisibility(View.VISIBLE);
-            holder.more.setOnClickListener(new View.OnClickListener() {//更多
+            holder.operation.setVisibility(View.VISIBLE);
+            holder.status.setVisibility(View.VISIBLE);
+            holder.status.show(bean);
+            String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
-                public void onClick(View view) {
-                    more(bean);
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1:
+                            //schedule(bean);
+                            databank(bean);
+                            break;
+                        case 2:
+                            databank(bean);
+                            break;
+                    }
                 }
             });
-            holder.courseState.setText(R.string.pending_for_course);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
+        } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
+            holder.status.setVisibility(View.VISIBLE);
+            holder.status.show(bean);
+            holder.operation.setVisibility(View.GONE);
         }
+    }
+
+    private void schedule(EnrolledLesson bean) {
+
     }
 
     //班级圈
@@ -151,21 +167,22 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     //进入教室
     private void enterClass(EnrolledLesson bean) {
-        
+
     }
 
     //资料库
-    private void databank(EnrolledLesson bean){
-
+    private void databank(EnrolledLesson bean) {
+        Intent intent = new Intent(mContext, MaterialActivity.class);
+        mContext.startActivity(intent);
     }
 
     //退课
-    private void dropClass(EnrolledLesson bean){
+    private void dropClass(EnrolledLesson bean) {
 
     }
 
     //评价
-    private void evaluate(EnrolledLesson bean){
+    private void evaluate(EnrolledLesson bean) {
 
     }
 
@@ -216,7 +233,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     @Override
     protected View createContentView(int position) {
-        View v = mInflater.inflate(R.layout.layout_my_course, null);
+        View v = mInflater.inflate(R.layout.layout_enroll_lesson_item, null);
         return v;
     }
 
@@ -226,7 +243,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     }
 
     @Override
-    protected void onDataItemClick(int position,EnrolledLesson bean) {
+    protected void onDataItemClick(int position, EnrolledLesson bean) {
         Intent i = new Intent(mContext, LessonHomeActivity.class);
         i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_ENROLL_LESSON);
         i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
@@ -266,7 +283,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     @Override
     protected void onDataFailed() {
-        if (mFragment != null){
+        if (mFragment != null) {
             mFragment.showTop();
         }
     }
@@ -279,73 +296,29 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     }
 
     static class Holder extends BaseHolder {
-        @BindView(R.id.course_item_image)
-        ImageView image;
-        @BindView(R.id.course_xbs_state)
-        TextView xbsState;
-        @BindView(R.id.course_name)
+        @BindView(R.id.enroll_lesson_item_name)
         TextView name;
-        @BindView(R.id.course_desc)
-        TextView desc;//用户小头像为40x40
-        @BindView(R.id.course_state)
-        TextView courseState;
-        @BindView(R.id.time_mark)
-        TextView time;
-        @BindView(R.id.course_price)
-        TextView price;
-        @BindView(R.id.course_teacher_image)
-        RoundedImageView teacherImage;
+        @BindView(R.id.enroll_lesson_item_lessons)
+        TextView lessonCount;
 
-        @BindView(R.id.course_item_fun_circle)
-        RedTipTextView circle;
-        @BindView(R.id.course_item_fun_enter)
-        RedTipTextView enter;
-        @BindView(R.id.course_item_fun_stu_images)
-        ImageFlowLayout imageFlow;
+        @BindView(R.id.enroll_lesson_item_persons)
+        LessonPersonView persons;
 
-        @BindView(R.id.course_item_fun_shelves)
-        TextView shelves;
-        @BindView(R.id.course_item_fun_edit)
-        TextView edit;
-        @BindView(R.id.course_item_fun_cancel)
-        TextView cancel;
-        @BindView(R.id.course_item_fun_detail)
-        TextView detail;
+        @BindView(R.id.progress_wrapper)
+        View progressWrapper;
+        @BindView(R.id.enroll_lesson_item_cur_name)
+        TextView progressName;
+        @BindView(R.id.enroll_lesson_item_progress)
+        LiveProgress progress;
 
-        @BindView(R.id.course_item_fun_error)
-        TextView error;
-        @BindView(R.id.course_item_fun_data_base)
-        RedTipImageView databank;
-
-        @BindView(R.id.course_item_fun_more)
-        RedTipImageView more;
-
-        @BindView(R.id.course_item_fun_cls)
-        LinearLayout clsFunction;
-        @BindView(R.id.course_item_fun_opera)
-        LinearLayout operaFunction;
-
-        @BindView(R.id.course_item_fun_shelves_line)
-        View shelvesLine;
-        @BindView(R.id.course_item_fun_edit_line)
-        View editLine;
-        @BindView(R.id.course_item_fun_cancel_line)
-        View cancelLine;
-
+        @BindView(R.id.enroll_lesson_item_status)
+        LessonStatusView status;
+        @BindView(R.id.enroll_lesson_item_opera)
+        LessonOperationView operation;
 
         public void reset() {
-            clsFunction.setVisibility(View.GONE);
-            operaFunction.setVisibility(View.GONE);
-            error.setVisibility(View.GONE);
-            more.setVisibility(View.GONE);
-            databank.setVisibility(View.GONE);
-            shelves.setVisibility(View.GONE);
-            edit.setVisibility(View.GONE);
-            cancel.setVisibility(View.GONE);
-            shelvesLine.setVisibility(View.GONE);
-            editLine.setVisibility(View.GONE);
-            cancelLine.setVisibility(View.GONE);
-            price.setVisibility(View.GONE);
+            status.setVisibility(View.GONE);
+            progressWrapper.setVisibility(View.GONE);
         }
 
         public Holder(View view) {

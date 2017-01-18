@@ -17,7 +17,7 @@
                 android:layout_weight="1"/>
 
         <TextView
-                android:id="@+id/mark"
+                android:id="@+id/swipe_mark"
                 android:layout_width="@dimen/px200"
                 android:layout_height="match_parent"
                 android:background="@drawable/orange_bg_selector"
@@ -30,7 +30,7 @@
                 android:textSize="@dimen/font_28px"/>
 
         <TextView
-                android:id="@+id/delete"
+                android:id="@+id/swipe_delete"
                 android:layout_width="@dimen/px140"
                 android:layout_height="match_parent"
                 android:background="@drawable/red_bg_selector"

@@ -451,8 +451,8 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 view.setTag(holder);
             } else {
                 holder = (H) view.getTag();
-                TextView delete = (TextView) view.findViewById(R.id.delete);
-                TextView mark = (TextView) view.findViewById(R.id.mark);
+                TextView delete = (TextView) view.findViewById(R.id.swipe_delete);
+                TextView mark = (TextView) view.findViewById(R.id.swipe_mark);
                 setMarkListener(mark, i);
                 setDeleteListener(delete, i);
             }

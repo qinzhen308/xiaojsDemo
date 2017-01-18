@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.course;
+package cn.xiaojs.xma.ui.lesson;
 
 import android.view.LayoutInflater;
 import android.view.View;

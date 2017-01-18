@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.course;
+package cn.xiaojs.xma.ui.lesson;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -19,10 +19,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
@@ -39,12 +37,12 @@ import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
+import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
-import cn.xiaojs.xma.ui.widget.RedTipImageView;
-import cn.xiaojs.xma.ui.widget.RedTipTextView;
+import cn.xiaojs.xma.ui.widget.LiveProgress;
+import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.NumberUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -85,133 +83,191 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 //        if (!TextUtils.isEmpty(state)){
 //            bean.setState(state);
 //        }
+        /*if (position == 0){
+            bean.setState(LessonState.FINISHED);
+        }else if (position == 1){
+            bean.setState(LessonState.CANCELLED);
+        }else if (position == 2){
+            bean.setState(LessonState.DRAFT);
+        }else if (position == 3){
+            bean.setState(LessonState.LIVE);
+        }else if (position == 4){
+            bean.setState(LessonState.PENDING_FOR_APPROVAL);
+        }else if (position == 5){
+            bean.setState(LessonState.REJECTED);
+        }*/
         holder.price.setVisibility(View.VISIBLE);
         if (bean.getFee().free) {
             holder.price.setText(R.string.free);
         } else {
             holder.price.setText(NumberUtil.getPrice(bean.getFee().charge));
         }
-        holder.desc.setText(mContext.getString(R.string.course_stu, bean.getEnroll().current, bean.getEnroll().max));
+        holder.enrollDesc.setText(mContext.getString(R.string.course_stu, bean.getEnroll().current, bean.getEnroll().max));
 
         holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
-        Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
-        if (TextUtils.isEmpty(bean.getState())) {
+        holder.name.setText(bean.getTitle());
+        //Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
+        if (TextUtils.isEmpty(bean.getState()))
             return;
-        }
         if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)) {
-            holder.clsFunction.setVisibility(View.VISIBLE);
-            holder.circle.setText(R.string.shelves);
-            holder.enter.setText(R.string.edit);
-            holder.circle.setOnClickListener(new View.OnClickListener() {
+            String[] items = new String[]{mContext.getString(R.string.shelves),
+                    mContext.getString(R.string.edit),
+                    mContext.getString(R.string.look_detail)};
+            holder.state.setText(R.string.pending_shelves);
+            holder.state.setBackgroundResource(R.drawable.course_state_draft_bg);
+            holder.operation.enableMore(false);
+            holder.operation.setItems(items);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
-                public void onClick(View v) {
-                    shelves(bean);
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1://上架
+                            shelves(bean);
+                            break;
+                        case 2://编辑
+                            edit(bean);
+                            break;
+                        case 3://查看详情
+                            detail(bean);
+                            break;
+                    }
                 }
             });
-            holder.enter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    edit(bean);
-                }
-            });
-            holder.more.setVisibility(View.VISIBLE);
-            holder.more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    more(bean);
-                }
-            });
-            holder.courseState.setText(R.string.pending_shelves);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_draft_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
-//            holder.error.setVisibility(View.VISIBLE);
-//            holder.error.setText(R.string.course_examine_error_tip);
-            holder.clsFunction.setVisibility(View.VISIBLE);
-            holder.enter.setVisibility(View.GONE);
-            holder.funDivider.setVisibility(View.GONE);
-            holder.circle.setText(R.string.edit);
-            holder.circle.setOnClickListener(new View.OnClickListener() {
+            holder.assistants.setVisibility(View.VISIBLE);
+            String[] items = new String[]{mContext.getString(R.string.edit),
+                    mContext.getString(R.string.look_detail),
+                    mContext.getString(R.string.delete)};
+            holder.state.setText(R.string.examine_failure);
+            holder.state.setBackgroundResource(R.drawable.course_state_failure_bg);
+            holder.operation.enableMore(false);
+            holder.operation.setItems(items);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
-                public void onClick(View v) {
-                    edit(bean);
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1://编辑
+                            edit(bean);
+                            break;
+                        case 2://查看详情
+                            detail(bean);
+                            break;
+                        case 3://删除
+                            delete(bean);
+                            break;
+                    }
                 }
             });
-            holder.more.setVisibility(View.VISIBLE);
-            holder.more.setOnClickListener(new View.OnClickListener() {//更多
-                @Override
-                public void onClick(View view) {
-                    more(bean);
-                }
-            });
-            holder.courseState.setText(R.string.examine_failure);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_failure_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
-            holder.operaFunction.setVisibility(View.VISIBLE);
-            holder.detail.setOnClickListener(new View.OnClickListener() {//查看详情
+            String[] items = new String[]{mContext.getString(R.string.look_detail),
+                    mContext.getString(R.string.delete)};
+            holder.state.setText(R.string.course_state_cancel);
+            holder.state.setBackgroundResource(R.drawable.course_state_cancel_bg);
+            holder.operation.enableMore(false);
+            holder.operation.setItems(items);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
-                public void onClick(View view) {
-                    detail(bean);
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1://查看详情
+                            detail(bean);
+                            break;
+                        case 2://删除
+                            delete(bean);
+                            break;
+                    }
                 }
             });
-            holder.courseState.setText(R.string.course_state_cancel);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_cancel_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
-//            holder.error.setVisibility(View.VISIBLE);
-//            holder.error.setText(R.string.course_stop_error_tip);
-            holder.more.setVisibility(View.VISIBLE);
-            holder.more.setOnClickListener(new View.OnClickListener() {
+            String[] items = new String[]{mContext.getString(R.string.edit),
+                    mContext.getString(R.string.look_detail),
+                    mContext.getString(R.string.delete)};
+            holder.state.setText(R.string.force_stop);
+            holder.state.setBackgroundResource(R.drawable.course_state_stop_bg);
+            holder.operation.enableMore(false);
+            holder.operation.setItems(items);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
-                public void onClick(View v) {
-                    more(bean);
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1://编辑
+                            edit(bean);
+                            break;
+                        case 2://查看详情
+                            detail(bean);
+                            break;
+                        case 3://删除
+                            delete(bean);
+                            break;
+                    }
                 }
             });
-            holder.courseState.setText(R.string.force_stop);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_stop_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
-            holder.more.setVisibility(View.VISIBLE);
-            holder.more.setOnClickListener(new View.OnClickListener() {
+            holder.assistants.setVisibility(View.VISIBLE);
+            String[] items = new String[]{mContext.getString(R.string.cancel_examine),
+                    mContext.getString(R.string.look_detail)};
+            holder.state.setText(R.string.examining);
+            holder.state.setBackgroundResource(R.drawable.course_state_examine_bg);
+            holder.operation.enableMore(false);
+            holder.operation.setItems(items);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
-                public void onClick(View v) {
-                    more(bean);
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1://撤销审核
+                            offShelves(bean);
+                            break;
+                        case 2://查看详情
+                            detail(bean);
+                            break;
+                    }
                 }
             });
-            holder.courseState.setText(R.string.examining);
-            holder.courseState.setBackgroundResource(R.drawable.course_state_examine_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
                 || bean.getState().equalsIgnoreCase(LessonState.LIVE)
                 || bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-            holder.more.setVisibility(View.VISIBLE);
-            holder.clsFunction.setVisibility(View.VISIBLE);
-            holder.circle.setText(R.string.cls_moment);
-            holder.enter.setText(R.string.into_cls);
-            holder.circle.setOnClickListener(new View.OnClickListener() {//班级圈
+            holder.assistants.setVisibility(View.VISIBLE);
+//            List<Bitmap> l = new ArrayList<>();
+//            l.add(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_ad));
+//            holder.assistants.show(l);
+            String[] items = new String[]{/*mContext.getString(R.string.prepare_lesson),*/
+                    mContext.getString(R.string.class_home)};
+//            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+//                items[0] = mContext.getString(R.string.lesson_again);
+//            }
+            holder.operation.enableMore(true);
+            holder.operation.setItems(items);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
-                public void onClick(View view) {
-                    circle(bean);
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1://备课
+//                            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+//                                lessonAgain(bean);
+//                            } else {
+//                                prepare(bean);
+//                            }
+                            home(bean);
+                            break;
+                        case 2://班级主页
+                            home(bean);
+                            break;
+                        case MORE:
+                            more(bean);
+                            break;
+                    }
                 }
             });
-            holder.enter.setOnClickListener(new View.OnClickListener() {//进入教室
-                @Override
-                public void onClick(View view) {
-                    enterClass(bean);
-                }
-            });
-            holder.more.setOnClickListener(new View.OnClickListener() {//更多
-                @Override
-                public void onClick(View view) {
-                    more(bean);
-                }
-            });
-
             if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
-                holder.courseState.setText(R.string.pending_for_course);
-                holder.courseState.setBackgroundResource(R.drawable.course_state_wait_bg);
+                holder.state.setText(R.string.pending_for_course);
+                holder.state.setBackgroundResource(R.drawable.course_state_wait_bg);
             } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
-                holder.courseState.setText(R.string.living);
-                holder.courseState.setBackgroundResource(R.drawable.course_state_on_bg);
+                holder.state.setText(R.string.living);
+                holder.state.setBackgroundResource(R.drawable.course_state_on_bg);
+                holder.progressWrapper.setVisibility(View.VISIBLE);
             } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-                holder.courseState.setText(R.string.course_state_end);
-                holder.courseState.setBackgroundResource(R.drawable.course_state_end_bg);
+                holder.state.setVisibility(View.GONE);
+                holder.end.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -297,10 +353,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     //进入教室
     private void enterClass(TeachLesson bean) {
-        Intent i = new Intent();
-        i.setClass(mContext, ClassroomActivity.class);
-        i.putExtra(Constants.KEY_TICKET, bean.getTicket());
-        mContext.startActivity(i);
+
     }
 
     private void modifyLesson(TeachLesson bean) {
@@ -341,6 +394,12 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     }
 
+    //班级主页
+    private void home(TeachLesson bean) {
+        Intent intent = new Intent(mContext, GradeHomeActivity.class);
+        mContext.startActivity(intent);
+    }
+
     //分享
     private void share(TeachLesson bean) {
 
@@ -353,7 +412,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     //发布到主页
     private void publish(final TeachLesson bean) {
-        if (bean.getPublish().accessible){
+        if (bean.getPublish().accessible) {
             cancelPublish(bean);
             return;
         }
@@ -363,13 +422,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             public void onSuccess(Object object) {
                 cancelProgress();
                 bean.getPublish().accessible = true;
-                ToastUtil.showToast(mContext,R.string.lesson_publish_tip);
+                ToastUtil.showToast(mContext, R.string.lesson_publish_tip);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                ToastUtil.showToast(mContext,errorMessage);
+                ToastUtil.showToast(mContext, errorMessage);
             }
         });
     }
@@ -394,13 +453,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     public void onSuccess(Object object) {
                         cancelProgress();
                         bean.getPublish().accessible = false;
-                        ToastUtil.showToast(mContext,R.string.course_state_cancel);
+                        ToastUtil.showToast(mContext, R.string.course_state_cancel);
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
                         cancelProgress();
-                        ToastUtil.showToast(mContext,errorMessage);
+                        ToastUtil.showToast(mContext, errorMessage);
                     }
                 });
             }
@@ -420,13 +479,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     private void more(final TeachLesson bean) {
 
         int publishId = R.string.publish_to_home_page;
-        if (bean.getPublish().accessible){
+        if (bean.getPublish().accessible) {
             publishId = R.string.cancel_publish;
         }
-        if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)) {
+        /*if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)) {
             String[] items = new String[]{
                     mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+                    mContext.getString(R.string.edit)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -443,7 +502,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 }
             });
             dialog.show();
-        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
+        } else*/ /*if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
             String[] items = new String[]{mContext.getString(R.string.cancel_examine),
                     mContext.getString(R.string.look_detail)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
@@ -462,9 +521,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 }
             });
             dialog.show();
-        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
+        } else*/
+        if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
             String[] items = new String[]{
-                    mContext.getString(R.string.prepare_lesson),
                     mContext.getString(R.string.registration),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
@@ -477,25 +536,22 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 @Override
                 public void onItemClick(int position) {
                     switch (position) {
-                        case 0://备课
-                            prepare(bean);
-                            break;
-                        case 1://报名注册
+                        case 0://报名注册
                             registration(bean);
                             break;
-                        case 2://分享
+                        case 1://分享
                             share(bean);
                             break;
-                        case 3://查看详情
+                        case 2://查看详情
                             detail(bean);
                             break;
-                        case 4://发布到主页
+                        case 3://发布到主页
                             publish(bean);
                             break;
-                        case 5://修改上课时间
+                        case 4://修改上课时间
                             modifyLesson(bean);
                             break;
-                        case 6://取消上课
+                        case 5://取消上课
                             cancelLesson(bean);
                             break;
                     }
@@ -528,7 +584,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             dialog.show();
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
             String[] items = new String[]{
-                    mContext.getString(R.string.lesson_again),
                     mContext.getString(R.string.prepare_lesson),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
@@ -539,26 +594,23 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 @Override
                 public void onItemClick(int position) {
                     switch (position) {
-                        case 0://再次开课
-                            lessonAgain(bean);
-                            break;
-                        case 1://备课
+                        case 0://备课
                             prepare(bean);
                             break;
-                        case 2://分享
+                        case 1://分享
                             share(bean);
                             break;
-                        case 3://查看详情
+                        case 2://查看详情
                             detail(bean);
                             break;
-                        case 4://发布到主页
+                        case 3://发布到主页
                             publish(bean);
                             break;
                     }
                 }
             });
             dialog.show();
-        } else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
+        } /*else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
             String[] items = new String[]{
                     mContext.getString(R.string.look_detail),
                     mContext.getString(R.string.delete)};
@@ -599,12 +651,12 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             });
             dialog.show();
         }
-
+*/
     }
 
     @Override
     protected View createContentView(int position) {
-        View v = mInflater.inflate(R.layout.layout_my_course, null);
+        View v = mInflater.inflate(R.layout.layout_teach_lesson_item, null);
         return v;
     }
 
@@ -697,72 +749,43 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     }
 
     static class Holder extends BaseHolder {
-        @BindView(R.id.course_item_image)
-        ImageView image;
-        @BindView(R.id.course_xbs_state)
-        TextView xbsState;
-        @BindView(R.id.course_name)
+
+        @BindView(R.id.teach_lesson_item_name)
         TextView name;
-        @BindView(R.id.course_desc)
-        TextView desc;//用户小头像为40x40
-        @BindView(R.id.course_state)
-        TextView courseState;
-        @BindView(R.id.time_mark)
+        @BindView(R.id.teach_lesson_state)
+        TextView state;
+        @BindView(R.id.teach_lesson_item_time)
         TextView time;
-        @BindView(R.id.course_price)
+        @BindView(R.id.teach_lesson_open_distance)
+        TextView distance;
+        @BindView(R.id.teach_lesson_item_price)
         TextView price;
+        @BindView(R.id.teach_lesson_item_enroll_desc)
+        TextView enrollDesc;
 
-        @BindView(R.id.course_item_fun_circle)
-        RedTipTextView circle;
-        @BindView(R.id.course_item_fun_enter)
-        RedTipTextView enter;
+        @BindView(R.id.assistants)
+        ImageFlowLayout assistants;
 
-        @BindView(R.id.course_item_fun_shelves)
-        TextView shelves;
-        @BindView(R.id.course_item_fun_edit)
-        TextView edit;
-        @BindView(R.id.course_item_fun_cancel)
-        TextView cancel;
-        @BindView(R.id.course_item_fun_detail)
-        TextView detail;
+        @BindView(R.id.teach_lesson_opera)
+        LessonOperationView operation;
 
-        @BindView(R.id.course_item_fun_error)
-        TextView error;
+        @BindView(R.id.teach_lesson_item_end)
+        ImageView end;
 
-        @BindView(R.id.course_item_fun_more)
-        RedTipImageView more;
-        @BindView(R.id.course_item_fun_data_base)
-        RedTipImageView databank;
+        @BindView(R.id.teach_lesson_item_assistants)
+        View assistantsWrapper;
 
-        @BindView(R.id.course_item_fun_cls)
-        LinearLayout clsFunction;
-        @BindView(R.id.course_item_fun_opera)
-        LinearLayout operaFunction;
-
-        @BindView(R.id.course_item_fun_shelves_line)
-        View shelvesLine;
-        @BindView(R.id.course_item_fun_edit_line)
-        View editLine;
-        @BindView(R.id.course_item_fun_cancel_line)
-        View cancelLine;
-        @BindView(R.id.fun_divider)
-        View funDivider;
+        @BindView(R.id.progress_wrapper)
+        View progressWrapper;
+        @BindView(R.id.progress)
+        LiveProgress progress;
 
         public void reset() {
-            clsFunction.setVisibility(View.GONE);
-            enter.setVisibility(View.VISIBLE);
-            funDivider.setVisibility(View.VISIBLE);
-            operaFunction.setVisibility(View.GONE);
-            error.setVisibility(View.INVISIBLE);
-            more.setVisibility(View.GONE);
-            databank.setVisibility(View.GONE);
-            shelves.setVisibility(View.GONE);
-            edit.setVisibility(View.GONE);
-            cancel.setVisibility(View.GONE);
-            shelvesLine.setVisibility(View.GONE);
-            editLine.setVisibility(View.GONE);
-            cancelLine.setVisibility(View.GONE);
-            price.setVisibility(View.GONE);
+            assistantsWrapper.setVisibility(View.GONE);
+            end.setVisibility(View.GONE);
+            distance.setVisibility(View.GONE);
+            state.setVisibility(View.VISIBLE);
+            progressWrapper.setVisibility(View.GONE);
         }
 
         public Holder(View view) {
