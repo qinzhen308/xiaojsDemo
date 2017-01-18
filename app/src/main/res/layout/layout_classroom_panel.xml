@@ -96,6 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
+                        android:layout_gravity="center"
                         android:textSize="@dimen/font_30px"
                         android:text="战略性积极管理"/>
 
@@ -106,6 +107,7 @@
                         android:textColor="@color/white"
                         android:layout_marginTop="@dimen/px4"
                         android:textSize="@dimen/font_20px"
+                        android:visibility="gone"
                         android:text="01:15:30"/>
             </LinearLayout>
 

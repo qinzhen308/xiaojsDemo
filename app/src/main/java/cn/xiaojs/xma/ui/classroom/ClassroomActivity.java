@@ -162,6 +162,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Boolean mSktConnected = false;
 
     private String mTicket = "";
+    private CtlSession mCtlSession;
     private Constants.User mUser = Constants.User.STUDENT;
 
     @Override
@@ -292,8 +293,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         LiveManager.bootSession(this, mTicket, new APIServiceCallback<CtlSession>() {
             @Override
-            public void onSuccess(CtlSession object) {
-
+            public void onSuccess(CtlSession ctlSession) {
+                if (ctlSession != null) {
+                    mCtlSession = ctlSession;
+                    mUser = Constants.User.valueOf(ctlSession.psType);
+                    mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
+                }
             }
 
             @Override

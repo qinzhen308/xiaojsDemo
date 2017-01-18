@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:roundimg="http://schemas.android.com/apk/res-auto"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/px20"
                 android:paddingRight="@dimen/px20"
@@ -22,7 +22,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/portrait"
-            android:text="吴君如"
             android:layout_marginLeft="@dimen/px15"
             android:textSize="@dimen/font_24px"
             android:textColor="@color/font_blue"/>
@@ -32,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/name"
-            android:text="19:20"
             android:layout_marginLeft="@dimen/px14"
             android:textSize="@dimen/font_24px"
             android:textColor="@color/font_black"/>
@@ -43,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/portrait"
             android:gravity="center_vertical"
-            android:text="Hi，王老师，最喜欢你上的课了，国庆节上课么?"
             android:layout_below="@+id/name"
             android:textSize="@dimen/font_26px"
             android:layout_marginLeft="@dimen/px5"

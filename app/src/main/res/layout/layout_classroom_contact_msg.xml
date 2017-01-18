@@ -7,7 +7,7 @@
 
     <include layout="@layout/layout_classroom_contact"/>
 
-    <include layout="@layout/layout_classroom_chat"/>
+    <include layout="@layout/layout_classroom_talk"/>
 
 </FrameLayout>
 
