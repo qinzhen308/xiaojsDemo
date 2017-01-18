@@ -624,6 +624,10 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
     private void sendMsg() {
         String text = mMsgInputEdt.getText().toString();
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+
         TalkItem talkItem = new TalkItem();
 
         TalkItem.TalkPerson person = new TalkItem.TalkPerson();
@@ -644,6 +648,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
         TalkBean talkBean = new TalkBean();
         TalkBean.TalkContent sendContent = new TalkBean.TalkContent();
+        sendContent.text = text;
         talkBean.time = sendTime;
         talkBean.body = sendContent;
         switch (mTalkCriteria) {
@@ -668,7 +673,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         } catch (Exception e) {
 
         }
-        if (!TextUtils.isEmpty(sendJson) && mSocket != null) {
+        if (sendJson != null && mSocket != null) {
             mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), sendJson);
         }
 
