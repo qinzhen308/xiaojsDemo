@@ -150,7 +150,7 @@
     <string name="input_tips"><![CDATA[<font color="#cc0000">%1$d</font>]]>/%2$d字</string>
 
     <string name="home_search_hint">个人/机构/课</string>
-    <string name="course_of_learn">我学的课</string>
+    <string name="course_of_learn">我报的班</string>
     <string name="course_of_teach">我授的课</string>
     <string name="my_course">我的课</string>
     <string name="cls_moment">班级圈</string>
@@ -269,18 +269,19 @@
     <string name="look_detail">查看详情</string>
     <string name="course_examine_error_tip">标题涉及违法内容,请重新编辑</string>
     <string name="course_stop_error_tip">传播淫秽内容,本直播课被平台强制停止</string>
-    <string name="pending_shelves">待上架</string>
+    <string name="pending_shelves">草稿</string>
     <string name="examine_failure">审核失败</string>
     <string name="force_stop">强制停止</string>
-    <string name="examining">审核中</string>
-    <string name="pending_for_course">待上课</string>
-    <string name="living">上课中</string>
+    <string name="examining">待审核</string>
+    <string name="pending_for_course">待开课</string>
+    <string name="living">已开课</string>
     <string name="course_stu">已报名&#160;%1$d/%2$d</string>
     <string name="shelves_need_examine">您提交的上架申请正在审核中，请耐心等待</string>
     <string name="registration">报名注册</string>
     <string name="modify_lesson_time">修改上课时间</string>
     <string name="cancel_lesson">取消上课</string>
     <string name="cancel_publish">取消公开</string>
+    <string name="class_home">班级主页</string>
     <string name="publish_to_home_page">设为公开</string>
     <string name="off_shelves_success">撤销成功</string>
     <string name="cancel_publish_tip">直播课取消发布后，该直播课将不再在您的主页中展示且不能对外分享</string>

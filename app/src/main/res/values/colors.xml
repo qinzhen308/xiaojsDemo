@@ -75,9 +75,9 @@
     <color name="translucent_30">#6f000000</color>
     <color name="search_gray">#bfbfbf</color>
     <color name="common_text">#8a8a8a</color>
-    <color name="course_state_on">#698700</color>
+    <color name="course_state_on">#b8f986</color>
     <color name="course_state_cancel">#bbbbbb</color>
-    <color name="course_state_stop">#cccccc</color>
+    <color name="course_state_stop">#ff0000</color>
     <color name="course_state_end">#999999</color>
     <color name="course_state_draft">#6699ff</color>
     <color name="course_state_examine">#66cccc</color>

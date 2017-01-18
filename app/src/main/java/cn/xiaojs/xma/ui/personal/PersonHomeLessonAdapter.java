@@ -27,7 +27,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
-import cn.xiaojs.xma.ui.course.LessonBusiness;
+import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 
 public class PersonHomeLessonAdapter extends AbsSwipeAdapter<LessonBusiness,PersonHomeLessonAdapter.Holder> {
     public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, boolean isNeedPreLoading) {

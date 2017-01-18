@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <RelativeLayout
+            android:layout_margin="@dimen/px30"
+            android:background="@drawable/white_bolder_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <View
+                android:id="@+id/mark"
+                android:layout_alignParentLeft="true"
+                android:layout_width="@dimen/px10"
+                android:layout_height="@dimen/px120"
+                android:background="@color/font_orange"/>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@+id/mark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <RelativeLayout
+                    android:layout_marginLeft="@dimen/px15"
+                    android:layout_marginRight="@dimen/px15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/status"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/px30"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/title"
+                        android:textSize="@dimen/font_28px"
+                        android:textColor="@color/font_black"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                    android:layout_marginLeft="@dimen/px15"
+                    android:layout_marginRight="@dimen/px15"
+                    android:layout_marginTop="@dimen/px10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:id="@+id/opera_wrapper"
+                        android:orientation="horizontal"
+                        android:layout_marginRight="@dimen/px30"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:id="@+id/distance"
+                            android:textColor="@color/font_orange"
+                            android:textSize="@dimen/font_26px"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:id="@+id/evaluate"
+                            android:textColor="@color/font_blue"
+                            android:textSize="@dimen/font_26px"
+                            android:text="评价"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:id="@+id/review"
+                            android:layout_marginLeft="@dimen/px30"
+                            android:textColor="@color/font_blue"
+                            android:textSize="@dimen/font_26px"
+                            android:text="回放"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <TextView
+                        android:id="@+id/time"
+                        android:textColor="@color/common_text"
+                        android:textSize="@dimen/font_26px"
+                        android:layout_marginRight="@dimen/px30"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/opera_wrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+            android:id="@+id/lesson_end"
+            android:src="@drawable/ic_lesson_end"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+</RelativeLayout>

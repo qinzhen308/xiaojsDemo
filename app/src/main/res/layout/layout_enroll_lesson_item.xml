@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@drawable/white_grey_selector"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout
+            android:layout_marginTop="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/enroll_lesson_item_lessons"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/common_text"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/enroll_lesson_item_name"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/enroll_lesson_item_lessons"
+                android:layout_marginRight="@dimen/px30"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <cn.xiaojs.xma.ui.view.LessonPersonView
+            android:id="@+id/enroll_lesson_item_persons"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <LinearLayout
+            android:id="@+id/progress_wrapper"
+            android:background="@drawable/wb_conner_bg"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/enroll_lesson_item_cur_name"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:visibility="visible"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <cn.xiaojs.xma.ui.widget.LiveProgress
+                android:id="@+id/enroll_lesson_item_progress"
+                android:layout_margin="@dimen/px30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <cn.xiaojs.xma.ui.view.LessonStatusView
+            android:id="@+id/enroll_lesson_item_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <View
+            style="@style/DividerHorizontal"
+            android:layout_marginTop="@dimen/px30"/>
+
+    <cn.xiaojs.xma.ui.view.LessonOperationView
+            android:id="@+id/enroll_lesson_item_opera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -57,7 +57,6 @@ public class AccountBusiness {
 
                     if (loginInfo != null) {
                         XiaojsConfig.mLoginUser = loginInfo.getUser();
-                        CacheUtil.saveLoginInfo(loginInfo.getUser());
                         XjsUtils.getSharedPreferences().edit().putLong(XiaojsConfig.KEY_LOGIN_USERNAME,
                                 loginParams.getMobile()).commit();
 
