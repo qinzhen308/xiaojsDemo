@@ -18,11 +18,13 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CategoriesManager;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.model.LiveSession.CtlSession;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CSubject;
@@ -165,9 +167,10 @@ public class TestAPIActivity extends Activity {
 
     private void testT(Context context){
 
-        CategoriesManager.requestGetSubject(context, new APIServiceCallback<CSubject>() {
+        String t = "94bf60841b32192ed0df1a8e025f6c0a08bd6f1cc753610fe4d55080c34da460b15feffa68840f4e045fad946a416675";
+        LiveManager.bootSession(getApplicationContext(), t, new APIServiceCallback<CtlSession>() {
             @Override
-            public void onSuccess(CSubject object) {
+            public void onSuccess(CtlSession object) {
 
             }
 
@@ -176,6 +179,18 @@ public class TestAPIActivity extends Activity {
 
             }
         });
+
+//        CategoriesManager.requestGetSubject(context, new APIServiceCallback<CSubject>() {
+//            @Override
+//            public void onSuccess(CSubject object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 
 //        Pagination pagination = new Pagination();
