@@ -180,7 +180,10 @@
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity android:name=".ui.message.CloseFriendActivity"/>
-
+        <activity
+                android:name=".TestActivity"
+                android:screenOrientation="landscape"
+                android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <!--service-->
         <service
                 android:name=".data.loader.SyncService"

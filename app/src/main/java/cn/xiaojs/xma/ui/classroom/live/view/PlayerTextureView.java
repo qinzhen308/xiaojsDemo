@@ -23,12 +23,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
 import com.orhanobut.logger.Logger;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
+
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
 
 public class PlayerTextureView extends BaseMediaView{
     private PLVideoTextureView mPlayer;
@@ -38,20 +39,25 @@ public class PlayerTextureView extends BaseMediaView{
 
     public PlayerTextureView(Context context) {
         super(context);
-        init();
+        init(PLVideoTextureView.ASPECT_RATIO_16_9);
+    }
+
+    public PlayerTextureView(Context context,int ratio) {
+        super(context);
+        init(ratio);
     }
 
     public PlayerTextureView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(PLVideoTextureView.ASPECT_RATIO_16_9);
     }
 
     public PlayerTextureView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(PLVideoTextureView.ASPECT_RATIO_16_9);
     }
 
-    private void init(){
+    private void init(int ratio){
 
         mPlayer.setBufferingIndicator(mLoadingView);
         showLoading(true);
@@ -81,7 +87,7 @@ public class PlayerTextureView extends BaseMediaView{
 
         mPlayer.setOnCompletionListener(mOnCompletionListener);
         mPlayer.setOnErrorListener(mOnErrorListener);
-        mPlayer.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_16_9);
+        mPlayer.setDisplayAspectRatio(ratio);
         //setBackgroundResource(R.drawable.common_white_bg_corner);
     }
 
