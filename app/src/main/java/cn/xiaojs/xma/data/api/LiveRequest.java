@@ -29,12 +29,12 @@ public class LiveRequest extends ServiceRequest{
     }
 
     public void generateTicket(String cs) {
-        Call<Ticket> call = getService().generateTicket(cs);
+        Call<Ticket> call = getLiveService().generateTicket(cs);
         enqueueRequest(APIType.GENERATE_TICKET,call);
     }
     public void bootSession(String ticket) {
 
-        Call<CtlSession> call = getService().bootSession(ticket);
+        Call<CtlSession> call = getLiveService().bootSession(ticket);
         enqueueRequest(APIType.BOOT_SESSION,call);
     }
 
@@ -48,7 +48,7 @@ public class LiveRequest extends ServiceRequest{
             Logger.json(paginationJsonstr);
         }
 
-        Call<CollectionPage<TalkItem>> call = getService().getTalks(ticket,
+        Call<CollectionPage<TalkItem>> call = getLiveService().getTalks(ticket,
                 criteriaJsonstr,
                 paginationJsonstr);
 
@@ -57,7 +57,7 @@ public class LiveRequest extends ServiceRequest{
     }
 
     public void getAttendees(String ticket) {
-        Call<LiveCollection<Attendee>> call = getService().getAttendees(ticket);
+        Call<LiveCollection<Attendee>> call = getLiveService().getAttendees(ticket);
         enqueueRequest(APIType.GET_ATTENDEES,call);
     }
 }

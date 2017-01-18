@@ -71,7 +71,7 @@ import retrofit2.http.Path;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String BASE_URL = "http://192.168.100.3:3000";
+    String SERVICE_PORT = "3000";
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -365,30 +365,6 @@ public interface XiaojsService {
                                                       @Path("pagination") String pagination);
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //Live Sessions
-    //Provides access to live session interfaces accessible to the Xiaojs client applications.
 
-    //Generate Ticket
-    @GET("/v1/live/ticket/{cs}")
-    Call<Ticket> generateTicket(@Path("cs") String cs);
-
-
-    //Boot Session
-    @Headers("Content-Type: application/json")
-    @POST("/v1/live/{ticket}")
-    Call<CtlSession> bootSession(@Path("ticket") String ticket);
-
-    //Get Talks
-    @GET("/v1/live/{ticket}/talks/{criteria}/{pagination}")
-    Call<CollectionPage<TalkItem>> getTalks(@Path("ticket") String ticket,
-                                            @Path("criteria") String criteria,
-                                            @Path("pagination") String pagination);
-
-
-    //Get Attendees
-    @GET("/v1/live/{ticket}/attendees")
-    Call<LiveCollection<Attendee>> getAttendees(@Path("ticket") String ticket);
 
 }
