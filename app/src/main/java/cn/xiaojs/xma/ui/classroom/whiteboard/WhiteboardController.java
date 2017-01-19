@@ -68,7 +68,7 @@ public class WhiteboardController implements
     private static final String[] PERMISSIONS = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    private static final String TEST_VIDEO = "rtmp://demo.srs.tongchia.me:1935/live/livestream";
+    private static final String TEST_VIDEO = "rtmp://pili-live-rtmp.xiaojs.cn/xiaojs/test";
 
     private WhiteboardScrollerView mWhiteboardSv;
     //whiteboard adapter

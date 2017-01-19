@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -97,6 +99,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
     private View mMultiTalkTab;
     private View mSingleTalkTab;
+    private View mDiscussionSwitcher;
     private TextView mTeachTalkTab;
     private TextView mMultiTalkTitle;
     private TextView mSingleTalkTitle;
@@ -115,9 +118,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private Attendee mTalkAttendee;
     private String mPeerTalkAccountId = "";
     private String mMyAccountId = "";
+    private Constants.User mUser;
 
-    public TalkPanel(Context context, String ticket) {
+    public TalkPanel(Context context, String ticket, Constants.User user) {
         super(context);
+        mUser = user;
         initParams(context, ticket);
     }
 
@@ -160,7 +165,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         if (mSocket != null) {
             mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
             mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
-            mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), mOnSendTalk);
+            //mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), mOnSendTalk);
             mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
         }
 
@@ -182,6 +187,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         mContactView = root.findViewById(R.id.contact);
         mTalkView = root.findViewById(R.id.talk);
         mTalkMsgView = root.findViewById(R.id.talk_msg_layout);
+        mDiscussionSwitcher = root.findViewById(R.id.discussion_switcher);
 
         mContactBook = (ListView) root.findViewById(R.id.contact_book);
         mTalkContactLv = (ListView) root.findViewById(R.id.talk_simple_contact);
@@ -227,6 +233,14 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         mTeachTalkTab.setOnClickListener(this);
         mSingleTalkTab.setOnClickListener(this);
         mMsgSendTv.setOnClickListener(this);
+
+        //test
+        if (mUser == Constants.User.STUDENT) {
+            mMultiTalkTab.setVisibility(View.VISIBLE);
+            mTeachTalkTab.setVisibility(View.GONE);
+            mDiscussionSwitcher.setVisibility(View.GONE);
+        }
+
 
         switchTalkTab(MULTI_TALK);
     }
@@ -525,11 +539,26 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             return;
         }
 
-        if (!(args[0] instanceof String)) {
+        /*if (!(args[0] instanceof String)) {
+            return;
+        }*/
+
+
+        String result = null;
+        try {
+            if ((args[0] instanceof JSONObject)) {
+                result = args[0].toString();
+            } else {
+                result = (String)args[0];
+            }
+        } catch (Exception e) {
+
+        }
+
+        if (TextUtils.isEmpty(result)) {
             return;
         }
 
-        String result = (String) args[0];
         Attendee attendee = null;
         try {
             ObjectMapper mapper = new ObjectMapper();

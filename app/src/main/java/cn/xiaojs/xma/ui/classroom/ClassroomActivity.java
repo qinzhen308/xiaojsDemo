@@ -298,9 +298,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 cancelProgress();
                 if (ctlSession != null) {
                     mCtlSession = ctlSession;
-                    mUser = getUser(ctlSession.psType);
+                    //mUser = getUser(ctlSession.psType);
+                    mUser = Constants.User.STUDENT;
                     mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
-                    mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
+                    //mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
+                    mAppType = Platform.AppType.WEB_CLASSROOM;
 
                     //init socket
                     initSocketIO(mTicket, ctlSession.secret);
@@ -312,7 +314,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress();
+                //cancelProgress();
+                mUser = Constants.User.STUDENT;
+                //mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
+                mAppType = Platform.AppType.WEB_CLASSROOM;
+
+                //init socket
+                initSocketIO(mTicket, "");
+                listenSocket();
+                //init whiteboard
+                mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
+
                 Toast.makeText(ClassroomActivity.this, "BootSession 失败：" + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
@@ -500,7 +512,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      */
     private void openTalk(int mode) {
         if (mTalkPanel == null) {
-            mTalkPanel = new TalkPanel(this, mTicket);
+            mTalkPanel = new TalkPanel(this, mTicket, mUser);
             mTalkPanel.setPanelCallback(new PanelCallback() {
                 @Override
                 public void onOpenPanel(int panel) {
