@@ -122,8 +122,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
     public TalkPanel(Context context, String ticket, Constants.User user) {
         super(context);
-        mUser = user;
-        initParams(context, ticket);
+        initParams(context, ticket, user);
     }
 
     public TalkPanel with(int mode) {
@@ -136,8 +135,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         return this;
     }
 
-    private void initParams(Context context, String ticket) {
+    private void initParams(Context context, String ticket, Constants.User user) {
         mTicket = ticket;
+        mUser = user;
         mWhiteColor = context.getResources().getColor(R.color.white);
         mBlackFont = context.getResources().getColor(R.color.font_black);
     }
@@ -165,7 +165,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         if (mSocket != null) {
             mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
             mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
-            //mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), mOnSendTalk);
             mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
         }
 
@@ -234,13 +233,10 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         mSingleTalkTab.setOnClickListener(this);
         mMsgSendTv.setOnClickListener(this);
 
-        //test
         if (mUser == Constants.User.STUDENT) {
-            mMultiTalkTab.setVisibility(View.VISIBLE);
             mTeachTalkTab.setVisibility(View.GONE);
             mDiscussionSwitcher.setVisibility(View.GONE);
         }
-
 
         switchTalkTab(MULTI_TALK);
     }
