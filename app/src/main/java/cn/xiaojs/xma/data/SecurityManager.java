@@ -85,6 +85,41 @@ public class SecurityManager {
 
     }
 
+
+    public static Privilege[] havePrivilegeSync(@NonNull Context context,
+                                                int... permissions) throws Exception{
+
+        int pcount = permissions.length;
+        if (pcount <= 0) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("permissions length is 0,so cancel the request");
+            }
+            return null;
+        }
+
+        Privilege[] privileges = new Privilege[pcount];
+        for (int i=0;i<pcount ; i++) {
+
+            Privilege p = new Privilege();
+            p.setPermission(permissions[i]);
+
+            privileges[i] = p;
+        }
+
+        return havePrivilegeSync(context,privileges);
+
+    }
+
+    public static Privilege[] havePrivilegeSync(@NonNull Context context,
+                                            @NonNull Privilege[] privileges) throws Exception{
+
+
+        SecurityRequest securityRequest = new SecurityRequest(context,null);
+        return securityRequest.havePrivilegesSync(privileges);
+
+    }
+
+
     public static void requestHavePrivilege(@NonNull Context context,
                                             @NonNull Privilege[] privileges,
                                             @NonNull APIServiceCallback<Privilege[]> callback) {
