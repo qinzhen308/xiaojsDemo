@@ -28,6 +28,7 @@ import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public class SearchOrganizationAdapter extends CanInScrollviewListView.Adapter {
 
@@ -86,6 +87,7 @@ public class SearchOrganizationAdapter extends CanInScrollviewListView.Adapter {
         }
 
         holder.name.setText(mBeans.get(position)._source.basic.getName());
+        holder.head.setImageResource(DeviceUtil.getPor());
         return convertView;
     }
 
