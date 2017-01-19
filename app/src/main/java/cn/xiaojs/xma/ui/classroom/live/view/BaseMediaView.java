@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public abstract class BaseMediaView extends FrameLayout {
 
@@ -65,6 +66,10 @@ public abstract class BaseMediaView extends FrameLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (touchable){
+            if (!normal){
+                scale();
+                return true;
+            }
             mGesture.onTouchEvent(event);
             return true;
         }else {
@@ -151,13 +156,19 @@ public abstract class BaseMediaView extends FrameLayout {
     private boolean normal = true;
 
     protected void scale() {
-        ViewGroup.LayoutParams lp = getLayoutParams();
+        ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) getLayoutParams();
         if (normal) {
-            lp.width = getResources().getDimensionPixelSize(Config.SCALED_WIDTH);
-            lp.height = getResources().getDimensionPixelSize(Config.SCALED_HEIGHT);
+//            lp.width = getResources().getDimensionPixelSize(Config.SCALED_WIDTH);
+//            lp.height = getResources().getDimensionPixelSize(Config.SCALED_HEIGHT);
+            lp.width = DeviceUtil.getScreenWidth(getContext());
+            lp.height = DeviceUtil.getScreenHeight(getContext());
+            lp.leftMargin = 0;
+            lp.topMargin = 0;
         } else {
             lp.width = getResources().getDimensionPixelSize(Config.NORMAL_WIDTH);
             lp.height = getResources().getDimensionPixelSize(Config.NORMAL_HEIGHT);
+            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.px18);
+            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.px15);
         }
         setLayoutParams(lp);
         normal = !normal;
