@@ -40,6 +40,7 @@ import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
+import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.HorizontalAdaptScrollerView;
 
@@ -73,6 +74,8 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         View all2 = mHeader.findViewById(R.id.lesson_all_2);
         all1.setOnClickListener(this);
         all2.setOnClickListener(this);
+        View search = v.findViewById(R.id.my_course_search);
+        search.setOnClickListener(this);
         //ButterKnife.bind(this,v);
         return v;
     }
@@ -152,6 +155,10 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
             case R.id.lesson_all_2:
                 Intent enroll = new Intent(mContext, EnrollLessonActivity.class);
                 mContext.startActivity(enroll);
+                break;
+            case R.id.my_course_search:
+                Intent search = new Intent(mContext, SearchActivity.class);
+                mContext.startActivity(search);
                 break;
         }
     }

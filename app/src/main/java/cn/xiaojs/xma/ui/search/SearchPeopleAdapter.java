@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
 
@@ -88,6 +89,7 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
         }
 
         holder.name.setText(mBeans.get(position)._source.basic.getName());
+        holder.head.setImageResource(DeviceUtil.getPor());
         return convertView;
     }
 
