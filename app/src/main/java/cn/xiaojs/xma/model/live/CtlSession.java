@@ -15,6 +15,7 @@ public class CtlSession {
     public boolean accessible;
     public ConnectType connected;
     public String psType;
+    public String state;
 
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)

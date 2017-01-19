@@ -125,6 +125,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>> () {
             @Override
             public void onSuccess(CollectionPage<TalkItem> object) {
+                Toast.makeText(mContext, "获取消息成功", Toast.LENGTH_SHORT).show();
                 TalkMsgAdapter.this.onSuccess(object.objectsOfPage);
             }
 

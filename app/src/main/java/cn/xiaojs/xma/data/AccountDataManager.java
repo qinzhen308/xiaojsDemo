@@ -75,9 +75,13 @@ public class AccountDataManager {
     public static boolean isLogin(Context context) {
 
         String sessionID = AccountPref.getAuthToken(context);
+        boolean login = AccountPref.getLoginStatus(context);
 
-        return TextUtils.isEmpty(sessionID) ? false : true ;
+        if (login && !TextUtils.isEmpty(sessionID)) {
+            return true;
+        }
 
+        return false;
     }
 
     public static void saveUserInfo(Context context,@NonNull User user) {
@@ -96,6 +100,7 @@ public class AccountDataManager {
 
         String id = user.getId();
         AccountPref.setAccountID(context,id);
+        AccountPref.setLoginStatus(context,true);
 
         AccountPref.setUser(context,user);
     }
@@ -112,6 +117,7 @@ public class AccountDataManager {
 
         AccountPref.setAuthToken(context,"");
         AccountPref.setAccountID(context,"");
+        AccountPref.setLoginStatus(context,false);
         AccountPref.setUser(context,null);
         SecurityManager.saveCSRFToken(context,"");
 

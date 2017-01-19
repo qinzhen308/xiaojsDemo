@@ -23,6 +23,7 @@ public class AccountPref{
 
     private static final String PREF_PHONE = "active_phone";
     private static final String PREF_ID = "active_id";
+    private static final String PREF_LOGIN = "auth_login";
 
     private static final String PREF_SUBJECT = "acc_subject";
     private static final String PREF_USER = "active_u";
@@ -35,6 +36,18 @@ public class AccountPref{
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
+
+
+    public static void setLoginStatus(final Context context,boolean status) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putBoolean(PREF_LOGIN, status).apply();
+
+    }
+
+    public static boolean getLoginStatus(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getBoolean(PREF_LOGIN,false);
+    }
 
     public static void setUser(final Context context, User user) {
 

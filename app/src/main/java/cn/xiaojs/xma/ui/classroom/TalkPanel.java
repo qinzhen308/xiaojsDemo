@@ -48,6 +48,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkBean;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.TalkSimpleContactAdapter;
+import io.socket.client.Ack;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -564,7 +565,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     }
 
     /**
-     * 加入事件
+     * 接收到消息
      */
     private Emitter.Listener mOnReceiveTalk = new Emitter.Listener() {
                 @Override
@@ -573,7 +574,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                         ((Activity) mContext).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(mContext, "消息发送", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
                                 updateMsgList(args);
                             }
                         });
@@ -582,7 +583,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             };
 
     /**
-     * 退出事件
+     * 消息发送
      */
     private Emitter.Listener mOnSendTalk = new Emitter.Listener() {
         @Override
@@ -591,7 +592,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "消息发送", Toast.LENGTH_SHORT).show();
                         updateMsgList(args);
                     }
                 });
@@ -624,6 +625,10 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
     private void sendMsg() {
         String text = mMsgInputEdt.getText().toString();
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+
         TalkItem talkItem = new TalkItem();
 
         TalkItem.TalkPerson person = new TalkItem.TalkPerson();
@@ -643,19 +648,21 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         updateTalkMsgData(mTalkCriteria, talkItem);
 
         TalkBean talkBean = new TalkBean();
-        TalkBean.TalkContent sendContent = new TalkBean.TalkContent();
-        talkBean.time = sendTime;
-        talkBean.body = sendContent;
+        talkBean.payload = new TalkBean.Payload();
+        talkBean.payload.body = new TalkBean.TalkContent();
+        talkBean.payload.body.text = text;
+
+        talkBean.payload.time = sendTime;
         switch (mTalkCriteria) {
             case MULTI_TALK:
-                talkBean.to = Communications.TalkType.OPEN;
+                talkBean.payload.to = Communications.TalkType.OPEN;
                 break;
             case PEER_TALK:
-                talkBean.to = Communications.TalkType.FACULTY;
+                talkBean.payload.to = Communications.TalkType.FACULTY;
                 break;
             case TEACHING_TALK:
                 try {
-                    talkBean.to = Integer.parseInt(mPeerTalkAccountId);
+                    talkBean.payload.to = Integer.parseInt(mPeerTalkAccountId);
                 } catch (Exception e) {
 
                 }
@@ -668,8 +675,18 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         } catch (Exception e) {
 
         }
-        if (!TextUtils.isEmpty(sendJson) && mSocket != null) {
-            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), sendJson);
+        if (sendJson != null && mSocket != null) {
+            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), sendJson, new Ack() {
+                @Override
+                public void call(Object... args) {
+                    ((Activity) mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mContext, "消息发送成功", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
         }
 
         //reset text

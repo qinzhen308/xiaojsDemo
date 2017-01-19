@@ -15,9 +15,14 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 public class TalkBean {
-    public int to;
-    public long time;
-    public TalkContent body;
+
+    public Payload payload;
+
+    public static class Payload {
+        public int to;
+        public long time;
+        public TalkContent body;
+    }
 
     public static class TalkContent{
         public String text;

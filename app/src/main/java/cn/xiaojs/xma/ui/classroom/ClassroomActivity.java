@@ -294,7 +294,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         LiveManager.bootSession(this, mTicket, new APIServiceCallback<CtlSession>() {
             @Override
             public void onSuccess(CtlSession ctlSession) {
-                Toast.makeText(ClassroomActivity.this, "接口调用成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
                 cancelProgress();
                 if (ctlSession != null) {
                     mCtlSession = ctlSession;
@@ -313,7 +313,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(ClassroomActivity.this, "连接教室：" + errorMessage, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClassroomActivity.this, "BootSession 失败：" + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -996,8 +996,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private void initSocketIO(String ticket, String secret) {
         SocketManager.init(ticket, secret);
+        mSocket = SocketManager.getSocket();
         if (mSocket != null) {
-            mSocket = SocketManager.getSocket();
             mSocket.connect();
         }
     }
