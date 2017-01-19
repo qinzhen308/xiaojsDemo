@@ -33,7 +33,9 @@ public class SocketManager {
     public synchronized static void init(String ticket, String secret) {
         if (mSocket == null) {
             try {
-                mSocket = IO.socket(getClassroomSocketUrl(ticket, secret));
+                IO.Options opts = new IO.Options();
+                opts.query = "secret=" + secret;
+                mSocket = IO.socket(getClassroomSocketUrl(ticket), opts);
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
@@ -50,8 +52,8 @@ public class SocketManager {
         return SCHEME + Constants.CLASSROOM_BASE_URL + ":" + Constants.CLASSROOM_PORT + "/" + Constants.CLASSROOM_PATH;
     }
 
-    public static String getClassroomSocketUrl(String ticket, String secret) {
-        String url = XiaojsConfig.BASE_URL + ":" + LiveService.SERVICE_PORT + "/" + ticket + "?" + "secret=" + secret;
+    public static String getClassroomSocketUrl(String ticket) {
+        String url = XiaojsConfig.BASE_URL + ":" + LiveService.SERVICE_PORT + "/" + ticket;
         Log.i("aaa", "socket=" + url);
         return url;
     }
