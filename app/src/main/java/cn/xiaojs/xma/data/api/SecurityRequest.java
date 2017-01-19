@@ -11,6 +11,7 @@ import com.orhanobut.logger.Logger;
 
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by maxiaobao on 2016/12/4.
@@ -32,6 +33,21 @@ public class SecurityRequest extends ServiceRequest {
 
         Call<Privilege[]> call = getService().havePrivileges(privilegesPath);
         enqueueRequest(APIType.HAVE_PROVILEGES,call);
+
+    }
+
+    public Privilege[] havePrivilegesSync(Privilege[] privileges) throws Exception{
+
+        String privilegesPath = objectToJsonString(privileges);
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("privilegesPath: %s",privilegesPath);
+        }
+
+        Response<Privilege[]> response = getService().havePrivileges(privilegesPath).execute();
+        if (response != null) {
+            return response.body();
+        }
+        return null;
 
     }
 

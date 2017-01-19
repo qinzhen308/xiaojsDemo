@@ -10,9 +10,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.social.ContactGroup;
 
 /**
@@ -35,7 +39,7 @@ public class SyncService extends IntentService {
         }
 
         try {
-            Context context = getApplicationContext();
+            final Context context = getApplicationContext();
 
             int syncType = intent.getIntExtra(DataManager.SYNC_TYPE,-1);
             switch (syncType) {
@@ -47,11 +51,21 @@ public class SyncService extends IntentService {
                     }
                     break;
                 default:
+
+                    //FIXME
+                    if(SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)) {
+
+                        Privilege[] privileges = SecurityManager.havePrivilegeSync(context,
+                                Su.Permission.COURSE_OPEN_CREATE);
+                        SecurityManager.savePermission(context, privileges);
+
+                    }
+
                     ArrayList<ContactGroup> contactGroups = SocialManager.getContacts(context);
                     DataManager.syncContactData(context,contactGroups);
 
                     Map<Long, ContactGroup> map = AccountDataManager.getHomeData(context);
-                    if (contactGroups!=null) {
+                    if (contactGroups!=null && map != null) {
 
                         for (ContactGroup group : contactGroups){
                             ContactGroup cg = map.get(group.group);
