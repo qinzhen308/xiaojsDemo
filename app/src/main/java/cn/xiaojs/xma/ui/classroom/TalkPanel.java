@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
@@ -443,18 +444,21 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 if (mMultiTalkAdapter != null) {
                     mMultiTalkAdapter.add(talkItem);
                     mTalkMsgLv.setAdapter(mMultiTalkAdapter);
+                    mTalkMsgLv.getRefreshableView().setSelection(mMultiTalkAdapter.getCount()-1);
                 }
                 break;
             case TEACHING_TALK:
                 if (mTeachingTalkAdapter != null) {
                     mTeachingTalkAdapter.add(talkItem);
                     mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
+                    mTalkMsgLv.getRefreshableView().setSelection(mTeachingTalkAdapter.getCount()-1);
                 }
                 break;
             case PEER_TALK:
                 if (mPeerTalkMsgAdapter != null) {
                     mPeerTalkMsgAdapter.add(talkItem);
                     mTalkMsgLv.setAdapter(mPeerTalkMsgAdapter);
+                    mTalkMsgLv.getRefreshableView().setSelection(mPeerTalkMsgAdapter.getCount()-1);
                 }
                 break;
         }
@@ -535,28 +539,19 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             return;
         }
 
-        /*if (!(args[0] instanceof String)) {
-            return;
-        }*/
-
-
-        String result = null;
+        Attendee attendee = null;
         try {
+            String result = null;
             if ((args[0] instanceof JSONObject)) {
                 result = args[0].toString();
             } else {
-                result = (String)args[0];
+                result = (String) args[0];
             }
-        } catch (Exception e) {
 
-        }
+            if (TextUtils.isEmpty(result)) {
+                return;
+            }
 
-        if (TextUtils.isEmpty(result)) {
-            return;
-        }
-
-        Attendee attendee = null;
-        try {
             ObjectMapper mapper = new ObjectMapper();
             attendee = mapper.readValue(result, Attendee.class);
         } catch (Exception e) {
@@ -572,6 +567,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             synchronized (LOCK) {
                 if (add) {
                     //add
+                    if (mLiveCollection.attendees.contains(attendee)) {
+                        return;
+                    }
                     mLiveCollection.attendees.add(attendee);
                 } else {
                     //remove
@@ -593,31 +591,13 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
      * 接收到消息
      */
     private Emitter.Listener mOnReceiveTalk = new Emitter.Listener() {
-                @Override
-                public void call(final Object... args) {
-                    if (mContext instanceof Activity && args != null && args.length > 0) {
-                        ((Activity) mContext).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
-                                updateMsgList(args);
-                            }
-                        });
-                    }
-                }
-            };
-
-    /**
-     * 消息发送
-     */
-    private Emitter.Listener mOnSendTalk = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if (mContext instanceof Activity && args != null && args.length > 0) {
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(mContext, "消息发送", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
                         updateMsgList(args);
                     }
                 });
@@ -630,21 +610,38 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             return;
         }
 
-        if (!(args[0] instanceof String)) {
-            return;
-        }
-
-        String result = (String) args[0];
-        TalkItem talkItem = null;
         try {
+            String result = null;
+            if ((args[0] instanceof JSONObject)) {
+                result = args[0].toString();
+            } else if (args[0] instanceof String) {
+                result = (String) args[0];
+            }
+
+            if (TextUtils.isEmpty(result)) {
+                return;
+            }
+
+            TalkBean receiveBean = null;
             ObjectMapper mapper = new ObjectMapper();
-            talkItem = mapper.readValue(result, TalkItem.class);
+            receiveBean = mapper.readValue(result, TalkBean.class);
+
+
+            if (receiveBean == null) {
+                return;
+            }
+
+            TalkItem talkItem = new TalkItem();
+            talkItem.time = new Date(receiveBean.time);
+            talkItem.body = new TalkItem.TalkContent();
+            talkItem.from = new TalkItem.TalkPerson();
+            talkItem.body.text = receiveBean.body.text;
+            talkItem.from.accountId = receiveBean.from;
+            talkItem.from.name = getNameByAccountId(receiveBean.from);
+
+            updateTalkMsgData(mTalkCriteria, talkItem);
         } catch (Exception e) {
 
-        }
-
-        if (talkItem != null) {
-            updateTalkMsgData(mTalkCriteria, talkItem);
         }
     }
 
@@ -655,53 +652,49 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         }
 
         TalkItem talkItem = new TalkItem();
+        //file myself info
+        fillMySelfInfo(talkItem);
 
-        TalkItem.TalkPerson person = new TalkItem.TalkPerson();
-        //myself info
-        person.accountId = mMyAccountId;
-        //person.name = mTalkAttendee.name;
-        //person.avatar = mTalkAttendee.avatar;
-        talkItem.from = person;
-
-        TalkItem.TalkContent talkContent = new TalkItem.TalkContent();
-        talkContent.text = text;
-        talkItem.body = talkContent;
+        talkItem.body = new TalkItem.TalkContent();
+        talkItem.body.text = text;
 
         long sendTime = System.currentTimeMillis();
         talkItem.time = new Date(sendTime);
 
+        //update task message info
         updateTalkMsgData(mTalkCriteria, talkItem);
 
+        //send socket info
         TalkBean talkBean = new TalkBean();
-        talkBean.payload = new TalkBean.Payload();
-        talkBean.payload.body = new TalkBean.TalkContent();
-        talkBean.payload.body.text = text;
-
-        talkBean.payload.time = sendTime;
+        talkBean.body = new TalkBean.TalkContent();
+        talkBean.body.text = text;
+        talkBean.time = sendTime;
         switch (mTalkCriteria) {
             case MULTI_TALK:
-                talkBean.payload.to = Communications.TalkType.OPEN;
+                talkBean.to = String.valueOf(Communications.TalkType.OPEN);
                 break;
             case PEER_TALK:
-                talkBean.payload.to = Communications.TalkType.FACULTY;
+                talkBean.to = String.valueOf(Communications.TalkType.FACULTY);
                 break;
             case TEACHING_TALK:
                 try {
-                    talkBean.payload.to = Integer.parseInt(mPeerTalkAccountId);
+                    talkBean.to = mPeerTalkAccountId;
                 } catch (Exception e) {
 
                 }
                 break;
         }
         String sendJson = null;
+        JSONObject data = null;
         try {
             ObjectMapper mapper = new ObjectMapper();
             sendJson = mapper.writeValueAsString(talkBean);
+            data = new JSONObject(sendJson);
         } catch (Exception e) {
 
         }
         if (sendJson != null && mSocket != null) {
-            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), sendJson, new Ack() {
+            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), data, new Ack() {
                 @Override
                 public void call(Object... args) {
                     ((Activity) mContext).runOnUiThread(new Runnable() {
@@ -716,6 +709,30 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
         //reset text
         mMsgInputEdt.setText("");
+    }
+
+    private void fillMySelfInfo(TalkItem talkItem) {
+        talkItem.from = new TalkItem.TalkPerson();
+        talkItem.from.accountId = mMyAccountId;
+        cn.xiaojs.xma.model.account.User mLoginUser = XiaojsConfig.mLoginUser;
+        if (mLoginUser != null) {
+            talkItem.from.name = mLoginUser.getName();
+            if (mLoginUser.getAccount() != null && mLoginUser.getAccount().getBasic() != null) {
+                talkItem.from.avatar = mLoginUser.getAccount().getBasic().getAvatar();
+            }
+        }
+    }
+
+    private String getNameByAccountId(String accountId) {
+        if (accountId != null && mLiveCollection != null && mLiveCollection.attendees != null) {
+            for (Attendee attendee : mLiveCollection.attendees) {
+                if (accountId != null && accountId.equals(attendee.accountId)) {
+                    return attendee.name;
+                }
+            }
+        }
+
+        return null;
     }
 }
 

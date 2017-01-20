@@ -69,7 +69,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
     @Override
     protected void setViewContent(Holder holder, TalkItem bean, int position) {
-        Glide.with(mContext).load(bean.from.avatar).into(holder.portrait);
+        Glide.with(mContext).load(bean.from.avatar).error(R.drawable.default_avatar).into(holder.portrait);
         holder.name.setText(bean.from.name);
         holder.msg.setText(bean.body != null ? bean.body.text : null);
         holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_HH_MM_SS));

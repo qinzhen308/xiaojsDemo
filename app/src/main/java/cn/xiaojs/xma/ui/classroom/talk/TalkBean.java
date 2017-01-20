@@ -10,21 +10,19 @@ package cn.xiaojs.xma.ui.classroom.talk;
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
  * Date:2017/1/17
- * Desc:
+ * Desc:针对socket聊天的bean
  *
  * ======================================================================================== */
 
 public class TalkBean {
 
-    public Payload payload;
-
-    public static class Payload {
-        public int to;
-        public long time;
-        public TalkContent body;
-    }
+    public String from;
+    public String to;
+    public long time;
+    public TalkContent body;
 
     public static class TalkContent{
         public String text;
+        public int contentType;
     }
 }
