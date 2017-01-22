@@ -12,10 +12,19 @@ import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
+import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.ui.widget.MessageImageView;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -32,201 +41,96 @@ import cn.xiaojs.xma.model.social.Contact;
  *
  * ======================================================================================== */
 
-public class InviteFriendAdapter extends BaseExpandableListAdapter {
-    private List<GroupData> mGroupData;
+public class InviteFriendAdapter extends AbsSwipeAdapter<Attendee, InviteFriendAdapter.ViewHolder> implements View.OnClickListener{
     private Context mContext;
-    private LayoutInflater mInflater;
-    private SparseArray<SparseBooleanArray> mCheckedPositions;
-    private String mSelectedFriends;
+    private List<String> mChoiceList;
+    private SelectionListener mSelectionListener;
 
-    private int mChoiceMode = AbsListView.CHOICE_MODE_MULTIPLE;
 
-    public InviteFriendAdapter(Context context) {
-        init(context);
-    }
+    public InviteFriendAdapter(Context context, PullToRefreshSwipeListView listView) {
+        super(context, listView);
 
-    public InviteFriendAdapter(Context context, List<GroupData> data) {
-        this(context);
-        mGroupData = data;
-    }
-
-    public void setData(List<GroupData> data) {
-        mGroupData = data;
-    }
-
-    private void init (Context context) {
         mContext = context;
-        mInflater = LayoutInflater.from(context);
-        mSelectedFriends = context.getString(R.string.invite_selected_friends);
-        mCheckedPositions = new SparseArray<SparseBooleanArray>();
+        mChoiceList = new ArrayList<String>();
     }
 
-
-    @Override
-    public int getGroupCount() {
-        return mGroupData != null ? mGroupData.size() : 0;
+    public void setSelectionListener(SelectionListener listener) {
+        mSelectionListener = listener;
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
-        List<Contact> cts = mGroupData.get(groupPosition).contacts;
-        return cts != null ? cts.size() : 0;
+    protected void setViewContent(ViewHolder holder, Attendee bean, int position) {
+        holder.position = position;
+        Glide.with(mContext).load(bean.avatar).error(R.drawable.default_avatar).into(holder.portrait);
+        holder.name.setText(bean.name);
     }
 
     @Override
-    public GroupData getGroup(int groupPosition) {
-        return mGroupData.get(groupPosition);
+    protected View createContentView(int position) {
+        return LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_invite_friend_item, null);
     }
 
     @Override
-    public Contact getChild(int groupPosition, int childPosition) {
-        List<Contact> cts = mGroupData.get(groupPosition).contacts;
-        return cts != null ? cts.get(childPosition) : null;
+    protected ViewHolder initHolder(View v) {
+        v.setOnClickListener(this);
+        ViewHolder holder = new ViewHolder(v);
+        holder.checkbox = (ImageView) v.findViewById(R.id.checkbox);
+        holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
+        holder.name = (TextView) v.findViewById(R.id.name);
+
+        return holder;
     }
 
     @Override
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
+    protected void doRequest() {
+        onSuccess(getTestData());
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
-    }
+    public void onClick(View v) {
+        Object object = v.getTag();
+        if (object instanceof ViewHolder) {
+            ViewHolder holder = (ViewHolder)object;
+            String choice = String.valueOf(holder.position);
+            if (mChoiceList.contains(choice)) {
+                holder.checkbox.setSelected(false);
+                mChoiceList.remove(choice);
+            } else {
+                holder.checkbox.setSelected(true);
+                mChoiceList.add(choice);
+            }
 
-    @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-
-    @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.layout_contact_group, parent, false);
-
-            holder = new ViewHolder();
-            holder.nameView = (TextView) convertView.findViewById(R.id.group_name);
-            holder.countView = (TextView) convertView.findViewById(R.id.group_count);
-            convertView.setTag(holder);
-        }else{
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.nameView.setText(getGroup(groupPosition).name);
-        //holder.countView.setText(String.valueOf(groupPosition));
-
-        return convertView;
-    }
-
-    @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.layout_contact_choice_child, parent, false);
-
-            holder = new ViewHolder();
-            holder.checkedView = (CheckedTextView) convertView.findViewById(R.id.check_view);
-            holder.avatarView = (ImageView) convertView.findViewById(R.id.contact_avatar);
-            holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        if (mCheckedPositions.get(groupPosition) != null) {
-            boolean isChecked = mCheckedPositions.get(groupPosition).get(childPosition);
-            holder.checkedView.setChecked(isChecked);
-        }else{
-            holder.checkedView.setChecked(false);
-        }
-
-        holder.nameView.setText(getChild(groupPosition, childPosition).name);
-
-        return convertView;
-    }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
-    }
-
-    public void setChoiceMode(int choiceMode) {
-        mChoiceMode = choiceMode;
-        mCheckedPositions.clear();
-    }
-
-    public int getChildrenChoiceCount(int groupPosition) {
-        if (mCheckedPositions !=null){
-            SparseBooleanArray booleanArray = mCheckedPositions.get(groupPosition);
-            if(booleanArray!=null) {
-                return booleanArray.size();
+            if (mSelectionListener != null) {
+                mSelectionListener.onSelectChanged(mChoiceList.size());
             }
         }
-
-        return 0;
     }
 
-    public void setClicked(int groupPosition, int childPosition) {
-        switch (mChoiceMode) {
-            case AbsListView.CHOICE_MODE_MULTIPLE:
-                SparseBooleanArray checkedChildPositionsMultiple = mCheckedPositions.get(groupPosition);
-                // if in the group there was not any child checked
-                if (checkedChildPositionsMultiple == null) {
-                    checkedChildPositionsMultiple = new SparseBooleanArray();
-                    // By default, the status of a child is not checked
-                    // So a click will enable it
-                    checkedChildPositionsMultiple.put(childPosition, true);
-                    mCheckedPositions.put(groupPosition, checkedChildPositionsMultiple);
-                } else {
-                    boolean oldState = checkedChildPositionsMultiple.get(childPosition);
-                    if(oldState){
-                        checkedChildPositionsMultiple.delete(childPosition);
-                    }else{
-                        checkedChildPositionsMultiple.put(childPosition, !oldState);
-                    }
-                }
+    static class ViewHolder extends BaseHolder{
+        ImageView checkbox;
+        RoundedImageView portrait;
+        TextView name;
+        int position = -1;
 
-                // Notify that some data has been changed
-                notifyDataSetChanged();
-
-                break;
-            case AbsListView.CHOICE_MODE_SINGLE:
-
-                SparseBooleanArray checkedChildPositionsSingle = mCheckedPositions.get(groupPosition);
-                // If in the group there was not any child checked
-                if (checkedChildPositionsSingle == null) {
-                    checkedChildPositionsSingle = new SparseBooleanArray();
-                    // By default, the status of a child is not checked
-                    checkedChildPositionsSingle.put(childPosition, true);
-                    mCheckedPositions.put(groupPosition, checkedChildPositionsSingle);
-                } else {
-                    boolean oldState = checkedChildPositionsSingle.get(childPosition);
-                    // If the old state was false, set it as the unique one which is true
-                    if (!oldState) {
-                        checkedChildPositionsSingle.clear();
-                        checkedChildPositionsSingle.put(childPosition, !oldState);
-                    } // Else does not allow the user to uncheck it
-                }
-
-                // Notify that some data has been changed
-                notifyDataSetChanged();
-                break;
+        public ViewHolder(View view) {
+            super(view);
         }
     }
 
-    public static class GroupData {
-        public String name;
-        public List<Contact> contacts;
+    private List<Attendee> getTestData() {
+        List<Attendee> attendees = new ArrayList<Attendee>();
+        for (int i = 0; i < 10; i++) {
+            Attendee attendee = new Attendee();
+            attendee.name = "张无忌" + i;
+            attendee.avatar = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1485083983103&di=c4c4d2b8cafe4b5b94e41" +
+                    "171a5d138ff&imgtype=0&src=http%3A%2F%2Fwww.qq1234.org%2Fuploads%2Fallimg%2F140526%2F3_140526213847_1-lp.jpg";
+            attendees.add(attendee);
+        }
+
+        return attendees;
     }
 
-    static class ViewHolder {
-        TextView nameView;
-        TextView countView;
-        ImageView avatarView;
-        CheckedTextView checkedView;
+    public interface SelectionListener {
+        public void onSelectChanged(int selectionCount);
     }
 }

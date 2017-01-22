@@ -84,6 +84,8 @@ public abstract class Panel {
 
         setChildViewStyle();
         drawerLayout.openDrawer(container);
+        drawerLayout.addDrawerListener(mDrawerListener);
+
         mDrawerLayout = drawerLayout;
         mContainer = container;
     }
@@ -123,6 +125,12 @@ public abstract class Panel {
         }
 
         mDrawerLayout.closeDrawer(mContainer, animate);
+    }
+
+    public void release() {
+        if (mDrawerLayout != null) {
+            mDrawerLayout.removeDrawerListener(mDrawerListener);
+        }
     }
 
     public void initChildView(View root) {

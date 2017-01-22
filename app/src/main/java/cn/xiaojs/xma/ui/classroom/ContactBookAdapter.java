@@ -22,6 +22,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,8 +117,11 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     }
 
     private void bindData(Holder holder, int position) {
-        holder.portrait.setImageResource(R.drawable.default_portrait);
         holder.position = position;
+        Attendee attendee = mAttendeeList.get(position);
+        Glide.with(mContext).load(attendee.avatar).error(R.drawable.default_avatar).into(holder.portrait);
+        holder.name.setText(attendee.name);
+
         if (mContactManagementMode) {
             //holder.portrait.setCount(0);
             holder.video.setVisibility(View.GONE);

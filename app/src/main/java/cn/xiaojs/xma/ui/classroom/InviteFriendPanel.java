@@ -19,15 +19,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.model.social.Contact;
 
-public class InviteFriendPanel extends Panel {
-    private ExpandableListView mFriendListView;
+public class InviteFriendPanel extends Panel implements InviteFriendAdapter.SelectionListener {
+    private TextView mSelectionCountView;
+    private PullToRefreshSwipeListView mFriendListView;
     private InviteFriendAdapter mAdapter;
 
     public InviteFriendPanel(Context context) {
@@ -41,65 +45,28 @@ public class InviteFriendPanel extends Panel {
 
     @Override
     public void initChildView(View root) {
-        mFriendListView = (ExpandableListView)root.findViewById(R.id.friends);
+        mSelectionCountView = (TextView) root.findViewById(R.id.selected_friends);
+        mFriendListView = (PullToRefreshSwipeListView) root.findViewById(R.id.friends);
+        mFriendListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
     }
 
     @Override
     public void initData() {
-        List<InviteFriendAdapter.GroupData> groupDataList = new ArrayList<InviteFriendAdapter.GroupData>();
-        InviteFriendAdapter.GroupData groupData;
-        for (int i = 0; i < 8; i++) {
-            groupData = new InviteFriendAdapter.GroupData();
-            groupData.name = "班级" + i;
-            groupData.contacts = new ArrayList<Contact>();
-
-            for (int j = 0; j < 3; j++) {
-                Contact contact = new Contact();
-                contact.name = "小明" + i + "" + j;
-                groupData.contacts.add(contact);
-            }
-
-            //add to group
-            groupDataList.add(groupData);
-        }
-
         if (mAdapter == null) {
-            mAdapter = new InviteFriendAdapter(mContext);
-            mAdapter.setData(groupDataList);
-            mAdapter.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+            mAdapter = new InviteFriendAdapter(mContext, mFriendListView);
+            mAdapter.setSelectionListener(this);
+
             mFriendListView.setAdapter(mAdapter);
-
-            // Handle the click when the user clicks an any child
-            mFriendListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-                @Override
-                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                    mAdapter.setClicked(groupPosition, childPosition);
-                    return false;
-                }
-            });
-
-            mFriendListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-
-                @Override
-                public void onGroupExpand(int groupPosition) {
-                    /*for (int i = 0, count = mAdapter.getGroupCount(); i < count; i++) {
-                        if (groupPosition != i) {
-                            //close other group
-                            mFriendListView.collapseGroup(i);
-                        }
-                    }*/
-                }
-            });
-        } else {
-            mAdapter.notifyDataSetChanged();
         }
     }
 
-
-    private void expandALL() {
-        int groupCount = mFriendListView.getCount();
-        for (int i=0; i< groupCount; i++) {
-            mFriendListView.expandGroup(i, false);
+    @Override
+    public void onSelectChanged(int selectionCount) {
+        if (selectionCount > 0) {
+            mSelectionCountView.setVisibility(View.VISIBLE);
+            mSelectionCountView.setText(mContext.getString(R.string.invite_selected_friends, selectionCount));
+        } else {
+            mSelectionCountView.setVisibility(View.INVISIBLE);
         }
     }
 }
