@@ -20,8 +20,8 @@
     <View
             style="@style/DividerHorizontal"/>
 
-    <ListView
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
             android:id="@+id/msg_list"
             android:layout_width="@dimen/px560"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content" />
 </LinearLayout>

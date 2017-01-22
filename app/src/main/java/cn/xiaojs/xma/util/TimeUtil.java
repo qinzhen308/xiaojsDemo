@@ -39,6 +39,7 @@ public class TimeUtil {
     public static final String TIME_MM_DD_HH_MM_SS = "MM-dd HH:mm:ss";
     public static final String TIME_HH_MM = "HH:mm";
     public static final String TIME_HH_MM_SS = "HH:mm:ss";
+    public static final String TIME_MM_SS = "mm:ss";
     public static final String TIME_MM_DD = "MM-dd";
 
     /**

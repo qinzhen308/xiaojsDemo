@@ -134,7 +134,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     //all kind of panels
     private CourseWarePanel mCourseWarePanel;
-    private MessagePanel mMessagePanel;
+    private NotifyMsgPanel mNotifyMsgPanel;
     private InviteFriendPanel mInviteFriendPanel;
     private SettingPanel mSettingPanel;
     private TalkPanel mTalkPanel;
@@ -526,11 +526,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * 打开通知消息
      */
     private void openAllMessage() {
-        if (mMessagePanel == null) {
-            mMessagePanel = new MessagePanel(this);
+        if (mNotifyMsgPanel == null) {
+            mNotifyMsgPanel = new NotifyMsgPanel(this, mTicket);
         }
-        mMessagePanel.show(mDrawerLayout, mRightDrawer);
-        mOpenedPanel = mMessagePanel;
+        mNotifyMsgPanel.show(mDrawerLayout, mRightDrawer);
+        mOpenedPanel = mNotifyMsgPanel;
     }
 
     /**

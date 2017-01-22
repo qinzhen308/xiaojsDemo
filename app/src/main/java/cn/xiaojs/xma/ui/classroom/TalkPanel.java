@@ -399,7 +399,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             case MULTI_TALK:
                 if (mMultiTalkAdapter == null) {
                     mMultiLiveCriteria = new LiveCriteria();
-                    mMultiLiveCriteria.to = Communications.TalkType.OPEN;
+                    mMultiLiveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
                     mMultiTalkAdapter = new TalkMsgAdapter(mContext, mTicket, mMultiLiveCriteria, mTalkMsgLv);
                     mTalkMsgLv.setAdapter(mMultiTalkAdapter);
                 } else {
@@ -409,7 +409,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
             case TEACHING_TALK:
                 if (mTeachingTalkAdapter == null) {
                     mTeachingCriteria = new LiveCriteria();
-                    mTeachingCriteria.to = Communications.TalkType.FACULTY;
+                    mTeachingCriteria.to = String.valueOf(Communications.TalkType.FACULTY);
                     mTeachingTalkAdapter = new TalkMsgAdapter(mContext, mTicket, mTeachingCriteria, mTalkMsgLv);
                     mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
                 } else {
@@ -422,7 +422,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 }
 
                 try {
-                    mPeerCriteria.to = Integer.parseInt(mPeerTalkAccountId);
+                    mPeerCriteria.to = mPeerTalkAccountId;
                 } catch (Exception e) {
 
                 }

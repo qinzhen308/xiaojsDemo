@@ -11,6 +11,6 @@ import java.util.Date;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LiveCriteria {
-    public int to;
+    public String to;
     public Date before;
 }

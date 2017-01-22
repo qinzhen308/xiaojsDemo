@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:roundimg="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20">
+
+    <cn.xiaojs.xma.ui.widget.RoundedImageView
+            android:id="@+id/portrait"
+            android:layout_width="@dimen/px56"
+            android:layout_height="@dimen/px56"
+            roundimg:oval="true"
+            android:layout_centerVertical="true"
+            roundimg:border_color="@color/white"
+            roundimg:border_width="@dimen/px2"
+            android:layout_marginTop="@dimen/px20"/>
+
+    <LinearLayout
+            android:id="@+id/content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/portrait"
+            android:layout_marginLeft="@dimen/px20">
+
+        <TextView
+                android:id="@+id/msg_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_26px"
+                android:text="李敏敏老师 分享了 课件人力资源管理师必读 到班级课件库 18:00"/>
+
+        <TextView
+                android:id="@+id/action_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_blue"
+                android:textSize="@dimen/font_26px"
+                android:visibility="gone"/>
+    </LinearLayout>
+
+    <view
+            style="@style/DividerHorizontal2"
+            android:layout_below="@+id/content_layout"
+            android:layout_marginTop="@dimen/px28"/>
+
+</RelativeLayout>
