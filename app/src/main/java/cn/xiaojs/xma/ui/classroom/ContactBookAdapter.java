@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -103,10 +104,6 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.portrait.setOnClickListener(this);
         v.setOnClickListener(this);
 
-        holder.video.setTag(holder);
-        holder.microphone.setTag(holder);
-        holder.portrait.setTag(holder);
-
         //set type
         holder.portrait.setType(MessageImageView.TYPE_NUM);
         holder.portrait.setExtraOffsetX(mOffset);
@@ -138,9 +135,18 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Object obj = v.getTag();
+        Object obj = null;
+        if (v.getId() == R.id.portrait) {
+            obj = ((View)v.getParent()).getTag();
+        } else {
+            obj = v.getTag();
+            if (obj == null && v.getParent() instanceof View) {
+                obj = ((View)v.getParent()).getTag();
+            }
+        }
+
         if (obj instanceof Holder) {
-            Holder holder = (Holder) v.getTag();
+            Holder holder = (Holder) obj;
             int pos = holder.position;
 
             if (mContactManagementMode) {
@@ -170,7 +176,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                         break;
                 }
 
-                //Toast.makeText(mContext, s + pos, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, s + pos, Toast.LENGTH_SHORT).show();
             }
         }
     }

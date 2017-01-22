@@ -55,16 +55,17 @@ public class SettingPanel extends Panel implements View.OnClickListener{
         mStandardTv.setOnClickListener(this);
         mHighTv.setOnClickListener(this);
 
-    }
-
-    @Override
-    public void initData() {
         //default fluent
         mFluentTv.setSelected(true);
 
         mMicroPhoneSwitcher.setChecked(true);
         mCameraSwitcher.setChecked(true);
         mChatSwitcher.setChecked(true);
+    }
+
+    @Override
+    public void initData() {
+
     }
 
     @Override
