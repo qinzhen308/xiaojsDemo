@@ -502,19 +502,19 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mTalkPanel = new TalkPanel(this, mTicket, mUser);
             mTalkPanel.setPanelCallback(new PanelCallback() {
                 @Override
-                public void onOpenPanel(int panel) {
-                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
-                    openInviteFriend();
+                public void onPanelOpened(int panel) {
+
                 }
 
                 @Override
-                public void onClosePanel(int panel) {
-                    switch (panel) {
-                        case PanelCallback.TALK_PANEL_MSG:
-                        case PanelCallback.TALK_PANEL_CONTACT:
-                            mTalkPanel.close(mDrawerLayout, mRightDrawer);
-                            break;
-                    }
+                public void onPanelClosed(int panel) {
+
+                }
+
+                @Override
+                public void switchPanel(int panel) {
+                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+                    openInviteFriend();
                 }
             });
         }

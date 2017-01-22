@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.talk;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,23 +9,14 @@ package cn.xiaojs.xma.ui.classroom;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2016/12/27
+ * Date:2017/1/22
  * Desc:
  *
  * ======================================================================================== */
 
-public interface PanelCallback {
-    public final static int COURSE_PANEL = 1;
-    public final static int TALK_PANEL_MSG = 2;
-    public final static int TALK_PANEL_CONTACT = 3;
-    public final static int MESSAGE_PANEL = 4;
-    public final static int SETTING_PANEL = 5;
-    public final static int INVITE_FRIEND_PANEL = 6;
-    public final static int QUESTION_ANSWER_PANEL = 7;
-
-    public void onPanelOpened(int panel);
-
-    public void onPanelClosed(int panel);
-
-    public void switchPanel(int panel);
+public class TalkResponse {
+    public String to;
+    public long time;
+    public boolean result;
+    public String data;
 }

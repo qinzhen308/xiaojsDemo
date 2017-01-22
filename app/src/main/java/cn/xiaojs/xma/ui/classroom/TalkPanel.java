@@ -50,6 +50,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkBean;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
+import cn.xiaojs.xma.ui.classroom.talk.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.talk.TalkSimpleContactAdapter;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
@@ -251,13 +252,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 getTalkMsgData(MULTI_TALK);
                 break;
             case R.id.close_msg_list_view:
-                if (mCallback != null) {
-                    mCallback.onClosePanel(PanelCallback.TALK_PANEL_MSG);
-                }
+                super.close();
                 break;
             case R.id.add_contact:
                 if (mCallback != null) {
-                    mCallback.onOpenPanel(PanelCallback.INVITE_FRIEND_PANEL);
+                    mCallback.switchPanel(PanelCallback.INVITE_FRIEND_PANEL);
                 }
                 break;
             case R.id.manage_contact:
@@ -444,21 +443,21 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 if (mMultiTalkAdapter != null) {
                     mMultiTalkAdapter.add(talkItem);
                     mTalkMsgLv.setAdapter(mMultiTalkAdapter);
-                    mTalkMsgLv.getRefreshableView().setSelection(mMultiTalkAdapter.getCount()-1);
+                    mTalkMsgLv.getRefreshableView().setSelection(mMultiTalkAdapter.getCount() - 1);
                 }
                 break;
             case TEACHING_TALK:
                 if (mTeachingTalkAdapter != null) {
                     mTeachingTalkAdapter.add(talkItem);
                     mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
-                    mTalkMsgLv.getRefreshableView().setSelection(mTeachingTalkAdapter.getCount()-1);
+                    mTalkMsgLv.getRefreshableView().setSelection(mTeachingTalkAdapter.getCount() - 1);
                 }
                 break;
             case PEER_TALK:
                 if (mPeerTalkMsgAdapter != null) {
                     mPeerTalkMsgAdapter.add(talkItem);
                     mTalkMsgLv.setAdapter(mPeerTalkMsgAdapter);
-                    mTalkMsgLv.getRefreshableView().setSelection(mPeerTalkMsgAdapter.getCount()-1);
+                    mTalkMsgLv.getRefreshableView().setSelection(mPeerTalkMsgAdapter.getCount() - 1);
                 }
                 break;
         }
@@ -605,6 +604,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         }
     };
 
+    /**
+     * 更新消息列表
+     */
     private void updateMsgList(Object... args) {
         if (args == null || args.length == 0) {
             return;
@@ -653,7 +655,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
 
         TalkItem talkItem = new TalkItem();
         //file myself info
-        fillMySelfInfo(talkItem);
+        fillMyselfInfo(talkItem);
 
         talkItem.body = new TalkItem.TalkContent();
         talkItem.body.text = text;
@@ -696,11 +698,12 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         if (sendJson != null && mSocket != null) {
             mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), data, new Ack() {
                 @Override
-                public void call(Object... args) {
+                public void call(final Object... args) {
                     ((Activity) mContext).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(mContext, "消息发送成功", Toast.LENGTH_SHORT).show();
+                            //TalkResponse
+                            handSendResponse(args);
                         }
                     });
                 }
@@ -711,7 +714,47 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         mMsgInputEdt.setText("");
     }
 
-    private void fillMySelfInfo(TalkItem talkItem) {
+    /**
+     * 处理消息发送的回调信息
+     */
+    private void handSendResponse(Object... args) {
+        if (args == null || args.length == 0) {
+            return;
+        }
+
+        try {
+            String result = null;
+            if ((args[0] instanceof JSONObject)) {
+                result = args[0].toString();
+            } else if (args[0] instanceof String) {
+                result = (String) args[0];
+            }
+
+            if (TextUtils.isEmpty(result)) {
+                return;
+            }
+
+            TalkResponse talkResponse = null;
+            ObjectMapper mapper = new ObjectMapper();
+            talkResponse = mapper.readValue(result, TalkResponse.class);
+
+
+            if (talkResponse == null) {
+                return;
+            }
+
+            if (talkResponse.result) {
+                Toast.makeText(mContext, "消息发送成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "消息发送失败", Toast.LENGTH_SHORT).show();
+                //TODO resend
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void fillMyselfInfo(TalkItem talkItem) {
         talkItem.from = new TalkItem.TalkPerson();
         talkItem.from.accountId = mMyAccountId;
         cn.xiaojs.xma.model.account.User mLoginUser = XiaojsConfig.mLoginUser;
