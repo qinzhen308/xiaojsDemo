@@ -9,8 +9,6 @@ import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.data.api.RegisterRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.data.preference.AccountPref;
-import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;

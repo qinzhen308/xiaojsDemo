@@ -8,8 +8,6 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.data.api.LoginRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.data.preference.AccountPref;
-import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
