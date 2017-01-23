@@ -34,8 +34,8 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.WhiteboardCollection;
-import cn.xiaojs.xma.ui.classroom.live.view.CaptureView;
 import cn.xiaojs.xma.ui.classroom.live.view.CutView;
+import cn.xiaojs.xma.ui.classroom.live.view.SurfaceCaptureView;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
@@ -77,7 +77,7 @@ public class WhiteboardController implements
 
     private View mLiveLayout;
     private CutView mWhiteboardVideo;
-    private CaptureView mTeacherVideo;
+    private SurfaceCaptureView mTeacherVideo;
 
     private ImageView mSelection;
     private ImageView mHandWriting;
@@ -131,7 +131,7 @@ public class WhiteboardController implements
 
         mLiveLayout = root.findViewById(R.id.live_layout);
         mWhiteboardVideo = (CutView) root.findViewById(R.id.whiteboard_video);
-        mTeacherVideo = (CaptureView) root.findViewById(R.id.teacher_video);
+        mTeacherVideo = (SurfaceCaptureView) root.findViewById(R.id.teacher_video);
 
         mWhiteboardSv = (WhiteboardScrollerView) root.findViewById(R.id.white_board_scrollview);
         mSyncWhiteboard = (Whiteboard) root.findViewById(R.id.stu_receive_wb);

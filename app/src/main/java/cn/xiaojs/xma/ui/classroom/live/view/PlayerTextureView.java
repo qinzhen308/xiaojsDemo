@@ -36,7 +36,7 @@ public class PlayerTextureView extends BaseMediaView {
     private static final String TAG = "PlayerTextureView";
     private boolean mIsPause;
     private boolean mIsMute;
-    private CaptureView mCaptureView;
+    private SurfaceCaptureView mCaptureView;
 
     public PlayerTextureView(Context context) {
         super(context);
@@ -293,7 +293,7 @@ public class PlayerTextureView extends BaseMediaView {
         return mIsMute;
     }
 
-    public void setCaptureView(CaptureView captureView) {
+    public void setCaptureView(SurfaceCaptureView captureView) {
         mCaptureView = captureView;
     }
 

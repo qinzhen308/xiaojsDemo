@@ -101,7 +101,7 @@ public class CutView extends FrameLayout {
 
     }
 
-    public void setCaptureView(CaptureView captureView) {
+    public void setCaptureView(SurfaceCaptureView captureView) {
         if (mPlayer != null) {
             mPlayer.setCaptureView(captureView);
         }
