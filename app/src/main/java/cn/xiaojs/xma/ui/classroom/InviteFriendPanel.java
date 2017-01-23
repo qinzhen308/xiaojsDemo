@@ -15,19 +15,16 @@ package cn.xiaojs.xma.ui.classroom;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
-import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.ui.classroom.talk.InviteFriendAdapter;
 
 public class InviteFriendPanel extends Panel implements InviteFriendAdapter.SelectionListener {
     private TextView mSelectionCountView;
@@ -64,9 +61,19 @@ public class InviteFriendPanel extends Panel implements InviteFriendAdapter.Sele
     public void onSelectChanged(int selectionCount) {
         if (selectionCount > 0) {
             mSelectionCountView.setVisibility(View.VISIBLE);
-            mSelectionCountView.setText(mContext.getString(R.string.invite_selected_friends, selectionCount));
+            Spanned selection = Html.fromHtml(mContext.getString(R.string.invite_selected_friends, selectionCount));
+            mSelectionCountView.setText(selection);
         } else {
             mSelectionCountView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    protected void onPanelClosed() {
+        if (mAdapter != null) {
+            mAdapter.resetSelection();
+        }
+
+        mSelectionCountView.setVisibility(View.INVISIBLE);
     }
 }

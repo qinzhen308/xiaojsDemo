@@ -1,14 +1,8 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.talk;
 
 import android.content.Context;
-import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +16,6 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.model.live.Attendee;
-import cn.xiaojs.xma.model.social.Contact;
-import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 /*  =======================================================================================
@@ -54,12 +46,18 @@ public class InviteFriendAdapter extends AbsSwipeAdapter<Attendee, InviteFriendA
         mChoiceList = new ArrayList<String>();
     }
 
+    public void resetSelection() {
+        mChoiceList.clear();
+        notifyDataSetChanged();
+    }
+
     public void setSelectionListener(SelectionListener listener) {
         mSelectionListener = listener;
     }
 
     @Override
     protected void setViewContent(ViewHolder holder, Attendee bean, int position) {
+        holder.checkbox.setSelected(mChoiceList.contains(String.valueOf(position)));
         holder.position = position;
         Glide.with(mContext).load(bean.avatar).error(R.drawable.default_avatar).into(holder.portrait);
         holder.name.setText(bean.name);

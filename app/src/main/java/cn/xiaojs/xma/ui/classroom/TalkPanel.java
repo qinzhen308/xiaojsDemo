@@ -17,7 +17,9 @@ package cn.xiaojs.xma.ui.classroom;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -48,6 +50,7 @@ import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom.talk.ContactBookAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.TalkBean;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.TalkResponse;
@@ -64,12 +67,21 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private final static int TEACHING_TALK = 2;
     private final static int PEER_TALK = 3;
 
+    /**
+     * 联系人列表
+     */
     private ListView mContactBook;
     private ContactBookAdapter mContactBookAdapter;
 
+    /**
+     * Talk界面联系人列表（头像）
+     */
     private ListView mTalkContactLv;
     private TalkSimpleContactAdapter mTalkContactAdapter;
 
+    /**
+     * Talk消息列表
+     */
     private PullToRefreshListView mTalkMsgLv;
     private TalkMsgAdapter mPeerTalkMsgAdapter;
     private TalkMsgAdapter mMultiTalkAdapter;
@@ -96,6 +108,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private ImageView mCloseMsgLv;
     private ImageView mDelSingleTalkBtn;
 
+    private EditText mSearchEdt;
+    private ImageView mSearchBtn;
+
     private EditText mMsgInputEdt;
     private TextView mMsgSendTv;
 
@@ -112,6 +127,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
     private int mCurrentMode = MODE_CONTACT;
 
     private LiveCollection<Attendee> mLiveCollection;
+    private LiveCollection<Attendee> mSearchLiveCollection;
     private PanelCallback mCallback;
     private final Object LOCK = new Object();
     private String mTicket;
@@ -200,6 +216,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         mDefaultContactAction = root.findViewById(R.id.default_contact_action);
         mManageContactAction = root.findViewById(R.id.manage_contact_action);
 
+        mSearchEdt = (EditText) root.findViewById(R.id.search_txt);
+        mSearchBtn = (ImageView) root.findViewById(R.id.search_btn);
+
         mOpenMsg = (ImageView) root.findViewById(R.id.open_talk);
         mAddContact = (ImageView) root.findViewById(R.id.add_contact);
         mManageContact = (ImageView) root.findViewById(R.id.manage_contact);
@@ -234,6 +253,10 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         mTeachTalkTab.setOnClickListener(this);
         mSingleTalkTab.setOnClickListener(this);
         mMsgSendTv.setOnClickListener(this);
+        mSearchBtn.setOnClickListener(this);
+
+        //set search text watcher
+        mSearchEdt.addTextChangedListener(mSearchTextWatcher);
 
         if (mUser == Constants.User.STUDENT) {
             mTeachTalkTab.setVisibility(View.GONE);
@@ -282,6 +305,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
                 break;
             case R.id.single_talk_tab:
                 switchTalkTab(PEER_TALK);
+                break;
+            case R.id.search_btn:
+                searchContactFromLocal(mSearchEdt.getText().toString());
                 break;
         }
     }
@@ -776,6 +802,60 @@ public class TalkPanel extends Panel implements View.OnClickListener, ContactBoo
         }
 
         return null;
+    }
+
+    private TextWatcher mSearchTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            searchContactFromLocal(s.toString());
+        }
+    };
+
+    private void searchContactFromLocal(String searchTxt) {
+        if (mContactBookAdapter == null || mLiveCollection == null ||
+                mLiveCollection.attendees == null || mLiveCollection.attendees.isEmpty()) {
+            return;
+        }
+
+        if (TextUtils.isEmpty(searchTxt)) {
+            mContactBookAdapter.setData(mLiveCollection);
+            return;
+        }
+
+        if (mSearchLiveCollection == null) {
+            mSearchLiveCollection = new LiveCollection<Attendee>();
+
+            mSearchLiveCollection.current = mLiveCollection.current;
+            mSearchLiveCollection.open = mLiveCollection.open;
+            mSearchLiveCollection.total = mLiveCollection.total;
+        }
+
+        mSearchLiveCollection.attendees.clear();
+        for (Attendee attendee : mLiveCollection.attendees) {
+            if (attendee.name != null && attendee.name.contains(searchTxt)) {
+                mSearchLiveCollection.attendees.add(attendee);
+            }
+        }
+
+        mContactBookAdapter.setData(mSearchLiveCollection);
+    }
+
+    @Override
+    protected void onPanelClosed() {
+        mSearchEdt.setText("");
+        if (mLiveCollection != null && mContactBookAdapter != null) {
+            mContactBookAdapter.setData(mLiveCollection);
+        }
     }
 }
 
