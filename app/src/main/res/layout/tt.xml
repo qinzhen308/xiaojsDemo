@@ -6,12 +6,20 @@
 
     <cn.xiaojs.xma.ui.classroom.live.view.CutView
             android:id="@+id/cut1"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     <cn.xiaojs.xma.ui.classroom.live.view.CutView
             android:id="@+id/cut2"
+            android:visibility="gone"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+    <cn.xiaojs.xma.ui.widget.PortraitView
+            android:id="@+id/portrait"
+            android:src="@drawable/por_1"
+            android:layout_width="@dimen/px140"
+            android:layout_height="@dimen/px140"/>
 </FrameLayout>

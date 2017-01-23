@@ -22,7 +22,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"/>
 
-            <cn.xiaojs.xma.ui.classroom.live.view.CutView
+            <cn.xiaojs.xma.ui.classroom.live.view.CaptureView
                     android:id="@+id/teacher_video"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

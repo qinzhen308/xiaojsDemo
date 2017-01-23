@@ -6,89 +6,159 @@
               android:layout_height="match_parent">
 
     <LinearLayout
-            android:id="@+id/lesson_all_1"
-            android:orientation="horizontal"
-            android:background="@drawable/white_grey_selector"
+            android:id="@+id/teacher_wrapper"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <TextView
-                android:textSize="@dimen/font_30px"
-                android:textColor="@color/font_black"
-                android:text="@string/course_of_teach"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginTop="@dimen/px30"
-                android:layout_marginBottom="@dimen/px30"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <LinearLayout
+                android:id="@+id/lesson_all_1"
+                android:orientation="horizontal"
+                android:background="@drawable/white_grey_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-                android:id="@+id/home_lesson_whole"
-                android:textSize="@dimen/font_26px"
-                android:textColor="@color/font_blue"
-                android:layout_gravity="right|center_vertical"
-                android:text="@string/whole"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_height="wrap_content"/>
+            <TextView
+                    android:textSize="@dimen/font_30px"
+                    android:textColor="@color/font_black"
+                    android:text="@string/course_of_teach"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginTop="@dimen/px30"
+                    android:layout_marginBottom="@dimen/px30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/home_lesson_whole"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/font_blue"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="@string/whole"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <View style="@style/DividerHorizontal2"/>
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:id="@+id/teach_empty"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:textColor="@color/common_text"
+                        android:textSize="@dimen/font_28px"
+                        android:layout_marginTop="@dimen/px50"
+                        android:layout_marginLeft="@dimen/px80"
+                        android:layout_marginRight="@dimen/px80"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:text="@string/teacher_no_lesson_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <ImageView
+                        android:id="@+id/open_lesson"
+                        android:scaleType="fitXY"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/px10"
+                        android:layout_marginBottom="@dimen/px30"
+                        android:src="@drawable/ic_open_lesson"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
+                    android:id="@+id/home_live_list"
+                    android:divider="@color/main_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_height="@dimen/px30"
+                android:background="@color/main_bg"/>
     </LinearLayout>
 
-    <View style="@style/DividerHorizontal2"/>
-
-    <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
-            android:id="@+id/home_live_list"
-            android:divider="@color/main_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    <View
-            style="@style/DividerHorizontal"
-            android:layout_height="@dimen/px30"
-            android:background="@color/main_bg"/>
 
     <LinearLayout
-            android:id="@+id/lesson_all_2"
-            android:orientation="horizontal"
-            android:background="@drawable/white_grey_selector"
+            android:id="@+id/student_wrapper"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <TextView
-                android:textSize="@dimen/font_30px"
-                android:textColor="@color/font_black"
-                android:text="@string/course_of_learn"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginTop="@dimen/px30"
-                android:layout_marginBottom="@dimen/px30"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <LinearLayout
+                android:id="@+id/lesson_all_2"
+                android:orientation="horizontal"
+                android:background="@drawable/white_grey_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-                android:textSize="@dimen/font_26px"
-                android:textColor="@color/font_blue"
-                android:layout_gravity="right|center_vertical"
-                android:text="@string/whole"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_height="wrap_content"/>
+            <TextView
+                    android:textSize="@dimen/font_30px"
+                    android:textColor="@color/font_black"
+                    android:text="@string/course_of_learn"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginTop="@dimen/px30"
+                    android:layout_marginBottom="@dimen/px30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/font_blue"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="@string/whole"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <View style="@style/DividerHorizontal2"/>
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/student_empty"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_28px"
+                    android:layout_marginTop="@dimen/px50"
+                    android:layout_marginBottom="@dimen/px50"
+                    android:layout_marginLeft="@dimen/px80"
+                    android:layout_marginRight="@dimen/px80"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="@string/student_no_lesson_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
+                    android:id="@+id/home_live_list2"
+                    android:divider="@color/main_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_height="@dimen/px30"
+                android:background="@color/main_bg"/>
     </LinearLayout>
-
-    <View style="@style/DividerHorizontal2"/>
-
-    <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
-            android:id="@+id/home_live_list2"
-            android:divider="@color/main_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    <View
-            style="@style/DividerHorizontal"
-            android:layout_height="@dimen/px30"
-            android:background="@color/main_bg"/>
 
     <TextView
             android:text="@string/brilliant_clazz"

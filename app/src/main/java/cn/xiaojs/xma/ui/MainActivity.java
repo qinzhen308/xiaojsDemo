@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.TestActivity;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
-import cn.xiaojs.xma.ui.certification.CertificationActivity;
-import cn.xiaojs.xma.ui.lesson.CourseConstant;
-import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.home.HomeFragment;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.NotificationFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
@@ -85,7 +85,9 @@ public class MainActivity extends BaseTabActivity {
 //                urls.add("http://h.hiphotos.baidu.com/image/pic/item/6609c93d70cf3bc798e14b10d700baa1cc112a6c.jpg");
 //                startActivity(new Intent(this,ImageViewActivity.class)
 //                .putExtra(ImageViewActivity.IMAGE_PATH_KEY,urls));
-                startActivity(new Intent(this, CertificationActivity.class));
+                //startActivity(new Intent(this, CertificationActivity.class));
+                startActivity(new Intent(this, TestActivity.class));
+
                 break;
             case 4:
                 startActivity(new Intent(this,PersonHomeActivity.class));
