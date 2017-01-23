@@ -575,6 +575,7 @@ public class WhiteboardController implements
             if (mUser == Constants.User.STUDENT) {
                 if (wbColl.isLive()) {
                     if (isWebApp(mAppType)) {
+                        onResumeVideo();
                         mLiveLayout.setVisibility(View.VISIBLE);
                         mSyncWhiteboard.setVisibility(View.GONE);
                     } else {
@@ -584,6 +585,7 @@ public class WhiteboardController implements
                     }
                     mWhiteboardSv.setVisibility(View.GONE);
                 } else {
+                    onPauseVideo();
                     mLiveLayout.setVisibility(View.GONE);
                     mSyncWhiteboard.setVisibility(View.GONE);
                     mWhiteboardSv.setVisibility(View.VISIBLE);
