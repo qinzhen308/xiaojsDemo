@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
@@ -28,11 +30,12 @@ import cn.xiaojs.xma.ui.widget.MessageImageView;
  *
  * ======================================================================================== */
 
-public class TalkSimpleContactAdapter extends BaseAdapter {
+public class TalkSimpleContactAdapter extends BaseAdapter implements View.OnClickListener {
     private Context mContext;
     private int mOffset;
     private LiveCollection<Attendee> mLiveCollection;
     private ArrayList<Attendee> mAttendeeList;
+    private OnPortraitClickListener mListener;
 
     public TalkSimpleContactAdapter(Context context) {
         mContext = context;
@@ -43,6 +46,10 @@ public class TalkSimpleContactAdapter extends BaseAdapter {
         mLiveCollection = liveCollection;
         mAttendeeList = liveCollection != null ? liveCollection.attendees : null;
         notifyDataSetChanged();
+    }
+
+    public void setOnPortraitClickListener(OnPortraitClickListener listener) {
+        mListener = listener;
     }
 
     public LiveCollection<Attendee> getLiveCollection() {
@@ -70,9 +77,9 @@ public class TalkSimpleContactAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = createContentView();
         }
-        holder = (Holder)convertView.getTag();
+        holder = (Holder) convertView.getTag();
 
-        bindData(holder);
+        bindData(holder, position);
         return convertView;
     }
 
@@ -86,16 +93,35 @@ public class TalkSimpleContactAdapter extends BaseAdapter {
         holder.portrait.setExtraOffsetY(mOffset);
 
         v.setTag(holder);
+        v.setOnClickListener(this);
         return v;
     }
 
-    private void bindData(Holder holder) {
-        holder.portrait.setImageResource(R.drawable.default_portrait);
+    private void bindData(Holder holder, int position) {
+        holder.position = position;
+        Attendee attendee = mAttendeeList.get(position);
+        Glide.with(mContext).load(attendee.avatar).error(R.drawable.default_avatar).into(holder.portrait);
         //holder.portrait.setCount(5);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Object obj = v.getTag();
+        try {
+            if (obj instanceof Holder) {
+                Holder holder = (Holder) obj;
+                if (mListener != null) {
+                    mListener.onPortraitClick(mAttendeeList.get(holder.position));
+                }
+            }
+        } catch (Exception e) {
+
+        }
     }
 
 
     private class Holder {
         MessageImageView portrait;
+        int position = -1;
     }
 }
