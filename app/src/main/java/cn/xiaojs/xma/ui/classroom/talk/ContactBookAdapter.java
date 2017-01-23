@@ -31,13 +31,14 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.ui.classroom.TalkPanel;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 
 public class ContactBookAdapter extends BaseAdapter implements View.OnClickListener{
     private Context mContext;
     private boolean mContactManagementMode = false;
     private List<String> mChoiceList;
-    private OnContactBookListener mListener;
+    private OnPortraitClickListener mListener;
     private LiveCollection<Attendee> mLiveCollection;
     private ArrayList<Attendee> mAttendeeList;
     private int mOffset;
@@ -48,7 +49,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px5);
     }
 
-    public void setOnContactBookListener(OnContactBookListener listener) {
+    public void setOnPortraitClickListener(OnPortraitClickListener listener) {
         mListener = listener;
     }
 
@@ -204,7 +205,4 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         notifyDataSetChanged();
     }
 
-    public interface OnContactBookListener {
-        public void onPortraitClick(Attendee attendee);
-    }
 }

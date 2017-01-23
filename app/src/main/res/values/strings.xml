@@ -334,7 +334,9 @@
     <string name="raise_hands_stu">举手的学生</string>
     <string name="random_select_stu">随机选择</string>
     <string name="classroom_discussion">教室讨论</string>
+    <string name="teaching_group">教学组</string>
     <string name="invite_friend">邀请好友</string>
+    <string name="close_cr_discussion">老师设置了禁止群聊</string>
     <string name="invite_selected_friends">已选择<![CDATA[<font color="#ff9833">%1$d</font>]]>人</string>
     <string name="set_assistant">设为助教</string>
     <string name="kick_out">踢出</string>
