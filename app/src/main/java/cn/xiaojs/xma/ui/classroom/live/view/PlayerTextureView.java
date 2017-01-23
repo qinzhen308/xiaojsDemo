@@ -31,18 +31,19 @@ import com.pili.pldroid.player.widget.PLVideoTextureView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
 
-public class PlayerTextureView extends BaseMediaView{
+public class PlayerTextureView extends BaseMediaView {
     private PLVideoTextureView mPlayer;
     private static final String TAG = "PlayerTextureView";
     private boolean mIsPause;
     private boolean mIsMute;
+    private CaptureView mCaptureView;
 
     public PlayerTextureView(Context context) {
         super(context);
         init(PLVideoTextureView.ASPECT_RATIO_16_9);
     }
 
-    public PlayerTextureView(Context context,int ratio) {
+    public PlayerTextureView(Context context, int ratio) {
         super(context);
         init(ratio);
     }
@@ -57,8 +58,7 @@ public class PlayerTextureView extends BaseMediaView{
         init(PLVideoTextureView.ASPECT_RATIO_16_9);
     }
 
-    private void init(int ratio){
-
+    private void init(int ratio) {
         mPlayer.setBufferingIndicator(mLoadingView);
         showLoading(true);
         AVOptions options = new AVOptions();
@@ -87,6 +87,7 @@ public class PlayerTextureView extends BaseMediaView{
 
         mPlayer.setOnCompletionListener(mOnCompletionListener);
         mPlayer.setOnErrorListener(mOnErrorListener);
+        mPlayer.setOnPreparedListener(mPrepared);
         mPlayer.setDisplayAspectRatio(ratio);
         //setBackgroundResource(R.drawable.common_white_bg_corner);
     }
@@ -100,7 +101,7 @@ public class PlayerTextureView extends BaseMediaView{
 
     @Override
     protected View initMediaView() {
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_texture_player_view,null);
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_texture_player_view, null);
         mPlayer = (PLVideoTextureView) v.findViewById(R.id.texture_player);
         return v;
     }
@@ -112,16 +113,22 @@ public class PlayerTextureView extends BaseMediaView{
 
     @Override
     public void resume() {
-        if (mPlayer != null && !mPlayer.isPlaying()){
+        if (mPlayer != null && !mPlayer.isPlaying()) {
             mPlayer.start();
+        }
+        if (mCaptureView != null) {
+            mCaptureView.start();
         }
         mIsPause = false;
     }
 
     @Override
     public void pause() {
-        if (mPlayer != null && mPlayer.isPlaying()){
+        if (mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.pause();
+        }
+        if (mCaptureView != null) {
+            mCaptureView.stop();
         }
         mIsPause = true;
     }
@@ -129,15 +136,18 @@ public class PlayerTextureView extends BaseMediaView{
     @Override
     public void destroy() {
         stopInternal();
+        if (mCaptureView != null) {
+            mCaptureView.stop();
+        }
         mHandler = null;
     }
 
     @Override
     protected void mute() {
-        if (mIsMute){
-            mPlayer.setVolume(1f,1f);
-        }else {
-            mPlayer.setVolume(0f,0f);
+        if (mIsMute) {
+            mPlayer.setVolume(1f, 1f);
+        } else {
+            mPlayer.setVolume(0f, 0f);
         }
         mIsMute = !mIsMute;
     }
@@ -145,7 +155,7 @@ public class PlayerTextureView extends BaseMediaView{
     private PLMediaPlayer.OnCompletionListener mOnCompletionListener = new PLMediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(PLMediaPlayer plMediaPlayer) {
-            Log.e(TAG,"Play Completed !");
+            Log.e(TAG, "Play Completed !");
         }
     };
 
@@ -156,55 +166,55 @@ public class PlayerTextureView extends BaseMediaView{
             switch (errorCode) {
                 case PLMediaPlayer.ERROR_CODE_INVALID_URI:
                     //showToastTips("Invalid URL !");
-                    Log.e(TAG,"Invalid URL !");
+                    Log.e(TAG, "Invalid URL !");
                     break;
                 case PLMediaPlayer.ERROR_CODE_404_NOT_FOUND:
                     //showToastTips("404 resource not found !");
-                    Log.e(TAG,"404 resource not found !");
+                    Log.e(TAG, "404 resource not found !");
                     break;
                 case PLMediaPlayer.ERROR_CODE_CONNECTION_REFUSED:
                     //showToastTips("Connection refused !");
-                    Log.e(TAG,"Connection refused !");
+                    Log.e(TAG, "Connection refused !");
                     break;
                 case PLMediaPlayer.ERROR_CODE_CONNECTION_TIMEOUT:
                     //showToastTips("Connection timeout !");
-                    Log.e(TAG,"Connection timeout !");
+                    Log.e(TAG, "Connection timeout !");
                     isNeedReconnect = true;
                     break;
                 case PLMediaPlayer.ERROR_CODE_EMPTY_PLAYLIST:
                     //showToastTips("Empty playlist !");
-                    Log.e(TAG,"Empty playlist !");
+                    Log.e(TAG, "Empty playlist !");
                     break;
                 case PLMediaPlayer.ERROR_CODE_STREAM_DISCONNECTED:
                     //showToastTips("Stream disconnected !");
-                    Log.e(TAG,"Stream disconnected !");
+                    Log.e(TAG, "Stream disconnected !");
                     isNeedReconnect = true;
                     break;
                 case PLMediaPlayer.ERROR_CODE_IO_ERROR:
                     //showToastTips("Network IO Error !");
-                    Log.e(TAG,"Network IO Error !");
+                    Log.e(TAG, "Network IO Error !");
                     isNeedReconnect = true;
                     break;
                 case PLMediaPlayer.ERROR_CODE_UNAUTHORIZED:
                     //showToastTips("Unauthorized Error !");
-                    Log.e(TAG,"Unauthorized Error !");
+                    Log.e(TAG, "Unauthorized Error !");
                     break;
                 case PLMediaPlayer.ERROR_CODE_PREPARE_TIMEOUT:
                     //showToastTips("Prepare timeout !");
-                    Log.e(TAG,"Prepare timeout !");
+                    Log.e(TAG, "Prepare timeout !");
                     isNeedReconnect = true;
                     break;
                 case PLMediaPlayer.ERROR_CODE_READ_FRAME_TIMEOUT:
                     //showToastTips("Read frame timeout !");
-                    Log.e(TAG,"Read frame timeout !");
+                    Log.e(TAG, "Read frame timeout !");
                     isNeedReconnect = true;
                     break;
                 case PLMediaPlayer.MEDIA_ERROR_UNKNOWN:
-                    Log.e(TAG,"unknown error !");
+                    Log.e(TAG, "unknown error !");
                     break;
                 default:
                     //showToastTips("unknown error !");
-                    Log.e(TAG,"unknown error !");
+                    Log.e(TAG, "unknown error !");
                     break;
             }
             // Todo pls handle the error status here, reconnect or call finish()
@@ -218,12 +228,20 @@ public class PlayerTextureView extends BaseMediaView{
             return true;
         }
     };
+    private PLMediaPlayer.OnPreparedListener mPrepared = new PLMediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(PLMediaPlayer plMediaPlayer) {
+            if (mCaptureView != null) {
+                mCaptureView.start();
+            }
+        }
+    };
     private static final int MESSAGE_ID_RECONNECTING = 0x01;
 
     private void sendReconnectMessage() {
         if (mHandler == null)
             return;
-        Logger.i(TAG,"正在重连...");
+        Logger.i(TAG, "正在重连...");
         showLoading(true);
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_ID_RECONNECTING), 500);
@@ -243,7 +261,7 @@ public class PlayerTextureView extends BaseMediaView{
                 sendReconnectMessage();
                 return;
             }
-            if (mPlayer != null){
+            if (mPlayer != null) {
                 mPlayer.setVideoPath(getPath());
                 mPlayer.start();
             }
@@ -257,9 +275,9 @@ public class PlayerTextureView extends BaseMediaView{
         super.close();
     }
 
-    private void stopInternal(){
+    private void stopInternal() {
         //关闭播放器有点耗时，放在线程里处理
-        if (mPlayer != null){
+        if (mPlayer != null) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -273,5 +291,13 @@ public class PlayerTextureView extends BaseMediaView{
     @Override
     protected boolean isMute() {
         return mIsMute;
+    }
+
+    public void setCaptureView(CaptureView captureView) {
+        mCaptureView = captureView;
+    }
+
+    public PLVideoTextureView getPlayer(){
+        return mPlayer;
     }
 }

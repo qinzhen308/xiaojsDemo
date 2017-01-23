@@ -15,4 +15,9 @@ public class Account {
         public static final String STAND_ALONE_LESSON="StandaloneLesson";
     }
 
+    public class Sex{
+        public static final String MALE = "true";
+        public static final String FEMALE = "false";
+    }
+
 }

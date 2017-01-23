@@ -33,7 +33,7 @@ import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 import cn.xiaojs.xma.ui.view.RelationshipView;
 import cn.xiaojs.xma.ui.widget.IconTextView;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.ui.widget.PortraitView;
 import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -50,7 +50,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
     @BindView(R.id.person_home_header_image_holder)
     View mImageHolder;
     @BindView(R.id.person_home_head)
-    RoundedImageView mHead;
+    PortraitView mHead;
     @BindView(R.id.person_home_name)
     IconTextView mName;
     @BindView(R.id.person_home_relationship)
@@ -129,6 +129,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
         mFollowPeople.show(lists);
+
+        mHead.setSex("true");
     }
 
     @Override

@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <cn.xiaojs.xma.ui.widget.RoundedImageView
+            <cn.xiaojs.xma.ui.widget.PortraitView
                     android:id="@+id/person_home_head"
                     android:scaleType="fitXY"
                     app:oval="true"
@@ -36,8 +36,8 @@
                     android:src="@drawable/por_58"
                     android:layout_marginTop="@dimen/px100"
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/px100"
-                    android:layout_height="@dimen/px100"/>
+                    android:layout_width="@dimen/px140"
+                    android:layout_height="@dimen/px140"/>
 
             <cn.xiaojs.xma.ui.widget.IconTextView
                     android:id="@+id/person_home_name"

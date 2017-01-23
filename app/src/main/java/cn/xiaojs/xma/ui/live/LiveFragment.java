@@ -21,6 +21,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +41,7 @@ import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
+import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
@@ -51,21 +54,38 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     CanInScrollviewListView mLessonList;
     CanInScrollviewListView mLessonList2;
 
+    View mTeacherWrapper;
+    View mStudentWrapper;
+
+    View mTeacherEmpty;
+    TextView mStudentEmpty;
+
+    ImageView mOpenLesson;
+
     View mHeader;
 
 
     private int mUserType;
+
     @Override
     protected View getContentView() {
-        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_moment , null);
+        View v = mContext.getLayoutInflater().inflate(R.layout.fragment_moment, null);
         mGrid = (PullToRefreshGridView) v.findViewById(R.id.live_grid);
 
-        mHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_live_header,null);
+        mHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_live_header, null);
         mHorizontalListView = (HorizontalAdaptScrollerView) mHeader.findViewById(R.id.home_live_brilliant);
         mGrid.getRefreshableView().addHeaderView(mHeader);
 
         mLessonList = (CanInScrollviewListView) mHeader.findViewById(R.id.home_live_list);
         mLessonList2 = (CanInScrollviewListView) mHeader.findViewById(R.id.home_live_list2);
+
+        mTeacherWrapper = mHeader.findViewById(R.id.teacher_wrapper);
+        mStudentWrapper = mHeader.findViewById(R.id.student_wrapper);
+
+        mTeacherEmpty = mHeader.findViewById(R.id.teach_empty);
+        mStudentEmpty = (TextView) mHeader.findViewById(R.id.student_empty);
+
+        mOpenLesson = (ImageView) mHeader.findViewById(R.id.open_lesson);
 
         mLessonList.setNeedDivider(true);
         mLessonList.setDividerHeight(mContext.getResources().getDimensionPixelSize(R.dimen.px30));
@@ -76,6 +96,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         all2.setOnClickListener(this);
         View search = v.findViewById(R.id.my_course_search);
         search.setOnClickListener(this);
+        mOpenLesson.setOnClickListener(this);
         //ButterKnife.bind(this,v);
         return v;
     }
@@ -83,8 +104,8 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void init() {
         Bundle bundle = getArguments();
-        if (bundle != null){
-            mUserType = bundle.getInt(LiveConstant.KEY_USER_TYPE,LiveConstant.USER_STUDENT);
+        if (bundle != null) {
+            mUserType = bundle.getInt(LiveConstant.KEY_USER_TYPE, LiveConstant.USER_STUDENT);
         }
         RecyclerView.Adapter adapter = new LiveBrilliantAdapter(mContext);
         mHorizontalListView.setItemVisibleCountType(HorizontalAdaptScrollerView.ItemVisibleTypeCount.TYPE_FREE);
@@ -93,7 +114,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         ViewGroup.LayoutParams lp = mHorizontalListView.getLayoutParams();
         lp.height = getResources().getDimensionPixelSize(R.dimen.px370);
         mHorizontalListView.setLayoutParams(lp);
-        mGrid.setAdapter(new LiveAdapter(mContext,mGrid));
+        mGrid.setAdapter(new LiveAdapter(mContext, mGrid));
 
         List<TeachLesson> teachLessons = new ArrayList<>();
         TeachLesson tl1 = new TeachLesson();
@@ -125,7 +146,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         tl2.setSchedule(schedule);
         tl2.setPublish(publish);
         teachLessons.add(tl2);
-        mLessonList.setAdapter(new LiveTeachLessonAdapter(mContext,teachLessons));
+        mLessonList.setAdapter(new LiveTeachLessonAdapter(mContext, teachLessons));
 
 
         EnrolledLesson el1 = new EnrolledLesson();
@@ -142,12 +163,12 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         List<EnrolledLesson> enrolls = new ArrayList<>();
         enrolls.add(el1);
 
-        mLessonList2.setAdapter(new LiveEnrollLessonAdapter(mContext,enrolls));
+        mLessonList2.setAdapter(new LiveEnrollLessonAdapter(mContext, enrolls));
     }
 
     @Override
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.lesson_all_1:
                 Intent intent = new Intent(mContext, TeachLessonActivity.class);
                 mContext.startActivity(intent);
@@ -159,6 +180,10 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
             case R.id.my_course_search:
                 Intent search = new Intent(mContext, SearchActivity.class);
                 mContext.startActivity(search);
+                break;
+            case R.id.open_lesson:
+                Intent open = new Intent(mContext, LessonCreationActivity.class);
+                mContext.startActivity(open);
                 break;
         }
     }

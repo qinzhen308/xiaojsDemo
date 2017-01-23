@@ -27,7 +27,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
@@ -35,6 +34,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.WhiteboardCollection;
+import cn.xiaojs.xma.ui.classroom.live.view.CaptureView;
 import cn.xiaojs.xma.ui.classroom.live.view.CutView;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -76,7 +76,7 @@ public class WhiteboardController implements
 
     private View mLiveLayout;
     private CutView mWhiteboardVideo;
-    private CutView mTeacherVideo;
+    private CaptureView mTeacherVideo;
 
     private ImageView mSelection;
     private ImageView mHandWriting;
@@ -130,7 +130,7 @@ public class WhiteboardController implements
 
         mLiveLayout = root.findViewById(R.id.live_layout);
         mWhiteboardVideo = (CutView) root.findViewById(R.id.whiteboard_video);
-        mTeacherVideo = (CutView) root.findViewById(R.id.teacher_video);
+        mTeacherVideo = (CaptureView) root.findViewById(R.id.teacher_video);
 
         mWhiteboardSv = (WhiteboardScrollerView) root.findViewById(R.id.white_board_scrollview);
         mSyncWhiteboard = (Whiteboard) root.findViewById(R.id.stu_receive_wb);
@@ -180,8 +180,9 @@ public class WhiteboardController implements
                 mLiveLayout.setVisibility(View.VISIBLE);
                 mWhiteboardSv.setVisibility(View.GONE);
                 mSyncWhiteboard.setVisibility(View.GONE);
-                mTeacherVideo.setPath(TEST_VIDEO, false);
-                mWhiteboardVideo.setPath(TEST_VIDEO, true);
+                mWhiteboardVideo.setPath(TEST_VIDEO);
+                mWhiteboardVideo.setCaptureView(mTeacherVideo);
+                mTeacherVideo.setTextureView(mWhiteboardVideo.getPlayer().getPlayer().getTextureView());
                 onResumeVideo();
 
                 //TODO test hold collection
@@ -422,27 +423,18 @@ public class WhiteboardController implements
     }
 
     public void onResumeVideo() {
-        if (mTeacherVideo != null) {
-            mTeacherVideo.resume();
-        }
         if (mWhiteboardVideo != null) {
             mWhiteboardVideo.resume();
         }
     }
 
     public void onPauseVideo() {
-        if (mTeacherVideo != null) {
-            mTeacherVideo.pause();
-        }
         if (mWhiteboardVideo != null) {
             mWhiteboardVideo.pause();
         }
     }
 
     public void onDestroyVideo() {
-        if (mTeacherVideo != null) {
-            mTeacherVideo.destroy();
-        }
         if (mWhiteboardVideo != null) {
             mWhiteboardVideo.destroy();
         }

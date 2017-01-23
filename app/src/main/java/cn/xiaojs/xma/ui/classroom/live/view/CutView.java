@@ -33,6 +33,7 @@ public class CutView extends FrameLayout {
     PlayerTextureView mPlayer;
     private boolean mBoard = true;
     private static final int SCALE = 4;
+
     public CutView(Context context) {
         super(context);
         init();
@@ -60,45 +61,53 @@ public class CutView extends FrameLayout {
         addView(mPlayer);
     }
 
-    public void setPath(String path, boolean board) {
-        mBoard = board;
+    public void setPath(String path) {
         ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) mPlayer.getLayoutParams();
-        if (mBoard){
-            lp.height = getContext().getResources().getDisplayMetrics().heightPixels;
-            lp.width = (BOARD_WIDTH + VIDEO_WIDTH) * lp.height / BOARD_HEIGHT;
-        }else {
-            lp.height = getContext().getResources().getDisplayMetrics().heightPixels / SCALE;
-            lp.width = (BOARD_WIDTH + VIDEO_WIDTH) * lp.height / BOARD_HEIGHT;
-            lp.leftMargin = (int) (-lp.width * ((float)BOARD_WIDTH/(VIDEO_WIDTH + BOARD_WIDTH)));
-        }
+//        if (mBoard){
+        lp.height = getContext().getResources().getDisplayMetrics().heightPixels;
+        lp.width = (BOARD_WIDTH + VIDEO_WIDTH) * lp.height / BOARD_HEIGHT;
+//        }else {
+//            lp.height = getContext().getResources().getDisplayMetrics().heightPixels / SCALE;
+//            lp.width = (BOARD_WIDTH + VIDEO_WIDTH) * lp.height / BOARD_HEIGHT;
+//            lp.leftMargin = (int) (-lp.width * ((float)BOARD_WIDTH/(VIDEO_WIDTH + BOARD_WIDTH)));
+//        }
         mPlayer.setPath(path);
     }
 
-    public void resume(){
+    public void resume() {
         mPlayer.resume();
     }
 
-    public void pause(){
+    public void pause() {
         mPlayer.pause();
     }
 
-    public void destroy(){
+    public void destroy() {
         mPlayer.destroy();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec,heightMeasureSpec);
-        if (mBoard){
-            int height = getContext().getResources().getDisplayMetrics().heightPixels;
-            int width = BOARD_WIDTH * height / BOARD_HEIGHT;
-            setMeasuredDimension(width,height);
-        }else {
-            int height = (int) (getContext().getResources().getDisplayMetrics().heightPixels / SCALE * ((float)VIDEO_HEIGHT / BOARD_HEIGHT));
-            int width = VIDEO_WIDTH * height / VIDEO_HEIGHT;
-            setMeasuredDimension(width,height);
-        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        if (mBoard){
+        int height = getContext().getResources().getDisplayMetrics().heightPixels;
+        int width = BOARD_WIDTH * height / BOARD_HEIGHT;
+        setMeasuredDimension(width, height);
+//        }else {
+//            int height = (int) (getContext().getResources().getDisplayMetrics().heightPixels / SCALE * ((float)VIDEO_HEIGHT / BOARD_HEIGHT));
+//            int width = VIDEO_WIDTH * height / VIDEO_HEIGHT;
+//            setMeasuredDimension(width,height);
+//        }
 
     }
 
+    public void setCaptureView(CaptureView captureView) {
+        if (mPlayer != null) {
+            mPlayer.setCaptureView(captureView);
+        }
+    }
+
+    public PlayerTextureView getPlayer() {
+        return mPlayer;
+    }
 }
