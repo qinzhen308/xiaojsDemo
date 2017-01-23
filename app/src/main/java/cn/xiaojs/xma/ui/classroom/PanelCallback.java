@@ -23,7 +23,9 @@ public interface PanelCallback {
     public final static int INVITE_FRIEND_PANEL = 6;
     public final static int QUESTION_ANSWER_PANEL = 7;
 
-    public void onOpenPanel(int panel);
+    public void onPanelOpened(int panel);
 
-    public void onClosePanel(int panel);
+    public void onPanelClosed(int panel);
+
+    public void switchPanel(int panel);
 }

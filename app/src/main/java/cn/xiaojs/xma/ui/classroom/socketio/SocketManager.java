@@ -35,6 +35,7 @@ public class SocketManager {
             try {
                 IO.Options opts = new IO.Options();
                 opts.query = "secret=" + secret;
+                opts.transports = new String[] {"websocket"};
                 mSocket = IO.socket(getClassroomSocketUrl(ticket), opts);
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);

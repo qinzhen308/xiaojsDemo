@@ -18,7 +18,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import cn.xiaojs.xma.R;
@@ -30,7 +29,7 @@ public class SettingPanel extends Panel implements View.OnClickListener{
 
     private ToggleButton mMicroPhoneSwitcher;
     private ToggleButton mCameraSwitcher;
-    private ToggleButton mChatSwitcher;
+    private ToggleButton mTalkSwitcher;
 
     public SettingPanel(Context context) {
         super(context);
@@ -49,22 +48,23 @@ public class SettingPanel extends Panel implements View.OnClickListener{
 
         mMicroPhoneSwitcher = (ToggleButton) root.findViewById(R.id.microphone_switcher);
         mCameraSwitcher = (ToggleButton) root.findViewById(R.id.camera_switcher);
-        mChatSwitcher = (ToggleButton) root.findViewById(R.id.class_room_chat);
+        mTalkSwitcher = (ToggleButton) root.findViewById(R.id.class_room_talk);
 
         mFluentTv.setOnClickListener(this);
         mStandardTv.setOnClickListener(this);
         mHighTv.setOnClickListener(this);
 
-    }
-
-    @Override
-    public void initData() {
         //default fluent
         mFluentTv.setSelected(true);
 
         mMicroPhoneSwitcher.setChecked(true);
         mCameraSwitcher.setChecked(true);
-        mChatSwitcher.setChecked(true);
+        mTalkSwitcher.setChecked(true);
+    }
+
+    @Override
+    public void initData() {
+
     }
 
     @Override

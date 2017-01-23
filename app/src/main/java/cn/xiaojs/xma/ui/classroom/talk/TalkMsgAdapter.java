@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
@@ -69,12 +68,10 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
     @Override
     protected void setViewContent(Holder holder, TalkItem bean, int position) {
-        //TODO test
-        //holder.portrait.setImageResource(R.drawable.default_portrait);
-        Glide.with(mContext).load(bean.from.avatar).into(holder.portrait);
+        Glide.with(mContext).load(bean.from.avatar).error(R.drawable.default_avatar).into(holder.portrait);
         holder.name.setText(bean.from.name);
         holder.msg.setText(bean.body != null ? bean.body.text : null);
-        holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_HH_MM_SS));
+        holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_MM_SS));
     }
 
     @Override
@@ -100,10 +97,10 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         View v = null;
         switch (type) {
             case TYPE_MY_SPEAKER:
-                v = LayoutInflater.from(mContext).inflate(R.layout.layout_chat_my_speaker_item, null);
+                v = LayoutInflater.from(mContext).inflate(R.layout.layout_talk_my_speaker_item, null);
                 break;
             case TYPE_OTHER_SPEAKER:
-                v = LayoutInflater.from(mContext).inflate(R.layout.layout_chat_other_speaker_item, null);
+                v = LayoutInflater.from(mContext).inflate(R.layout.layout_talk_other_speaker_item, null);
                 break;
         }
         return v;

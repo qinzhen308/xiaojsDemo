@@ -15,6 +15,7 @@ public class CollectionPage<T> {
     public int totalUpdates;
     public int total;
     public int page;
+    public int unread;
     public int numOfPages;
     public int maxNumOfObjectsPerPage;
     public ArrayList<T> objectsOfPage;

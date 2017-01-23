@@ -3,7 +3,8 @@
               android:layout_width="@dimen/px500"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:clickable="true">
+              android:clickable="true"
+              android:background="@color/white">
 
     <RelativeLayout
             android:layout_width="@dimen/px500"
@@ -46,10 +47,13 @@
 
     <View style="@style/DividerHorizontal"/>
 
-    <ExpandableListView
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
             android:id="@+id/friends"
             android:layout_width="@dimen/px500"
             android:layout_height="match_parent"
-            android:groupIndicator="@drawable/ic_expand_selector"/>
+            android:scrollbars="none"
+            android:divider="@color/light_grey"
+            android:listSelector="@android:color/transparent"
+            android:dividerHeight="1px"/>
 
 </LinearLayout>

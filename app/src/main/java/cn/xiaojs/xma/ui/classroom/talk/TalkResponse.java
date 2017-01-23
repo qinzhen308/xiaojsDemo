@@ -9,10 +9,14 @@ package cn.xiaojs.xma.ui.classroom.talk;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2016/11/29
+ * Date:2017/1/22
  * Desc:
  *
  * ======================================================================================== */
 
-public class ImView {
+public class TalkResponse {
+    public String to;
+    public long time;
+    public boolean result;
+    public String data;
 }

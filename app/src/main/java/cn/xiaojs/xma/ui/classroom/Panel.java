@@ -23,9 +23,33 @@ import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 public abstract class Panel {
     protected Context mContext;
     protected View mContentView;
+    protected DrawerLayout mDrawerLayout;
+    protected ViewGroup mContainer;
+
+    private DrawerLayout.DrawerListener mDrawerListener;
 
     public Panel(Context context) {
         mContext = context;
+        mDrawerListener = new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                initData();
+                onPanelOpened();
+            }
+
+
+            public void onDrawerClosed(View drawerView) {
+                onPanelClosed();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        };
     }
 
     public abstract View onCreateView();
@@ -60,8 +84,10 @@ public abstract class Panel {
 
         setChildViewStyle();
         drawerLayout.openDrawer(container);
+        drawerLayout.addDrawerListener(mDrawerListener);
 
-        initData();
+        mDrawerLayout = drawerLayout;
+        mContainer = container;
     }
 
     public void close(final DrawerLayout drawerLayout, final ViewGroup container) {
@@ -85,6 +111,28 @@ public abstract class Panel {
         drawerLayout.closeDrawer(gravity, animate);
     }
 
+    protected void close () {
+        if (mDrawerLayout == null || mContainer == null) {
+            return;
+        }
+
+        mDrawerLayout.closeDrawer(mContainer, true);
+    }
+
+    protected void close(boolean animate) {
+        if (mDrawerLayout == null || mContainer == null) {
+            return;
+        }
+
+        mDrawerLayout.closeDrawer(mContainer, animate);
+    }
+
+    public void release() {
+        if (mDrawerLayout != null) {
+            mDrawerLayout.removeDrawerListener(mDrawerListener);
+        }
+    }
+
     public void initChildView(View root) {
 
     }
@@ -94,4 +142,12 @@ public abstract class Panel {
     }
 
     public abstract void initData();
+
+    protected void onPanelOpened() {
+
+    }
+
+    protected void onPanelClosed() {
+
+    }
 }

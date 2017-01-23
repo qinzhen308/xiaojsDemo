@@ -25,16 +25,22 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.live.LiveCriteria;
+import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
@@ -134,7 +140,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     //all kind of panels
     private CourseWarePanel mCourseWarePanel;
-    private MessagePanel mMessagePanel;
+    private NotifyMsgPanel mNotifyMsgPanel;
     private InviteFriendPanel mInviteFriendPanel;
     private SettingPanel mSettingPanel;
     private TalkPanel mTalkPanel;
@@ -307,13 +313,40 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     listenSocket();
                     //init whiteboard
                     mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
+
+                    initNotifyMsgCount();
                 }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress();
                 Toast.makeText(ClassroomActivity.this, "BootSession 失败：" + errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 未知消息
+     */
+    private void initNotifyMsgCount() {
+        LiveCriteria liveCriteria = new LiveCriteria();
+        liveCriteria.to = String.valueOf(Communications.TalkType.SYSTEM);
+        Pagination pagination = new Pagination();
+        pagination.setPage(1);
+        LiveManager.getTalks(this, mTicket, liveCriteria, pagination, new APIServiceCallback<CollectionPage<TalkItem>> () {
+            @Override
+            public void onSuccess(CollectionPage<TalkItem> collectionPage) {
+                if (collectionPage != null) {
+                    mNotifyImgBtn.setType(MessageImageView.TYPE_MARK);
+                    int offsetY = getResources().getDimensionPixelOffset(R.dimen.px8);
+                    mNotifyImgBtn.setExtraOffsetY(offsetY);
+                    mNotifyImgBtn.setCount(collectionPage.unread);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
             }
         });
     }
@@ -500,22 +533,22 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      */
     private void openTalk(int mode) {
         if (mTalkPanel == null) {
-            mTalkPanel = new TalkPanel(this, mTicket);
+            mTalkPanel = new TalkPanel(this, mTicket, mUser);
             mTalkPanel.setPanelCallback(new PanelCallback() {
                 @Override
-                public void onOpenPanel(int panel) {
-                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
-                    openInviteFriend();
+                public void onPanelOpened(int panel) {
+
                 }
 
                 @Override
-                public void onClosePanel(int panel) {
-                    switch (panel) {
-                        case PanelCallback.TALK_PANEL_MSG:
-                        case PanelCallback.TALK_PANEL_CONTACT:
-                            mTalkPanel.close(mDrawerLayout, mRightDrawer);
-                            break;
-                    }
+                public void onPanelClosed(int panel) {
+
+                }
+
+                @Override
+                public void switchPanel(int panel) {
+                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+                    openInviteFriend();
                 }
             });
         }
@@ -527,11 +560,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * 打开通知消息
      */
     private void openAllMessage() {
-        if (mMessagePanel == null) {
-            mMessagePanel = new MessagePanel(this);
+        if (mNotifyMsgPanel == null) {
+            mNotifyMsgPanel = new NotifyMsgPanel(this, mTicket);
         }
-        mMessagePanel.show(mDrawerLayout, mRightDrawer);
-        mOpenedPanel = mMessagePanel;
+        mNotifyMsgPanel.show(mDrawerLayout, mRightDrawer);
+        mOpenedPanel = mNotifyMsgPanel;
     }
 
     /**
