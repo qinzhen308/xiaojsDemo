@@ -56,4 +56,7 @@ public class SecurityRequest extends ServiceRequest {
         Call<AuthenticateStatus> call = getService().checkSession();
         enqueueRequest(APIType.CHECK_SESSION,call);
     }
+
+
+
 }
