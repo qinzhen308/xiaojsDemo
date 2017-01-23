@@ -38,9 +38,7 @@ public class LoginDataManager {
             return;
         }
 
-        String session = AccountPref.getAuthToken(context);
-        String token = SecurityPref.getCSRFToken(context);
-        if (TextUtils.isEmpty(token) || TextUtils.isEmpty(session)) {
+        if (SecurityManager.needCheckSession(context)) {
 
             if(XiaojsConfig.DEBUG){
                 Logger.d("the token or session is null, so check session first");
