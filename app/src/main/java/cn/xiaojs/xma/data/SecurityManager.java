@@ -2,10 +2,12 @@ package cn.xiaojs.xma.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.SecurityRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
@@ -40,6 +42,23 @@ public class SecurityManager {
             SecurityPref.setPermission(context,p.getPermission(),granted);
 
         }
+    }
+
+    /**
+     * 是否需要check session
+     * @param context
+     * @return
+     */
+    public static boolean needCheckSession(Context context) {
+
+        String session = AccountPref.getAuthToken(context);
+        String token = SecurityPref.getCSRFToken(context);
+        if (TextUtils.isEmpty(token) || TextUtils.isEmpty(session)) {
+            return true;
+        }
+
+        return false;
+
     }
 
     /**
