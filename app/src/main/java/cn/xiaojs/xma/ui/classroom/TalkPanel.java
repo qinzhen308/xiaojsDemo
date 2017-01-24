@@ -256,7 +256,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         mManageContact.setOnClickListener(this);
         mDelPeerTalkBtn.setOnClickListener(this);
         mMultiTalkTab.setOnClickListener(this);
-        mTeachTalkTitle.setOnClickListener(this);
+        mTeachingTalkTab.setOnClickListener(this);
         mPeerTalkTab.setOnClickListener(this);
         mMsgSendTv.setOnClickListener(this);
         mSearchBtn.setOnClickListener(this);
