@@ -97,11 +97,11 @@ public class TextWriting extends Doodle {
 
         canvas.save();
 
-        float baseX = mTextBasePoint.x;
-        float baseY = mTextBasePoint.y;
+        float baseX = mTextBasePoint.x * mDrawScale;
+        float baseY = mTextBasePoint.y * mDrawScale;
 
         if (mTextOrientation == TEXT_HORIZONTAL) {
-            float singleH = mSingleLineTextHeight;
+            float singleH = mSingleLineTextHeight * mDrawScale;
 
             canvas.concat(mTransformMatrix);
             mDrawingMatrix.postConcat(mTransformMatrix);
@@ -111,7 +111,7 @@ public class TextWriting extends Doodle {
                 canvas.drawText(singleLineText, baseX, baseY + singleH * i, getPaint());
             }
         } else {
-            float singleW = mSingleLineTextWidth;
+            float singleW = mSingleLineTextWidth * mDrawScale;
             canvas.concat(mTransformMatrix);
             mDrawingMatrix.postConcat(mTransformMatrix);
             String singleLineText;

@@ -46,6 +46,14 @@ public class WhiteboardLayer {
      * 是否可以向服务器发送白板绘制命令
      */
     private boolean isCanSend;
+    /**
+     * layer的宽
+     */
+    private int width;
+    /**
+     * layer的高
+     */
+    private int height;
 
     public WhiteboardLayer() {
         mWhiteboardId = UUID.randomUUID().toString();
@@ -122,5 +130,21 @@ public class WhiteboardLayer {
 
     public void incrementGroupId() {
         mRecordGroupId++;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

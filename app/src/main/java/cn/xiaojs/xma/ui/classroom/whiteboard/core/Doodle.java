@@ -77,6 +77,8 @@ public abstract class Doodle implements Transformation {
     protected List<ActionRecord> mRedoRecords;
     private int mVisibility = View.VISIBLE;
 
+    protected float mDrawScale = 1.0f;
+
     protected Doodle(Whiteboard whiteboard, int style) {
         mDoodleId = Utils.buildDoodleId();
         mWhiteboard = whiteboard;
@@ -209,6 +211,10 @@ public abstract class Doodle implements Transformation {
 
     public RectF getDoodleRect() {
         return mDoodleRect;
+    }
+
+    public void setDrawScale(float drawScale) {
+        mDrawScale = drawScale;
     }
 
     //==========================getter and setter==========================================

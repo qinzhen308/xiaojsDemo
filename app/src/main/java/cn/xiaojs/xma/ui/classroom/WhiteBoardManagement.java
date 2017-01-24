@@ -3,9 +3,11 @@ package cn.xiaojs.xma.ui.classroom;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -24,7 +26,9 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.document.DocumentActivity;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardProcessor;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -79,7 +83,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
     public void onDetach() {
         super.onDetach();
         if (mContext instanceof ClassroomActivity) {
-            ((ClassroomActivity)mContext).updateWhiteboardCollCountStyle();
+            ((ClassroomActivity) mContext).updateWhiteboardCollCountStyle();
         }
         if (mWbAdapter != null) {
             mWbAdapter.exitRemoveMode(false);
@@ -143,7 +147,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         mGridView.setNumColumns(NUM_COLUMN);
 
         mCoverWidth = (mScreenWidth - 2 * gdMargin - (NUM_COLUMN - 1) * mHorizontalPadding) / 4 - (coverMargin + contentMargin) * 2;
-        mCOverHeight =  (int)(0.75f * mCoverWidth);
+        mCOverHeight = (int) (0.75f * mCoverWidth);
     }
 
     private void initData() {
@@ -165,7 +169,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Object obj = mWbAdapter.getItem(position);
         if (obj instanceof WhiteboardCollection) {
-            ((ClassroomActivity)mContext).onSwitchWhiteboardCollection((WhiteboardCollection)obj);
+            ((ClassroomActivity) mContext).onSwitchWhiteboardCollection((WhiteboardCollection) obj);
             WhiteBoardManagement.this.dismiss();
         }
     }
@@ -197,7 +201,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                         wbColl.addWhiteboardLayer(layer);
                     }
                     if (mContext instanceof ClassroomActivity) {
-                        ((ClassroomActivity)mContext).onAddWhiteboardCollection(wbColl);
+                        ((ClassroomActivity) mContext).onAddWhiteboardCollection(wbColl);
                     }
                     mWbAdapter.notifyDataSetChanged();
                     break;
@@ -225,15 +229,18 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         }
     };
 
-    private class WbAdapter extends BaseAdapter implements View.OnClickListener{
+    private class WbAdapter extends BaseAdapter implements View.OnClickListener {
         private ArrayList<WhiteboardCollection> mWbCollList;
         private boolean mRemoveMode = false;
+        private int mWhiteColor;
 
         public WbAdapter() {
+            mWhiteColor = mContext.getResources().getColor(R.color.white);
         }
 
         public WbAdapter(ArrayList<WhiteboardCollection> list) {
             mWbCollList = list;
+            mWhiteColor = mContext.getResources().getColor(R.color.white);
         }
 
         public void setData(ArrayList<WhiteboardCollection> list) {
@@ -280,7 +287,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                 convertView = createView();
             }
 
-            holder = (Holder)convertView.getTag();
+            holder = (Holder) convertView.getTag();
 
             bindData(holder, position);
             return convertView;
@@ -312,7 +319,13 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         private void bindData(Holder holder, int pos) {
             WhiteboardCollection wbColl = mWbCollList.get(pos);
             holder.title.setText(wbColl.isLive() ? mLiveWhiteboardName : wbColl.getName());
-            holder.cover.setBackgroundColor(Color.GRAY);
+            holder.cover.setBackgroundColor(mWhiteColor);
+            holder.cover.setTag(pos);
+            if (wbColl.isDefaultWhiteboard()) {
+                new LoadDefaultWhiteboardTask(holder.cover, pos).execute(wbColl);
+                //Bitmap bmp = WhiteboardProcessor.process(wbColl, mCoverWidth, mCOverHeight);
+                //holder.cover.setImageBitmap(bmp);
+            }
 
             if (!mRemoveMode || (wbColl.isLive() && mUser == Constants.User.STUDENT)) {
                 holder.removeBtn.setVisibility(View.GONE);
@@ -334,11 +347,41 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                     break;
             }
         }
+
+        private class Holder {
+            public TextView title;
+            public ImageView cover;
+            public ImageView removeBtn;
+        }
+
+        private class LoadDefaultWhiteboardTask extends AsyncTask<WhiteboardCollection, Integer, Bitmap> {
+            private ImageView mCoverImg;
+            private int mPos;
+
+            public LoadDefaultWhiteboardTask(ImageView imgV, int pos) {
+                mCoverImg = imgV;
+                mPos = pos;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                int refreshPos = (Integer)mCoverImg.getTag();
+                if (mCoverImg != null && refreshPos == mPos) {
+                    mCoverImg.setImageBitmap(bitmap);
+                } else {
+                    mCoverImg.setImageBitmap(null);
+                }
+            }
+
+            @Override
+            protected Bitmap doInBackground(WhiteboardCollection... params) {
+                if (params == null || params.length == 0) {
+                    return null;
+                }
+
+                return WhiteboardProcessor.process(params[0], mCoverWidth, mCOverHeight);
+            }
+        }
     }
 
-    private static class Holder {
-        public TextView title;
-        public ImageView cover;
-        public ImageView removeBtn;
-    }
 }
