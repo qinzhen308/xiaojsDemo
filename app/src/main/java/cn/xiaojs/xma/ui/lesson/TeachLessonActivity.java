@@ -14,7 +14,9 @@ package cn.xiaojs.xma.ui.lesson;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -23,8 +25,13 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
+import cn.xiaojs.xma.ui.view.CommonPopupMenu;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 
 public class TeachLessonActivity extends BaseActivity {
 
@@ -48,6 +55,7 @@ public class TeachLessonActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_teach_lesson);
+        setRightImage(R.drawable.add_selector);
         needHeaderDivider(false);
         setMiddleTitle(R.string.course_of_teach);
         mAdapter = new TeachLessonAdapter(this, mList);
@@ -55,7 +63,7 @@ public class TeachLessonActivity extends BaseActivity {
         mSearch.setHint("课程名称");
     }
 
-    @OnClick({R.id.left_image, R.id.course_filter})
+    @OnClick({R.id.left_image, R.id.course_filter,R.id.right_image})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_image:
@@ -64,6 +72,56 @@ public class TeachLessonActivity extends BaseActivity {
             case R.id.course_filter:
                 //TODO FILTER
                 filter();
+                break;
+            case R.id.right_image:
+                CommonPopupMenu menu = new CommonPopupMenu(this);
+                String[] items = getResources().getStringArray(R.array.my_course_list);
+                menu.addTextItems(items);
+                menu.addImgItems(new Integer[]{R.drawable.open_course_selector});
+                menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        handleRightClick(i);
+                    }
+                });
+                int offset = getResources().getDimensionPixelSize(R.dimen.px68);
+                menu.show(mBaseHeader,offset);
+                break;
+        }
+    }
+
+    private void handleRightClick(int position){
+        switch (position){
+            case 0://我要开课
+                if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)){
+                    //老师可以开课
+                    Intent intent = new Intent(this,LessonCreationActivity.class);
+                    startActivityForResult(intent,CourseConstant.CODE_CREATE_LESSON);
+                }else {
+                    //提示申明教学能力
+                    final CommonDialog dialog = new CommonDialog(this);
+                    dialog.setTitle(R.string.declare_teaching_ability);
+                    dialog.setDesc(R.string.declare_teaching_ability_tip);
+                    dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                        @Override
+                        public void onClick() {
+                            dialog.dismiss();
+                            Intent intent = new Intent(TeachLessonActivity.this, TeachAbilityDemoActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                        @Override
+                        public void onClick() {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
+                break;
+            case 1://加入私密课
+                break;
+            default:
                 break;
         }
     }
