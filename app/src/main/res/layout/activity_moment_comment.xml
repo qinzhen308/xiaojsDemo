@@ -35,7 +35,7 @@
         <Button
                 android:id="@+id/moment_comment_send"
                 android:textSize="@dimen/font_28px"
-                android:textColor="@color/font_black"
+                android:textColor="@color/font_blue"
                 android:minWidth="@dimen/px100"
                 android:paddingTop="@dimen/px5"
                 android:paddingBottom="@dimen/px5"
@@ -44,7 +44,7 @@
                 android:layout_marginRight="@dimen/px30"
                 android:layout_marginTop="@dimen/px15"
                 android:layout_marginBottom="@dimen/px15"
-                android:background="@drawable/moment_comment_selector"
+                android:background="@null"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
     </LinearLayout>

@@ -7,7 +7,7 @@
               android:layout_height="match_parent">
 
     <RelativeLayout
-            android:layout_marginTop="@dimen/px30"
+            android:layout_marginTop="@dimen/px20"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginRight="@dimen/px30"
             android:layout_width="match_parent"
@@ -19,13 +19,13 @@
                 android:src="@drawable/default_portrait"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
-                android:layout_width="@dimen/px100"
-                android:layout_height="@dimen/px100"/>
+                android:layout_width="@dimen/px80"
+                android:layout_height="@dimen/px80"/>
 
         <TextView
                 android:id="@+id/moment_comment_praise"
                 android:textColor="@color/common_text"
-                android:textSize="@dimen/font_26px"
+                android:textSize="@dimen/font_24px"
                 android:drawableLeft="@drawable/ic_praise_off"
                 android:drawablePadding="@dimen/px5"
                 android:layout_alignParentRight="true"
@@ -45,7 +45,7 @@
 
             <TextView
                     android:id="@+id/moment_comment_name"
-                    android:textSize="@dimen/font_30px"
+                    android:textSize="@dimen/font_26px"
                     android:textColor="@color/font_black"
                     android:text="张星星"
                     android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
 
             <TextView
                     android:id="@+id/moment_comment_time"
-                    android:textSize="@dimen/font_26px"
+                    android:textSize="@dimen/font_24px"
                     android:textColor="@color/common_text"
                     android:layout_marginTop="@dimen/px5"
                     android:layout_width="wrap_content"
@@ -64,19 +64,19 @@
 
     <TextView
             android:id="@+id/moment_comment_reply"
-            android:textSize="@dimen/font_30px"
+            android:textSize="@dimen/font_26px"
             android:textColor="@color/common_text"
             android:layout_marginTop="@dimen/px5"
-            android:layout_marginLeft="@dimen/px160"
+            android:layout_marginLeft="@dimen/px140"
             android:layout_marginRight="@dimen/px30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     <TextView
             android:id="@+id/moment_comment_content"
-            android:textSize="@dimen/font_30px"
+            android:textSize="@dimen/font_26px"
             android:textColor="@color/font_black"
-            android:layout_marginLeft="@dimen/px160"
+            android:layout_marginLeft="@dimen/px140"
             android:layout_marginRight="@dimen/px30"
             android:layout_marginTop="@dimen/px10"
             android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
 
     <View
             style="@style/DividerHorizontal"
-            android:layout_marginTop="@dimen/px30"
-            android:layout_marginLeft="@dimen/px160"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_marginLeft="@dimen/px140"
             android:layout_marginRight="@dimen/px30"/>
 </LinearLayout>
