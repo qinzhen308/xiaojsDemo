@@ -34,6 +34,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
@@ -199,6 +200,8 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
     private Drawable mShadowRight = null;
 
     private final ArrayList<View> mNonDrawerViews;
+    // Distance to travel before a drag may begin
+    private int mTouchSlop;
 
     /**
      * Listener for monitoring events about drawers.
@@ -374,6 +377,8 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
         mDrawerElevation = DRAWER_ELEVATION * density;
 
         mNonDrawerViews = new ArrayList<View>();
+        final ViewConfiguration vc = ViewConfiguration.get(context);
+        mTouchSlop = vc.getScaledTouchSlop();
     }
 
     /**
@@ -1405,6 +1410,9 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
         return false;
     }
 
+    private float mDownX;
+    private float mDownY;
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         final int action = MotionEventCompat.getActionMasked(ev);
@@ -1449,7 +1457,32 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
             }
         }
 
-        return interceptForDrag || interceptForTap || hasPeekingDrawer() || mChildrenCanceledTouch;
+
+        //boolean intercept = interceptForDrag || interceptForTap || hasPeekingDrawer() || mChildrenCanceledTouch;
+        //return intercept;
+
+        //add by hy
+        switch (MotionEvent.ACTION_MASK & ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mDownX = ev.getX();
+                mDownY = ev.getY();
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                if (Math.abs(ev.getX() - mDownX) > Math.abs(ev.getY() - mDownY) &&
+                        Math.abs(ev.getX() - mDownX)  > mTouchSlop) {
+                    return true;
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                break;
+            default:
+                break;
+        }
+
+        return interceptForTap || hasPeekingDrawer() || mChildrenCanceledTouch || false;
     }
 
     @Override
