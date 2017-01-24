@@ -26,18 +26,25 @@ public class WhiteboardAdapter extends PagerAdapter {
     private List<WhiteboardLayer> mLayers;
     private OnWhiteboardListener mOnWhiteboardListener;
     private Whiteboard mCurrWhiteboard;
+    private WhiteboardCollection mWhiteboardCollection;
 
     public WhiteboardAdapter(Context context) {
         mContext = context;
     }
 
-    public void setData(List<WhiteboardLayer> layers) {
-        setData(layers, 0);
-    }
-
-    public void setData(List<WhiteboardLayer> layers, int index) {
+    private void setLayers(List<WhiteboardLayer> layers, int index) {
         mLayers = layers;
         refreshData(layers, index);
+    }
+
+    public void setData(WhiteboardCollection wbColl) {
+        mWhiteboardCollection = wbColl;
+        setLayers(wbColl.getWhiteboardLayer(), wbColl.getCurrIndex());
+    }
+
+    public void setData(WhiteboardCollection wbColl, int index) {
+        mWhiteboardCollection = wbColl;
+        setLayers(wbColl.getWhiteboardLayer(), index);
     }
 
     @Override
@@ -85,6 +92,7 @@ public class WhiteboardAdapter extends PagerAdapter {
         if (object instanceof WhiteboardLayout) {
             WhiteboardLayout wbLayout = (WhiteboardLayout)object;
             Whiteboard wb = wbLayout.getWhiteboard();
+            mWhiteboardCollection.setCurrIndex(position);
             if (mOnWhiteboardListener != null) {
                 mCurrWhiteboard = wb;
                 mOnWhiteboardListener.onWhiteboardSelected(wb);
@@ -98,7 +106,7 @@ public class WhiteboardAdapter extends PagerAdapter {
 
     private void refreshData(List<WhiteboardLayer> layers, int index) {
         if (mCurrWhiteboard != null && layers != null && layers.size() > index) {
-            mCurrWhiteboard.setLayer(layers.get(0));
+            mCurrWhiteboard.setLayer(layers.get(index));
         }
     }
 

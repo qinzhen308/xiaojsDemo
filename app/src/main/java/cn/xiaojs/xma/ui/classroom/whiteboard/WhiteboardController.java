@@ -33,7 +33,6 @@ import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
-import cn.xiaojs.xma.ui.classroom.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.live.view.CutView;
 import cn.xiaojs.xma.ui.classroom.live.view.SurfaceCaptureView;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
@@ -589,14 +588,18 @@ public class WhiteboardController implements
                     mLiveLayout.setVisibility(View.GONE);
                     mSyncWhiteboard.setVisibility(View.GONE);
                     mWhiteboardSv.setVisibility(View.VISIBLE);
-                    mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
+                    mWhiteboardAdapter.setData(wbColl);
                     mWhiteboardAdapter.notifyDataSetChanged();
+                    int index = wbColl.getCurrIndex();
                     mWhiteboardSv.setAdapter(mWhiteboardAdapter);
+                    mWhiteboardSv.setCurrentItem(index);
                 }
             } else {
-                mWhiteboardAdapter.setData(wbColl.getWhiteboardLayer());
+                mWhiteboardAdapter.setData(wbColl);
                 mWhiteboardAdapter.notifyDataSetChanged();
+                int index = wbColl.getCurrIndex();
                 mWhiteboardSv.setAdapter(mWhiteboardAdapter);
+                mWhiteboardSv.setCurrentItem(index);
             }
         }
     }

@@ -40,9 +40,9 @@ import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
-import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -305,8 +305,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (ctlSession != null) {
                     mCtlSession = ctlSession;
                     mUser = getUser(ctlSession.psType);
+                    //mUser = Constants.User.STUDENT;
                     mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
                     mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
+                    //mAppType = Platform.AppType.WEB_CLASSROOM;
 
                     //init socket
                     initSocketIO(mTicket, ctlSession.secret);
@@ -964,6 +966,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     public void updateWhiteboardCollCountStyle() {
+        if (mWhiteboardController == null) {
+            return;
+        }
+
         List<WhiteboardCollection> collections = mWhiteboardController.getWhiteboardCollectionList();
         int wbCollSize = collections != null ? collections.size() : 0;
         updateWhiteboardCollCountStyle(wbCollSize);

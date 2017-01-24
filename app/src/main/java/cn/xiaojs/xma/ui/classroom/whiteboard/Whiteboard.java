@@ -361,6 +361,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     public void setLayer(WhiteboardLayer layer) {
+        layer.setWidth(mBlackboardWidth);
+        layer.setHeight(mBlackboardHeight);
+
         mLayer = layer;
         mAllDoodles = layer.getAllDoodles();
         mReDoStack = layer.getReDoStack();
@@ -1005,6 +1008,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mDoodleCanvas == null) {
             int w = mBlackboardWidth;
             int h = mBlackboardHeight;
+            mLayer.setWidth(mBlackboardWidth);
+            mLayer.setHeight(mBlackboardHeight);
+
             mDoodleBitmap = mDoodleBitmapPool != null ? mDoodleBitmapPool.getBitmap(w, h) : null;
             if (mDoodleBitmap == null) {
                 mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);

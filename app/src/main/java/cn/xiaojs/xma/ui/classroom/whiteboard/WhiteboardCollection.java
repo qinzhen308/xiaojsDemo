@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.whiteboard;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -20,8 +20,6 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
-
 public class WhiteboardCollection implements Parcelable{
     public final static int DEFAULT = 1;
     public final static int COURSE_WARE = 2;
@@ -40,6 +38,7 @@ public class WhiteboardCollection implements Parcelable{
     private String url;
     private String coverUrl;
     private List<WhiteboardLayer> whiteboardLayer;
+    private int currIndex = 0;
 
     public WhiteboardCollection() {
         whiteboardLayer = new ArrayList<WhiteboardLayer>();
@@ -102,6 +101,14 @@ public class WhiteboardCollection implements Parcelable{
         return whiteboardLayer;
     }
 
+    public int getCurrIndex() {
+        return currIndex;
+    }
+
+    public void setCurrIndex(int index) {
+        currIndex = index;
+    }
+
     public void addWhiteboardLayer(WhiteboardLayer layer) {
         if (layer != null) {
             layer.setIsLive(isLive);
@@ -133,6 +140,7 @@ public class WhiteboardCollection implements Parcelable{
         dest.writeString(name);
         dest.writeString(url);
         dest.writeString(coverUrl);
+        dest.writeInt(currIndex);
     }
 
     private WhiteboardCollection(Parcel in) {
@@ -155,6 +163,7 @@ public class WhiteboardCollection implements Parcelable{
         name = in.readString();
         url = in.readString();
         coverUrl = in.readString();
+        currIndex = in.readInt();
     }
 
     public boolean isDefaultWhiteboard() {
