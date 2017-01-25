@@ -202,6 +202,7 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
     private final ArrayList<View> mNonDrawerViews;
     // Distance to travel before a drag may begin
     private int mTouchSlop;
+    private boolean mOnDrawOpened;
 
     /**
      * Listener for monitoring events about drawers.
@@ -820,6 +821,8 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                 }
             }
 
+            mOnDrawOpened = false;
+
             updateChildrenImportantForAccessibility(drawerView, false);
 
             // Only send WINDOW_STATE_CHANGE if the host has window focus. This
@@ -846,6 +849,7 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                     mListeners.get(i).onDrawerOpened(drawerView);
                 }
             }
+            mOnDrawOpened = true;
 
             updateChildrenImportantForAccessibility(drawerView, true);
 
@@ -1410,9 +1414,6 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
         return false;
     }
 
-    private float mDownX;
-    private float mDownY;
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         final int action = MotionEventCompat.getActionMasked(ev);
@@ -1458,19 +1459,19 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
         }
 
 
-        //boolean intercept = interceptForDrag || interceptForTap || hasPeekingDrawer() || mChildrenCanceledTouch;
-        //return intercept;
+        //return interceptForDrag || interceptForTap || hasPeekingDrawer() || mChildrenCanceledTouch;
 
         //add by hy
-        switch (MotionEvent.ACTION_MASK & ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mDownX = ev.getX();
-                mDownY = ev.getY();
-                break;
+        boolean intercept = interceptForDrag || interceptForTap || hasPeekingDrawer() || mChildrenCanceledTouch;
 
+        if (!mOnDrawOpened) {
+            return intercept;
+        }
+
+        switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_MOVE:
-                if (Math.abs(ev.getX() - mDownX) > Math.abs(ev.getY() - mDownY) &&
-                        Math.abs(ev.getX() - mDownX)  > mTouchSlop) {
+                if (Math.abs(ev.getX() - mInitialMotionX) > Math.abs(ev.getY() - mInitialMotionX) &&
+                        Math.abs(ev.getX() - mInitialMotionX)  > mTouchSlop) {
                     return true;
                 }
                 break;

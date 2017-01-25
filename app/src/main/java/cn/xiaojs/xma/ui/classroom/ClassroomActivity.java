@@ -388,7 +388,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
-        if (wbColl != null) {
+        if (wbColl != null && mWhiteboardController != null) {
             if (mUser == Constants.User.STUDENT) {
                 if (wbColl.isLive()) {
                     mWhiteBoardPanel.setVisibility(View.GONE);
@@ -595,7 +595,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * 打开关闭白板工具栏 若正在动画，直接返回 1.若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板 否则，直接隐藏或显示白板操作面板
      */
     private void switchWhiteBoardToolbar() {
-        if (mAnimating) {
+        if (mAnimating || mWhiteboardController == null) {
             return;
         }
 
@@ -709,10 +709,18 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     private void saveWhiteboard() {
+        if (mWhiteboardController == null) {
+            return;
+        }
+
         mWhiteboardController.saveWhiteboard();
     }
 
     private void setWhiteboardMainScreen() {
+        if (mWhiteboardController == null) {
+            return;
+        }
+
         mWhiteboardController.setWhiteboardMainScreen();
     }
 
@@ -947,6 +955,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     public boolean isSyncWhiteboard() {
+        if (mWhiteboardController == null) {
+            return false;
+        }
+
         return mWhiteboardController.isSyncWhiteboard();
     }
 
@@ -954,6 +966,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * 白板管理界面添加新的白板回调
      */
     public void onAddWhiteboardCollection(WhiteboardCollection collection) {
+        if (mWhiteboardController == null) {
+            return;
+        }
+
         int size = mWhiteboardController.addToWhiteboardCollectionList(collection);
         updateWhiteboardCollCountStyle(size);
     }
