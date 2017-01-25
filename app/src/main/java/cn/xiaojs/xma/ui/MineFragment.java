@@ -40,7 +40,7 @@ import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.certification.CertificationActivity;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.mine.ProfileActivity;
@@ -97,7 +97,7 @@ public class MineFragment extends BaseFragment {
                 startActivity(new Intent(mContext, EnrollLessonActivity.class));
                 break;
             case R.id.my_document_layout:
-                startActivity(new Intent(mContext, ClassroomActivity.class));
+                startActivity(new Intent(mContext, MaterialActivity.class).putExtra(MaterialActivity.KEY_IS_MINE,true));
                 break;
             case R.id.my_favorites_layout:
                 break;

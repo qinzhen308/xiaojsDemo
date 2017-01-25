@@ -37,13 +37,17 @@ public class MaterialActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_material);
-        setMiddleTitle(R.string.data_bank);
         setRightImage(R.drawable.upload_selector);
         Intent intent = getIntent();
         if (intent != null) {
             mIsMine = intent.getBooleanExtra(KEY_IS_MINE, false);
         }
-        mAdapter = new MaterialAdapter(this, mList);
+        if (mIsMine){
+            setMiddleTitle(R.string.data_bank_of_mine);
+        }else {
+            setMiddleTitle(R.string.data_bank);
+        }
+        mAdapter = new MaterialAdapter(this, mList,mIsMine);
         mList.setAdapter(mAdapter);
     }
 

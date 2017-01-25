@@ -33,14 +33,20 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 
 public class MaterialAdapter extends AbsSwipeAdapter<Date, MaterialAdapter.Holder> {
 
+    private boolean mIsMine;
 
-    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView) {
+    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView,boolean isMine) {
         super(context, listView);
+        mIsMine = isMine;
     }
 
     @Override
     protected void setViewContent(final Holder holder, Date bean, int position) {
         holder.showOpera(false);
+        if (mIsMine){
+            holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.share_selector,0,0);
+            holder.opera2.setText(R.string.share);
+        }
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
