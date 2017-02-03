@@ -1470,7 +1470,7 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_MOVE:
-                if (Math.abs(ev.getX() - mInitialMotionX) > Math.abs(ev.getY() - mInitialMotionX) &&
+                if (Math.abs(ev.getX() - mInitialMotionX) > Math.abs(ev.getY() - mInitialMotionY) &&
                         Math.abs(ev.getX() - mInitialMotionX)  > mTouchSlop) {
                     return true;
                 }
@@ -1483,7 +1483,7 @@ public class DrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                 break;
         }
 
-        return interceptForTap || hasPeekingDrawer() || mChildrenCanceledTouch || false;
+        return interceptForTap || hasPeekingDrawer() || mChildrenCanceledTouch;
     }
 
     @Override
