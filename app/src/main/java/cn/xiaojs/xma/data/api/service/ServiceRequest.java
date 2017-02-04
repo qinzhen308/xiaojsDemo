@@ -394,7 +394,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 if (cache) {
 
                     okhttp3.Response res = response.raw().networkResponse();
-                    if (res.code() == NOT_MODIFIED) {
+                    if (res !=null && res.code() == NOT_MODIFIED) {
 
                         if (XiaojsConfig.DEBUG) {
                             Logger.d("network data equals cache data,so return");
