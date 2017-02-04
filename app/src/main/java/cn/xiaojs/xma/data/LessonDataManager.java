@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Xu;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.LessonRequest;
 import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -150,6 +151,12 @@ public class LessonDataManager {
     }
 
 
+    /**
+     * 上传课程封面图片
+     * @param context
+     * @param filePath
+     * @param qiniuService
+     */
     public static void requestUploadCover(Context context,
                                           @NonNull final String filePath,
                                           @NonNull QiniuService qiniuService) {
@@ -174,11 +181,8 @@ public class LessonDataManager {
 //            return;
 //        }
 
-        UpTokenParam param = new UpTokenParam();
-        param.type = Xu.TokenType.LESSON_COVER;
-
         QiniuRequest qiniuRequest = new QiniuRequest(context, filePath, qiniuService);
-        qiniuRequest.getToken(param);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.COVER_OF_CTL,1);
 
     }
 

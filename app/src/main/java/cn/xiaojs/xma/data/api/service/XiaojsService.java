@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
+import cn.xiaojs.xma.model.Collaboration.TokenPair;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
@@ -106,9 +107,9 @@ public interface XiaojsService {
 //                                        @Path("lesson") String lesson);
 
     //Get upToken
-    @Headers("Content-Type: application/json")
-    @POST("/v1/files/up_token")
-    Call<UpToken[]> getUpToken(@Body UpTokenParam... tokenParam);
+//    @Headers("Content-Type: application/json")
+//    @POST("/v1/files/up_token")
+//    Call<UpToken[]> getUpToken(@Body UpTokenParam... tokenParam);
 
     //Get Center Data
     @GET("/v1/accounts/center")
@@ -355,6 +356,14 @@ public interface XiaojsService {
                                                       @Path("pagination") String pagination);
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Collaborations
+    //
+
+    //Get Upload Tokens
+    @GET("/v1/collaboration/uploadtokens/{type}/{quantity}")
+    Call<TokenPair[]>getUploadTokens(@Path("type") int type, @Path("quantity") int quantity);
 
 
 }

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.TokenResponse;
-import cn.xiaojs.xma.model.account.UpToken;
-import cn.xiaojs.xma.model.account.UpTokenParam;
+import cn.xiaojs.xma.model.Collaboration.TokenPair;
 
 import com.orhanobut.logger.Logger;
 import com.qiniu.android.common.ServiceAddress;
@@ -24,17 +24,18 @@ import org.json.JSONObject;
  * Created by maxiaobao on 2016/11/15.
  */
 
-public class QiniuRequest implements APIServiceCallback<UpToken[]>{
+public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
 
-    private AccountRequest accountRequest;
+    private CollaRequest collaRequest;
     private String filePath;
     private QiniuService qiniuService;
+    private int type;
 
 
     public QiniuRequest(Context context,String filePath,QiniuService service) {
         this.filePath = filePath;
         this.qiniuService = service;
-        this.accountRequest = new AccountRequest(context,this);
+        this.collaRequest = new CollaRequest(context,this);
     }
 
 
@@ -43,9 +44,10 @@ public class QiniuRequest implements APIServiceCallback<UpToken[]>{
 //        accountRequest.getCoverUpToken(sessionID,lesson);
 //    }
 //
-    public void getToken(UpTokenParam... params) {
+    public void getToken(int type, int quantity) {
 
-        accountRequest.getUpToken(params);
+        this.type = type;
+        collaRequest.getUploadTokens(type, quantity);
 
     }
 
@@ -53,8 +55,7 @@ public class QiniuRequest implements APIServiceCallback<UpToken[]>{
     //Connect qiniu server and upload file
     //
 
-    private void uploadFile(final String domain,
-                            @NonNull final String filePath,
+    private void uploadFile(@NonNull final String filePath,
                             @NonNull String uploadKey,
                             @NonNull String uploadToken,
                             @NonNull final QiniuService callback){
@@ -70,7 +71,7 @@ public class QiniuRequest implements APIServiceCallback<UpToken[]>{
                     Logger.d("qiniu:%s", key + ",\r\n " + info + ",\r\n " + response);
                 }
 
-                if (accountRequest.getServiceCallback() == null) {
+                if (collaRequest.getServiceCallback() == null) {
 
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("the API service callback is now null, so don't send callback and return");
@@ -83,11 +84,7 @@ public class QiniuRequest implements APIServiceCallback<UpToken[]>{
                 if (info.isOK()){
                     if (callback != null) {
 
-                        StringBuilder fileUrl = new StringBuilder(domain)
-                                .append(key);
-
-
-                        callback.uploadSuccess(key,fileUrl.toString());
+                        callback.uploadSuccess(key,null);
                     }
                 }else{
                     if (callback != null) {
@@ -127,14 +124,14 @@ public class QiniuRequest implements APIServiceCallback<UpToken[]>{
     //
 
     @Override
-    public void onSuccess(UpToken[] upTokens) {
+    public void onSuccess(TokenPair[] tokenPairs) {
 
 
 
-        if(upTokens == null || upTokens.length <= 0) {
+        if(tokenPairs == null || tokenPairs.length <= 0) {
 
             if (XiaojsConfig.DEBUG) {
-                Logger.d("0 get upload for token is null or lenght == 0");
+                Logger.d("get upload for token is null or lenght = 0");
             }
 
             if (qiniuService!=null){
@@ -144,14 +141,13 @@ public class QiniuRequest implements APIServiceCallback<UpToken[]>{
             return;
         }
 
-        UpToken upToken = upTokens[0];
-
-        UpToken.TokenValue[] values;
-
-        if (upToken ==null || (values = upToken.tokens) == null || values.length <= 0) {
+        //因为目前所有的上传只支持一次上传一个文件，所以只要取第一个token即可。
+        TokenPair tokenPair = tokenPairs[0];
+        if (tokenPair == null) {
             if (XiaojsConfig.DEBUG) {
-                Logger.d("1 get upload for token is null or lenght == 0");
+                Logger.d("get upload for tokenpair is null");
             }
+
             if (qiniuService!=null){
                 qiniuService.uploadFailure();
             }
@@ -159,16 +155,15 @@ public class QiniuRequest implements APIServiceCallback<UpToken[]>{
             return;
         }
 
-        UpToken.TokenValue tokenValue = values[0];
 
-        String token = tokenValue.token;
-        String key = tokenValue.key;
-        String domain = upToken.domain;
+        String token = tokenPair.token;
+        String key = tokenPair.key;
+        //String domain = upToken.domain;
 
         if (XiaojsConfig.DEBUG) {
-            Logger.d("get upload for token onSuccess token=%s,key=%s,domain=%s",token,key,domain);
+            Logger.d("get upload for token onSuccess token=%s,key=%s",token,key);
         }
-        uploadFile(domain,filePath,key,token,qiniuService);
+        uploadFile(filePath,key,token,qiniuService);
 
     }
 

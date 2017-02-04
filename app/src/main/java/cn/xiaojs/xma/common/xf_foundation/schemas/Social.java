@@ -1,6 +1,8 @@
 package cn.xiaojs.xma.common.xf_foundation.schemas;
 
 
+import cn.xiaojs.xma.common.xf_foundation.Constants;
+
 /**
  * Created by maxiaobao on 2016/12/26.
  */
@@ -188,5 +190,24 @@ public class Social {
         public static final String PERSON = "Person";
         public static final String LESSON = "Lesson";
         public static final String ORGANIZATION = "Organization";
+    }
+
+    /**
+     * Returns the URL to a drawing associated with specific activity.
+     * @param key
+     * @param thumbnailOnly
+     * @return
+     */
+    public static String getDrawing(String key, boolean thumbnailOnly) {
+
+        StringBuilder sb = new StringBuilder(Constants.XCFSUrl)
+                .append("/")
+                .append(key);
+
+        if (thumbnailOnly) {
+            sb.append("?imageView2/0/w/690");
+        }
+
+        return sb.toString();
     }
 }

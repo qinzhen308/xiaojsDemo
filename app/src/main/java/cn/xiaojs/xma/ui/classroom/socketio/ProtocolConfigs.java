@@ -28,7 +28,7 @@ public class ProtocolConfigs {
      */
     public final static int SHAPE_ID_LENGTH = 4;
 
-    //=======================constants for commend======================
+    //=======================Constants for commend======================
     /**
      * 创建一个图形
      */
@@ -79,7 +79,7 @@ public class ProtocolConfigs {
     public final static String CHANGE_COLOR = "C";
 
 
-    //=======================constants for shape=========================
+    //=======================Constants for shape=========================
     /**
      * 随意涂鸦(手绘)
      */

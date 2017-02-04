@@ -11,9 +11,11 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.api.CollaRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.ClaimCompetency;
+import cn.xiaojs.xma.model.Collaboration.TokenPair;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.LessonDetail;
@@ -64,7 +66,7 @@ public class ExampleInstrumentedTest {
         //testCenterData(appContext);
         //testGetData(appContext);
         //testToggleLesson(appContext);
-        //testT(appContext);
+        testT(appContext);
 
 
 //        String json = "{\"1482891322185\":\"xiao peng you\"}";
@@ -80,25 +82,36 @@ public class ExampleInstrumentedTest {
 //        System.out.println("===========:"+cc);
 
 
-
-
     }
 
 
     private void testT(Context context){
 
 
-        SecurityManager.requestHavePrivilege(context, new APIServiceCallback<Privilege[]>() {
+        CollaRequest collaRequest = new CollaRequest(context, new APIServiceCallback<TokenPair[]>() {
             @Override
-            public void onSuccess(Privilege[] object) {
-
+            public void onSuccess(TokenPair[] pairs) {
+                TokenPair tokenPair = pairs[0];
+                System.out.println("key:"+tokenPair.key+", token:"+tokenPair.token);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
 
             }
-        }, Su.Permission.COURSE_OPEN_CREATE);
+        });
+
+//        SecurityManager.requestHavePrivilege(context, new APIServiceCallback<Privilege[]>() {
+//            @Override
+//            public void onSuccess(Privilege[] object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        }, Su.Permission.COURSE_OPEN_CREATE);
 
     }
 

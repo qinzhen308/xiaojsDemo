@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Xu;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.SocialRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -331,7 +332,7 @@ public class SocialManager {
 
 
     /**
-     * upload picture when post actiivty
+     * 上传动态图片
      * @param context
      * @param filePath
      * @param qiniuService
@@ -361,13 +362,8 @@ public class SocialManager {
 //            return;
 //        }
 
-        UpTokenParam param = new UpTokenParam();
-        param.type = Xu.TokenType.SOCIAL;
-        param.quantity = 1;
-
-
         QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
-        qiniuRequest.getToken(param);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.DRAWING_IN_ACTIVITY,1);
 
 
     }

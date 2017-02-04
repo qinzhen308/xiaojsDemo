@@ -104,5 +104,9 @@ public class APIType {
     public static final int GET_TALKS = 81;
     public static final int GET_ATTENDEES = 82;
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Collaborations
+    //
+    public static final int GET_UPLOAD_TOKENS = 9;
 
 }

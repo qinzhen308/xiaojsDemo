@@ -91,10 +91,10 @@ public class AccountRequest extends ServiceRequest {
 //
 //    }
 
-    protected void getUpToken(UpTokenParam... upToken) {
-        Call<UpToken[]> call = getService().getUpToken(upToken);
-        enqueueRequest(GET_UPTOKEN,call);
-    }
+//    protected void getUpToken(UpTokenParam... upToken) {
+//        Call<UpToken[]> call = getService().getUpToken(upToken);
+//        enqueueRequest(GET_UPTOKEN,call);
+//    }
 
     public void getCenterData() {
 

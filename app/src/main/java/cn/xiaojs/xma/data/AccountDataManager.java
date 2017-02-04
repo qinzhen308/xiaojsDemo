@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Xu;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.AccountRequest;
 import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
@@ -262,6 +263,12 @@ public class AccountDataManager {
 //    }
 
 
+    /**
+     * 上传头像
+     * @param context
+     * @param filePath
+     * @param qiniuService
+     */
     public static void requestUploadAvatar(Context context,
                                            @NonNull final String filePath,
                                            @NonNull QiniuService qiniuService) {
@@ -287,14 +294,8 @@ public class AccountDataManager {
 //            return;
 //        }
 
-        UpTokenParam param = new UpTokenParam();
-        param.type = Xu.TokenType.AVATAR;
-        param.quantity = 1;
-
-
         QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
-        qiniuRequest.getToken(param);
-
+        qiniuRequest.getToken(Collaboration.UploadTokenType.AVATAR,1);
 
     }
 

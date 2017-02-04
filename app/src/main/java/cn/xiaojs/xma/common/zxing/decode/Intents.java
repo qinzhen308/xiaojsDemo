@@ -17,7 +17,7 @@
 package cn.xiaojs.xma.common.zxing.decode;
 
 /**
- * This class provides the constants to use when sending an Intent to Barcode
+ * This class provides the Constants to use when sending an Intent to Barcode
  * Scanner. These strings are effectively API and cannot be changed.
  * 
  * @author dswitkin@google.com (Daniel Switkin)

@@ -1,5 +1,8 @@
 package cn.xiaojs.xma.common.xf_foundation.schemas;
 
+import cn.xiaojs.xma.common.xf_foundation.Constants;
+import cn.xiaojs.xma.model.social.Dimension;
+
 /**
  * Created by maxiaobao on 2016/11/4.
  */
@@ -134,6 +137,23 @@ public class Ctl {
 
         public static final String STOPPED = "Stopped";
 
+    }
+
+    /**
+     * Returns the URL to a sized cover for specific CTL.
+     * @param key
+     * @param size
+     * @return
+     */
+    public static String getCover(String key, Dimension size) {
+        return new StringBuilder(Constants.XCFSUrl)
+                .append("/")
+                .append(key)
+                .append("?imageView2/3/w/")
+                .append(size.width)
+                .append("/h/")
+                .append(size.height)
+                .toString();
     }
 
 }
