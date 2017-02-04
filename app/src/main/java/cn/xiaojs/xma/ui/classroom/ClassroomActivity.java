@@ -323,6 +323,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 Toast.makeText(ClassroomActivity.this, "BootSession 失败：" + errorMessage, Toast.LENGTH_SHORT).show();
+                cancelProgress();
             }
         });
     }
@@ -706,6 +707,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     public int getInteractiveLevel() {
         return mCurrentControllerLevel;
+    }
+
+    public String getTicket() {
+        return mTicket;
     }
 
     private void saveWhiteboard() {

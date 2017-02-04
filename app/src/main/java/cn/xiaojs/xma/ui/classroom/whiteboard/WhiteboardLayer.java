@@ -39,6 +39,11 @@ public class WhiteboardLayer {
     private int mRecordGroupId;
 
     /**
+     * 课件的图片地址
+     */
+    private String mCoursePath;
+
+    /**
      * 是否能接受服务器发来的白板绘制命令
      */
     private boolean isCanReceive;
@@ -146,5 +151,13 @@ public class WhiteboardLayer {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public String getCoursePath() {
+        return mCoursePath;
+    }
+
+    public void setCoursePath(String path) {
+        mCoursePath = path;
     }
 }
