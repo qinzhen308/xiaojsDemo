@@ -268,6 +268,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             "http://d.hiphotos.baidu.com/zhidao/pic/item/6a600c338744ebf839e379c5d9f9d72a6159a7bd.jpg"};
 
     private void onMeasureFinished(boolean finished) {
+        if (finished) {
+            createDoodleCanvas();
+        }
+
         if (finished && mCourseUri == null && mCourseBmp == null) {
             //test
             Uri uri = Uri.parse(paths[(int) (Math.random() * 7)]);
@@ -493,9 +497,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         RectF destF = mViewGestureListener.getDestRect();
         mDoodleBounds.set(destF.left, destF.top, destF.right, destF.bottom);
 
-        //map matrix
-        mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
-
         canvas.save();
         //clip
         canvas.clipRect(mDoodleBounds);
@@ -503,6 +504,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         //1. draw background
         canvas.drawColor(BG_COLOR);
 
+        //map matrix
+        mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
         canvas.concat(mDisplayMatrix);
 
         //2. draw course image
@@ -640,15 +643,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                         if (mSelectionRectRegion != IntersectionHelper.RECT_NO_SELECTED) {
                             switch (mSelectionRectRegion) {
                                 case IntersectionHelper.RIGHT_TOP_CORNER:
-                                    //only scale
-                                    /*mDoodle.scale(mPreviousPoint.x, mPreviousPoint.y, x, y);
-                                    drawAllDoodlesCanvas();
-                                    postInvalidate();*/
-                                    //only rotate
-                                    /*mDoodle.rotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
-                                    drawAllDoodlesCanvas();
-                                    postInvalidate();*/
-
                                     //scale and rotate
                                     mDoodle.scaleAndRotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
                                     //scale_rotate record
@@ -994,9 +988,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mDoodle == null || mDoodle instanceof Selector) {
             return;
         }
-
-        createDoodleCanvas();
-
         drawDoodle(mDoodleCanvas, mDoodle);
         invalidate();
     }
@@ -1031,10 +1022,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     private void drawAllDoodlesCanvas() {
         long ss = System.currentTimeMillis();
-        createDoodleCanvas();
-
         eraserAllDoodle();
-        //draw background
+
         if (mAllDoodles != null) {
             for (Doodle d : mAllDoodles) {
                 d.setDrawingMatrix(mDrawingMatrix);
@@ -1225,8 +1214,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     public void hideInputMethod() {
-        //mInputMethodManager.hideSoftInputFromWindow(getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        //force hide
         mInputMethodManager.hideSoftInputFromWindow(getWindowToken(), 0);
     }
 
@@ -1273,9 +1260,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             if (mDoodleBitmap != null) {
                 mDoodleBitmap.eraseColor(0);
             }
-
-            //draw background
-            mDoodleCanvas.drawColor(Color.argb(255, 255, 255, 255));
 
             if (mSelector != null) {
                 mSelector.reset();
