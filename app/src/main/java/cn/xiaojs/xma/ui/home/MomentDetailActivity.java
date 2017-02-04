@@ -28,6 +28,7 @@ import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
@@ -74,7 +75,6 @@ public class MomentDetailActivity extends BaseActivity {
         addView(R.layout.activity_moment_detail);
         setMiddleTitle(R.string.detail);
         setRightImage(R.drawable.ic_lesson_more);
-        setRightImage2(R.drawable.share_selector);
         Intent intent = getIntent();
         if (intent != null) {
             mMomentId = intent.getStringExtra(HomeConstant.KEY_MOMENT_ID);
@@ -153,6 +153,10 @@ public class MomentDetailActivity extends BaseActivity {
             mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_on, 0, 0, 0);
         } else {
             mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_off, 0, 0, 0);
+        }
+
+        if (detail.scope == Social.ShareScope.PUBLIC){//公开动态可分享
+            setRightImage2(R.drawable.share_selector);
         }
     }
 

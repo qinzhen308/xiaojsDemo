@@ -25,6 +25,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Dynamic;
@@ -171,9 +172,16 @@ public class MomentUGC extends RelativeLayout {
 
     public void setStatus(Dynamic status){
         mDynamic = status;
+        if (mDynamic == null)
+            return;
         mComment.setText(String.valueOf(mDynamic.stats.comments));
         mShare.setText(String.valueOf(mDynamic.stats.shared));
         praise(mDynamic.liked,mDynamic.stats.liked);
+        if (mDynamic.scope == Social.ShareScope.PUBLIC){//公开动态可分享
+            mShare.setVisibility(VISIBLE);
+        }else {
+            mShare.setVisibility(GONE);
+        }
     }
 
 

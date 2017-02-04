@@ -58,8 +58,6 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
                             @NonNull String uploadToken,
                             @NonNull final QiniuService callback){
 
-       // Configuration configuration = createConfiguration();
-       // UploadManager uploadManager = new UploadManager(configuration);
         UploadManager uploadManager = new UploadManager();
         uploadManager.put(filePath, uploadKey, uploadToken, new UpCompletionHandler() {
             @Override
