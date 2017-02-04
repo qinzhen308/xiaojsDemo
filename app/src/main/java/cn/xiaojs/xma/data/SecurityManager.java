@@ -45,14 +45,14 @@ public class SecurityManager {
     }
 
     /**
-     * 是否需要check session
+     * 是否需要 check session
      * @param context
      * @return
      */
     public static boolean needCheckSession(Context context) {
 
         String session = AccountPref.getAuthToken(context);
-        String token = SecurityPref.getCSRFToken(context);
+        String token = getCSRFToken(context);
         if (TextUtils.isEmpty(token) || TextUtils.isEmpty(session)) {
             return true;
         }
