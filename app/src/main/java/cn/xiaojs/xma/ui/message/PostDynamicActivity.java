@@ -257,7 +257,7 @@ public class PostDynamicActivity extends BaseActivity {
             @Override
             public void uploadSuccess(String key, String fileUrl) {
 
-                photoKey = fileUrl;
+                photoKey = key;
                 //Point point = BitmapUtils.getImageSize(filePath);
                 if (photoDim == null) {
                     photoDim = new Dimension();
