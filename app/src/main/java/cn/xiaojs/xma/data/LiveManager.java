@@ -6,12 +6,16 @@ import cn.xiaojs.xma.data.api.LiveRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardCriteria;
+import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.live.Ticket;
 import cn.xiaojs.xma.model.Pagination;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/1/9.
@@ -80,4 +84,98 @@ public class LiveManager {
         LiveRequest request = new LiveRequest(context,callback);
         request.getAttendees(ticket);
     }
+
+    /**
+     * Actually starts the scheduled live session by the teaching lead.
+     * @param context
+     * @param ticket
+     * @param callback
+     */
+    public static void beginClass(Context context,
+                                  String ticket,
+                                  APIServiceCallback<ResponseBody> callback) {
+        LiveRequest request = new LiveRequest(context,callback);
+        request.beginClass(ticket);
+    }
+
+    /**
+     * Closes an open board.
+     * @param context
+     * @param ticket
+     * @param board
+     * @param callback
+     */
+    public static void closeBoard(Context context,
+                                  String ticket,
+                                  String board,
+                                  APIServiceCallback<ResponseBody> callback) {
+
+        LiveRequest request = new LiveRequest(context,callback);
+        request.closeBoard(ticket, board);
+
+    }
+
+    /**
+     * Retrieves a collection of boards accessible to the current attendee within a specific class.
+     * @param context
+     * @param ticket
+     * @param criteria
+     * @param pagination
+     * @param callback
+     */
+    public static void getBoards(Context context,
+                                 String ticket,
+                                 BoardCriteria criteria,
+                                 Pagination pagination,
+                                 APIServiceCallback<CollectionPage<BoardItem>> callback) {
+
+        LiveRequest request = new LiveRequest(context,callback);
+        request.getBoards(ticket, criteria, pagination);
+
+    }
+
+    /**
+     * Retrieves a board owned by the current attendee.
+     * @param context
+     * @param ticket
+     * @param board
+     * @param callback
+     */
+    public static void openBoard(Context context,
+                                 String ticket,
+                                 String board,
+                                 APIServiceCallback<BoardItem> callback) {
+
+        LiveRequest request = new LiveRequest(context,callback);
+        request.openBoard(ticket, board);
+    }
+
+    /**
+     * Pauses the live session to have a rest.
+     * @param context
+     * @param ticket
+     * @param callback
+     */
+    public static void pauseClass(Context context,
+                                  String ticket,
+                                  APIServiceCallback<ResponseBody> callback) {
+        LiveRequest request = new LiveRequest(context,callback);
+        request.pauseClass(ticket);
+    }
+
+    /**
+     * Registers a board created during a class.
+     * @param context
+     * @param ticket
+     * @param board
+     * @param callback
+     */
+    public static void registerBoard(Context context,
+                                     String ticket,
+                                     Board board,
+                                     APIServiceCallback<BoardItem> callback) {
+        LiveRequest request = new LiveRequest(context,callback);
+        request.registerBoard(ticket, board);
+    }
+
 }

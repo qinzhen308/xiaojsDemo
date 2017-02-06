@@ -365,5 +365,8 @@ public interface XiaojsService {
     @GET("/v1/collaboration/uploadtokens/{type}/{quantity}")
     Call<TokenPair[]>getUploadTokens(@Path("type") int type, @Path("quantity") int quantity);
 
+    //Add To Library
+//    @POST("/v1/collaboration/documents")
+//    addToLibrary(String key,);
 
 }

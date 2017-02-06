@@ -37,6 +37,15 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.BEGIN_CLASS:
+                if (errorCode.equals(Errors.ACCESS_VIOLATION)){
+                    errorMessage = "你没有权限";
+                } else if (errorCode.equals(Errors.OPERATION_TIMEOUT)){
+                    errorMessage = "操作超时";
+                } else {
+                    errorMessage = "开始课程失败";
+                }
+                break;
             case APIType.BOOT_SESSION:
                 if (errorCode.equals(Errors.CLASS_NOT_READY)){
                     errorMessage = "教室没准备好或着无法访问";

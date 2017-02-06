@@ -103,6 +103,12 @@ public class APIType {
     public static final int BOOT_SESSION = 80;
     public static final int GET_TALKS = 81;
     public static final int GET_ATTENDEES = 82;
+    public static final int BEGIN_CLASS = 83;
+    public static final int CLOSE_BOARD = 84;
+    public static final int GET_BOARDS = 85;
+    public static final int OPEN_BOARD = 86;
+    public static final int PAUSE_CLASS = 87;
+    public static final int REGISTER_BOARD = 88;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Collaborations

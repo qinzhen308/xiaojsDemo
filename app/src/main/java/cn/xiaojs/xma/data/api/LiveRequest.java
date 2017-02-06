@@ -9,13 +9,18 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardCriteria;
+import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.live.Ticket;
 import cn.xiaojs.xma.model.Pagination;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
@@ -59,5 +64,47 @@ public class LiveRequest extends ServiceRequest{
     public void getAttendees(String ticket) {
         Call<LiveCollection<Attendee>> call = getLiveService().getAttendees(ticket);
         enqueueRequest(APIType.GET_ATTENDEES,call);
+    }
+
+    public void beginClass(String ticket) {
+        Call<ResponseBody> call = getLiveService().beginClass(ticket);
+        enqueueRequest(APIType.BEGIN_CLASS, call);
+    }
+
+    public void closeBoard(String ticket, String board) {
+        Call<ResponseBody> call = getLiveService().closeBoard(ticket, board);
+        enqueueRequest(APIType.CLOSE_BOARD,call);
+    }
+
+    public void getBoards(String ticket, BoardCriteria criteria, Pagination pagination) {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+        Call<CollectionPage<BoardItem>> call = getLiveService().getBoards(ticket,
+                criteriaJsonstr,
+                paginationJsonstr);
+
+        enqueueRequest(APIType.GET_BOARDS, call);
+    }
+
+    public void openBoard(String ticket, String board) {
+        Call<BoardItem> call = getLiveService().openBoard(ticket, board);
+        enqueueRequest(APIType.OPEN_BOARD, call);
+    }
+
+    public void pauseClass(String ticket) {
+        Call<ResponseBody> call = getLiveService().pauseClass(ticket);
+        enqueueRequest(APIType.PAUSE_CLASS, call);
+    }
+
+    public void registerBoard(String ticket, Board board) {
+        Call<BoardItem> call = getLiveService().registerBoard(ticket, board);
+        enqueueRequest(APIType.REGISTER_BOARD, call);
     }
 }

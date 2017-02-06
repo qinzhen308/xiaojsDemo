@@ -2,13 +2,18 @@ package cn.xiaojs.xma.data.api.service;
 
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.live.Ticket;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -45,4 +50,31 @@ public interface LiveService {
     //Get Attendees
     @GET("/v1/live/{ticket}/attendees")
     Call<LiveCollection<Attendee>> getAttendees(@Path("ticket") String ticket);
+
+    //Begin Class
+    @PATCH("/v1/live/{ticket}/begin")
+    Call<ResponseBody> beginClass(@Path("ticket") String ticket);
+
+    //Close Board
+    @PATCH("/v1/live/{ticket}/boards/{board}")
+    Call<ResponseBody> closeBoard(@Path("ticket") String ticket, @Path("board") String board);
+
+    //Get Boards
+    @GET("/v1/live/{ticket}/boards/{criteria}/{pagination}")
+    Call<CollectionPage<BoardItem>> getBoards(@Path("ticket") String ticket,
+                                              @Path("criteria") String criteria,
+                                              @Path("pagination") String pagination);
+
+    //Open Board
+    @GET("/v1/live/{ticket}/boards/{board}")
+    Call<BoardItem> openBoard(@Path("ticket") String ticket, @Path("board") String board);
+
+    //Pause Class
+    @PATCH("/v1/live/{ticket}/pause")
+    Call<ResponseBody> pauseClass(@Path("ticket") String ticket);
+
+    //Register Board
+    @POST("/v1/live/{ticket}/boards")
+    Call<BoardItem> registerBoard(@Path("ticket") String ticket, @Body Board board);
+
 }
