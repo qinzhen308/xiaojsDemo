@@ -265,6 +265,11 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                             }
 
                             @Override
+                            public void uploadProgress(String key, double percent) {
+
+                            }
+
+                            @Override
                             public void uploadFailure() {
                                 cancelProgress();
                                 Toast.makeText(c, R.string.upload_cover_fail, Toast.LENGTH_SHORT).show();

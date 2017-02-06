@@ -8,8 +8,11 @@ import com.qiniu.android.common.ServiceAddress;
 import com.qiniu.android.common.Zone;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.Configuration;
+import com.qiniu.android.storage.UpCancellationSignal;
 import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
+import com.qiniu.android.storage.UploadOptions;
 
 import org.json.JSONObject;
 
@@ -28,6 +31,7 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
     private String filePath;
     private QiniuService qiniuService;
     private int type;
+    private boolean isCanceled = false;
 
 
     public QiniuRequest(Context context,String filePath,QiniuService service) {
@@ -47,6 +51,10 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
         this.type = type;
         collaRequest.getUploadTokens(type, quantity);
 
+    }
+
+    public void cancelUpload() {
+        isCanceled = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +99,23 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
                 }
 
             }
-        },null);
+        },new UploadOptions(null, null, false, new UpProgressHandler() {
+            @Override
+            public void progress(String key, double percent) {
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the progress====", percent);
+                }
+                if (callback != null){
+                    callback.uploadProgress(key, percent);
+                }
+
+            }
+        }, new UpCancellationSignal() {
+            @Override
+            public boolean isCancelled() {
+                return isCanceled;
+            }
+        }));
     }
 
 

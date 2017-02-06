@@ -14,6 +14,8 @@ public interface QiniuService {
      */
     void uploadSuccess(String key,String fileUrl);
 
+    void uploadProgress(String key, double percent);
+
     void uploadFailure();
 
 }

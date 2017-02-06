@@ -341,6 +341,11 @@ public class ProfileActivity extends BaseActivity {
                                     }
 
                                     @Override
+                                    public void uploadProgress(String key, double percent) {
+
+                                    }
+
+                                    @Override
                                     public void uploadFailure() {
                                         cancelProgress();
                                         Toast.makeText(ProfileActivity.this, R.string.upload_portrait_fail, Toast.LENGTH_SHORT).show();
