@@ -274,6 +274,11 @@ public class PostDynamicActivity extends BaseActivity {
             }
 
             @Override
+            public void uploadProgress(String key, double percent) {
+
+            }
+
+            @Override
             public void uploadFailure() {
 
                 cancelProgress();
