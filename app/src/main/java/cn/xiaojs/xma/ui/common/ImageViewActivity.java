@@ -19,6 +19,7 @@ import com.orhanobut.logger.Logger;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.banner.PointIndicateView;
@@ -84,8 +85,9 @@ public class ImageViewActivity extends BaseActivity {
                     .findViewById(R.id.drag_image_viewer);
 
             Glide.with(mContext)
-                    .load(mList.get(position % mList.size()))
+                    .load(Social.getDrawing(mList.get(position % mList.size()),false))
                     .asBitmap()
+                    .placeholder(R.drawable.default_lesson_cover)
                     .error(R.drawable.default_lesson_cover)
                     .into(imageView);
 
@@ -126,9 +128,9 @@ public class ImageViewActivity extends BaseActivity {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.obj == null) {
-                    ToastUtil.showToast(ImageViewActivity.this,"下载失败!");
+                    ToastUtil.showToast(getApplicationContext(),"下载失败!");
                 }else {
-                    ToastUtil.showToast(ImageViewActivity.this,"下载成功!保存路径为:" + msg.obj.toString());
+                    ToastUtil.showToast(getApplicationContext(),"下载成功!保存路径为:" + msg.obj.toString());
                 }
             }
         };

@@ -166,7 +166,7 @@ public class MomentContent extends RelativeLayout {
                     mSpecialImage.setVisibility(VISIBLE);
                     Glide.with(getContext())
                             .load(dynamic.body.ref.snap)
-                            .error(DeviceUtil.getLesson())
+                            .error(R.drawable.default_lesson_cover)
                             .into(mSpecialImage);
                 }
             }
@@ -249,8 +249,8 @@ public class MomentContent extends RelativeLayout {
                 lp.height = res[1];
             }
             Glide.with(getContext()).
-                    load(photo.name).
-                    error(DeviceUtil.getLesson()).
+                    load(Social.getDrawing(photo.name,true))
+                    .error(R.drawable.default_lesson_cover).
                     into(mNormalImage);
             mNormalImage.setOnClickListener(new OnClickListener() {
                 @Override
