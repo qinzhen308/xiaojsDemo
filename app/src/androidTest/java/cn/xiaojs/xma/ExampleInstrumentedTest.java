@@ -4,25 +4,21 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
-import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.CollaRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.ClaimCompetency;
-import cn.xiaojs.xma.model.Collaboration.TokenPair;
+import cn.xiaojs.xma.model.Colla.TokenPair;
 import cn.xiaojs.xma.model.CompetencyParams;
-import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
-import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.util.APPUtils;
 

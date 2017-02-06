@@ -114,5 +114,7 @@ public class APIType {
     //Collaborations
     //
     public static final int GET_UPLOAD_TOKENS = 9;
+    public static final int ADD_TO_LIBRARY = 90;
+    public static final int GET_LIBRARY_OVERVIEW = 91;
 
 }

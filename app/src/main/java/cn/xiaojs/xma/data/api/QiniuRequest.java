@@ -4,11 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.Collaboration.TokenPair;
+import cn.xiaojs.xma.model.Colla.TokenPair;
 
 import com.orhanobut.logger.Logger;
 import com.qiniu.android.common.ServiceAddress;
