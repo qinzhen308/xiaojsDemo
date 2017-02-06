@@ -24,7 +24,7 @@ public class Account {
 
     /**
      * Returns the URL to a sized avatar for specific account.
-     * @param accountId
+     * @param accountId 用户的ID
      * @param size
      * @return
      */
