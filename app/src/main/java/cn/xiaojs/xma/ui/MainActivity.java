@@ -8,6 +8,7 @@ import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.TestActivity;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
@@ -22,10 +23,12 @@ import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.ToastUtil;
 import okhttp3.OkHttpClient;
 
 public class MainActivity extends BaseTabActivity {
-    
+
+    private long time;
     @Override
     protected void initView() {
         //setMiddleTitle(R.string.app_name);
@@ -112,6 +115,11 @@ public class MainActivity extends BaseTabActivity {
 
     @Override
     public void onBackPressed() {
+        if (System.currentTimeMillis() - time > XiaojsConfig.EXIT_DELAY){
+            ToastUtil.showToast(this,R.string.exit_tips);
+            time = System.currentTimeMillis();
+            return;
+        }
         super.onBackPressed();
         finish();
         System.exit(1);

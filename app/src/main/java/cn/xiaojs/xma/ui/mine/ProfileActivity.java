@@ -6,6 +6,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
@@ -18,16 +28,6 @@ import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.DataPicker;
 import cn.xiaojs.xma.util.TimeUtil;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.signature.StringSignature;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -60,7 +60,7 @@ public class ProfileActivity extends BaseActivity {
     EditTextDel mUserTitleEdt;
 
     private Date mBirthDayDate;
-    private String mAvatarFileName;
+//    private String mAvatarFileName;
     private String mAvatarUrl;
     private long mOldTime;
     private Account.Basic mBasic;
@@ -123,7 +123,7 @@ public class ProfileActivity extends BaseActivity {
                     //avatar
                     mBasic = basic;
                     Glide.with(ProfileActivity.this)
-                            .load(basic.getAvatar())
+                            .load(cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(AccountDataManager.getAccountID(ProfileActivity.this),300))
                             .error(R.drawable.default_avatar)
                             .into(mPortraitImg);
 
@@ -192,7 +192,7 @@ public class ProfileActivity extends BaseActivity {
             }
         }
 
-        if (mAvatarFileName != null) {
+        if (mAvatarUrl != null) {
             return true;
         }
 
@@ -258,9 +258,9 @@ public class ProfileActivity extends BaseActivity {
             basic.setBirthday(new Date(mBirthDayDate.getTime()));
         }
 
-        if (!TextUtils.isEmpty(mAvatarFileName)) {
-            basic.setAvatar(mAvatarFileName);
-        }
+//        if (!TextUtils.isEmpty(mAvatarFileName)) {
+//            basic.setAvatar(mAvatarFileName);
+//        }
 
         AccountDataManager.requestEditProfile(this, basic, new APIServiceCallback() {
             @Override
@@ -328,14 +328,14 @@ public class ProfileActivity extends BaseActivity {
                                 new QiniuService() {
 
                                     @Override
-                                    public void uploadSuccess(String fileName, String fileUrl) {
+                                    public void uploadSuccess(String key, String fileUrl) {
                                         cancelProgress();
                                         Glide.with(ProfileActivity.this)
                                                 .load(cropImgPath)
                                                 .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                                                 .into(mPortraitImg);
-                                        mAvatarUrl = fileUrl;
-                                        mAvatarFileName = fileName;
+                                        mAvatarUrl = key;
+//                                        mAvatarFileName = fileName;
 
                                         mImgUploading = false;
                                     }

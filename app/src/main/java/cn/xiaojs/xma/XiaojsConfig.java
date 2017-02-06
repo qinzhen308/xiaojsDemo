@@ -15,7 +15,7 @@ public class XiaojsConfig {
     public static final String LOG_TAG = "XiaoJS-Log";
 
     //BASE_URL
-    public static final String BASE_URL = "http://192.168.100.204";
+    public static final String BASE_URL = "http://192.168.100.3";
 
     //HTTP缓存目录
     public static final String HTTP_CACHE_DIR = "hcache";
@@ -33,4 +33,8 @@ public class XiaojsConfig {
 
     public static final String XIAOJS_PREFERENCE_NAME = "xiaojs_preference";
     public static final String KEY_LOGIN_USERNAME = "key-login-username";
+
+    public static final int PORTRAIT_SIZE = 300;
+
+    public static final int EXIT_DELAY = 1000;
 }

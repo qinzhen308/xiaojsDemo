@@ -8,10 +8,10 @@
             android:id="@+id/moment_header_image"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
-            android:src="@drawable/default_portrait"
-            app:corner_radius="@dimen/px50"
-            android:layout_width="@dimen/px100"
-            android:layout_height="@dimen/px100"/>
+            app:oval="true"
+            android:src="@drawable/default_avatar"
+            android:layout_width="@dimen/px90"
+            android:layout_height="@dimen/px90"/>
 
     <cn.xiaojs.xma.ui.view.FollowView
             android:id="@+id/moment_header_focus"

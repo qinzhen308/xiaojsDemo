@@ -86,4 +86,8 @@ public class DeviceUtil {
         Random random = new Random();
         return SourceConfig.lessons[random.nextInt(56) + 1];
     }
+
+    public static String getSignature(){
+        return String.valueOf(System.currentTimeMillis());
+    }
 }
