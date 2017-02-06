@@ -3,13 +3,6 @@ package cn.xiaojs.xma.data.api;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.Collaboration.TokenPair;
-
 import com.orhanobut.logger.Logger;
 import com.qiniu.android.common.ServiceAddress;
 import com.qiniu.android.common.Zone;
@@ -23,7 +16,7 @@ import org.json.JSONObject;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.Collaboration.TokenPair;
+import cn.xiaojs.xma.model.colla.TokenPair;
 
 /**
  * Created by maxiaobao on 2016/11/15.
