@@ -314,7 +314,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 }
                 ((TextWriting) mDoodle).onTextChanged(text);
 
-                drawAllDoodlesCanvas();
                 Whiteboard.this.invalidate();
             }
         }
@@ -452,11 +451,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }.execute();
     }
 
-    public float getPhotoScale(int viewW, int viewH, int photoW, int photoH) {
-        float scale = Math.min((float) viewW / (float) photoW, (float) viewH / (float) photoH);
-        return Math.min(20, scale);
-    }
-
     private void initParams(Context context) {
         mMeasureFinished = false;
         mContext = context;
@@ -488,7 +482,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         if (!mInitLayer && mMeasureFinished) {
             mInitLayer = true;
             drawAllDoodlesCanvas();
@@ -513,17 +506,22 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             canvas.drawBitmap(mCourseBmp, mSrcCourseRect, mDesCourseRect, null);
         }
 
-        //3. draw doodle
+        //3. draw doodle bitmap
         if (mDoodleBitmap != null) {
             updateAllDoodleDisplayMatrix();
             canvas.drawBitmap(mDoodleBitmap, 0, 0, null);
         }
 
-        //4. draw selector
+        //4. draw current doodle
+        if (mDoodle != null) {
+            drawDoodle(canvas, mDoodle);
+        }
+
+        //5. draw selector
         drawSelector(canvas, mSelector);
         canvas.restore();
 
-        //5. draw border(selected doodle or selector)
+        //6. draw border(selected doodle or selector)
         if (!onViewChanged) {
             if (mCurrentMode == MODE_SELECTION) {
                 drawDoodleBorder(canvas, mSelector);
@@ -647,7 +645,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mDoodle.scaleAndRotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
                                     //scale_rotate record
                                     mDoodleAction = Action.SCALE_ROTATE_ACTION;
-                                    drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
                                 case IntersectionHelper.RIGHT_BOTTOM_CORNER:
@@ -658,7 +655,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     //move record
                                     mDoodleAction = Action.MOVE_ACTION;
 
-                                    drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
                                 case IntersectionHelper.TOP_EDGE:
@@ -669,7 +665,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     //change area record
                                     mDoodleAction = Action.CHANGE_AREA_ACTION;
 
-                                    drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
 
@@ -681,11 +676,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                             if (!mDoodleAdded) {
                                 mDoodleAdded = true;
                                 mDoodleAction = Action.ADD_ACTION;
+                                //保存之前的绘制的
+                                drawToDoodleCanvas();
                                 buildDoodle();
                             }
 
                             addLastPointIntoDoodle();
-                            drawAllDoodlesCanvas();
+                            postInvalidate();
                         }
                     }
                     break;
@@ -778,15 +775,18 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     break;
                 case MODE_GEOMETRY:
                 case MODE_HAND_WRITING:
+                case MODE_TEXT:
                     if (mDoodle != null) {
                         if (mDoodleAction != Action.NO_ACTION) {
                             //add action
                             addRecords(mDoodle, mDoodleAction);
                         }
-                        if (mDoodle.getStyle() != Doodle.STYLE_TEXT) {
+
+                        if (mCurrentMode != MODE_TEXT) {
                             if (mDoodle.getState() == Doodle.STATE_DRAWING) {
                                 if (mDoodle instanceof HandWriting) {
                                     //如果是手写模式，默认绘制图形不被选择
+                                    drawToDoodleCanvas();
                                     mDoodle.setState(Doodle.STATE_IDLE);
                                     mDoodle = null;
                                     postInvalidate();
@@ -796,6 +796,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                 }
                             } else if (mDoodle.getState() == Doodle.STATE_EDIT) {
                                 if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
+                                    drawToDoodleCanvas();
                                     mDoodle.setState(Doodle.STATE_IDLE);
                                     mDoodle = null;
                                     postInvalidate();
@@ -806,18 +807,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                             if (!mTransform && mSelectionRectRegion != IntersectionHelper.RECT_NO_SELECTED) {
                                 mSelectedOnPressed = mDoodle.isSelected(mDownPoint.x, mDownPoint.y);
                                 if (!mSelectedOnPressed) {
+                                    drawToDoodleCanvas();
                                     mDoodle.setState(Doodle.STATE_IDLE);
                                     mDoodle = null;
                                     postInvalidate();
                                 }
                             }
                         }
-                    }
-                    break;
-                case MODE_TEXT:
-                    if (mDoodleAction != Action.NO_ACTION) {
-                        //add action
-                        addRecords(mDoodle, mDoodleAction);
                     }
                     break;
                 case MODE_COLOR_PICKER:
@@ -853,6 +849,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                         if (mSelectionRectRegion == IntersectionHelper.RECT_NO_SELECTED) {
                             hideInputMethod();
                             handleEditOnImeHide();
+                            drawToDoodleCanvas();
                             mDoodle.setState(Doodle.STATE_IDLE);
                             mDoodle = null;
                             postInvalidate();
@@ -989,7 +986,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             return;
         }
         drawDoodle(mDoodleCanvas, mDoodle);
-        invalidate();
+        postInvalidate();
     }
 
     private void eraserAllDoodle() {
@@ -1021,7 +1018,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void drawAllDoodlesCanvas() {
-        long ss = System.currentTimeMillis();
         eraserAllDoodle();
 
         if (mAllDoodles != null) {
@@ -1031,7 +1027,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 d.drawSelf(mDoodleCanvas);
             }
         }
-        //Log.i("aaa", "================draw============"+(System.currentTimeMillis()-ss) +"   size="+mAllDoodles.size());
     }
 
     private void createDoodleCanvas() {
@@ -1666,7 +1661,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             Doodle d = buildDoodle(cmd.id, mode);
             d.setState(Doodle.STATE_EDIT);
             fillDoodlePoints(params, d);
-            drawAllDoodlesCanvas();
+            drawToDoodleCanvas();
             if (d != null) {
                 d.setState(Doodle.STATE_IDLE);
             }
@@ -1677,7 +1672,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 d.setVisibility(View.GONE);
                 mAllDoodles.remove(d);
             }
-            drawAllDoodlesCanvas();
+            drawToDoodleCanvas();
         } else if (ProtocolConfigs.CLEAR.equals(cmd.cm)) {
             //clear all doodle
             clearWhiteboard();
@@ -1685,19 +1680,19 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             //move doodle: absolute or relative
             Doodle d = findDoodleById(cmd.id);
             moveDoodle(params, d, ProtocolConfigs.MOVE_A.equals(cmd.cm));
-            drawAllDoodlesCanvas();
+            drawToDoodleCanvas();
         } else if (ProtocolConfigs.ROTATE_A.equalsIgnoreCase(cmd.cm)) {
             //rotate doodle: by doodle center
             Doodle d = findDoodleById(cmd.id);
             boolean absolute = ProtocolConfigs.ROTATE_A.equals(cmd.cm);
             rotateDoodle(params, d, absolute);
-            drawAllDoodlesCanvas();
+            drawToDoodleCanvas();
         } else if (ProtocolConfigs.ZOOM_A.equalsIgnoreCase(cmd.cm)) {
             //scale doodle: by doodle center
             Doodle d = findDoodleById(cmd.id);
             boolean absolute = ProtocolConfigs.ZOOM_A.equals(cmd.cm);
             scaleDoodle(params, d, absolute);
-            drawAllDoodlesCanvas();
+            drawToDoodleCanvas();
         } else if (ProtocolConfigs.CHANGE_COLOR.equals(cmd.cm)) {
             //change color
             Doodle doodle = findDoodleById(cmd.id);
@@ -1705,7 +1700,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 int c = Utils.getColor(params[0], mPaintColor);
                 doodle.getPaint().setColor(c);
             }
-            drawAllDoodlesCanvas();
+            drawToDoodleCanvas();
         } else if (ProtocolConfigs.PAINT.equals(cmd.cm)) {
             //change stroke and color
             changePaintStyle(params);
