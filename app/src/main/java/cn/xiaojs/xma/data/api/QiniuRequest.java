@@ -3,6 +3,13 @@ package cn.xiaojs.xma.data.api;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.model.Collaboration.TokenPair;
+
 import com.orhanobut.logger.Logger;
 import com.qiniu.android.common.ServiceAddress;
 import com.qiniu.android.common.Zone;
@@ -58,6 +65,8 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
                             @NonNull String uploadToken,
                             @NonNull final QiniuService callback){
 
+       // Configuration configuration = createConfiguration();
+       // UploadManager uploadManager = new UploadManager(configuration);
         UploadManager uploadManager = new UploadManager();
         uploadManager.put(filePath, uploadKey, uploadToken, new UpCompletionHandler() {
             @Override
