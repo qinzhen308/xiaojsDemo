@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.document.DocumentActivity;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
-import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardProcessor;
 
 /*  =======================================================================================
@@ -45,7 +45,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardProcessor;
  *
  * ======================================================================================== */
 
-public class WhiteBoardManagement extends DialogFragment implements AdapterView.OnItemClickListener {
+public class WhiteboardManageFragment extends DialogFragment implements AdapterView.OnItemClickListener {
     public static final String WHITE_BOARD_COLL = "white_board_coll";
     public static final String WHITE_BOARD_CLIENT = "white_board_client";
 
@@ -71,6 +71,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
     private ArrayList<WhiteboardCollection> mCollections;
     private String mLiveWhiteboardName;
     private Constants.User mUser = Constants.User.TEACHER;
+    private String mTicket;
 
 
     @Override
@@ -86,7 +87,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
             ((ClassroomActivity) mContext).updateWhiteboardCollCountStyle();
         }
         if (mWbAdapter != null) {
-            mWbAdapter.exitRemoveMode(false);
+            mWbAdapter.exitCloseMode(false);
         }
     }
 
@@ -119,7 +120,6 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         super.onActivityCreated(savedInstanceState);
         initView();
         initData();
-
     }
 
     private void initView() {
@@ -158,11 +158,14 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
 
         Bundle data = getArguments();
         if (data != null) {
-            mCollections = data.getParcelableArrayList(WHITE_BOARD_COLL);
             mUser = (Constants.User) data.getSerializable(WHITE_BOARD_CLIENT);
+            mCollections = WhiteboardManager.getInstance().getWhiteboardCollectionList();
             mWbAdapter.setData(mCollections);
         }
 
+        if (mContext instanceof ClassroomActivity) {
+            mTicket = ((ClassroomActivity) mContext).getTicket();
+        }
     }
 
     @Override
@@ -170,7 +173,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         Object obj = mWbAdapter.getItem(position);
         if (obj instanceof WhiteboardCollection) {
             ((ClassroomActivity) mContext).onSwitchWhiteboardCollection((WhiteboardCollection) obj);
-            WhiteBoardManagement.this.dismiss();
+            WhiteboardManageFragment.this.dismiss();
         }
     }
 
@@ -186,30 +189,13 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
 
             switch (v.getId()) {
                 case R.id.add_white_board:
-                    //add default board
-                    WhiteboardCollection wbColl = new WhiteboardCollection();
-                    //TODO test
-                    for (int i = 0; i < count; i++) {
-                        WhiteboardLayer layer = new WhiteboardLayer();
-                        if (mUser == Constants.User.STUDENT) {
-                            layer.setCanSend(false);
-                            layer.setCanReceive(true);
-                        } else {
-                            layer.setCanSend(true);
-                            layer.setCanReceive(false);
-                        }
-                        wbColl.addWhiteboardLayer(layer);
-                    }
-                    if (mContext instanceof ClassroomActivity) {
-                        ((ClassroomActivity) mContext).onAddWhiteboardCollection(wbColl);
-                    }
-                    mWbAdapter.notifyDataSetChanged();
+                    addDefaultWhiteboard();
                     break;
                 case R.id.open_docs:
                     //open document
                     if (mWbAdapter != null) {
-                        if (mWbAdapter.isRemoveMode()) {
-                            mWbAdapter.exitRemoveMode(true);
+                        if (mWbAdapter.isCloseMode()) {
+                            mWbAdapter.exitCloseMode(true);
                         }
                     }
                     Intent i = new Intent(mContext, DocumentActivity.class);
@@ -218,10 +204,10 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                 case R.id.del_white_board:
                     //remove white boards
                     if (mWbAdapter != null) {
-                        if (mWbAdapter.isRemoveMode()) {
-                            mWbAdapter.exitRemoveMode(true);
+                        if (mWbAdapter.isCloseMode()) {
+                            mWbAdapter.exitCloseMode(true);
                         } else {
-                            mWbAdapter.enterRemoveMode();
+                            mWbAdapter.enterCloseMode();
                         }
                     }
                     break;
@@ -229,9 +215,39 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         }
     };
 
+
+    private void addDefaultWhiteboard() {
+        WhiteboardManager.getInstance().addDefaultBoard(mContext, mUser, new WhiteboardManager.WhiteboardAddListener() {
+            @Override
+            public void onWhiteboardAdded() {
+                mWbAdapter.notifyDataSetChanged();
+                if (mContext instanceof ClassroomActivity) {
+                    ((ClassroomActivity) mContext).updateWhiteboardCollCountStyle();
+                }
+            }
+
+        });
+    }
+
+    /**
+     * 添加课件白板
+     */
+    private void addCourseWhiteboard() {
+        WhiteboardManager.getInstance().addDefaultBoard(mContext, mUser, new WhiteboardManager.WhiteboardAddListener() {
+            @Override
+            public void onWhiteboardAdded() {
+                mWbAdapter.notifyDataSetChanged();
+                if (mContext instanceof ClassroomActivity) {
+                    ((ClassroomActivity) mContext).updateWhiteboardCollCountStyle();
+                }
+            }
+
+        });
+    }
+
     private class WbAdapter extends BaseAdapter implements View.OnClickListener {
         private ArrayList<WhiteboardCollection> mWbCollList;
-        private boolean mRemoveMode = false;
+        private boolean mCloseMode = false;
         private int mWhiteColor;
 
         public WbAdapter() {
@@ -248,20 +264,20 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
             notifyDataSetChanged();
         }
 
-        public void enterRemoveMode() {
-            mRemoveMode = true;
+        public void enterCloseMode() {
+            mCloseMode = true;
             notifyDataSetChanged();
         }
 
-        public void exitRemoveMode(boolean needRefresh) {
-            mRemoveMode = false;
+        public void exitCloseMode(boolean needRefresh) {
+            mCloseMode = false;
             if (needRefresh) {
                 notifyDataSetChanged();
             }
         }
 
-        public boolean isRemoveMode() {
-            return mRemoveMode;
+        public boolean isCloseMode() {
+            return mCloseMode;
         }
 
         @Override
@@ -300,7 +316,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
 
             holder.title = (TextView) v.findViewById(R.id.wb_title);
             holder.cover = (ImageView) v.findViewById(R.id.wb_cover);
-            holder.removeBtn = (ImageView) v.findViewById(R.id.wb_remove);
+            holder.closeBtn = (ImageView) v.findViewById(R.id.wb_close);
             v.setTag(holder);
 
             ViewGroup.LayoutParams params = holder.cover.getLayoutParams();
@@ -312,13 +328,13 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                 holder.cover.setLayoutParams(params);
             }
 
-            holder.removeBtn.setOnClickListener(this);
+            holder.closeBtn.setOnClickListener(this);
             return v;
         }
 
         private void bindData(Holder holder, int pos) {
             WhiteboardCollection wbColl = mWbCollList.get(pos);
-            holder.title.setText(wbColl.isLive() ? mLiveWhiteboardName : wbColl.getName());
+            holder.title.setText(wbColl.isLive() ? mLiveWhiteboardName : wbColl.getTitle());
             holder.cover.setBackgroundColor(mWhiteColor);
             holder.cover.setTag(pos);
             if (wbColl.isDefaultWhiteboard()) {
@@ -327,22 +343,27 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
                 //holder.cover.setImageBitmap(bmp);
             }
 
-            if (!mRemoveMode || (wbColl.isLive() && mUser == Constants.User.STUDENT)) {
-                holder.removeBtn.setVisibility(View.GONE);
+            if (!mCloseMode || (wbColl.isLive() && mUser == Constants.User.STUDENT)) {
+                holder.closeBtn.setVisibility(View.GONE);
             } else {
-                holder.removeBtn.setVisibility(View.VISIBLE);
-                holder.removeBtn.setTag(wbColl);
+                holder.closeBtn.setVisibility(View.VISIBLE);
+                holder.closeBtn.setTag(wbColl);
             }
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.wb_remove:
+                case R.id.wb_close:
                     Object obj = v.getTag();
-                    if (mWbCollList != null && obj instanceof WhiteboardCollection) {
-                        mWbCollList.remove(obj);
-                        notifyDataSetChanged();
+                    if (obj instanceof WhiteboardCollection) {
+                        WhiteboardManager.getInstance().closeBoard(mContext, mUser, (WhiteboardCollection) obj,
+                                new WhiteboardManager.WhiteboardCloseListener() {
+                                    @Override
+                                    public void onWhiteboardClosed() {
+                                        notifyDataSetChanged();
+                                    }
+                                });
                     }
                     break;
             }
@@ -351,7 +372,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
         private class Holder {
             public TextView title;
             public ImageView cover;
-            public ImageView removeBtn;
+            public ImageView closeBtn;
         }
 
         private class LoadDefaultWhiteboardTask extends AsyncTask<WhiteboardCollection, Integer, Bitmap> {
@@ -365,7 +386,7 @@ public class WhiteBoardManagement extends DialogFragment implements AdapterView.
 
             @Override
             protected void onPostExecute(Bitmap bitmap) {
-                int refreshPos = (Integer)mCoverImg.getTag();
+                int refreshPos = (Integer) mCoverImg.getTag();
                 if (mCoverImg != null && refreshPos == mPos) {
                     mCoverImg.setImageBitmap(bitmap);
                 } else {

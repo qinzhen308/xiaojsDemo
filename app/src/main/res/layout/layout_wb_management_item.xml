@@ -30,7 +30,7 @@
     </LinearLayout>
 
     <ImageView
-            android:id="@+id/wb_remove"
+            android:id="@+id/wb_close"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"

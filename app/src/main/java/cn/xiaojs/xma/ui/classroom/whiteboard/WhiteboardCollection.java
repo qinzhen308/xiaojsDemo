@@ -34,7 +34,7 @@ public class WhiteboardCollection implements Parcelable{
      */
     private int style;
     private String id;
-    private String name;
+    private String title;
     private String url;
     private String coverUrl;
     private List<WhiteboardLayer> whiteboardLayer;
@@ -53,15 +53,15 @@ public class WhiteboardCollection implements Parcelable{
     public WhiteboardCollection(String name, int style) {
         whiteboardLayer = new ArrayList<WhiteboardLayer>();
         this.style = style;
-        this.name = name;
+        this.title = title;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setUrl(String url) {
@@ -85,8 +85,8 @@ public class WhiteboardCollection implements Parcelable{
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public String getUrl() {
@@ -137,7 +137,7 @@ public class WhiteboardCollection implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(name);
+        dest.writeString(title);
         dest.writeString(url);
         dest.writeString(coverUrl);
         dest.writeInt(currIndex);
@@ -160,7 +160,7 @@ public class WhiteboardCollection implements Parcelable{
 
     public void readFromParcel(Parcel in) {
         id = in.readString();
-        name = in.readString();
+        title = in.readString();
         url = in.readString();
         coverUrl = in.readString();
         currIndex = in.readInt();

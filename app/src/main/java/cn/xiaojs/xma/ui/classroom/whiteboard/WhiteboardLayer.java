@@ -93,6 +93,10 @@ public class WhiteboardLayer {
         return mWhiteboardName;
     }
 
+    public void setWhiteboardName(String name) {
+        mWhiteboardName = name;
+    }
+
     public boolean isLive() {
         return isLive;
     }

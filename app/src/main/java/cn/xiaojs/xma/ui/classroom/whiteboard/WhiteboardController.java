@@ -114,7 +114,6 @@ public class WhiteboardController implements
 
     private Whiteboard mSyncWhiteboard;
     private Whiteboard mCurrWhiteboard;
-    private String mWhiteboardSuffix;
 
     private Socket mSocket;
     private Handler mHandler;
@@ -126,7 +125,6 @@ public class WhiteboardController implements
         mUser = client;
         mAppType = appType;
         mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
-        mWhiteboardSuffix = context.getString(R.string.white_board);
 
         mLiveLayout = root.findViewById(R.id.live_layout);
         mWhiteboardVideo = (CutView) root.findViewById(R.id.whiteboard_video);
@@ -208,7 +206,12 @@ public class WhiteboardController implements
 
         //第一次初始化调用
         onSwitchWhiteboardCollection(whiteboardCollection);
-        addToWhiteboardCollectionList(whiteboardCollection);
+        WhiteboardManager.getInstance().addDefaultBoard(mContext, mUser, new WhiteboardManager.WhiteboardAddListener() {
+            @Override
+            public void onWhiteboardAdded() {
+
+            }
+        });
     }
 
     public void handlePanelItemClick(View v) {
@@ -535,34 +538,6 @@ public class WhiteboardController implements
     @Override
     public void onUndoRedoStackChanged() {
         setUndoRedoStyle();
-    }
-
-    /**
-     * 添加到白板集合
-     */
-    public int addToWhiteboardCollectionList(WhiteboardCollection collection) {
-        if (collection != null) {
-            if (TextUtils.isEmpty(collection.getName())) {
-                int count = 0;
-                for (WhiteboardCollection coll : mWhiteboardCollectionList) {
-                    if (coll.isDefaultWhiteboard()) {
-                        count++;
-                    }
-                }
-                String name = mWhiteboardSuffix + "_" + (count + 1);
-                collection.setName(name);
-            }
-            mWhiteboardCollectionList.add(collection);
-        }
-
-        return mWhiteboardCollectionList != null ? mWhiteboardCollectionList.size() : 0;
-    }
-
-    /**
-     * 获取所有的白板集
-     */
-    public ArrayList<WhiteboardCollection> getWhiteboardCollectionList() {
-        return mWhiteboardCollectionList;
     }
 
     /**
