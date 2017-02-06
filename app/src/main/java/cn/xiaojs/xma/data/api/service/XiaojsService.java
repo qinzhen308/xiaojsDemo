@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
-import cn.xiaojs.xma.model.Colla.LibOverview;
-import cn.xiaojs.xma.model.Colla.TokenPair;
-import cn.xiaojs.xma.model.Colla.UploadParam;
-import cn.xiaojs.xma.model.Colla.UploadReponse;
+import cn.xiaojs.xma.model.colla.LibOverview;
+import cn.xiaojs.xma.model.colla.TokenPair;
+import cn.xiaojs.xma.model.colla.UploadParam;
+import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;

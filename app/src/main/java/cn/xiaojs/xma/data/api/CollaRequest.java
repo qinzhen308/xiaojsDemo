@@ -8,11 +8,11 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
-import cn.xiaojs.xma.model.Colla.LibCriteria;
-import cn.xiaojs.xma.model.Colla.LibOverview;
-import cn.xiaojs.xma.model.Colla.TokenPair;
-import cn.xiaojs.xma.model.Colla.UploadParam;
-import cn.xiaojs.xma.model.Colla.UploadReponse;
+import cn.xiaojs.xma.model.colla.LibCriteria;
+import cn.xiaojs.xma.model.colla.LibOverview;
+import cn.xiaojs.xma.model.colla.TokenPair;
+import cn.xiaojs.xma.model.colla.UploadParam;
+import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.model.Pagination;
 import retrofit2.Call;
 

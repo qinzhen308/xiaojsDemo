@@ -4,10 +4,10 @@ import android.content.Context;
 
 import cn.xiaojs.xma.data.api.CollaRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.Colla.LibCriteria;
-import cn.xiaojs.xma.model.Colla.LibOverview;
-import cn.xiaojs.xma.model.Colla.UploadParam;
-import cn.xiaojs.xma.model.Colla.UploadReponse;
+import cn.xiaojs.xma.model.colla.LibCriteria;
+import cn.xiaojs.xma.model.colla.LibOverview;
+import cn.xiaojs.xma.model.colla.UploadParam;
+import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.model.Pagination;
 
 /**
