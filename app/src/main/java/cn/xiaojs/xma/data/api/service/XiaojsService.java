@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
-import cn.xiaojs.xma.model.Collaboration.TokenPair;
+import cn.xiaojs.xma.model.colla.LibOverview;
+import cn.xiaojs.xma.model.colla.TokenPair;
+import cn.xiaojs.xma.model.colla.UploadParam;
+import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
@@ -26,10 +29,7 @@ import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
-import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.account.RegisterInfo;
-import cn.xiaojs.xma.model.account.UpToken;
-import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
@@ -366,7 +366,13 @@ public interface XiaojsService {
     Call<TokenPair[]>getUploadTokens(@Path("type") int type, @Path("quantity") int quantity);
 
     //Add To Library
-//    @POST("/v1/collaboration/documents")
-//    addToLibrary(String key,);
+    @POST("/v1/collaboration/documents")
+    Call<UploadReponse> addToLibrary(@Body UploadParam uploadParam);
+
+    //Get Library Overview
+    @GET("/v1/collaboration/overview/{criteria}/{pagination}")
+    Call<LibOverview> getLibraryOverview(@Path("criteria") String criteria,
+                                         @Path("pagination") String pagination);
+
 
 }

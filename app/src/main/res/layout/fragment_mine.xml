@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:roundimg="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/tools">
 
     <LinearLayout
             android:background="@color/main_bg"
@@ -46,16 +47,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                <cn.xiaojs.xma.ui.widget.RoundedImageView
+                <cn.xiaojs.xma.ui.widget.PortraitView
                         android:id="@+id/portrait"
                         android:scaleType="fitXY"
-                        roundimg:oval="true"
-                        roundimg:border_color="@color/white"
-                        roundimg:border_width="@dimen/px1"
+                        app:oval="true"
+                        app:border_color="@color/white"
+                        app:border_width="@dimen/px1"
+                        android:src="@drawable/por_58"
                         android:layout_marginTop="@dimen/px100"
                         android:layout_gravity="center_horizontal"
-                        android:layout_width="@dimen/px100"
-                        android:layout_height="@dimen/px100"/>
+                        android:layout_width="@dimen/px140"
+                        android:layout_height="@dimen/px140"/>
 
                 <cn.xiaojs.xma.ui.widget.IconTextView
                         android:id="@+id/user_name"

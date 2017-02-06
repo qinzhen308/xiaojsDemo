@@ -17,7 +17,6 @@ package cn.xiaojs.xma.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -30,6 +29,7 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.signature.StringSignature;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -49,14 +49,15 @@ import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.IconTextView;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.ui.widget.PortraitView;
+import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.FastBlur;
 
 public class MineFragment extends BaseFragment {
     private final static int REQUEST_EDIT = 1000;
 
     @BindView(R.id.portrait)
-    RoundedImageView mPortraitView;
+    PortraitView mPortraitView;
     @BindView(R.id.blur_portrait)
     ImageView mBlurPortraitView;
     @BindView(R.id.user_name)
@@ -87,7 +88,8 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,
-            R.id.my_favorites_layout, R.id.teach_ability_layout, R.id.name_auth_layout, R.id.person_home})
+            R.id.my_favorites_layout, R.id.teach_ability_layout, R.id.name_auth_layout, R.id.person_home,R.id.portrait,
+            R.id.user_name})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_teaching_layout:
@@ -112,6 +114,10 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.person_home:
                 startActivity(new Intent(mContext, PersonHomeActivity.class));
+                break;
+            case R.id.portrait:
+            case R.id.user_name:
+                startActivityForResult(new Intent(mContext, ProfileActivity.class),REQUEST_EDIT);
                 break;
             default:
                 break;
@@ -150,8 +156,10 @@ public class MineFragment extends BaseFragment {
             mUserName.setText(basic.getName());
         }
 
+
         //set title
         if (basic != null) {
+            mPortraitView.setSex(basic.getSex());
             String title = basic.getTitle();
             if (TextUtils.isEmpty(title)) {
                 //mUserTitle.setText(R.string.my_profile_txt);
@@ -168,16 +176,19 @@ public class MineFragment extends BaseFragment {
         mPortraitView.setBorderWidth(R.dimen.px2);
 
         //TODO test
-        if (true) {
-            mPortraitView.setImageResource(R.drawable.mine_portrait);
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.mine_portrait);
-            setupBlurPortraitView(bmp);
-            return;
-        }
+//        if (true) {
+//            mPortraitView.setImageResource(R.drawable.mine_portrait);
+//            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.mine_portrait);
+//            setupBlurPortraitView(bmp);
+//            return;
+//        }
 
         //set avatar
         if (basic != null) {
-            Glide.with(mContext).load(basic.getAvatar())
+            String s = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(AccountDataManager.getAccountID(mContext),300);
+
+            Glide.with(mContext).load(s)
+                    .signature(new StringSignature(DeviceUtil.getSignature()))
                     .error(R.drawable.default_avatar)
                     .into(new GlideDrawableImageViewTarget(mPortraitView) {
                         @Override

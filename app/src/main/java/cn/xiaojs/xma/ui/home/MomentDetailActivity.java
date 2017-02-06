@@ -21,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -28,6 +30,9 @@ import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
@@ -43,6 +48,7 @@ import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
 
@@ -61,6 +67,8 @@ public class MomentDetailActivity extends BaseActivity {
     TextView mPraiseNum;
     @BindView(R.id.moment_detail_prise)
     TextView mPraise;
+    @BindView(R.id.moment_detail_footer_image)
+    RoundedImageView mFooterImage;
 
     private String mMomentId;
     private MomentDetailAdapter mAdapter;
@@ -74,7 +82,6 @@ public class MomentDetailActivity extends BaseActivity {
         addView(R.layout.activity_moment_detail);
         setMiddleTitle(R.string.detail);
         setRightImage(R.drawable.ic_lesson_more);
-        setRightImage2(R.drawable.share_selector);
         Intent intent = getIntent();
         if (intent != null) {
             mMomentId = intent.getStringExtra(HomeConstant.KEY_MOMENT_ID);
@@ -82,6 +89,10 @@ public class MomentDetailActivity extends BaseActivity {
         initList();
         mBinder = ButterKnife.bind(this);
         request();
+        Glide.with(this)
+                .load(Account.getAvatar(AccountDataManager.getAccountID(this),XiaojsConfig.PORTRAIT_SIZE))
+                .error(R.drawable.default_avatar)
+                .into(mFooterImage);
     }
 
     private void request() {
@@ -153,6 +164,10 @@ public class MomentDetailActivity extends BaseActivity {
             mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_on, 0, 0, 0);
         } else {
             mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_off, 0, 0, 0);
+        }
+
+        if (detail.scope == Social.ShareScope.PUBLIC){//公开动态可分享
+            setRightImage2(R.drawable.share_selector);
         }
     }
 

@@ -22,6 +22,7 @@ public class Dynamic {
     public DynOwner owner;
     public DynBody body;
     public DynStatus stats;
+    public int scope;
 
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)

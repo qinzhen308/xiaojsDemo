@@ -50,7 +50,7 @@
     <string name="hour_ago">%1$d小时之前</string>
     <string name="rename">重命名</string>
     <string name="all">全部</string>
-
+    <string name="exit_tips">再按一次返回键退出小教室</string>
 
     <string name="home_tab_index">首页</string>
     <string name="home_tab_circle">小圈</string>

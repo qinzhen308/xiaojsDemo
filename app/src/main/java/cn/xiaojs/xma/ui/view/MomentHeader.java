@@ -21,12 +21,15 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
@@ -36,7 +39,6 @@ import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
@@ -85,12 +87,14 @@ public class MomentHeader extends RelativeLayout {
     }
 
     public void setData(Dynamic dynamic) {
-        mHead.setImageResource(DeviceUtil.getPor());
+
+        //  mHead.setImageResource(DeviceUtil.getPor());
         if (dynamic == null)
             return;
 
         mOwner = dynamic.owner;
 
+        String url = Account.getAvatar(dynamic.owner.account,XiaojsConfig.PORTRAIT_SIZE);
         if (mOwner.myself || VerifyUtils.isMyself(mOwner.account)){
             mName.setText(XiaojsConfig.mLoginUser.getName());
             mTag.setText("自己");
@@ -107,6 +111,11 @@ public class MomentHeader extends RelativeLayout {
         } else {
             mFollow.setVisibility(VISIBLE);
         }
+
+        Glide.with(getContext())
+                .load(url)
+                .error(R.drawable.default_avatar)
+                .into(mHead);
     }
 
     @OnClick({R.id.moment_header_focus})

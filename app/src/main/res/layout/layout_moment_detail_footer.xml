@@ -14,7 +14,7 @@
             android:layout_marginBottom="@dimen/px15"
             android:layout_marginTop="@dimen/px15"
             android:layout_marginLeft="@dimen/px30"
-            android:src="@drawable/default_portrait"
+            android:src="@drawable/default_avatar"
             android:layout_width="@dimen/px62"
             android:layout_height="@dimen/px62"/>
 
