@@ -331,7 +331,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                                 initNotifyMsgCount();
                             } else  {
                                 //register failed
-                                //ClassroomActivity.this.finish();
+                                ClassroomActivity.this.finish();
                             }
                         }
                     });

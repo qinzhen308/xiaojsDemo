@@ -186,7 +186,8 @@
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
                 android:name=".ui.lesson.TeachLessonActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:configChanges="orientation|screenSize"/>
         <activity
                 android:name=".ui.lesson.EnrollLessonActivity"
                 android:screenOrientation="portrait"/>
