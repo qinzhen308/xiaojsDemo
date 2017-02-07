@@ -331,7 +331,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                                 initNotifyMsgCount();
                             } else  {
                                 //register failed
-                                ClassroomActivity.this.finish();
+                                //ClassroomActivity.this.finish();
                             }
                         }
                     });
@@ -446,7 +446,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             R.id.wb_toolbar_btn, R.id.color_picker_btn, R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn,
             R.id.eraser_btn, R.id.text_btn, R.id.exit_btn, R.id.main_screen_setting, R.id.save_white_board_btn,
             R.id.undo, R.id.redo})
-    public void onPanelItemClick(final View v) {
+    public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
                 showExitDialog();
@@ -458,43 +458,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 openWhiteBoardManager();
                 break;
             case R.id.play_pause_btn:
-                if (TextUtils.isEmpty(mTicket)) {
-                    //TODO toast
-                    break;
-                }
-
-                showProgress(true);
-                if (mPlayState == STATE_PLAY) {
-                    LiveManager.beginClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
-                        @Override
-                        public void onSuccess(ResponseBody object) {
-                            cancelProgress();
-                            mPlayState = STATE_PAUSE;
-                            ((ImageView) v).setImageResource(R.drawable.ic_cr_start);
-                        }
-
-                        @Override
-                        public void onFailure(String errorCode, String errorMessage) {
-                            cancelProgress();
-                            Log.i("aaa", "beginClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
-                        }
-                    });
-                } else {
-                    LiveManager.pauseClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
-                        @Override
-                        public void onSuccess(ResponseBody object) {
-                            cancelProgress();
-                            mPlayState = STATE_PLAY;
-                            ((ImageView) v).setImageResource(R.drawable.ic_cr_pause);
-                        }
-
-                        @Override
-                        public void onFailure(String errorCode, String errorMessage) {
-                            cancelProgress();
-                            Log.i("aaa", "pauseClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
-                        }
-                    });
-                }
+                playOrPauseLesson(v);
 
                 //live
                 if (!m) {
@@ -543,6 +507,49 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 开启或暂停课
+     */
+    private void playOrPauseLesson(final View view) {
+        if (TextUtils.isEmpty(mTicket)) {
+            //TODO toast
+            return;
+        }
+
+        showProgress(true);
+        if (mPlayState == STATE_PLAY) {
+            LiveManager.beginClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
+                @Override
+                public void onSuccess(ResponseBody object) {
+                    cancelProgress();
+                    mPlayState = STATE_PAUSE;
+                    ((ImageView) view).setImageResource(R.drawable.ic_cr_start);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    Log.i("aaa", "beginClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
+                }
+            });
+        } else {
+            LiveManager.pauseClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
+                @Override
+                public void onSuccess(ResponseBody object) {
+                    cancelProgress();
+                    mPlayState = STATE_PLAY;
+                    ((ImageView) view).setImageResource(R.drawable.ic_cr_pause);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    Log.i("aaa", "pauseClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
+                }
+            });
         }
     }
 

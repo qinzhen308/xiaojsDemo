@@ -26,8 +26,10 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.SlidePage;
+import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
 import okhttp3.ResponseBody;
 
 public class WhiteboardManager {
@@ -90,6 +92,9 @@ public class WhiteboardManager {
                 String ticket = ((ClassroomActivity) context).getTicket();
                 Board board = new Board();
                 board.title = collTitle;
+                board.drawing = new Dimension();
+                board.drawing.width = ProtocolConfigs.VIRTUAL_WIDTH;
+                board.drawing.height = ProtocolConfigs.VIRTUAL_HEIGHT;
                 LiveManager.registerBoard(context, ticket, board, new APIServiceCallback<BoardItem>() {
                     @Override
                     public void onSuccess(BoardItem object) {
@@ -149,6 +154,9 @@ public class WhiteboardManager {
 
                 Board board = new Board();
                 board.title = collTitle;
+                board.drawing = new Dimension();
+                board.drawing.width = ProtocolConfigs.VIRTUAL_WIDTH;
+                board.drawing.height = ProtocolConfigs.VIRTUAL_HEIGHT;
                 board.pages = new SlidePage[whiteboardName.length];
                 for (int i = 0; i < board.pages.length; i++) {
                     board.pages[i].name = whiteboardName[i];

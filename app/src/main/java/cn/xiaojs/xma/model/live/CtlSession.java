@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model.live;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.Date;
+
 /**
  * Created by maxiaobao on 2017/1/9.
  */
@@ -16,7 +18,7 @@ public class CtlSession {
     public ConnectType connected;
     public String psType;
     public String state;
-
+    public Date finishOn;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
