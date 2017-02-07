@@ -23,6 +23,7 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -328,7 +329,7 @@ public class ProfileActivity extends BaseActivity {
                                 new QiniuService() {
 
                                     @Override
-                                    public void uploadSuccess(String key, String fileUrl) {
+                                    public void uploadSuccess(String key, UploadReponse reponse) {
                                         cancelProgress();
                                         Glide.with(ProfileActivity.this)
                                                 .load(cropImgPath)

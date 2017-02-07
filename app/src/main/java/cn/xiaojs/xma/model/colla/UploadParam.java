@@ -12,6 +12,6 @@ public class UploadParam {
     public String key;
     public String fileName;
     public boolean toOrgLib;
-    public boolean ticket;
+    public String ticket;
 
 }

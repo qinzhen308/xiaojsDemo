@@ -17,9 +17,12 @@ import com.qiniu.android.storage.UploadOptions;
 import org.json.JSONObject;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.colla.TokenPair;
+import cn.xiaojs.xma.model.colla.UploadParam;
+import cn.xiaojs.xma.model.colla.UploadReponse;
 
 /**
  * Created by maxiaobao on 2016/11/15.
@@ -27,14 +30,30 @@ import cn.xiaojs.xma.model.colla.TokenPair;
 
 public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
 
+    private Context context;
     private CollaRequest collaRequest;
     private String filePath;
     private QiniuService qiniuService;
     private int type;
     private boolean isCanceled = false;
 
+    private UploadParam uploadParam;
+
+
+
 
     public QiniuRequest(Context context,String filePath,QiniuService service) {
+        iniRequest(context, filePath, service);
+    }
+
+    public QiniuRequest(Context context, String filePath, UploadParam param, QiniuService service) {
+        iniRequest(context, filePath, service);
+        this.uploadParam = param;
+
+    }
+
+    private void iniRequest(Context context,String filePath,QiniuService service) {
+        this.context = context.getApplicationContext();
         this.filePath = filePath;
         this.qiniuService = service;
         this.collaRequest = new CollaRequest(context,this);
@@ -47,7 +66,6 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
 //    }
 //
     public void getToken(int type, int quantity) {
-
         this.type = type;
         collaRequest.getUploadTokens(type, quantity);
 
@@ -88,9 +106,16 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
 
 
                 if (info.isOK()){
-                    if (callback != null) {
 
-                        callback.uploadSuccess(key,null);
+                    if (type == Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY) {
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("now to add library");
+                        }
+                        docToLibrary(key);
+                    } else {
+                        if (callback != null) {
+                            callback.uploadSuccess(key,null);
+                        }
                     }
                 }else{
                     if (callback != null) {
@@ -201,5 +226,35 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
             qiniuService.uploadFailure();
         }
 
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void docToLibrary(final String key) {
+
+        CollaRequest request = new CollaRequest(this.context, new APIServiceCallback<UploadReponse>() {
+            @Override
+            public void onSuccess(UploadReponse reponse) {
+
+                if (qiniuService!=null){
+                    qiniuService.uploadSuccess(key, reponse);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("add library error:(%s, %s)",errorCode,errorMessage);
+                }
+
+                if (qiniuService!=null){
+                    qiniuService.uploadFailure();
+                }
+            }
+        });
+
+        uploadParam.key = key;
+        request.addToLibrary(uploadParam);
     }
 }
