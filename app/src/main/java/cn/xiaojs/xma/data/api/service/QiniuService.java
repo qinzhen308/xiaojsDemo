@@ -25,7 +25,8 @@ public interface QiniuService {
 
     /**
      * 文件上传失败
+     * @param cancel true表示用户取消了上传
      */
-    void uploadFailure();
+    void uploadFailure(boolean cancel);
 
 }

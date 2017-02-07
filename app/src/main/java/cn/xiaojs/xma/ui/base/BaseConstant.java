@@ -16,4 +16,5 @@ package cn.xiaojs.xma.ui.base;
 
 public interface BaseConstant {
     public static final int REQUEST_CODE_SEND_MOMENT = 1;
+    public static final int REQUEST_CODE_CHOOSE_FILE = 1001;
 }

@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,8 +29,13 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.CollaManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.colla.LibCategory;
+import cn.xiaojs.xma.model.colla.LibCriteria;
+import cn.xiaojs.xma.model.colla.LibOverview;
 
-public class MaterialAdapter extends AbsSwipeAdapter<Date, MaterialAdapter.Holder> {
+public class MaterialAdapter extends AbsSwipeAdapter<LibCategory, MaterialAdapter.Holder> {
 
     private boolean mIsMine;
 
@@ -41,7 +45,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<Date, MaterialAdapter.Holde
     }
 
     @Override
-    protected void setViewContent(final Holder holder, Date bean, int position) {
+    protected void setViewContent(final Holder holder, LibCategory bean, int position) {
         holder.showOpera(false);
         if (mIsMine){
             holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.share_selector,0,0);
@@ -54,19 +58,19 @@ public class MaterialAdapter extends AbsSwipeAdapter<Date, MaterialAdapter.Holde
             }
         });
 
-        if (position % 6 == 0) {
-            holder.image.setImageResource(R.drawable.ic_word);
-        } else if (position % 6 == 1) {
-            holder.image.setImageResource(R.drawable.ic_ppt);
-        } else if (position % 6 == 2) {
-            holder.image.setImageResource(R.drawable.ic_excel);
-        } else if (position % 6 == 3) {
-            holder.image.setImageResource(R.drawable.ic_picture);
-        } else if (position % 6 == 4) {
-            holder.image.setImageResource(R.drawable.ic_pdf);
-        } else if (position % 6 == 5) {
-            holder.image.setImageResource(R.drawable.ic_unknown);
-        }
+//        if (FileUtil.DOC == FileUtil.getFileType(bean.)) {
+//            holder.image.setImageResource(R.drawable.ic_word);
+//        } else if (position % 6 == 1) {
+//            holder.image.setImageResource(R.drawable.ic_ppt);
+//        } else if (position % 6 == 2) {
+//            holder.image.setImageResource(R.drawable.ic_excel);
+//        } else if (position % 6 == 3) {
+//            holder.image.setImageResource(R.drawable.ic_picture);
+//        } else if (position % 6 == 4) {
+//            holder.image.setImageResource(R.drawable.ic_pdf);
+//        } else if (position % 6 == 5) {
+//            holder.image.setImageResource(R.drawable.ic_unknown);
+//        }
     }
 
     @Override
@@ -83,17 +87,26 @@ public class MaterialAdapter extends AbsSwipeAdapter<Date, MaterialAdapter.Holde
 
     @Override
     protected void doRequest() {
-        List<Date> dates = new ArrayList<>();
-        dates.add(new Date());
-        dates.add(new Date());
-        dates.add(new Date());
-        dates.add(new Date());
-        dates.add(new Date());
-        dates.add(new Date());
-        dates.add(new Date());
-        dates.add(new Date());
+        LibCriteria criteria = new LibCriteria();
+        CollaManager.getLibraryOverview(mContext, criteria, mPagination, new APIServiceCallback<LibOverview>() {
+            @Override
+            public void onSuccess(LibOverview object) {
+                if (object != null && object.categories != null){
+                    List<LibCategory> list = new ArrayList<LibCategory>();
+                    for (LibCategory category : object.categories){
+                        list.add(category);
+                    }
+                    MaterialAdapter.this.onSuccess(list);
+                }else {
+                    MaterialAdapter.this.onSuccess(null);
+                }
+            }
 
-        onSuccess(dates);
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                MaterialAdapter.this.onFailure(errorCode,errorMessage);
+            }
+        });
     }
 
     class Holder extends BaseHolder {

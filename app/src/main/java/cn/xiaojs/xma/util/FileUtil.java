@@ -19,6 +19,8 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.util.StringTokenizer;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -41,6 +43,50 @@ public class FileUtil {
 
     public static String INTERNAL_CACHE_DIR;
 
+    public static final int UNKNOWN = -1;
+    public static final int DOC = 1;
+    public static final int XLS = 2;
+    public static final int PPT = 3;
+    public static final int PDF = 4;
+    public static final int PICTURE = 5;
+    public static final int AUDIO = 6;
+    public static final int VIDEO = 7;
+
+
+    public static int getFileType(String type){
+        if (TextUtils.isEmpty(type)){
+            return UNKNOWN;
+        }
+        if (type.equalsIgnoreCase(Collaboration.OfficeMimeTypes.DOC)||
+                type.equalsIgnoreCase(Collaboration.OfficeMimeTypes.DOCX)){
+            return DOC;
+        }else if (type.equalsIgnoreCase(Collaboration.OfficeMimeTypes.PPT)||
+                type.equalsIgnoreCase(Collaboration.OfficeMimeTypes.PPTX)){
+            return PPT;
+        }else if (type.equalsIgnoreCase(Collaboration.ApplicationMimeTypes.PDF)){
+            return PDF;
+        }else if (type.equalsIgnoreCase(Collaboration.PictureMimeTypes.BMP)||
+                type.equalsIgnoreCase(Collaboration.PictureMimeTypes.GIF)||
+                type.equalsIgnoreCase(Collaboration.PictureMimeTypes.JPEG)||
+                type.equalsIgnoreCase(Collaboration.PictureMimeTypes.JPG)||
+                type.equalsIgnoreCase(Collaboration.PictureMimeTypes.PNG)||
+                type.equalsIgnoreCase(Collaboration.PictureMimeTypes.TIFF)){
+            return PICTURE;
+        }else if (type.equalsIgnoreCase(Collaboration.AudioMimeTypes.MP3)||
+                type.equalsIgnoreCase(Collaboration.AudioMimeTypes.WAV)){
+            return AUDIO;
+        }else if (type.equalsIgnoreCase(Collaboration.VideoMimeTypes.AVI)||
+                type.equalsIgnoreCase(Collaboration.VideoMimeTypes.MOV)||
+                type.equalsIgnoreCase(Collaboration.VideoMimeTypes.MP4)||
+                type.equalsIgnoreCase(Collaboration.VideoMimeTypes.MPEG)||
+                type.equalsIgnoreCase(Collaboration.VideoMimeTypes.MPG)||
+                type.equalsIgnoreCase(Collaboration.VideoMimeTypes.OGG)||
+                type.equalsIgnoreCase(Collaboration.VideoMimeTypes.QT)||
+                type.equalsIgnoreCase(Collaboration.VideoMimeTypes.THREE_GPP)){
+            return VIDEO;
+        }
+        return UNKNOWN;
+    }
     /**
      * 判断sd卡是否存在
      */

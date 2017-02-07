@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +32,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -39,6 +41,7 @@ import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
@@ -91,6 +94,12 @@ public class MomentHeader extends RelativeLayout {
         //  mHead.setImageResource(DeviceUtil.getPor());
         if (dynamic == null)
             return;
+
+        Glide.with(getContext())
+                .load(Account.getAvatar(AccountDataManager.getAccountID(getContext()),300))
+                .signature(new StringSignature(DeviceUtil.getSignature()))
+                .error(R.drawable.default_avatar)
+                .into(mHead);
 
         mOwner = dynamic.owner;
 

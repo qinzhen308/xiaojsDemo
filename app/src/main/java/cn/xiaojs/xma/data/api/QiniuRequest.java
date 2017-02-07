@@ -117,9 +117,13 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
                             callback.uploadSuccess(key,null);
                         }
                     }
-                }else{
+                }else if(info.isCancelled()) {
                     if (callback != null) {
-                        callback.uploadFailure();
+                        callback.uploadFailure(true);
+                    }
+                }else {
+                    if (callback != null) {
+                        callback.uploadFailure(false);
                     }
                 }
 
@@ -128,7 +132,7 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
             @Override
             public void progress(String key, double percent) {
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the progress====", percent);
+                    Logger.d("the progress====" + percent);
                 }
                 if (callback != null){
                     callback.uploadProgress(key, percent);
@@ -182,7 +186,7 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
             }
 
             if (qiniuService!=null){
-                qiniuService.uploadFailure();
+                qiniuService.uploadFailure(false);
             }
 
             return;
@@ -196,7 +200,7 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
             }
 
             if (qiniuService!=null){
-                qiniuService.uploadFailure();
+                qiniuService.uploadFailure(false);
             }
 
             return;
@@ -223,7 +227,7 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
         }
 
         if (qiniuService!=null){
-            qiniuService.uploadFailure();
+            qiniuService.uploadFailure(false);
         }
 
     }
@@ -249,7 +253,7 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
                 }
 
                 if (qiniuService!=null){
-                    qiniuService.uploadFailure();
+                    qiniuService.uploadFailure(false);
                 }
             }
         });

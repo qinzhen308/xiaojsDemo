@@ -96,7 +96,7 @@ public class CollaManager {
      * @param pagination
      * @param callback
      */
-    public void getLibraryOverview(Context context,
+    public static void getLibraryOverview(Context context,
                                    LibCriteria criteria,
                                    Pagination pagination,
                                    APIServiceCallback<LibOverview> callback) {

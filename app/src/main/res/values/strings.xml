@@ -431,4 +431,10 @@
     <string name="certification_require1">1.免冠，五官清晰可见；</string>
     <string name="certification_require2">2.双手手持证件；</string>
     <string name="certification_require3">3.证件全部信息清晰无遮挡；</string>
+
+    <!-- material -->
+    <string name="up_loading">上传中...</string>
+    <string name="up_load_failure">上传失败！</string>
+    <string name="up_load_success">上传成功！</string>
+    <string name="up_load_cancel">取消上传！</string>
 </resources>
