@@ -347,7 +347,7 @@ public class ProfileActivity extends BaseActivity {
                                     }
 
                                     @Override
-                                    public void uploadFailure() {
+                                    public void uploadFailure(boolean cancel) {
                                         cancelProgress();
                                         Toast.makeText(ProfileActivity.this, R.string.upload_portrait_fail, Toast.LENGTH_SHORT).show();
                                         mImgUploading = false;

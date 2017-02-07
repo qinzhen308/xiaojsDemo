@@ -280,7 +280,7 @@ public class PostDynamicActivity extends BaseActivity {
             }
 
             @Override
-            public void uploadFailure() {
+            public void uploadFailure(boolean cancel) {
 
                 cancelProgress();
                 Toast.makeText(PostDynamicActivity.this.getApplicationContext(),
