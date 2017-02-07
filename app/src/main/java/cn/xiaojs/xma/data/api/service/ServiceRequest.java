@@ -72,6 +72,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
     public XiaojsService getService() {
         return apiManager.getXiaojsService();
     }
+
     public LiveService getLiveService() {
         return apiManager.getLiveService();
     }
@@ -84,7 +85,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
         return serviceCallback;
     }
 
-    public void doTask(int apiType, T responseBody) {}
+    public void doTask(int apiType, T responseBody) {
+    }
 
     //Convert object to JSON string
     public String objectToJsonString(Object object) {
@@ -121,11 +123,9 @@ public class ServiceRequest<T> implements ContextLifecycle {
     private void saveCookie(okhttp3.Headers headers) {
         String cookie = headers.get("set-cookie");
         if (!TextUtils.isEmpty(cookie)) {
-            SecurityPref.setCSRFCookie(context,cookie);
+            SecurityPref.setCSRFCookie(context, cookie);
         }
     }
-
-
 
 
     //解析error body json
@@ -201,7 +201,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private static void assertNotDestroyed(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && activity.isDestroyed()) {
-            throw new IllegalArgumentException("You cannot start a load for a destroyed activity");
+            throw new IllegalArgumentException("You cannot start a load for a destroyed activity: " + activity);
         }
     }
 
@@ -304,14 +304,14 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
 
                 if (serviceCallback != null) {
-                    serviceCallback.onSuccess((T)object);
+                    serviceCallback.onSuccess((T) object);
 
 
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("load from db completed and begin request api");
                     }
 
-                    enqueueRequest(apiType,call,true);
+                    enqueueRequest(apiType, call, true);
                 }
             }
         }, params);
@@ -334,7 +334,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
                     if (serviceCallback != null) {
 
-                        if (entity !=null) {
+                        if (entity != null) {
                             serviceCallback.onSuccess(entity);
                         }
 
@@ -342,15 +342,15 @@ public class ServiceRequest<T> implements ContextLifecycle {
                             Logger.d("load from cache completed and begin request api");
                         }
 
-                        enqueueRequest(apiType,call,true);
+                        enqueueRequest(apiType, call, true);
                     }
 
                 }
-            },pClass,_class);
+            }, pClass, _class);
 
 
-        }else{
-            enqueueRequest(apiType,call);
+        } else {
+            enqueueRequest(apiType, call);
         }
 
     }
@@ -394,7 +394,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 if (cache) {
 
                     okhttp3.Response res = response.raw().networkResponse();
-                    if (res !=null && res.code() == NOT_MODIFIED) {
+                    if (res != null && res.code() == NOT_MODIFIED) {
 
                         if (XiaojsConfig.DEBUG) {
                             Logger.d("network data equals cache data,so return");
@@ -455,12 +455,12 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 if (serviceCallback != null) {
                     serviceCallback.onSuccess(object);
                 }
-            }else{
+            } else {
 
                 Error error = getError(errorBody);
                 String errorCode = "-1";
 
-                if (error != null){
+                if (error != null) {
                     errorCode = error.ec;
                 }
                 String errorMessage = ErrorPrompts.getErrorMessage(apiType, errorCode);
@@ -494,8 +494,6 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Load data from disk cache
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

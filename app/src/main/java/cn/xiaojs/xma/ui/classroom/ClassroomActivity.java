@@ -328,14 +328,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
                             if (boardCollection != null) {
                                 cancelProgress();
+                                initNotifyMsgCount();
                             } else  {
                                 //register failed
                                 ClassroomActivity.this.finish();
                             }
                         }
                     });
-
-                    initNotifyMsgCount();
                 } else {
                     Toast.makeText(ClassroomActivity.this, "BootSession 数据返回为null", Toast.LENGTH_SHORT).show();
                     cancelProgress();
