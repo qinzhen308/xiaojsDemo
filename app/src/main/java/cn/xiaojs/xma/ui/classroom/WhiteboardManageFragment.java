@@ -219,7 +219,7 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
     private void addDefaultWhiteboard() {
         WhiteboardManager.getInstance().addDefaultBoard(mContext, mUser, new WhiteboardManager.WhiteboardAddListener() {
             @Override
-            public void onWhiteboardAdded() {
+            public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
                 mWbAdapter.notifyDataSetChanged();
                 if (mContext instanceof ClassroomActivity) {
                     ((ClassroomActivity) mContext).updateWhiteboardCollCountStyle();
@@ -235,7 +235,7 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
     private void addCourseWhiteboard() {
         WhiteboardManager.getInstance().addDefaultBoard(mContext, mUser, new WhiteboardManager.WhiteboardAddListener() {
             @Override
-            public void onWhiteboardAdded() {
+            public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
                 mWbAdapter.notifyDataSetChanged();
                 if (mContext instanceof ClassroomActivity) {
                     ((ClassroomActivity) mContext).updateWhiteboardCollCountStyle();
@@ -360,7 +360,7 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
                         WhiteboardManager.getInstance().closeBoard(mContext, mUser, (WhiteboardCollection) obj,
                                 new WhiteboardManager.WhiteboardCloseListener() {
                                     @Override
-                                    public void onWhiteboardClosed() {
+                                    public void onWhiteboardClosed(WhiteboardCollection boardCollection) {
                                         notifyDataSetChanged();
                                     }
                                 });

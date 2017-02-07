@@ -307,7 +307,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             @Override
             public void onSuccess(CtlSession ctlSession) {
                 Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
-                cancelProgress();
                 if (ctlSession != null) {
                     mCtlSession = ctlSession;
                     mUser = getUser(ctlSession.psType);
@@ -324,8 +323,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                     //init whiteboard
                     mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
+                    mWhiteboardController.registerDefaultBoard(new WhiteboardManager.WhiteboardAddListener() {
+                        @Override
+                        public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
+                            cancelProgress();
+                        }
+                    });
 
                     initNotifyMsgCount();
+                } else {
+                    Toast.makeText(ClassroomActivity.this, "BootSession 数据返回为null", Toast.LENGTH_SHORT).show();
+                    cancelProgress();
                 }
             }
 

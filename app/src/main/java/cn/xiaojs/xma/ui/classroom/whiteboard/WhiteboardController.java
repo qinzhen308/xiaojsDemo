@@ -66,6 +66,10 @@ public class WhiteboardController implements
     private static final int REQUEST_GALLERY_PERMISSION = 1000;
     private static final String[] PERMISSIONS = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    /**
+     * 白板注册重试次数
+     */
+    private static final int RETRY_COUNT = 3;
 
     //private static final String TEST_VIDEO = "rtmp://demo.srs.tongchia.me:1935/live/livestream";
     private static final String TEST_VIDEO = "rtmp://pili-live-rtmp.xiaojs.cn/xiaojs/test2";
@@ -109,16 +113,14 @@ public class WhiteboardController implements
     private Constants.User mUser = Constants.User.TEACHER;
     private int mAppType = Platform.AppType.UNKNOWN;
 
-    private ArrayList<WhiteboardCollection> mWhiteboardCollectionList;
     private WhiteboardCollection mCurrWhiteboardColl;
-
     private Whiteboard mSyncWhiteboard;
     private Whiteboard mCurrWhiteboard;
 
     private Socket mSocket;
     private Handler mHandler;
     private ReceiveRunnable mSyncRunnable;
-
+    private int mCount;
 
     public WhiteboardController(Context context, View root, Constants.User client, int appType) {
         mContext = context;
@@ -156,60 +158,54 @@ public class WhiteboardController implements
     }
 
     private void initWhiteboardData(Context context) {
-        mWhiteboardCollectionList = new ArrayList<WhiteboardCollection>();
         mWhiteboardAdapter = new WhiteboardAdapter(context);
-
-        WhiteboardCollection whiteboardCollection = null;
-        if (mUser == Constants.User.STUDENT) {
-            if (mAppType == Platform.AppType.MOBILE_ANDROID ||
-                    mAppType == Platform.AppType.MOBILE_IOS ||
-                    mAppType == Platform.AppType.TABLET_ANDROID ||
-                    mAppType == Platform.AppType.TABLET_IOS) {
-                //mobile, tablet
-                whiteboardCollection = new WhiteboardCollection();
-                whiteboardCollection.setLive(true);
-                WhiteboardLayer layer = new WhiteboardLayer();
-                layer.setCanSend(false);
-                layer.setCanReceive(true);
-                whiteboardCollection.addWhiteboardLayer(layer);
-                mSyncWhiteboard.setNeedBitmapPool(false);
-                mSyncWhiteboard.setLayer(layer);
-            } else {
-                mLiveLayout.setVisibility(View.VISIBLE);
-                mWhiteboardSv.setVisibility(View.GONE);
-                mSyncWhiteboard.setVisibility(View.GONE);
-                mWhiteboardVideo.setPath(TEST_VIDEO);
-                mWhiteboardVideo.setCaptureView(mTeacherVideo);
-                mTeacherVideo.setTextureView(mWhiteboardVideo.getPlayer().getPlayer().getTextureView());
-                onResumeVideo();
-
-                //TODO test hold collection
-                whiteboardCollection = new WhiteboardCollection();
-                whiteboardCollection.setLive(true);
-                WhiteboardLayer layer = new WhiteboardLayer();
-                layer.setCanSend(false);
-                layer.setCanReceive(true);
-                whiteboardCollection.addWhiteboardLayer(layer);
-            }
-        } else {
-            mLiveLayout.setVisibility(View.GONE);
-            whiteboardCollection = new WhiteboardCollection();
-            WhiteboardLayer layer = new WhiteboardLayer();
-            layer.setCanSend(true);
-            layer.setCanReceive(false);
-            whiteboardCollection.addWhiteboardLayer(layer);
-        }
-
         mWhiteboardSv.setOffscreenPageLimit(2);
         mWhiteboardSv.setAdapter(mWhiteboardAdapter);
         mWhiteboardAdapter.setOnWhiteboardListener(this);
+    }
 
-        //第一次初始化调用
-        onSwitchWhiteboardCollection(whiteboardCollection);
+    public void registerDefaultBoard(final WhiteboardManager.WhiteboardAddListener listener) {
         WhiteboardManager.getInstance().addDefaultBoard(mContext, mUser, new WhiteboardManager.WhiteboardAddListener() {
             @Override
-            public void onWhiteboardAdded() {
+            public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
+                if (boardCollection == null) {
+                    if (mCount++ > RETRY_COUNT) {
+                        ((ClassroomActivity)mContext).finish();
+                        return;
+                    } else {
+                        registerDefaultBoard(listener);
+                    }
+                } else {
+                    //success
+                    if (listener != null) {
+                        listener.onWhiteboardAdded(boardCollection);
+                    }
 
+                    onSwitchWhiteboardCollection(boardCollection);
+                    if (mUser == Constants.User.STUDENT) {
+                        if (mAppType == Platform.AppType.MOBILE_ANDROID ||
+                                mAppType == Platform.AppType.MOBILE_IOS ||
+                                mAppType == Platform.AppType.TABLET_ANDROID ||
+                                mAppType == Platform.AppType.TABLET_IOS) {
+                            //mobile, tablet
+                            boardCollection.setLive(true);
+                            mSyncWhiteboard.setNeedBitmapPool(false);
+                            mSyncWhiteboard.setLayer(boardCollection.getWhiteboardLayer().get(0));
+                        } else {
+                            mLiveLayout.setVisibility(View.VISIBLE);
+                            mWhiteboardSv.setVisibility(View.GONE);
+                            mSyncWhiteboard.setVisibility(View.GONE);
+                            mWhiteboardVideo.setPath(TEST_VIDEO);
+                            mWhiteboardVideo.setCaptureView(mTeacherVideo);
+                            mTeacherVideo.setTextureView(mWhiteboardVideo.getPlayer().getPlayer().getTextureView());
+                            onResumeVideo();
+
+                            boardCollection.setLive(true);
+                        }
+                    } else {
+                        mLiveLayout.setVisibility(View.GONE);
+                    }
+                }
             }
         });
     }
@@ -583,9 +579,10 @@ public class WhiteboardController implements
      * 设置白板为主屏
      */
     public void setWhiteboardMainScreen() {
-        if (mUser == Constants.User.TEACHER) {
-            if (!mCurrWhiteboardColl.isLive() && mWhiteboardCollectionList != null) {
-                for (WhiteboardCollection coll : mWhiteboardCollectionList) {
+        ArrayList<WhiteboardCollection> collections = WhiteboardManager.getInstance().getWhiteboardCollectionList();
+        if (mUser == Constants.User.TEACHER && collections != null) {
+            if (!mCurrWhiteboardColl.isLive() && collections != null) {
+                for (WhiteboardCollection coll : collections) {
                     coll.setLive(false);
                 }
 

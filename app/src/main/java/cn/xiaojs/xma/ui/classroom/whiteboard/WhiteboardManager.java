@@ -95,13 +95,16 @@ public class WhiteboardManager {
                     public void onSuccess(BoardItem object) {
                         mWhiteboardCollectionList.add(wbColl);
                         if (listener != null) {
-                            listener.onWhiteboardAdded();
+                            listener.onWhiteboardAdded(wbColl);
                         }
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
                         Toast.makeText(context, "白板注册失败：" + errorMessage, Toast.LENGTH_SHORT).show();
+                        if (listener != null) {
+                            listener.onWhiteboardAdded(null);
+                        }
                     }
                 });
             }
@@ -109,7 +112,7 @@ public class WhiteboardManager {
             //学生端，白板都是本地存放，不需要注册
             mWhiteboardCollectionList.add(wbColl);
             if (listener != null) {
-                listener.onWhiteboardAdded();
+                listener.onWhiteboardAdded(wbColl);
             }
         }
     }
@@ -156,7 +159,7 @@ public class WhiteboardManager {
                     public void onSuccess(BoardItem object) {
                         mWhiteboardCollectionList.add(wbColl);
                         if (listener != null) {
-                            listener.onWhiteboardAdded();
+                            listener.onWhiteboardAdded(wbColl);
                         }
                     }
 
@@ -171,7 +174,7 @@ public class WhiteboardManager {
             //学生端，白板都是本地存放，不需要注册
             mWhiteboardCollectionList.add(wbColl);
             if (listener != null) {
-                listener.onWhiteboardAdded();
+                listener.onWhiteboardAdded(wbColl);
             }
         }
     }
@@ -180,7 +183,7 @@ public class WhiteboardManager {
         if (user == Constants.User.STUDENT) {
             if (listener != null) {
                 mWhiteboardCollectionList.remove(wbColl);
-                listener.onWhiteboardClosed();
+                listener.onWhiteboardClosed(wbColl);
             }
         } else if (context instanceof ClassroomActivity) {
             String ticket = ((ClassroomActivity) context).getTicket();
@@ -189,7 +192,7 @@ public class WhiteboardManager {
                 public void onSuccess(ResponseBody object) {
                     if (listener != null) {
                         mWhiteboardCollectionList.remove(wbColl);
-                        listener.onWhiteboardClosed();
+                        listener.onWhiteboardClosed(wbColl);
                     }
                 }
 
@@ -202,10 +205,10 @@ public class WhiteboardManager {
     }
 
     public interface WhiteboardAddListener {
-        void onWhiteboardAdded();
+        void onWhiteboardAdded(WhiteboardCollection boardCollection);
     }
 
     public interface WhiteboardCloseListener {
-        void onWhiteboardClosed();
+        void onWhiteboardClosed(WhiteboardCollection boardCollection);
     }
 }
