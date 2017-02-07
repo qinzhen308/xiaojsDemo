@@ -271,7 +271,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                             }
 
                             @Override
-                            public void uploadFailure() {
+                            public void uploadFailure(boolean cancel) {
                                 cancelProgress();
                                 Toast.makeText(c, R.string.upload_cover_fail, Toast.LENGTH_SHORT).show();
                                 mCoverImgView.setVisibility(View.GONE);

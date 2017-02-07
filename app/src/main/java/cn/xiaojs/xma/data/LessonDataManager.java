@@ -165,7 +165,7 @@ public class LessonDataManager {
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the api service callback is null,so cancel the request");
             }
-            qiniuService.uploadFailure();
+            qiniuService.uploadFailure(false);
             return;
         }
 
