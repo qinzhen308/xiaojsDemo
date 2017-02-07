@@ -132,7 +132,7 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
             @Override
             public void progress(String key, double percent) {
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("the progress====", percent);
+                    Logger.d("the progress====" + percent);
                 }
                 if (callback != null){
                     callback.uploadProgress(key, percent);
