@@ -326,7 +326,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mWhiteboardController.registerDefaultBoard(new WhiteboardManager.WhiteboardAddListener() {
                         @Override
                         public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
-                            cancelProgress();
+                            if (boardCollection != null) {
+                                cancelProgress();
+                            } else  {
+                                //register failed
+                                ClassroomActivity.this.finish();
+                            }
                         }
                     });
 

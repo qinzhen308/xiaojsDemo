@@ -169,10 +169,14 @@ public class WhiteboardController implements
             @Override
             public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
                 if (boardCollection == null) {
-                    if (mCount++ > RETRY_COUNT) {
-                        ((ClassroomActivity)mContext).finish();
+                    if (++mCount > RETRY_COUNT) {
+                        //failed
+                        if (listener != null) {
+                            listener.onWhiteboardAdded(null);
+                        }
                         return;
                     } else {
+                        //retry
                         registerDefaultBoard(listener);
                     }
                 } else {
