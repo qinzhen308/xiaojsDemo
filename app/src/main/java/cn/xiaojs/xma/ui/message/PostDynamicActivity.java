@@ -24,6 +24,7 @@ import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.Doc;
+import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.model.social.DynPost;
@@ -255,7 +256,7 @@ public class PostDynamicActivity extends BaseActivity {
 
         SocialManager.uploadSocialPhoto(this, filePath, new QiniuService() {
             @Override
-            public void uploadSuccess(String key, String fileUrl) {
+            public void uploadSuccess(String key, UploadReponse reponse) {
 
                 photoKey = key;
                 //Point point = BitmapUtils.getImageSize(filePath);

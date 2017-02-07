@@ -1,13 +1,16 @@
 package cn.xiaojs.xma.data;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.CollaRequest;
+import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.colla.LibCriteria;
 import cn.xiaojs.xma.model.colla.LibOverview;
 import cn.xiaojs.xma.model.colla.UploadParam;
-import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.model.Pagination;
 
 /**
@@ -16,18 +19,75 @@ import cn.xiaojs.xma.model.Pagination;
 
 public class CollaManager {
 
+    private QiniuRequest qiniuRequest;
+
     /**
      * Provides access to collaboration interfaces accessible to the Xiaojs client applications.
      * @param context
-     * @param param
-     * @param callback
      */
-    public static void addToLibrary(Context context,
-                                    UploadParam param,
-                                    APIServiceCallback<UploadReponse> callback) {
-        CollaRequest request = new CollaRequest(context,callback);
-        request.addToLibrary(param);
+    public void addToLibrary(Context context,
+                             @NonNull final String filePath,
+                             @NonNull final String fileName,
+                             @NonNull QiniuService qiniuService) {
+        UploadParam param = new UploadParam();
+        param.fileName = fileName;
+
+        addToLibrary(context,filePath,param,qiniuService);
     }
+
+    public void addToLibrary(Context context,
+                             @NonNull final String filePath,
+                             @NonNull final String fileName,
+                             boolean toOrLib,
+                             @NonNull QiniuService qiniuService) {
+        UploadParam param = new UploadParam();
+        param.fileName = fileName;
+        param.toOrgLib = toOrLib;
+        addToLibrary(context,filePath,param,qiniuService);
+    }
+
+    public void addToLibrary(Context context,
+                             @NonNull final String filePath,
+                             @NonNull final String fileName,
+                             String ticket,
+                             @NonNull QiniuService qiniuService) {
+        UploadParam param = new UploadParam();
+        param.fileName = fileName;
+        param.ticket = ticket;
+        addToLibrary(context,filePath,param,qiniuService);
+    }
+
+    public void addToLibrary(Context context,
+                             @NonNull final String filePath,
+                             @NonNull final String fileName,
+                             boolean toOrLib,
+                             String ticket,
+                             @NonNull QiniuService qiniuService) {
+        UploadParam param = new UploadParam();
+        param.fileName = fileName;
+        param.toOrgLib = toOrLib;
+        param.ticket = ticket;
+        addToLibrary(context,filePath,param,qiniuService);
+    }
+
+    private void addToLibrary(Context context,
+                              @NonNull final String filePath,
+                              @NonNull UploadParam param,
+                              @NonNull QiniuService qiniuService) {
+
+        qiniuRequest = new QiniuRequest(context,filePath,param,qiniuService);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY,1);
+    }
+
+    /**
+     * 取消上传
+     */
+    public void cancelAdd() {
+        if (qiniuRequest != null) {
+            qiniuRequest.cancelUpload();
+        }
+    }
+
 
     /**
      * Returns overview for all non-empty document categories in specific library.

@@ -27,6 +27,7 @@ import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.LiveLesson;
+import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 /*  =======================================================================================
@@ -249,7 +250,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                         showProgress(true);
                         LessonDataManager.requestUploadCover(c, cropImgPath, new QiniuService() {
                             @Override
-                            public void uploadSuccess(String fileName, String fileUrl) {
+                            public void uploadSuccess(String fileName, UploadReponse reponse) {
                                 cancelProgress();
                                 mCoverFileName = fileName;
                                 mCoverImgView.setVisibility(View.VISIBLE);
