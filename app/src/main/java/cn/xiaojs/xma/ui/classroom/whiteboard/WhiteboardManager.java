@@ -62,6 +62,8 @@ public class WhiteboardManager {
             mWhiteboardCollectionList.clear();
             mWhiteboardCollectionList = null;
         }
+
+        mInstance = null;
     }
 
     /**

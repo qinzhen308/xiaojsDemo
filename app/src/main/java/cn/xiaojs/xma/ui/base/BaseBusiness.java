@@ -82,7 +82,11 @@ public class BaseBusiness {
     }
 
     public static int getLessonStatusDrawable(String state) {
-        int drawable = -1;
+        if (TextUtils.isEmpty(state)) {
+            return 0;
+        }
+
+        int drawable = 0;
         if (state.equalsIgnoreCase(LessonState.DRAFT)) {
             drawable = R.drawable.course_state_draft_bg;
         } else if (state.equalsIgnoreCase(LessonState.REJECTED)) {

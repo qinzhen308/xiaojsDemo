@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,11 +23,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.document.DocumentActivity;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardProcessor;
 
@@ -52,11 +56,14 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
     private static final int NUM_COLUMN = 4;
     private static final int MAX_COUNT = 8;
 
+    public static final int REQUEST_OPEN_DOCS = 1024;
+
     private View mRoot;
     private GridView mGridView;
     private ImageView mAddWbBtn;
     private ImageView mOpenDocsBtn;
     private ImageView mDelWbBtn;
+    private ImageView mHistoryBtn;
     private Drawable mTransparentBg;
     private WbAdapter mWbAdapter;
 
@@ -128,8 +135,9 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
         mAddWbBtn = (ImageView) mRoot.findViewById(R.id.add_white_board);
         mOpenDocsBtn = (ImageView) mRoot.findViewById(R.id.open_docs);
         mDelWbBtn = (ImageView) mRoot.findViewById(R.id.del_white_board);
+        mHistoryBtn = (ImageView) mRoot.findViewById(R.id.white_board_history);
 
-        mRoot.setOnClickListener(mClickListener);
+        mHistoryBtn.setOnClickListener(mClickListener);
         mAddWbBtn.setOnClickListener(mClickListener);
         mOpenDocsBtn.setOnClickListener(mClickListener);
         mDelWbBtn.setOnClickListener(mClickListener);
@@ -172,6 +180,18 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Object obj = mWbAdapter.getItem(position);
         if (obj instanceof WhiteboardCollection) {
+            //open whiteboard
+            /*LiveManager.openBoard(mContext, mTicket, ((WhiteboardCollection) obj).getId(), new APIServiceCallback<BoardItem>() {
+                @Override
+                public void onSuccess(BoardItem object) {
+
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+
+                }
+            });*/
             ((ClassroomActivity) mContext).onSwitchWhiteboardCollection((WhiteboardCollection) obj);
             WhiteboardManageFragment.this.dismiss();
         }
@@ -199,7 +219,7 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
                         }
                     }
                     Intent i = new Intent(mContext, DocumentActivity.class);
-                    mContext.startActivity(i);
+                    getActivity().startActivityForResult(i, REQUEST_OPEN_DOCS);
                     break;
                 case R.id.del_white_board:
                     //remove white boards
@@ -210,6 +230,8 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
                             mWbAdapter.enterCloseMode();
                         }
                     }
+                    break;
+                case R.id.white_board_history:
                     break;
             }
         }
@@ -253,6 +275,12 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
         public WbAdapter() {
             mWhiteColor = mContext.getResources().getColor(R.color.white);
         }
+
+        private String[] paths = new String[]{"http://img5.imgtn.bdimg.com/it/u=3600871538,1052340553&fm=11&gp=0.jpg",
+                "http://img5.imgtn.bdimg.com/it/u=359655142,108274987&fm=23&gp=0.jpg",
+                "http://img1.imgtn.bdimg.com/it/u=3168845475,492408544&fm=23&gp=0.jpg",
+                "http://img5.imgtn.bdimg.com/it/u=4195912740,1434023583&fm=11&gp=0.jpg",
+                "http://d.hiphotos.baidu.com/zhidao/pic/item/6a600c338744ebf839e379c5d9f9d72a6159a7bd.jpg"};
 
         public WbAdapter(ArrayList<WhiteboardCollection> list) {
             mWbCollList = list;
@@ -400,9 +428,47 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
                     return null;
                 }
 
-                return WhiteboardProcessor.process(params[0], mCoverWidth, mCOverHeight);
+                WhiteboardCollection wbColl = params[0];
+                WhiteboardLayer layer = (wbColl.getWhiteboardLayer() != null && !wbColl.getWhiteboardLayer().isEmpty()) ?
+                        wbColl.getWhiteboardLayer().get(0) : null;
+
+                int bmpW = mCoverWidth;
+                int bmpH = mCOverHeight;
+                if (layer != null && layer.getWidth() > 0 && layer.getHeight() > 0) {
+                    layer.getWidth();
+                    float ratio = layer.getWidth() / (float)layer.getHeight();
+                    int temp = (int) (ratio * mCOverHeight);
+                    if (temp > mCoverWidth) {
+                        // depend width
+                        bmpW = mCoverWidth;
+                        bmpH = (int) (mCoverWidth / ratio);
+                    } else {
+                        // depend height
+                        bmpH = mCOverHeight;
+                        bmpW = temp;
+                    }
+                }
+                Bitmap bg = null;
+                Uri uri = Uri.parse(paths[0]);
+                try {
+                    bg = Glide.with(mContext)
+                            .load(uri)
+                            .asBitmap()
+                            .into(bmpW, bmpH)
+                            .get();
+                } catch (Exception e) {
+
+                }
+
+                return WhiteboardProcessor.process(wbColl, bg, bmpW, bmpH);
             }
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_OPEN_DOCS) {
+
+        }
+    }
 }

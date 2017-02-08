@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.lesson;
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -127,7 +128,6 @@ public class TeachLessonActivity extends BaseActivity {
     }
 
     private void filter() {
-
         CourseFilterDialog dialog = new CourseFilterDialog(this, false);
         dialog.setTimeSelection(timePosition);
         dialog.setStateSelection(statePosition);
@@ -151,7 +151,11 @@ public class TeachLessonActivity extends BaseActivity {
                 }
             }
         });
+    }
 
-
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //do something
     }
 }
