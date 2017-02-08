@@ -437,4 +437,5 @@
     <string name="up_load_failure">上传失败！</string>
     <string name="up_load_success">上传成功！</string>
     <string name="up_load_cancel">取消上传！</string>
+    <string name="download_of_mine">我的下载</string>
 </resources>
