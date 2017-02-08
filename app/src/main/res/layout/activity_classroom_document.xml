@@ -183,7 +183,8 @@
                     android:layout_toRightOf="@+id/upload"
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="@dimen/px40"
-                    android:src="@drawable/cr_new_folder"/>
+                    android:src="@drawable/cr_new_folder"
+                    android:visibility="gone"/>
 
             <EditText
                     android:id="@+id/search"

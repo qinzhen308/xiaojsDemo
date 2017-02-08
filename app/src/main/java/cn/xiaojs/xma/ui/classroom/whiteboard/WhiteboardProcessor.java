@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 import java.util.List;
@@ -28,27 +29,32 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 public class WhiteboardProcessor {
     private final static Object LOCK = new Object();
 
-    public static Bitmap process(WhiteboardCollection wbColl, int width, int height) {
+    public static Bitmap process(WhiteboardCollection wbColl, Bitmap courseBg, int width, int height) {
+        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bmp);
+        //draw bg
+        canvas.drawColor(Color.WHITE);
+        //TODO courseBg must center
+        if (courseBg != null) {
+            Rect src = new Rect(0, 0, courseBg.getWidth(), courseBg.getHeight());
+            Rect des = new Rect(0, 0, width, height);
+            canvas.drawBitmap(courseBg, src, des, null);
+        }
+
         if (wbColl == null) {
-            return null;
+            return bmp;
         }
 
         List<WhiteboardLayer> layers = wbColl.getWhiteboardLayer();
         if (layers == null || layers.isEmpty()) {
-            return null;
+            return bmp;
         }
 
         WhiteboardLayer layer = layers.size() == 1 ? layers.get(0) : layers.get(wbColl.getCurrIndex());
         List<Doodle> doodles = layer.getAllDoodles();
         if (doodles == null || doodles.isEmpty()) {
-            return null;
+            return bmp;
         }
-
-
-        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(bmp);
-        //draw bg
-        canvas.drawColor(Color.WHITE);
 
         Matrix matrix = new Matrix();
         matrix.setRectToRect(new RectF(0, 0, 1, 1), new RectF(0, 0, width, height), Matrix.ScaleToFit.FILL);
