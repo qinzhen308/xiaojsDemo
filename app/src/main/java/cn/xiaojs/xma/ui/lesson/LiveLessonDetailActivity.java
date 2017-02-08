@@ -11,6 +11,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -21,6 +22,7 @@ import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.Price;
+import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -327,7 +329,15 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 int h = (int) ((CourseConstant.COURSE_COVER_HEIGHT / (float) CourseConstant.COURSE_COVER_WIDTH) * w);
                 params.height = h;
                 params.width = w;
-                Glide.with(this).load(lesson.getCover()).error(R.drawable.default_lesson_cover).into(mLessonCover);
+                Dimension dimension = new Dimension();
+                dimension.width = w;
+                dimension.height = h;
+                String url = Ctl.getCover(lesson.getCover(), dimension);
+                Glide.with(this)
+                        .load(url)
+                        .placeholder(R.drawable.default_lesson_cover)
+                        .error(R.drawable.default_lesson_cover)
+                        .into(mLessonCover);
             } else {
                 //set gone
                 mLessonCoverLayout.setVisibility(View.GONE);
