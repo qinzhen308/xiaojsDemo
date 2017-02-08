@@ -522,7 +522,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         showProgress(true);
         if (mPlayState == STATE_PLAY) {
-            LiveManager.beginClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
+            LiveManager.pauseClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
                 @Override
                 public void onSuccess(ResponseBody object) {
                     cancelProgress();
@@ -537,7 +537,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 }
             });
         } else {
-            LiveManager.pauseClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
+            LiveManager.beginClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
                 @Override
                 public void onSuccess(ResponseBody object) {
                     cancelProgress();
