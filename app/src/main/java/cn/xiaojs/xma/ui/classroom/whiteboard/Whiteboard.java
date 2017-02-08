@@ -853,6 +853,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                             mDoodle.setState(Doodle.STATE_IDLE);
                             mDoodle = null;
                             postInvalidate();
+                        } else if (mDoodleAction == Action.DELETE_ACTION) {
+                            mDoodle.setState(Doodle.STATE_IDLE);
+                            mDoodle = null;
+                            postInvalidate();
                         }
                     }
                 } else {
