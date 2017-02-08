@@ -62,8 +62,22 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
     @BindView(R.id.person_home_target)
     TextView mTarget;
 
+    @BindView(R.id.person_home_fans)
+    TextView mFans;
+    @BindView(R.id.person_home_follow)
+    TextView mFollows;
+    @BindView(R.id.person_home_teaching_length)
+    TextView mTeachingLength;
+    @BindView(R.id.person_home_follow_divider)
+    View mFollowDivider;
+
     @BindView(R.id.person_home_free_video_cover)
     ImageView mFreeCover;
+
+    @BindView(R.id.person_home_message_more)
+    View mFooterMultiple;
+    @BindView(R.id.person_home_message_only)
+    View mFooterSingle;
 
     private float mCoverScale = 9.0f / 16;
 
@@ -100,7 +114,6 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
             tabs[0] = getString(R.string.my_lesson);
         }
         addContent(fragments,tabs,header,footer);
-
         mBinder = ButterKnife.bind(this);
         initHeader();
     }
@@ -117,12 +130,19 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
             mScrollRightText.setTextColor(getResources().getColor(R.color.white));
             mHead.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
             mName.setText(XiaojsConfig.mLoginUser.getName());
+
+            mFollows.setVisibility(View.VISIBLE);
+            mFollowDivider.setVisibility(View.VISIBLE);
+            needFooter(false);
         }else {
             mScrollRightText.setText("关注");
             mScrollRightText.setTextColor(getResources().getColor(R.color.white));
             mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
             mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
             mHead.setSex("true");
+
+            mFollows.setVisibility(View.GONE);
+            mFollowDivider.setVisibility(View.GONE);
         }
 
         int paddingv = getResources().getDimensionPixelSize(R.dimen.px10);
@@ -158,12 +178,14 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.scroll_tab_left_image})
+    @OnClick({R.id.scroll_tab_left_image,R.id.person_home_message_only})
     public void onClick(View view) {
 
         switch (view.getId()) {
             case R.id.scroll_tab_left_image:
                 finish();
+                break;
+            case R.id.person_home_message_only://发消息
                 break;
         }
     }

@@ -65,8 +65,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
+                <TextView
+                        android:id="@+id/person_home_level"
+                        android:textColor="@color/font_orange"
+                        android:textSize="@dimen/font_28px"
+                        android:layout_marginLeft="@dimen/px10"
+                        android:text="P8"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
                 <cn.xiaojs.xma.ui.widget.EvaluationStar
-                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginLeft="@dimen/px10"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -90,25 +100,45 @@
                     android:layout_height="wrap_content">
 
                 <TextView
+                        android:id="@+id/person_home_fans"
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_28px"
-                        android:text="35 关注"
+                        android:text="660005 粉丝"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
                 <View
-                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginLeft="@dimen/px15"
                         android:layout_width="@dimen/px1"
                         android:layout_height="@dimen/px30"
                         android:layout_gravity="center_vertical"
                         android:background="@color/white"/>
 
                 <TextView
+                        android:id="@+id/person_home_follow"
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_28px"
-                        android:layout_marginLeft="@dimen/px30"
-                        android:text="660005 粉丝"
+                        android:layout_marginLeft="@dimen/px15"
+                        android:text="220 关注"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <View
+                        android:id="@+id/person_home_follow_divider"
+                        android:layout_marginLeft="@dimen/px15"
+                        android:layout_width="@dimen/px1"
+                        android:layout_height="@dimen/px30"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/white"/>
+
+                <TextView
+                        android:id="@+id/person_home_teaching_length"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_28px"
+                        android:layout_marginLeft="@dimen/px15"
+                        android:text="239 教学时长(小时)"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
