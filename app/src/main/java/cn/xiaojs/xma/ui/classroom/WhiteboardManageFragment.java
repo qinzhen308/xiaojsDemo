@@ -52,11 +52,14 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
     private static final int NUM_COLUMN = 4;
     private static final int MAX_COUNT = 8;
 
+    public static final int REQUEST_OPEN_DOCS = 1024;
+
     private View mRoot;
     private GridView mGridView;
     private ImageView mAddWbBtn;
     private ImageView mOpenDocsBtn;
     private ImageView mDelWbBtn;
+    private ImageView mHistoryBtn;
     private Drawable mTransparentBg;
     private WbAdapter mWbAdapter;
 
@@ -128,8 +131,9 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
         mAddWbBtn = (ImageView) mRoot.findViewById(R.id.add_white_board);
         mOpenDocsBtn = (ImageView) mRoot.findViewById(R.id.open_docs);
         mDelWbBtn = (ImageView) mRoot.findViewById(R.id.del_white_board);
+        mHistoryBtn = (ImageView) mRoot.findViewById(R.id.white_board_history);
 
-        mRoot.setOnClickListener(mClickListener);
+        mHistoryBtn.setOnClickListener(mClickListener);
         mAddWbBtn.setOnClickListener(mClickListener);
         mOpenDocsBtn.setOnClickListener(mClickListener);
         mDelWbBtn.setOnClickListener(mClickListener);
@@ -199,7 +203,7 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
                         }
                     }
                     Intent i = new Intent(mContext, DocumentActivity.class);
-                    mContext.startActivity(i);
+                    getActivity().startActivityForResult(i, REQUEST_OPEN_DOCS);
                     break;
                 case R.id.del_white_board:
                     //remove white boards
@@ -210,6 +214,8 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
                             mWbAdapter.enterCloseMode();
                         }
                     }
+                    break;
+                case R.id.white_board_history:
                     break;
             }
         }
@@ -405,4 +411,10 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_OPEN_DOCS) {
+
+        }
+    }
 }

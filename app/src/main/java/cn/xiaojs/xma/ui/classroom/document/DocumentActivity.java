@@ -1,6 +1,8 @@
 package cn.xiaojs.xma.ui.classroom.document;
 
+import android.content.Intent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,7 +27,7 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
  *
  * ======================================================================================== */
 
-public class DocumentActivity extends BaseActivity {
+public class DocumentActivity extends BaseActivity implements AdapterView.OnItemClickListener {
     @BindView(R.id.my_document)
     TextView mMyDocumentTv;
     @BindView(R.id.class_document)
@@ -95,6 +97,7 @@ public class DocumentActivity extends BaseActivity {
     private void initData() {
         mDocumentAdapter = new DocumentAdapter(this, mDocListView, true);
         mDocListView.setAdapter(mDocumentAdapter);
+        mDocListView.setOnItemClickListener(this);
 
         mAllTv.setSelected(true);
     }
@@ -138,5 +141,12 @@ public class DocumentActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent i = new Intent();
+        setResult(RESULT_OK, i);
+        finish();
     }
 }

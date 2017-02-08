@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom;
 
 import android.animation.Animator;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -742,6 +743,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mMyVideo.destroy();
         mContainer.destroy();
 
+        WhiteboardManager.getInstance().release();
         if (mBinder != null) {
             mBinder.unbind();
         }
@@ -1205,4 +1207,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == WhiteboardManageFragment.REQUEST_OPEN_DOCS && mWhiteBoardManagePanel != null) {
+            mWhiteBoardManagePanel.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }
