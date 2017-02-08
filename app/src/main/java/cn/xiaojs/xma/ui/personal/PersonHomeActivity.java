@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.personal;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 import cn.xiaojs.xma.ui.view.RelationshipView;
@@ -65,8 +67,14 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
 
     private float mCoverScale = 9.0f / 16;
 
+    private boolean mIsMyself;
     @Override
     protected void initView() {
+
+        Intent intent = getIntent();
+        if (intent != null){
+            mIsMyself = intent.getBooleanExtra(PersonalBusiness.KEY_IS_MYSELF,false);
+        }
 
         PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
         PersonHomeLessonFragment f2 = new PersonHomeLessonFragment();
@@ -84,9 +92,13 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
                 getString(R.string.person_lesson),
                 getString(R.string.person_comment),
                 getString(R.string.person_moment)};
+
         View header = LayoutInflater.from(this).inflate(R.layout.layout_person_home_header, null);
         View footer = LayoutInflater.from(this).inflate(R.layout.layout_person_home_footer, null);
 
+        if (mIsMyself){
+            tabs[0] = getString(R.string.my_lesson);
+        }
         addContent(fragments,tabs,header,footer);
 
         mBinder = ButterKnife.bind(this);
@@ -100,10 +112,19 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         mBlur.setImageBitmap(blur);
         needHeader(false);
         mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
-        mScrollRightText.setText("关注");
-        mScrollRightText.setTextColor(getResources().getColor(R.color.white));
-        mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
-        mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
+        if (mIsMyself){
+            mScrollRightText.setText(R.string.edit_material);
+            mScrollRightText.setTextColor(getResources().getColor(R.color.white));
+            mHead.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
+            mName.setText(XiaojsConfig.mLoginUser.getName());
+        }else {
+            mScrollRightText.setText("关注");
+            mScrollRightText.setTextColor(getResources().getColor(R.color.white));
+            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
+            mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
+            mHead.setSex("true");
+        }
+
         int paddingv = getResources().getDimensionPixelSize(R.dimen.px10);
         int paddingh = getResources().getDimensionPixelSize(R.dimen.px15);
         mScrollRightText.setPadding(paddingh,paddingv,paddingh,paddingv);
@@ -130,7 +151,6 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
         mFollowPeople.show(lists);
 
-        mHead.setSex("true");
     }
 
     @Override
@@ -151,19 +171,33 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
     @Override
     public void onScrollY(int y) {
         if (y > mBlur.getHeight()){
-            mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
-            mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
-            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus, 0, 0, 0);
-            mScrollRightText.setBackgroundResource(R.drawable.orange_stoke_bg);
-            mScrollMiddleText.setText("林妙可");
+            if (mIsMyself){
+                mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
+                mScrollRightText.setText(R.string.edit_material);
+                mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
+                mScrollMiddleText.setText(XiaojsConfig.mLoginUser.getName());
+            }else {
+                mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
+                mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
+                mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus, 0, 0, 0);
+                mScrollRightText.setBackgroundResource(R.drawable.orange_stoke_bg);
+                mScrollMiddleText.setText("林妙可");
+            }
             mBack.setImageResource(R.drawable.back_arrow);
             needHeaderDivider(true);
         }else {
-            mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
-            mScrollRightText.setTextColor(getResources().getColor(R.color.white));
-            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
-            mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
-            mScrollMiddleText.setText("");
+            if (mIsMyself){
+                mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
+                mScrollRightText.setText(R.string.edit_material);
+                mScrollRightText.setTextColor(getResources().getColor(R.color.white));
+                mScrollMiddleText.setText("");
+            }else {
+                mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
+                mScrollRightText.setTextColor(getResources().getColor(R.color.white));
+                mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
+                mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
+                mScrollMiddleText.setText("");
+            }
             mBack.setImageResource(R.drawable.ic_white_back);
             needHeaderDivider(false);
         }
