@@ -55,6 +55,8 @@ public class MaterialActivity extends BaseActivity {
     TextView mTitle;
     @BindView(R.id.material_right_image)
     ImageView mRightImage;
+    @BindView(R.id.material_right_image2)
+    ImageView mRightImage2;
 
     MaterialAdapter mAdapter;
     CollaManager mManager;
@@ -74,16 +76,21 @@ public class MaterialActivity extends BaseActivity {
         }
         mAdapter = new MaterialAdapter(this, mList, mIsMine);
         mList.setAdapter(mAdapter);
-        mRightImage.setImageResource(R.drawable.upload_selector);
+        mRightImage2.setImageResource(R.drawable.upload_selector);
+        mRightImage.setImageResource(R.drawable.ic_my_download);
     }
 
-    @OnClick({R.id.material_left_image, R.id.material_right_image  , R.id.material_up_load_close})
+    @OnClick({R.id.material_left_image, R.id.material_right_image,R.id.material_right_image2, R.id.material_up_load_close})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.material_left_image:
                 finish();
                 break;
-            case R.id.material_right_image://上传文件
+            case R.id.material_right_image://我的下载
+                Intent intent = new Intent(this,MaterialDownloadActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.material_right_image2://上传文件
                 upload();
                 break;
             case R.id.material_up_load_close://取消上传

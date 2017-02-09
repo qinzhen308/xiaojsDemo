@@ -34,11 +34,15 @@ public abstract class BaseListActivity extends BaseActivity {
         initData();
     }
 
+    protected void setDividerHeight(int dimen) {
+        mList.getRefreshableView().getWrappedList().setDividerHeight(getResources().getDimensionPixelSize(dimen));
+    }
+
     protected abstract void initData();
 
     @OnClick({R.id.left_image})
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.left_image:
                 onBackPressed();
                 break;

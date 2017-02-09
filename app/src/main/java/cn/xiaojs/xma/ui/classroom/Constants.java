@@ -22,6 +22,7 @@ public interface Constants {
 
     public final static String KEY_CAMERA_OPEN = "key_camera_open";
     public final static String KEY_MICROPHONE_OPEN = "key_microphone_open";
+    public final static String KEY_MULTI_TALK_OPEN = "key_multi_talk_open";
 
     public final static String KEY_TICKET = "key_ticket";
 

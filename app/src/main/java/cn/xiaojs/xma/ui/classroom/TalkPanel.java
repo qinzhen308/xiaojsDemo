@@ -22,10 +22,10 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -142,6 +142,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private String mPeerTalkAccountId = "";
     private String mMyAccountId = "";
     private Constants.User mUser;
+    private boolean mPeerTabShow = false;
 
     public TalkPanel(Context context, String ticket, Constants.User user) {
         super(context);
@@ -312,7 +313,10 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 exitContactManagement();
                 break;
             case R.id.del_peer_talk_btn:
-                mPeerTalkTab.setVisibility(View.GONE);
+                mPeerTabShow = false;
+                mDelPeerTalkBtn.setVisibility(View.GONE);
+                mPeerTalkTitle.setText("");
+                switchTalkTab(MULTI_TALK);
                 break;
             case R.id.msg_send:
                 sendMsg();
@@ -324,7 +328,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 switchTalkTab(TEACHING_TALK);
                 break;
             case R.id.peer_talk_tab:
-                switchTalkTab(PEER_TALK);
+                if (mPeerTabShow) {
+                    switchTalkTab(PEER_TALK);
+                }
                 break;
             case R.id.search_btn:
                 searchContactFromLocal(mSearchEdt.getText().toString());
@@ -355,7 +361,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             case PEER_TALK:
                 mPeerTalkTab.setBackgroundColor(mWhiteColor);
                 mPeerTalkTab.setVisibility(View.VISIBLE);
-                mDelPeerTalkBtn.setVisibility(View.VISIBLE);
 
                 mPeerTalkTitle.setTextColor(mBlackFont);
                 mPeerTalkTitle.setText(getNameByAccountId(mPeerTalkAccountId));
@@ -452,65 +457,76 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                     mMultiLiveCriteria = new LiveCriteria();
                     mMultiLiveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
                     mMultiTalkAdapter = new TalkMsgAdapter(mContext, mTicket, mMultiLiveCriteria, mTalkMsgLv);
-                    mTalkMsgLv.setAdapter(mMultiTalkAdapter);
-                } else {
-                    mTalkMsgLv.setAdapter(mMultiTalkAdapter);
                 }
+
+                mTalkMsgLv.setAdapter(mMultiTalkAdapter);
                 break;
             case TEACHING_TALK:
                 if (mTeachingTalkAdapter == null) {
                     mTeachingCriteria = new LiveCriteria();
                     mTeachingCriteria.to = String.valueOf(Communications.TalkType.FACULTY);
                     mTeachingTalkAdapter = new TalkMsgAdapter(mContext, mTicket, mTeachingCriteria, mTalkMsgLv);
-                    mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
-                } else {
-                    mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
                 }
+
+                mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
                 break;
             case PEER_TALK:
-                if (mPeerCriteria == null) {
-                    mPeerCriteria = new LiveCriteria();
-                }
-
-                try {
-                    mPeerCriteria.to = mPeerTalkAccountId;
-                } catch (Exception e) {
-
-                }
-
                 //重新装载数据
-                mPeerTalkMsgAdapter = new TalkMsgAdapter(mContext, mTicket, mPeerCriteria, mTalkMsgLv);
+                if (mPeerTalkMsgAdapter == null) {
+                    if (mPeerCriteria == null) {
+                        mPeerCriteria = new LiveCriteria();
+                        mPeerCriteria.to = mPeerTalkAccountId;
+                    }
+                    mPeerTalkMsgAdapter = new TalkMsgAdapter(mContext, mTicket, mPeerCriteria, mTalkMsgLv);
+                }
+
                 mTalkMsgLv.setAdapter(mPeerTalkMsgAdapter);
                 break;
         }
+
+        scrollMsgLvToBottom();
     }
 
     /**
-     * 获取talk消息数据
+     * 更新talk消息数据
+     * @param updateMsgListView 是否更新列表
      */
-    private void updateTalkMsgData(int criteria, TalkItem talkItem) {
+    private void updateTalkMsgData(int criteria, TalkItem talkItem, boolean updateMsgListView) {
         switch (criteria) {
             case MULTI_TALK:
                 if (mMultiTalkAdapter != null) {
                     mMultiTalkAdapter.add(talkItem);
-                    mTalkMsgLv.setAdapter(mMultiTalkAdapter);
-                    mTalkMsgLv.getRefreshableView().setSelection(mMultiTalkAdapter.getCount() - 1);
+                    if (updateMsgListView) {
+                        mTalkMsgLv.setAdapter(mMultiTalkAdapter);
+                    }
                 }
                 break;
             case TEACHING_TALK:
                 if (mTeachingTalkAdapter != null) {
                     mTeachingTalkAdapter.add(talkItem);
-                    mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
-                    mTalkMsgLv.getRefreshableView().setSelection(mTeachingTalkAdapter.getCount() - 1);
+                    if (updateMsgListView) {
+                        mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
+                    }
                 }
                 break;
             case PEER_TALK:
                 if (mPeerTalkMsgAdapter != null) {
                     mPeerTalkMsgAdapter.add(talkItem);
-                    mTalkMsgLv.setAdapter(mPeerTalkMsgAdapter);
-                    mTalkMsgLv.getRefreshableView().setSelection(mPeerTalkMsgAdapter.getCount() - 1);
+                    if (updateMsgListView) {
+                        mTalkMsgLv.setAdapter(mPeerTalkMsgAdapter);
+                    }
                 }
                 break;
+        }
+
+        scrollMsgLvToBottom();
+    }
+
+    private void scrollMsgLvToBottom() {
+        ListAdapter adapter = mTalkMsgLv.getRefreshableView().getAdapter();
+        int count = adapter != null ? adapter.getCount() : 0;
+        if (count > 0) {
+            mTalkMsgLv.getRefreshableView().setSelection(count - 1);
         }
     }
 
@@ -538,11 +554,16 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
     @Override
     public void onPortraitClick(Attendee attendee) {
+        if (attendee == null) {
+            return;
+        }
+
+        mPeerTabShow = true;
         switchToTalk();
         getTalkSimpleContactData();
         mTalkAttendee = attendee;
-        mPeerTalkAccountId = attendee != null ? attendee.accountId : "";
-
+        mPeerTalkAccountId = attendee.accountId;
+        mDelPeerTalkBtn.setVisibility(View.VISIBLE);
         switchTalkTab(PEER_TALK);
     }
 
@@ -649,7 +670,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                     @Override
                     public void run() {
                         Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
-                        updateMsgList(args);
+                        handleReceivedMsg(args);
                     }
                 });
             }
@@ -659,7 +680,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     /**
      * 更新消息列表
      */
-    private void updateMsgList(Object... args) {
+    private void handleReceivedMsg(Object... args) {
         if (args == null || args.length == 0) {
             return;
         }
@@ -693,7 +714,12 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             talkItem.from.accountId = receiveBean.from;
             talkItem.from.name = getNameByAccountId(receiveBean.from);
 
-            updateTalkMsgData(mTalkCriteria, talkItem);
+            int criteria = PEER_TALK;
+            try {
+                criteria = Integer.parseInt(receiveBean.to);
+            } catch (NumberFormatException e) {
+            }
+            updateTalkMsgData(criteria, talkItem, mTalkCriteria == criteria);
         } catch (Exception e) {
 
         }
@@ -721,7 +747,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         talkItem.time = new Date(sendTime);
 
         //update task message info
-        updateTalkMsgData(mTalkCriteria, talkItem);
+        updateTalkMsgData(mTalkCriteria, talkItem, true);
 
         //send socket info
         TalkBean talkBean = new TalkBean();
@@ -732,10 +758,10 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             case MULTI_TALK:
                 talkBean.to = String.valueOf(Communications.TalkType.OPEN);
                 break;
-            case PEER_TALK:
+            case TEACHING_TALK:
                 talkBean.to = String.valueOf(Communications.TalkType.FACULTY);
                 break;
-            case TEACHING_TALK:
+            case PEER_TALK:
                 try {
                     talkBean.to = mPeerTalkAccountId;
                 } catch (Exception e) {
@@ -869,6 +895,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             mSearchLiveCollection.current = mLiveCollection.current;
             mSearchLiveCollection.open = mLiveCollection.open;
             mSearchLiveCollection.total = mLiveCollection.total;
+            mSearchLiveCollection.attendees = new ArrayList<Attendee>();
         }
 
         mSearchLiveCollection.attendees.clear();

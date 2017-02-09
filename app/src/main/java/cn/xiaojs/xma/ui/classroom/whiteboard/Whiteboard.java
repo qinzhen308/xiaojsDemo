@@ -260,11 +260,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     private String[] paths = new String[]{"http://img5.imgtn.bdimg.com/it/u=3600871538,1052340553&fm=11&gp=0.jpg",
             "http://img5.imgtn.bdimg.com/it/u=359655142,108274987&fm=23&gp=0.jpg",
-            "http://t-1.tuzhan.com/6f567e5831ce/c-1/l/2012/08/26/15/dc22714092eb4c39b3fcb19b052316db.jpg",
             "http://img1.imgtn.bdimg.com/it/u=3168845475,492408544&fm=23&gp=0.jpg",
             "http://img5.imgtn.bdimg.com/it/u=4195912740,1434023583&fm=11&gp=0.jpg",
-            "http://t-1.tuzhan.com/f0eeda541292/c-1/l/2012/08/26/19/5a2d099714604cbbbc5b6967d8847140.jpg",
-            "http://t-1.tuzhan.com/518568dff766/c-1/l/2012/08/26/15/779e9d33919e4b5eb3e8fc99745fb453.jpg",
             "http://d.hiphotos.baidu.com/zhidao/pic/item/6a600c338744ebf839e379c5d9f9d72a6159a7bd.jpg"};
 
     private void onMeasureFinished(boolean finished) {
@@ -274,7 +271,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         if (finished && mCourseUri == null && mCourseBmp == null) {
             //test
-            Uri uri = Uri.parse(paths[(int) (Math.random() * 7)]);
+            Uri uri = Uri.parse(paths[(int) (Math.random() * 4)]);
             loadCourse(uri);
         }
     }
@@ -850,6 +847,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                             hideInputMethod();
                             handleEditOnImeHide();
                             drawToDoodleCanvas();
+                            mDoodle.setState(Doodle.STATE_IDLE);
+                            mDoodle = null;
+                            postInvalidate();
+                        } else if (mDoodleAction == Action.DELETE_ACTION) {
                             mDoodle.setState(Doodle.STATE_IDLE);
                             mDoodle = null;
                             postInvalidate();

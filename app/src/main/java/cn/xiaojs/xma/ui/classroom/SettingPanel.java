@@ -15,14 +15,17 @@ package cn.xiaojs.xma.ui.classroom;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.util.XjsUtils;
 
-public class SettingPanel extends Panel implements View.OnClickListener{
+public class SettingPanel extends Panel implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, Constants{
     private TextView mFluentTv;
     private TextView mStandardTv;
     private TextView mHighTv;
@@ -57,9 +60,14 @@ public class SettingPanel extends Panel implements View.OnClickListener{
         //default fluent
         mFluentTv.setSelected(true);
 
-        mMicroPhoneSwitcher.setChecked(true);
-        mCameraSwitcher.setChecked(true);
-        mTalkSwitcher.setChecked(true);
+        SharedPreferences sf = XjsUtils.getSharedPreferences();
+        mMicroPhoneSwitcher.setChecked(sf.getBoolean(KEY_MICROPHONE_OPEN, true));
+        mCameraSwitcher.setChecked(sf.getBoolean(KEY_CAMERA_OPEN, true));
+        mTalkSwitcher.setChecked(sf.getBoolean(KEY_MULTI_TALK_OPEN, true));
+
+        mMicroPhoneSwitcher.setOnCheckedChangeListener(this);
+        mCameraSwitcher.setOnCheckedChangeListener(this);
+        mTalkSwitcher.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -88,5 +96,22 @@ public class SettingPanel extends Panel implements View.OnClickListener{
         mFluentTv.setSelected(false);
         mStandardTv.setSelected(false);
         mHighTv.setSelected(false);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        SharedPreferences.Editor editor = XjsUtils.getSharedPreferences().edit();
+        switch (buttonView.getId()) {
+            case R.id.camera_switcher:
+                editor.putBoolean(KEY_CAMERA_OPEN, isChecked);
+                break;
+            case R.id.microphone_switcher:
+                editor.putBoolean(KEY_MICROPHONE_OPEN, isChecked);
+                break;
+            case R.id.class_room_talk:
+                editor.putBoolean(KEY_MULTI_TALK_OPEN, isChecked);
+                break;
+        }
+        editor.commit();
     }
 }

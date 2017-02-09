@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/px30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/material_download_thumbnail"
+                android:src="@drawable/ic_word"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/px60"
+                android:layout_height="@dimen/px60"/>
+
+        <LinearLayout
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/material_download_name"
+                    android:text="手把手教你做人力资源"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_30px"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                    android:id="@+id/material_download_normal_wrapper"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/px10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/material_download_size"
+                        android:textSize="@dimen/font_26px"
+                        android:text="0.8M"
+                        android:textColor="@color/common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/material_download_time"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:text="2016-12-12 09:00"
+                        android:textSize="@dimen/font_26px"
+                        android:textColor="@color/common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/material_download_percent_wrapper"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/px10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/material_download_size_percent"
+                        android:textSize="@dimen/font_26px"
+                        android:text="0.8M/3.2M"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <ProgressBar
+                        android:id="@+id/material_up_load_progress"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:minHeight="@dimen/px4"
+                        android:maxHeight="@dimen/px4"
+                        android:max="100"
+                        android:progress="60"
+                        android:progressDrawable="@drawable/progress_download"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/material_download_percent"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:text="20%"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="@dimen/font_26px"
+                        android:textColor="@color/font_orange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+                android:id="@+id/material_download_close"
+                android:src="@drawable/ic_uploading_close"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+</FrameLayout>
