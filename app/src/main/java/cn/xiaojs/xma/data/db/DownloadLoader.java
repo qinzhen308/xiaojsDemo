@@ -24,21 +24,21 @@ public class DownloadLoader extends AsyncTaskLoader<Cursor> {
     @Override
     public Cursor loadInBackground() {
 
-//        String[] projections = {DBTables.TDownload._ID,
-//                DBTables.TDownload.URL,
-//                DBTables.TDownload.FILE_NAME,
-//                DBTables.TDownload.KEY,
-//                DBTables.TDownload.MIME_TYPE,
-//                DBTables.TDownload.STATUS,
-//                DBTables.TDownload.LAST_MOD,
-//                DBTables.TDownload.TOTAL_BYTES,
-//                DBTables.TDownload.CURRENT_BYTES,};
-//
-//        Cursor cursor = getContext().getContentResolver().query(DownloadProvider.DOWNLOAD_URI,
-//                projections,null,null,null);
-//        if (cursor!=null) {
-//            cursor.registerContentObserver(observer);
-//        }
+        String[] projections = {DBTables.TDownload._ID,
+                DBTables.TDownload.URL,
+                DBTables.TDownload.FILE_NAME,
+                DBTables.TDownload.KEY,
+                DBTables.TDownload.MIME_TYPE,
+                DBTables.TDownload.STATUS,
+                DBTables.TDownload.LAST_MOD,
+                DBTables.TDownload.TOTAL_BYTES,
+                DBTables.TDownload.CURRENT_BYTES,};
+
+        Cursor cursor = getContext().getContentResolver().query(DownloadProvider.DOWNLOAD_URI,
+                projections,null,null,null);
+        if (cursor!=null) {
+            cursor.registerContentObserver(observer);
+        }
 
         return null;//由于还没写好，所以先返回null
     }
