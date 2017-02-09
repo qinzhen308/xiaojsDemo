@@ -395,9 +395,6 @@ public abstract class AbsChatAdapter<B, H extends BaseHolder> extends BaseAdapte
                 view.setTag(holder);
             } else {
                 holder = (H) view.getTag();
-                TextView delete = (TextView) view.findViewById(R.id.delete);
-                TextView mark = (TextView) view.findViewById(R.id.mark);
-                setMarkListener(mark, i);
                 //setDeleteListener(delete, i);
             }
             if (holder == null) {//view可能会传成下方的占位view

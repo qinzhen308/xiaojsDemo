@@ -58,6 +58,11 @@ public class Su {
         public static final int JOIN = 660000;
         //离开教室
         public static final int LEAVE = 660001;
+
+        //同步状态
+        public static final int SYNC_STATE = 640000;
+
+        public static final int PRoVISION_FEEDBACK = 630002;
     }
 
 }
