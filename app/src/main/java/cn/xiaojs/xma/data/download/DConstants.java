@@ -6,6 +6,10 @@ package cn.xiaojs.xma.data.download;
 
 public class DConstants {
 
+    public static final String LOG_TAG = "download_log";
+
+
+
     /** The buffer size used to stream the data */
     public static final int BUFFER_SIZE = 8192;
 
@@ -20,4 +24,10 @@ public class DConstants {
 
     /** The minimum amount of time that has to elapse before the progress bar gets updated, in ms */
     public static final long MIN_PROGRESS_TIME = 2000;
+
+    /**
+     * The number of times that the download manager will retry its network
+     * operations when no progress is happening before it gives up.
+     */
+    public static final int MAX_RETRIES = 5;
 }
