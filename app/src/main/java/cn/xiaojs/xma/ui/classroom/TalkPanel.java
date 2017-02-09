@@ -732,10 +732,10 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             case MULTI_TALK:
                 talkBean.to = String.valueOf(Communications.TalkType.OPEN);
                 break;
-            case PEER_TALK:
+            case TEACHING_TALK:
                 talkBean.to = String.valueOf(Communications.TalkType.FACULTY);
                 break;
-            case TEACHING_TALK:
+            case PEER_TALK:
                 try {
                     talkBean.to = mPeerTalkAccountId;
                 } catch (Exception e) {
@@ -869,6 +869,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             mSearchLiveCollection.current = mLiveCollection.current;
             mSearchLiveCollection.open = mLiveCollection.open;
             mSearchLiveCollection.total = mLiveCollection.total;
+            mSearchLiveCollection.attendees = new ArrayList<Attendee>();
         }
 
         mSearchLiveCollection.attendees.clear();
