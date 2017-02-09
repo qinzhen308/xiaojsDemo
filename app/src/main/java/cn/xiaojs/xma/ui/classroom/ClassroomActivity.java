@@ -310,7 +310,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
                 if (ctlSession != null) {
                     mCtlSession = ctlSession;
-                    mUser = getUser(ctlSession.psType);
+                    mUser = ClassroomBusiness.getUser(ctlSession.psType);
                     //mUser = Constants.User.STUDENT;
                     mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
                     mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
@@ -374,27 +374,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
             }
         });
-    }
-
-    private Constants.User getUser(String session) {
-        Constants.User user = Constants.User.TEACHER;
-        if ("LeadSession".equals(session)) {
-            user = Constants.User.TEACHER;
-        } else if ("AssistantSession".equals(session)) {
-            user = Constants.User.ASSISTANT;
-        } else if ("RemoteAssistantSession".equals(session)) {
-            user = Constants.User.REMOTE_ASSISTANT;
-        } else if ("StudentSession".equals(session)) {
-            user = Constants.User.STUDENT;
-        } else if ("ManagerSession".equals(session)) {
-            user = Constants.User.MANAGER;
-        } else if ("AuditorSession".equals(session)) {
-            user = Constants.User.AUDITOR;
-        } else if ("AuditorSession".equals(session)) {
-            user = Constants.User.ADMINISTRATOR;
-        }
-
-        return user;
     }
 
     @Override
