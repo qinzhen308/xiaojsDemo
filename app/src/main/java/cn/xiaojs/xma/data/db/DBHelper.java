@@ -77,6 +77,7 @@ public final class DBHelper extends SQLiteOpenHelper {
 
         createContactTable(db);
         createGroupTable(db);
+        createDownloadTable(db);
     }
 
     private void createGroupTable(SQLiteDatabase db) {
@@ -116,6 +117,61 @@ public final class DBHelper extends SQLiteOpenHelper {
                 .append("); ")
                 .toString();
 
+        db.execSQL(CREATE_TABLE_SQL);
+    }
+
+    private void createDownloadTable(SQLiteDatabase db) {
+        final String CREATE_TABLE_SQL = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
+                .append(DBTables.TDownload.TABLE_NAME)
+                .append(" (")
+                .append(DBTables.TDownload._ID)
+                .append(" INTEGER PRIMARY KEY AUTOINCREMENT,")
+                .append(DBTables.TDownload.URL)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.FILE_NAME)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.TITLE)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.KEY)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.MIME_TYPE)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.CONTROL)
+                .append(" INTEGER, ")
+                .append(DBTables.TDownload.DELETED)
+                .append(" BOOLEAN NOT NULL DEFAULT 0, ")
+                .append(DBTables.TDownload.STATUS)
+                .append(" INTEGER, ")
+                .append(DBTables.TDownload.NUM_FAILED)
+                .append(" INTEGER, ")
+                .append(DBTables.TDownload.LAST_MOD)
+                .append(" BIGINT, ")
+                .append(DBTables.TDownload.REFERER)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.TOTAL_BYTES)
+                .append(" INTEGER, ")
+                .append(DBTables.TDownload.CURRENT_BYTES)
+                .append(" INTEGER, ")
+                .append(DBTables.TDownload.ETAG)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.COOKIES)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.USER_AGENT)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.DESCRIPTION)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.ERROR_MSG)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.ALLOW_METERED)
+                .append("INTEGER NOT NULL DEFAULT 1, ")
+                .append(DBTables.TDownload.FLAGS)
+                .append("INTEGER NOT NULL DEFAULT 0, ")
+                .append(DBTables.TDownload.ALLOWED_NETWORK_TYPES)
+                .append("INTEGER NOT NULL DEFAULT 0, ")
+                .append(DBTables.TDownload.ALLOWROADMING)
+                .append("INTEGER NOT NULL DEFAULT 0")
+                .append("); ")
+                .toString();
         db.execSQL(CREATE_TABLE_SQL);
     }
 
