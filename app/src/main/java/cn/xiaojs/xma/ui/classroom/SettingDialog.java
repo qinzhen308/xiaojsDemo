@@ -68,7 +68,7 @@ public class SettingDialog extends Dialog implements CompoundButton.OnCheckedCha
         mMicroPhoneBtn = (ToggleButton) findViewById(R.id.microphone_switcher);
 
         mCameraBtn.setOnCheckedChangeListener(this);
-        mCameraBtn.setOnCheckedChangeListener(this);
+        mMicroPhoneBtn.setOnCheckedChangeListener(this);
 
         //default
         mCameraBtn.setChecked(true);

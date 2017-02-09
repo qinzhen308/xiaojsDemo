@@ -114,6 +114,7 @@ public class WhiteboardController implements
     private int mAppType = Platform.AppType.UNKNOWN;
 
     private WhiteboardCollection mCurrWhiteboardColl;
+    private WhiteboardCollection mOldWhiteboardColl;
     private Whiteboard mSyncWhiteboard;
     private Whiteboard mCurrWhiteboard;
 
@@ -544,7 +545,7 @@ public class WhiteboardController implements
      * 切换白板集合
      */
     public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
-        if (wbColl != null) {
+        if (wbColl != null && wbColl != mOldWhiteboardColl) {
             mCurrWhiteboardColl = wbColl;
             if (mUser == Constants.User.STUDENT) {
                 if (wbColl.isLive()) {
@@ -576,6 +577,8 @@ public class WhiteboardController implements
                 mWhiteboardSv.setAdapter(mWhiteboardAdapter);
                 mWhiteboardSv.setCurrentItem(index);
             }
+
+            mOldWhiteboardColl = wbColl;
         }
     }
 
