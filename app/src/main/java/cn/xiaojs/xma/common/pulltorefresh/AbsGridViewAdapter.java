@@ -193,8 +193,8 @@ public abstract class AbsGridViewAdapter<B, H extends BaseHolder> extends BaseAd
             // 滑动删除list item的自定义区域
             View contentView = createContentView(position);
             contentFrame.addView(contentView);
-            TextView delete = (TextView) templateView.findViewById(R.id.delete);
-            TextView mark = (TextView) templateView.findViewById(R.id.mark);
+            TextView delete = (TextView) templateView.findViewById(R.id.swipe_delete);
+            TextView mark = (TextView) templateView.findViewById(R.id.swipe_mark);
             setMarkListener(mark,position);
             setDeleteListener(delete, position);
             onAttachSwipe(mark,delete);
@@ -368,8 +368,8 @@ public abstract class AbsGridViewAdapter<B, H extends BaseHolder> extends BaseAd
                 view.setTag(holder);
             } else {
                 holder = (H) view.getTag();
-                TextView delete = (TextView) view.findViewById(R.id.delete);
-                TextView mark = (TextView) view.findViewById(R.id.mark);
+                TextView delete = (TextView) view.findViewById(R.id.swipe_delete);
+                TextView mark = (TextView) view.findViewById(R.id.swipe_mark);
                 setMarkListener(mark,i);
                 setDeleteListener(delete, i);
             }
