@@ -47,6 +47,7 @@ import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.PortraitView;
@@ -113,7 +114,7 @@ public class MineFragment extends BaseFragment {
                 startActivity(new Intent(mContext, SettingsActivity.class));
                 break;
             case R.id.person_home:
-                startActivity(new Intent(mContext, PersonHomeActivity.class));
+                startActivity(new Intent(mContext, PersonHomeActivity.class).putExtra(PersonalBusiness.KEY_IS_MYSELF,true));
                 break;
             case R.id.portrait:
             case R.id.user_name:

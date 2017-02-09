@@ -396,6 +396,7 @@
     <string name="maybe_interest">你可能感兴趣的人</string>
     <string name="detail">详情</string>
     <string name="look_person_tip">他的个人资料，去认识一下</string>
+    <string name="my_lesson">我的课</string>
     <string name="person_lesson">Ta的课</string>
     <string name="person_comment">评价</string>
     <string name="person_moment">动态</string>
@@ -414,6 +415,7 @@
     <string name="personal">个人</string>
     <string name="organization">机构</string>
     <string name="personal_info">个人资料</string>
+    <string name="edit_material">编辑资料</string>
 
     <!-- certification -->
     <string name="certification">实名认证</string>
@@ -437,4 +439,5 @@
     <string name="up_load_failure">上传失败！</string>
     <string name="up_load_success">上传成功！</string>
     <string name="up_load_cancel">取消上传！</string>
+    <string name="download_of_mine">我的下载</string>
 </resources>

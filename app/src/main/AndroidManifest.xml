@@ -191,6 +191,9 @@
         <activity
                 android:name=".ui.lesson.EnrollLessonActivity"
                 android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.grade.MaterialDownloadActivity"
+                android:screenOrientation="portrait"/>
         <!--service-->
         <service
                 android:name=".data.loader.SyncService"

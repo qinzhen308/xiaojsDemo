@@ -133,6 +133,14 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
         }
     }
 
+    public void needFooter(boolean need){
+        if (need){
+            mFooterContainer.setVisibility(View.VISIBLE);
+        }else {
+            mFooterContainer.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected boolean delayBindView() {
         return true;
