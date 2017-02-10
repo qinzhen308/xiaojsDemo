@@ -36,6 +36,7 @@ import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.VerifyCode;
+import cn.xiaojs.xma.ui.grade.MaterialDownloadActivity;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import okhttp3.Cache;
 import okhttp3.Request;
@@ -83,7 +84,8 @@ public class TestAPIActivity extends Activity {
         switch (v.getId()) {
             case R.id.btn_svc: {
                 //testSendCode(this);
-
+                Intent intent = new Intent(this,MaterialDownloadActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.btn_svm: {
@@ -134,42 +136,23 @@ public class TestAPIActivity extends Activity {
 
 
     public void testCache() {
-
-
-        Request request = new Request.Builder().url("http://192.168.100.3:3000/v1/categories/subjects/demo").method("GET",null).build();
-
-
-        Cache cache = ApiManager.getAPIManager(this).getCache();
-
-        Class cacheCls = cache.getClass();
-        try {
-            Method m = cacheCls.getDeclaredMethod("get", Request.class);
-            m.setAccessible(true);
-
-            Response res = (Response) m.invoke(cache,request);
-
-            String b = res.body().string();
-            ObjectMapper objectMapper = new ObjectMapper();
-            CSubject subject = objectMapper.readValue(b,CSubject.class);
-
-
-
-
-            Logger.d(subject);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void testT(Context context){
-
-        DownloadManager.enqueueDownload(context,
-                "Vipkid",
+        DownloadManager.enqueueDownload(this,
+                "Vipkid.apk",
                 "testkey-23esefs",
                 "http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk",
                 null,
                 null);
+    }
+
+    private void testT(Context context){
+
+        DownloadManager.enqueueDownload(this,"pp" + System.currentTimeMillis(),
+                "key",
+                "http://img3.imgtn.bdimg.com/it/u=4271053251,2424464488&fm=23&gp=0.jpg",null,null);
+
+
+
+
 
 //        String t = "94bf60841b32192ed0df1a8e025f6c0a08bd6f1cc753610fe4d55080c34da460b15feffa68840f4e045fad946a416675";
 //        LiveManager.bootSession(getApplicationContext(), t, new APIServiceCallback<CtlSession>() {

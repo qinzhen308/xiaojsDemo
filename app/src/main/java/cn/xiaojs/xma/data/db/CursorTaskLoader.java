@@ -3,6 +3,7 @@ package cn.xiaojs.xma.data.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 
 /**
  * Created by maxiaobao on 2016/12/23.
@@ -13,6 +14,7 @@ public class CursorTaskLoader extends AsyncTaskLoader<Cursor> {
     private Context context;
     private Cursor cursor;
     private BaseDao baseDao;
+
 
     public CursorTaskLoader(Context context, BaseDao dao) {
 

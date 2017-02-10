@@ -479,7 +479,6 @@ public class DownloadThread extends Thread {
             // Delete if local file
             if (infoDelta.fileName != null) {
                 getDownloadTempFile(downloadInfo.fileName).delete();
-                infoDelta.fileName = null;
             }
 
         } else if (isStatusSuccess(infoDelta.status,infoDelta.httpCode)) {

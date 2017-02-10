@@ -55,7 +55,7 @@ public class DownloadProvider extends ContentProvider {
         SQLiteDatabase db = DBHelper.getWriteDb(getContext());
         int count = db.delete(DBTables.TDownload.TABLE_NAME, selection, selectionArgs);
 
-        notifyContentChanged(uri);
+        notifyContentChanged();
         return count;
     }
 
@@ -103,7 +103,7 @@ public class DownloadProvider extends ContentProvider {
             return null;
         }
 
-        notifyContentChanged(uri);
+        notifyContentChanged();
 
         lanuchDownload(rowID);
         return ContentUris.withAppendedId(DOWNLOAD_URI, rowID);
@@ -131,16 +131,27 @@ public class DownloadProvider extends ContentProvider {
         Cursor ret = db.query(DBTables.TDownload.TABLE_NAME, projection, selection,
                 selectionArgs, null, null, null);
 
+        if (ret != null) {
+            ret.setNotificationUri(getContext().getContentResolver(), uri);
+        }
+
         return ret;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
+        int match = sURIMatcher.match(uri);
+        if (match != DOWNLOAD_ID) {
+            return -1;
+        }
+
+        selection = DBTables.TDownload._ID + " = "+ uri.getLastPathSegment();
+
         SQLiteDatabase db = DBHelper.getWriteDb(getContext());
         int count = db.update(DBTables.TDownload.TABLE_NAME, values, selection, selectionArgs);
 
-        notifyContentChanged(uri);
+        notifyContentChanged();
 
         return count;
     }
@@ -184,8 +195,8 @@ public class DownloadProvider extends ContentProvider {
         getContext().startService(i);
     }
 
-    private void notifyContentChanged(final Uri uri) {
-        getContext().getContentResolver().notifyChange(uri, null);
+    private void notifyContentChanged() {
+        getContext().getContentResolver().notifyChange(DOWNLOAD_URI, null);
     }
 
 }

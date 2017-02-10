@@ -17,45 +17,49 @@ package cn.xiaojs.xma.ui.grade;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.data.db.DownloadLoader;
+import cn.xiaojs.xma.data.db.DBTables;
+import cn.xiaojs.xma.data.download.DownloadProvider;
 import cn.xiaojs.xma.ui.base.BaseListActivity;
 
 public class MaterialDownloadActivity extends BaseListActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private DownloadAdapter mAdapter;
-    private DownloadLoader mLoader;
     @Override
     protected void initData() {
         setMiddleTitle(R.string.download_of_mine);
         setDividerHeight(R.dimen.px1);
         getSupportLoaderManager().initLoader(0,null,this);
+
+        mAdapter = new DownloadAdapter(this,null);
+        mList.setAdapter(mAdapter);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        mLoader = new DownloadLoader(getApplicationContext());
-        return mLoader;
+        String[] projections = {DBTables.TDownload._ID,
+                DBTables.TDownload.URL,
+                DBTables.TDownload.TITLE,
+                DBTables.TDownload.FILE_NAME,
+                DBTables.TDownload.KEY,
+                DBTables.TDownload.ICON,
+                DBTables.TDownload.MIME_TYPE,
+                DBTables.TDownload.STATUS,
+                DBTables.TDownload.LAST_MOD,
+                DBTables.TDownload.TOTAL_BYTES,
+                DBTables.TDownload.CURRENT_BYTES};
+
+        return new CursorLoader(this, DownloadProvider.DOWNLOAD_URI, projections, null,null,null);
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (cursor != null){
-            if (mAdapter == null){
-                mAdapter = new DownloadAdapter(this,cursor);
-                mList.setAdapter(mAdapter);
-            }else {
-                mAdapter.swapCursor(cursor);
-            }
-
-            int count = mAdapter.getCount();
-            if (count <= 0){
-
-            }else {
-
-            }
+        if (mAdapter != null){
+            mAdapter.swapCursor(cursor);
         }
     }
 

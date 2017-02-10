@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.grade;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,11 +39,10 @@ import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class DownloadAdapter extends CursorAdapter implements StickyListHeadersAdapter {
-
     private Context mContext;
 
     public DownloadAdapter(Context context, Cursor c) {
-        super(context, c);
+        super(context, c, true);
         mContext = context;
     }
 
@@ -76,20 +76,19 @@ public class DownloadAdapter extends CursorAdapter implements StickyListHeadersA
         } else {
             holder.thumbnail.setImageResource(R.drawable.ic_unknown);
         }
-        holder.name.setText(cursor.getString(cursor.getColumnIndex(DBTables.TDownload.FILE_NAME)));
+
+        String name = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.FILE_NAME));
+        holder.name.setText(name);
 
         int status = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.STATUS));
-        if (status == DownloadInfo.DownloadStatus.STATUS_SUCCESS || status == DownloadInfo.DownloadStatus.STATUS_FAILED) {
+        if (status == DownloadInfo.DownloadStatus.STATUS_SUCCESS) {
             holder.normal();
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
             holder.size.setText(XjsUtils.getSizeFormatText(size));
             int modify = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
             holder.time.setText(TimeUtil.format(new Date(modify), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
-            if (status == DownloadInfo.DownloadStatus.STATUS_FAILED) {
-                holder.failure.setVisibility(View.VISIBLE);
-            } else {
-                holder.failure.setVisibility(View.GONE);
-            }
+            holder.failure.setVisibility(View.GONE);
+
         } else if (status == DownloadInfo.DownloadStatus.STATUS_RUNNING) {
             holder.download();
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
@@ -104,6 +103,14 @@ public class DownloadAdapter extends CursorAdapter implements StickyListHeadersA
                     //取消下载
                 }
             });
+        }else{
+            holder.normal();
+            long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
+            holder.size.setText(XjsUtils.getSizeFormatText(size));
+            int modify = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
+            holder.time.setText(TimeUtil.format(new Date(modify), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+            holder.failure.setVisibility(View.VISIBLE);
+
         }
 
     }
