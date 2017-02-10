@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
+import cn.xiaojs.xma.model.account.PrivateHome;
+import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.colla.LibOverview;
 import cn.xiaojs.xma.model.colla.TokenPair;
 import cn.xiaojs.xma.model.colla.UploadParam;
@@ -114,6 +116,14 @@ public interface XiaojsService {
     //Get Center Data
     @GET("/v1/accounts/center")
     Call<CenterData> getCenterData();
+
+    //Get Private Home
+    @GET("/v1/accounts/private")
+    Call<PrivateHome> getPrivateHome();
+
+    //Get Public Home
+    @GET("/v1/accounts/public/{account}")
+    Call<PublicHome> getPublicHome(@Path("account") String account);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

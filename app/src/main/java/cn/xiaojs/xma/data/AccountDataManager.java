@@ -19,6 +19,8 @@ import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
+import cn.xiaojs.xma.model.account.PrivateHome;
+import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.ContactGroup;
@@ -320,6 +322,29 @@ public class AccountDataManager {
     }
 
 
+    /**
+     * Returns home data used for populating one's external homepage.
+     * @param context
+     * @param callback
+     */
+    public static void getPrivateHome(Context context,
+                                      @NonNull APIServiceCallback<PrivateHome> callback) {
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.getPrivateHome();
+    }
+
+    /**
+     * Returns home data used for populating one's external homepage.
+     * @param context
+     * @param account
+     * @param callback
+     */
+    public static void getPublicHome(Context context,
+                                     String account,
+                                     @NonNull APIServiceCallback<PublicHome> callback) {
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.getPublicHome(account);
+    }
 
 
 }

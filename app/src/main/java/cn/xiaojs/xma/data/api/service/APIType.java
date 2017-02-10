@@ -18,6 +18,8 @@ public class APIType {
     public static final int GET_PROFILE = 13;
     public static final int GET_UPTOKEN = 14;
     public static final int REGISTER = 15;
+    public static final int GET_PRIVATE_HOME = 16;
+    public static final int GET_PUBLIC_HOME = 17;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

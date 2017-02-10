@@ -14,6 +14,8 @@ import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 
 
+import cn.xiaojs.xma.model.account.PrivateHome;
+import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.UpToken;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import okhttp3.ResponseBody;
@@ -101,6 +103,16 @@ public class AccountRequest extends ServiceRequest {
         Call<CenterData> call = getService().getCenterData();
         enqueueRequest(APIType.GET_CENTER_DATA,call);
 
+    }
+
+    public void getPrivateHome() {
+        Call<PrivateHome> call = getService().getPrivateHome();
+        enqueueRequest(APIType.GET_PRIVATE_HOME,call);
+    }
+
+    public void getPublicHome(String account) {
+        Call<PublicHome> call = getService().getPublicHome(account);
+        enqueueRequest(APIType.GET_PUBLIC_HOME,call);
     }
 
 }
