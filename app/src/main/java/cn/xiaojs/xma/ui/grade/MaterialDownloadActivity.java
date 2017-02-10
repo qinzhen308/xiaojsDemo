@@ -52,7 +52,9 @@ public class MaterialDownloadActivity extends BaseListActivity implements Loader
                 DBTables.TDownload.TOTAL_BYTES,
                 DBTables.TDownload.CURRENT_BYTES};
 
-        return new CursorLoader(this, DownloadProvider.DOWNLOAD_URI, projections, null,null,null);
+        String order = DBTables.TDownload._ID + " DESC";
+
+        return new CursorLoader(this, DownloadProvider.DOWNLOAD_URI, projections, null,null,order);
 
     }
 
