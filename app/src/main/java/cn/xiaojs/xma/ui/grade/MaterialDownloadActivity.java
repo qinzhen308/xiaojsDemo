@@ -14,18 +14,55 @@ package cn.xiaojs.xma.ui.grade;
  *
  * ======================================================================================== */
 
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.db.DownloadLoader;
 import cn.xiaojs.xma.ui.base.BaseListActivity;
 
-public class MaterialDownloadActivity extends BaseListActivity {
+public class MaterialDownloadActivity extends BaseListActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private MaterialDownloadAdapter mAdapter;
-
+    private DownloadAdapter mAdapter;
+    private DownloadLoader mLoader;
     @Override
     protected void initData() {
         setMiddleTitle(R.string.download_of_mine);
         setDividerHeight(R.dimen.px1);
-        mAdapter = new MaterialDownloadAdapter(this, mList);
-        mList.setAdapter(mAdapter);
+        getSupportLoaderManager().initLoader(0,null,this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        mLoader = new DownloadLoader(getApplicationContext());
+        return mLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (cursor != null){
+            if (mAdapter == null){
+                mAdapter = new DownloadAdapter(this,cursor);
+                mList.setAdapter(mAdapter);
+            }else {
+                mAdapter.swapCursor(cursor);
+            }
+
+            int count = mAdapter.getCount();
+            if (count <= 0){
+
+            }else {
+
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        if (mAdapter != null){
+            mAdapter.swapCursor(null);
+        }
     }
 }

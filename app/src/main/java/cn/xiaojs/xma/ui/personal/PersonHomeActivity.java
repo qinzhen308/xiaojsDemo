@@ -47,8 +47,6 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
 
     @BindView(R.id.person_home_header_blur)
     ImageView mBlur;
-    @BindView(R.id.person_home_look_material)
-    View mMaterial;
     @BindView(R.id.person_home_header_image_holder)
     View mImageHolder;
     @BindView(R.id.person_home_head)
@@ -78,6 +76,17 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
     View mFooterMultiple;
     @BindView(R.id.person_home_message_only)
     View mFooterSingle;
+
+    @BindView(R.id.person_home_summary_wrapper)
+    View mSummaryWrapper;
+    @BindView(R.id.person_home_relationship_wrapper)
+    View mRelationshipWrapper;
+    @BindView(R.id.person_home_target_wrapper)
+    View mTargetWrapper;
+    @BindView(R.id.person_home_look_material)
+    View mMaterialWrapper;
+    @BindView(R.id.person_home_free_wrapper)
+    View mFreeWrapper;
 
     private float mCoverScale = 9.0f / 16;
 
@@ -134,6 +143,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
             mFollows.setVisibility(View.VISIBLE);
             mFollowDivider.setVisibility(View.VISIBLE);
             needFooter(false);
+            myself();
         }else {
             mScrollRightText.setText("关注");
             mScrollRightText.setTextColor(getResources().getColor(R.color.white));
@@ -223,6 +233,39 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
             mBack.setImageResource(R.drawable.ic_white_back);
             needHeaderDivider(false);
         }
+    }
+
+
+    private void myself(){
+        mSummaryWrapper.setVisibility(View.VISIBLE);
+        mRelationshipWrapper.setVisibility(View.GONE);
+        mTargetWrapper.setVisibility(View.GONE);
+        mMaterialWrapper.setVisibility(View.GONE);
+        mFreeWrapper.setVisibility(View.GONE);
+    }
+
+    private void organization(){
+        mSummaryWrapper.setVisibility(View.VISIBLE);
+        mRelationshipWrapper.setVisibility(View.GONE);
+        mTargetWrapper.setVisibility(View.GONE);
+        mMaterialWrapper.setVisibility(View.GONE);
+        mFreeWrapper.setVisibility(View.GONE);
+    }
+
+    private void teacher(){
+        mSummaryWrapper.setVisibility(View.VISIBLE);
+        mRelationshipWrapper.setVisibility(View.GONE);
+        mTargetWrapper.setVisibility(View.GONE);
+        mMaterialWrapper.setVisibility(View.GONE);
+        mFreeWrapper.setVisibility(View.GONE);
+    }
+
+    private void student(){
+        mSummaryWrapper.setVisibility(View.GONE);
+        mRelationshipWrapper.setVisibility(View.VISIBLE);
+        mTargetWrapper.setVisibility(View.VISIBLE);
+        mMaterialWrapper.setVisibility(View.VISIBLE);
+        mFreeWrapper.setVisibility(View.GONE);
     }
 
     @Override

@@ -146,22 +146,59 @@
         </LinearLayout>
     </FrameLayout>
 
-    <TextView
-            android:textSize="@dimen/font_30px"
-            android:textColor="@color/font_black"
-            android:text="与我相关"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginTop="@dimen/px30"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    <cn.xiaojs.xma.ui.view.RelationshipView
-            android:id="@+id/person_home_relationship"
-            android:layout_marginTop="@dimen/px30"
+    <LinearLayout
+            android:id="@+id/person_home_summary_wrapper"
+            android:visibility="gone"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/common_text"
+                android:text="简介"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/person_home_summary"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px"
+                android:text="SWEET SALON品牌 创意总监"
+                android:layout_margin="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <LinearLayout
+            android:id="@+id/person_home_relationship_wrapper"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/font_black"
+                android:text="与我相关"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <cn.xiaojs.xma.ui.view.RelationshipView
+                android:id="@+id/person_home_relationship"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+            android:id="@+id/person_home_target_wrapper"
+            android:visibility="gone"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/px30"
             android:layout_width="match_parent"
@@ -201,15 +238,16 @@
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-    </LinearLayout>
 
-    <View
-            style="@style/DividerHorizontal"
-            android:layout_marginTop="@dimen/px30"/>
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px30"/>
+    </LinearLayout>
 
     <RelativeLayout
             android:id="@+id/person_home_look_material"
             android:background="@drawable/white_grey_selector"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -238,6 +276,8 @@
             android:background="@color/main_bg"/>
 
     <FrameLayout
+            android:id="@+id/person_home_free_wrapper"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

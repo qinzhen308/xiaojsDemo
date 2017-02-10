@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:background="@drawable/white_grey_selector"
              android:layout_width="match_parent"
              android:layout_height="wrap_content">
 
@@ -54,6 +55,15 @@
                         android:text="2016-12-12 09:00"
                         android:textSize="@dimen/font_26px"
                         android:textColor="@color/common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/material_download_failure"
+                        android:textSize="@dimen/font_26px"
+                        android:text="下载失败"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:textColor="@color/font_red"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
             </LinearLayout>
