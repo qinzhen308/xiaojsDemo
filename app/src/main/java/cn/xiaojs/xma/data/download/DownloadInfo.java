@@ -54,6 +54,7 @@ public class DownloadInfo {
         public void updateFromDatabase(DownloadInfo info) {
             info.id = getLong(DBTables.TDownload._ID);
             info.url = getString(DBTables.TDownload.URL);
+            info.key = getString(DBTables.TDownload.KEY);
             info.title = getString(DBTables.TDownload.TITLE);
             info.status = getInt(DBTables.TDownload.STATUS);
             info.mimeType = getString(DBTables.TDownload.MIME_TYPE);
@@ -91,9 +92,10 @@ public class DownloadInfo {
 
     public static DownloadInfo queryDownloadInfo(Context context, long downloadId) {
         final ContentResolver resolver = context.getContentResolver();
-        Cursor cursor = resolver.query(
-                ContentUris.withAppendedId(DownloadProvider.DOWNLOAD_URI, downloadId),
-                null, null, null, null);
+
+        Uri uri = ContentUris.withAppendedId(DownloadProvider.DOWNLOAD_URI, downloadId);
+
+        Cursor cursor = resolver.query(uri, null, null, null, null);
         if (cursor != null){
             final DownloadInfo.Reader reader = new DownloadInfo.Reader(resolver, cursor);
             final DownloadInfo info = new DownloadInfo(context);

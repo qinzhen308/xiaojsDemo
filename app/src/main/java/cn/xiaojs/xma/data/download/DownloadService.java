@@ -18,7 +18,7 @@ public class DownloadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        int id = intent.getIntExtra(DownloadProvider.EXTRA_DOWNLOAD_ID,-1);
+        long id = intent.getLongExtra(DownloadProvider.EXTRA_DOWNLOAD_ID,-1);
 
         if (id == -1){
             if (XiaojsConfig.DEBUG) {

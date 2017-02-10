@@ -26,8 +26,10 @@ public class DownloadLoader extends AsyncTaskLoader<Cursor> {
 
         String[] projections = {DBTables.TDownload._ID,
                 DBTables.TDownload.URL,
+                DBTables.TDownload.TITLE,
                 DBTables.TDownload.FILE_NAME,
                 DBTables.TDownload.KEY,
+                DBTables.TDownload.ICON,
                 DBTables.TDownload.MIME_TYPE,
                 DBTables.TDownload.STATUS,
                 DBTables.TDownload.LAST_MOD,
@@ -40,7 +42,7 @@ public class DownloadLoader extends AsyncTaskLoader<Cursor> {
             cursor.registerContentObserver(observer);
         }
 
-        return null;//由于还没写好，所以先返回null
+        return cursor;
     }
 
     @Override

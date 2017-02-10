@@ -24,6 +24,7 @@ public class DBTables {
         public static final String URL = "url";
         public static final String TITLE = "title";
         public static final String FILE_NAME = "filename";
+        public static final String ICON = "icon";
         public static final String STATUS = "status";
         public static final String MIME_TYPE = "mimetype";
         public static final String NUM_FAILED = "numfailed";

@@ -8,7 +8,11 @@ import android.os.Process;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,6 +23,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Locale;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.util.IOUtils;
 
@@ -31,6 +36,7 @@ import static cn.xiaojs.xma.data.download.DownloadInfo.DownloadStatus.STATUS_FIL
 import static cn.xiaojs.xma.data.download.DownloadInfo.DownloadStatus.STATUS_HTTP_DATA_ERROR;
 import static cn.xiaojs.xma.data.download.DownloadInfo.DownloadStatus.STATUS_PAUSED_BY_APP;
 import static cn.xiaojs.xma.data.download.DownloadInfo.DownloadStatus.STATUS_QUEUED_FOR_WIFI;
+import static cn.xiaojs.xma.data.download.DownloadInfo.DownloadStatus.STATUS_SUCCESS;
 import static cn.xiaojs.xma.data.download.DownloadInfo.DownloadStatus.STATUS_TOO_MANY_REDIRECTS;
 import static cn.xiaojs.xma.data.download.DownloadInfo.DownloadStatus.STATUS_UNHANDLED_HTTP_CODE;
 import static cn.xiaojs.xma.data.download.DownloadInfo.DownloadStatus.STATUS_UNKNOWN_ERROR;
@@ -81,8 +87,6 @@ public class DownloadThread extends Thread {
     private long mLastUpdateTime = 0;
 
     private final long mId;
-
-
 
 
     public DownloadThread(DownloadService service,DownloadInfo info) {
@@ -235,6 +239,9 @@ public class DownloadThread extends Thread {
                 addRequestHeaders(conn, resuming);
 
                 final int responseCode = conn.getResponseCode();
+
+                infoDelta.httpCode = responseCode;
+
                 switch(responseCode) {
                     case HTTP_OK:
                         if (resuming) {
@@ -339,7 +346,14 @@ public class DownloadThread extends Thread {
 
            // Start streaming data, periodically watch for pause/cancel
            // commands and checking disk space as needed.
-           transferData(in, out);
+
+            try {
+                out = new FileOutputStream(getDownloadTempFile(downloadInfo.fileName));
+            } catch (FileNotFoundException e) {
+                throw new StopRequestException(STATUS_FILE_ERROR, e);
+            }
+
+            transferData(in, out);
 
 
         } finally {
@@ -432,6 +446,15 @@ public class DownloadThread extends Thread {
             // so we can always resume based on latest database information.
             //outFd.sync();
 
+            if (XiaojsConfig.DEBUG){
+                Logger.d("the "
+                        + infoDelta.fileName
+                        + " total bytes:"
+                        + infoDelta.totalBytes
+                        + ", current byte:"
+                        +infoDelta.currentBytes);
+            }
+
             infoDelta.writeToDatabaseOrThrow();
 
             mLastUpdateBytes = currentBytes;
@@ -451,33 +474,33 @@ public class DownloadThread extends Thread {
      * necessary action on the downloaded file.
      */
     private void finalizeDestination() {
-        if (isStatusError(infoDelta.status)) {
+        if (isStatusError(infoDelta.status, infoDelta.httpCode)) {
 
             // Delete if local file
             if (infoDelta.fileName != null) {
-                new File(infoDelta.fileName).delete();
+                getDownloadTempFile(downloadInfo.fileName).delete();
                 infoDelta.fileName = null;
             }
 
-        } else if (isStatusSuccess(infoDelta.status)) {
+        } else if (isStatusSuccess(infoDelta.status,infoDelta.httpCode)) {
             // When success, open access if local file
-
             if (infoDelta.fileName != null) {
-                //TODO 文件转换
+                getDownloadTempFile(downloadInfo.fileName)
+                        .renameTo(getDownloadFile(downloadInfo.fileName));
             }
         }
     }
 
-    public boolean isStatusSuccess(int status) {
-        return (status >= 200 && status < 300);
+    public boolean isStatusSuccess(int status, int httpCode) {
+        return (httpCode >= 200 && httpCode < 300) && status == STATUS_SUCCESS ;
     }
 
-    public boolean isStatusError(int status) {
-        return (status >= 400 && status < 600);
+    public boolean isStatusError(int status, int httpCode) {
+        return (httpCode >= 400 && httpCode < 600) || status != STATUS_SUCCESS;
     }
 
-    public boolean isStatusCompleted(int status) {
-        return (status >= 200 && status < 300) || (status >= 400 && status < 600);
+    public boolean isStatusCompleted(int httpCode) {
+        return (httpCode >= 200 && httpCode < 300) || (httpCode >= 400 && httpCode < 600);
     }
 
 
@@ -579,6 +602,19 @@ public class DownloadThread extends Thread {
         return type;
     }
 
+    private File getDownloadTempFile(String fileName){
+        String tempFilename = fileName + ".temp";
+        return new File(getDownloadDir(),tempFilename);
+    }
+
+    private File getDownloadFile(String fileName){
+        return new File(getDownloadDir(),fileName);
+    }
+
+    private File getDownloadDir() {
+        return context.getExternalFilesDir(null);
+    }
+
     private void logDebug(String msg) {
         Log.d(LOG_TAG, "[" + mId + "] " + msg);
     }
@@ -605,6 +641,7 @@ public class DownloadThread extends Thread {
         public String eTag;
 
         public String errorMsg;
+        public int httpCode;
 
         public DownloadInfoDelta(DownloadInfo info) {
             url = info.url;

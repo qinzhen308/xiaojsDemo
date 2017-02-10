@@ -16,6 +16,7 @@ import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CategoriesManager;
+import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.LoginDataManager;
@@ -163,18 +164,25 @@ public class TestAPIActivity extends Activity {
 
     private void testT(Context context){
 
-        String t = "94bf60841b32192ed0df1a8e025f6c0a08bd6f1cc753610fe4d55080c34da460b15feffa68840f4e045fad946a416675";
-        LiveManager.bootSession(getApplicationContext(), t, new APIServiceCallback<CtlSession>() {
-            @Override
-            public void onSuccess(CtlSession object) {
+        DownloadManager.enqueueDownload(context,
+                "Vipkid",
+                "testkey-23esefs",
+                "http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk",
+                null,
+                null);
 
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+//        String t = "94bf60841b32192ed0df1a8e025f6c0a08bd6f1cc753610fe4d55080c34da460b15feffa68840f4e045fad946a416675";
+//        LiveManager.bootSession(getApplicationContext(), t, new APIServiceCallback<CtlSession>() {
+//            @Override
+//            public void onSuccess(CtlSession object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 //        CategoriesManager.requestGetSubject(context, new APIServiceCallback<CSubject>() {
 //            @Override

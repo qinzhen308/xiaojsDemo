@@ -21,17 +21,19 @@ public class DownloadProvider extends ContentProvider {
 
     public static final String EXTRA_DOWNLOAD_ID = "did";
 
-    public static final String AUTHORITY = "cn.xiaojs.downloads";
+    public static final String AUTHORITY = "cn.xiaojs.xma";
     //FIXME to impl define
-    public static final Uri DOWNLOAD_URI = Uri.parse("content://xiaojs/downloads");
+    public static final Uri DOWNLOAD_URI = Uri.parse("content://cn.xiaojs.xma/downloads");
 
-    private static final int DOC_DOWNLOAD = 1;
+    private static final int ALL_DOWNLOAD = 1;
+    private static final int DOWNLOAD_ID = 2;
 
     /** URI matcher used to recognize URIs sent by applications */
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        sURIMatcher.addURI(AUTHORITY, "downloads", DOC_DOWNLOAD);
+        sURIMatcher.addURI(AUTHORITY, "downloads", ALL_DOWNLOAD);
+        sURIMatcher.addURI(AUTHORITY, "downloads/#", DOWNLOAD_ID);
     }
 
     public SystemFacade systemFacade;
@@ -112,10 +114,18 @@ public class DownloadProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-//        int match = sURIMatcher.match(uri);
-//        if (match == -1) {
-//            throw new IllegalArgumentException("Unknown URI: " + uri);
-//        }
+        int match = sURIMatcher.match(uri);
+        if (match == -1) {
+            throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+
+        switch (match) {
+            case ALL_DOWNLOAD:
+                break;
+            case DOWNLOAD_ID:
+                selection = DBTables.TDownload._ID + " = "+ uri.getLastPathSegment();
+                break;
+        }
 
         SQLiteDatabase db = DBHelper.getReadDatabase(getContext());
         Cursor ret = db.query(DBTables.TDownload.TABLE_NAME, projection, selection,

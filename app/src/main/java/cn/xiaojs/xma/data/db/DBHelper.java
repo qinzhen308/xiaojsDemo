@@ -134,6 +134,8 @@ public final class DBHelper extends SQLiteOpenHelper {
                 .append(" TEXT, ")
                 .append(DBTables.TDownload.KEY)
                 .append(" TEXT, ")
+                .append(DBTables.TDownload.ICON)
+                .append(" TEXT, ")
                 .append(DBTables.TDownload.MIME_TYPE)
                 .append(" TEXT, ")
                 .append(DBTables.TDownload.CONTROL)
