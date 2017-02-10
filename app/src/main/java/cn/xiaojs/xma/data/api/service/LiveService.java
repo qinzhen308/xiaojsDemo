@@ -4,6 +4,8 @@ import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardItem;
+import cn.xiaojs.xma.model.live.ClassMode;
+import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.TalkItem;
@@ -53,7 +55,7 @@ public interface LiveService {
 
     //Begin Class
     @PATCH("/v1/live/{ticket}/begin")
-    Call<ResponseBody> beginClass(@Path("ticket") String ticket);
+    Call<ClassResponse> beginClass(@Path("ticket") String ticket, @Body ClassMode mode);
 
     //Close Board
     @PATCH("/v1/live/{ticket}/boards/{board}")
@@ -76,5 +78,14 @@ public interface LiveService {
     //Register Board
     @POST("/v1/live/{ticket}/boards")
     Call<BoardItem> registerBoard(@Path("ticket") String ticket, @Body Board board);
+
+    //Finish Class
+    @PATCH("/v1/live/{ticket}/end")
+    Call<ClassResponse> finishClass(@Path("ticket") String ticket);
+
+    //Resume Class
+    @PATCH("/v1/live/{ticket}/resume")
+    Call<ClassResponse> resumeClass(@Path("ticket") String ticket, @Body ClassMode mode);
+
 
 }

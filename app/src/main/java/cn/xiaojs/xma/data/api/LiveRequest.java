@@ -14,6 +14,8 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
+import cn.xiaojs.xma.model.live.ClassMode;
+import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
@@ -66,8 +68,9 @@ public class LiveRequest extends ServiceRequest{
         enqueueRequest(APIType.GET_ATTENDEES,call);
     }
 
-    public void beginClass(String ticket) {
-        Call<ResponseBody> call = getLiveService().beginClass(ticket);
+    public void beginClass(String ticket, ClassMode mode) {
+
+        Call<ClassResponse> call = getLiveService().beginClass(ticket, mode);
         enqueueRequest(APIType.BEGIN_CLASS, call);
     }
 
@@ -106,5 +109,16 @@ public class LiveRequest extends ServiceRequest{
     public void registerBoard(String ticket, Board board) {
         Call<BoardItem> call = getLiveService().registerBoard(ticket, board);
         enqueueRequest(APIType.REGISTER_BOARD, call);
+    }
+
+    public void finishClass(String ticket) {
+        Call<ClassResponse> call = getLiveService().finishClass(ticket);
+        enqueueRequest(APIType.FINISH_CLASS,call);
+    }
+
+    public void resumeClass(String ticket, ClassMode mode) {
+
+        Call<ClassResponse> call = getLiveService().resumeClass(ticket,mode);
+        enqueueRequest(APIType.RESUME_CLASS,call);
     }
 }

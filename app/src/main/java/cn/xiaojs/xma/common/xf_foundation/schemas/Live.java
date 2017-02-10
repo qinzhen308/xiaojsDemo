@@ -26,4 +26,18 @@ public class Live {
 
     }
 
+
+    public class StreamMode {
+        // No need to start streaming
+        public static final int NO = 0;
+        // Enabled both Video & Audio
+        public static final int AV = 1;
+        // Enabled audio only
+        public static final int AUDIO_ONLY = 2;
+        // Enabled video but filtered out audio channels
+        public static final int MUTE = 3;
+        // Turned off both audio & video and streaming board only, effective on XWC only
+        public static final int BOARD_ONLY = 4;
+    }
+
 }

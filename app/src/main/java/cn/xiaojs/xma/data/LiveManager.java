@@ -9,6 +9,8 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
+import cn.xiaojs.xma.model.live.ClassMode;
+import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
@@ -93,9 +95,28 @@ public class LiveManager {
      */
     public static void beginClass(Context context,
                                   String ticket,
-                                  APIServiceCallback<ResponseBody> callback) {
+                                  APIServiceCallback<ClassResponse> callback) {
+
         LiveRequest request = new LiveRequest(context,callback);
-        request.beginClass(ticket);
+        request.beginClass(ticket,null);
+    }
+
+    /**
+     * Actually starts the scheduled live session by the teaching lead.
+     * @param context
+     * @param ticket
+     * @param callback
+     */
+    public static void beginClass(Context context,
+                                  String ticket,
+                                  int mode,
+                                  APIServiceCallback<ClassResponse> callback) {
+
+        ClassMode classMode = new ClassMode();
+        classMode.mode = mode;
+
+        LiveRequest request = new LiveRequest(context,callback);
+        request.beginClass(ticket,classMode);
     }
 
     /**
@@ -176,6 +197,50 @@ public class LiveManager {
                                      APIServiceCallback<BoardItem> callback) {
         LiveRequest request = new LiveRequest(context,callback);
         request.registerBoard(ticket, board);
+    }
+
+    /**
+     * Requests to finish the live session by the teaching lead.
+     * @param context
+     * @param ticket
+     * @param callback
+     */
+    public static void finishClass(Context context,
+                                     String ticket,
+                                     APIServiceCallback<ClassResponse> callback) {
+        LiveRequest request = new LiveRequest(context,callback);
+        request.finishClass(ticket);
+    }
+
+    /**
+     * Manually resumes a paused live session.
+     * @param context
+     * @param ticket
+     * @param callback
+     */
+    public static void resumeClass(Context context,
+                                   String ticket,
+                                   APIServiceCallback<ClassResponse> callback) {
+        LiveRequest request = new LiveRequest(context,callback);
+        request.resumeClass(ticket, null);
+    }
+
+    /**
+     * Manually resumes a paused live session.
+     * @param context
+     * @param ticket
+     * @param mode
+     * @param callback
+     */
+    public static void resumeClass(Context context,
+                                   String ticket,
+                                   int mode,
+                                   APIServiceCallback<ClassResponse> callback) {
+        ClassMode classMode = new ClassMode();
+        classMode.mode = mode;
+
+        LiveRequest request = new LiveRequest(context,callback);
+        request.resumeClass(ticket, classMode);
     }
 
 }

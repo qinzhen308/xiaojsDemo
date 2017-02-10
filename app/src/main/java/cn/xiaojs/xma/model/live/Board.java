@@ -15,7 +15,13 @@ public class Board {
     public String title;
     public long sort = System.currentTimeMillis();
     public int type = Live.BoardType.WHITE;
-    public Dimension drawing;
+    public DrawDimension drawing;
     public SlidePage[] pages;
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class DrawDimension extends Dimension {
+        public String snapshot;
+    }
 
 }

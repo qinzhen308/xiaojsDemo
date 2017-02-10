@@ -32,6 +32,7 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
@@ -516,9 +517,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 }
             });
         } else {
-            LiveManager.beginClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
+            LiveManager.beginClass(this, mTicket, new APIServiceCallback<ClassResponse>() {
                 @Override
-                public void onSuccess(ResponseBody object) {
+                public void onSuccess(ClassResponse object) {
                     cancelProgress();
                     mPlayState = STATE_PLAY;
                     ((ImageView) view).setImageResource(R.drawable.ic_cr_pause);

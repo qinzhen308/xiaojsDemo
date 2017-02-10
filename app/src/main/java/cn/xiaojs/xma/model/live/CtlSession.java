@@ -18,7 +18,12 @@ public class CtlSession {
     public ConnectType connected;
     public String psType;
     public String state;
-    public Date finishOn;
+    public long startOn;
+    public long finishOn;
+    public String publishUrl;
+    public String playUrl;
+    public int streamMode;
+    public String claimedBy;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,6 +34,7 @@ public class CtlSession {
         public String title;
         public String state;
         public String startedOn;
+        public long duration;
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)

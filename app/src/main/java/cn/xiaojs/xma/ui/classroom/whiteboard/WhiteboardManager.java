@@ -94,7 +94,7 @@ public class WhiteboardManager {
                 String ticket = ((ClassroomActivity) context).getTicket();
                 Board board = new Board();
                 board.title = collTitle;
-                board.drawing = new Dimension();
+                board.drawing = new Board.DrawDimension();
                 board.drawing.width = ProtocolConfigs.VIRTUAL_WIDTH;
                 board.drawing.height = ProtocolConfigs.VIRTUAL_HEIGHT;
                 LiveManager.registerBoard(context, ticket, board, new APIServiceCallback<BoardItem>() {
@@ -156,7 +156,7 @@ public class WhiteboardManager {
 
                 Board board = new Board();
                 board.title = collTitle;
-                board.drawing = new Dimension();
+                board.drawing = new Board.DrawDimension();
                 board.drawing.width = ProtocolConfigs.VIRTUAL_WIDTH;
                 board.drawing.height = ProtocolConfigs.VIRTUAL_HEIGHT;
                 board.pages = new SlidePage[whiteboardName.length];

@@ -109,6 +109,8 @@ public class APIType {
     public static final int OPEN_BOARD = 86;
     public static final int PAUSE_CLASS = 87;
     public static final int REGISTER_BOARD = 88;
+    public static final int FINISH_CLASS = 89;
+    public static final int RESUME_CLASS = 890;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Collaborations
