@@ -324,6 +324,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                     initPanel();
 
+                    addPlayUrl(ctlSession.playUrl);
+
                     setPlayPauseBtnStyle(ctlSession.state);
                     //init socket
                     initSocketIO(mTicket, ctlSession.secret);
@@ -355,6 +357,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 cancelProgress();
             }
         });
+    }
+
+    private void addPlayUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            mContainer.addPlayer(url);
+        }
     }
 
     private void setPlayPauseBtnStyle(String liveSessionState) {
@@ -457,12 +465,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 playOrPauseLesson(v);
 
                 //live
-                if (!m) {
+                /*if (!m) {
                     mContainer.addPlayer(Config.pathCfu);
                     m = !m;
                     break;
                 }
-                mContainer.addPlayer(Config.pathHK);
+                mContainer.addPlayer(Config.pathHK);*/
                 break;
             case R.id.course_ware_btn:
                 openCourseWarePanel();
