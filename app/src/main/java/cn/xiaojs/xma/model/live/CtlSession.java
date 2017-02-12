@@ -20,6 +20,7 @@ public class CtlSession {
     public String state;
     public long startOn;
     public long finishOn;
+    public long hasTaken;
     public String publishUrl;
     public String playUrl;
     public int streamMode;
