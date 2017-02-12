@@ -32,8 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -50,14 +48,13 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
-import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.bean.TalkItem;
+import cn.xiaojs.xma.ui.classroom.bean.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ContactBookAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.OnPortraitClickListener;
-import cn.xiaojs.xma.ui.classroom.talk.TalkBean;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
-import cn.xiaojs.xma.ui.classroom.talk.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.talk.TalkSimpleContactAdapter;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
@@ -491,7 +488,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
      * 更新talk消息数据
      * @param updateMsgListView 是否更新列表
      */
-    private void updateTalkMsgData(int criteria, TalkItem talkItem, boolean updateMsgListView) {
+    private void updateTalkMsgData(int criteria, cn.xiaojs.xma.model.live.TalkItem talkItem, boolean updateMsgListView) {
         switch (criteria) {
             case MULTI_TALK:
                 if (mMultiTalkAdapter != null) {
@@ -611,25 +608,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             return;
         }
 
-        Attendee attendee = null;
-        try {
-            String result = null;
-            if ((args[0] instanceof JSONObject)) {
-                result = args[0].toString();
-            } else {
-                result = (String) args[0];
-            }
-
-            if (TextUtils.isEmpty(result)) {
-                return;
-            }
-
-            ObjectMapper mapper = new ObjectMapper();
-            attendee = mapper.readValue(result, Attendee.class);
-        } catch (Exception e) {
-
-        }
-
+        Attendee attendee = ClassroomBusiness.parseSocketBean(args, Attendee.class);
         if (attendee != null && mLiveCollection != null) {
             if (mLiveCollection.attendees == null) {
                 mLiveCollection.attendees = new ArrayList<Attendee>();
@@ -686,30 +665,15 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         }
 
         try {
-            String result = null;
-            if ((args[0] instanceof JSONObject)) {
-                result = args[0].toString();
-            } else if (args[0] instanceof String) {
-                result = (String) args[0];
-            }
-
-            if (TextUtils.isEmpty(result)) {
-                return;
-            }
-
-            TalkBean receiveBean = null;
-            ObjectMapper mapper = new ObjectMapper();
-            receiveBean = mapper.readValue(result, TalkBean.class);
-
-
+            TalkItem receiveBean = ClassroomBusiness.parseSocketBean(args, TalkItem.class);
             if (receiveBean == null) {
                 return;
             }
 
-            TalkItem talkItem = new TalkItem();
+            cn.xiaojs.xma.model.live.TalkItem talkItem = new cn.xiaojs.xma.model.live.TalkItem();
             talkItem.time = new Date(receiveBean.time);
-            talkItem.body = new TalkItem.TalkContent();
-            talkItem.from = new TalkItem.TalkPerson();
+            talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
+            talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
             talkItem.body.text = receiveBean.body.text;
             talkItem.from.accountId = receiveBean.from;
             talkItem.from.name = getNameByAccountId(receiveBean.from);
@@ -736,11 +700,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             return;
         }
 
-        TalkItem talkItem = new TalkItem();
+        cn.xiaojs.xma.model.live.TalkItem talkItem = new cn.xiaojs.xma.model.live.TalkItem();
         //file myself info
         fillMyselfInfo(talkItem);
 
-        talkItem.body = new TalkItem.TalkContent();
+        talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
         talkItem.body.text = text;
 
         long sendTime = System.currentTimeMillis();
@@ -750,8 +714,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         updateTalkMsgData(mTalkCriteria, talkItem, true);
 
         //send socket info
-        TalkBean talkBean = new TalkBean();
-        talkBean.body = new TalkBean.TalkContent();
+        TalkItem talkBean = new TalkItem();
+        talkBean.body = new TalkItem.TalkContent();
         talkBean.body.text = text;
         talkBean.time = sendTime;
         switch (mTalkCriteria) {
@@ -769,16 +733,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 }
                 break;
         }
-        String sendJson = null;
-        JSONObject data = null;
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            sendJson = mapper.writeValueAsString(talkBean);
-            data = new JSONObject(sendJson);
-        } catch (Exception e) {
-
-        }
-        if (sendJson != null && mSocket != null) {
+        JSONObject data = ClassroomBusiness.wrapSocketBean(talkBean);
+        if (data != null && mSocket != null) {
             mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), data, new Ack() {
                 @Override
                 public void call(final Object... args) {
@@ -818,9 +774,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             }
 
             TalkResponse talkResponse = null;
-            ObjectMapper mapper = new ObjectMapper();
-            talkResponse = mapper.readValue(result, TalkResponse.class);
-
+            talkResponse = ClassroomBusiness.parseSocketBean(result, TalkResponse.class);
 
             if (talkResponse == null) {
                 return;
@@ -837,8 +791,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         }
     }
 
-    private void fillMyselfInfo(TalkItem talkItem) {
-        talkItem.from = new TalkItem.TalkPerson();
+    private void fillMyselfInfo(cn.xiaojs.xma.model.live.TalkItem talkItem) {
+        talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
         talkItem.from.accountId = mMyAccountId;
         cn.xiaojs.xma.model.account.User mLoginUser = XiaojsConfig.mLoginUser;
         if (mLoginUser != null) {

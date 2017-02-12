@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.talk;
+package cn.xiaojs.xma.ui.classroom.bean;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,20 +9,14 @@ package cn.xiaojs.xma.ui.classroom.talk;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/1/17
- * Desc:针对socket聊天的bean
+ * Date:2017/1/22
+ * Desc:
  *
  * ======================================================================================== */
 
-public class TalkBean {
-
-    public String from;
+public class TalkResponse {
     public String to;
     public long time;
-    public TalkContent body;
-
-    public static class TalkContent{
-        public String text;
-        public int contentType;
-    }
+    public boolean result;
+    public String data;
 }
