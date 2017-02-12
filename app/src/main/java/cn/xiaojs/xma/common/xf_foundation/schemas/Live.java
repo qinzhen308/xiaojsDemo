@@ -40,4 +40,16 @@ public class Live {
         public static final int BOARD_ONLY = 4;
     }
 
+    public class LiveSessionState {
+        public static final String SCHEDULED = "Scheduled";
+        public static final String PENDING_FOR_JOIN = "PendingForJoin";
+        public static final String LIVE = "Live";
+        public static final String DELAY = "Delayed";
+        public static final String FINISHED = "Finished";
+        public static final String TERMINATED = "Terminated";
+        public static final String ABORTED = "Aborted";
+        public static final String CANCELLED = "Cancelled";
+        public static final String RESET = "Rest";
+    }
+
 }

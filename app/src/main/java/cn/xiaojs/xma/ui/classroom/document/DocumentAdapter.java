@@ -25,7 +25,7 @@ import cn.xiaojs.xma.util.XjsUtils;
  *  package, may result in severe civil and criminal penalties, and will be prosecuted to
  *  the maximum extent under the law.
  *
- *  ---------------------------------------------------------------------------------------
+ *  --------------------------\-------------------------------------------------------------
  * Author:huangyong
  * Date:2016/12/29
  * Desc:

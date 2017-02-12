@@ -2,6 +2,7 @@ package cn.xiaojs.xma.data;
 
 import android.content.Context;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.api.LiveRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
@@ -96,9 +97,11 @@ public class LiveManager {
     public static void beginClass(Context context,
                                   String ticket,
                                   APIServiceCallback<ClassResponse> callback) {
+        ClassMode classMode = new ClassMode();
+        classMode.mode = Live.StreamMode.NO;
 
         LiveRequest request = new LiveRequest(context,callback);
-        request.beginClass(ticket,null);
+        request.beginClass(ticket, classMode);
     }
 
     /**
@@ -116,7 +119,7 @@ public class LiveManager {
         classMode.mode = mode;
 
         LiveRequest request = new LiveRequest(context,callback);
-        request.beginClass(ticket,classMode);
+        request.beginClass(ticket, classMode);
     }
 
     /**
@@ -221,8 +224,11 @@ public class LiveManager {
     public static void resumeClass(Context context,
                                    String ticket,
                                    APIServiceCallback<ClassResponse> callback) {
+        ClassMode classMode = new ClassMode();
+        classMode.mode = Live.StreamMode.NO;
+
         LiveRequest request = new LiveRequest(context,callback);
-        request.resumeClass(ticket, null);
+        request.resumeClass(ticket, classMode);
     }
 
     /**

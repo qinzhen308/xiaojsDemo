@@ -14,6 +14,12 @@ package cn.xiaojs.xma.ui.classroom;
  *
  * ======================================================================================== */
 
+import android.text.TextUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONObject;
+
 public class ClassroomBusiness {
     public static Constants.User getUser(String session) {
         Constants.User user = Constants.User.TEACHER;
@@ -34,5 +40,49 @@ public class ClassroomBusiness {
         }
 
         return user;
+    }
+
+    public static <T> T parseSocketBean(Object obj, Class<T> valueType) {
+        if (obj == null) {
+            return null;
+        }
+
+        try {
+            String result = null;
+            if ((obj instanceof JSONObject)) {
+                result = obj.toString();
+            } else if (obj instanceof String ){
+                result = (String) obj;
+            } else {
+                result = obj.toString();
+            }
+
+            if (TextUtils.isEmpty(result)) {
+                return null;
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(result, valueType);
+        } catch (Exception e) {
+
+        }
+
+        return null;
+    }
+
+    public static JSONObject wrapSocketBean(Object obj) {
+        JSONObject data = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String sendJson = mapper.writeValueAsString(obj);
+            if (sendJson == null) {
+                return null;
+            }
+            data = new JSONObject(sendJson);
+        } catch (Exception e) {
+
+        }
+
+        return data;
     }
 }

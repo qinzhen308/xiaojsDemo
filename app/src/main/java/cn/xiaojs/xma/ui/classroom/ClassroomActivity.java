@@ -26,7 +26,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -36,6 +38,7 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -165,18 +168,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private boolean mAnimating = false;
     private PanelAnimListener mPanelAnimListener;
     private boolean mNeedOpenWhiteBoardPanel = false;
-    private int mPlayState = STATE_STOP;
+    private String mLiveSessionState = Live.LiveSessionState.PENDING_FOR_JOIN;
 
     private WhiteboardController mWhiteboardController;
     private Bundle mExtraData;
 
     private CommonDialog mExitDialog;
+    private CommonDialog mFinishDialog;
 
     private Socket mSocket;
     private Boolean mSktConnected = false;
 
     private String mTicket = "";
     private CtlSession mCtlSession;
+    private SyncStateResponse mSyncState;
     private Constants.User mUser = Constants.User.STUDENT;
     private int mAppType = Platform.AppType.UNKNOWN;
 
@@ -312,13 +317,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (ctlSession != null) {
                     mCtlSession = ctlSession;
                     mUser = ClassroomBusiness.getUser(ctlSession.psType);
-                    //mUser = Constants.User.STUDENT;
+                    mLiveSessionState = ctlSession.state;
                     mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
                     mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
-                    //mAppType = Platform.AppType.WEB_CLASSROOM;
+
 
                     initPanel();
 
+                    setPlayPauseBtnStyle(ctlSession.state);
                     //init socket
                     initSocketIO(mTicket, ctlSession.secret);
                     listenSocket();
@@ -331,7 +337,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             if (boardCollection != null) {
                                 cancelProgress();
                                 initNotifyMsgCount();
-                            } else  {
+                            } else {
                                 //register failed
                                 ClassroomActivity.this.finish();
                             }
@@ -349,6 +355,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 cancelProgress();
             }
         });
+    }
+
+    private void setPlayPauseBtnStyle(String liveSessionState) {
+        if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)
+                || Live.LiveSessionState.RESET.equals(liveSessionState)) {
+            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
+        } else if (Live.LiveSessionState.LIVE.equals(liveSessionState)) {
+            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
+        }
     }
 
     /**
@@ -495,18 +510,18 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * 开启或暂停课
      */
     private void playOrPauseLesson(final View view) {
-        if (TextUtils.isEmpty(mTicket)) {
+        if (TextUtils.isEmpty(mTicket) || Live.LiveSessionState.FINISHED.equals(mLiveSessionState)) {
             //TODO toast
             return;
         }
 
         showProgress(true);
-        if (mPlayState == STATE_PLAY) {
+        if (Live.LiveSessionState.LIVE.equals(mLiveSessionState)) {
             LiveManager.pauseClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
                 @Override
                 public void onSuccess(ResponseBody object) {
                     cancelProgress();
-                    mPlayState = STATE_PAUSE;
+                    mLiveSessionState = Live.LiveSessionState.RESET;
                     ((ImageView) view).setImageResource(R.drawable.ic_cr_start);
                 }
 
@@ -516,12 +531,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     Log.i("aaa", "beginClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
                 }
             });
-        } else {
-            LiveManager.beginClass(this, mTicket, new APIServiceCallback<ClassResponse>() {
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(mLiveSessionState)) {
+            LiveManager.beginClass(this, mTicket, Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
                 @Override
                 public void onSuccess(ClassResponse object) {
                     cancelProgress();
-                    mPlayState = STATE_PLAY;
+                    mLiveSessionState = Live.LiveSessionState.LIVE;
                     ((ImageView) view).setImageResource(R.drawable.ic_cr_pause);
                 }
 
@@ -531,6 +546,23 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     Log.i("aaa", "pauseClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
                 }
             });
+        } else if (Live.LiveSessionState.RESET.equals(mLiveSessionState)) {
+            LiveManager.resumeClass(this, mTicket, Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
+                @Override
+                public void onSuccess(ClassResponse object) {
+                    cancelProgress();
+                    mLiveSessionState = Live.LiveSessionState.LIVE;
+                    ((ImageView) view).setImageResource(R.drawable.ic_cr_pause);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    Log.i("aaa", "pauseClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
+                }
+            });
+        } else {
+            cancelProgress();
         }
     }
 
@@ -1073,7 +1105,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mExitDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {
-                    //exitClassroom();
                     ClassroomActivity.this.finish();
                     mExitDialog.dismiss();
                 }
@@ -1083,12 +1114,40 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mExitDialog.show();
     }
 
-    private void exitClassroom() {
+
+    private void showFinishDialog() {
+        if (mFinishDialog == null) {
+            mFinishDialog = new CommonDialog(this);
+            mFinishDialog.setTitle(R.string.finish_classroom);
+            mFinishDialog.setDesc(R.string.finish_classroom_tips);
+            int width = DeviceUtil.getScreenWidth(this) / 2;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mFinishDialog.setDialogLayout(width, height);
+
+            mFinishDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mFinishDialog.dismiss();
+                }
+            });
+
+            mFinishDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mFinishDialog.dismiss();
+                    finishClassroom();
+                }
+            });
+        }
+
+        mFinishDialog.show();
+    }
+
+    private void finishClassroom() {
         showProgress(true);
-        //TODO
-        LiveManager.pauseClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
+        LiveManager.finishClass(this, mTicket, new APIServiceCallback<ClassResponse>() {
             @Override
-            public void onSuccess(ResponseBody object) {
+            public void onSuccess(ClassResponse object) {
                 cancelProgress();
                 ClassroomActivity.this.finish();
             }
@@ -1096,10 +1155,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Log.i("aaa", "beginClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
+                ClassroomActivity.this.finish();
             }
         });
     }
+
 
     private void initSocketIO(String ticket, String secret) {
         SocketManager.init(ticket, secret);
@@ -1118,7 +1178,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mSocket.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
-        mSocket.on(Event.WELCOME, mOnWelcome);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
     }
 
     private void disConnectIO() {
@@ -1183,6 +1243,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (args != null && args.length > 0 && mSocket != null) {
                 mSocket.emit(Event.JOIN, Constants.ROOM_DRAW);
                 mSocket.emit(Event.BEGIN);
+            }
+        }
+    };
+
+    private Emitter.Listener mSyncStateListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            if (args != null && args.length > 0) {
+                mSyncState = ClassroomBusiness.parseSocketBean(args[0], SyncStateResponse.class);
             }
         }
     };
