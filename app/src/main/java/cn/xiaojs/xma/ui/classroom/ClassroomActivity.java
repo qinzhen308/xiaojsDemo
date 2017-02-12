@@ -339,7 +339,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                                 initNotifyMsgCount();
                             } else {
                                 //register failed
-                                ClassroomActivity.this.finish();
+                                //ClassroomActivity.this.finish();
                             }
                         }
                     });
@@ -1262,5 +1262,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (requestCode == WhiteboardManageFragment.REQUEST_OPEN_DOCS && mWhiteBoardManagePanel != null) {
             mWhiteBoardManagePanel.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void onPublishMyVideo(String publishUrl) {
+
     }
 }

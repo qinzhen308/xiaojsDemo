@@ -20,30 +20,30 @@ public class SyncStateResponse {
     public String event;
     public String from;
     public String to;
-    public TimeLine timeLine;
-    public Date finishOnDate;
-    public long finishOn;
-    public Date conveneOn;
-    public Date restartOn;
-    public Date dismissDue;
-    public Date resumeDue;
-    public long hasTaken;
+    public TimeLine timeline;
 
     /**
      * The timeline details. Use with cautious due to several attributes are available on specific
      * states only.
      */
-    public class TimeLine {
+    public static class TimeLine {
         public boolean hasPostponed;
+        public Duration currentDuration;
         public Date startOnDate;
         public long startOn;
-        public Duration currentDuration;
+        public Date finishOnDate;
+        public long finishOn;
+        public Date conveneOn;
+        public Date restartOn;
+        public Date dismissDue;
+        public Date resumeDue;
+        public long hasTaken;
     }
 
     /**
      * The current duration.
      */
-    public class Duration {
+    public static class Duration {
         public Date start;
         public long duration;
     }

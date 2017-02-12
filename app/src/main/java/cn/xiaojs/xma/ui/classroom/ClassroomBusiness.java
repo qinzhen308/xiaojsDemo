@@ -64,7 +64,7 @@ public class ClassroomBusiness {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(result, valueType);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         return null;
