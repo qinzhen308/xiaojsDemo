@@ -132,6 +132,7 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
     @Override
     protected void onDeleteClick(Cursor cursor) {
         ToastUtil.showToast(mContext,"DELETE");
+        //DownloadManager.delDownload(mContext,id);
     }
 
     @Override
