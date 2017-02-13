@@ -129,7 +129,7 @@ public class DownloadProvider extends ContentProvider {
 
         SQLiteDatabase db = DBHelper.getReadDatabase(getContext());
         Cursor ret = db.query(DBTables.TDownload.TABLE_NAME, projection, selection,
-                selectionArgs, null, null, null);
+                selectionArgs, null, null, sortOrder);
 
         if (ret != null) {
             ret.setNotificationUri(getContext().getContentResolver(), uri);

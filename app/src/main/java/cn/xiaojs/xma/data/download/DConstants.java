@@ -20,10 +20,10 @@ public class DConstants {
     public static final int MAX_REDIRECTS = 5; // can't be more than 7.
 
     /** The minimum amount of progress that has to be done before the progress bar gets updated */
-    public static final int MIN_PROGRESS_STEP = 65536;
+    public static final int MIN_PROGRESS_STEP = 5536;//65536
 
     /** The minimum amount of time that has to elapse before the progress bar gets updated, in ms */
-    public static final long MIN_PROGRESS_TIME = 2000;
+    public static final long MIN_PROGRESS_TIME = 500;//2000
 
     /**
      * The number of times that the download manager will retry its network

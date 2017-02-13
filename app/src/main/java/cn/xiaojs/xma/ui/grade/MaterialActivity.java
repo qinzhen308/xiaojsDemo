@@ -88,7 +88,7 @@ public class MaterialActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.material_right_image://我的下载
-                DownloadManager.enqueueDownload(this,"pp" + System.currentTimeMillis(),"key","http://img3.imgtn.bdimg.com/it/u=4271053251,2424464488&fm=23&gp=0.jpg","","");
+                DownloadManager.enqueueDownload(this,"vipkid" + System.currentTimeMillis() + ".apk","key","http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk","","");
                 Intent intent = new Intent(this,MaterialDownloadActivity.class);
                 startActivity(intent);
                 break;

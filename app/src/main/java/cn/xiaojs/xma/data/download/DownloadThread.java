@@ -446,14 +446,14 @@ public class DownloadThread extends Thread {
             // so we can always resume based on latest database information.
             //outFd.sync();
 
-            if (XiaojsConfig.DEBUG){
-                Logger.d("the "
-                        + infoDelta.fileName
-                        + " total bytes:"
-                        + infoDelta.totalBytes
-                        + ", current byte:"
-                        +infoDelta.currentBytes);
-            }
+//            if (XiaojsConfig.DEBUG){
+//                Logger.d("the "
+//                        + infoDelta.fileName
+//                        + " total bytes:"
+//                        + infoDelta.totalBytes
+//                        + ", current byte:"
+//                        +infoDelta.currentBytes);
+//            }
 
             infoDelta.writeToDatabaseOrThrow();
 
