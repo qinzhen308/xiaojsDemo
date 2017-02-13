@@ -20,6 +20,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.qiniu.pili.droid.streaming.StreamingState;
+import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,9 +44,10 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
-import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -59,6 +63,7 @@ import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.XjsUtils;
+import io.socket.client.Ack;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import okhttp3.ResponseBody;
@@ -80,6 +85,7 @@ import okhttp3.ResponseBody;
 
 public class ClassroomActivity extends FragmentActivity implements WhiteboardAdapter.OnWhiteboardListener {
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.55F;
+    private final static int REQUEST_PERMISSION_CODE = 1024;
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
@@ -188,7 +194,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Constants.User mUser = Constants.User.STUDENT;
     private int mAppType = Platform.AppType.UNKNOWN;
 
-    private String publishUrl;
+    private String mPublishUrl;
     private boolean mInit;
 
     @Override
@@ -205,17 +211,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         initGestureDetector();
         //init nav tips
         showSettingNav();
-//        PermissionGen.needPermission(ClassroomActivity.this,2, Manifest.permission.CAMERA);
-//        mMyVideo.setPath("");
         //init data
         initData();
 
     }
 
-    @PermissionSuccess(requestCode =  2)
-    private void recordOn(){
+    @PermissionSuccess(requestCode = REQUEST_PERMISSION_CODE)
+    private void recordOn() {
         mMyVideo.setVisibility(View.VISIBLE);
-        mMyVideo.setPath(publishUrl);
+        mMyVideo.setPath(mPublishUrl);
     }
 
     private void initParams() {
@@ -224,8 +228,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         mTicket = getIntent().getStringExtra(Constants.KEY_TICKET);
         mPanelAnimListener = new PanelAnimListener();
+        mMyVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
     }
-
 
     private void initPanel() {
         switch (mUser) {
@@ -335,19 +339,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
                     mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
 
-
-                    initPanel();
-
-                    addPlayUrl(ctlSession.playUrl);
-
-                    setPlayPauseBtnStyle(ctlSession.state);
                     //init socket
                     initSocketIO(mTicket, ctlSession.secret);
                     listenSocket();
-                    if (!TextUtils.isEmpty(ctlSession.publishUrl)){
-//                        publishUrl = "rtmp://pili-publish.ps.qiniucdn.com/NIU7PS/xiaojiaoshi-test?key=efdbc36f-8759-44c2-bdd8-873521b6724a";
-                        publishUrl = ctlSession.publishUrl;
-                        PermissionGen.needPermission(ClassroomActivity.this,2, Manifest.permission.CAMERA);
+
+                    //init ui
+                    initPanel();
+                    addPlayUrl(ctlSession.playUrl);
+                    setPlayPauseBtnStyle(ctlSession.state);
+                    if (!TextUtils.isEmpty(ctlSession.publishUrl)) {
+                        mPublishUrl = ctlSession.publishUrl;
+                        PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
                     }
 
                     //init whiteboard
@@ -467,15 +469,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.course_ware_btn, R.id.setting_btn,
             R.id.play_pause_btn, R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.enter_talk_btn,
             R.id.wb_toolbar_btn, R.id.color_picker_btn, R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn,
-            R.id.eraser_btn, R.id.text_btn, R.id.exit_btn, R.id.main_screen_setting, R.id.save_white_board_btn,
+            R.id.eraser_btn, R.id.text_btn, R.id.finish_btn, R.id.main_screen_setting, R.id.save_white_board_btn,
             R.id.undo, R.id.redo})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
                 showExitDialog();
                 break;
-            case R.id.exit_btn:
-                showExitDialog();
+            case R.id.finish_btn:
+                showFinishDialog();
                 break;
             case R.id.blackboard_switcher_btn:
                 openWhiteBoardManager();
@@ -534,7 +536,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     /**
-     * 开启或暂停课
+     * 开启或暂停课，相应的逻辑处理在socket监听回调事件内
+     * @see mSyncStateListener
      */
     private void playOrPauseLesson(final View view) {
         if (TextUtils.isEmpty(mTicket) || Live.LiveSessionState.FINISHED.equals(mLiveSessionState)) {
@@ -548,8 +551,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 @Override
                 public void onSuccess(ResponseBody object) {
                     cancelProgress();
-                    mLiveSessionState = Live.LiveSessionState.RESET;
-                    ((ImageView) view).setImageResource(R.drawable.ic_cr_start);
                 }
 
                 @Override
@@ -563,8 +564,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 @Override
                 public void onSuccess(ClassResponse object) {
                     cancelProgress();
-                    mLiveSessionState = Live.LiveSessionState.LIVE;
-                    ((ImageView) view).setImageResource(R.drawable.ic_cr_pause);
+                    mPublishUrl = object != null ? object.publishUrl : null;
                 }
 
                 @Override
@@ -578,14 +578,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 @Override
                 public void onSuccess(ClassResponse object) {
                     cancelProgress();
-                    mLiveSessionState = Live.LiveSessionState.LIVE;
-                    ((ImageView) view).setImageResource(R.drawable.ic_cr_pause);
+                    mPublishUrl = object != null ? object.publishUrl : null;
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
                     cancelProgress();
-                    Log.i("aaa", "pauseClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
+                    Log.i("aaa", "resumeClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
                 }
             });
         } else {
@@ -1182,7 +1181,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                ClassroomActivity.this.finish();
             }
         });
     }
@@ -1205,6 +1203,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mSocket.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
         mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
     }
 
@@ -1279,6 +1279,69 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         public void call(Object... args) {
             if (args != null && args.length > 0) {
                 mSyncState = ClassroomBusiness.parseSocketBean(args[0], SyncStateResponse.class);
+                if (mSyncState != null) {
+                    if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))
+                     || (Live.LiveSessionState.RESET.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))) {
+                        mLiveSessionState = Live.LiveSessionState.LIVE;
+                        setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
+                        PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+                    } else if (Live.LiveSessionState.LIVE.equals(mSyncState.from) && Live.LiveSessionState.RESET.equals(mSyncState.to)) {
+                        //stop stream
+                        mLiveSessionState = Live.LiveSessionState.RESET;
+                        setPlayPauseBtnStyle(Live.LiveSessionState.RESET);
+
+                        mMyVideo.pause();
+                        mMyVideo.destroy();
+                    }
+                }
+            }
+        }
+    };
+
+    private Emitter.Listener mStreamingStartedListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            if (args != null && args.length > 0) {
+                StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
+                if (startedNotify != null) {
+                    mPublishUrl = startedNotify.RTMPPlayUrl;
+                    PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+                }
+            }
+        }
+    };
+
+    private Emitter.Listener mStreamingStoppedListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            if (args != null && args.length > 0) {
+
+            }
+        }
+    };
+
+    /**
+     * 流推送监听
+     */
+    private StreamingStateChangedListener mStreamingStateChangedListener = new StreamingStateChangedListener() {
+        @Override
+        public void onStateChanged(StreamingState streamingState, Object o) {
+            switch (streamingState) {
+                case STREAMING:
+                    if (mSocket != null) {
+                        mSocket.emit(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), new Ack() {
+                            @Override
+                            public void call(final Object... args) {
+                                if (args != null && args.length > 0) {
+                                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                    if (response != null && response.result) {
+                                        Toast.makeText(ClassroomActivity.this, "推流开始", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    break;
             }
         }
     };
