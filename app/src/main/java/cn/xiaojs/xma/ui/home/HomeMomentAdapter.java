@@ -36,6 +36,8 @@ import cn.xiaojs.xma.model.DynamicStatus;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.live.LiveScrollView;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.view.MomentUGC;
@@ -81,6 +83,18 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         });
         holder.header.setData(bean);
         DeviceUtil.expandViewTouch(holder.ugc.getMore(),150);
+        holder.header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                personalHome(bean);
+            }
+        });
+    }
+
+    private void personalHome(Dynamic bean){
+        Intent intent = new Intent(mContext, PersonHomeActivity.class);
+        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT,bean.owner.account);
+        mContext.startActivity(intent);
     }
 
     private void more(final Dynamic bean) {

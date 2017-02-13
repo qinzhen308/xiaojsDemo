@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.TestActivity;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
@@ -88,7 +89,7 @@ public class MainActivity extends BaseTabActivity {
 //                startActivity(new Intent(this,ImageViewActivity.class)
 //                .putExtra(ImageViewActivity.IMAGE_PATH_KEY,urls));
                 //startActivity(new Intent(this, CertificationActivity.class));
-                //startActivity(new Intent(this, TestActivity.class));
+                startActivity(new Intent(this, TestActivity.class));
 
                 break;
             case 4:

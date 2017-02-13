@@ -22,4 +22,11 @@
             android:src="@drawable/por_1"
             android:layout_width="@dimen/px140"
             android:layout_height="@dimen/px140"/>
+    <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
+            android:id="@+id/my_video"
+            android:visibility="gone"
+            android:layout_width="@dimen/px144"
+            android:layout_height="@dimen/px81"
+            android:layout_marginTop="@dimen/px18"
+            android:layout_marginLeft="@dimen/px15"/>
 </FrameLayout>

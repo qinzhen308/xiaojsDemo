@@ -23,11 +23,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.ui.classroom.live.core.CameraPreviewFrameView;
-import cn.xiaojs.xma.ui.classroom.live.core.Config;
-import cn.xiaojs.xma.ui.classroom.live.gles.FBO;
 import com.orhanobut.logger.Logger;
 import com.qiniu.android.dns.DnsManager;
 import com.qiniu.android.dns.IResolver;
@@ -50,6 +45,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.ui.classroom.live.core.CameraPreviewFrameView;
+import cn.xiaojs.xma.ui.classroom.live.core.Config;
+import cn.xiaojs.xma.ui.classroom.live.gles.FBO;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class LiveRecordView extends BaseMediaView implements
         SurfaceTextureCallback,
@@ -100,6 +102,11 @@ public class LiveRecordView extends BaseMediaView implements
                 default:
                     Log.e(TAG, "Invalid message");
                     break;
+            }
+
+            Object obj = msg.obj;
+            if (obj != null){
+                ToastUtil.showToast(getContext(),obj.toString());
             }
         }
     };
@@ -182,6 +189,7 @@ public class LiveRecordView extends BaseMediaView implements
         //mMediaStreamingManager.setStreamingSessionListener(this);
         //mMediaStreamingManager.setStreamingPreviewCallback(this);
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
+        resume();
     }
 
     private class OnStreamingState implements StreamingStateChangedListener{
@@ -199,6 +207,7 @@ public class LiveRecordView extends BaseMediaView implements
                  * */
                 case PREPARING:
                     id = MSG_SHOW_LOADING;
+                    info("PREPARING");
                     break;
                 /**
                  * <ol>
@@ -211,6 +220,7 @@ public class LiveRecordView extends BaseMediaView implements
                     mIsReady = true;
                     id = MSG_SHOW_LOADING;
                     start();
+                    info("READY");
                     break;
                 /**
                  * Being connecting.
@@ -218,12 +228,14 @@ public class LiveRecordView extends BaseMediaView implements
                  * */
                 case CONNECTING:
                     id = MSG_SHOW_LOADING;
+                    info("CONNECTING");
                     break;
                 /**
                  * The av datas start sending successfully.
                  *
                  * */
                 case STREAMING:
+                    info("STREAMING");
                     break;
                 /**
                  * Streaming has been finished, and you can {@link #startStreaming()} again.
@@ -231,6 +243,7 @@ public class LiveRecordView extends BaseMediaView implements
                  * */
                 case SHUTDOWN:
                     Logger.i("Recorder Shutdown!");
+                    info("SHUTDOWN");
                     break;
                 /**
                  * Connect error.
@@ -244,30 +257,35 @@ public class LiveRecordView extends BaseMediaView implements
                  * 连接失败，重连也失败，无法通过网络和服务端建立链接
                  * */
                 case IOERROR:
+                    info("IOERROR");
                     break;
                 /**
                  * The initial state.
                  *
                  * */
                 case UNKNOWN:
+                    info("UNKNOWN");
                     break;
                 /**
                  * Sending buffer is empty.
                  *
                  * */
                 case SENDING_BUFFER_EMPTY:
+                    info("SENDING_BUFFER_EMPTY");
                     break;
                 /**
                  * Sending buffer have been full.
                  *
                  * */
                 case SENDING_BUFFER_FULL:
+                    info("SENDING_BUFFER_FULL");
                     break;
                 /**
                  * {@link AudioRecord#startRecording()} failed.
                  *
                  * */
                 case AUDIO_RECORDING_FAIL:
+                    info("AUDIO_RECORDING_FAIL");
                     break;
                 /**
                  * camera open failed.
@@ -275,13 +293,14 @@ public class LiveRecordView extends BaseMediaView implements
                  * */
                 case OPEN_CAMERA_FAIL:
                     Log.e(TAG, "Open Camera Fail. id:" + extra);
-
+                    info("OPEN_CAMERA_FAIL");
                     break;
                 /**
                  * The network connection has been broken.
                  *  网络连接断开，需要提示
                  * */
                 case DISCONNECTED:
+                    info("DISCONNECTED");
                     break;
                 /**
                  * Invalid streaming url.
@@ -291,6 +310,7 @@ public class LiveRecordView extends BaseMediaView implements
                  * */
                 case INVALID_STREAMING_URL:
                     Log.e(TAG, "Invalid streaming url:" + extra);
+                    info("INVALID_STREAMING_URL");
                     break;
                 /**
                  * Invalid streaming url.
@@ -300,6 +320,7 @@ public class LiveRecordView extends BaseMediaView implements
                  * */
                 case UNAUTHORIZED_STREAMING_URL:
                     Log.e(TAG, "Unauthorized streaming url:" + extra);
+                    info("UNAUTHORIZED_STREAMING_URL");
                     break;
                 /**
                  * Notify the camera switched.
@@ -319,6 +340,7 @@ public class LiveRecordView extends BaseMediaView implements
                  *  摄像机切换镜头
                  * */
                 case CAMERA_SWITCHED:
+                    info("CAMERA_SWITCHED");
                     break;
                 /**
                  * Notify the torch info after camera be active.
@@ -338,6 +360,7 @@ public class LiveRecordView extends BaseMediaView implements
                  *
                  * */
                 case TORCH_INFO:
+                    info("TORCH_INFO");
                     break;
             }
             mHandler.sendMessage(mHandler.obtainMessage(id));
@@ -345,16 +368,28 @@ public class LiveRecordView extends BaseMediaView implements
 
     }
 
+    private void info(String info){
+        Message msg = Message.obtain();
+        msg.obj = info;
+        mHandler.sendMessage(msg);
+    }
+
     @Override
     public void resume() {
-        mMediaStreamingManager.resume();
+        if (mMediaStreamingManager != null){
+            mMediaStreamingManager.resume();
+        }
     }
 
     @Override
     public void pause() {
         mIsReady = false;
-        mHandler.removeCallbacksAndMessages(null);
-        mMediaStreamingManager.pause();
+        if (mHandler != null){
+            mHandler.removeCallbacksAndMessages(null);
+        }
+        if (mMediaStreamingManager != null){
+            mMediaStreamingManager.pause();
+        }
     }
 
     @Override

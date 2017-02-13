@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.classroom;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Intent;
@@ -26,6 +27,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -185,6 +188,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Constants.User mUser = Constants.User.STUDENT;
     private int mAppType = Platform.AppType.UNKNOWN;
 
+    private String publishUrl;
+    private boolean mInit;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,10 +205,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         initGestureDetector();
         //init nav tips
         showSettingNav();
-        mMyVideo.setPath(Config.pathPush);
+//        PermissionGen.needPermission(ClassroomActivity.this,2, Manifest.permission.CAMERA);
+//        mMyVideo.setPath("");
         //init data
         initData();
 
+    }
+
+    @PermissionSuccess(requestCode =  2)
+    private void recordOn(){
+        mMyVideo.setVisibility(View.VISIBLE);
+        mMyVideo.setPath(publishUrl);
     }
 
     private void initParams() {
@@ -315,6 +328,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             public void onSuccess(CtlSession ctlSession) {
                 Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
                 if (ctlSession != null) {
+                    mInit = true;
                     mCtlSession = ctlSession;
                     mUser = ClassroomBusiness.getUser(ctlSession.psType);
                     mLiveSessionState = ctlSession.state;
@@ -328,6 +342,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     //init socket
                     initSocketIO(mTicket, ctlSession.secret);
                     listenSocket();
+                    if (!TextUtils.isEmpty(ctlSession.publishUrl)){
+//                        publishUrl = "rtmp://pili-publish.ps.qiniucdn.com/NIU7PS/xiaojiaoshi-test?key=efdbc36f-8759-44c2-bdd8-873521b6724a";
+                        publishUrl = ctlSession.publishUrl;
+                        PermissionGen.needPermission(ClassroomActivity.this,2, Manifest.permission.CAMERA);
+                    }
 
                     //init whiteboard
                     mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
@@ -356,7 +375,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             }
         });
     }
-
     private void setPlayPauseBtnStyle(String liveSessionState) {
         if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)
                 || Live.LiveSessionState.RESET.equals(liveSessionState)) {

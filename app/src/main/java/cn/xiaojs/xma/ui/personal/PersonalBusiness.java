@@ -16,4 +16,5 @@ package cn.xiaojs.xma.ui.personal;
 
 public class PersonalBusiness {
     public static final String KEY_IS_MYSELF = "key_is_myself";
+    public static final String KEY_PERSONAL_ACCOUNT = "key_personal_account";
 }
