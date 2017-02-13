@@ -1329,7 +1329,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             switch (streamingState) {
                 case STREAMING:
                     if (mSocket != null) {
-                        mSocket.emit(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), new Ack() {
+                        mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new Ack() {
                             @Override
                             public void call(final Object... args) {
                                 if (args != null && args.length > 0) {
