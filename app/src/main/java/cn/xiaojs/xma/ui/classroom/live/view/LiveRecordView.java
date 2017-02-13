@@ -72,6 +72,8 @@ public class LiveRecordView extends BaseMediaView implements
     private StreamingProfile mProfile;
     private FBO mFBO = new FBO();
 
+    private StreamingStateChangedListener mOuterStreamingStateChangedListener;
+
     private boolean mMute;
 
     private int mCurrentCamFacingIndex;
@@ -190,6 +192,10 @@ public class LiveRecordView extends BaseMediaView implements
         //mMediaStreamingManager.setStreamingPreviewCallback(this);
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
         resume();
+    }
+
+    public void setOnStreamingStateListener(StreamingStateChangedListener listener) {
+        mOuterStreamingStateChangedListener = listener;
     }
 
     private class OnStreamingState implements StreamingStateChangedListener{
@@ -364,6 +370,10 @@ public class LiveRecordView extends BaseMediaView implements
                     break;
             }
             mHandler.sendMessage(mHandler.obtainMessage(id));
+
+            if (mOuterStreamingStateChangedListener != null) {
+                mOuterStreamingStateChangedListener.onStateChanged(streamingState, extra);
+            }
         }
 
     }
