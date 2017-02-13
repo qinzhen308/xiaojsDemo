@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -29,6 +30,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.CollaManager;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.colla.UploadReponse;
@@ -88,7 +90,12 @@ public class MaterialActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.material_right_image://我的下载
-                DownloadManager.enqueueDownload(this,"vipkid" + System.currentTimeMillis() + ".apk","key","http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk","","");
+                if(DownloadManager.allowDownload(this)){
+                    DownloadManager.enqueueDownload(this,"vipkid" + System.currentTimeMillis() + ".apk","key","http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk","","");
+                }else{
+                    Toast.makeText(this,"当前有下载任务，不能新建下载",Toast.LENGTH_SHORT).show();
+                }
+
                 Intent intent = new Intent(this,MaterialDownloadActivity.class);
                 startActivity(intent);
                 break;

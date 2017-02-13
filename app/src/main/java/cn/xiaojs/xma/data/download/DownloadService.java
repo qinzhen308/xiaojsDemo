@@ -36,6 +36,8 @@ public class DownloadService extends IntentService {
     public void onCreate() {
         super.onCreate();
 
+        DataPref.setAllowDownload(this,false);
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(DownloadManager.DEL_ACTION);
         registerReceiver(receiver,filter);
@@ -43,21 +45,9 @@ public class DownloadService extends IntentService {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
-
-        DataPref.setAllowDownload(this,false);
-
-        downlodId = intent.getLongExtra(DownloadProvider.EXTRA_DOWNLOAD_ID,-1);
-
-        if (XiaojsConfig.DEBUG) {
-            Logger.d("the download is start ID:"+ downlodId);
-        }
-    }
-
-    @Override
     protected void onHandleIntent(Intent intent) {
 
+        downlodId = intent.getLongExtra(DownloadProvider.EXTRA_DOWNLOAD_ID,-1);
         if (downlodId == -1){
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the download id is invalid,so cancel download...");
@@ -72,6 +62,10 @@ public class DownloadService extends IntentService {
             }
 
             return;
+        }
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the download is start ID:"+ downlodId);
         }
 
         downloadThread = new DownloadThread(this,info);

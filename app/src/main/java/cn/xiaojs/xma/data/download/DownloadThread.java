@@ -68,6 +68,7 @@ public class DownloadThread extends Thread {
             + NOT_PAUSED;
 
     private static final int DEFAULT_TIMEOUT = (int) (20 * SECOND_IN_MILLIS);
+    private static final int READ_TIMEOUT = (int) ( 24 * 60 * 60 * SECOND_IN_MILLIS);
 
     private final Context context;
     private final DownloadService downloadService;
@@ -139,6 +140,9 @@ public class DownloadThread extends Thread {
 
 
         } catch (StopRequestException e) {
+
+            e.printStackTrace();
+
             infoDelta.status = e.getStatus();
             infoDelta.errorMsg = e.getMessage();
 
@@ -235,7 +239,7 @@ public class DownloadThread extends Thread {
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setInstanceFollowRedirects(false);
                 conn.setConnectTimeout(DEFAULT_TIMEOUT);
-                conn.setReadTimeout(DEFAULT_TIMEOUT);
+                conn.setReadTimeout(READ_TIMEOUT);
 
                 addRequestHeaders(conn, resuming);
 
