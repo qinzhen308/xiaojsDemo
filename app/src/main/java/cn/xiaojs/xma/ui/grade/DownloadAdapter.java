@@ -36,7 +36,6 @@ import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.download.DownloadInfo;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.TimeUtil;
-import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> implements StickyListHeadersAdapter {
@@ -58,9 +57,7 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        Holder holder = (Holder) view.getTag();
-
+    protected void setViewContent(Holder holder, Context context, Cursor cursor) {
         String mimeType = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.MIME_TYPE));
         if (FileUtil.getFileType(mimeType) == FileUtil.DOC) {
             holder.thumbnail.setImageResource(R.drawable.ic_word);
@@ -102,11 +99,12 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
             int percent = (int) (((float) current) / size * 100);
             holder.progress.setProgress(percent);
             holder.percent.setText(percent + "%");
+            final String path = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.LOCAL));
             holder.close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //取消下载
-                    //DownloadManager.delDownload(mContext,id);
+                    DownloadManager.delDownload(mContext, id, path);
                 }
             });
         } else {
@@ -118,7 +116,6 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
             holder.failure.setVisibility(View.VISIBLE);
 
         }
-
     }
 
     @Override
@@ -130,9 +127,17 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
     }
 
     @Override
-    protected void onDeleteClick(Cursor cursor) {
-        ToastUtil.showToast(mContext,"DELETE");
-        //DownloadManager.delDownload(mContext,id);
+    protected void setDeleteListener(TextView text, Cursor cursor) {
+        if (text == null)
+            return;
+        final long id = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload._ID));
+        final String path = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.LOCAL));
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DownloadManager.delDownload(mContext, id, path);
+            }
+        });
     }
 
     @Override

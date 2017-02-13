@@ -53,6 +53,16 @@ public abstract class AbsCursorAdapter<H extends BaseHolder> extends CursorAdapt
         return view;
     }
 
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        H h = (H) view.getTag();
+        TextView delete = (TextView) view.findViewById(R.id.swipe_delete);
+        TextView mark = (TextView) view.findViewById(R.id.swipe_mark);
+        setDeleteListener(delete, cursor);
+        setViewContent(h,context,cursor);
+    }
+
+    protected abstract void setViewContent(H holder, Context context, Cursor cursor);
     /**
      * 加载item的布局view
      */
@@ -78,24 +88,10 @@ public abstract class AbsCursorAdapter<H extends BaseHolder> extends CursorAdapt
         // 滑动删除list item的自定义区域
         View contentView = createContentView(context, cursor, parent);
         contentFrame.addView(contentView);
-        TextView delete = (TextView) templateView.findViewById(R.id.swipe_delete);
-        TextView mark = (TextView) templateView.findViewById(R.id.swipe_mark);
-        setDeleteListener(delete, cursor);
         return templateView;
     }
 
-    private void setDeleteListener(TextView text, final Cursor cursor) {
-        if (text == null)
-            return;
-        text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDeleteClick(cursor);
-            }
-        });
-    }
-
-    protected void onDeleteClick(Cursor cursor) {
+    protected void setDeleteListener(TextView text, Cursor cursor) {
 
     }
 }
