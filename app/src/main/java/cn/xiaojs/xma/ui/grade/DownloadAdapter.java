@@ -106,7 +106,7 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
                 @Override
                 public void onClick(View v) {
                     //取消下载
-                    DownloadManager.delDownload(mContext,id);
+                    //DownloadManager.delDownload(mContext,id);
                 }
             });
         } else {

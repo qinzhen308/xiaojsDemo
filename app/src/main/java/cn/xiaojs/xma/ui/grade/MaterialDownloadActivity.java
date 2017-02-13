@@ -48,6 +48,7 @@ public class MaterialDownloadActivity extends BaseListActivity implements Loader
                 DBTables.TDownload.URL,
                 DBTables.TDownload.TITLE,
                 DBTables.TDownload.FILE_NAME,
+                DBTables.TDownload.LOCAL,
                 DBTables.TDownload.KEY,
                 DBTables.TDownload.ICON,
                 DBTables.TDownload.MIME_TYPE,

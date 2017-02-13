@@ -10,6 +10,8 @@ import android.text.TextUtils;
 
 import com.orhanobut.logger.Logger;
 
+import java.io.File;
+
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.download.DownloadProvider;
@@ -71,7 +73,7 @@ public class DownloadManager {
      * @param context
      * @param downloadId
      */
-    public static void delDownload(Context context, long downloadId) {
+    public static void delDownload(Context context, long downloadId, @Nullable String localPath) {
         shutdownDownload(context, downloadId);
 
         String where = new StringBuilder(DBTables.TDownload._ID)
@@ -80,6 +82,11 @@ public class DownloadManager {
                 .append("'")
                 .toString();
         context.getContentResolver().delete(DownloadProvider.DOWNLOAD_URI, where, null);
+
+        if (!TextUtils.isEmpty(localPath)){
+            new File(localPath).delete();
+        }
+
     }
 
     private static boolean startDownload(Context context,ContentValues values) {
