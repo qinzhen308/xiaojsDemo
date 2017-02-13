@@ -16,11 +16,19 @@ package cn.xiaojs.xma.ui.personal;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +39,11 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.account.PrivateHome;
+import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 import cn.xiaojs.xma.ui.view.RelationshipView;
@@ -41,7 +54,7 @@ import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.FastBlur;
 
-public class PersonHomeActivity extends BaseScrollTabActivity{
+public class PersonHomeActivity extends BaseScrollTabActivity {
 
     private Unbinder mBinder;
 
@@ -91,13 +104,25 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
     private float mCoverScale = 9.0f / 16;
 
     private boolean mIsMyself;
+
+    private String mAccount;
+
     @Override
     protected void initView() {
 
         Intent intent = getIntent();
-        if (intent != null){
-            mIsMyself = intent.getBooleanExtra(PersonalBusiness.KEY_IS_MYSELF,false);
+        if (intent != null) {
+            mIsMyself = intent.getBooleanExtra(PersonalBusiness.KEY_IS_MYSELF, false);
+            if (!mIsMyself){
+                mAccount = intent.getStringExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT);
+                if (!TextUtils.isEmpty(mAccount)){
+                    if (mAccount.equalsIgnoreCase(XiaojsConfig.mLoginUser.getAccount().getId())){
+                        mIsMyself = true;
+                    }
+                }
+            }
         }
+
 
         PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
         PersonHomeLessonFragment f2 = new PersonHomeLessonFragment();
@@ -119,22 +144,114 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         View header = LayoutInflater.from(this).inflate(R.layout.layout_person_home_header, null);
         View footer = LayoutInflater.from(this).inflate(R.layout.layout_person_home_footer, null);
 
-        if (mIsMyself){
+        if (mIsMyself) {
             tabs[0] = getString(R.string.my_lesson);
         }
-        addContent(fragments,tabs,header,footer);
+        addContent(fragments, tabs, header, footer);
         mBinder = ButterKnife.bind(this);
         initHeader();
+
+        getData();
+
+    }
+
+    private void getData() {
+        showProgress(true);
+        if (mIsMyself) {
+            AccountDataManager.getPrivateHome(this, new APIServiceCallback<PrivateHome>() {
+                @Override
+                public void onSuccess(PrivateHome object) {
+                    cancelProgress();
+                    initView(object);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    showFailedView(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getData();
+                        }
+                    });
+                }
+            });
+        } else {
+            AccountDataManager.getPublicHome(this, mAccount, new APIServiceCallback<PublicHome>() {
+                @Override
+                public void onSuccess(PublicHome object) {
+                    cancelProgress();
+                    initView(object);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    showFailedView(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getData();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private void initView(PrivateHome home) {
+        if (home == null)
+            return;
+
+        Glide.with(this)
+                .load(Account.getAvatar(home.profile.id, 300))
+                .error(R.drawable.default_avatar)
+                .into(new GlideDrawableImageViewTarget(mHead) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                        super.onResourceReady(resource, animation);
+                        if (resource instanceof GlideBitmapDrawable) {
+                            Bitmap bmp = ((GlideBitmapDrawable) resource).getBitmap();
+                            setupBlurPortraitView(bmp);
+                        }
+                    }
+
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        super.onLoadFailed(e, errorDrawable);
+                        setDefaultPortrait();
+                    }
+                });
+        mHead.setSex(home.profile.sex);
+        mName.setText(home.profile.name);
+        mFans.setText(getString(R.string.fans_num,home.profile.stats.fans));
+        mFollows.setText(getString(R.string.follow_num,home.profile.stats.followships));
+    }
+
+    private void initView(PublicHome home){
+        if (home == null)
+            return;
+    }
+
+    private void setupBlurPortraitView(Bitmap portrait) {
+        Bitmap blurBitmap = FastBlur.smartBlur(portrait, 4, true);
+        mBlur.setImageBitmap(blurBitmap);
+    }
+
+    private void initProfileBg() {
+        mBlur.setBackgroundColor(getResources().getColor(R.color.main_blue));
+    }
+
+    private void setDefaultPortrait() {
+        mHead.setImageResource(R.drawable.default_avatar);
+        initProfileBg();
     }
 
     private void initHeader() {
         needHeaderDivider(false);
         mBack.setImageResource(R.drawable.ic_white_back);
-        Bitmap blur = FastBlur.smartBlur(BitmapUtils.getBitmap(this, R.drawable.por_58), 2, true);
-        mBlur.setImageBitmap(blur);
         needHeader(false);
         mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
-        if (mIsMyself){
+        if (mIsMyself) {
             mScrollRightText.setText(R.string.edit_material);
             mScrollRightText.setTextColor(getResources().getColor(R.color.white));
             mHead.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
@@ -144,7 +261,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
             mFollowDivider.setVisibility(View.VISIBLE);
             needFooter(false);
             myself();
-        }else {
+        } else {
             mScrollRightText.setText("关注");
             mScrollRightText.setTextColor(getResources().getColor(R.color.white));
             mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
@@ -157,7 +274,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
 
         int paddingv = getResources().getDimensionPixelSize(R.dimen.px10);
         int paddingh = getResources().getDimensionPixelSize(R.dimen.px15);
-        mScrollRightText.setPadding(paddingh,paddingv,paddingh,paddingv);
+        mScrollRightText.setPadding(paddingh, paddingv, paddingh, paddingv);
         mScrollRightText.setCompoundDrawablePadding(paddingh);
         ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mScrollRightText.getLayoutParams();
         mlp.rightMargin = getResources().getDimensionPixelSize(R.dimen.px30);
@@ -188,7 +305,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.scroll_tab_left_image,R.id.person_home_message_only})
+    @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -202,13 +319,13 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
 
     @Override
     public void onScrollY(int y) {
-        if (y > mBlur.getHeight()){
-            if (mIsMyself){
+        if (y > mBlur.getHeight()) {
+            if (mIsMyself) {
                 mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
                 mScrollRightText.setText(R.string.edit_material);
                 mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
                 mScrollMiddleText.setText(XiaojsConfig.mLoginUser.getName());
-            }else {
+            } else {
                 mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
                 mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
                 mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus, 0, 0, 0);
@@ -217,13 +334,13 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
             }
             mBack.setImageResource(R.drawable.back_arrow);
             needHeaderDivider(true);
-        }else {
-            if (mIsMyself){
+        } else {
+            if (mIsMyself) {
                 mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
                 mScrollRightText.setText(R.string.edit_material);
                 mScrollRightText.setTextColor(getResources().getColor(R.color.white));
                 mScrollMiddleText.setText("");
-            }else {
+            } else {
                 mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
                 mScrollRightText.setTextColor(getResources().getColor(R.color.white));
                 mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
@@ -236,7 +353,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
     }
 
 
-    private void myself(){
+    private void myself() {
         mSummaryWrapper.setVisibility(View.VISIBLE);
         mRelationshipWrapper.setVisibility(View.GONE);
         mTargetWrapper.setVisibility(View.GONE);
@@ -244,7 +361,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         mFreeWrapper.setVisibility(View.GONE);
     }
 
-    private void organization(){
+    private void organization() {
         mSummaryWrapper.setVisibility(View.VISIBLE);
         mRelationshipWrapper.setVisibility(View.GONE);
         mTargetWrapper.setVisibility(View.GONE);
@@ -252,7 +369,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         mFreeWrapper.setVisibility(View.GONE);
     }
 
-    private void teacher(){
+    private void teacher() {
         mSummaryWrapper.setVisibility(View.VISIBLE);
         mRelationshipWrapper.setVisibility(View.GONE);
         mTargetWrapper.setVisibility(View.GONE);
@@ -260,7 +377,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity{
         mFreeWrapper.setVisibility(View.GONE);
     }
 
-    private void student(){
+    private void student() {
         mSummaryWrapper.setVisibility(View.GONE);
         mRelationshipWrapper.setVisibility(View.VISIBLE);
         mTargetWrapper.setVisibility(View.VISIBLE);

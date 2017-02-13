@@ -151,6 +151,7 @@
                 android:id="@+id/my_video"
                 android:layout_width="@dimen/px144"
                 android:layout_height="@dimen/px81"
+                android:visibility="gone"
                 android:layout_below="@+id/title_bar"
                 android:layout_marginTop="@dimen/px18"
                 android:layout_marginLeft="@dimen/px15"/>

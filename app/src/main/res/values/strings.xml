@@ -419,6 +419,8 @@
     <string name="organization">机构</string>
     <string name="personal_info">个人资料</string>
     <string name="edit_material">编辑资料</string>
+    <string name="fans_num">%1$d&#160;粉丝</string>
+    <string name="follow_num">%1$d&#160;关注</string>
 
     <!-- certification -->
     <string name="certification">实名认证</string>

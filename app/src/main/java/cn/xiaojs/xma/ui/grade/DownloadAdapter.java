@@ -16,11 +16,9 @@ package cn.xiaojs.xma.ui.grade;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -30,6 +28,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.AbsCursorAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.stickylistheaders.StickyListHeadersAdapter;
 import cn.xiaojs.xma.data.DownloadManager;
@@ -37,22 +36,25 @@ import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.download.DownloadInfo;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
-public class DownloadAdapter extends CursorAdapter implements StickyListHeadersAdapter {
-    private Context mContext;
+public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> implements StickyListHeadersAdapter {
 
     public DownloadAdapter(Context context, Cursor c) {
         super(context, c, true);
-        mContext = context;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material_download_item, parent, false);
-        Holder holder = new Holder(view);
-        view.setTag(holder);
+    protected View createContentView(Context context, Cursor cursor, ViewGroup parent) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material_download_item, null);
         return view;
+    }
+
+    @Override
+    protected Holder initHolder(View view) {
+        Holder holder = new Holder(view);
+        return holder;
     }
 
     @Override
@@ -107,7 +109,7 @@ public class DownloadAdapter extends CursorAdapter implements StickyListHeadersA
                     DownloadManager.delDownload(mContext,id);
                 }
             });
-        }else{
+        } else {
             holder.normal();
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
             holder.size.setText(XjsUtils.getSizeFormatText(size));
@@ -125,6 +127,11 @@ public class DownloadAdapter extends CursorAdapter implements StickyListHeadersA
             convertView = new View(mContext);
         }
         return convertView;
+    }
+
+    @Override
+    protected void onDeleteClick(Cursor cursor) {
+        ToastUtil.showToast(mContext,"DELETE");
     }
 
     @Override
