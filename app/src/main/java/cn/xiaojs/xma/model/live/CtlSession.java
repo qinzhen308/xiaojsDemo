@@ -25,6 +25,7 @@ public class CtlSession {
     public String playUrl;
     public int streamMode;
     public String claimedBy;
+    public String titleOfPrimary;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
