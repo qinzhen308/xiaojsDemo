@@ -128,7 +128,8 @@ public abstract class PullToRefreshStickyAdapterViewBase<T extends StickyListHea
 				setState(State.REFRESHING, true);
 			}
 			if (mNeedNextPage && mOnRefreshListener2 != null) {
-				mOnRefreshListener2.onPullUpToRefresh(this);
+				//Log.i("mOnRefreshListener2","onPullUpToRefresh");
+				//mOnRefreshListener2.onPullUpToRefresh(this);
 			}
 		}
 

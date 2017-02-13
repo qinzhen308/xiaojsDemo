@@ -217,6 +217,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                     if (mCurrentState != STATE_DOWN_REFRESH) {
                         mCurrentState = STATE_DOWN_REFRESH;
                     }
+                    //Log.i("mPagination page = ",mPagination.getPage() + "");
                     request();
                 }
             });
