@@ -128,6 +128,8 @@ public final class DBHelper extends SQLiteOpenHelper {
                 .append(" INTEGER PRIMARY KEY AUTOINCREMENT,")
                 .append(DBTables.TDownload.URL)
                 .append(" TEXT, ")
+                .append(DBTables.TDownload.LOCAL)
+                .append(" TEXT, ")
                 .append(DBTables.TDownload.FILE_NAME)
                 .append(" TEXT, ")
                 .append(DBTables.TDownload.TITLE)

@@ -16,11 +16,9 @@ package cn.xiaojs.xma.ui.grade;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -30,34 +28,36 @@ import java.util.Date;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.AbsCursorAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.stickylistheaders.StickyListHeadersAdapter;
+import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.download.DownloadInfo;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
-public class DownloadAdapter extends CursorAdapter implements StickyListHeadersAdapter {
-    private Context mContext;
+public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> implements StickyListHeadersAdapter {
 
     public DownloadAdapter(Context context, Cursor c) {
         super(context, c, true);
-        mContext = context;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material_download_item, parent, false);
-        Holder holder = new Holder(view);
-        view.setTag(holder);
+    protected View createContentView(Context context, Cursor cursor, ViewGroup parent) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material_download_item, null);
         return view;
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        Holder holder = (Holder) view.getTag();
+    protected Holder initHolder(View view) {
+        Holder holder = new Holder(view);
+        return holder;
+    }
 
+    @Override
+    protected void setViewContent(Holder holder, Context context, Cursor cursor) {
         String mimeType = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.MIME_TYPE));
         if (FileUtil.getFileType(mimeType) == FileUtil.DOC) {
             holder.thumbnail.setImageResource(R.drawable.ic_word);
@@ -80,12 +80,14 @@ public class DownloadAdapter extends CursorAdapter implements StickyListHeadersA
         String name = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.FILE_NAME));
         holder.name.setText(name);
 
+        final long id = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload._ID));
+
         int status = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.STATUS));
         if (status == DownloadInfo.DownloadStatus.STATUS_SUCCESS) {
             holder.normal();
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
             holder.size.setText(XjsUtils.getSizeFormatText(size));
-            int modify = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
+            long modify = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
             holder.time.setText(TimeUtil.format(new Date(modify), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
             holder.failure.setVisibility(View.GONE);
 
@@ -97,22 +99,23 @@ public class DownloadAdapter extends CursorAdapter implements StickyListHeadersA
             int percent = (int) (((float) current) / size * 100);
             holder.progress.setProgress(percent);
             holder.percent.setText(percent + "%");
+            final String path = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.LOCAL));
             holder.close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //取消下载
+                    DownloadManager.delDownload(mContext, id, path);
                 }
             });
-        }else{
+        } else {
             holder.normal();
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
             holder.size.setText(XjsUtils.getSizeFormatText(size));
-            int modify = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
+            long modify = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
             holder.time.setText(TimeUtil.format(new Date(modify), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
             holder.failure.setVisibility(View.VISIBLE);
 
         }
-
     }
 
     @Override
@@ -121,6 +124,20 @@ public class DownloadAdapter extends CursorAdapter implements StickyListHeadersA
             convertView = new View(mContext);
         }
         return convertView;
+    }
+
+    @Override
+    protected void setDeleteListener(TextView text, Cursor cursor) {
+        if (text == null)
+            return;
+        final long id = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload._ID));
+        final String path = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.LOCAL));
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DownloadManager.delDownload(mContext, id, path);
+            }
+        });
     }
 
     @Override

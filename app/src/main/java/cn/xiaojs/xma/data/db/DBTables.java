@@ -31,6 +31,7 @@ public class DBTables {
         public static final String LAST_MOD = "lastmod";
         public static final String TOTAL_BYTES = "totalbytes";
         public static final String CURRENT_BYTES = "currentbytes";
+        public static final String LOCAL = "local";
         public static final String DELETED = "deleted";
         public static final String CONTROL = "control";
         public static final String DESCRIPTION = "description";

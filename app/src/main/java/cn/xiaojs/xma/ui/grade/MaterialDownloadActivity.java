@@ -24,18 +24,22 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.download.DownloadProvider;
 import cn.xiaojs.xma.ui.base.BaseListActivity;
+import cn.xiaojs.xma.util.DeviceUtil;
 
-public class MaterialDownloadActivity extends BaseListActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MaterialDownloadActivity extends BaseListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private DownloadAdapter mAdapter;
+
     @Override
     protected void initData() {
         setMiddleTitle(R.string.download_of_mine);
         setDividerHeight(R.dimen.px1);
-        getSupportLoaderManager().initLoader(0,null,this);
+        getSupportLoaderManager().initLoader(0, null, this);
 
-        mAdapter = new DownloadAdapter(this,null);
+        mAdapter = new DownloadAdapter(this, null);
         mList.setAdapter(mAdapter);
+        mList.enableLeftSwipe();
+        mList.getRefreshableView().getWrappedList().setOffsetLeft(DeviceUtil.getScreenWidth(this) - getResources().getDimensionPixelSize(R.dimen.px140));
     }
 
     @Override
@@ -44,6 +48,7 @@ public class MaterialDownloadActivity extends BaseListActivity implements Loader
                 DBTables.TDownload.URL,
                 DBTables.TDownload.TITLE,
                 DBTables.TDownload.FILE_NAME,
+                DBTables.TDownload.LOCAL,
                 DBTables.TDownload.KEY,
                 DBTables.TDownload.ICON,
                 DBTables.TDownload.MIME_TYPE,
@@ -54,20 +59,20 @@ public class MaterialDownloadActivity extends BaseListActivity implements Loader
 
         String order = DBTables.TDownload._ID + " DESC";
 
-        return new CursorLoader(this, DownloadProvider.DOWNLOAD_URI, projections, null,null,order);
+        return new CursorLoader(this, DownloadProvider.DOWNLOAD_URI, projections, null, null, order);
 
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (mAdapter != null){
+        if (mAdapter != null) {
             mAdapter.swapCursor(cursor);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        if (mAdapter != null){
+        if (mAdapter != null) {
             mAdapter.swapCursor(null);
         }
     }

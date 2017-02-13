@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Process;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.orhanobut.logger.Logger;
@@ -67,6 +68,7 @@ public class DownloadThread extends Thread {
             + NOT_PAUSED;
 
     private static final int DEFAULT_TIMEOUT = (int) (20 * SECOND_IN_MILLIS);
+    private static final int READ_TIMEOUT = (int) ( 24 * 60 * 60 * SECOND_IN_MILLIS);
 
     private final Context context;
     private final DownloadService downloadService;
@@ -138,6 +140,9 @@ public class DownloadThread extends Thread {
 
 
         } catch (StopRequestException e) {
+
+            e.printStackTrace();
+
             infoDelta.status = e.getStatus();
             infoDelta.errorMsg = e.getMessage();
 
@@ -234,7 +239,7 @@ public class DownloadThread extends Thread {
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setInstanceFollowRedirects(false);
                 conn.setConnectTimeout(DEFAULT_TIMEOUT);
-                conn.setReadTimeout(DEFAULT_TIMEOUT);
+                conn.setReadTimeout(READ_TIMEOUT);
 
                 addRequestHeaders(conn, resuming);
 
@@ -446,14 +451,14 @@ public class DownloadThread extends Thread {
             // so we can always resume based on latest database information.
             //outFd.sync();
 
-            if (XiaojsConfig.DEBUG){
-                Logger.d("the "
-                        + infoDelta.fileName
-                        + " total bytes:"
-                        + infoDelta.totalBytes
-                        + ", current byte:"
-                        +infoDelta.currentBytes);
-            }
+//            if (XiaojsConfig.DEBUG){
+//                Logger.d("the "
+//                        + infoDelta.fileName
+//                        + " total bytes:"
+//                        + infoDelta.totalBytes
+//                        + ", current byte:"
+//                        +infoDelta.currentBytes);
+//            }
 
             infoDelta.writeToDatabaseOrThrow();
 
@@ -484,8 +489,10 @@ public class DownloadThread extends Thread {
         } else if (isStatusSuccess(infoDelta.status,infoDelta.httpCode)) {
             // When success, open access if local file
             if (infoDelta.fileName != null) {
-                getDownloadTempFile(downloadInfo.fileName)
-                        .renameTo(getDownloadFile(downloadInfo.fileName));
+
+                File realFile = getDownloadFile(downloadInfo.fileName);
+                getDownloadTempFile(downloadInfo.fileName).renameTo(realFile);
+                infoDelta.local = realFile.getAbsolutePath();
             }
         }
     }
@@ -642,6 +649,8 @@ public class DownloadThread extends Thread {
         public String errorMsg;
         public int httpCode;
 
+        public String local;
+
         public DownloadInfoDelta(DownloadInfo info) {
             url = info.url;
             fileName = info.fileName;
@@ -687,6 +696,10 @@ public class DownloadThread extends Thread {
 
             values.put(DBTables.TDownload.LAST_MOD, systemFacade.currentTimeMillis());
             //values.put(DownloadInfo.DownloadColumn.ERROR_MSG, mErrorMsg);
+
+            if (!TextUtils.isEmpty(local)) {
+                values.put(DBTables.TDownload.LOCAL, local);
+            }
 
             return values;
         }
