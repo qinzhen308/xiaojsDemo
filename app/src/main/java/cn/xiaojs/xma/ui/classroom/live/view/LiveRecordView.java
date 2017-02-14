@@ -194,6 +194,16 @@ public class LiveRecordView extends BaseMediaView implements
         resume();
     }
 
+    public void setPublishUrl(String url){
+        if (mProfile != null){
+            try {
+                mProfile.setPublishUrl(url);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void setOnStreamingStateListener(StreamingStateChangedListener listener) {
         mOuterStreamingStateChangedListener = listener;
     }

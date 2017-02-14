@@ -40,6 +40,7 @@ import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PrivateHome;
@@ -106,6 +107,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
     private boolean mIsMyself;
 
     private String mAccount;
+    private String mPersonName;
 
     @Override
     protected void initView() {
@@ -225,11 +227,45 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         mName.setText(home.profile.name);
         mFans.setText(getString(R.string.fans_num,home.profile.stats.fans));
         mFollows.setText(getString(R.string.follow_num,home.profile.stats.followships));
+        mPersonName = home.profile.name;
     }
 
     private void initView(PublicHome home){
         if (home == null)
             return;
+        Glide.with(this)
+                .load(Account.getAvatar(home.profile.id, 300))
+                .error(R.drawable.default_avatar)
+                .into(new GlideDrawableImageViewTarget(mHead) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                        super.onResourceReady(resource, animation);
+                        if (resource instanceof GlideBitmapDrawable) {
+                            Bitmap bmp = ((GlideBitmapDrawable) resource).getBitmap();
+                            setupBlurPortraitView(bmp);
+                        }
+                    }
+
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        super.onLoadFailed(e, errorDrawable);
+                        setDefaultPortrait();
+                    }
+                });
+        mHead.setSex(home.profile.sex);
+        mName.setText(home.profile.name);
+        mFans.setText(getString(R.string.fans_num,home.profile.stats.fans));
+        mFollows.setText(getString(R.string.follow_num,home.profile.stats.followships));
+        mPersonName = home.profile.name;
+        if (!TextUtils.isEmpty(home.relationship)){
+            if (home.relationship.equalsIgnoreCase(Social.Relationship.TEACHER)){
+                mFooterMultiple.setVisibility(View.VISIBLE);
+            }else {
+                mFooterSingle.setVisibility(View.VISIBLE);
+            }
+        }else {
+            mFooterSingle.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
@@ -305,7 +341,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only})
+    @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only,R.id.person_home_message,
+    R.id.person_home_query})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -313,6 +350,10 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 finish();
                 break;
             case R.id.person_home_message_only://发消息
+                break;
+            case R.id.person_home_message:
+                break;
+            case R.id.person_home_query:
                 break;
         }
     }
@@ -330,10 +371,9 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
                 mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus, 0, 0, 0);
                 mScrollRightText.setBackgroundResource(R.drawable.orange_stoke_bg);
-                mScrollMiddleText.setText("林妙可");
+                mScrollMiddleText.setText(mPersonName);
             }
             mBack.setImageResource(R.drawable.back_arrow);
-            needHeaderDivider(true);
         } else {
             if (mIsMyself) {
                 mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
@@ -348,7 +388,6 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 mScrollMiddleText.setText("");
             }
             mBack.setImageResource(R.drawable.ic_white_back);
-            needHeaderDivider(false);
         }
     }
 

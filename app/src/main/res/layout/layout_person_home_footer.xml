@@ -8,6 +8,7 @@
     <LinearLayout
             android:id="@+id/person_home_message_more"
             android:orientation="vertical"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -24,6 +25,7 @@
                     android:layout_height="wrap_content">
 
                 <TextView
+                        android:id="@+id/person_home_message"
                         android:layout_gravity="center"
                         android:paddingTop="@dimen/px20"
                         android:paddingBottom="@dimen/px20"
@@ -40,6 +42,7 @@
             <FrameLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:layout_height="wrap_content">
 
                 <TextView
@@ -62,6 +65,7 @@
                     android:layout_height="wrap_content">
 
                 <TextView
+                        android:id="@+id/person_home_query"
                         android:layout_gravity="center"
                         android:paddingTop="@dimen/px20"
                         android:paddingBottom="@dimen/px20"
@@ -81,6 +85,7 @@
     <FrameLayout
             android:id="@+id/person_home_message_only"
             android:background="@drawable/big_submit_btn_selector"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

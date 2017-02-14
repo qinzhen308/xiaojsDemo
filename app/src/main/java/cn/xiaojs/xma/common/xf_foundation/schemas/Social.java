@@ -192,6 +192,13 @@ public class Social {
         public static final String ORGANIZATION = "Organization";
     }
 
+    public static class Relationship{
+        public static String CLASS_MATE = "classmate";
+        public static String FRIENDS = "friends";
+        public static String TEACHER = "teacher";
+        public static String STRANGER = "stranger";
+    }
+
     /**
      * Returns the URL to a drawing associated with specific activity.
      * @param key

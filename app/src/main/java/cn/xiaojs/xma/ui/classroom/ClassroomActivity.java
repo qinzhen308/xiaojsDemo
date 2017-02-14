@@ -592,7 +592,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mPublishUrl = object != null ? object.publishUrl : null;
                     mLiveSessionState = Live.LiveSessionState.LIVE;
                     setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
-                    PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+                    mMyVideo.setPublishUrl(mPublishUrl);
+                    mMyVideo.resume();
                 }
 
                 @Override
