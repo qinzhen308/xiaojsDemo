@@ -217,7 +217,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     @PermissionSuccess(requestCode = REQUEST_PERMISSION_CODE)
-    private void recordOn() {
+    private void publishStream() {
         mMyVideo.setVisibility(View.VISIBLE);
         mMyVideo.setPath(mPublishUrl);
     }
@@ -536,12 +536,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     /**
-     * 开启或暂停课，相应的逻辑处理在socket监听回调事件内
+     * 开启或暂停课，除老师外的其他参与者的状态变化在socket的回调里面进行处理
+     *
      * @see mSyncStateListener
      */
     private void playOrPauseLesson(final View view) {
-        if (TextUtils.isEmpty(mTicket) || Live.LiveSessionState.FINISHED.equals(mLiveSessionState)) {
-            //TODO toast
+        if (TextUtils.isEmpty(mTicket) || Live.LiveSessionState.FINISHED.equals(mLiveSessionState)
+                || mUser != Constants.User.TEACHER) {
             return;
         }
 
@@ -551,6 +552,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 @Override
                 public void onSuccess(ResponseBody object) {
                     cancelProgress();
+
+                    //stop stream
+                    mLiveSessionState = Live.LiveSessionState.RESET;
+                    setPlayPauseBtnStyle(Live.LiveSessionState.RESET);
+
+                    mMyVideo.pause();
+                    //mMyVideo.destroy();
                 }
 
                 @Override
@@ -565,6 +573,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 public void onSuccess(ClassResponse object) {
                     cancelProgress();
                     mPublishUrl = object != null ? object.publishUrl : null;
+                    mLiveSessionState = Live.LiveSessionState.LIVE;
+                    setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
+                    PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
                 }
 
                 @Override
@@ -579,6 +590,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 public void onSuccess(ClassResponse object) {
                     cancelProgress();
                     mPublishUrl = object != null ? object.publishUrl : null;
+                    mLiveSessionState = Live.LiveSessionState.LIVE;
+                    setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
+                    PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
                 }
 
                 @Override
@@ -1281,17 +1295,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 mSyncState = ClassroomBusiness.parseSocketBean(args[0], SyncStateResponse.class);
                 if (mSyncState != null) {
                     if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))
-                     || (Live.LiveSessionState.RESET.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))) {
-                        mLiveSessionState = Live.LiveSessionState.LIVE;
-                        setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
-                        PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+                            || (Live.LiveSessionState.RESET.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))) {
+                        if (mUser != Constants.User.TEACHER) {
+                            mLiveSessionState = Live.LiveSessionState.LIVE;
+                            //非老师端播放推流地址
+                        }
                     } else if (Live.LiveSessionState.LIVE.equals(mSyncState.from) && Live.LiveSessionState.RESET.equals(mSyncState.to)) {
-                        //stop stream
-                        mLiveSessionState = Live.LiveSessionState.RESET;
-                        setPlayPauseBtnStyle(Live.LiveSessionState.RESET);
-
-                        mMyVideo.pause();
-                        mMyVideo.destroy();
+                        if (mUser != Constants.User.TEACHER) {
+                            mLiveSessionState = Live.LiveSessionState.RESET;
+                            //非老师端暂停播放
+                        }
                     }
                 }
             }
@@ -1357,4 +1370,5 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void onPublishMyVideo(String publishUrl) {
 
     }
+
 }
