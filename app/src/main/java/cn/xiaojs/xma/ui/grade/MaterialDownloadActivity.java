@@ -44,7 +44,8 @@ public class MaterialDownloadActivity extends BaseListActivity implements Loader
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projections = {DBTables.TDownload._ID,
+        String[] projections = {
+                DBTables.TDownload._ID,
                 DBTables.TDownload.URL,
                 DBTables.TDownload.TITLE,
                 DBTables.TDownload.FILE_NAME,
@@ -55,12 +56,11 @@ public class MaterialDownloadActivity extends BaseListActivity implements Loader
                 DBTables.TDownload.STATUS,
                 DBTables.TDownload.LAST_MOD,
                 DBTables.TDownload.TOTAL_BYTES,
-                DBTables.TDownload.CURRENT_BYTES};
+                DBTables.TDownload.CURRENT_BYTES
+        };
 
         String order = DBTables.TDownload._ID + " DESC";
-
         return new CursorLoader(this, DownloadProvider.DOWNLOAD_URI, projections, null, null, order);
-
     }
 
     @Override
