@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -62,6 +63,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
@@ -131,8 +133,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     //lesson info
     @BindView(R.id.lesson_title)
     TextView mLessonTitle;
-    @BindView(R.id.lesson_duration)
-    TextView mLessonDuration;
+    @BindView(R.id.reset_time)
+    TextView mResetTime;
+    @BindView(R.id.play_time)
+    TextView mPlayTime;
+    @BindView(R.id.total_time)
+    TextView mTotalTime;
+    @BindView(R.id.delay_time)
+    TextView mDelayTime;
 
     //panel btn
     @BindView(R.id.main_screen_setting)
@@ -196,6 +204,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private String mPublishUrl;
     private boolean mInitPublishVideo = false;
+    private Handler mHandler;
+    private long mResetTotalTime = 30 * 60; //s
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -230,6 +240,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mTicket = getIntent().getStringExtra(Constants.KEY_TICKET);
         mPanelAnimListener = new PanelAnimListener();
         mMyVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
+        mHandler = new Handler();
     }
 
     private void initPanel() {
@@ -347,6 +358,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     initPanel();
                     addPlayUrl(ctlSession.playUrl);
                     setPlayPauseBtnStyle(ctlSession.state);
+                    mTotalTime.setText(TimeUtil.formatMinuteTime(ctlSession.ctl != null ? ctlSession.ctl.duration : 0));
                     mPublishUrl = ctlSession.publishUrl;
                     if (!mInitPublishVideo) {
                         PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
@@ -354,6 +366,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         mMyVideo.setPublishUrl(mPublishUrl);
                         mMyVideo.resume();
                     }
+                    mPlayTime.setText(TimeUtil.formatSecondTime(ctlSession.startOn));
 
                     //init whiteboard
                     mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
@@ -1308,11 +1321,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             mLiveSessionState = Live.LiveSessionState.LIVE;
                             //非老师端播放推流地址
                         }
+
+                        mResetTime.setVisibility(View.GONE);
                     } else if (Live.LiveSessionState.LIVE.equals(mSyncState.from) && Live.LiveSessionState.RESET.equals(mSyncState.to)) {
                         if (mUser != Constants.User.TEACHER) {
                             mLiveSessionState = Live.LiveSessionState.RESET;
                             //非老师端暂停播放
                         }
+
+                        setResetTime();
                     }
                 }
             }
@@ -1378,5 +1395,21 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void onPublishMyVideo(String publishUrl) {
 
     }
+
+    private void setResetTime() {
+        mHandler.removeMessages(0);
+        mResetTotalTime = 30 * 60;
+        mResetTime.setText(TimeUtil.formatSecondTime(mResetTotalTime));
+        mResetTime.setVisibility(View.VISIBLE);
+        mHandler.postDelayed(mResetTimeRunnable, 1000);
+    }
+
+    private Runnable mResetTimeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mResetTotalTime--;
+            mResetTime.setText(TimeUtil.formatSecondTime(mResetTotalTime));
+        }
+    };
 
 }

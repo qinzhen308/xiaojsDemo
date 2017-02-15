@@ -127,13 +127,20 @@ public class LiveRecordView extends BaseMediaView implements
         View v = inflater.inflate(R.layout.layout_live_record_view,null);
         mAspect = (AspectFrameLayout) v.findViewById(R.id.camera_afl);
         mPreviewFrameView = (CameraPreviewFrameView) v.findViewById(R.id.camera_preview_surfaceView);
+        init();
         return v;
     }
 
     @Override
     public void setPath(String path) {
         super.setPath(path);
-        init();
+        //init();
+
+        try {
+            mProfile.setPublishUrl(getPath());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     private void init() {
@@ -146,11 +153,11 @@ public class LiveRecordView extends BaseMediaView implements
         StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
         mAspect.setShowMode(AspectFrameLayout.SHOW_MODE.REAL);
         mProfile = new StreamingProfile();
-        try {
+        /*try {
             mProfile.setPublishUrl(getPath());
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        }
+        }*/
 
         mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3)
                 .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)

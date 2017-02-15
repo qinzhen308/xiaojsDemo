@@ -700,28 +700,28 @@ public class TimeUtil {
         return new Date(cal.getTimeInMillis());
     }
 
-    public static String getTimeFromNow(Date date){
+    public static String getTimeFromNow(Date date) {
         StringBuilder time = new StringBuilder();
         Date now = new Date(System.currentTimeMillis());
-        if (inOneHour(date,now)){
-            int target = getTime(date,Calendar.MINUTE);
-            int nowMin = getTime(now,Calendar.MINUTE);
+        if (inOneHour(date, now)) {
+            int target = getTime(date, Calendar.MINUTE);
+            int nowMin = getTime(now, Calendar.MINUTE);
 
             int fact = nowMin - target;
-            if (fact > 0){
+            if (fact > 0) {
                 time.append(fact);
                 time.append("分钟前");
-            }else {
+            } else {
                 time.append("刚刚");
             }
 
-        }else if (isSameDay(date,now)){
-            time.append(format(date,TIME_HH_MM));
-        }else if (isYesterday(date,now)){
+        } else if (isSameDay(date, now)) {
+            time.append(format(date, TIME_HH_MM));
+        } else if (isYesterday(date, now)) {
             time.append("昨天 ");
-            time.append(format(date,TIME_HH_MM));
-        }else {
-            time.append(format(date,TIME_YYYY_MM_DD_HH_MM));
+            time.append(format(date, TIME_HH_MM));
+        } else {
+            time.append(format(date, TIME_YYYY_MM_DD_HH_MM));
         }
 
         return time.toString();
@@ -787,19 +787,19 @@ public class TimeUtil {
         StringBuilder time = new StringBuilder();
         if (target.getTime() >= now.getTime()) {//之后
             int dis = getTime(target, Calendar.MINUTE) - getTime(now, Calendar.MINUTE);
-            if (dis > 0){
+            if (dis > 0) {
                 time.append(dis);
                 time.append("分钟之后");
-            }else {
+            } else {
                 time.append("刚刚");
             }
             return time.toString();
         } else {//之前
             int dis = getTime(now, Calendar.MINUTE) - getTime(target, Calendar.MINUTE);
-            if (dis > 0 ){
+            if (dis > 0) {
                 time.append(dis);
                 time.append("分钟之前");
-            }else {
+            } else {
                 time.append("刚刚");
             }
             return time.toString();
@@ -824,5 +824,57 @@ public class TimeUtil {
     public static String format(long date, String format) {
         SimpleDateFormat formatter = new SimpleDateFormat(format);
         return formatter.format(date);
+    }
+
+    public static String formatMinuteTime(long minute) {
+        if (minute <= 0) {
+            return "00:00:00";
+        }
+
+        long h = minute / 60;
+        long m = minute % 60;
+
+        String hh = "00";
+        if (h < 10) {
+            hh = "0" + h;
+        } else if (h >= 0 && h <= 59) {
+            hh = String.valueOf(h);
+        }
+
+        String mm = "00";
+        if (m < 10) {
+            mm = "0" + m;
+        } else if (m >= 0 && m <= 59) {
+            mm = String.valueOf(m);
+        }
+
+        return hh + ":" + mm + ":00";
+
+    }
+
+    public static String formatSecondTime(long second) {
+        if (second <= 0) {
+            return "00:00:00";
+        }
+
+        long h = second / 3600;
+        long m = (second % 3600) / 60;
+
+        String hh = "00";
+        if (h < 10) {
+            hh = "0" + h;
+        } else if (h >= 0 && h <= 59) {
+            hh = String.valueOf(h);
+        }
+
+        String mm = "00";
+        if (m < 10) {
+            mm = "0" + m;
+        } else if (m >= 0 && m <= 59) {
+            mm = String.valueOf(m);
+        }
+
+        return hh + ":" + mm + ":00";
+
     }
 }

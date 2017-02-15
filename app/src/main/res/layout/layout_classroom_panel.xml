@@ -86,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_toRightOf="@+id/exit_btn"
+                    android:layout_toRightOf="@+id/finish_btn"
                     android:layout_toLeftOf="@+id/contact_btn"
                     android:gravity="center"
                     android:orientation="vertical">
@@ -97,18 +97,16 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
                         android:layout_gravity="center"
-                        android:textSize="@dimen/font_30px"
-                        android:text="战略性积极管理"/>
+                        android:textSize="@dimen/font_30px"/>
 
                 <TextView
-                        android:id="@+id/lesson_duration"
+                        android:id="@+id/reset_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
                         android:layout_marginTop="@dimen/px4"
                         android:textSize="@dimen/font_20px"
-                        android:visibility="gone"
-                        android:text="01:15:30"/>
+                        android:visibility="gone"/>
             </LinearLayout>
 
             <ImageView
@@ -151,7 +149,6 @@
                 android:id="@+id/my_video"
                 android:layout_width="@dimen/px144"
                 android:layout_height="@dimen/px81"
-                android:visibility="gone"
                 android:layout_below="@+id/title_bar"
                 android:layout_marginTop="@dimen/px18"
                 android:layout_marginLeft="@dimen/px15"/>
@@ -191,16 +188,30 @@
                     android:thumb="@drawable/live_progress_controller"
                     android:progressDrawable="@drawable/live_progress_bar"/>
 
-            <TextView
-                    android:id="@+id/total_time"
-                    android:textColor="@color/font_white"
-                    android:textSize="@dimen/font_20px"
+
+            <LinearLayout
                     android:layout_width="wrap_content"
-                    android:text="01:15:00"
-                    android:paddingRight="@dimen/px15"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                <TextView
+                        android:id="@+id/total_time"
+                        android:textColor="@color/font_white"
+                        android:textSize="@dimen/font_20px"
+                        android:layout_width="wrap_content"
+                        android:text="01:15:00"
+                        android:paddingRight="@dimen/px15"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/delay_time"
+                        android:textColor="@color/font_red"
+                        android:textSize="@dimen/font_20px"
+                        android:layout_width="wrap_content"
+                        android:visibility="gone"
+                        android:paddingRight="@dimen/px15"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 
