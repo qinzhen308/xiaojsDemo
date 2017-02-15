@@ -195,7 +195,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private int mAppType = Platform.AppType.UNKNOWN;
 
     private String mPublishUrl;
-    private boolean mInit;
+    private boolean mInitPublishVideo = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -218,6 +218,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     @PermissionSuccess(requestCode = REQUEST_PERMISSION_CODE)
     private void publishStream() {
+        mInitPublishVideo = true;
         mMyVideo.setVisibility(View.VISIBLE);
         mMyVideo.setPath(mPublishUrl);
     }
@@ -332,7 +333,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             public void onSuccess(CtlSession ctlSession) {
                 Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
                 if (ctlSession != null) {
-                    mInit = true;
                     mCtlSession = ctlSession;
                     mUser = ClassroomBusiness.getUser(ctlSession.psType);
                     mLiveSessionState = ctlSession.state;
@@ -347,9 +347,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     initPanel();
                     addPlayUrl(ctlSession.playUrl);
                     setPlayPauseBtnStyle(ctlSession.state);
-                    if (!TextUtils.isEmpty(ctlSession.publishUrl)) {
-                        mPublishUrl = ctlSession.publishUrl;
+                    mPublishUrl = ctlSession.publishUrl;
+                    if (!mInitPublishVideo) {
                         PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+                    } else {
+                        mMyVideo.setPublishUrl(mPublishUrl);
+                        mMyVideo.resume();
                     }
 
                     //init whiteboard
@@ -558,7 +561,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     setPlayPauseBtnStyle(Live.LiveSessionState.RESET);
 
                     mMyVideo.pause();
-                    //mMyVideo.destroy();
                 }
 
                 @Override
@@ -575,7 +577,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mPublishUrl = object != null ? object.publishUrl : null;
                     mLiveSessionState = Live.LiveSessionState.LIVE;
                     setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
-                    PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+                    if (!mInitPublishVideo) {
+                        PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+                    } else {
+                        mMyVideo.setPublishUrl(mPublishUrl);
+                        mMyVideo.resume();
+                    }
                 }
 
                 @Override
