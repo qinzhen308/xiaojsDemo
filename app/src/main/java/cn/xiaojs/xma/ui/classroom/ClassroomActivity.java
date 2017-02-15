@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
+import java.sql.Time;
 import java.util.List;
 
 import butterknife.BindView;
@@ -88,6 +90,9 @@ import okhttp3.ResponseBody;
 public class ClassroomActivity extends FragmentActivity implements WhiteboardAdapter.OnWhiteboardListener {
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.55F;
     private final static int REQUEST_PERMISSION_CODE = 1024;
+
+    private final static int MSG_RESET_TIME = 1024;
+    private final static int MSG_PLAY_TIME = 2048;
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
@@ -204,8 +209,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private String mPublishUrl;
     private boolean mInitPublishVideo = false;
-    private Handler mHandler;
     private long mResetTotalTime = 30 * 60; //s
+    private long mPlayTotalTime = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -240,7 +245,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mTicket = getIntent().getStringExtra(Constants.KEY_TICKET);
         mPanelAnimListener = new PanelAnimListener();
         mMyVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
-        mHandler = new Handler();
     }
 
     private void initPanel() {
@@ -382,6 +386,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             }
                         }
                     });
+
+                    if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
+                        setPlayTime();
+                    }
                 } else {
                     Toast.makeText(ClassroomActivity.this, "BootSession 数据返回为null", Toast.LENGTH_SHORT).show();
                     cancelProgress();
@@ -596,6 +604,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         mMyVideo.setPublishUrl(mPublishUrl);
                         mMyVideo.resume();
                     }
+
+                    setPlayTime();
                 }
 
                 @Override
@@ -614,6 +624,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
                     mMyVideo.setPublishUrl(mPublishUrl);
                     mMyVideo.resume();
+
+                    setPlayTime();
                 }
 
                 @Override
@@ -1322,7 +1334,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             //非老师端播放推流地址
                         }
 
-                        mResetTime.setVisibility(View.GONE);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mResetTime.setVisibility(View.GONE);
+                            }
+                        });
                     } else if (Live.LiveSessionState.LIVE.equals(mSyncState.from) && Live.LiveSessionState.RESET.equals(mSyncState.to)) {
                         if (mUser != Constants.User.TEACHER) {
                             mLiveSessionState = Live.LiveSessionState.RESET;
@@ -1392,24 +1409,47 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     }
 
-    private void onPublishMyVideo(String publishUrl) {
-
-    }
-
     private void setResetTime() {
-        mHandler.removeMessages(0);
+        mHandler.removeMessages(MSG_RESET_TIME);
         mResetTotalTime = 30 * 60;
-        mResetTime.setText(TimeUtil.formatSecondTime(mResetTotalTime));
-        mResetTime.setVisibility(View.VISIBLE);
-        mHandler.postDelayed(mResetTimeRunnable, 1000);
+
+        Message msg = new Message();
+        msg.what = MSG_RESET_TIME;
+        msg.arg1 = (int)mResetTotalTime;
+        mHandler.sendMessage(msg);
     }
 
-    private Runnable mResetTimeRunnable = new Runnable() {
+    private void setPlayTime() {
+        mHandler.removeMessages(MSG_PLAY_TIME);
+        mPlayTotalTime = 0;
+
+        Message msg = new Message();
+        msg.what = MSG_PLAY_TIME;
+        msg.arg1 = (int)mPlayTotalTime;
+        mHandler.sendMessage(msg);
+    }
+
+    private Handler mHandler = new Handler() {
         @Override
-        public void run() {
-            mResetTotalTime--;
-            mResetTime.setText(TimeUtil.formatSecondTime(mResetTotalTime));
+        public void handleMessage(Message msg) {
+            if (msg != null) {
+                Message m = mHandler.obtainMessage();
+                switch (msg.what) {
+                    case MSG_RESET_TIME:
+                        mResetTotalTime--;
+                        mResetTime.setVisibility(View.VISIBLE);
+                        mResetTime.setText(TimeUtil.formatSecondTime(mResetTotalTime));
+                        m.what = MSG_RESET_TIME;
+                        mHandler.sendMessageDelayed(m, 1000);
+                        break;
+                    case MSG_PLAY_TIME:
+                        mPlayTotalTime++;
+                        mPlayTime.setText(TimeUtil.formatSecondTime(mPlayTotalTime));
+                        m.what = MSG_PLAY_TIME;
+                        mHandler.sendMessageDelayed(m, 1000);
+                        break;
+                }
+            }
         }
     };
-
 }

@@ -859,6 +859,7 @@ public class TimeUtil {
 
         long h = second / 3600;
         long m = (second % 3600) / 60;
+        long s = second % 60;
 
         String hh = "00";
         if (h < 10) {
@@ -874,7 +875,14 @@ public class TimeUtil {
             mm = String.valueOf(m);
         }
 
-        return hh + ":" + mm + ":00";
+        String ss = "00";
+        if (s < 10) {
+            ss = "0" + s;
+        } else if (s >= 0 && s <= 59) {
+            ss = String.valueOf(s);
+        }
+
+        return hh + ":" + mm + ":" + ss;
 
     }
 }
