@@ -43,7 +43,6 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
@@ -108,6 +107,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
     private String mAccount;
     private String mPersonName;
+    private PublicHome mBean;
 
     @Override
     protected void initView() {
@@ -115,13 +115,15 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mIsMyself = intent.getBooleanExtra(PersonalBusiness.KEY_IS_MYSELF, false);
-            if (!mIsMyself){
+            if (!mIsMyself) {
                 mAccount = intent.getStringExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT);
-                if (!TextUtils.isEmpty(mAccount)){
-                    if (mAccount.equalsIgnoreCase(XiaojsConfig.mLoginUser.getAccount().getId())){
+                if (!TextUtils.isEmpty(mAccount)) {
+                    if (mAccount.equalsIgnoreCase(XiaojsConfig.mLoginUser.getId())) {
                         mIsMyself = true;
                     }
                 }
+            } else {
+                mAccount = XiaojsConfig.mLoginUser.getId();
             }
         }
 
@@ -159,51 +161,30 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
     private void getData() {
         showProgress(true);
-        if (mIsMyself) {
-            AccountDataManager.getPrivateHome(this, new APIServiceCallback<PrivateHome>() {
-                @Override
-                public void onSuccess(PrivateHome object) {
-                    cancelProgress();
-                    initView(object);
-                }
+        AccountDataManager.getPublicHome(this, mAccount, new APIServiceCallback<PublicHome>() {
+            @Override
+            public void onSuccess(PublicHome object) {
+                cancelProgress();
+                initView(object);
+            }
 
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    cancelProgress();
-                    showFailedView(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getData();
-                        }
-                    });
-                }
-            });
-        } else {
-            AccountDataManager.getPublicHome(this, mAccount, new APIServiceCallback<PublicHome>() {
-                @Override
-                public void onSuccess(PublicHome object) {
-                    cancelProgress();
-                    initView(object);
-                }
-
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    cancelProgress();
-                    showFailedView(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getData();
-                        }
-                    });
-                }
-            });
-        }
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                showFailedView(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getData();
+                    }
+                });
+            }
+        });
     }
 
-    private void initView(PrivateHome home) {
+    private void initView(PublicHome home) {
         if (home == null)
             return;
-
+        mBean = home;
         Glide.with(this)
                 .load(Account.getAvatar(home.profile.id, 300))
                 .error(R.drawable.default_avatar)
@@ -225,45 +206,16 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 });
         mHead.setSex(home.profile.sex);
         mName.setText(home.profile.name);
-        mFans.setText(getString(R.string.fans_num,home.profile.stats.fans));
-        mFollows.setText(getString(R.string.follow_num,home.profile.stats.followships));
+        mFans.setText(getString(R.string.fans_num, home.profile.stats.fans));
+        mFollows.setText(getString(R.string.follow_num, home.profile.stats.followships));
         mPersonName = home.profile.name;
-    }
-
-    private void initView(PublicHome home){
-        if (home == null)
-            return;
-        Glide.with(this)
-                .load(Account.getAvatar(home.profile.id, 300))
-                .error(R.drawable.default_avatar)
-                .into(new GlideDrawableImageViewTarget(mHead) {
-                    @Override
-                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                        super.onResourceReady(resource, animation);
-                        if (resource instanceof GlideBitmapDrawable) {
-                            Bitmap bmp = ((GlideBitmapDrawable) resource).getBitmap();
-                            setupBlurPortraitView(bmp);
-                        }
-                    }
-
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        super.onLoadFailed(e, errorDrawable);
-                        setDefaultPortrait();
-                    }
-                });
-        mHead.setSex(home.profile.sex);
-        mName.setText(home.profile.name);
-        mFans.setText(getString(R.string.fans_num,home.profile.stats.fans));
-        mFollows.setText(getString(R.string.follow_num,home.profile.stats.followships));
-        mPersonName = home.profile.name;
-        if (!TextUtils.isEmpty(home.relationship)){
-            if (home.relationship.equalsIgnoreCase(Social.Relationship.TEACHER)){
+        if (!TextUtils.isEmpty(home.relationship)) {
+            if (home.relationship.equalsIgnoreCase(Social.Relationship.TEACHER)) {
                 mFooterMultiple.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 mFooterSingle.setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             mFooterSingle.setVisibility(View.VISIBLE);
         }
     }
@@ -288,8 +240,6 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         needHeader(false);
         mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
         if (mIsMyself) {
-            mScrollRightText.setText(R.string.edit_material);
-            mScrollRightText.setTextColor(getResources().getColor(R.color.white));
             mHead.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
             mName.setText(XiaojsConfig.mLoginUser.getName());
 
@@ -341,8 +291,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only,R.id.person_home_message,
-    R.id.person_home_query})
+    @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only, R.id.person_home_message,
+            R.id.person_home_query})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -363,9 +313,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         if (y > mBlur.getHeight()) {
             if (mIsMyself) {
                 mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
-                mScrollRightText.setText(R.string.edit_material);
-                mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
-                mScrollMiddleText.setText(XiaojsConfig.mLoginUser.getName());
+                mScrollMiddleText.setText(mPersonName);
             } else {
                 mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
                 mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
@@ -377,8 +325,6 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         } else {
             if (mIsMyself) {
                 mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
-                mScrollRightText.setText(R.string.edit_material);
-                mScrollRightText.setTextColor(getResources().getColor(R.color.white));
                 mScrollMiddleText.setText("");
             } else {
                 mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
