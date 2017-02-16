@@ -8,7 +8,9 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -282,6 +284,15 @@ public class ServiceRequest<T> implements ContextLifecycle {
         requestObj = null;
     }
 
+    private boolean needToLogin(String errorCode) {
+        if (Errors.needLogin(errorCode)){
+            Toast.makeText(context, R.string.relogin, Toast.LENGTH_LONG).show();
+            APPUtils.lanuchLogin(context);
+            return true;
+        }
+        return false;
+    }
+
     private final String getExceptionErrorCode() {
         return getDefaultErrorCode();
     }
@@ -465,7 +476,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 }
                 String errorMessage = ErrorPrompts.getErrorMessage(apiType, errorCode);
 
-                if (serviceCallback != null) {
+                if (!needToLogin(errorCode) && serviceCallback != null) {
                     serviceCallback.onFailure(errorCode, errorMessage);
                 }
             }

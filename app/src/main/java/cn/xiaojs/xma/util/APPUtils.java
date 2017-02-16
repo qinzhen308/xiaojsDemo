@@ -24,11 +24,14 @@
 package cn.xiaojs.xma.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Looper;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.ui.account.LoginActivity;
 
 /**
  * Created by maxiaobao on 2016/10/26.
@@ -127,5 +130,14 @@ public class APPUtils {
         }
 
         return Platform.AppType.MOBILE_ANDROID;
+    }
+
+    public static void lanuchLogin(Context context) {
+
+        AccountDataManager.clearUserInfo(context);
+        //jump login page
+        Intent i = new Intent(context, LoginActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 }

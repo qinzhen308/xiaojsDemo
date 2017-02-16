@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.common.xf_foundation;
 
+import android.text.TextUtils;
+
 /**
  * Created by maxiaobao on 2016/10/28.
  */
@@ -218,5 +220,16 @@ public class Errors {
     public static final String ACTION_NOT_FOUND = "0xA1000005";
 
     //endregion
+
+    /**
+     * 根据错误码判断是不是需要用户重新登陆
+     * @param errorCode
+     * @return
+     */
+    public static boolean needLogin(String errorCode) {
+        return (errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.BAD_CSRF)
+                || errorCode.equals(Errors.BAD_SESSION));
+    }
 
 }
