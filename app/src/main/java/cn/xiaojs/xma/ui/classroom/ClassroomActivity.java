@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
-import java.sql.Time;
 import java.util.List;
 
 import butterknife.BindView;
@@ -139,13 +138,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @BindView(R.id.lesson_title)
     TextView mLessonTitle;
     @BindView(R.id.reset_time)
-    TextView mResetTime;
+    TextView mResetTimeTv;
     @BindView(R.id.play_time)
-    TextView mPlayTime;
+    TextView mPlayTimeTv;
     @BindView(R.id.total_time)
-    TextView mTotalTime;
+    TextView mTotalTimeTv;
     @BindView(R.id.delay_time)
-    TextView mDelayTime;
+    TextView mDelayTimeTv;
 
     //panel btn
     @BindView(R.id.main_screen_setting)
@@ -362,7 +361,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     initPanel();
                     addPlayUrl(ctlSession.playUrl);
                     setPlayPauseBtnStyle(ctlSession.state);
-                    mTotalTime.setText(TimeUtil.formatMinuteTime(ctlSession.ctl != null ? ctlSession.ctl.duration : 0));
+                    mTotalTimeTv.setText(TimeUtil.formatMinuteTime(ctlSession.ctl != null ? ctlSession.ctl.duration : 0));
                     mPublishUrl = ctlSession.publishUrl;
                     if (!mInitPublishVideo) {
                         PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
@@ -370,7 +369,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         mMyVideo.setPublishUrl(mPublishUrl);
                         mMyVideo.resume();
                     }
-                    mPlayTime.setText(TimeUtil.formatSecondTime(ctlSession.startOn));
 
                     //init whiteboard
                     mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
@@ -388,7 +386,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     });
 
                     if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
-                        setPlayTime();
+                        setPlayTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
+                    } else {
+                        mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
                     }
                 } else {
                     Toast.makeText(ClassroomActivity.this, "BootSession 数据返回为null", Toast.LENGTH_SHORT).show();
@@ -604,8 +604,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         mMyVideo.setPublishUrl(mPublishUrl);
                         mMyVideo.resume();
                     }
-
-                    setPlayTime();
                 }
 
                 @Override
@@ -624,8 +622,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
                     mMyVideo.setPublishUrl(mPublishUrl);
                     mMyVideo.resume();
-
-                    setPlayTime();
                 }
 
                 @Override
@@ -844,6 +840,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (mProgress != null && mProgress.isShowing()) {
             mProgress.dismiss();
             mProgress = null;
+        }
+
+        if (mHandler != null) {
+            mHandler.removeMessages(MSG_RESET_TIME);
+            mHandler.removeMessages(MSG_PLAY_TIME);
         }
 
         cancelAllAnim();
@@ -1334,19 +1335,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             //非老师端播放推流地址
                         }
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mResetTime.setVisibility(View.GONE);
-                            }
-                        });
+                        setResetTime(false);
+                        setPlayTime(mSyncState.timeline != null ? mSyncState.timeline.hasTaken : 0, true);
                     } else if (Live.LiveSessionState.LIVE.equals(mSyncState.from) && Live.LiveSessionState.RESET.equals(mSyncState.to)) {
                         if (mUser != Constants.User.TEACHER) {
                             mLiveSessionState = Live.LiveSessionState.RESET;
                             //非老师端暂停播放
                         }
 
-                        setResetTime();
+                        setResetTime(true);
+                        setPlayTime(mSyncState.timeline != null ? mSyncState.timeline.hasTaken : 0, false);
                     }
                 }
             }
@@ -1409,23 +1407,23 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     }
 
-    private void setResetTime() {
+    private void setResetTime(boolean show) {
         mHandler.removeMessages(MSG_RESET_TIME);
         mResetTotalTime = 30 * 60;
 
         Message msg = new Message();
         msg.what = MSG_RESET_TIME;
-        msg.arg1 = (int)mResetTotalTime;
+        msg.arg1 = show ? 1 : 0;
         mHandler.sendMessage(msg);
     }
 
-    private void setPlayTime() {
+    private void setPlayTime(long hasTaken, boolean auto) {
         mHandler.removeMessages(MSG_PLAY_TIME);
-        mPlayTotalTime = 0;
+        mPlayTotalTime = hasTaken;
 
         Message msg = new Message();
         msg.what = MSG_PLAY_TIME;
-        msg.arg1 = (int)mPlayTotalTime;
+        msg.arg1 = auto ? 1 : 0;
         mHandler.sendMessage(msg);
     }
 
@@ -1436,17 +1434,27 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 Message m = mHandler.obtainMessage();
                 switch (msg.what) {
                     case MSG_RESET_TIME:
-                        mResetTotalTime--;
-                        mResetTime.setVisibility(View.VISIBLE);
-                        mResetTime.setText(TimeUtil.formatSecondTime(mResetTotalTime));
-                        m.what = MSG_RESET_TIME;
-                        mHandler.sendMessageDelayed(m, 1000);
+                        if (msg.arg1 == 1) {
+                            mResetTotalTime--;
+                            mResetTimeTv.setVisibility(View.VISIBLE);
+                            mResetTimeTv.setText(TimeUtil.formatSecondTime(mResetTotalTime));
+                            m.what = MSG_RESET_TIME;
+                            m.arg1 = 1;
+                            mHandler.sendMessageDelayed(m, 1000);
+                        } else {
+                            mResetTimeTv.setVisibility(View.GONE);
+                        }
                         break;
                     case MSG_PLAY_TIME:
-                        mPlayTotalTime++;
-                        mPlayTime.setText(TimeUtil.formatSecondTime(mPlayTotalTime));
-                        m.what = MSG_PLAY_TIME;
-                        mHandler.sendMessageDelayed(m, 1000);
+                        if (msg.arg1 == 1) {
+                            mPlayTotalTime++;
+                            mPlayTimeTv.setText(TimeUtil.formatSecondTime(mPlayTotalTime));
+                            m.what = MSG_PLAY_TIME;
+                            m.arg1 = 1;
+                            mHandler.sendMessageDelayed(m, 1000);
+                        } else {
+                            mPlayTimeTv.setText(TimeUtil.formatSecondTime(mPlayTotalTime));
+                        }
                         break;
                 }
             }
