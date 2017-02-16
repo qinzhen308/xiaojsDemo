@@ -350,7 +350,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mCtlSession = ctlSession;
                     mUser = ClassroomBusiness.getUser(ctlSession.psType);
                     mLiveSessionState = ctlSession.state;
-                    mLessonTitle.setText(ctlSession.ctl != null ? ctlSession.ctl.title : "");
+                    mLessonTitle.setText(ctlSession.titleOfPrimary);
                     mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
 
                     //init socket
@@ -387,6 +387,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                     if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
                         setPlayTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
+                    } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
+                            Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
+                        setPendingLivePlayTime(ctlSession.startOn);
                     } else {
                         mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
                     }
@@ -1427,6 +1430,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mHandler.sendMessage(msg);
     }
 
+    private void setPendingLivePlayTime(long startOn) {
+        mHandler.removeMessages(MSG_PLAY_TIME);
+        mPlayTotalTime = startOn;
+
+        Message msg = new Message();
+        msg.what = MSG_PLAY_TIME;
+        msg.arg1 = 2;
+        mHandler.sendMessage(msg);
+    }
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -1451,6 +1464,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             mPlayTimeTv.setText(TimeUtil.formatSecondTime(mPlayTotalTime));
                             m.what = MSG_PLAY_TIME;
                             m.arg1 = 1;
+                            mHandler.sendMessageDelayed(m, 1000);
+                        } else if (msg.arg1 == 2) {
+                            mPlayTotalTime--;
+                            mPlayTimeTv.setText(TimeUtil.formatSecondTime(mPlayTotalTime));
+                            m.what = MSG_PLAY_TIME;
+                            m.arg1 = 2;
                             mHandler.sendMessageDelayed(m, 1000);
                         } else {
                             mPlayTimeTv.setText(TimeUtil.formatSecondTime(mPlayTotalTime));
