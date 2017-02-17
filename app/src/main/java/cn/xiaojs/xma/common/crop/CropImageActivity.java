@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -32,6 +34,8 @@ import butterknife.OnClick;
  * ======================================================================================== */
 
 public class CropImageActivity extends BaseActivity {
+    public static final String ACTION_DONE_TXT = "action_done_txt"; //action done按钮的文字
+
     private int mWidth = 300;
     private int mHeight = 300;
     private Bitmap mBitmap;
@@ -44,17 +48,18 @@ public class CropImageActivity extends BaseActivity {
 
     @Override
     public void addViewContent() {
+        String actionDoneTxt = null;
         if (getIntent() != null) {
-            mWidth = getIntent().getIntExtra(CropImagePath.CROP_IMAGE_WIDTH,
-                    300);
-            mHeight = getIntent().getIntExtra(CropImagePath.CROP_IMAGE_HEIGHT,
-                    300);
-            isNotCrop = getIntent().getBooleanExtra(CropImagePath.CROP_NEVER,
-                    false);
-            isUploadCompress = getIntent().getBooleanExtra(
-                    CropImagePath.UPLOAD_COMPRESS, false);
+            mWidth = getIntent().getIntExtra(CropImagePath.CROP_IMAGE_WIDTH, 300);
+            mHeight = getIntent().getIntExtra(CropImagePath.CROP_IMAGE_HEIGHT, 300);
+            isNotCrop = getIntent().getBooleanExtra(CropImagePath.CROP_NEVER, false);
+            isUploadCompress = getIntent().getBooleanExtra(CropImagePath.UPLOAD_COMPRESS, false);
+            actionDoneTxt = getIntent().getStringExtra(ACTION_DONE_TXT);
         }
         addView(R.layout.crop_image_layout);
+        if (!TextUtils.isEmpty(actionDoneTxt)) {
+            ((TextView)findViewById(R.id.save)).setText(actionDoneTxt);
+        }
 
         needHeader(false);
         mBottomContent = (RelativeLayout)findViewById(R.id.crop_bottom_content);
