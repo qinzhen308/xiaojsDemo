@@ -106,3 +106,24 @@
 # bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+
+# jmessage
+-dontoptimize
+-dontpreverify
+-keepattributes  EnclosingMethod,Signature
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+
+-dontwarn cn.jiguang.**
+-keep class cn.jiguang.** { *; }
+
+ -keepclassmembers class ** {
+     public void onEvent*(**);
+ }
+
+#========================gson================================
+-dontwarn com.google.**
+-keep class com.google.gson.** {*;}
+
+#========================protobuf================================
+-keep class com.google.protobuf.** {*;}

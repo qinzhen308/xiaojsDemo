@@ -16,11 +16,11 @@ package cn.xiaojs.xma.ui.message;
 
 import android.text.TextUtils;
 
-import cn.xiaojs.xma.common.xf_foundation.platform.NotificationTemplate;
-import cn.xiaojs.xma.model.NotificationCategory;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.xiaojs.xma.common.xf_foundation.platform.NotificationTemplate;
+import cn.xiaojs.xma.model.NotificationCategory;
 
 public class NotificationBusiness {
 
@@ -76,5 +76,13 @@ public class NotificationBusiness {
 
         }
         return null;
+    }
+
+    public static List<NotificationCategory> getPlatformCategory(){
+        List<NotificationCategory> list = new ArrayList<>();
+        for (int i = 0 ; i < 7 ; i++){
+            list.add(new NotificationCategory());
+        }
+        return list;
     }
 }

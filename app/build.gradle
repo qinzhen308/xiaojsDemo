@@ -9,6 +9,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
+        multiDexEnabled true
         applicationId "cn.xiaojs.xma"
         minSdkVersion 15
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -85,19 +86,19 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
-//    compile files('libs/nineoldanimatin.jar')
-//    compile files('libs/pldroid-media-streaming-2.0.4.jar')
-//    compile files('libs/pldroid-player-1.3.2.jar')
+    //    compile files('libs/nineoldanimatin.jar')
+    //    compile files('libs/pldroid-media-streaming-2.0.4.jar')
+    //    compile files('libs/pldroid-player-1.3.2.jar')
     //compile files('libs/nineoldanimatin.jar')
-
     //debug only////////////////////////////////////////////////////////////////////////////////////
     debugCompile 'com.facebook.stetho:stetho:1.4.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-
     //recyclerview
-    compile "com.android.support:recyclerview-v7:22.0.0"
-
-    compile ('io.socket:socket.io-client:0.8.3') {
+    compile 'com.android.support:recyclerview-v7:22.0.0'
+    compile('io.socket:socket.io-client:0.8.3') {
         exclude group: 'org.json', module: 'json'
     }
+//    compile files('libs/jcore-android_v1.1.0.jar')
+//    compile files('libs/jmessage-android-2.0.0.jar')
+//    compile files('libs/jpush-android_v3.0.1.jar')
 }

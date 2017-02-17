@@ -6,9 +6,10 @@ import android.support.v4.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jpush.im.android.api.JMessageClient;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.TestActivity;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
@@ -43,6 +44,17 @@ public class MainActivity extends BaseTabActivity {
                 new int[]{R.drawable.home_tab_selector, R.drawable.live_tab_selector, R.drawable.message_tab_selector, R.drawable.mine_tab_selector},
                 fs);
         new OkHttpClient();
+
+        //JMessageClient.registerEventReceiver(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Fragment fragment = getFragmentByPosition(2);
+        if (fragment != null && fragment instanceof NotificationFragment){
+            ((NotificationFragment)fragment).notifyConversation();
+        }
     }
 
     @Override
@@ -89,8 +101,13 @@ public class MainActivity extends BaseTabActivity {
 //                startActivity(new Intent(this,ImageViewActivity.class)
 //                .putExtra(ImageViewActivity.IMAGE_PATH_KEY,urls));
                 //startActivity(new Intent(this, CertificationActivity.class));
-                startActivity(new Intent(this, TestActivity.class));
+                //startActivity(new Intent(this, TestActivity.class));
 
+                if (JMessageClient.getMyInfo() != null){
+                    Intent intent = new Intent(this, ChatActivity.class);
+                    intent.putExtra(ChatActivity.TARGET_ID,"1234567");
+                    startActivity(intent);
+                }
                 break;
             case 4:
                 startActivity(new Intent(this,PersonHomeActivity.class));
@@ -122,5 +139,11 @@ public class MainActivity extends BaseTabActivity {
         super.onBackPressed();
         finish();
         System.exit(1);
+    }
+
+    @Override
+    protected void onDestroy() {
+        //JMessageClient.unRegisterEventReceiver(this);
+        super.onDestroy();
     }
 }

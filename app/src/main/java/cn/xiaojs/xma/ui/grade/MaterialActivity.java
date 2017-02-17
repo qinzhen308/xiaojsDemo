@@ -14,8 +14,11 @@ package cn.xiaojs.xma.ui.grade;
  *
  * ======================================================================================== */
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -30,7 +33,6 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.CollaManager;
-import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.colla.UploadReponse;
@@ -63,6 +65,7 @@ public class MaterialActivity extends BaseActivity {
 
     MaterialAdapter mAdapter;
     CollaManager mManager;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_material);
@@ -83,27 +86,27 @@ public class MaterialActivity extends BaseActivity {
         mRightImage.setImageResource(R.drawable.ic_my_download);
     }
 
-    @OnClick({R.id.material_left_image, R.id.material_right_image,R.id.material_right_image2, R.id.material_up_load_close})
+    @OnClick({R.id.material_left_image, R.id.material_right_image, R.id.material_right_image2, R.id.material_up_load_close})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.material_left_image:
                 finish();
                 break;
             case R.id.material_right_image://我的下载
-                if(DownloadManager.allowDownload(this)){
-                    DownloadManager.enqueueDownload(this,"vipkid" + System.currentTimeMillis() + ".apk","key","http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk","","");
-                }else{
-                    Toast.makeText(this,"当前有下载任务，不能新建下载",Toast.LENGTH_SHORT).show();
+                if (DownloadManager.allowDownload(this)) {
+                    DownloadManager.enqueueDownload(this, "vipkid" + System.currentTimeMillis() + ".apk", "key", "http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk", "", "");
+                } else {
+                    Toast.makeText(this, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
                 }
 
-                Intent intent = new Intent(this,MaterialDownloadActivity.class);
+                Intent intent = new Intent(this, MaterialDownloadActivity.class);
                 startActivity(intent);
                 break;
             case R.id.material_right_image2://上传文件
                 upload();
                 break;
             case R.id.material_up_load_close://取消上传
-                if (mManager != null){
+                if (mManager != null) {
                     mManager.cancelAdd();
                 }
                 break;
@@ -123,35 +126,50 @@ public class MaterialActivity extends BaseActivity {
             if (resultCode == RESULT_OK && data != null) {//是否选择，没选择就不会继续
                 Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
                 if (uri != null) {
-                    File file = new File(uri.getPath());
-                    if (file == null)
-                        return;
-                    mUploadName.setText(file.getName());
-                    mUploadingWrapper.setVisibility(View.VISIBLE);
-                    mManager = new CollaManager();
-                    String t = "869f6f9be63c3ee2157b4188e709718638f7e8faf2e1223f389631a3f2dfc5f8f9025c1208dacc1b32ab324f5d9da842";
-                    mManager.addToLibrary(this, file.getPath(), file.getName(), t, new QiniuService() {
-                        @Override
-                        public void uploadSuccess(String key, UploadReponse reponse) {
-                            mUploadingWrapper.setVisibility(View.GONE);
-                            ToastUtil.showToast(getApplicationContext(), R.string.up_load_success);
+                    File file = null;
+                    if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(uri.getScheme())) {
+                        file = new File(uri.getPath());
+                    } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(uri.getScheme())) {
+                        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
+                        Cursor cursor = getContentResolver().query(uri,
+                                filePathColumn, null, null, null);
+                        if (cursor != null) {
+                            cursor.moveToFirst();
+                            int columnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
+                            String picturePath = cursor.getString(columnIndex);
+                            cursor.close();
+                            file = new File(picturePath);
                         }
 
-                        @Override
-                        public void uploadProgress(String key, double percent) {
-                            mUploadProgress.setProgress((int) (percent * 100));
-                        }
-
-                        @Override
-                        public void uploadFailure(boolean cancel) {
-                            mUploadingWrapper.setVisibility(View.GONE);
-                            if (cancel){
-                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_cancel);
-                            }else {
-                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_failure);
+                        if (file == null)
+                            return;
+                        mUploadName.setText(file.getName());
+                        mUploadingWrapper.setVisibility(View.VISIBLE);
+                        mManager = new CollaManager();
+                        String t = "869f6f9be63c3ee2157b4188e709718638f7e8faf2e1223f389631a3f2dfc5f8f9025c1208dacc1b32ab324f5d9da842";
+                        mManager.addToLibrary(this, file.getPath(), file.getName(), t, new QiniuService() {
+                            @Override
+                            public void uploadSuccess(String key, UploadReponse reponse) {
+                                mUploadingWrapper.setVisibility(View.GONE);
+                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_success);
                             }
-                        }
-                    });
+
+                            @Override
+                            public void uploadProgress(String key, double percent) {
+                                mUploadProgress.setProgress((int) (percent * 100));
+                            }
+
+                            @Override
+                            public void uploadFailure(boolean cancel) {
+                                mUploadingWrapper.setVisibility(View.GONE);
+                                if (cancel) {
+                                    ToastUtil.showToast(getApplicationContext(), R.string.up_load_cancel);
+                                } else {
+                                    ToastUtil.showToast(getApplicationContext(), R.string.up_load_failure);
+                                }
+                            }
+                        });
+                    }
                 }
             }
         }

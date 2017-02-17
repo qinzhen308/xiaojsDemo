@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.ArrayList;
 
+import cn.jpush.im.android.api.model.Conversation;
+
 /**
  * Created by maxiaobao on 2016/11/13.
  */
@@ -19,5 +21,6 @@ public class NotificationCategory {
 
     public ArrayList<Notification> notifications;
 
+    public Conversation conversation;
 
 }
