@@ -414,8 +414,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     private void setPlayPauseBtnStyle(String liveSessionState) {
-        if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)
-                || Live.LiveSessionState.RESET.equals(liveSessionState)) {
+        if (Live.LiveSessionState.SCHEDULED.equals(liveSessionState) ||
+                Live.LiveSessionState.FINISHED.equals(liveSessionState)) {
+            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState) ||
+                Live.LiveSessionState.RESET.equals(liveSessionState)) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
         } else if (Live.LiveSessionState.LIVE.equals(liveSessionState)) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
@@ -633,6 +636,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     Log.i("aaa", "resumeClass errorCode=" + errorCode + "   errorMessage=" + errorMessage);
                 }
             });
+        } else if (Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState) ||
+                Live.LiveSessionState.FINISHED.equals(mLiveSessionState)) {
+            //个人推流
         } else {
             cancelProgress();
         }
@@ -1226,7 +1232,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             @Override
             public void onSuccess(ClassResponse object) {
                 cancelProgress();
-                ClassroomActivity.this.finish();
+                //ClassroomActivity.this.finish();
+                mLiveSessionState = Live.LiveSessionState.FINISHED;
+                setPlayPauseBtnStyle(mLiveSessionState);
             }
 
             @Override
@@ -1315,23 +1323,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     };
 
-    private Emitter.Listener mOnWelcome = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            if (args != null && args.length > 0 && mSocket != null) {
-                mSocket.emit(Event.JOIN, Constants.ROOM_DRAW);
-                mSocket.emit(Event.BEGIN);
-            }
-        }
-    };
-
     private Emitter.Listener mSyncStateListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             if (args != null && args.length > 0) {
                 mSyncState = ClassroomBusiness.parseSocketBean(args[0], SyncStateResponse.class);
                 if (mSyncState != null) {
-                    if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))
+                    if (Live.LiveSessionState.SCHEDULED.equals(mSyncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(mSyncState.to)) {
+                        mLiveSessionState = Live.LiveSessionState.PENDING_FOR_JOIN;
+                        setPlayPauseBtnStyle(mLiveSessionState);
+                    } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))
                             || (Live.LiveSessionState.RESET.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))) {
                         if (mUser != Constants.User.TEACHER) {
                             mLiveSessionState = Live.LiveSessionState.LIVE;

@@ -170,7 +170,6 @@
                     android:textColor="@color/font_white"
                     android:textSize="@dimen/font_20px"
                     android:layout_width="wrap_content"
-                    android:text="00:15:00"
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
                     android:paddingLeft="@dimen/px15"
@@ -198,7 +197,6 @@
                         android:textColor="@color/font_white"
                         android:textSize="@dimen/font_20px"
                         android:layout_width="wrap_content"
-                        android:text="01:15:00"
                         android:paddingRight="@dimen/px15"
                         android:layout_height="wrap_content"/>
 
