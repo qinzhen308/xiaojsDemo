@@ -16,19 +16,19 @@
                 android:layout_height="match_parent"
                 android:visibility="gone">
 
-            <cn.xiaojs.xma.ui.classroom.live.view.CutView
+            <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
                     android:id="@+id/whiteboard_video"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"/>
 
-            <cn.xiaojs.xma.ui.classroom.live.view.SurfaceCaptureView
+           <!-- <cn.xiaojs.xma.ui.classroom.live.view.SurfaceCaptureView
                     android:id="@+id/teacher_video"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="right|top"
                     android:layout_marginTop="@dimen/px100"
-                    android:layout_marginRight="@dimen/px10"/>
+                    android:layout_marginRight="@dimen/px10"/>-->
 
         </FrameLayout>
 

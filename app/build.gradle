@@ -80,6 +80,10 @@ dependencies {
     //qiniu live dependencies
     compile 'com.qiniu:happy-dns:0.2.+'
     compile 'com.qiniu.pili:pili-android-qos:0.8.+'
+    //wechat share
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
+    //QQ
+    compile files('libs/open_sdk_r5781_lite.jar')
     //suport test
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -101,4 +105,5 @@ dependencies {
 //    compile files('libs/jcore-android_v1.1.0.jar')
 //    compile files('libs/jmessage-android-2.0.0.jar')
 //    compile files('libs/jpush-android_v3.0.1.jar')
+
 }
