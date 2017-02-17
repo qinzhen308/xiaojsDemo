@@ -92,6 +92,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private final static int MSG_RESET_TIME = 1024;
     private final static int MSG_PLAY_TIME = 2048;
+    private final static int MSG_PLAY_BTN_SETTING = 4096;
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
@@ -1331,7 +1332,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (mSyncState != null) {
                     if (Live.LiveSessionState.SCHEDULED.equals(mSyncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(mSyncState.to)) {
                         mLiveSessionState = Live.LiveSessionState.PENDING_FOR_JOIN;
-                        setPlayPauseBtnStyle(mLiveSessionState);
+                        mHandler.sendEmptyMessage(MSG_PLAY_BTN_SETTING);
                     } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))
                             || (Live.LiveSessionState.RESET.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))) {
                         if (mUser != Constants.User.TEACHER) {
@@ -1475,6 +1476,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         } else {
                             mPlayTimeTv.setText(TimeUtil.formatSecondTime(mPlayTotalTime));
                         }
+                        break;
+                    case MSG_PLAY_BTN_SETTING:
+                        setPlayPauseBtnStyle(mLiveSessionState);
                         break;
                 }
             }
