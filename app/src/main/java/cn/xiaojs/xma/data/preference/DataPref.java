@@ -30,7 +30,7 @@ public class DataPref {
 
     public static boolean allowDownload(final Context context) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        return sp.getBoolean(PREF_ALLOW_DOWNLOAD,false);
+        return sp.getBoolean(PREF_ALLOW_DOWNLOAD,true);
     }
 
 //    public static void setContactGroup(final Context context,String group) {
