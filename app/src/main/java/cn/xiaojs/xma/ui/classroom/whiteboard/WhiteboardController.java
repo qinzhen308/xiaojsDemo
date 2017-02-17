@@ -33,8 +33,7 @@ import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
-import cn.xiaojs.xma.ui.classroom.live.view.CutView;
-import cn.xiaojs.xma.ui.classroom.live.view.SurfaceCaptureView;
+import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
@@ -79,8 +78,8 @@ public class WhiteboardController implements
     private WhiteboardAdapter mWhiteboardAdapter;
 
     private View mLiveLayout;
-    private CutView mWhiteboardVideo;
-    private SurfaceCaptureView mTeacherVideo;
+    private PlayerTextureView mWhiteboardVideo;
+    //private SurfaceCaptureView mTeacherVideo;
 
     private ImageView mSelection;
     private ImageView mHandWriting;
@@ -130,8 +129,8 @@ public class WhiteboardController implements
         mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
         mLiveLayout = root.findViewById(R.id.live_layout);
-        mWhiteboardVideo = (CutView) root.findViewById(R.id.whiteboard_video);
-        mTeacherVideo = (SurfaceCaptureView) root.findViewById(R.id.teacher_video);
+        mWhiteboardVideo = (PlayerTextureView) root.findViewById(R.id.whiteboard_video);
+        //mTeacherVideo = (SurfaceCaptureView) root.findViewById(R.id.teacher_video);
 
         mWhiteboardSv = (WhiteboardScrollerView) root.findViewById(R.id.white_board_scrollview);
         mSyncWhiteboard = (Whiteboard) root.findViewById(R.id.stu_receive_wb);
@@ -201,8 +200,6 @@ public class WhiteboardController implements
                             mWhiteboardSv.setVisibility(View.GONE);
                             mSyncWhiteboard.setVisibility(View.GONE);
                             mWhiteboardVideo.setPath(TEST_VIDEO);
-                            mWhiteboardVideo.setCaptureView(mTeacherVideo);
-                            mTeacherVideo.setTextureView(mWhiteboardVideo.getPlayer().getPlayer().getTextureView());
                             onResumeVideo();
 
                             boardCollection.setLive(true);
@@ -717,5 +714,10 @@ public class WhiteboardController implements
 
     private boolean isWebApp(int app) {
         return app == Platform.AppType.WEB_CLASSROOM || app == Platform.AppType.MOBILE_WEB;
+    }
+
+    public void playWhiteboardVideo(String url) {
+        mWhiteboardVideo.setPath(url);
+        onResumeVideo();
     }
 }

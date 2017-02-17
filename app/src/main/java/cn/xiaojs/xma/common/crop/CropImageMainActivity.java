@@ -55,6 +55,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
     public static final String NEED_DELETE = "need_delete";// 需要删除按钮
     public static final String NEED_LOOK = "need_look";// 需要预览
     public static final String NEED_COVER = "need_cover"; //需要设置封面
+
     private int mWidth = 300;
     private int mHeight = 300;
     private boolean isNotCrop = false;
@@ -62,6 +63,8 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
     private boolean isNeedLook = false;
     private boolean isNeedCover = false;
     private boolean isUploadCompress = false;
+    private String mActionDoneTxt;
+
     public static final int RESULT_DELETE = RESULT_FIRST_USER + 1;
     public static final int RESULT_LOOK = RESULT_FIRST_USER + 2;
     public static final int RESULT_COVER = RESULT_FIRST_USER + 3;
@@ -81,6 +84,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
             isNeedLook = getIntent().getBooleanExtra(NEED_LOOK, false);
             isUploadCompress = getIntent().getBooleanExtra(CropImagePath.UPLOAD_COMPRESS, false);
             isNeedCover = getIntent().getBooleanExtra(NEED_COVER, false);
+            mActionDoneTxt = getIntent().getStringExtra(CropImageActivity.ACTION_DONE_TXT);
         }
 
         needHeader(false);
@@ -316,27 +320,11 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                             picturePath = getPath(CropImageMainActivity.this, imageUri);
                         }
                         if (!PermissionUtil.isOverMarshmallow()) {
-                            setImgPathToResult(picturePath);
+                            setImgPathToResult(new File(picturePath), true);
                         }
                     } else {
                         URI uri = URI.create(data.getData().toString());
-                        File fileP = new File(uri);
-                        if (fileP != null && fileP.exists()) {
-                            FileUtil.copyFiles(fileP.getAbsolutePath(),
-                                    CropImagePath.UPLOAD_IMAGE_PATH, true);
-                            Intent intent = new Intent();
-                            intent.setClass(this, CropImageActivity.class);
-                            intent.putExtra(CropImagePath.CROP_IMAGE_WIDTH, mWidth);
-                            intent.putExtra(CropImagePath.CROP_IMAGE_HEIGHT,
-                                    mHeight);
-                            intent.putExtra(CropImagePath.CROP_NEVER, isNotCrop);
-                            intent.putExtra(CropImagePath.UPLOAD_COMPRESS, isUploadCompress);
-                            startActivityForResult(intent,
-                                    CropImagePath.CROP_IMAGE_REQUEST_CODE);
-                        } else {
-                            //ToastUtil.showCustomViewToast(this, R.string.not_find_image);
-                            finish();
-                        }
+                        setImgPathToResult(new File(uri), true);
                     }
                 } else {
                     // 未选择图片
@@ -346,16 +334,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
             case CropImagePath.TAKE_PHOTO: // 拍照
                 if (resultCode == RESULT_OK) {
                     File file = new File(CropImagePath.UPLOAD_IMAGE_PATH);
-                    if (file.exists()) {
-                        Intent intent = new Intent();
-                        intent.setClass(this, CropImageActivity.class);
-                        intent.putExtra(CropImagePath.CROP_IMAGE_WIDTH, mWidth);
-                        intent.putExtra(CropImagePath.CROP_IMAGE_HEIGHT, mHeight);
-                        intent.putExtra(CropImagePath.CROP_NEVER, isNotCrop);
-                        intent.putExtra(CropImagePath.UPLOAD_COMPRESS, isUploadCompress);
-                        startActivityForResult(intent,
-                                CropImagePath.CROP_IMAGE_REQUEST_CODE);
-                    }
+                    setImgPathToResult(file, true);
                 } else {
                     // 未拍照
                     setFailure();
@@ -522,7 +501,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                 cursor.close();
         }
 
-        setImgPathToResult(path);
+        setImgPathToResult(new File(path), true);
     }
 
     @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
@@ -627,22 +606,21 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-    private void setImgPathToResult(String picturePath) {
-        File file = new File(picturePath);
+    private void setImgPathToResult(File file, boolean needFinish) {
         if (file.exists()) {
-            FileUtil.copyFiles(picturePath,
-                    CropImagePath.UPLOAD_IMAGE_PATH, true);
+            FileUtil.copyFiles(file.getAbsolutePath(), CropImagePath.UPLOAD_IMAGE_PATH, true);
             Intent intent = new Intent();
             intent.setClass(this, CropImageActivity.class);
             intent.putExtra(CropImagePath.CROP_IMAGE_WIDTH, mWidth);
-            intent.putExtra(CropImagePath.CROP_IMAGE_HEIGHT,
-                    mHeight);
+            intent.putExtra(CropImagePath.CROP_IMAGE_HEIGHT, mHeight);
             intent.putExtra(CropImagePath.CROP_NEVER, isNotCrop);
             intent.putExtra(CropImagePath.UPLOAD_COMPRESS, isUploadCompress);
-            startActivityForResult(intent,
-                    CropImagePath.CROP_IMAGE_REQUEST_CODE);
+            intent.putExtra(CropImageActivity.ACTION_DONE_TXT, mActionDoneTxt);
+            startActivityForResult(intent, CropImagePath.CROP_IMAGE_REQUEST_CODE);
         } else {
-            finish();
+            if (needFinish) {
+                finish();
+            }
         }
     }
 }
