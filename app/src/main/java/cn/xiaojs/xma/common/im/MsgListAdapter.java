@@ -60,6 +60,7 @@ import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.im.utils.DialogCreator;
 import cn.xiaojs.xma.common.im.utils.FileHelper;
 import cn.xiaojs.xma.common.im.utils.HandleResponseCode;
@@ -848,7 +849,7 @@ public class MsgListAdapter extends BaseAdapter {
             // 点击预览图片
             holder.picture.setOnClickListener(new BtnOrTxtListener(position, holder));
 
-            holder.picture.setTag(position);
+            holder.picture.setTag(R.string.app_name,position);
             holder.picture.setOnLongClickListener(mLongClickListener);
 
         }

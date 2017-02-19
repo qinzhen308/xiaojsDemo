@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.callback.DownloadCompletionCallback;
+import cn.jpush.im.android.api.callback.ProgressUpdateCallback;
 import cn.jpush.im.android.api.content.ImageContent;
 import cn.jpush.im.android.api.enums.ContentType;
 import cn.jpush.im.android.api.model.Conversation;
@@ -57,7 +60,11 @@ public class ImageViewActivity extends BaseActivity {
     private boolean mFromChat;
     private int mMessageId;
     private Conversation mConv;
-    private final static int PICTURE_PATH_LOADED = 0x2000;
+    private static final String POSITION = "position";
+    private static final int PICTURE_PATH_LOADED = 0x2000;
+    private static final int DOWNLOAD_ORIGIN_IMAGE_SUCCEED = 1;
+    private cn.jpush.im.android.api.model.Message mMsg;
+
     //存放图片消息的ID
     private List<Integer> mMsgIdList = new ArrayList<Integer>();
     private int mOriginPosition;
@@ -71,7 +78,27 @@ public class ImageViewActivity extends BaseActivity {
     private void init() {
         pointContent = (PointIndicateView) findViewById(R.id.image_pager_points);
         mPager = (ScaleViewPager) findViewById(R.id.image_view_pager);
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mMsg = mConv.getMessage(mMsgIdList.get(position % mPathList.size()));
+                ImageContent ic = (ImageContent) mMsg.getContent();
+                if (ic.getLocalPath() == null) {
+//                    mLoadBtn.setVisibility(View.VISIBLE);
+                    downloadImage();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         Intent intent = getIntent();
         if (intent != null) {
             mFromChat = intent.getBooleanExtra(IMAGE_FROM_CHAT,false);
@@ -105,6 +132,50 @@ public class ImageViewActivity extends BaseActivity {
                 }
             }
 
+        }
+    }
+
+    //每次在聊天界面点击图片或者滑动图片自动下载大图
+    private void downloadImage() {
+        ImageContent imgContent = (ImageContent) mMsg.getContent();
+        if (imgContent.getLocalPath() == null) {
+            //如果不存在进度条Callback，重新注册
+            if (!mMsg.isContentDownloadProgressCallbackExists()) {
+//                mProgressDialog = new ProgressDialog(this);
+//                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//                mProgressDialog.setCanceledOnTouchOutside(false);
+//                mProgressDialog.setIndeterminate(false);
+//                mProgressDialog.setMessage(mContext.getString(R.string.downloading_hint));
+//                mDownloading = true;
+//                mProgressDialog.show();
+                // 显示下载进度条
+                mMsg.setOnContentDownloadProgressCallback(new ProgressUpdateCallback() {
+
+                    @Override
+                    public void onProgressUpdate(double progress) {
+//                        android.os.Message msg = mUIHandler.obtainMessage();
+                        Bundle bundle = new Bundle();
+                        if (!(progress < 1.0)) {
+
+                        }
+                    }
+                });
+                // msg.setContent(imgContent);
+                imgContent.downloadOriginImage(mMsg, new DownloadCompletionCallback() {
+                    @Override
+                    public void onComplete(int status, String desc, File file) {
+                        if (status == 0) {
+                            android.os.Message msg = handler.obtainMessage();
+                            msg.what = DOWNLOAD_ORIGIN_IMAGE_SUCCEED;
+                            Bundle bundle = new Bundle();
+                            bundle.putString("path", file.getAbsolutePath());
+                            bundle.putInt(POSITION, mPager.getCurrentItem() % mPathList.size());
+                            msg.setData(bundle);
+                            msg.sendToTarget();
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -248,6 +319,13 @@ public class ImageViewActivity extends BaseActivity {
             switch (msg.what) {
                 case PICTURE_PATH_LOADED:
                     showImages(mOriginPosition);
+                    break;
+                case DOWNLOAD_ORIGIN_IMAGE_SUCCEED:
+                    Bundle bundle = msg.getData();
+                    if (bundle != null){
+                        mPathList.set(bundle.getInt(POSITION), bundle.getString("path"));
+                        mPager.getAdapter().notifyDataSetChanged();
+                    }
                     break;
             }
         }
