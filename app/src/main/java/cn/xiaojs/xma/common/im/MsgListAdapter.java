@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
@@ -59,12 +60,12 @@ import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
-import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.im.utils.DialogCreator;
 import cn.xiaojs.xma.common.im.utils.FileHelper;
 import cn.xiaojs.xma.common.im.utils.HandleResponseCode;
 import cn.xiaojs.xma.common.im.utils.IdHelper;
 import cn.xiaojs.xma.common.im.utils.TimeFormat;
+import cn.xiaojs.xma.ui.common.ImageViewActivity;
 
 @SuppressLint("NewApi")
 public class MsgListAdapter extends BaseAdapter {
@@ -648,6 +649,8 @@ public class MsgListAdapter extends BaseAdapter {
     }
 
     private void handleCustomMsg(Message msg, ViewHolder holder) {
+        if( !(msg.getContent() instanceof CustomContent))
+            return;
         CustomContent content = (CustomContent) msg.getContent();
         Boolean isBlackListHint = content.getBooleanValue("blackList");
         if (isBlackListHint != null && isBlackListHint) {
@@ -845,7 +848,7 @@ public class MsgListAdapter extends BaseAdapter {
             // 点击预览图片
             holder.picture.setOnClickListener(new BtnOrTxtListener(position, holder));
 
-            holder.picture.setTag(R.string.app_name, position);
+            holder.picture.setTag(position);
             holder.picture.setOnLongClickListener(mLongClickListener);
 
         }
@@ -1291,16 +1294,13 @@ public class MsgListAdapter extends BaseAdapter {
                 }
             } else if (holder.picture != null && v.getId() == holder.picture.getId()) {
                 //TODO jump to BrowserViewPagerActivity
-//                Intent intent = new Intent();
-//                intent.putExtra(JChatDemoApplication.TARGET_ID, mTargetId);
-//                intent.putExtra("msgId", msg.getId());
-//                intent.putExtra(JChatDemoApplication.GROUP_ID, mGroupId);
-//                intent.putExtra(JChatDemoApplication.TARGET_APP_KEY, mTargetAppKey);
-//                intent.putExtra("msgCount", mMsgList.size());
-//                intent.putIntegerArrayListExtra(JChatDemoApplication.MsgIDs, getImgMsgIDList());
-//                intent.putExtra("fromChatActivity", true);
-//                intent.setClass(mContext, BrowserViewPagerActivity.class);
-//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, ImageViewActivity.class);
+                intent.putExtra(ImageViewActivity.IMAGE_FROM_CHAT, true);
+                intent.putExtra(ImageViewActivity.CHAT_APP_KEY, msg.getTargetAppKey());
+                intent.putExtra(ImageViewActivity.CHAT_TARGET_ID, mConv.getTargetId());
+                intent.putExtra(ImageViewActivity.CHAT_MESSAGE_ID, msg.getId());
+                intent.putExtra(ImageViewActivity.CHAT_MSG_LIST_ID, getImgMsgIDList());
+                mContext.startActivity(intent);
             }
         }
     }

@@ -21,7 +21,7 @@
                     android:layout_width="@dimen/title_bar_height"
                     android:layout_height="match_parent"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/ic_back"
+                    android:src="@drawable/back_arrow"
                     android:background="@drawable/jmui_back_btn_bg"/>
 
             <LinearLayout
