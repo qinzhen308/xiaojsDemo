@@ -448,6 +448,11 @@
 
     <string name="relogin">登陆过期，请重新登陆</string>
 
+    <!-- download-->
+    <string name="download_ok">下载成功</string>
+    <string name="download_error">下载失败</string>
+    <string name="downloading">正在下载</string>
+
     <!-- im -->
     <string name="jmui_action_settings">Settings</string>
     <string name="jmui_about">关于</string>

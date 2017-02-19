@@ -23,6 +23,8 @@ import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.download.DConstants;
+import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
@@ -45,6 +47,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import com.bumptech.glide.Glide;
+import com.facebook.stetho.inspector.elements.ShadowDocument;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -148,7 +151,11 @@ public class TestAPIActivity extends Activity {
 
     public void testCache() {
 
-        WechatUtil.shareWebpage(this,iwxapi,"小教室","小教室，大世界","http://sports.qq.com/nba/?ptag=baidu.ald.sc.nba",false);
+        Intent i = new Intent(this, UpdateService.class);
+        i.putExtra(DConstants.EXTRA_URL,"http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk");
+        startService(i);
+
+        //WechatUtil.shareWebpage(this,iwxapi,"小教室","小教室，大世界","http://sports.qq.com/nba/?ptag=baidu.ald.sc.nba",false);
         //WechatUtil.shareText(iwxapi,"小教室，大世界", false);
 
 //        DownloadManager.enqueueDownload(this,

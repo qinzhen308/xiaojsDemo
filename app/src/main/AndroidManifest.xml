@@ -8,24 +8,20 @@
             android:name="cn.xiaojs.xma.permission.JPUSH_MESSAGE"
             android:protectionLevel="signature"/>
 
-    <uses-permission android:name="cn.xiaojs.xma.permission.JPUSH_MESSAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="cn.xiaojs.xma.permission.JPUSH_MESSAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- Optional. Required for location feature -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
@@ -59,11 +55,7 @@
         <activity
                 android:name=".ui.SplashActivity"
                 android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity
                 android:name=".ui.account.LoginActivity"
@@ -102,7 +94,11 @@
         <activity android:name=".ui.lesson.LessonHomeActivity">
         </activity>
         <activity android:name=".ui.TestAPIActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity android:name=".ui.lesson.LiveLessonBriefActivity"/>
         <activity android:name=".ui.lesson.SalePromotionActivity"/>
@@ -217,25 +213,27 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".common.im.ChatActivity"
-                android:windowSoftInputMode="adjustResize"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustResize"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"
-                android:noHistory="true"
-                android:launchMode="singleTask" >
+                android:launchMode="singleTask"
+                android:noHistory="true">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="替换真正的APPID" />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="替换真正的APPID"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.tencent.connect.common.AssistActivity"
-                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                  android:configChanges="orientation|keyboardHidden|screenSize"
-                />
-        <!--service-->
+        <activity
+                android:name="com.tencent.connect.common.AssistActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <!-- service -->
         <service
                 android:name=".data.loader.SyncService"
                 android:exported="false"/>
@@ -252,8 +250,12 @@
                 android:enabled="true"
                 android:exported="false">
         </service>
+        <service
+                android:name=".data.download.UpdateService"
+                android:exported="false">
+        </service>
 
-        <!-- Required Push SDK核心功能-->
+        <!-- Required Push SDK核心功能 -->
         <service
                 android:name="cn.jpush.android.service.PushService"
                 android:enabled="true"
@@ -267,12 +269,13 @@
             </intent-filter>
         </service>
 
-        <!-- Required Push SDK核心功能-->
+        <!-- Required Push SDK核心功能 -->
         <receiver
                 android:name="cn.jpush.android.service.PushReceiver"
                 android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>
+
                 <category android:name="${applicationId}"/>
             </intent-filter>
             <intent-filter>
@@ -296,7 +299,7 @@
         <!-- Required Push SDK核心功能 -->
         <receiver android:name="cn.jpush.android.service.AlarmReceiver"/>
 
-        <!-- IM Required IM SDK核心功能-->
+        <!-- IM Required IM SDK核心功能 -->
         <receiver
                 android:name="cn.jpush.im.android.helpers.IMReceiver"
                 android:enabled="true"
@@ -317,6 +320,8 @@
         <meta-data
                 android:name="JPUSH_APPKEY"
                 android:value="e87cffb332432eec3c0807ba"/>
+
+
     </application>
 
 </manifest>

@@ -8,6 +8,9 @@ public class DConstants {
 
     public static final String LOG_TAG = "download_log";
 
+    /** 获取不到下载更新的安装包的名称时，默认使用的安装包名称 */
+    public static final String DOWNLOAD_CLIENT_FILE_NAME = "xiaojs_xma.apk";
+
 
 
     /** The buffer size used to stream the data */
@@ -30,4 +33,10 @@ public class DConstants {
      * operations when no progress is happening before it gives up.
      */
     public static final int MAX_RETRIES = 5;
+
+
+    /** update xiaojs client download notify id*/
+    public static final int UPDATE_NOTIFY_ID = 0x1000;
+
+    public static final String EXTRA_URL = "url";
 }
