@@ -21,6 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -30,7 +36,6 @@ import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.Teacher;
 import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.Price;
-import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
@@ -38,13 +43,8 @@ import cn.xiaojs.xma.ui.widget.BlockTabView;
 import cn.xiaojs.xma.ui.widget.BottomSheet;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
 import cn.xiaojs.xma.util.TimeUtil;
-import com.bumptech.glide.Glide;
-
-import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 public class LessonHomeActivity extends BaseActivity {
     public final static int ENTRANCE_FROM_TEACH_LESSON = 0;
@@ -58,6 +58,8 @@ public class LessonHomeActivity extends BaseActivity {
     TextView mLessonBeginTimeTv;
     @BindView(R.id.lesson_duration)
     TextView mLessonDurationTv;
+    @BindView(R.id.label_container)
+    ColorTextFlexboxLayout mLabelContainer;
     @BindView(R.id.lesson_money)
     TextView mLessonMoneyTv;
     @BindView(R.id.lesson_origin_money)
@@ -181,6 +183,15 @@ public class LessonHomeActivity extends BaseActivity {
 
             //set title
             mLessonTitleTv.setText(lesson.getTitle());
+
+            //set tag
+            String[] tags = lesson.getTags();
+            if (tags != null && tags.length > 0) {
+                mLabelContainer.setVisibility(View.VISIBLE);
+                for (String tag : tags) {
+                    mLabelContainer.addText(tag);
+                }
+            }
 
             //enroll
             Enroll enroll = lesson.getEnroll();
