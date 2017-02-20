@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 
 import cn.xiaojs.xma.R;
 
@@ -42,13 +43,22 @@ public class DownloadNotifier {
 
         builder.setProgress(0, 0, true);
 
-        notificationMgr.notify(notifyID, builder.build());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            notificationMgr.notify(notifyID, builder.build());
+        }else{
+            notificationMgr.notify(notifyID, builder.getNotification());
+        }
     }
 
     public void updateNotify(int progress) {
         builder.setContentText(progress + "%");
         builder.setProgress(100, progress, false);
-        notificationMgr.notify(notifyId, builder.build());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            notificationMgr.notify(notifyId, builder.build());
+        }else {
+            notificationMgr.notify(notifyId, builder.getNotification());
+        }
     }
 
     public void removeNotify() {
