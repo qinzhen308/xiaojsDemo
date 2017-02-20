@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:background="@drawable/white_grey_selector"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/my_order_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_orange"
+                android:textSize="@dimen/font_28px"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/px30"/>
+
+        <cn.xiaojs.xma.ui.widget.RoundedImageView
+                android:id="@+id/my_order_por"
+                android:layout_width="@dimen/px50"
+                android:layout_height="@dimen/px50"
+                app:oval="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/px30"
+                android:scaleType="fitXY"
+                android:src="@drawable/default_avatar"/>
+
+        <TextView
+                android:id="@+id/my_order_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:layout_toRightOf="@+id/my_order_por"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/px15"/>
+    </RelativeLayout>
+
+    <View style="@style/DividerHorizontal"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30">
+
+        <TextView
+                android:id="@+id/my_order_title"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px"/>
+
+        <TextView
+                android:id="@+id/my_order_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_24px"
+                android:layout_marginLeft="@dimen/px30"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30">
+
+        <TextView
+                android:id="@+id/my_order_time"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_26px"
+                android:text="创建时间:"/>
+
+        <TextView
+                android:id="@+id/my_order_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_red"
+                android:textSize="@dimen/font_28px"
+                android:layout_marginLeft="@dimen/px30"/>
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/my_order_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_26px"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:text="已优惠30元:"/>
+
+    <LinearLayout
+            android:id="@+id/my_order_opera_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px30"
+            android:orientation="vertical">
+
+        <View style="@style/DividerHorizontal"/>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/my_order_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_28px"
+                    android:layout_alignParentRight="true"
+                    android:padding="@dimen/px30"
+                    android:text="取消报名"/>
+
+            <View
+                    android:id="@+id/my_order_divider"
+                    android:layout_toLeftOf="@+id/my_order_cancel"
+                    android:layout_centerInParent="true"
+                    android:layout_width="@dimen/px1"
+                    android:layout_height="@dimen/px30"
+                    android:background="@color/common_text"/>
+
+            <TextView
+                    android:id="@+id/my_order_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_orange"
+                    android:textSize="@dimen/font_28px"
+                    android:layout_toLeftOf="@+id/my_order_divider"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/orange_stoke_bg"
+                    android:paddingLeft="@dimen/px20"
+                    android:paddingRight="@dimen/px20"
+                    android:paddingTop="@dimen/px10"
+                    android:paddingBottom="@dimen/px10"
+                    android:layout_marginRight="@dimen/px30"
+                    android:text="去付款"/>
+
+            <TextView
+                    android:id="@+id/my_order_time_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_orange"
+                    android:textSize="@dimen/font_26px"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:drawableLeft="@drawable/ic_count_down"
+                    android:drawablePadding="@dimen/px10"/>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

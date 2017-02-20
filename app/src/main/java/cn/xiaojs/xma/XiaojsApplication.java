@@ -2,13 +2,16 @@ package cn.xiaojs.xma;
 
 import android.app.Application;
 
-import cn.xiaojs.xma.data.DataManager;
-import cn.xiaojs.xma.util.XjsUtils;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.Settings;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 import com.tencent.bugly.crashreport.CrashReport;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.util.XjsUtils;
 
 /**
  * Created by maxiaobao on 2016/10/19.
@@ -45,6 +48,19 @@ public class XiaojsApplication extends Application {
 
         //初始化直播
         StreamingEnv.init(getApplicationContext());
+
+        //JMessage的debug模式
+        JMessageClient.setDebugMode(XiaojsConfig.DEBUG);
+        //初始化JMessage-sdk
+        JMessageClient.init(getApplicationContext());
+        //SharePreferenceManager.init(getApplicationContext(), JCHAT_CONFIGS);
+        //设置Notification的模式
+        JMessageClient.setNotificationMode(JMessageClient.NOTI_MODE_DEFAULT);
+//        //注册Notification点击的接收器
+//        new NotificationClickEventReceiver(getApplicationContext());
+
+        JPushInterface.setDebugMode(XiaojsConfig.DEBUG);
+        JPushInterface.init(getApplicationContext());
     }
 
 }

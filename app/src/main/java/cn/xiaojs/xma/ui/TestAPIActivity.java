@@ -23,6 +23,8 @@ import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.download.DConstants;
+import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
@@ -38,14 +40,19 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.ui.grade.MaterialDownloadActivity;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
+import cn.xiaojs.xma.util.QQUtil;
+import cn.xiaojs.xma.util.WechatUtil;
 import okhttp3.Cache;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import com.bumptech.glide.Glide;
+import com.facebook.stetho.inspector.elements.ShadowDocument;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.tauth.Tencent;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -65,6 +72,9 @@ public class TestAPIActivity extends Activity {
 
     private ImageView imageView;
 
+    private IWXAPI iwxapi;
+    private Tencent tencent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +86,10 @@ public class TestAPIActivity extends Activity {
         Glide.with(this).load(R.drawable.login_logo).into(imageView);
         //InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
         //ExternalCacheDiskCacheFactory
+
+
+        iwxapi = WechatUtil.registerToWechat(this);
+        tencent = QQUtil.getTencent(this.getApplicationContext());
 
     }
 
@@ -136,19 +150,33 @@ public class TestAPIActivity extends Activity {
 
 
     public void testCache() {
-        DownloadManager.enqueueDownload(this,
-                "Vipkid.apk",
-                "testkey-23esefs",
-                "http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk",
-                null,
-                null);
+
+        Intent i = new Intent(this, UpdateService.class);
+        i.putExtra(DConstants.EXTRA_URL,"http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk");
+        startService(i);
+
+        //WechatUtil.shareWebpage(this,iwxapi,"小教室","小教室，大世界","http://sports.qq.com/nba/?ptag=baidu.ald.sc.nba",false);
+        //WechatUtil.shareText(iwxapi,"小教室，大世界", false);
+
+//        DownloadManager.enqueueDownload(this,
+//                "Vipkid.apk",
+//                "testkey-23esefs",
+//                "http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk",
+//                null,
+//                null);
     }
 
     private void testT(Context context){
 
-        DownloadManager.enqueueDownload(this,"pp" + System.currentTimeMillis(),
-                "key",
-                "http://img3.imgtn.bdimg.com/it/u=4271053251,2424464488&fm=23&gp=0.jpg",null,null);
+        //QQUtil.share(this,tencent,null);
+        //WechatUtil.shareWebpage(this,iwxapi,"小教室","小教室，大世界","http://sports.qq.com/nba/?ptag=baidu.ald.sc.nba",true);
+        //WechatUtil.shareText(iwxapi,"小教室，大世界", true);
+//        DownloadManager.enqueueDownload(this,"pp" + System.currentTimeMillis(),
+//                "key",
+//                "http://img3.imgtn.bdimg.com/it/u=4271053251,2424464488&fm=23&gp=0.jpg",null,null);
+
+
+
 
 
 

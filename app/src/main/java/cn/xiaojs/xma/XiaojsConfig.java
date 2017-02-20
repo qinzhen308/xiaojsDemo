@@ -37,4 +37,11 @@ public class XiaojsConfig {
     public static final int PORTRAIT_SIZE = 300;
 
     public static final int EXIT_DELAY = 1000;
+
+
+    //wechat
+    public static final String WX_APP_ID = "wxb0290782ab5b55b5";
+    //QQ
+    public static final String QQ_APP_ID = "1105023462";
+
 }

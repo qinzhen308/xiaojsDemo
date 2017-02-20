@@ -23,6 +23,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.net.URI;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
@@ -31,9 +34,6 @@ import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.BottomSheet;
 import cn.xiaojs.xma.util.FileUtil;
-
-import java.io.File;
-import java.net.URI;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -308,23 +308,30 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
             case CropImagePath.CHOOSE_IMAGE:
                 if (resultCode == RESULT_OK && data != null) {
                     Uri imageUri = data.getData();
-                    String[] filePathColumn = {MediaColumns.DATA};
-                    Cursor cursor = getContentResolver().query(imageUri,
-                            filePathColumn, null, null, null);
-                    if (cursor != null) {
-                        cursor.moveToFirst();
-                        int columnIndex = cursor.getColumnIndex(MediaColumns.DATA);
-                        String picturePath = cursor.getString(columnIndex);
-                        cursor.close();
-                        if (picturePath == null) {
-                            picturePath = getPath(CropImageMainActivity.this, imageUri);
-                        }
-                        if (!PermissionUtil.isOverMarshmallow()) {
-                            setImgPathToResult(new File(picturePath), true);
+                    if (imageUri != null && ContentResolver.SCHEME_FILE.equalsIgnoreCase(imageUri.getScheme())) {
+                        setImgPathToResult(new File(imageUri.getPath()), true);
+                    } else if (imageUri != null && ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(imageUri.getScheme())) {
+                        String[] filePathColumn = {MediaColumns.DATA};
+                        Cursor cursor = getContentResolver().query(imageUri, filePathColumn, null, null, null);
+                        if (cursor != null) {
+                            cursor.moveToFirst();
+                            int columnIndex = cursor.getColumnIndex(MediaColumns.DATA);
+                            String picturePath = cursor.getString(columnIndex);
+                            cursor.close();
+                            if (picturePath == null) {
+                                picturePath = getPath(CropImageMainActivity.this, imageUri);
+                                if (!PermissionUtil.isOverMarshmallow()) {
+                                    setImgPathToResult(new File(picturePath), true);
+                                }
+                            } else {
+                                setImgPathToResult(new File(picturePath), true);
+                            }
+                        } else {
+                            URI uri = URI.create(data.getData().toString());
+                            setImgPathToResult(new File(uri), true);
                         }
                     } else {
-                        URI uri = URI.create(data.getData().toString());
-                        setImgPathToResult(new File(uri), true);
+                        finish();
                     }
                 } else {
                     // 未选择图片
@@ -351,6 +358,11 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
     }
 
     public void setFailure() {

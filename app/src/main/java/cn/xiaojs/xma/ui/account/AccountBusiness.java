@@ -16,16 +16,18 @@ package cn.xiaojs.xma.ui.account;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.MainActivity;
-import cn.xiaojs.xma.util.CacheUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class AccountBusiness {
@@ -59,8 +61,7 @@ public class AccountBusiness {
                         XiaojsConfig.mLoginUser = loginInfo.getUser();
                         XjsUtils.getSharedPreferences().edit().putLong(XiaojsConfig.KEY_LOGIN_USERNAME,
                                 loginParams.getMobile()).commit();
-
-
+                        imLogin();
                         //enter main page
                         Intent intent = new Intent(activity, MainActivity.class);
                         //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -105,4 +106,17 @@ public class AccountBusiness {
         public void onLogin(boolean succ);
     }
 
+    public static void imLogin(){
+        JMessageClient.login("123456", "123456", new BasicCallback() {
+            @Override
+            public void gotResult(int status, String desc) {
+                if (status == 0) {
+                //登录成功
+                    Log.i("imLogin", "im登录成功" + status);
+                } else {
+                    Log.i("imLogin", "im登录失败" + status);
+                }
+            }
+        });
+    }
 }
