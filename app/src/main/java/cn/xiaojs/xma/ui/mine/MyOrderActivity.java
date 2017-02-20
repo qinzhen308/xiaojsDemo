@@ -9,18 +9,22 @@ package cn.xiaojs.xma.ui.mine;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2016/12/23
+ * Date:2017/2/20
  * Desc:
  *
  * ======================================================================================== */
 
-import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.base.BaseListActivity;
 
-public class ScrollTabFragment extends BaseScrollTabFragment {
+public class MyOrderActivity extends BaseListActivity {
+
+    private MyOrderAdapter mAdapter;
 
     @Override
     protected void initData() {
-//        cn.xiaojs.xma.ui.home.MomentDetailAdapter adapter1 = new cn.xiaojs.xma.ui.home.MomentDetailAdapter(getContext(),mList);
-//        mList.setAdapter(adapter1);
+        setMiddleTitle(R.string.my_order);
+        mAdapter = new MyOrderAdapter(this,mList);
+        mList.setAdapter(mAdapter);
     }
 }

@@ -8,6 +8,7 @@ import com.orhanobut.logger.Settings;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 import com.tencent.bugly.crashreport.CrashReport;
 
+import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.util.XjsUtils;
@@ -48,6 +49,7 @@ public class XiaojsApplication extends Application {
         //初始化直播
         StreamingEnv.init(getApplicationContext());
 
+        //JMessage的debug模式
         JMessageClient.setDebugMode(XiaojsConfig.DEBUG);
         //初始化JMessage-sdk
         JMessageClient.init(getApplicationContext());
@@ -56,6 +58,9 @@ public class XiaojsApplication extends Application {
         JMessageClient.setNotificationMode(JMessageClient.NOTI_MODE_DEFAULT);
 //        //注册Notification点击的接收器
 //        new NotificationClickEventReceiver(getApplicationContext());
+
+        JPushInterface.setDebugMode(XiaojsConfig.DEBUG);
+        JPushInterface.init(getApplicationContext());
     }
 
 }
