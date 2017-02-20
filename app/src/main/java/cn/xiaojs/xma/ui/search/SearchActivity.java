@@ -133,7 +133,10 @@ public class SearchActivity extends BaseActivity {
                 break;
             case R.id.search_organization_result:
                 if (mOrganization != null){
-                    follow(mOrganization._id,null);
+                    //follow(mOrganization._id,null);
+                    if (mOrganization != null){
+                        SearchBusiness.goPersonal(SearchActivity.this,mOrganization);
+                    }
                 }
                 break;
         }
@@ -212,7 +215,10 @@ public class SearchActivity extends BaseActivity {
                 @Override
                 public void onItemClick(View view, int position) {
                     AccountSearch search = people.get(position);
-                    follow(search._id,search._source.basic.getName());
+                    if (search != null){
+                        SearchBusiness.goPersonal(SearchActivity.this,search);
+                    }
+                    //follow(search._id,search._source.basic.getName());
                 }
             });
         } else {

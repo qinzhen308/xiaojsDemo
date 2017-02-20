@@ -7,6 +7,7 @@
         android:layout_height="match_parent"
         android:scrollbars="none"
         android:divider="@color/main_bg"
+        android:background="@android:color/transparent"
         android:listSelector="@android:color/transparent"
         android:dividerHeight="@dimen/px1"
         android:orientation="vertical"/>
