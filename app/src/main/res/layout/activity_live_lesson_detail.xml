@@ -294,6 +294,33 @@
 
         </LinearLayout>
 
+        <!--直播课标签-->
+        <LinearLayout
+                android:id="@+id/lesson_label_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px32"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+            <TextView
+                    style="@style/LiveLessonDetailTitle"
+                    android:text="@string/live_lesson_label"/>
+
+            <cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout
+                    android:id="@+id/label_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <View
+                    style="@style/DividerHorizontal"
+                    android:layout_marginTop="@dimen/px40"/>
+
+        </LinearLayout>
+
 
         <!--直播课简介-->
         <LinearLayout
