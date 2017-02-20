@@ -76,6 +76,10 @@ public class DownloadNotifier {
         builder.setSmallIcon(android.R.drawable.stat_sys_download_done);
         builder.setAutoCancel(true);
 
-        notificationMgr.notify(notifyId, builder.build());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            notificationMgr.notify(notifyId, builder.build());
+        } else {
+            notificationMgr.notify(notifyId, builder.getNotification());
+        }
     }
 }
