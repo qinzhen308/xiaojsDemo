@@ -4,11 +4,11 @@ package cn.xiaojs.xma.ui.lesson;
 import com.google.android.flexbox.FlexboxLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +39,6 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.BlockTabView;
-import cn.xiaojs.xma.ui.widget.BottomSheet;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
@@ -92,6 +90,7 @@ public class LessonHomeActivity extends BaseActivity {
     BlockTabView mBlockTabView;
 
     private ArrayList<TextView> textViews;
+    private LessonDetail mLessonDetail;
 
     @Override
     protected void addViewContent() {
@@ -120,7 +119,7 @@ public class LessonHomeActivity extends BaseActivity {
             case R.id.report:
                 break;
             case R.id.apply_btn:
-                showApplyDlg();
+                enterConfirmPayPage();
                 break;
 
         }
@@ -130,9 +129,9 @@ public class LessonHomeActivity extends BaseActivity {
         int type = getIntent().getIntExtra(CourseConstant.KEY_ENTRANCE_TYPE, ENTRANCE_FROM_TEACH_LESSON);
         //TODO not implemented
         //if (type == ENTRANCE_FROM_TEACH_LESSON) {
-            mReportLayout.setVisibility(View.GONE);
-            mReportDivideLine.setVisibility(View.GONE);
-            mLessonEnrollLayout.setVisibility(View.GONE);
+        //    mReportLayout.setVisibility(View.GONE);
+        //    mReportDivideLine.setVisibility(View.GONE);
+        //    mLessonEnrollLayout.setVisibility(View.GONE);
         //}
 
         String lessonId = getIntent().getStringExtra(CourseConstant.KEY_LESSON_ID);
@@ -159,6 +158,7 @@ public class LessonHomeActivity extends BaseActivity {
 
     private void setData (LessonDetail lesson) {
         if (lesson != null) {
+            mLessonDetail = lesson;
             //set cover
             if (!TextUtils.isEmpty(lesson.getCover())) {
                 //mLessonCoverImg.setVisibility(View.VISIBLE);
@@ -237,6 +237,10 @@ public class LessonHomeActivity extends BaseActivity {
             }
 
             setTeacherInfo(lesson);
+        } else {
+            mReportLayout.setVisibility(View.GONE);
+            mReportDivideLine.setVisibility(View.GONE);
+            mLessonEnrollLayout.setVisibility(View.GONE);
         }
     }
 
@@ -345,20 +349,12 @@ public class LessonHomeActivity extends BaseActivity {
     }
 
 
-    private void showApplyDlg() {
-        View view = LayoutInflater.from(this).inflate(R.layout.layout_apply_lession_dlg, null);
-        ListView payListView = (ListView) view.findViewById(R.id.list_pay);
-
-        String[] payArray = getResources().getStringArray(R.array.lesson_pay_methods);
-        PayAdapter payAdapter = new PayAdapter(this, R.layout.layout_pay_lesson_item, payArray);
-        payListView.setAdapter(payAdapter);
-        payListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        BottomSheet bottomSheet = new BottomSheet(this);
-        bottomSheet.setTitleVisibility(View.GONE);
-        bottomSheet.setContent(view);
-        bottomSheet.show();
-
+    private void enterConfirmPayPage() {
+        //ConfirmEnrollmentActivity
+        Intent i = new Intent();
+        i.setClass(this, ConfirmEnrollmentActivity.class);
+        i.putExtra(CourseConstant.KEY_LESSON_BEAN, mLessonDetail);
+        startActivity(i);
     }
 
 
