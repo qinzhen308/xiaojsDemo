@@ -27,9 +27,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ELResponse;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.Teacher;
@@ -88,6 +90,9 @@ public class LessonHomeActivity extends BaseActivity {
 
     @BindView(R.id.block_detail_bar)
     BlockTabView mBlockTabView;
+
+    @BindView(R.id.apply_btn)
+    Button applyBtn;
 
     private ArrayList<TextView> textViews;
     private LessonDetail mLessonDetail;
@@ -283,7 +288,10 @@ public class LessonHomeActivity extends BaseActivity {
         if (lesson != null) {
             Teacher tea = lesson.getTeacher();
             if (tea != null && tea.getBasic() != null) {
-                Glide.with(this).load(tea.getBasic().getAvatar())
+
+                String avator = Account.getAvatar(tea._id, mTeaAvatarImg.getMeasuredWidth());
+
+                Glide.with(this).load(avator)
                         .error(R.drawable.default_avatar)
                         .into(mTeaAvatarImg);
                 mTeaNameTv.setText(tea.getBasic().getName());
@@ -357,25 +365,54 @@ public class LessonHomeActivity extends BaseActivity {
         startActivity(i);
     }
 
+    private void enjoyFreeLesson(String lesson) {
+        showProgress(true);
+        LessonDataManager.requestEnrollLesson(this,
+                lesson, null, new APIServiceCallback<ELResponse>() {
+            @Override
+            public void onSuccess(ELResponse object) {
 
-    private class PayAdapter extends ArrayAdapter<String> {
-        public PayAdapter(Context context, int resource, String[] objects) {
-            super(context, resource, objects);
-        }
+                applyBtn.setText(R.string.lesson_enrolled);
+                applyBtn.setEnabled(false);
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = super.getView(position, convertView, parent);
-            CheckedTextView textView = (CheckedTextView) v;
+                cancelProgress();
 
-            if (position == 0) {
-                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alipay, 0, 0, 0);
-            } else {
-                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wechat, 0, 0, 0);
+                Toast.makeText(LessonHomeActivity.this,
+                        R.string.enroll_lesson_success, Toast.LENGTH_SHORT).show();
+
             }
-            return v;
-        }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                cancelProgress();
+
+                Toast.makeText(LessonHomeActivity.this,
+                        R.string.enroll_lesson_failed, Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
+
+
+//    private class PayAdapter extends ArrayAdapter<String> {
+//        public PayAdapter(Context context, int resource, String[] objects) {
+//            super(context, resource, objects);
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            View v = super.getView(position, convertView, parent);
+//            CheckedTextView textView = (CheckedTextView) v;
+//
+//            if (position == 0) {
+//                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alipay, 0, 0, 0);
+//            } else {
+//                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wechat, 0, 0, 0);
+//            }
+//            return v;
+//        }
+//    }
 
 
 

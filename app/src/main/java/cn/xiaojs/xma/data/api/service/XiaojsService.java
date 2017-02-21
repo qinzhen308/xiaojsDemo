@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.data.api.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
@@ -32,6 +33,8 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
+import cn.xiaojs.xma.model.order.Orderp;
+import cn.xiaojs.xma.model.order.PaymentCharge;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
@@ -41,6 +44,7 @@ import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.DynamicAcc;
 import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.FollowParam;
 import cn.xiaojs.xma.model.social.LikedRecord;
@@ -208,6 +212,23 @@ public interface XiaojsService {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
+    //OrderGroup
+    //
+
+    //Create Order
+    @POST("/v1/order")
+    Call<ResponseBody> createOrder(@Body Orderp orderp);
+
+    //CreatePaymentCharge
+    @GET("/v1/order/{order}/charge/{channel}")
+    Call<PaymentCharge> createPaymentCharge(@Path("order") String order,
+                                            @Path("channel") String channel);
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
     //Platform
     //
 
@@ -298,6 +319,10 @@ public interface XiaojsService {
     @POST("/v1/social/activities/{activity}/comments")
     Call<Comment> commentActivity(@Path("activity") String activity,
                                   @Body Comment comment);
+
+    //Get Account Activities
+    @GET("/v1/social/activities/{account}?page={page}&limit={limit}")
+    Call<List<DynamicAcc>> getAccountActivities(@Path("account") String account, int page, int limit);
 
     // Get Activities
     @GET("/v1/social/activities/{criteria}/{pagination}")
