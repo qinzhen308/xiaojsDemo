@@ -246,6 +246,10 @@
     <string name="lesson_apply">立即报名</string>
     <string name="consulting">咨询</string>
     <string name="pay_now">下单并付款</string>
+    <string name="lesson_pay">立即支付</string>
+
+    <string name="pay_ali">支付宝</string>
+    <string name="pay_weixin">微信</string>
 
     <string name="my_xiaojs">我的小教室</string>
     <string name="name_of_course">课程名称</string>
