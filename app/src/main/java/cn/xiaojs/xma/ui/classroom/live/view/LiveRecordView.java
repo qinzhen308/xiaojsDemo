@@ -229,7 +229,7 @@ public class LiveRecordView extends BaseMediaView implements
                  *
                  * */
                 case PREPARING:
-                    id = MSG_SHOW_LOADING;
+                    //id = MSG_SHOW_LOADING;
                     info("PREPARING");
                     break;
                 /**
@@ -241,7 +241,7 @@ public class LiveRecordView extends BaseMediaView implements
                 case READY:
                     // start streaming when READY
                     mIsReady = true;
-                    id = MSG_SHOW_LOADING;
+                    //id = MSG_SHOW_LOADING;
                     start();
                     info("READY");
                     break;
