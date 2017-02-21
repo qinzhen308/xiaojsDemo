@@ -40,6 +40,7 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.ui.grade.MaterialDownloadActivity;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
+import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.QQUtil;
 import cn.xiaojs.xma.util.WechatUtil;
 import okhttp3.Cache;
@@ -167,6 +168,9 @@ public class TestAPIActivity extends Activity {
     }
 
     private void testT(Context context){
+
+        String chaanel = APPUtils.getChannel(context);
+        Logger.d("---chaanel:"+ chaanel);
 
         //QQUtil.share(this,tencent,null);
         //WechatUtil.shareWebpage(this,iwxapi,"小教室","小教室，大世界","http://sports.qq.com/nba/?ptag=baidu.ald.sc.nba",true);

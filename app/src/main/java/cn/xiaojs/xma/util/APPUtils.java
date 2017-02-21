@@ -29,6 +29,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Looper;
 
+import com.meituan.android.walle.WalleChannelReader;
+
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.ui.account.LoginActivity;
@@ -38,6 +40,15 @@ import cn.xiaojs.xma.ui.account.LoginActivity;
  */
 
 public class APPUtils {
+
+    /**
+     * 获取渠道号
+     * @param context
+     * @return
+     */
+    public static String getChannel(Context context) {
+        return WalleChannelReader.getChannel(context.getApplicationContext());
+    }
 
     public static boolean isBackgroundThread(){
 

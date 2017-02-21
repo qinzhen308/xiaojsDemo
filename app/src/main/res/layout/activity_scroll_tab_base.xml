@@ -12,31 +12,26 @@
             android:layout_height="match_parent"/>
 
 
-    <cn.xiaojs.xma.ui.widget.NoScrollView
+    <LinearLayout
+            android:id="@+id/scroll_tab_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
 
-        <LinearLayout
-                android:id="@+id/scroll_tab_header"
+        <FrameLayout
+                android:id="@+id/scroll_tab_header_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-            <FrameLayout
-                    android:id="@+id/scroll_tab_header_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+        </FrameLayout>
 
-            </FrameLayout>
-
-            <cn.xiaojs.xma.ui.base.hover.ScrollTabIndicator
-                    android:id="@+id/scroll_tab_indicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dip"
-                    android:background="@color/white"/>
-        </LinearLayout>
-    </cn.xiaojs.xma.ui.widget.NoScrollView>
+        <cn.xiaojs.xma.ui.base.hover.ScrollTabIndicator
+                android:id="@+id/scroll_tab_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="44dip"
+                android:background="@color/white"/>
+    </LinearLayout>
 
 
     <FrameLayout

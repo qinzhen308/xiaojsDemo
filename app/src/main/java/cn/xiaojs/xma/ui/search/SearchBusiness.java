@@ -14,20 +14,31 @@ package cn.xiaojs.xma.ui.search;
  *
  * ======================================================================================== */
 
+import android.content.Context;
+import android.content.Intent;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.model.search.AccountSearch;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 
 public class SearchBusiness {
 
-    public static List<AccountSearch> getSearchResultByType(List<AccountSearch> origin,String type){
+    public static List<AccountSearch> getSearchResultByType(List<AccountSearch> origin, String type) {
         List<AccountSearch> result = new ArrayList<>();
-        for (AccountSearch search : origin){
-            if (search._source.typeName.equalsIgnoreCase(type)){
+        for (AccountSearch search : origin) {
+            if (search._source.typeName.equalsIgnoreCase(type)) {
                 result.add(search);
             }
         }
         return result;
+    }
+
+    public static void goPersonal(Context context, AccountSearch search) {
+        Intent intent = new Intent(context, PersonHomeActivity.class);
+        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, search._id);
+        context.startActivity(intent);
     }
 }
