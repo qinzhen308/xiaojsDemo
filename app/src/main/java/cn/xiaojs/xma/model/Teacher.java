@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.account.Account;
 public class Teacher implements Serializable{
     private Account.Basic basic;
     private String id;
+    public String _id;
 
     public Account.Basic getBasic() {
         return basic;
