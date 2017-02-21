@@ -52,6 +52,7 @@ import cn.xiaojs.xma.common.im.utils.FileHelper;
 import cn.xiaojs.xma.common.im.utils.HandleResponseCode;
 import cn.xiaojs.xma.common.im.utils.IdHelper;
 import cn.xiaojs.xma.common.im.utils.SharePreferenceManager;
+import cn.xiaojs.xma.ui.widget.SingleSelectDialog;
 import cn.xiaojs.xma.util.ToastUtil;
 
 /*
@@ -220,13 +221,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             }
             finish();
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_right_btn")) {//更多按钮
-//            if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
-//                mChatView.dismissMoreMenu();
-//            }
-//            dismissSoftInput();
-            //TODO
-//            startChatDetailActivity(mTargetId, mTargetAppKey, mGroupId);
-            // 切换输入
+            SingleSelectDialog dialog = new SingleSelectDialog(this);
+            dialog.setTitle("消息设置");
+            dialog.setItems(getResources().getStringArray(R.array.chat_setting));
+            dialog.show();
         }else if (v.getId() == IdHelper.getViewID(mContext, "jmui_right_btn2")){//聊天成员按钮，更多按钮之右
 
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_switch_voice_ib")) {

@@ -18,6 +18,8 @@ public class PublicHome {
     public int countOfUnreadN;
     public PubProfile profile;
     public String relationship;
+    public boolean isTeacher;
+    public boolean isFollowed;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)

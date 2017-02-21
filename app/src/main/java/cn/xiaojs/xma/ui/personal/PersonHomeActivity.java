@@ -39,11 +39,14 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
+import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 import cn.xiaojs.xma.ui.view.RelationshipView;
@@ -53,6 +56,7 @@ import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.FastBlur;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class PersonHomeActivity extends BaseScrollTabActivity {
 
@@ -128,30 +132,10 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         }
 
 
-        PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
-        PersonHomeLessonFragment f2 = new PersonHomeLessonFragment();
-        PersonHomeLessonFragment f3 = new PersonHomeLessonFragment();
-
-        f1.setPagePosition(0);
-        f2.setPagePosition(1);
-        f3.setPagePosition(2);
-
-        List<BaseScrollTabFragment> fragments = new ArrayList<>();
-        fragments.add(f1);
-        fragments.add(f2);
-        fragments.add(f3);
-        String[] tabs = new String[]{
-                getString(R.string.person_lesson),
-                getString(R.string.person_comment),
-                getString(R.string.person_moment)};
-
         View header = LayoutInflater.from(this).inflate(R.layout.layout_person_home_header, null);
         View footer = LayoutInflater.from(this).inflate(R.layout.layout_person_home_footer, null);
 
-        if (mIsMyself) {
-            tabs[0] = getString(R.string.my_lesson);
-        }
-        addContent(fragments, tabs, header, footer);
+        addContent(header, footer);
         mBinder = ButterKnife.bind(this);
         initHeader();
 
@@ -185,6 +169,41 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         if (home == null)
             return;
         mBean = home;
+
+        if (!mIsMyself) {
+            headerNormal(home.isFollowed);
+        }
+        if (home.isTeacher) {//用户是老师
+            PersonHomeMomentFragment f1 = new PersonHomeMomentFragment();
+            PersonHomeLessonFragment f2 = new PersonHomeLessonFragment();
+            PersonHomeLessonFragment f3 = new PersonHomeLessonFragment();
+
+            f1.setPagePosition(0);
+            f2.setPagePosition(1);
+            f3.setPagePosition(2);
+
+            List<BaseScrollTabFragment> fragments = new ArrayList<>();
+            fragments.add(f1);
+            fragments.add(f2);
+            fragments.add(f3);
+            String[] tabs = new String[]{
+                    getString(R.string.person_lesson),
+                    getString(R.string.person_comment),
+                    getString(R.string.person_moment)};
+            if (mIsMyself) {
+                tabs[0] = getString(R.string.my_lesson);
+            }
+
+            addContent(fragments, tabs);
+        } else {//用户不是老师
+            PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
+            List<BaseScrollTabFragment> fragments = new ArrayList<>();
+            fragments.add(f1);
+            mIndicator.setVisibility(View.GONE);
+            addContent(fragments, null);
+        }
+
+
         Glide.with(this)
                 .load(Account.getAvatar(home.profile.id, 300))
                 .error(R.drawable.default_avatar)
@@ -209,14 +228,16 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         mFans.setText(getString(R.string.fans_num, home.profile.stats.fans));
         mFollows.setText(getString(R.string.follow_num, home.profile.stats.followships));
         mPersonName = home.profile.name;
-        if (!TextUtils.isEmpty(home.relationship)) {
-            if (home.relationship.equalsIgnoreCase(Social.Relationship.TEACHER)) {
-                mFooterMultiple.setVisibility(View.VISIBLE);
-            } else {
-                mFooterSingle.setVisibility(View.VISIBLE);
-            }
-        } else {
+        if (Account.TypeName.ORGANIZATION.equalsIgnoreCase(home.profile.typeName)) {
             mFooterSingle.setVisibility(View.VISIBLE);
+        } else {
+            if (!mIsMyself) {
+                if (home.isTeacher) {
+                    mFooterMultiple.setVisibility(View.VISIBLE);
+                } else {
+                    mFooterSingle.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 
@@ -248,10 +269,6 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             needFooter(false);
             myself();
         } else {
-            mScrollRightText.setText("关注");
-            mScrollRightText.setTextColor(getResources().getColor(R.color.white));
-            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
-            mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
             mHead.setSex("true");
 
             mFollows.setVisibility(View.GONE);
@@ -292,7 +309,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
     }
 
     @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only, R.id.person_home_message,
-            R.id.person_home_query})
+            R.id.person_home_query, R.id.scroll_tab_right_view})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -300,11 +317,54 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 finish();
                 break;
             case R.id.person_home_message_only://发消息
+                sendMessage();
                 break;
             case R.id.person_home_message:
+                sendMessage();
                 break;
-            case R.id.person_home_query:
+            case R.id.person_home_query://提问
+
                 break;
+            case R.id.scroll_tab_right_view://加关注
+                follow();
+                break;
+        }
+    }
+
+    private void sendMessage() {
+        if (mBean != null) {
+            if (mBean.isFollowed) {//已关注跳转到聊天界面
+                final Intent intent = new Intent(this, ChatActivity.class);
+                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
+                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+                startActivity(intent);
+            } else {//未关注先提示去关注
+
+            }
+        }
+    }
+
+    private void follow() {
+        if (mBean != null && !mBean.isFollowed) {//这里需要弹框选择分组
+            SocialManager.followContact(this, mAccount, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+                @Override
+                public void onSuccess(Relation object) {
+                    ToastUtil.showToast(getApplicationContext(), R.string.followed);
+                    mBean.isFollowed = true;
+                    headerNormal(mBean.isFollowed);
+//
+//                    Contact contact = new Contact();
+//                    contact.alias = alias;
+//                    contact.account = id;
+//
+//                    DataManager.addContact(getApplicationContext(),Social.ContactGroup.FRIENDS,contact);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    ToastUtil.showToast(getApplicationContext(), errorMessage);
+                }
+            });
         }
     }
 
@@ -315,11 +375,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
                 mScrollMiddleText.setText(mPersonName);
             } else {
-                mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
-                mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
-                mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus, 0, 0, 0);
-                mScrollRightText.setBackgroundResource(R.drawable.orange_stoke_bg);
-                mScrollMiddleText.setText(mPersonName);
+                headerScrolled(mBean.isFollowed);
             }
             mBack.setImageResource(R.drawable.back_arrow);
         } else {
@@ -327,14 +383,36 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
                 mScrollMiddleText.setText("");
             } else {
-                mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
-                mScrollRightText.setTextColor(getResources().getColor(R.color.white));
-                mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
-                mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
-                mScrollMiddleText.setText("");
+                headerNormal(mBean.isFollowed);
             }
             mBack.setImageResource(R.drawable.ic_white_back);
         }
+    }
+
+    private void headerNormal(boolean followed) {
+        mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
+        mScrollRightText.setTextColor(getResources().getColor(R.color.white));
+        if (!followed) {
+            mScrollRightText.setText("关注");
+            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
+        } else {
+            mScrollRightText.setText("已关注");
+        }
+        mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
+        mScrollMiddleText.setText("");
+    }
+
+    private void headerScrolled(boolean followed) {
+        mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
+        mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
+        if (!followed) {
+            mScrollRightText.setText("关注");
+            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus, 0, 0, 0);
+        } else {
+            mScrollRightText.setText("已关注");
+        }
+        mScrollRightText.setBackgroundResource(R.drawable.orange_stoke_bg);
+        mScrollMiddleText.setText(mPersonName);
     }
 
 

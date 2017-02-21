@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.grade;
+package cn.xiaojs.xma.ui.personal;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *

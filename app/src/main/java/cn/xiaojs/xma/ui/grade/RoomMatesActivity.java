@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.personal.PersonalInfoActivity;
 import cn.xiaojs.xma.util.DeviceUtil;
 
 public class RoomMatesActivity extends BaseActivity {
