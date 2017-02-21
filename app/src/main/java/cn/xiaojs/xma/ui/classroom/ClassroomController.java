@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.whiteboard;
+package cn.xiaojs.xma.ui.classroom;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
  * ======================================================================================== */
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -24,20 +25,34 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.qiniu.pili.droid.streaming.StreamingState;
+import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardManager;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.OnColorChangeListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.UndoRedoListener;
@@ -50,10 +65,11 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
 import cn.xiaojs.xma.util.CacheUtil;
+import io.socket.client.Ack;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class WhiteboardController implements
+public class ClassroomController implements
         EraserPop.EraserChangeListener,
         HandwritingPop.PaintChangeListener,
         GeometryPop.GeometryChangeListener,
@@ -65,21 +81,20 @@ public class WhiteboardController implements
     private static final int REQUEST_GALLERY_PERMISSION = 1000;
     private static final String[] PERMISSIONS = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    private final static int REQUEST_PERMISSION_CODE = 1024;
     /**
      * 白板注册重试次数
      */
     private static final int RETRY_COUNT = 3;
 
-    //private static final String TEST_VIDEO = "rtmp://demo.srs.tongchia.me:1935/live/livestream";
-    private static final String TEST_VIDEO = "rtmp://pili-live-rtmp.xiaojs.cn/xiaojs/test2";
-
     private WhiteboardScrollerView mWhiteboardSv;
     //whiteboard adapter
     private WhiteboardAdapter mWhiteboardAdapter;
 
-    private View mLiveLayout;
-    private PlayerTextureView mWhiteboardVideo;
-    //private SurfaceCaptureView mTeacherVideo;
+    private PlayerTextureView mLiveVideo;
+    private LiveRecordView mPublishVideo;
+    private LiveRecordView mMyVideo;
 
     private ImageView mSelection;
     private ImageView mHandWriting;
@@ -96,7 +111,6 @@ public class WhiteboardController implements
     private ColorPickerPop mColorSetting;
     private TextPop mTextSetting;
 
-    private Whiteboard mWhiteboard;
     private Whiteboard mOldWhiteboard;
     private View mPanel;
 
@@ -121,19 +135,22 @@ public class WhiteboardController implements
     private Handler mHandler;
     private ReceiveRunnable mSyncRunnable;
     private int mCount;
+    private boolean mInitPublishVideo = false;
+    private String mPublishUrl;
 
-    public WhiteboardController(Context context, View root, Constants.User client, int appType) {
+    public ClassroomController(Context context, View root, Constants.User client, int appType) {
         mContext = context;
         mUser = client;
         mAppType = appType;
         mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        mSocket = SocketManager.getSocket();
 
-        mLiveLayout = root.findViewById(R.id.live_layout);
-        mWhiteboardVideo = (PlayerTextureView) root.findViewById(R.id.whiteboard_video);
-        //mTeacherVideo = (SurfaceCaptureView) root.findViewById(R.id.teacher_video);
+        mLiveVideo = (PlayerTextureView) root.findViewById(R.id.live_video);
+        mPublishVideo = (LiveRecordView) root.findViewById(R.id.publish_video);
+        mMyVideo = (LiveRecordView) root.findViewById(R.id.my_video);
 
         mWhiteboardSv = (WhiteboardScrollerView) root.findViewById(R.id.white_board_scrollview);
-        mSyncWhiteboard = (Whiteboard) root.findViewById(R.id.stu_receive_wb);
+        mCurrWhiteboard = (Whiteboard) root.findViewById(R.id.white_board);
         mPanel = root.findViewById(R.id.white_board_panel);
         mSelection = (ImageView) root.findViewById(R.id.select_btn);
         mHandWriting = (ImageView) root.findViewById(R.id.handwriting_btn);
@@ -150,11 +167,30 @@ public class WhiteboardController implements
         mPanel.measure(0, 0);
         mPanelWidth = mPanel.getMeasuredWidth();
 
-        mSocket = SocketManager.getSocket();
-        mSocket.on(Event.BOARD, mOnBoard);
-        mHandler = new Handler();
+        initVideo();
+        //initWhiteboardData(context);
+    }
 
-        initWhiteboardData(context);
+    private void initVideo() {
+        mPublishVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
+        mMyVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.setVisibility(View.VISIBLE);
+        } else if (mUser == Constants.User.STUDENT) {
+            mLiveVideo.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @PermissionSuccess(requestCode = REQUEST_PERMISSION_CODE)
+    private void publishStream() {
+        mInitPublishVideo = true;
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.setVisibility(View.VISIBLE);
+            mPublishVideo.setPath(mPublishUrl);
+        } else if (mUser == Constants.User.STUDENT) {
+            mMyVideo.setVisibility(View.VISIBLE);
+            mMyVideo.setPath(mPublishUrl);
+        }
     }
 
     private void initWhiteboardData(Context context) {
@@ -162,8 +198,14 @@ public class WhiteboardController implements
         mWhiteboardSv.setOffscreenPageLimit(2);
         mWhiteboardSv.setAdapter(mWhiteboardAdapter);
         mWhiteboardAdapter.setOnWhiteboardListener(this);
+
+        mSocket.on(Event.BOARD, mOnBoard);
+        mHandler = new Handler();
     }
 
+    /**
+     * 注册白板(第一期暂时不用)
+     */
     public void registerDefaultBoard(final WhiteboardManager.WhiteboardAddListener listener) {
         WhiteboardManager.getInstance().addDefaultBoard(mContext, mUser, new WhiteboardManager.WhiteboardAddListener() {
             @Override
@@ -193,23 +235,27 @@ public class WhiteboardController implements
                                 mAppType == Platform.AppType.TABLET_IOS) {
                             //mobile, tablet
                             boardCollection.setLive(true);
-                            mSyncWhiteboard.setNeedBitmapPool(false);
-                            mSyncWhiteboard.setLayer(boardCollection.getWhiteboardLayer().get(0));
+                            mCurrWhiteboard.setNeedBitmapPool(false);
+                            mCurrWhiteboard.setLayer(boardCollection.getWhiteboardLayer().get(0));
                         } else {
-                            mLiveLayout.setVisibility(View.VISIBLE);
                             mWhiteboardSv.setVisibility(View.GONE);
-                            mSyncWhiteboard.setVisibility(View.GONE);
-                            mWhiteboardVideo.setPath(TEST_VIDEO);
+                            mCurrWhiteboard.setVisibility(View.GONE);
                             onResumeVideo();
 
                             boardCollection.setLive(true);
                         }
-                    } else {
-                        mLiveLayout.setVisibility(View.GONE);
                     }
                 }
             }
         });
+    }
+
+    public void showWhiteboard() {
+        mCurrWhiteboard.setVisibility(View.VISIBLE);
+    }
+
+    public void hideWhiteboard() {
+        mCurrWhiteboard.setVisibility(View.GONE);
     }
 
     public void handlePanelItemClick(View v) {
@@ -258,11 +304,11 @@ public class WhiteboardController implements
     }
 
     private void enterText() {
-        if (mWhiteboard == null) {
+        if (mCurrWhiteboard == null) {
             return;
         }
 
-        if (mWhiteboard.getMode() == Whiteboard.MODE_TEXT) {
+        if (mCurrWhiteboard.getMode() == Whiteboard.MODE_TEXT) {
             if (mTextSetting == null) {
                 mTextSetting = new TextPop(mContext);
                 mTextSetting.setTextChangeListener(this);
@@ -273,11 +319,11 @@ public class WhiteboardController implements
     }
 
     private void enterHandWriting() {
-        if (mWhiteboard == null) {
+        if (mCurrWhiteboard == null) {
             return;
         }
 
-        if (mWhiteboard.getMode() == Whiteboard.MODE_HAND_WRITING) {
+        if (mCurrWhiteboard.getMode() == Whiteboard.MODE_HAND_WRITING) {
             if (mPaintSetting == null) {
                 mPaintSetting = new HandwritingPop(mContext);
                 mPaintSetting.setOnDoodlePaintParamsListener(this);
@@ -288,7 +334,7 @@ public class WhiteboardController implements
     }
 
     private void enterEraser() {
-        if (mWhiteboard == null) {
+        if (mCurrWhiteboard == null) {
             return;
         }
 
@@ -301,15 +347,15 @@ public class WhiteboardController implements
     }
 
     private void enterGeometry() {
-        if (mWhiteboard == null) {
+        if (mCurrWhiteboard == null) {
             return;
         }
 
-        if (mWhiteboard.getMode() == Whiteboard.MODE_GEOMETRY) {
+        if (mCurrWhiteboard.getMode() == Whiteboard.MODE_GEOMETRY) {
             if (mShapeSetting == null) {
                 mShapeSetting = new GeometryPop(mContext);
                 mShapeSetting.setOnShapeChangeListener(this);
-                mShapeSetting.setShapeParams(mWhiteboard.getPaintColor(), mGeometryId);
+                mShapeSetting.setShapeParams(mCurrWhiteboard.getPaintColor(), mGeometryId);
             }
             mShapeSetting.updateShapeSelectedState(mGeometryId);
             mShapeSetting.show(mGeoShape, mPanelWidth);
@@ -318,7 +364,7 @@ public class WhiteboardController implements
     }
 
     private void enterColorPicker() {
-        if (mWhiteboard == null) {
+        if (mCurrWhiteboard == null) {
             return;
         }
 
@@ -358,9 +404,9 @@ public class WhiteboardController implements
 
     @Override
     public void onColorChanged(int color) {
-        if (mWhiteboard != null) {
+        if (mCurrWhiteboard != null) {
             mColorPicker.setPaintColor(color);
-            mWhiteboard.setPaintColor(color);
+            mCurrWhiteboard.setPaintColor(color);
         }
     }
 
@@ -371,23 +417,23 @@ public class WhiteboardController implements
 
     @Override
     public void onClearDoodles() {
-        if (mWhiteboard != null) {
-            mWhiteboard.onClearWhiteboard();
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.onClearWhiteboard();
         }
     }
 
     @Override
     public void onGeometryChange(int geometryID) {
-        if (mWhiteboard != null) {
-            mWhiteboard.setGeometryShapeId(geometryID);
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.setGeometryShapeId(geometryID);
             updateGeometryStyle(geometryID);
         }
     }
 
     @Override
     public void onPaintSize(float size) {
-        if (mWhiteboard != null) {
-            mWhiteboard.setPaintStrokeWidth(size);
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.setPaintStrokeWidth(size);
         }
     }
 
@@ -403,7 +449,7 @@ public class WhiteboardController implements
 
     @Override
     public void onTextOrientation(int orientation) {
-        if (mWhiteboard != null) {
+        if (mCurrWhiteboard != null) {
             switch (orientation) {
                 case TextWriting.TEXT_HORIZONTAL:
                     mTextWriting.setImageResource(R.drawable.wb_text_selector);
@@ -413,31 +459,49 @@ public class WhiteboardController implements
                     mTextWriting.setImageResource(R.drawable.wb_text_vertical_selector);
                     break;
             }
-            mWhiteboard.setTextOrientation(orientation);
+            mCurrWhiteboard.setTextOrientation(orientation);
         }
     }
 
     private void enterMode(int mode) {
-        if (mWhiteboard != null) {
-            mWhiteboard.switchMode(mode);
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.switchMode(mode);
         }
     }
 
     public void onResumeVideo() {
-        if (mWhiteboardVideo != null) {
-            mWhiteboardVideo.resume();
+        if (mLiveVideo != null) {
+            mLiveVideo.resume();
+        }
+
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.pause();
+        } else if (mUser == Constants.User.STUDENT) {
+            mMyVideo.pause();
         }
     }
 
     public void onPauseVideo() {
-        if (mWhiteboardVideo != null) {
-            mWhiteboardVideo.pause();
+        if (mLiveVideo != null) {
+            mLiveVideo.pause();
+        }
+
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.pause();
+        } else if (mUser == Constants.User.STUDENT) {
+            mMyVideo.pause();
         }
     }
 
     public void onDestroyVideo() {
-        if (mWhiteboardVideo != null) {
-            mWhiteboardVideo.destroy();
+        if (mLiveVideo != null) {
+            mLiveVideo.destroy();
+        }
+
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.pause();
+        } else if (mUser == Constants.User.STUDENT) {
+            mMyVideo.pause();
         }
     }
 
@@ -445,12 +509,12 @@ public class WhiteboardController implements
      * 释放资源
      */
     public void release() {
-        if (mWhiteboard != null) {
-            mWhiteboard.release();
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.release();
         }
 
-        if (mSyncWhiteboard != null) {
-            mSyncWhiteboard.release();
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.release();
         }
 
         //recycle handler
@@ -472,12 +536,11 @@ public class WhiteboardController implements
     private void setWhiteboard(Whiteboard whiteboard) {
         mCurrWhiteboard = whiteboard;
         if (mOldWhiteboard != whiteboard) {
-            mWhiteboard = whiteboard;
-            if (mWhiteboard != null) {
-                mColorPicker.setPaintColor(mWhiteboard.getPaintColor());
-                mWhiteboard.setUndoRedoListener(this);
-                mWhiteboard.setOnColorChangeListener(this);
-                mWhiteboard.onWhiteboardSelected();
+            if (mCurrWhiteboard != null) {
+                mColorPicker.setPaintColor(mCurrWhiteboard.getPaintColor());
+                mCurrWhiteboard.setUndoRedoListener(this);
+                mCurrWhiteboard.setOnColorChangeListener(this);
+                mCurrWhiteboard.onWhiteboardSelected();
 
                 reset();
             }
@@ -506,8 +569,8 @@ public class WhiteboardController implements
      * 退出白板模式
      */
     public void exitWhiteboard() {
-        if (mWhiteboard != null) {
-            mWhiteboard.exit();
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.exit();
         }
     }
 
@@ -515,21 +578,21 @@ public class WhiteboardController implements
      * 设置撤销反撤销按钮样式
      */
     public void setUndoRedoStyle() {
-        if (mWhiteboard != null) {
-            mUndo.setEnabled(mWhiteboard.isCanUndo());
-            mRedo.setEnabled(mWhiteboard.isCanRedo());
+        if (mCurrWhiteboard != null) {
+            mUndo.setEnabled(mCurrWhiteboard.isCanUndo());
+            mRedo.setEnabled(mCurrWhiteboard.isCanRedo());
         }
     }
 
     private void undo() {
-        if (mWhiteboard != null) {
-            mWhiteboard.undo();
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.undo();
         }
     }
 
     private void redo() {
-        if (mWhiteboard != null) {
-            mWhiteboard.redo();
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.redo();
         }
     }
 
@@ -548,18 +611,14 @@ public class WhiteboardController implements
                 if (wbColl.isLive()) {
                     if (isWebApp(mAppType)) {
                         onResumeVideo();
-                        mLiveLayout.setVisibility(View.VISIBLE);
-                        mSyncWhiteboard.setVisibility(View.GONE);
+                        mCurrWhiteboard.setVisibility(View.GONE);
                     } else {
-                        mSyncWhiteboard.setVisibility(View.VISIBLE);
-                        mLiveLayout.setVisibility(View.GONE);
-                        mCurrWhiteboard = mSyncWhiteboard;
+                        mCurrWhiteboard.setVisibility(View.VISIBLE);
                     }
                     mWhiteboardSv.setVisibility(View.GONE);
                 } else {
                     onPauseVideo();
-                    mLiveLayout.setVisibility(View.GONE);
-                    mSyncWhiteboard.setVisibility(View.GONE);
+                    mCurrWhiteboard.setVisibility(View.GONE);
                     mWhiteboardSv.setVisibility(View.VISIBLE);
                     mWhiteboardAdapter.setData(wbColl);
                     mWhiteboardAdapter.notifyDataSetChanged();
@@ -668,8 +727,8 @@ public class WhiteboardController implements
 
         @Override
         public void run() {
-            if (mSyncWhiteboard != null) {
-                mSyncWhiteboard.onReceive(mCommendList);
+            if (mCurrWhiteboard != null) {
+                mCurrWhiteboard.onReceive(mCommendList);
             }
         }
     }
@@ -717,7 +776,40 @@ public class WhiteboardController implements
     }
 
     public void playWhiteboardVideo(String url) {
-        mWhiteboardVideo.setPath(url);
-        onResumeVideo();
+        PermissionGen.needPermission((Activity) mContext, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
     }
+
+    public void pauseVideo() {
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.pause();
+        } else if (mUser == Constants.User.STUDENT) {
+            mMyVideo.pause();
+        }
+    }
+
+    /**
+     * 流推送监听
+     */
+    private StreamingStateChangedListener mStreamingStateChangedListener = new StreamingStateChangedListener() {
+        @Override
+        public void onStateChanged(StreamingState streamingState, Object o) {
+            switch (streamingState) {
+                case STREAMING:
+                    if (mSocket != null) {
+                        mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new Ack() {
+                            @Override
+                            public void call(final Object... args) {
+                                if (args != null && args.length > 0) {
+                                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                    if (response != null && response.result) {
+                                        Toast.makeText(mContext, "推流开始", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    break;
+            }
+        }
+    };
 }

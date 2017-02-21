@@ -10,29 +10,22 @@
             android:layout_height="wrap_content"
             android:background="@color/classroom_white_bg">
 
-        <FrameLayout
-                android:id="@+id/live_layout"
+        <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
+                android:id="@+id/live_video"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone">
+                android:layout_gravity="center"
+                android:visibility="gone"/>
 
-            <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
-                    android:id="@+id/whiteboard_video"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"/>
+        <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
+                android:id="@+id/publish_video"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:background="#000000"/>
 
-           <!-- <cn.xiaojs.xma.ui.classroom.live.view.SurfaceCaptureView
-                    android:id="@+id/teacher_video"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right|top"
-                    android:layout_marginTop="@dimen/px100"
-                    android:layout_marginRight="@dimen/px10"/>-->
-
-        </FrameLayout>
-
-        <!--白板列表-->
+        <!--白板列表, 第一期暂时没有-->
         <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView
                 android:id="@+id/white_board_scrollview"
                 android:layout_width="match_parent"
@@ -40,9 +33,10 @@
                 android:layout_gravity="center">
         </cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView>
 
-        <!--学生端用来绘制老师端发送来的白板命令-->
+        <!--白板,本地手绘-->
         <cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard
-                android:id="@+id/stu_receive_wb"
+
+                android:id="@+id/white_board"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
