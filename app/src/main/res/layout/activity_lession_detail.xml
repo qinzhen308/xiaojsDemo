@@ -117,12 +117,20 @@
 
                 </LinearLayout>
 
+                <cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout
+                        android:id="@+id/label_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginTop="@dimen/px10"
+                        android:layout_below="@id/lesson_time_layout"/>
+
                 <View
                         android:id="@+id/lesson_line"
                         style="@style/DividerHorizontal"
                         android:layout_marginTop="@dimen/px32"
                         android:layout_marginBottom="@dimen/px32"
-                        android:layout_below="@id/lesson_time_layout"/>
+                        android:layout_below="@id/label_container"/>
 
                 <TextView
                         android:id="@+id/lesson_money"

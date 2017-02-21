@@ -26,6 +26,7 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
 import cn.xiaojs.xma.util.TimeUtil;
 import com.bumptech.glide.Glide;
 
@@ -59,6 +60,8 @@ public class LiveLessonDetailActivity extends BaseActivity {
     View mEnrolledView;
     @BindView(R.id.enrolled_divide_line)
     View mEnrolledDivideLine;
+    @BindView(R.id.enrolled)
+    TextView mEnrolledCountTv;
     @BindView(R.id.teach_form)
     TextView mTeachFormTv;
     @BindView(R.id.lesson_fee)
@@ -80,6 +83,10 @@ public class LiveLessonDetailActivity extends BaseActivity {
     View mLessonCoverLayout;
     @BindView(R.id.lesson_cover)
     ImageView mLessonCover;
+    @BindView(R.id.lesson_label_layout)
+    View mLessonLabelLayout;
+    @BindView(R.id.label_container)
+    ColorTextFlexboxLayout mLabelContainer;
 
     //lesson brief
     @BindView(R.id.lesson_brief_layout)
@@ -273,6 +280,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
             if (enroll != null && enroll.mandatory) {
                 mEnrolledView.setVisibility(View.VISIBLE);
                 mEnrolledDivideLine.setVisibility(View.VISIBLE);
+                mEnrolledCountTv.setText(enroll.current + "/" + enroll.max);
             } else {
                 mEnrolledView.setVisibility(View.GONE);
                 mEnrolledDivideLine.setVisibility(View.GONE);
@@ -341,6 +349,16 @@ public class LiveLessonDetailActivity extends BaseActivity {
             } else {
                 //set gone
                 mLessonCoverLayout.setVisibility(View.GONE);
+            }
+
+            //set tag
+            String[] tags = lesson.getTags();
+            if (tags != null && tags.length > 0) {
+                for (String tag : tags) {
+                    mLabelContainer.addText(tag);
+                }
+            } else {
+                mLessonLabelLayout.setVisibility(View.GONE);
             }
 
             //set lesson brief

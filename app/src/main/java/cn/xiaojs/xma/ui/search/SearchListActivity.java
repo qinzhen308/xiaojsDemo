@@ -113,7 +113,7 @@ public class SearchListActivity extends BaseActivity {
             mList.setVisibility(View.GONE);
             return;
         }
-        List<AccountSearch> result = SearchBusiness.getSearchResultByType(searches,mTypeName);
+        final List<AccountSearch> result = SearchBusiness.getSearchResultByType(searches,mTypeName);
         if (Social.SearchType.PERSON.equalsIgnoreCase(mTypeName)){
             mList.setNeedDivider(true);
             if (mPeopleAdapter == null){
@@ -133,6 +133,15 @@ public class SearchListActivity extends BaseActivity {
                 mOrganizationAdapter.notifyDataSetChanged();
             }
         }
+        mList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                AccountSearch search = result.get(position);
+                if (search == null)
+                    return;
+                SearchBusiness.goPersonal(SearchListActivity.this,search);
+            }
+        });
     }
 
     @OnClick({R.id.search_ok})

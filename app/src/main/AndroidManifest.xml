@@ -212,6 +212,9 @@
                 android:name=".ui.grade.MaterialDownloadActivity"
                 android:screenOrientation="portrait"/>
         <activity
+                android:name=".ui.mine.MyOrderActivity"
+                android:screenOrientation="portrait"/>
+        <activity
                 android:name=".common.im.ChatActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="adjustResize"/>
