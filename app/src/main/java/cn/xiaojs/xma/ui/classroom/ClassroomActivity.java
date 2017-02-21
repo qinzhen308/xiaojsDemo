@@ -358,10 +358,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                     //init whiteboard
                     initWhiteboardController();
-                    mClassroomController.playWhiteboardVideo(ctlSession.publishUrl);
 
                     if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
                         setPlayTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
+                        if (mUser == Constants.User.TEACHER) {
+                            mClassroomController.publishWhiteboardVideo(ctlSession.publishUrl);
+                        } else if (mUser == Constants.User.STUDENT) {
+                            mClassroomController.playWhiteboardVideo(ctlSession.publishUrl);
+                        }
                     } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
                             Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
                         setPendingLivePlayTime(ctlSession.startOn);
@@ -562,7 +566,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     cancelProgress();
                     mLiveSessionState = Live.LiveSessionState.LIVE;
                     setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
-                    mClassroomController.playWhiteboardVideo(object != null ? object.publishUrl : null);
+                    mClassroomController.publishWhiteboardVideo(object != null ? object.publishUrl : null);
                 }
 
                 @Override
@@ -578,7 +582,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     cancelProgress();
                     mLiveSessionState = Live.LiveSessionState.LIVE;
                     setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
-                    mClassroomController.playWhiteboardVideo(object != null ? object.publishUrl : null);
+                    mClassroomController.publishWhiteboardVideo(object != null ? object.publishUrl : null);
                 }
 
                 @Override

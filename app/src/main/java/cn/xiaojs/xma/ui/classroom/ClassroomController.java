@@ -175,6 +175,7 @@ public class ClassroomController implements
         mPublishVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
         mMyVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
         if (mUser == Constants.User.TEACHER) {
+            //PermissionGen.needPermission((Activity) mContext, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
             mPublishVideo.setVisibility(View.VISIBLE);
         } else if (mUser == Constants.User.STUDENT) {
             mLiveVideo.setVisibility(View.VISIBLE);
@@ -187,9 +188,11 @@ public class ClassroomController implements
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.setVisibility(View.VISIBLE);
             mPublishVideo.setPath(mPublishUrl);
+            mPublishVideo.resume();
         } else if (mUser == Constants.User.STUDENT) {
             mMyVideo.setVisibility(View.VISIBLE);
             mMyVideo.setPath(mPublishUrl);
+            mMyVideo.resume();
         }
     }
 
@@ -776,7 +779,13 @@ public class ClassroomController implements
     }
 
     public void playWhiteboardVideo(String url) {
-        PermissionGen.needPermission((Activity) mContext, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+        mLiveVideo.setPath(url);
+    }
+
+    public void publishWhiteboardVideo(String url) {
+        //PermissionGen.needPermission((Activity) mContext, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+        mPublishUrl = url;
+        publishStream();
     }
 
     public void pauseVideo() {
@@ -808,6 +817,9 @@ public class ClassroomController implements
                             }
                         });
                     }
+                    break;
+                case READY:
+
                     break;
             }
         }
