@@ -24,16 +24,6 @@
 
     </LinearLayout>
 
-    <cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView
-            android:id="@+id/player_container"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/px10"
-            android:layout_marginTop="@dimen/px120"
-            android:layout_above="@+id/right_panel"
-            android:layout_marginBottom="@dimen/px10"/>
-
     <RelativeLayout
             android:id="@+id/top_panel"
             android:layout_alignParentTop="true"
@@ -147,6 +137,7 @@
 
         <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
                 android:id="@+id/my_video"
+                android:visibility="gone"
                 android:layout_width="@dimen/px144"
                 android:layout_height="@dimen/px81"
                 android:layout_below="@+id/title_bar"
@@ -184,7 +175,8 @@
                     android:maxHeight="@dimen/px2"
                     android:thumbOffset="@dimen/px7"
                     android:foregroundGravity="center_vertical"
-                    android:thumb="@drawable/live_progress_controller"
+                    android:thumb="@null"
+                    android:clickable="false"
                     android:progressDrawable="@drawable/live_progress_bar"/>
 
 

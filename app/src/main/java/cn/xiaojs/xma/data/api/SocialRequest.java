@@ -8,6 +8,7 @@ import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.DataManager;
@@ -24,6 +25,7 @@ import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.DynamicAcc;
 import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.FollowParam;
 import cn.xiaojs.xma.model.social.LikedRecord;
@@ -40,6 +42,11 @@ public class SocialRequest extends ServiceRequest {
 
     public SocialRequest(Context context, APIServiceCallback callback) {
         super(context, callback);
+    }
+
+    public void getAccountActivities(String account, int page, int limit) {
+        Call<List<DynamicAcc>> call = getService().getAccountActivities(account, page, limit);
+        enqueueRequest(APIType.GET_ACCOUNT_ACTIVITIES,call);
     }
 
     public void addContactGroup(String name) {

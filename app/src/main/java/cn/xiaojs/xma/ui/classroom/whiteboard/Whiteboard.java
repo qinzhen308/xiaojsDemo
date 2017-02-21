@@ -268,12 +268,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (finished) {
             createDoodleCanvas();
         }
-
-        if (finished && mCourseUri == null && mCourseBmp == null) {
-            //test
-            Uri uri = Uri.parse(paths[(int) (Math.random() * 4)]);
-            loadCourse(uri);
-        }
     }
 
     @Override

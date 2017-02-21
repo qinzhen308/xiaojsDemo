@@ -152,13 +152,13 @@ public class SalePromotionActivity extends BaseActivity {
                 if (promotion != null) {
                     if (promotion.getType() == PROMOTION_ENROLL_BEFORE) {
                         mEnrollBeforeEdt.setText(String.valueOf(promotion.getQuota()));
-                        mEnrollDiscountEdt.setText(String.valueOf(promotion.getDiscount() * 10));
-                        mEnrollPromotionPriceTv.setText(formatPrice(mOriginalPrice * promotion.getDiscount(),
+                        mEnrollDiscountEdt.setText(String.valueOf(promotion.getDiscount()));
+                        mEnrollPromotionPriceTv.setText(formatPrice(mOriginalPrice * promotion.getDiscount() / 10,
                                 PROMOTION_ENROLL_BEFORE));
                     } else if (promotion.getType() == PROMOTION_LESSON_BEFORE) {
                         mLessonBeforeEdt.setText(String.valueOf(promotion.getBefore()));
-                        mLessonDiscountEdt.setText(String.valueOf(promotion.getDiscount() * 10));
-                        mLessonPromotionPriceTv.setText(formatPrice(mOriginalPrice * promotion.getDiscount(),
+                        mLessonDiscountEdt.setText(String.valueOf(promotion.getDiscount()));
+                        mLessonPromotionPriceTv.setText(formatPrice(mOriginalPrice * promotion.getDiscount() / 10,
                                 PROMOTION_LESSON_BEFORE));
                     }
                 }
@@ -198,7 +198,7 @@ public class SalePromotionActivity extends BaseActivity {
                 case R.id.enroll_discount:
                     if (s.length() > 0) {
                         if (checkDiscountLegal(s.toString(), true)) {
-                            mEnrollPromotionPriceTv.setText(formatPrice(mOriginalPrice * getDiscount(s.toString()), mPricingType));
+                            mEnrollPromotionPriceTv.setText(formatPrice(mOriginalPrice * getDiscount(s.toString()) / 10.f, mPricingType));
                         } else {
                             mEnrollPromotionPriceTv.setText("");
                         }
@@ -210,7 +210,7 @@ public class SalePromotionActivity extends BaseActivity {
                 case R.id.attend_lesson_discount:
                     if (s.length() > 0) {
                         if (checkDiscountLegal(s.toString(), true)) {
-                            mLessonPromotionPriceTv.setText(formatPrice(mOriginalPrice * getDiscount(s.toString()), mPricingType));
+                            mLessonPromotionPriceTv.setText(formatPrice(mOriginalPrice * getDiscount(s.toString()) / 10.f, mPricingType));
                         } else {
                             mLessonPromotionPriceTv.setText("");
                         }
@@ -240,10 +240,10 @@ public class SalePromotionActivity extends BaseActivity {
 
     private float getDiscount(String s) {
         if (s.length() > 0) {
-            return Float.parseFloat(s.toString()) / 10.f;
+            return Float.parseFloat(s.toString());
         }
 
-        return 1;
+        return 10;
     }
 
     private SpannableString formatPrice(float price, int pricingType) {

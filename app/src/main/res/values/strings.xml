@@ -246,6 +246,10 @@
     <string name="lesson_apply">立即报名</string>
     <string name="consulting">咨询</string>
     <string name="pay_now">下单并付款</string>
+    <string name="lesson_pay">立即支付</string>
+
+    <string name="pay_ali">支付宝</string>
+    <string name="pay_weixin">微信</string>
 
     <string name="my_xiaojs">我的小教室</string>
     <string name="name_of_course">课程名称</string>
@@ -291,6 +295,9 @@
     <string name="declare_teaching_ability">声明教学能力</string>
     <string name="declare_teaching_ability_tip">开课需要先声明教学能力，确定去声明吗？</string>
     <string name="lesson_publish_tip">发布到主页后，该直播课将在您的主页中展示、报名并可对外分享</string>
+    <string name="enroll_lesson_success">报名成功</string>
+    <string name="enroll_lesson_failed">报名失败</string>
+    <string name="has_youhui">已优惠%1$s元</string>
 
 
     <!-- 修改上课时间 -->

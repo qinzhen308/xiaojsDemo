@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui.classroom;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Intent;
@@ -22,9 +21,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.qiniu.pili.droid.streaming.StreamingState;
-import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,8 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.permissiongen.PermissionGen;
-import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -46,18 +40,15 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
-import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
-import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -66,7 +57,6 @@ import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
-import io.socket.client.Ack;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import okhttp3.ResponseBody;
@@ -96,10 +86,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
-
-    private final static int STATE_PLAY = 1;
-    private final static int STATE_PAUSE = 2;
-    private final static int STATE_STOP = 3;
 
     //drawer
     @BindView(R.id.drawer_layout)
@@ -156,14 +142,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     ImageView mPlayPauseBtn;
     @BindView(R.id.course_ware_btn)
     ImageView mCourseWareBtn;
+    @BindView(R.id.save_white_board_btn)
+    ImageView mSageWhiteBoardBtn;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mWhiteboardSv;
-    @BindView(R.id.my_video)
-    LiveRecordView mMyVideo;
-    @BindView(R.id.player_container)
-    MediaContainerView mContainer;
 
     private Unbinder mBinder;
 
@@ -181,7 +165,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private GestureDetector mWhiteboardGestureDetector;
     private GestureDetector mSyncWhitboardGestureDetector;
 
-    ProgressHUD mProgress;
+    private ProgressHUD mProgress;
 
     private ViewGroup mOpenedDrawer;
     private Panel mOpenedPanel;
@@ -192,7 +176,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private boolean mNeedOpenWhiteBoardPanel = false;
     private String mLiveSessionState = Live.LiveSessionState.PENDING_FOR_JOIN;
 
-    private WhiteboardController mWhiteboardController;
+    private ClassroomController mClassroomController;
     private Bundle mExtraData;
 
     private CommonDialog mExitDialog;
@@ -202,13 +186,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Boolean mSktConnected = false;
 
     private String mTicket = "";
-    private CtlSession mCtlSession;
     private SyncStateResponse mSyncState;
     private Constants.User mUser = Constants.User.STUDENT;
     private int mAppType = Platform.AppType.UNKNOWN;
 
-    private String mPublishUrl;
-    private boolean mInitPublishVideo = false;
+    private long mLessonDuration;
     private long mResetTotalTime = 30 * 60; //s
     private long mPlayTotalTime = 0;
 
@@ -220,22 +202,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         //init params
         initParams();
 
-        initPanel();
+        hidePanel();
         initDrawer();
         initLiveProgress();
         initGestureDetector();
         //init nav tips
         showSettingNav();
+
         //init data
         initData();
-
-    }
-
-    @PermissionSuccess(requestCode = REQUEST_PERMISSION_CODE)
-    private void publishStream() {
-        mInitPublishVideo = true;
-        mMyVideo.setVisibility(View.VISIBLE);
-        mMyVideo.setPath(mPublishUrl);
     }
 
     private void initParams() {
@@ -244,7 +219,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         mTicket = getIntent().getStringExtra(Constants.KEY_TICKET);
         mPanelAnimListener = new PanelAnimListener();
-        mMyVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
     }
 
     private void initPanel() {
@@ -252,29 +226,29 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case TEACHER:
             case ASSISTANT:
             case REMOTE_ASSISTANT:
-                //老师的权限最大，所以都可以使用
-                mLeftPanel.setVisibility(View.VISIBLE);
-                mPlayPauseBtn.setVisibility(View.VISIBLE);
-                mCourseWareBtn.setVisibility(View.VISIBLE);
-                mMainScreenSettingBtn.setVisibility(View.VISIBLE);
                 break;
             case STUDENT:
-                mPlayPauseBtn.setVisibility(View.GONE);
-                mCourseWareBtn.setVisibility(View.GONE);
-                mMainScreenSettingBtn.setVisibility(View.GONE);
                 break;
             case ADMINISTRATOR:
             case AUDITOR:
             case MANAGER:
-                mLeftPanel.setVisibility(View.GONE);
-                mMainScreenSettingBtn.setVisibility(View.GONE);
-                mPlayPauseBtn.setVisibility(View.GONE);
+
                 break;
         }
     }
 
     /**
-     * 教室内容分为LiveLayout，WhiteBord，(MainPanel:含视频) 3层， 底层是WhiteBord 通过重写MainPanel,
+     * 第一期教室没有课件，没有白板切换，没有白板管理
+     */
+    private void hidePanel() {
+        mLeftPanel.setVisibility(View.GONE);
+        mMainScreenSettingBtn.setVisibility(View.GONE);
+        mCourseWareBtn.setVisibility(View.GONE);
+        mSageWhiteBoardBtn.setVisibility(View.GONE);
+    }
+
+    /**
+     * 教室内容分为video，WhiteBord，(MainPanel:含视频) 3层， 底层是WhiteBord 通过重写MainPanel,
      * WhiteboardScrollView, Whiteboard的OnTouchEvent来控制事件分发
      */
     private void initGestureDetector() {
@@ -318,6 +292,24 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         int w = getResources().getDisplayMetrics().widthPixels;
         ViewGroup.LayoutParams params = mLiveProgress.getLayoutParams();
         params.width = (int) (w * LIVE_PROGRESS_WIDTH_FACTOR);
+        mLiveProgress.setEnabled(false);
+    }
+
+    private void initWhiteboardController() {
+        //init whiteboard
+        mClassroomController = new ClassroomController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
+        //mClassroomController.registerDefaultBoard(new WhiteboardManager.WhiteboardAddListener() {
+        //    @Override
+        //    public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
+        //        if (boardCollection != null) {
+        //            cancelProgress();
+        //            initNotifyMsgCount();
+        //        } else {
+        //            //register failed
+        //            //ClassroomActivity.this.finish();
+        //        }
+        //    }
+        //});
     }
 
     /**
@@ -346,9 +338,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         LiveManager.bootSession(this, mTicket, new APIServiceCallback<CtlSession>() {
             @Override
             public void onSuccess(CtlSession ctlSession) {
+                cancelProgress();
                 Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
                 if (ctlSession != null) {
-                    mCtlSession = ctlSession;
                     mUser = ClassroomBusiness.getUser(ctlSession.psType);
                     mLiveSessionState = ctlSession.state;
                     mLessonTitle.setText(ctlSession.titleOfPrimary);
@@ -360,34 +352,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                     //init ui
                     initPanel();
-                    addPlayUrl(ctlSession.playUrl);
                     setPlayPauseBtnStyle(ctlSession.state);
-                    mTotalTimeTv.setText(TimeUtil.formatMinuteTime(ctlSession.ctl != null ? ctlSession.ctl.duration : 0));
-                    mPublishUrl = ctlSession.publishUrl;
-                    if (!mInitPublishVideo) {
-                        PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
-                    } else {
-                        mMyVideo.setPublishUrl(mPublishUrl);
-                        mMyVideo.resume();
-                    }
+                    mLessonDuration = ctlSession.ctl != null ? ctlSession.ctl.duration : 0;
+                    mTotalTimeTv.setText(TimeUtil.formatMinuteTime(mLessonDuration));
 
                     //init whiteboard
-                    mWhiteboardController = new WhiteboardController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
-                    mWhiteboardController.registerDefaultBoard(new WhiteboardManager.WhiteboardAddListener() {
-                        @Override
-                        public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
-                            if (boardCollection != null) {
-                                cancelProgress();
-                                initNotifyMsgCount();
-                            } else {
-                                //register failed
-                                //ClassroomActivity.this.finish();
-                            }
-                        }
-                    });
+                    initWhiteboardController();
 
                     if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
                         setPlayTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
+                        if (mUser == Constants.User.TEACHER) {
+                            mClassroomController.publishWhiteboardVideo(ctlSession.publishUrl);
+                        } else if (mUser == Constants.User.STUDENT) {
+                            mClassroomController.playWhiteboardVideo(ctlSession.publishUrl);
+                        }
                     } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
                             Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
                         setPendingLivePlayTime(ctlSession.startOn);
@@ -406,12 +384,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 cancelProgress();
             }
         });
-    }
-
-    private void addPlayUrl(String url) {
-        if (!TextUtils.isEmpty(url)) {
-            mContainer.addPlayer(url);
-        }
     }
 
     private void setPlayPauseBtnStyle(String liveSessionState) {
@@ -466,7 +438,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
-        if (wbColl != null && mWhiteboardController != null) {
+        if (wbColl != null && mClassroomController != null) {
             if (mUser == Constants.User.STUDENT) {
                 if (wbColl.isLive()) {
                     mWhiteBoardPanel.setVisibility(View.GONE);
@@ -480,18 +452,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 }
             }
             mLessonTitle.setText(wbColl.getTitle());
-            mWhiteboardController.onSwitchWhiteboardCollection(wbColl);
+            mClassroomController.onSwitchWhiteboardCollection(wbColl);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mMyVideo.resume();
-        mContainer.resume();
 
-        if (mWhiteboardController != null) {
-            mWhiteboardController.onResumeVideo();
+        if (mClassroomController != null) {
+            mClassroomController.onResumeVideo();
         }
     }
 
@@ -515,14 +485,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 break;
             case R.id.play_pause_btn:
                 playOrPauseLesson(v);
-
-                //live
-                /*if (!m) {
-                    mContainer.addPlayer(Config.pathCfu);
-                    m = !m;
-                    break;
-                }
-                mContainer.addPlayer(Config.pathHK);*/
                 break;
             case R.id.course_ware_btn:
                 openCourseWarePanel();
@@ -588,7 +550,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mLiveSessionState = Live.LiveSessionState.RESET;
                     setPlayPauseBtnStyle(Live.LiveSessionState.RESET);
 
-                    mMyVideo.pause();
+                    mClassroomController.pauseVideo();
                 }
 
                 @Override
@@ -602,15 +564,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 @Override
                 public void onSuccess(ClassResponse object) {
                     cancelProgress();
-                    mPublishUrl = object != null ? object.publishUrl : null;
                     mLiveSessionState = Live.LiveSessionState.LIVE;
                     setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
-                    if (!mInitPublishVideo) {
-                        PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
-                    } else {
-                        mMyVideo.setPublishUrl(mPublishUrl);
-                        mMyVideo.resume();
-                    }
+                    mClassroomController.publishWhiteboardVideo(object != null ? object.publishUrl : null);
                 }
 
                 @Override
@@ -624,11 +580,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 @Override
                 public void onSuccess(ClassResponse object) {
                     cancelProgress();
-                    mPublishUrl = object != null ? object.publishUrl : null;
                     mLiveSessionState = Live.LiveSessionState.LIVE;
                     setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
-                    mMyVideo.setPublishUrl(mPublishUrl);
-                    mMyVideo.resume();
+                    mClassroomController.publishWhiteboardVideo(object != null ? object.publishUrl : null);
                 }
 
                 @Override
@@ -746,11 +700,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * 打开关闭白板工具栏 若正在动画，直接返回 1.若当前在顶部和底部的面板显示，先隐藏顶部底部隐藏动画完成后，再显示白板操作面板 否则，直接隐藏或显示白板操作面板
      */
     private void switchWhiteBoardToolbar() {
-        if (mAnimating || mWhiteboardController == null) {
+        if (mAnimating || mClassroomController == null) {
             return;
         }
 
-        if (mUser == Constants.User.STUDENT && mWhiteboardController.isLiveWhiteboard()) {
+        if (mUser == Constants.User.STUDENT && mClassroomController.isLiveWhiteboard()) {
             Toast.makeText(this, R.string.wb_toolbar_unable_tips, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -820,31 +774,27 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @Override
     protected void onPause() {
         super.onPause();
-        mMyVideo.pause();
-        mContainer.pause();
 
-        if (mWhiteboardController != null) {
-            mWhiteboardController.onPauseVideo();
+        if (mClassroomController != null) {
+            mClassroomController.onPauseVideo();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMyVideo.destroy();
-        mContainer.destroy();
 
         WhiteboardManager.getInstance().release();
         if (mBinder != null) {
             mBinder.unbind();
         }
 
-        if (mWhiteboardController != null) {
-            mWhiteboardController.onDestroyVideo();
+        if (mClassroomController != null) {
+            mClassroomController.onDestroyVideo();
         }
 
-        if (mWhiteboardController != null) {
-            mWhiteboardController.release();
+        if (mClassroomController != null) {
+            mClassroomController.release();
         }
 
         if (mProgress != null && mProgress.isShowing()) {
@@ -870,19 +820,19 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     private void saveWhiteboard() {
-        if (mWhiteboardController == null) {
+        if (mClassroomController == null) {
             return;
         }
 
-        mWhiteboardController.saveWhiteboard();
+        mClassroomController.saveWhiteboard();
     }
 
     private void setWhiteboardMainScreen() {
-        if (mWhiteboardController == null) {
+        if (mClassroomController == null) {
             return;
         }
 
-        mWhiteboardController.setWhiteboardMainScreen();
+        mClassroomController.setWhiteboardMainScreen();
     }
 
     /**
@@ -965,8 +915,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             return;
         }
 
-        if (mWhiteboardController != null) {
-            mWhiteboardController.exitWhiteboard();
+        if (mClassroomController != null) {
+            mClassroomController.exitWhiteboard();
         }
 
         mWhiteBoardPanel.animate()
@@ -1110,17 +1060,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     private void handleWhitePanelClick(View v) {
-        if (mWhiteboardController != null) {
-            mWhiteboardController.handlePanelItemClick(v);
+        if (mClassroomController != null) {
+            mClassroomController.handlePanelItemClick(v);
         }
     }
 
     public boolean isSyncWhiteboard() {
-        if (mWhiteboardController == null) {
+        if (mClassroomController == null) {
             return false;
         }
 
-        return mWhiteboardController.isSyncWhiteboard();
+        return mClassroomController.isSyncWhiteboard();
     }
 
     public void updateWhiteboardCollCountStyle(int wbCollSize) {
@@ -1131,7 +1081,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     public void updateWhiteboardCollCountStyle() {
-        if (mWhiteboardController == null) {
+        if (mClassroomController == null) {
             return;
         }
 
@@ -1362,8 +1312,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (args != null && args.length > 0) {
                 StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
                 if (startedNotify != null) {
-                    mPublishUrl = startedNotify.RTMPPlayUrl;
-                    PermissionGen.needPermission(ClassroomActivity.this, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
+                    mClassroomController.playWhiteboardVideo(startedNotify.RTMPPlayUrl);
                 }
             }
         }
@@ -1374,32 +1323,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         public void call(Object... args) {
             if (args != null && args.length > 0) {
 
-            }
-        }
-    };
-
-    /**
-     * 流推送监听
-     */
-    private StreamingStateChangedListener mStreamingStateChangedListener = new StreamingStateChangedListener() {
-        @Override
-        public void onStateChanged(StreamingState streamingState, Object o) {
-            switch (streamingState) {
-                case STREAMING:
-                    if (mSocket != null) {
-                        mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new Ack() {
-                            @Override
-                            public void call(final Object... args) {
-                                if (args != null && args.length > 0) {
-                                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                    if (response != null && response.result) {
-                                        Toast.makeText(ClassroomActivity.this, "推流开始", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-                        });
-                    }
-                    break;
             }
         }
     };
@@ -1467,6 +1390,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             m.what = MSG_PLAY_TIME;
                             m.arg1 = 1;
                             mHandler.sendMessageDelayed(m, 1000);
+                            if (mLessonDuration > 0) {
+                                int progress = Math.round(100 * (mPlayTotalTime / (float)(mLessonDuration * 60)));
+                                mLiveProgress.setProgress(progress);
+                            }
                         } else if (msg.arg1 == 2) {
                             mPlayTotalTime--;
                             mPlayTimeTv.setText(TimeUtil.formatSecondTime(mPlayTotalTime));

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <RelativeLayout
+            android:id="@+id/head_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px90"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/px32">
+
+        <ImageView
+                android:id="@+id/back_btn"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px32"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:src="@drawable/back_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <ImageView
+                android:id="@+id/favourite_btn"
+                android:paddingLeft="@dimen/px32"
+                android:layout_toLeftOf="@+id/share_wb_btn"
+                android:layout_centerInParent="true"
+                android:paddingRight="@dimen/px32"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/favourite_selector"/>
+
+        <ImageView
+                android:id="@+id/share_wb_btn"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:paddingLeft="@dimen/px32"
+                android:paddingRight="@dimen/px40"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/share_selector"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px22"
+            android:paddingRight="@dimen/px22"
+            android:layout_below="@+id/head_layout"
+            android:background="@color/white">
+
+        <ImageView
+                android:id="@+id/lesson_cover"
+                android:layout_width="@dimen/px260"
+                android:layout_height="@dimen/px148"
+                android:layout_marginRight="@dimen/px22"/>
+
+        <TextView
+                android:id="@+id/lesson_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/px24"
+                android:layout_toRightOf="@+id/lesson_cover"
+                android:textSize="@dimen/font_38px"
+                android:textStyle="bold"/>
+
+        <LinearLayout
+                android:id="@+id/lesson_time_layout"
+                android:layout_below="@+id/lesson_title"
+                android:layout_toRightOf="@+id/lesson_cover"
+                android:layout_marginRight="@dimen/px24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px22"
+                android:orientation="horizontal">
+
+            <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/lesson_begin_time"-->
+                    <!--android:textSize="@dimen/font_26px"-->
+                    <!--android:layout_below="@id/lesson_title"-->
+                    <!--android:textColor="@color/common_text"/>-->
+
+            <TextView
+                    android:id="@+id/lesson_begin_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_26px"
+                    android:layout_below="@id/lesson_title"
+                    android:textColor="@color/common_text"/>
+
+            <TextView
+                    android:id="@+id/lesson_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_26px"
+                    android:layout_marginLeft="@dimen/px12"
+                    android:layout_below="@id/lesson_title"
+                    android:textColor="@color/common_text"/>
+
+        </LinearLayout>
+
+        <View
+                android:id="@+id/lesson_line"
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px32"
+                android:layout_marginBottom="@dimen/px32"
+                android:layout_below="@id/lesson_cover"/>
+
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lesson_line"
+                android:layout_marginBottom="@dimen/px32">
+
+            <TextView
+                    android:id="@+id/lesson_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="8dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/font_red"/>
+            <TextView
+                    android:id="@+id/lesson_origin_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_26px"
+                    android:layout_toRightOf="@id/lesson_money"
+                    android:layout_alignBaseline="@id/lesson_money"/>
+
+            <TextView
+                    android:id="@+id/promotion_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/lesson_home_textview"
+                    android:layout_below="@id/lesson_money"
+                    android:textColor="@color/font_orange"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+        <View
+                android:id="@+id/bottom_line"
+                style="@style/DividerHorizontal"
+                android:layout_marginTop="@dimen/px32"
+                />
+
+        <LinearLayout
+                android:id="@+id/price_info"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px96"
+                android:paddingLeft="@dimen/px50"
+                android:paddingRight="@dimen/px50"
+                android:orientation="vertical"
+                android:layout_below="@+id/bottom_line"
+                android:background="@color/white">
+
+            <TextView
+                    android:id="@+id/pay_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_red"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/font_40px"/>
+
+            <TextView
+                    android:id="@+id/discount_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_gray"
+                    android:textSize="@dimen/font_24px"
+                    android:gravity="center_horizontal"
+                    />
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/pay_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px96"
+                android:layout_below="@+id/bottom_line"
+                android:layout_toRightOf="@+id/price_info"
+                android:background="@color/main_orange"
+                android:text="@string/lesson_pay"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/font_white"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
+
+

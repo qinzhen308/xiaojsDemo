@@ -140,7 +140,7 @@
 }
 
 #alipay sdk
--libraryjars libs/alipaySdk-20161222.jar
+#-libraryjars libs/alipaySdk-20161222.jar
 
 -keep class com.alipay.android.app.IAlixPay{*;}
 -keep class com.alipay.android.app.IAlixPay$Stub{*;}

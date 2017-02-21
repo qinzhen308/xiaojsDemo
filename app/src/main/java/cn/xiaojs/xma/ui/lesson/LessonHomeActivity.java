@@ -4,11 +4,11 @@ package cn.xiaojs.xma.ui.lesson;
 import com.google.android.flexbox.FlexboxLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,9 +27,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ELResponse;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.Teacher;
@@ -40,7 +41,6 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.BlockTabView;
-import cn.xiaojs.xma.ui.widget.BottomSheet;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
@@ -91,7 +91,11 @@ public class LessonHomeActivity extends BaseActivity {
     @BindView(R.id.block_detail_bar)
     BlockTabView mBlockTabView;
 
+    @BindView(R.id.apply_btn)
+    Button applyBtn;
+
     private ArrayList<TextView> textViews;
+    private LessonDetail mLessonDetail;
 
     @Override
     protected void addViewContent() {
@@ -120,7 +124,7 @@ public class LessonHomeActivity extends BaseActivity {
             case R.id.report:
                 break;
             case R.id.apply_btn:
-                showApplyDlg();
+                enterConfirmPayPage();
                 break;
 
         }
@@ -130,9 +134,9 @@ public class LessonHomeActivity extends BaseActivity {
         int type = getIntent().getIntExtra(CourseConstant.KEY_ENTRANCE_TYPE, ENTRANCE_FROM_TEACH_LESSON);
         //TODO not implemented
         //if (type == ENTRANCE_FROM_TEACH_LESSON) {
-            mReportLayout.setVisibility(View.GONE);
-            mReportDivideLine.setVisibility(View.GONE);
-            mLessonEnrollLayout.setVisibility(View.GONE);
+        //    mReportLayout.setVisibility(View.GONE);
+        //    mReportDivideLine.setVisibility(View.GONE);
+        //    mLessonEnrollLayout.setVisibility(View.GONE);
         //}
 
         String lessonId = getIntent().getStringExtra(CourseConstant.KEY_LESSON_ID);
@@ -159,6 +163,7 @@ public class LessonHomeActivity extends BaseActivity {
 
     private void setData (LessonDetail lesson) {
         if (lesson != null) {
+            mLessonDetail = lesson;
             //set cover
             if (!TextUtils.isEmpty(lesson.getCover())) {
                 //mLessonCoverImg.setVisibility(View.VISIBLE);
@@ -237,6 +242,10 @@ public class LessonHomeActivity extends BaseActivity {
             }
 
             setTeacherInfo(lesson);
+        } else {
+            mReportLayout.setVisibility(View.GONE);
+            mReportDivideLine.setVisibility(View.GONE);
+            mLessonEnrollLayout.setVisibility(View.GONE);
         }
     }
 
@@ -279,7 +288,10 @@ public class LessonHomeActivity extends BaseActivity {
         if (lesson != null) {
             Teacher tea = lesson.getTeacher();
             if (tea != null && tea.getBasic() != null) {
-                Glide.with(this).load(tea.getBasic().getAvatar())
+
+                String avator = Account.getAvatar(tea._id, mTeaAvatarImg.getMeasuredWidth());
+
+                Glide.with(this).load(avator)
                         .error(R.drawable.default_avatar)
                         .into(mTeaAvatarImg);
                 mTeaNameTv.setText(tea.getBasic().getName());
@@ -345,41 +357,62 @@ public class LessonHomeActivity extends BaseActivity {
     }
 
 
-    private void showApplyDlg() {
-        View view = LayoutInflater.from(this).inflate(R.layout.layout_apply_lession_dlg, null);
-        ListView payListView = (ListView) view.findViewById(R.id.list_pay);
-
-        String[] payArray = getResources().getStringArray(R.array.lesson_pay_methods);
-        PayAdapter payAdapter = new PayAdapter(this, R.layout.layout_pay_lesson_item, payArray);
-        payListView.setAdapter(payAdapter);
-        payListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        BottomSheet bottomSheet = new BottomSheet(this);
-        bottomSheet.setTitleVisibility(View.GONE);
-        bottomSheet.setContent(view);
-        bottomSheet.show();
-
+    private void enterConfirmPayPage() {
+        //ConfirmEnrollmentActivity
+        Intent i = new Intent();
+        i.setClass(this, ConfirmEnrollmentActivity.class);
+        i.putExtra(CourseConstant.KEY_LESSON_BEAN, mLessonDetail);
+        startActivity(i);
     }
 
+    private void enjoyFreeLesson(String lesson) {
+        showProgress(true);
+        LessonDataManager.requestEnrollLesson(this,
+                lesson, null, new APIServiceCallback<ELResponse>() {
+            @Override
+            public void onSuccess(ELResponse object) {
 
-    private class PayAdapter extends ArrayAdapter<String> {
-        public PayAdapter(Context context, int resource, String[] objects) {
-            super(context, resource, objects);
-        }
+                applyBtn.setText(R.string.lesson_enrolled);
+                applyBtn.setEnabled(false);
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = super.getView(position, convertView, parent);
-            CheckedTextView textView = (CheckedTextView) v;
+                cancelProgress();
 
-            if (position == 0) {
-                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alipay, 0, 0, 0);
-            } else {
-                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wechat, 0, 0, 0);
+                Toast.makeText(LessonHomeActivity.this,
+                        R.string.enroll_lesson_success, Toast.LENGTH_SHORT).show();
+
             }
-            return v;
-        }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                cancelProgress();
+
+                Toast.makeText(LessonHomeActivity.this,
+                        R.string.enroll_lesson_failed, Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
+
+
+//    private class PayAdapter extends ArrayAdapter<String> {
+//        public PayAdapter(Context context, int resource, String[] objects) {
+//            super(context, resource, objects);
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            View v = super.getView(position, convertView, parent);
+//            CheckedTextView textView = (CheckedTextView) v;
+//
+//            if (position == 0) {
+//                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alipay, 0, 0, 0);
+//            } else {
+//                textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wechat, 0, 0, 0);
+//            }
+//            return v;
+//        }
+//    }
 
 
 
