@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import java.util.List;
 
@@ -43,7 +46,6 @@ import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
-import cn.xiaojs.xma.ui.classroom.live.view.MediaContainerView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
@@ -78,7 +80,6 @@ import okhttp3.ResponseBody;
 
 public class ClassroomActivity extends FragmentActivity implements WhiteboardAdapter.OnWhiteboardListener {
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.55F;
-    private final static int REQUEST_PERMISSION_CODE = 1024;
 
     private final static int MSG_RESET_TIME = 1024;
     private final static int MSG_PLAY_TIME = 2048;
@@ -86,6 +87,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
+
+    private final static int PAGE_EDIT_VIDEO = 1024;
+    private final static int PAGE_TOP = 2048;
 
     //drawer
     @BindView(R.id.drawer_layout)
@@ -120,6 +124,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     MessageImageView mEnterTalkBtn;
     @BindView(R.id.notify_msg_btn)
     MessageImageView mNotifyImgBtn;
+    @BindView(R.id.video_doodle_panel)
+    View mVideoDoodlePanel;
+    @BindView(R.id.publish_video_panel)
+    View mPublishVideoPanel;
 
     //lesson info
     @BindView(R.id.lesson_title)
@@ -144,6 +152,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     ImageView mCourseWareBtn;
     @BindView(R.id.save_white_board_btn)
     ImageView mSageWhiteBoardBtn;
+    @BindView(R.id.blackboard_switcher_btn)
+    ImageView mBoardSwitcherBtn;
+    @BindView(R.id.publish_take_pic)
+    ImageView mTakePicBtn;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
@@ -193,6 +205,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private long mLessonDuration;
     private long mResetTotalTime = 30 * 60; //s
     private long mPlayTotalTime = 0;
+
+    private int mPageState = PAGE_TOP;
+    private Bitmap mCaptureFrame;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -244,12 +259,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         mLeftPanel.setVisibility(View.GONE);
         mMainScreenSettingBtn.setVisibility(View.GONE);
         mCourseWareBtn.setVisibility(View.GONE);
+        mBoardSwitcherBtn.setVisibility(View.GONE);
         mSageWhiteBoardBtn.setVisibility(View.GONE);
     }
 
     /**
-     * 教室内容分为video，WhiteBord，(MainPanel:含视频) 3层， 底层是WhiteBord 通过重写MainPanel,
-     * WhiteboardScrollView, Whiteboard的OnTouchEvent来控制事件分发
+     * 教室内容分为video，WhiteBord，(MainPanel:含视频) 3层， 底层是WhiteBord 通过重写MainPanel, WhiteboardScrollView,
+     * Whiteboard的OnTouchEvent来控制事件分发
      */
     private void initGestureDetector() {
         mMainPanelGestureDetector = new GestureDetector(this, new MainPanelGestureListener());
@@ -343,7 +359,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (ctlSession != null) {
                     mUser = ClassroomBusiness.getUser(ctlSession.psType);
                     mLiveSessionState = ctlSession.state;
-                    mLessonTitle.setText(ctlSession.titleOfPrimary);
+                    mLessonTitle.setText(!TextUtils.isEmpty(ctlSession.titleOfPrimary) ? ctlSession.titleOfPrimary : ctlSession.ctl.title);
                     mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
 
                     //init socket
@@ -471,7 +487,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             R.id.play_pause_btn, R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.enter_talk_btn,
             R.id.wb_toolbar_btn, R.id.color_picker_btn, R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn,
             R.id.eraser_btn, R.id.text_btn, R.id.finish_btn, R.id.main_screen_setting, R.id.save_white_board_btn,
-            R.id.undo, R.id.redo})
+            R.id.undo, R.id.redo, R.id.publish_camera_switcher, R.id.publish_take_pic, R.id.back_in_doodle,
+            R.id.save_doodle, R.id.share_doodle})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -522,6 +539,19 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case R.id.undo:
             case R.id.redo:
                 handleWhitePanelClick(v);
+                break;
+            case R.id.publish_camera_switcher:
+                switchCamera();
+                break;
+            case R.id.publish_take_pic:
+                enterVideoEditing();
+                break;
+            case R.id.back_in_doodle:
+                exitVideoEditing();
+                break;
+            case R.id.save_doodle:
+                break;
+            case R.id.share_doodle:
                 break;
             default:
                 break;
@@ -725,6 +755,58 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     }
 
+    private void enterVideoEditing() {
+        if (mClassroomController != null && mPageState == PAGE_TOP) {
+            mClassroomController.takeVideoFrame(mFrameCaptureCallback);
+        }
+    }
+
+    private FrameCapturedCallback mFrameCaptureCallback = new FrameCapturedCallback() {
+        @Override
+        public void onFrameCaptured(Bitmap bitmap) {
+            mCaptureFrame = bitmap;
+            runOnUiThread(mCaptureFrameRunnable);
+        }
+    };
+
+    private Runnable mCaptureFrameRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mCaptureFrame != null) {
+                mPageState = PAGE_EDIT_VIDEO;
+                mLeftPanel.setVisibility(View.VISIBLE);
+                mTakePicBtn.setVisibility(View.GONE);
+                mVideoDoodlePanel.setVisibility(View.VISIBLE);
+                mPublishVideoPanel.setVisibility(View.GONE);
+                mEnterTalkBtn.setVisibility(View.GONE);
+                mClassroomController.enterVideoEditing(mCaptureFrame);
+                hideTopBottomPanel();
+            } else {
+                mPageState = PAGE_TOP;
+            }
+        }
+    };
+
+    private void exitVideoEditing() {
+        if (mClassroomController != null) {
+            mPageState = PAGE_TOP;
+            mCurrentControllerLevel = InteractiveLevel.MAIN_PANEL;
+            mLeftPanel.setVisibility(View.GONE);
+            mTakePicBtn.setVisibility(View.VISIBLE);
+            mVideoDoodlePanel.setVisibility(View.GONE);
+            mPublishVideoPanel.setVisibility(View.VISIBLE);
+            mEnterTalkBtn.setVisibility(View.VISIBLE);
+            mClassroomController.exitVideoEditing();
+            hideWhiteBoardPanel();
+        }
+    }
+
+    private void switchCamera() {
+        if (mClassroomController != null) {
+            mClassroomController.switchCamera();
+        }
+    }
+
     private class MainPanelGestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
@@ -734,7 +816,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (mBottomPanel.getVisibility() == View.VISIBLE) {
                     mNeedOpenWhiteBoardPanel = false;
                     hideTopBottomPanel();
-                } else {
+                } else if (mPageState != PAGE_EDIT_VIDEO) {
                     showTopBottomPanel();
                 }
             }
@@ -762,7 +844,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (mBottomPanel.getVisibility() == View.VISIBLE) {
                     mNeedOpenWhiteBoardPanel = false;
                     hideTopBottomPanel();
-                } else {
+                } else if (mPageState != PAGE_EDIT_VIDEO){
                     showTopBottomPanel();
                 }
             }
@@ -1391,7 +1473,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             m.arg1 = 1;
                             mHandler.sendMessageDelayed(m, 1000);
                             if (mLessonDuration > 0) {
-                                int progress = Math.round(100 * (mPlayTotalTime / (float)(mLessonDuration * 60)));
+                                int progress = Math.round(100 * (mPlayTotalTime / (float) (mLessonDuration * 60)));
                                 mLiveProgress.setProgress(progress);
                             }
                         } else if (msg.arg1 == 2) {

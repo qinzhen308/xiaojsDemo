@@ -34,8 +34,9 @@
         </cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView>
 
         <!--白板,本地手绘-->
-        <cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard
-                android:id="@+id/white_board"
+        <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayout
+                android:id="@+id/white_board_layout"
+                android:background="#FAEEEEEE"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>

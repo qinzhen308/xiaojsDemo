@@ -15,7 +15,6 @@ package cn.xiaojs.xma.ui.classroom;
  * ======================================================================================== */
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -25,6 +24,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
@@ -33,13 +33,9 @@ import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
-import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
@@ -51,6 +47,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayout;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
@@ -129,7 +126,9 @@ public class ClassroomController implements
     private WhiteboardCollection mCurrWhiteboardColl;
     private WhiteboardCollection mOldWhiteboardColl;
     private Whiteboard mSyncWhiteboard;
+    private WhiteboardLayout mWhiteboardLayout;
     private Whiteboard mCurrWhiteboard;
+    private WhiteboardLayer mWhiteboardLayer;
 
     private Socket mSocket;
     private Handler mHandler;
@@ -137,6 +136,7 @@ public class ClassroomController implements
     private int mCount;
     private boolean mInitPublishVideo = false;
     private String mPublishUrl;
+    private Bitmap mVideoFrameBitmap;
 
     public ClassroomController(Context context, View root, Constants.User client, int appType) {
         mContext = context;
@@ -150,7 +150,8 @@ public class ClassroomController implements
         mMyVideo = (LiveRecordView) root.findViewById(R.id.my_video);
 
         mWhiteboardSv = (WhiteboardScrollerView) root.findViewById(R.id.white_board_scrollview);
-        mCurrWhiteboard = (Whiteboard) root.findViewById(R.id.white_board);
+        mWhiteboardLayout = (WhiteboardLayout) root.findViewById(R.id.white_board_layout);
+        mCurrWhiteboard = mWhiteboardLayout.getWhiteboard();
         mPanel = root.findViewById(R.id.white_board_panel);
         mSelection = (ImageView) root.findViewById(R.id.select_btn);
         mHandWriting = (ImageView) root.findViewById(R.id.handwriting_btn);
@@ -566,6 +567,42 @@ public class ClassroomController implements
         mGeoShape.setSelected(false);
         mTextWriting.setSelected(false);
         mEraser.setSelected(false);
+    }
+
+    public void enterVideoEditing(Bitmap bmp) {
+        if (mWhiteboardLayout != null) {
+            //mVideoFrameBitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Bitmap.Config.ARGB_4444);
+            mVideoFrameBitmap = bmp.copy(Bitmap.Config.ARGB_4444, true);
+            mWhiteboardLayout.setVisibility(View.VISIBLE);
+            mWhiteboardLayer = new WhiteboardLayer();
+            mCurrWhiteboard.setLayer(mWhiteboardLayer);
+            mCurrWhiteboard.setSrcBitmap(bmp);
+            onWhiteboardSelected(mCurrWhiteboard);
+        }
+    }
+
+    public void switchCamera() {
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.switchCamera();
+        } else if (mUser == Constants.User.STUDENT) {
+            mMyVideo.switchCamera();
+        }
+    }
+
+    public void exitVideoEditing() {
+        if (mWhiteboardLayout != null) {
+            mWhiteboardLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public Bitmap takeVideoFrame(FrameCapturedCallback callback) {
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.captureOriginalFrame(callback);
+        } else if (mUser == Constants.User.STUDENT) {
+            mMyVideo.captureOriginalFrame(callback);
+        }
+
+        return null;
     }
 
     /**

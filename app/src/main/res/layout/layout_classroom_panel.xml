@@ -24,6 +24,100 @@
 
     </LinearLayout>
 
+    <!--视频推流顶部面板-->
+    <RelativeLayout
+            android:id="@+id/publish_video_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
+
+        <TextView
+                android:id="@+id/publish_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:drawableLeft="@drawable/cr_publish_video_stop"
+                android:padding="@dimen/px10"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/px28"
+                android:drawablePadding="@dimen/px10"
+                android:background="@drawable/cr_corner_gray_bg"
+                android:layout_marginLeft="@dimen/px20"
+                android:layout_marginTop="@dimen/px20"
+                android:text="00:00:00"/>
+
+        <ImageView
+                android:id="@+id/publish_camera_switcher"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_marginTop="@dimen/px20"
+                android:src="@drawable/cr_publish_camera_switcher"/>
+
+    </RelativeLayout>
+
+    <!--视频涂鸦面板-->
+    <RelativeLayout
+            android:id="@+id/video_doodle_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:visibility="gone">
+
+        <ImageView
+                android:id="@+id/back_in_doodle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back_pressed"
+                android:padding="@dimen/px36"/>
+
+        <TextView
+                android:id="@+id/share_doodle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_toLeftOf="@+id/save_doodle"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10"
+                android:textSize="@dimen/px28"
+                android:textColor="@color/font_white"
+                android:text="@string/share"
+                android:background="@drawable/cr_corner_blue_bg"/>
+
+        <TextView
+                android:id="@+id/save_doodle"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10"
+                android:textSize="@dimen/px28"
+                android:textColor="@color/font_white"
+                android:text="@string/save"
+                android:background="@drawable/cr_corner_blue_bg"/>
+
+    </RelativeLayout>
+
+
+    <ImageView
+            android:id="@+id/publish_take_pic"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/px20"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cr_publish_take_pic"/>
+
     <RelativeLayout
             android:id="@+id/top_panel"
             android:layout_alignParentTop="true"
@@ -34,7 +128,7 @@
         <RelativeLayout
                 android:id="@+id/title_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/px100"
                 android:paddingTop="@dimen/px16"
                 android:paddingBottom="@dimen/px16"
                 android:background="@color/classroom_main_gray">
