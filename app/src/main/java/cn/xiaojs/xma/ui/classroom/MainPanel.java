@@ -106,12 +106,16 @@ public class MainPanel extends RelativeLayout {
 
             return true;
         } else if (InteractiveLevel.WHITE_BOARD == getInteractiveLevel()) {
-            if (isSyncWhiteboard()) {
-                mSyncWhiteboardGestureDetector.onTouchEvent(event);
-                return true;
-            } else {
-                return false;
-            }
+            //if (isSyncWhiteboard()) {
+            //    mSyncWhiteboardGestureDetector.onTouchEvent(event);
+            //    return true;
+            //} else {
+            //    return false;
+            //}
+
+            //force
+            mSyncWhiteboardGestureDetector.onTouchEvent(event);
+            return false;
         } else {
             return false;
         }

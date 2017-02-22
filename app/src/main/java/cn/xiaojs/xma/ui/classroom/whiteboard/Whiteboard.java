@@ -267,6 +267,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private void onMeasureFinished(boolean finished) {
         if (finished) {
             createDoodleCanvas();
+
+            if (mCourseBmp != null) {
+                mSrcCourseRect = new Rect(0, 0, mCourseBmp.getWidth(), mCourseBmp.getHeight());
+                mDesCourseRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
+            }
         }
     }
 
@@ -389,6 +394,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mNeedBitmapPool) {
             mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
         }
+        postInvalidate();
+    }
+
+    public void setSrcBitmap(Bitmap bmp) {
+        mSrcCourseRect = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
+        mDesCourseRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
+        mCourseBmp = bmp;
         postInvalidate();
     }
 

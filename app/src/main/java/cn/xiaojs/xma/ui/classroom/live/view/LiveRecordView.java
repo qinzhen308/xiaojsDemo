@@ -33,6 +33,7 @@ import com.qiniu.android.dns.local.Resolver;
 import com.qiniu.pili.droid.streaming.AVCodecType;
 import com.qiniu.pili.droid.streaming.AudioSourceCallback;
 import com.qiniu.pili.droid.streaming.CameraStreamingSetting;
+import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.MediaStreamingManager;
 import com.qiniu.pili.droid.streaming.MicrophoneStreamingSetting;
 import com.qiniu.pili.droid.streaming.StreamingProfile;
@@ -431,7 +432,7 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     @Override
-    protected void switchCamera() {
+    public void switchCamera() {
         //切换摄像头
         mHandler.removeCallbacks(mCameraSwitcher);
         mHandler.postDelayed(mCameraSwitcher,100);
@@ -526,5 +527,9 @@ public class LiveRecordView extends BaseMediaView implements
     @Override
     protected boolean isMute() {
         return mMute;
+    }
+
+    public void captureOriginalFrame(FrameCapturedCallback callback) {
+        mMediaStreamingManager.captureFrame(0, 0, callback);
     }
 }
