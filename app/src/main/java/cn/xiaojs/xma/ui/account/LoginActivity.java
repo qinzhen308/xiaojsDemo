@@ -14,6 +14,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.SplashActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.VerifyUtils;
 import cn.xiaojs.xma.util.XjsUtils;
@@ -79,6 +81,38 @@ public class LoginActivity extends BaseActivity {
 
         //FIXME 临时做法，先调试开发用
         checkSession();
+        changeBaseUrl();
+    }
+
+    /**
+     * 修改baseUrl，测试专用
+     */
+    private void changeBaseUrl() {
+        mContent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final CommonDialog commonDialog = new CommonDialog(LoginActivity.this);
+                commonDialog.setTitle("修改服务器地址");
+                commonDialog.show();
+                final EditText edt = new EditText(LoginActivity.this);
+                commonDialog.setCustomView(edt);
+                edt.setText("http://");
+                commonDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        commonDialog.dismiss();
+                        XiaojsConfig.BASE_URL = edt.getText().toString();
+                    }
+                });
+                commonDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        commonDialog.dismiss();
+                    }
+                });
+                return false;
+            }
+        });
     }
 
     @OnClick({R.id.left_view, R.id.login_btn, R.id.hide_show_pwd})
