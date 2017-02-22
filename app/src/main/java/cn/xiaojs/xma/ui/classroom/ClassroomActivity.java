@@ -86,6 +86,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private final static int MSG_RESET_TIME = 1024;
     private final static int MSG_PLAY_TIME = 2048;
     private final static int MSG_PLAY_BTN_SETTING = 4096;
+    private final static int MSG_PLAY_VIDEO = 8192;
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
@@ -214,6 +215,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private int mPageState = PAGE_TOP;
     private Bitmap mCaptureFrame;
+    private String mPlayUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -389,7 +391,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         if (mUser == Constants.User.TEACHER) {
                             mClassroomController.publishStream(ctlSession.publishUrl);
                         } else if (mUser == Constants.User.STUDENT) {
-                            mClassroomController.playWhiteboardVideo(ctlSession.playUrl);
+                            mPlayUrl = ctlSession.playUrl;
+                            mClassroomController.playWhiteboardVideo(mPlayUrl);
                         }
                     } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
                             Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
@@ -1387,6 +1390,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         if (mUser != Constants.User.TEACHER) {
                             mLiveSessionState = Live.LiveSessionState.LIVE;
                             //非老师端播放推流地址
+                            mHandler.sendEmptyMessage(MSG_PLAY_VIDEO);
                         }
 
                         setResetTime(false);
@@ -1411,7 +1415,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (args != null && args.length > 0) {
                 StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
                 if (startedNotify != null) {
-                    mClassroomController.playWhiteboardVideo(startedNotify.RTMPPlayUrl);
+                    mPlayUrl = startedNotify.RTMPPlayUrl;
+                    mClassroomController.playWhiteboardVideo(mPlayUrl);
                 }
             }
         }
@@ -1511,6 +1516,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         break;
                     case MSG_PLAY_BTN_SETTING:
                         setPlayPauseBtnStyle(mLiveSessionState);
+                        break;
+                    case MSG_PLAY_VIDEO:
+                        if (mClassroomController != null) {
+                            mClassroomController.playWhiteboardVideo(mPlayUrl);
+                        }
                         break;
                 }
             }
