@@ -22,9 +22,9 @@ public class DataLoder {
 
     }
 
-    public void load(DataLoaderCallback callback, Object... params) {
+    public void load(DataLoaderCallback callback, int ptype, Object... params) {
         this.callback = callback;
-        new Thread(new DataRunnable(params)).start();
+        new Thread(new DataRunnable(ptype, params)).start();
     }
 
 
@@ -35,8 +35,10 @@ public class DataLoder {
     private class DataRunnable implements Runnable {
 
         private Object[] loadParams;
+        private int ptype;
 
-        protected DataRunnable(Object[] params) {
+
+        protected DataRunnable(int type, Object[] params) {
             loadParams = params;
         }
 
@@ -44,7 +46,7 @@ public class DataLoder {
         public void run() {
 
             Message message = new Message();
-            message.obj = dao.loadData(context,loadParams);
+            message.obj = dao.loadData(context,ptype,loadParams);
             message.what = 0;
 
             loadHandler.sendMessage(message);

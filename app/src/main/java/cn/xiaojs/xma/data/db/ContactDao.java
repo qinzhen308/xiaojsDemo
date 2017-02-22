@@ -32,7 +32,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
 
 
     @Override
-    public ArrayList<ContactGroup> loadData(Context context, Object... params) {
+    public ArrayList<ContactGroup> loadData(Context context, int ptype,Object... params) {
 
         if (params != null && params.length >0){
             if (params[0] instanceof Map) {
@@ -40,7 +40,12 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                 return getContacts(context, map);
             }else if (params[0] instanceof Integer) {
                 int type = (int)params[0];
-                return getContacts(context, type);
+                if (type == -1){
+                    return getClasses(context);
+                }else {
+                    return getContacts(context, type);
+                }
+
             }
         }
 
@@ -113,6 +118,67 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
         mDb.execSQL(sql);
     }
 
+    public ArrayList<ContactGroup> getClasses(Context context) {
+
+        SQLiteDatabase db = DBHelper.getReadDatabase(context);
+        ArrayList<ContactGroup> contactGroups = null;
+        Cursor cursor = null;
+        try{
+
+            String sql = new StringBuilder("select * from ")
+                    .append(DBTables.TContact.TABLE_NAME)
+                    .append(" where ")
+                    .append(DBTables.TContact.GID)
+                    .append(" = '")
+                    .append(CLASSES)
+                    .append("'")
+                    .toString();
+
+            cursor = db.rawQuery(sql, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                ArrayList<Contact> contacts = new ArrayList<>(cursor.getCount());
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+
+//                    long gid = cursor.getLong(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.GID));
+                    String id = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.CID));
+//                    int followType = cursor.getInt(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.FOLLOW_TYPE));
+                    String name = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.NAME));
+
+//                    String avatar = cursor.getString(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.AVATOR));
+
+                    Contact contact = new Contact();
+                    contact.account = id;
+                    contact.alias = name;
+
+                    contacts.add(contact);
+
+                    cursor.moveToNext();
+                }
+
+                ContactGroup contactGroup = new ContactGroup();
+                contactGroup.collection = contacts;
+
+                contactGroups = new ArrayList<>(1);
+                contactGroups.add(contactGroup);
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (cursor !=null) {
+                cursor.close();
+            }
+        }
+
+        return contactGroups;
+    }
+
     /**
      * @param context
      * @return
@@ -130,6 +196,10 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     .append(DBTables.TContact.FOLLOW_TYPE)
                     .append(" = '")
                     .append(followType)
+                    .append("' and ")
+                    .append(DBTables.TContact.GID)
+                    .append(" <> '")
+                    .append(CLASSES)
                     .append("'")
                     .toString();
 
@@ -180,6 +250,96 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
         return contactGroups;
     }
 
+
+    /**
+     * @param context
+     * @return
+     */
+    public ArrayList<ContactGroup> getContactsOnly(Context context,Map<Long, ContactGroup> map) {
+
+        SQLiteDatabase db = DBHelper.getReadDatabase(context);
+        ArrayList<ContactGroup> contactGroups = null;
+        Cursor cursor = null;
+        try{
+
+            String sql = new StringBuilder("select * from ")
+                    .append(DBTables.TContact.TABLE_NAME)
+                    .append(" where ")
+                    .append(DBTables.TContact.GID)
+                    .append(" <> '")
+                    .append(CLASSES)
+                    .append("'")
+                    .toString();
+
+            cursor = db.rawQuery(sql, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                Map<Long, ContactGroup> temp = new HashMap<>();
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+
+                    long gid = cursor.getLong(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.GID));
+                    String id = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.CID));
+                    int followType = cursor.getInt(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.FOLLOW_TYPE));
+                    String name = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.NAME));
+
+                    String avatar = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.AVATOR));
+
+
+
+                    Contact contact = new Contact();
+                    contact.account = id;
+                    contact.alias = name;
+                    contact.followType = followType;
+                    contact.avatar = avatar;
+
+                    boolean isclass = gid == CLASSES;
+
+                    ContactGroup group = map.get(gid);
+                    if (group != null || isclass) {
+
+                        ContactGroup  tempGroup = temp.get(gid);
+                        if (tempGroup == null) {
+
+                            ContactGroup nGroup = new ContactGroup();
+                            nGroup.group = isclass? gid : group.group;
+                            //nGroup.id = group.id;
+                            nGroup.collection = new ArrayList<>();
+                            nGroup.collection.add(contact);
+                            temp.put(gid,nGroup);
+
+                        }else {
+                            tempGroup.collection.add(contact);
+                        }
+
+                    }
+
+                    cursor.moveToNext();
+                }
+
+                contactGroups = new ArrayList<>();
+                for(ContactGroup group : temp.values()) {
+                    if (group.collection.size()>0) {
+                        contactGroups.add(group);
+                    }
+                }
+
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (cursor !=null) {
+                cursor.close();
+            }
+        }
+
+        return contactGroups;
+    }
 
     /**
      * @param context

@@ -72,7 +72,21 @@ public class DataManager {
                                         int followType,
                                         DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
         DataLoder dataLoder = new DataLoder(context,new ContactDao());
-        dataLoder.load(callback,followType);
+        dataLoder.load(callback,-1,followType);
+    }
+
+    public static void getFriendsOnly(Context context,
+                                        int followType,
+                                        DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
+        DataLoder dataLoder = new DataLoder(context,new ContactDao());
+        dataLoder.load(callback,-1,followType);
+    }
+
+
+    public static void getClasses(Context context,
+                                  DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
+        DataLoder dataLoder = new DataLoder(context,new ContactDao());
+        dataLoder.load(callback,-1,-1);
     }
 
 //    public static ArrayList<ContactGroup> getContactGroupData(Context context) {

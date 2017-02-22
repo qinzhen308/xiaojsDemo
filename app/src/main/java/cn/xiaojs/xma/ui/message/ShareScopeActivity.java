@@ -106,6 +106,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
         if (position == 2) {
 
             // TODO 班级圈
+            startActivity(new Intent(this, ChooseClassActivity.class));
         } else if (position == 3) {
 
             //FIXME 如果用户再次进入选择联系人，需要将之前以选择的联系人删除清零。
