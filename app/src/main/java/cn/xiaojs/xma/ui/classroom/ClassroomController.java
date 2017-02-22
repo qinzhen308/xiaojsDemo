@@ -190,7 +190,7 @@ public class ClassroomController implements
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.setVisibility(View.VISIBLE);
             mPublishVideo.setPath(mPublishUrl);
-            mPublishVideo.resume();
+            mPublishVideo.start();
         } else if (mUser == Constants.User.STUDENT) {
             mMyVideo.setVisibility(View.VISIBLE);
             mMyVideo.setPath(mPublishUrl);
@@ -480,9 +480,9 @@ public class ClassroomController implements
         }
 
         if (mUser == Constants.User.TEACHER) {
-            mPublishVideo.pause();
+            mPublishVideo.resume();
         } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.pause();
+            mMyVideo.resume();
         }
     }
 
