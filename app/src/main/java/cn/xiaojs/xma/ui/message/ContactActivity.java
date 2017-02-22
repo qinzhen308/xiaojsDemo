@@ -41,6 +41,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 
+import static cn.xiaojs.xma.common.xf_foundation.schemas.Social.ContactGroup.CLASSES;
+
 public class ContactActivity extends BaseActivity {
 
     @BindView(R.id.list_contact)
@@ -316,6 +318,7 @@ public class ContactActivity extends BaseActivity {
             @Override
             public void onSuccess(ArrayList<ContactGroup> object) {
 
+
                 bindDataView(object);
                 //listView.onRefreshComplete();
             }
@@ -365,6 +368,11 @@ public class ContactActivity extends BaseActivity {
         for (ContactGroup contactGroup : contactData) {
 
             long id = contactGroup.group;
+
+            if (id == CLASSES){
+                contactGroup.name = "班级";
+                continue;
+            }
 
             if (tempMap.get(id) != null) {
                 tempMap.remove(id);
@@ -519,7 +527,10 @@ public class ContactActivity extends BaseActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.nameView.setText(getChild(groupPosition, childPosition).alias);
+            final Contact c = getChild(groupPosition, childPosition);
+
+            String name = TextUtils.isEmpty(c.title)? c.alias : c.title;
+            holder.nameView.setText(name);
 
             holder.moveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -532,7 +543,7 @@ public class ContactActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Contact c = getChild(groupPosition, childPosition);
+
                     ContactGroup cg = getGroup(groupPosition);
 
 

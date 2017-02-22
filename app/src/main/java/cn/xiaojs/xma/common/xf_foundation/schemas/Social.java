@@ -9,6 +9,12 @@ import cn.xiaojs.xma.common.xf_foundation.Constants;
 
 public class Social {
 
+    public class GroupSetType {
+        public static final String CONTACTS = "contacts";
+        public static final String CLASSES = "classes";
+        public static final String RECENT = "recent";
+    }
+
     /**
     * Defines the follow types.
     */
@@ -36,6 +42,9 @@ public class Social {
         public static final int COLLEAGUES = 6;
         public static final int USER_DEFINED = 10;
         public static final int STRANGERS = 99;
+
+        //班级不属于默认分组
+        public static final int CLASSES = -1;
 
     }
 
@@ -108,6 +117,9 @@ public class Social {
 
             case ContactGroup.STRANGERS:
                 return "陌生人";
+
+            case ContactGroup.CLASSES://班级不属于默认分组
+                return "班级";
 
             default:
                 return "n/a";

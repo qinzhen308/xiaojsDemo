@@ -119,6 +119,7 @@
     <string name="clear_cache">清除缓存</string>
     <string name="feedback_help">意见反馈</string>
     <string name="about_us">关于我们</string>
+    <string name="clear_cache_completed">清除完成</string>
 
     <!--my sub page-->
     <string name="exit_login">退出登录</string>

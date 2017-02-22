@@ -148,7 +148,7 @@ public class ChoiceContactActivity extends BaseActivity {
         if (choiceAdapter != null) {
             ArrayList<Contact> contacts = choiceAdapter.getCheckedContacts();
             Intent i = new Intent();
-            i.putParcelableArrayListExtra(CHOOSE_CONTACT_EXTRA,contacts);
+            i.putExtra(CHOOSE_CONTACT_EXTRA,contacts);
            // bundle.putSparseParcelableArray(CHOOSE_CONTACT_INDEX,choiceAdapter.getCheckedPositions());
 
             setResult(RESULT_OK,i);

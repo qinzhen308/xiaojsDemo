@@ -128,7 +128,7 @@ public class AccountDataManager {
         SecurityManager.saveCSRFToken(context,"");
 
 
-        DataManager.clearCacheData(context);
+        DataManager.clearAllData(context);
     }
 
 

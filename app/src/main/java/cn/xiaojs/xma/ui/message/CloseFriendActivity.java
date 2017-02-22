@@ -44,7 +44,7 @@ public class CloseFriendActivity extends BaseActivity {
         setRightTextColor(getResources().getColor(R.color.font_orange));
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
-        ArrayList<Contact> expContacts = getIntent().getParcelableArrayListExtra(EXTRA_CONTACT);
+        ArrayList<Contact> expContacts = (ArrayList<Contact>) getIntent().getSerializableExtra(EXTRA_CONTACT);
         if (expContacts != null) {
             getCloseFriend(expContacts);
         }else{
@@ -79,7 +79,7 @@ public class CloseFriendActivity extends BaseActivity {
                     contacts.add(contact);
                 }
 
-                i.putParcelableArrayListExtra(ChoiceContactActivity.CHOOSE_CONTACT_EXTRA,contacts);
+                i.putExtra(ChoiceContactActivity.CHOOSE_CONTACT_EXTRA,contacts);
                 i.putExtra(CHECKED_POS,pos);
                 setResult(RESULT_OK,i);
             }

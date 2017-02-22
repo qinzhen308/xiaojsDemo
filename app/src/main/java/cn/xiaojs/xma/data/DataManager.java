@@ -21,6 +21,7 @@ import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.SecurityUtil;
 import okhttp3.ResponseBody;
 
+import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
@@ -43,7 +44,7 @@ import java.util.Set;
 public class DataManager {
 
     public static final String SYNC_TYPE = "stype";
-    public static final int TYPE_CONTACT = 0x2;
+    public static final int TYPE_CONTACT = 1;
 
     public static final String EXTRA_CONTACT = "econtact";
 
@@ -88,14 +89,26 @@ public class DataManager {
      * Clear the cache and local data
      * @param context
      */
-    public static void clearCacheData(Context context) {
-
-        //cache data
-        clearAPICache(context);
+    public static void clearAllData(Context context) {
+        //memory data
         MemCache.getDataCache(context).clear();
-
+        //cache files
+        clearCacheFiles(context);
         //local data
         ContactDao.clear(context);
+    }
+
+    /**
+     * Clear the cache and local data
+     * @param context
+     */
+    public static void clearCacheFiles(Context context) {
+        //api cache
+        clearAPICache(context);
+
+        //TODO 清除图片缓存
+        //img cache
+        //Glide.getPhotoCacheDir();
     }
 
     /**
