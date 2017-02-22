@@ -185,11 +185,14 @@ public class ClassroomController implements
     }
 
     public void publishStream(String url) {
-        mInitPublishVideo = true;
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.setVisibility(View.VISIBLE);
             mPublishVideo.setPath(url);
-            mPublishVideo.start();
+            if (!mInitPublishVideo) {
+                mPublishVideo.start();
+            } else {
+                mPublishVideo.resume();
+            }
         } else if (mUser == Constants.User.STUDENT) {
             mMyVideo.setVisibility(View.VISIBLE);
             mMyVideo.setPath(url);
@@ -852,6 +855,7 @@ public class ClassroomController implements
         public void onStateChanged(StreamingState streamingState, Object o) {
             switch (streamingState) {
                 case STREAMING:
+                    mInitPublishVideo = true;
                     if (mSocket != null) {
                         mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new Ack() {
                             @Override
