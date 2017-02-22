@@ -97,10 +97,10 @@
         </activity>
         <activity android:name=".ui.lesson.LessonHomeActivity">
         </activity>
-        <activity android:name=".ui.lesson.ConfirmEnrollmentActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.lesson.ConfirmEnrollmentActivity"
+                android:screenOrientation="portrait"/>
         <activity android:name=".ui.TestAPIActivity">
-
         </activity>
         <activity android:name=".ui.lesson.LiveLessonBriefActivity"/>
         <activity android:name=".ui.lesson.SalePromotionActivity"/>
@@ -243,9 +243,10 @@
                 android:name="com.pingplusplus.android.PaymentActivity"
                 android:configChanges="orientation|screenSize"
                 android:launchMode="singleTop"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+                android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
+
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
 
@@ -253,7 +254,7 @@
             </intent-filter>
         </activity>
 
-        <!--alipay-->
+        <!-- alipay -->
         <activity
                 android:name="com.alipay.sdk.app.H5PayActivity"
                 android:configChanges="orientation|keyboardHidden|navigation"
@@ -355,7 +356,8 @@
                 android:name="JPUSH_APPKEY"
                 android:value="e87cffb332432eec3c0807ba"/>
 
-
+        <activity android:name=".ui.message.ChooseClassActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -34,6 +34,9 @@ public class CloseFriendActivity extends BaseActivity {
     @BindView(R.id.v_empty)
     View emptyView;
 
+    @BindView(R.id.tips)
+    TextView tipView;
+
     private ChoiceAdapter adapter;
 
     @Override
@@ -99,6 +102,9 @@ public class CloseFriendActivity extends BaseActivity {
         }
 
         if (adapter == null) {
+
+            tipView.setVisibility(View.VISIBLE);
+
             adapter = new ChoiceAdapter(this,
                     R.layout.layout_contact_choice_child,
                     R.id.contact_name,

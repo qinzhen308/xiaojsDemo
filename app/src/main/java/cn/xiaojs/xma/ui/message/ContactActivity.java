@@ -383,9 +383,9 @@ public class ContactActivity extends BaseActivity {
                 contactGroup.name = Social.getContactName((int) id);
             }
 
-            if (tempMap.isEmpty()) {
-                break;
-            }
+//            if (tempMap.isEmpty()) {
+//                break;
+//            }
 
         }
 
