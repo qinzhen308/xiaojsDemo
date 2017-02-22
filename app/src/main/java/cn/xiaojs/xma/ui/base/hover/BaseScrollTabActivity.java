@@ -43,7 +43,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
     LinearLayout mHeader;
     FrameLayout mHeaderContainer;
     FrameLayout mFooterContainer;
-    ScrollTabIndicator mIndicator;
+    protected ScrollTabIndicator mIndicator;
 
     @BindView(R.id.scroll_tab_middle_view)
     protected TextView mScrollMiddleText;
@@ -131,6 +131,26 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
         if (footer != null) {
             mFooterContainer.addView(footer);
         }
+    }
+
+    protected void addContent(View header, View footer) {
+        if (header != null) {
+            mHeaderContainer.addView(header);
+        }
+        if (footer != null) {
+            mFooterContainer.addView(footer);
+        }
+    }
+
+    protected void addContent(List<BaseScrollTabFragment> fragments, String[] tabs) {
+        mAdapter = new ScrollTabPageAdapter(getSupportFragmentManager(), fragments, tabs, mHeader);
+        mAdapter.setTabHolderScrollingListener(this);
+        mPager.setOffscreenPageLimit(fragments.size());
+        mPager.setAdapter(mAdapter);
+        mPager.addOnPageChangeListener(this);
+
+        mIndicator.setShouldExpand(true);
+        mIndicator.setViewPager(mPager);
     }
 
     public void needFooter(boolean need){

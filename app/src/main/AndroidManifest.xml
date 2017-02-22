@@ -192,7 +192,7 @@
                 android:name=".ui.grade.MaterialActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.grade.PersonalInfoActivity"
+                android:name=".ui.personal.PersonalInfoActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.chat.ChatActivity"
