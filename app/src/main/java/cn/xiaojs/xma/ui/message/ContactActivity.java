@@ -21,8 +21,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
@@ -520,6 +523,7 @@ public class ContactActivity extends BaseActivity {
                 holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
                 holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
                 holder.delBtn = (Button) convertView.findViewById(R.id.del_contact);
+                holder.size = holder.avatarView.getMeasuredWidth();
 
                 convertView.setTag(holder);
 
@@ -528,6 +532,11 @@ public class ContactActivity extends BaseActivity {
             }
 
             final Contact c = getChild(groupPosition, childPosition);
+
+//            String avatar = Account.getAvatar(c.account, holder.size);
+//            Glide.with(ContactActivity.this)
+//                    .load(avatar).error(R.drawable.default_avatar)
+//                    .into(holder.avatarView);
 
             String name = TextUtils.isEmpty(c.title)? c.alias : c.title;
             holder.nameView.setText(name);
@@ -612,6 +621,7 @@ public class ContactActivity extends BaseActivity {
         ImageView avatarView;
         Button moveBtn;
         Button delBtn;
+        int size;
     }
 
 
