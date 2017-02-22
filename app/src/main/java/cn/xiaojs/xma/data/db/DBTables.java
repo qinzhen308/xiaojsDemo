@@ -71,6 +71,17 @@ public class DBTables {
         public static final String AVATOR = "avator";
         //contact follow type
         public static final String FOLLOW_TYPE = "followType";
+        //the file key
+        public static final String KEY = "ukey";
+        public static final String SUBTYPE = "subtype";
+        public static final String SUBJECT = "subject";
+        public static final String STATE = "state";
+        public static final String STARTED = "startted";
+
+        public static final String UNREAD = "unread";
+        public static final String LAST_MSG = "lastMessage";
+
+        public static final String GNAME = "gname";
 
     }
 

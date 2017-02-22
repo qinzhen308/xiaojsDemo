@@ -5,7 +5,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -20,7 +19,6 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.Schedule;
-import cn.xiaojs.xma.model.ctl.Fee;
 import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -191,7 +189,7 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
     }
 
     private void setSalePromotion(Price fee) {
-        Price.Applied[] appliedArr = fee.discounted.applied;
+        Price.Applied[] appliedArr = fee.discounted != null ? fee.discounted.applied : null;
         if (appliedArr == null || appliedArr.length == 0) {
             mPromotionInfoTv.setVisibility(View.GONE);
             return;

@@ -119,7 +119,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CHOOSE_CONTACT_CODE) {
             if (resultCode == RESULT_OK) {
-                choiceContacts = data.getParcelableArrayListExtra(
+                choiceContacts = (ArrayList<Contact>) data.getSerializableExtra(
                         ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
 
                 if (choiceContacts != null && choiceContacts.size()>0) {

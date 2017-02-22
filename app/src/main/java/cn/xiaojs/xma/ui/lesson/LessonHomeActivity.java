@@ -3,17 +3,13 @@ package cn.xiaojs.xma.ui.lesson;
 
 import com.google.android.flexbox.FlexboxLayout;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,6 +29,7 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ELResponse;
 import cn.xiaojs.xma.model.LessonDetail;
+import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.Teacher;
 import cn.xiaojs.xma.model.ctl.Enroll;
@@ -45,6 +42,7 @@ import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
 import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class LessonHomeActivity extends BaseActivity {
     public final static int ENTRANCE_FROM_TEACH_LESSON = 0;
@@ -358,11 +356,30 @@ public class LessonHomeActivity extends BaseActivity {
 
 
     private void enterConfirmPayPage() {
+        if (mLessonDetail.getFee().free){
+            //免费课不用付款
+            showProgress(true);
+            LessonDataManager.requestEnrollLesson(this, mLessonDetail.getId(),new OfflineRegistrant(), new APIServiceCallback<ELResponse>() {
+                @Override
+                public void onSuccess(ELResponse object) {
+                    cancelProgress();
+                    ToastUtil.showToast(getApplicationContext(),"报名成功!");
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    ToastUtil.showToast(getApplicationContext(),errorMessage);
+                }
+            });
+        }else {
+            Intent i = new Intent();
+            i.setClass(this, ConfirmEnrollmentActivity.class);
+            i.putExtra(CourseConstant.KEY_LESSON_BEAN, mLessonDetail);
+            startActivity(i);
+        }
         //ConfirmEnrollmentActivity
-        Intent i = new Intent();
-        i.setClass(this, ConfirmEnrollmentActivity.class);
-        i.putExtra(CourseConstant.KEY_LESSON_BEAN, mLessonDetail);
-        startActivity(i);
+
     }
 
     private void enjoyFreeLesson(String lesson) {

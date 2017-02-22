@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.personal;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -174,10 +175,14 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             headerNormal(home.isFollowed);
         }
         if (home.isTeacher) {//用户是老师
-            PersonHomeMomentFragment f1 = new PersonHomeMomentFragment();
-            PersonHomeLessonFragment f2 = new PersonHomeLessonFragment();
-            PersonHomeLessonFragment f3 = new PersonHomeLessonFragment();
 
+            PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
+            PersonHomeLessonFragment f2 = new PersonHomeLessonFragment();
+            PersonHomeMomentFragment f3 = new PersonHomeMomentFragment();
+
+            Bundle b1 = new Bundle();
+            b1.putSerializable(PersonalBusiness.KEY_PERSONAL_LESSON_LIST, mBean.lessons);
+            f1.setArguments(b1);
             f1.setPagePosition(0);
             f2.setPagePosition(1);
             f3.setPagePosition(2);
@@ -196,7 +201,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
             addContent(fragments, tabs);
         } else {//用户不是老师
-            PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
+            PersonHomeMomentFragment f1 = new PersonHomeMomentFragment();
             List<BaseScrollTabFragment> fragments = new ArrayList<>();
             fragments.add(f1);
             mIndicator.setVisibility(View.GONE);

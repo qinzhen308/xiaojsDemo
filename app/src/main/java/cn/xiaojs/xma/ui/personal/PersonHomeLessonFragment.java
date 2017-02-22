@@ -14,13 +14,29 @@ package cn.xiaojs.xma.ui.personal;
  *
  * ======================================================================================== */
 
+import android.os.Bundle;
+
+import java.util.ArrayList;
+
+import cn.xiaojs.xma.model.PersonHomeLesson;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 
 public class PersonHomeLessonFragment extends BaseScrollTabFragment {
 
+    private PersonHomeLessonAdapter mAdapter;
     @Override
     protected void initData() {
-        PersonHomeLessonAdapter adapter = new PersonHomeLessonAdapter(getContext(),mList);
-        mList.setAdapter(adapter);
+        Bundle bundle = getArguments();
+        if (bundle != null){
+            ArrayList<PersonHomeLesson> lessons = (ArrayList<PersonHomeLesson>) bundle.getSerializable(PersonalBusiness.KEY_PERSONAL_LESSON_LIST);
+            if (lessons != null){
+                mAdapter = new PersonHomeLessonAdapter(getContext(),mList,lessons);
+            }
+        }
+        if (mAdapter == null){
+            mAdapter = new PersonHomeLessonAdapter(getContext(),mList);
+        }
+
+        mList.setAdapter(mAdapter);
     }
 }

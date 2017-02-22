@@ -114,6 +114,11 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private boolean mRefreshOnLoad = true;
     private int mRefreshMode = MODE_DOWN_REFRESH_MORE;
 
+    public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView, List<B> data) {
+        this(context, listView, false);
+        mBeanList = data;
+    }
+
     public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView) {
         this(context, listView, true);
     }

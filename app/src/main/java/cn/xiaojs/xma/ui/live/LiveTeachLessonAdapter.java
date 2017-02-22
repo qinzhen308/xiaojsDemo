@@ -50,7 +50,7 @@ import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
-    private final int MAX = 2;
+//    private final int MAX = 2;
     private Context mContext;
     private List<TeachLesson> lessons;
 
@@ -62,9 +62,9 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
     public int getCount() {
         if (lessons == null)
             return 0;
-        if (lessons.size() > MAX){
-            return MAX;
-        }
+//        if (lessons.size() > MAX){
+//            return MAX;
+//        }
         return lessons.size();
     }
 
