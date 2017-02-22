@@ -608,7 +608,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             return;
         }
 
-        Attendee attendee = ClassroomBusiness.parseSocketBean(args, Attendee.class);
+        Attendee attendee = ClassroomBusiness.parseSocketBean(args[0], Attendee.class);
         if (attendee != null && mLiveCollection != null) {
             if (mLiveCollection.attendees == null) {
                 mLiveCollection.attendees = new ArrayList<Attendee>();
@@ -665,7 +665,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         }
 
         try {
-            TalkItem receiveBean = ClassroomBusiness.parseSocketBean(args, TalkItem.class);
+            TalkItem receiveBean = ClassroomBusiness.parseSocketBean(args[0], TalkItem.class);
             if (receiveBean == null) {
                 return;
             }
@@ -762,19 +762,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         }
 
         try {
-            String result = null;
-            if ((args[0] instanceof JSONObject)) {
-                result = args[0].toString();
-            } else if (args[0] instanceof String) {
-                result = (String) args[0];
-            }
-
-            if (TextUtils.isEmpty(result)) {
-                return;
-            }
-
             TalkResponse talkResponse = null;
-            talkResponse = ClassroomBusiness.parseSocketBean(result, TalkResponse.class);
+            talkResponse = ClassroomBusiness.parseSocketBean(args[0], TalkResponse.class);
 
             if (talkResponse == null) {
                 return;
