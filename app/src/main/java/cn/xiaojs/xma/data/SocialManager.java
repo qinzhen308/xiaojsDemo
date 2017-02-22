@@ -66,12 +66,12 @@ public class SocialManager {
 
     public static void getAccountActivities(Context context,
                                             String account,
-                                            int page,
-                                            int limit,
+                                            Pagination pagination,
                                             APIServiceCallback<List<DynamicAcc>> callback) {
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.getAccountActivities(account, page, limit);
+        socialRequest.getAccountActivities(account,
+                pagination.getPage(), pagination.getMaxNumOfObjectsPerPage());
     }
 
 
