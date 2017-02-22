@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Xu;
@@ -33,6 +34,7 @@ import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.model.social.DynamicAcc;
 import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.model.social.Relation;
@@ -61,6 +63,17 @@ public class SocialManager {
 //        ((FragmentActivity) context).getSupportLoaderManager().initLoader(0, null, dataLoader);
 //
 //    }
+
+    public static void getAccountActivities(Context context,
+                                            String account,
+                                            Pagination pagination,
+                                            APIServiceCallback<List<DynamicAcc>> callback) {
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.getAccountActivities(account,
+                pagination.getPage(), pagination.getMaxNumOfObjectsPerPage());
+    }
+
 
     /**
      * Add Contact Group

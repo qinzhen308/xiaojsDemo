@@ -295,6 +295,9 @@
     <string name="declare_teaching_ability">声明教学能力</string>
     <string name="declare_teaching_ability_tip">开课需要先声明教学能力，确定去声明吗？</string>
     <string name="lesson_publish_tip">发布到主页后，该直播课将在您的主页中展示、报名并可对外分享</string>
+    <string name="enroll_lesson_success">报名成功</string>
+    <string name="enroll_lesson_failed">报名失败</string>
+    <string name="has_youhui">已优惠%1$s元</string>
 
 
     <!-- 修改上课时间 -->

@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.lesson;
 
+import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,11 +19,14 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.LessonDetail;
+import cn.xiaojs.xma.model.Schedule;
+import cn.xiaojs.xma.model.ctl.Fee;
 import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import cn.xiaojs.xma.util.TimeUtil;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -65,8 +69,9 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_confirm_enrollment);
-
+        mLessonOriMoneyTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         needHeader(false);
+        setData();
         loadData();
     }
 
@@ -87,20 +92,18 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
     }
 
     private void loadData() {
-        mLessonDetail = (LessonDetail)getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
-        String lesson = mLessonDetail != null ? mLessonDetail.getId() : null;
-        if (TextUtils.isEmpty(lesson)) {
-            finish();
-            return;
-        }
-        String registrant = AccountDataManager.getAccountID(this);
 
-        showProgress(true);
+        String registrant = AccountDataManager.getAccountID(this);
+        String lesson = mLessonDetail != null ? mLessonDetail.getId() : null;
         LessonDataManager.requestLessonEnrollment(this, lesson, registrant, new APIServiceCallback<CLEResponse>() {
             @Override
             public void onSuccess(CLEResponse cleResponse) {
-                cancelProgress();
-                setData(cleResponse);
+
+                if (cleResponse == null)
+                    return;
+
+                updateLessonDetail(cleResponse);
+                setData();
             }
 
             @Override
@@ -110,59 +113,81 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
         });
     }
 
-    private void setData (CLEResponse cleResponse) {
-        if (cleResponse != null) {
-            //set cover
-            if (!TextUtils.isEmpty(mLessonDetail.getCover())) {
-                //mLessonCoverImg.setVisibility(View.VISIBLE);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLessonCoverImg.getLayoutParams();
-                int w = getResources().getDisplayMetrics().widthPixels;
-                int h = (int) ((CourseConstant.COURSE_COVER_HEIGHT / (float) CourseConstant.COURSE_COVER_WIDTH) * w);
-                params.height = h;
-                params.width = w;
-                Dimension dimension = new Dimension();
-                dimension.width = w;
-                dimension.height = h;
-                String url = Ctl.getCover(mLessonDetail.getCover(), dimension);
-                Glide.with(this)
-                        .load(url)
-                        .placeholder(R.drawable.default_lesson_cover)
-                        .error(R.drawable.default_lesson_cover)
-                        .into(mLessonCoverImg);
-            } else {
-                //set gone
-                //mLessonCoverImg.setVisibility(View.GONE);
-            }
-
-            //set title
-            mLessonTitleTv.setText(cleResponse.getTitle());
-
-            //fee
-            Price fee = cleResponse.getFee();
-            if (fee == null || fee.free) {
-                mLessonMoneyTv.setText(R.string.free);
-                mLessonOriMoneyTv.setVisibility(View.GONE);
-                mPromotionInfoTv.setVisibility(View.GONE);
-            } else {
-                //mLessonOriMoneyTv.setVisibility(View.VISIBLE);
-                float originCharge = fee.total;
-                Price.Discounted discounted = fee.discounted;
-                if (discounted != null) {
-                    if (discounted.ratio == 10.0f) {
-                        mLessonOriMoneyTv.setVisibility(View.GONE);
-                    } else {
-                        mLessonOriMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
-                    }
-                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(discounted.subtotal, true));
-                } else {
-                    mLessonOriMoneyTv.setVisibility(View.GONE);
-                    mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
-                }
-                setSalePromotion(fee);
-                setPriceInfo(fee);
-            }
-
+    private void updateLessonDetail(CLEResponse cleResponse) {
+        String title = cleResponse.getTitle();
+        if (!TextUtils.isEmpty(title)) {
+            mLessonDetail.setTitle(title);
         }
+
+        Schedule schedule = cleResponse.getSchedule();
+        if (schedule != null){
+            mLessonDetail.setSchedule(schedule);
+        }
+
+        Price fee = cleResponse.getFee();
+        if (fee != null) {
+            mLessonDetail.setFee(fee);
+        }
+
+    }
+
+    private void setData() {
+        mLessonDetail = (LessonDetail)getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
+        String lesson = mLessonDetail != null ? mLessonDetail.getId() : null;
+        if (TextUtils.isEmpty(lesson)) {
+            finish();
+            return;
+        }
+
+
+        Dimension dimension = new Dimension();
+        dimension.width = mLessonCoverImg.getMeasuredWidth();
+        dimension.height = mLessonCoverImg.getMeasuredHeight();
+        String url = Ctl.getCover(mLessonDetail.getCover(), dimension);
+        Glide.with(this)
+                .load(url)
+                .placeholder(R.drawable.default_lesson_cover)
+                .error(R.drawable.default_lesson_cover)
+                .into(mLessonCoverImg);
+
+        mLessonTitleTv.setText(mLessonDetail.getTitle());
+
+        Price fee = mLessonDetail.getFee();
+        if (fee != null) {
+            float originCharge = fee.total;
+            Price.Discounted discounted = fee.discounted;
+            if (discounted != null) {
+
+                String fY = getResources().getString(R.string.has_youhui);
+
+                if (discounted.ratio == 10.0f) {
+                    mLessonOriMoneyTv.setVisibility(View.GONE);
+                    mDiscountPriceTv.setText(String.format(fY,0));
+                } else {
+                    String dprice = BaseBusiness.formatPrice(originCharge, true);
+                    mLessonOriMoneyTv.setText(dprice);
+                    mDiscountPriceTv.setText(String.format(fY,originCharge - discounted.subtotal));
+                }
+                String p = BaseBusiness.formatPrice(discounted.subtotal, true);
+                mLessonMoneyTv.setText(p);
+                mPayPriceTv.setText(p);
+
+            } else {
+                mLessonOriMoneyTv.setVisibility(View.GONE);
+                mLessonMoneyTv.setText(BaseBusiness.formatPrice(originCharge, true));
+            }
+            setSalePromotion(fee);
+        }
+
+        //schedule
+        Schedule schedule = mLessonDetail.getSchedule();
+        if (schedule != null) {
+            mLessonBeginTimeTv.setText(TimeUtil.format(schedule.getStart().getTime(),
+                    TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+            String m = getString(R.string.minute);
+            mLessonDurationTv.setText(String.valueOf(schedule.getDuration()) + m);
+        }
+
     }
 
     private void setSalePromotion(Price fee) {
