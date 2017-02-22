@@ -43,6 +43,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom.whiteboard.ShareDoodlePopWindow;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
@@ -137,6 +138,7 @@ public class ClassroomController implements
     private boolean mInitPublishVideo = false;
     private String mPublishUrl;
     private Bitmap mVideoFrameBitmap;
+    ShareDoodlePopWindow mSharePopWindow;
 
     public ClassroomController(Context context, View root, Constants.User client, int appType) {
         mContext = context;
@@ -176,7 +178,6 @@ public class ClassroomController implements
         mPublishVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
         mMyVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
         if (mUser == Constants.User.TEACHER) {
-            //PermissionGen.needPermission((Activity) mContext, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
             mPublishVideo.setVisibility(View.VISIBLE);
         } else if (mUser == Constants.User.STUDENT) {
             mLiveVideo.setVisibility(View.VISIBLE);
@@ -189,7 +190,7 @@ public class ClassroomController implements
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.setVisibility(View.VISIBLE);
             mPublishVideo.setPath(mPublishUrl);
-            mPublishVideo.resume();
+            mPublishVideo.start();
         } else if (mUser == Constants.User.STUDENT) {
             mMyVideo.setVisibility(View.VISIBLE);
             mMyVideo.setPath(mPublishUrl);
@@ -479,9 +480,9 @@ public class ClassroomController implements
         }
 
         if (mUser == Constants.User.TEACHER) {
-            mPublishVideo.pause();
+            mPublishVideo.resume();
         } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.pause();
+            mMyVideo.resume();
         }
     }
 
@@ -503,9 +504,9 @@ public class ClassroomController implements
         }
 
         if (mUser == Constants.User.TEACHER) {
-            mPublishVideo.pause();
+            mPublishVideo.destroy();
         } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.pause();
+            mMyVideo.destroy();
         }
     }
 
@@ -571,7 +572,6 @@ public class ClassroomController implements
 
     public void enterVideoEditing(Bitmap bmp) {
         if (mWhiteboardLayout != null) {
-            //mVideoFrameBitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Bitmap.Config.ARGB_4444);
             mVideoFrameBitmap = bmp.copy(Bitmap.Config.ARGB_4444, true);
             mWhiteboardLayout.setVisibility(View.VISIBLE);
             mWhiteboardLayer = new WhiteboardLayer();
@@ -595,14 +595,27 @@ public class ClassroomController implements
         }
     }
 
-    public Bitmap takeVideoFrame(FrameCapturedCallback callback) {
+    public void takeVideoFrame(FrameCapturedCallback callback) {
+        Bitmap bmp = null;
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.captureOriginalFrame(callback);
+            //mPublishVideo.captureBeautyFrame(callback);
         } else if (mUser == Constants.User.STUDENT) {
             mMyVideo.captureOriginalFrame(callback);
+            //mMyVideo.captureBeautyFrame(callback);
         }
 
-        return null;
+        callback.onFrameCaptured(bmp);
+    }
+
+    public void selectShareContact(View anchor) {
+        if (mSharePopWindow == null) {
+            mSharePopWindow = new ShareDoodlePopWindow(mContext);
+        }
+
+        int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);
+        int offsetY = -mContext.getResources().getDimensionPixelSize(R.dimen.px58);
+        mSharePopWindow.showAsDropDown(anchor, offsetX, offsetY);
     }
 
     /**
@@ -820,7 +833,6 @@ public class ClassroomController implements
     }
 
     public void publishWhiteboardVideo(String url) {
-        //PermissionGen.needPermission((Activity) mContext, REQUEST_PERMISSION_CODE, Manifest.permission.CAMERA);
         mPublishUrl = url;
         publishStream();
     }

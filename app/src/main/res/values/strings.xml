@@ -368,6 +368,9 @@
     <string name="socket_error_connect">无法连接到教室，请检查你的网络</string>
     <string name="live_whiteboard">直播白板</string>
     <string name="wb_toolbar_unable_tips">只能在自己创建的白板上使用白板工具</string>
+    <string name="share_to_all">分享给所有人</string>
+    <string name="confirm_share">确认分享</string>
+    <string name="share_target_empty">联系人为空</string>
     <!--whiteboard-->
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>

@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.classroom;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -226,6 +228,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         //init data
         initData();
+
+        PermissionGen.needPermission(this, 100, Manifest.permission.CAMERA);
     }
 
     private void initParams() {
@@ -552,6 +556,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case R.id.save_doodle:
                 break;
             case R.id.share_doodle:
+                selectShareContact(v);
                 break;
             default:
                 break;
@@ -804,6 +809,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void switchCamera() {
         if (mClassroomController != null) {
             mClassroomController.switchCamera();
+        }
+    }
+
+    private void selectShareContact(View view) {
+        if (mClassroomController != null) {
+            mClassroomController.selectShareContact(view);
         }
     }
 

@@ -131,4 +131,21 @@ public class InviteFriendAdapter extends AbsSwipeAdapter<Attendee, InviteFriendA
     public interface SelectionListener {
         public void onSelectChanged(int selectionCount);
     }
+
+    public void checkAll() {
+        if (mChoiceList != null) {
+            int count = getCount();
+            for (int i = 0; i < count; i++) {
+                mChoiceList.add(String.valueOf(i));
+            }
+            notifyDataSetChanged();
+        }
+    }
+
+    public void unCheckAll() {
+        if (mChoiceList != null) {
+            mChoiceList.clear();
+            notifyDataSetChanged();
+        }
+    }
 }
