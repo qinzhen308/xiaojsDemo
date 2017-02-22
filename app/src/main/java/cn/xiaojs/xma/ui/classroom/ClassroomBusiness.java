@@ -49,7 +49,7 @@ public class ClassroomBusiness {
 
         try {
             String result = null;
-            if ((obj instanceof JSONObject)) {
+            if (obj instanceof JSONObject) {
                 result = obj.toString();
             } else if (obj instanceof String ){
                 result = (String) obj;

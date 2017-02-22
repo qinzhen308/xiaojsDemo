@@ -21,8 +21,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
@@ -40,6 +43,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
+
+import static cn.xiaojs.xma.common.xf_foundation.schemas.Social.ContactGroup.CLASSES;
 
 public class ContactActivity extends BaseActivity {
 
@@ -316,6 +321,7 @@ public class ContactActivity extends BaseActivity {
             @Override
             public void onSuccess(ArrayList<ContactGroup> object) {
 
+
                 bindDataView(object);
                 //listView.onRefreshComplete();
             }
@@ -365,6 +371,11 @@ public class ContactActivity extends BaseActivity {
         for (ContactGroup contactGroup : contactData) {
 
             long id = contactGroup.group;
+
+            if (id == CLASSES){
+                contactGroup.name = "班级";
+                continue;
+            }
 
             if (tempMap.get(id) != null) {
                 tempMap.remove(id);
@@ -512,6 +523,7 @@ public class ContactActivity extends BaseActivity {
                 holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
                 holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
                 holder.delBtn = (Button) convertView.findViewById(R.id.del_contact);
+                holder.size = holder.avatarView.getMeasuredWidth();
 
                 convertView.setTag(holder);
 
@@ -519,7 +531,15 @@ public class ContactActivity extends BaseActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.nameView.setText(getChild(groupPosition, childPosition).alias);
+            final Contact c = getChild(groupPosition, childPosition);
+
+//            String avatar = Account.getAvatar(c.account, holder.size);
+//            Glide.with(ContactActivity.this)
+//                    .load(avatar).error(R.drawable.default_avatar)
+//                    .into(holder.avatarView);
+
+            String name = TextUtils.isEmpty(c.title)? c.alias : c.title;
+            holder.nameView.setText(name);
 
             holder.moveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -532,7 +552,7 @@ public class ContactActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Contact c = getChild(groupPosition, childPosition);
+
                     ContactGroup cg = getGroup(groupPosition);
 
 
@@ -601,6 +621,7 @@ public class ContactActivity extends BaseActivity {
         ImageView avatarView;
         Button moveBtn;
         Button delBtn;
+        int size;
     }
 
 

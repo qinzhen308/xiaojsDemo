@@ -44,8 +44,8 @@ public class SyncService extends IntentService {
             int syncType = intent.getIntExtra(DataManager.SYNC_TYPE,-1);
             switch (syncType) {
                 case DataManager.TYPE_CONTACT:
-                    ArrayList<ContactGroup> entry = intent.
-                            getParcelableArrayListExtra(DataManager.EXTRA_CONTACT);
+                    ArrayList<ContactGroup> entry = (ArrayList<ContactGroup>) intent.
+                            getSerializableExtra(DataManager.EXTRA_CONTACT);
                     if (entry != null){
                         DataManager.syncContactData(context,entry);
                     }

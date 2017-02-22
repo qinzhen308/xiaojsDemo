@@ -110,14 +110,14 @@ public class Account implements Serializable{
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Phone {
+    public static class Phone implements Serializable{
         public String subsNum;
     }
 
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class SimpleAccount {
+    public static class SimpleAccount implements Serializable {
         public String id;
         public String name;
     }

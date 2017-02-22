@@ -207,7 +207,7 @@ public class SocialRequest extends ServiceRequest {
             if (result != null) {
                 Intent i = new Intent(getContext(), SyncService.class);
                 i.putExtra(DataManager.SYNC_TYPE,DataManager.TYPE_CONTACT);
-                i.putParcelableArrayListExtra(DataManager.EXTRA_CONTACT,result);
+                i.putExtra(DataManager.EXTRA_CONTACT,result);
                 DataManager.syncData(getContext(),i);
             }
         }

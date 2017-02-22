@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import java.util.Map;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
+
+import static cn.xiaojs.xma.common.xf_foundation.schemas.Social.ContactGroup.CLASSES;
 
 /**
  * Created by maxiaobao on 2016/12/23.
@@ -206,21 +209,25 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     String avatar = cursor.getString(cursor
                             .getColumnIndexOrThrow(DBTables.TContact.AVATOR));
 
+
+
                     Contact contact = new Contact();
                     contact.account = id;
                     contact.alias = name;
                     contact.followType = followType;
                     contact.avatar = avatar;
 
+                    boolean isclass = gid == CLASSES;
+
                     ContactGroup group = map.get(gid);
-                    if (group != null) {
+                    if (group != null || isclass) {
 
                         ContactGroup  tempGroup = temp.get(gid);
                         if (tempGroup == null) {
 
                             ContactGroup nGroup = new ContactGroup();
-                            nGroup.group = group.group;
-                            nGroup.id = group.id;
+                            nGroup.group = isclass? gid : group.group;
+                            //nGroup.id = group.id;
                             nGroup.collection = new ArrayList<>();
                             nGroup.collection.add(contact);
                             temp.put(gid,nGroup);
@@ -228,8 +235,6 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                         }else {
                             tempGroup.collection.add(contact);
                         }
-
-
 
                     }
 
@@ -278,22 +283,53 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
             sb.append(DBTables.TContact.NAME);
             sb.append(",");
             sb.append(DBTables.TContact.AVATOR);
-            sb.append(") VALUES(?,?,?,?,?)");
+            sb.append(",");
+            sb.append(DBTables.TContact.SUBJECT);
+            sb.append(",");
+            sb.append(DBTables.TContact.SUBTYPE);
+            sb.append(",");
+            sb.append(DBTables.TContact.STATE);
+            sb.append(",");
+            sb.append(DBTables.TContact.STARTED);
+            sb.append(") VALUES(?,?,?,?,?,?,?,?,?)");
 
             SQLiteStatement stmt = db.compileStatement(sb.toString());
             for (ContactGroup group : contactGroups) {
 
+                if (TextUtils.isEmpty(group.set)) continue;
+
+                boolean isclass = group.set.equalsIgnoreCase(Social.GroupSetType.CLASSES);
+
+                long gid  = isclass? CLASSES : group.group;
                 for (Contact contact : group.collection) {
                     stmt.clearBindings();
-                    stmt.bindLong(1, group.group);
-                    stmt.bindString(2, contact.account);
+
+                    stmt.bindLong(1, gid);
+
+                    String cid = isclass? contact.id: contact.account;
+                    stmt.bindString(2, cid);
+
                     stmt.bindLong(3, contact.followType);
-                    stmt.bindString(4, contact.alias);
+
+                    String name = isclass? contact.title : contact.alias;
+                    stmt.bindString(4, name);
 
                     String url = contact.avatar;
                     String s = url != null? url :"";
-
                     stmt.bindString(5, s);
+
+                    String subject = TextUtils.isEmpty(contact.subject)? "" : contact.subject;
+                    stmt.bindString(6,subject);
+
+                    String subtype = TextUtils.isEmpty(contact.subtype)? "" : contact.subtype;
+                    stmt.bindString(7,subtype);
+
+                    String state = TextUtils.isEmpty(contact.state)? "" : contact.state;
+                    stmt.bindString(8,state);
+
+                    String start = TextUtils.isEmpty(contact.startedOn)? "" : contact.startedOn;
+                    stmt.bindString(9,start);
+
                     stmt.executeInsert();
                 }
 

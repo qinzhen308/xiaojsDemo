@@ -113,7 +113,7 @@ public class PostDynamicActivity extends BaseActivity {
                 }
 
                 if (audience != null && audience.type == Social.ShareScope.SPECIFIC) {
-                    iat.putParcelableArrayListExtra(CloseFriendActivity.EXTRA_CONTACT,
+                    iat.putExtra(CloseFriendActivity.EXTRA_CONTACT,
                             chooseContacts);
                 }
 
@@ -236,11 +236,11 @@ public class PostDynamicActivity extends BaseActivity {
 
                 audience = data.getParcelableExtra(ShareScopeActivity.CHOOSE_DATA);
                 checkedIndex = data.getIntExtra(ShareScopeActivity.CHOOSE_INDEX, 0);
-                chooseContacts = data.getParcelableArrayListExtra(ShareScopeActivity.CHOOSE_C);
+                chooseContacts = (ArrayList<Contact>) data.getSerializableExtra(ShareScopeActivity.CHOOSE_C);
 
                 updateScope();
             } else if (requestCode == REQUEST_AT_CODE) {
-                atContacts = data.getParcelableArrayListExtra(
+                atContacts = (ArrayList<Contact>) data.getSerializableExtra(
                         ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
                 atCheckedPos = data.getLongArrayExtra(CloseFriendActivity.CHECKED_POS);
 

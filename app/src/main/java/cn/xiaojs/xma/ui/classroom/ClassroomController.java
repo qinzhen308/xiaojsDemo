@@ -184,16 +184,15 @@ public class ClassroomController implements
         }
     }
 
-    @PermissionSuccess(requestCode = REQUEST_PERMISSION_CODE)
-    private void publishStream() {
+    public void publishStream(String url) {
         mInitPublishVideo = true;
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.setVisibility(View.VISIBLE);
-            mPublishVideo.setPath(mPublishUrl);
+            mPublishVideo.setPath(url);
             mPublishVideo.start();
         } else if (mUser == Constants.User.STUDENT) {
             mMyVideo.setVisibility(View.VISIBLE);
-            mMyVideo.setPath(mPublishUrl);
+            mMyVideo.setPath(url);
             mMyVideo.resume();
         }
     }
@@ -601,11 +600,15 @@ public class ClassroomController implements
             mPublishVideo.captureOriginalFrame(callback);
             //mPublishVideo.captureBeautyFrame(callback);
         } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.captureOriginalFrame(callback);
+            bmp = mLiveVideo.getPlayer().getTextureView().getBitmap();
+            if (callback != null) {
+                callback.onFrameCaptured(bmp);
+            }
+            //mMyVideo.captureOriginalFrame(callback);
             //mMyVideo.captureBeautyFrame(callback);
         }
 
-        callback.onFrameCaptured(bmp);
+        //callback.onFrameCaptured(bmp);
     }
 
     public void selectShareContact(View anchor) {
@@ -830,11 +833,7 @@ public class ClassroomController implements
 
     public void playWhiteboardVideo(String url) {
         mLiveVideo.setPath(url);
-    }
-
-    public void publishWhiteboardVideo(String url) {
-        mPublishUrl = url;
-        publishStream();
+        mLiveVideo.resume();
     }
 
     public void pauseVideo() {

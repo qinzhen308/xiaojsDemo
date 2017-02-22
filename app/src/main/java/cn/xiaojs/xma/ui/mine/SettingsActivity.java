@@ -9,6 +9,7 @@ import android.widget.Toast;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.ui.account.LoginActivity;
@@ -61,6 +62,8 @@ public class SettingsActivity extends BaseActivity {
             case R.id.account_safe:
                 break;
             case R.id.clear_cache_layout:
+                DataManager.clearCacheFiles(mContext);
+                Toast.makeText(mContext, R.string.clear_cache_completed, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.feedback_help:
                 break;

@@ -259,7 +259,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:orientation="horizontal"
-                    android:background="@drawable/lesson_home_lay_bg">
+                    android:background="@drawable/lesson_home_lay_bg"
+                    android:visibility="gone">
 
                 <Button
                         android:id="@+id/consulting"
