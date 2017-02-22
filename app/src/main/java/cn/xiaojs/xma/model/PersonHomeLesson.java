@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.personal;
+package cn.xiaojs.xma.model;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,13 +9,13 @@ package cn.xiaojs.xma.ui.personal;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:zhanghui
- * Date:2017/2/7
+ * Date:2017/2/22
  * Desc:
  *
  * ======================================================================================== */
 
-public class PersonalBusiness {
-    public static final String KEY_IS_MYSELF = "key_is_myself";
-    public static final String KEY_PERSONAL_ACCOUNT = "key_personal_account";
-    public static final String KEY_PERSONAL_LESSON_LIST = "key_personal_lesson_list";
+public class PersonHomeLesson extends TeachLesson {
+    public Object assistants;
+    public Object students;
+    public String teacher;
 }

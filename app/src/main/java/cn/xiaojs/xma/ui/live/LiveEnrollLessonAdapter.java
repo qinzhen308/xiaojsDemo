@@ -36,7 +36,7 @@ import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
 
 public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
-    private final int MAX = 2;
+//    private final int MAX = 2;
 
     private Context mContext;
     private List<EnrolledLesson> lessons;
@@ -49,9 +49,9 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
     public int getCount() {
         if (lessons == null)
             return 0;
-        if (lessons.size() > MAX){
-            return MAX;
-        }
+//        if (lessons.size() > MAX){
+//            return MAX;
+//        }
         return lessons.size();
     }
 

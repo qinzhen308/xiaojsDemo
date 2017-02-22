@@ -15,12 +15,12 @@ package cn.xiaojs.xma.ui.personal;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,28 +28,49 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
-import cn.xiaojs.xma.ui.lesson.LessonBusiness;
-import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.model.PersonHomeLesson;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
+import cn.xiaojs.xma.util.NumberUtil;
+import cn.xiaojs.xma.util.TimeUtil;
 
-public class PersonHomeLessonAdapter extends AbsSwipeAdapter<LessonBusiness,PersonHomeLessonAdapter.Holder> {
-    public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, boolean isNeedPreLoading) {
-        super(context, list, isNeedPreLoading);
-    }
-
+public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeLesson, PersonHomeLessonAdapter.Holder> {
     public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list) {
         super(context, list);
     }
 
+    public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, List<PersonHomeLesson> data) {
+        super(context, list, data);
+    }
+
     @Override
-    protected void setViewContent(Holder holder, LessonBusiness bean, int position) {
-        holder.title.setText("重要的化妆防晒手册 " + position);
-        holder.image.setImageResource(DeviceUtil.getLesson());
+    protected void setViewContent(Holder holder, PersonHomeLesson bean, int position) {
+        holder.title.setText(bean.getTitle());
+//        Glide.with(mContext)
+//                .load(Ctl.getCover(bean.))
+        holder.image.setImageResource(R.drawable.default_lesson_cover);
+        String time = TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + "  " + bean.getSchedule().getDuration() + "分钟";
+        holder.time.setText(time);
+        holder.enroll.setText(bean.getEnroll().current + "人报名");
+        if (bean.getFee().free) {
+            holder.price.setText(R.string.free);
+        } else {
+            holder.price.setText(NumberUtil.getPrice(bean.getFee().charge));
+        }
     }
 
     @Override
     protected View createContentView(int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_person_home_lesson_item, null);
         return view;
+    }
+
+    @Override
+    protected void onDataItemClick(int position, PersonHomeLesson bean) {
+        Intent i = new Intent(mContext, LessonHomeActivity.class);
+        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        mContext.startActivity(i);
     }
 
     @Override
@@ -60,19 +81,19 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<LessonBusiness,Pers
 
     @Override
     protected void doRequest() {
-        List<LessonBusiness> list = new ArrayList<>();
-        list.add(new LessonBusiness());
-        list.add(new LessonBusiness());
-        list.add(new LessonBusiness());
-        list.add(new LessonBusiness());
-        list.add(new LessonBusiness());
-        list.add(new LessonBusiness());
-        list.add(new LessonBusiness());
-        list.add(new LessonBusiness());
-        list.add(new LessonBusiness());
-        list.add(new LessonBusiness());
-
-        onSuccess(list);
+//        List<PersonHomeLesson> list = new ArrayList<>();
+//        list.add(new PersonHomeLesson());
+//        list.add(new PersonHomeLesson());
+//        list.add(new PersonHomeLesson());
+//        list.add(new PersonHomeLesson());
+//        list.add(new PersonHomeLesson());
+//        list.add(new PersonHomeLesson());
+//        list.add(new PersonHomeLesson());
+//        list.add(new PersonHomeLesson());
+//        list.add(new PersonHomeLesson());
+//        list.add(new PersonHomeLesson());
+//
+//        onSuccess(list);
     }
 
     class Holder extends BaseHolder {
@@ -81,6 +102,13 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<LessonBusiness,Pers
         TextView title;
         @BindView(R.id.lesson_adapter_image)
         ImageView image;
+        @BindView(R.id.lesson_adapter_time)
+        TextView time;
+        @BindView(R.id.lesson_adapter_enroll)
+        TextView enroll;
+        @BindView(R.id.lesson_adapter_charge)
+        TextView price;
+
         public Holder(View view) {
             super(view);
         }

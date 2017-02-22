@@ -3,7 +3,10 @@ package cn.xiaojs.xma.model.account;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.ArrayList;
+
 import cn.xiaojs.xma.model.HomeData;
+import cn.xiaojs.xma.model.PersonHomeLesson;
 
 /**
  * Created by maxiaobao on 2017/2/10.
@@ -17,6 +20,7 @@ public class PublicHome {
     public Follow followed;
     public int countOfUnreadN;
     public PubProfile profile;
+    public ArrayList<PersonHomeLesson> lessons;
     public String relationship;
     public boolean isTeacher;
     public boolean isFollowed;

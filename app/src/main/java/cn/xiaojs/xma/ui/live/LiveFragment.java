@@ -24,30 +24,38 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Date;
+import com.orhanobut.logger.Logger;
+
 import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshGridView;
-import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.EnrolledLesson;
-import cn.xiaojs.xma.model.Publish;
-import cn.xiaojs.xma.model.Schedule;
+import cn.xiaojs.xma.model.GELessonsResponse;
+import cn.xiaojs.xma.model.GetLessonsResponse;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.TeachLesson;
-import cn.xiaojs.xma.model.Teacher;
-import cn.xiaojs.xma.model.account.Account;
-import cn.xiaojs.xma.model.ctl.Enroll;
-import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
+import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.HorizontalAdaptScrollerView;
+import cn.xiaojs.xma.util.TimeUtil;
 
 public class LiveFragment extends BaseFragment implements View.OnClickListener {
+
+    private final int MAX = 3;
 
     PullToRefreshGridView mGrid;
     HorizontalAdaptScrollerView mHorizontalListView;
@@ -66,6 +74,11 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
 
 
     private int mUserType;
+    private Criteria mCriteria;
+    protected Pagination mPagination;
+
+    private List<TeachLesson> mTeachLessons;
+    private List<EnrolledLesson> mEnrollLessons;
 
     @Override
     protected View getContentView() {
@@ -116,54 +129,186 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         mHorizontalListView.setLayoutParams(lp);
         mGrid.setAdapter(new LiveAdapter(mContext, mGrid));
 
-        List<TeachLesson> teachLessons = new ArrayList<>();
-        TeachLesson tl1 = new TeachLesson();
-        tl1.setTitle("希区柯克教你拍电影");
-        Price price = new Price();
-        price.free = true;
-        tl1.setFee(price);
-        Enroll enroll = new Enroll();
-        enroll.max = 100;
-        enroll.current = 19;
-        tl1.setEnroll(enroll);
-        tl1.setState(LessonState.PENDING_FOR_LIVE);
+//        List<TeachLesson> teachLessons = new ArrayList<>();
+//        TeachLesson tl1 = new TeachLesson();
+//        tl1.setTitle("希区柯克教你拍电影");
+//        Price price = new Price();
+//        price.free = true;
+//        tl1.setFee(price);
+//        Enroll enroll = new Enroll();
+//        enroll.max = 100;
+//        enroll.current = 19;
+//        tl1.setEnroll(enroll);
+//        tl1.setState(LessonState.PENDING_FOR_LIVE);
+//
+//        Publish publish = new Publish();
+//        publish.accessible = false;
+//
+//        Schedule schedule = new Schedule();
+//        schedule.setDuration(88);
+//        schedule.setStart(new Date(System.currentTimeMillis() + 3600 * 1000 * 12));
+//        tl1.setSchedule(schedule);
+//        tl1.setPublish(publish);
+//        teachLessons.add(tl1);
+//
+//        TeachLesson tl2 = new TeachLesson();
+//        tl2.setTitle("灵枢针灸-中医入门");
+//        tl2.setFee(price);
+//        tl2.setEnroll(enroll);
+//        tl2.setState(LessonState.LIVE);
+//        tl2.setSchedule(schedule);
+//        tl2.setPublish(publish);
+//        teachLessons.add(tl2);
+//        mLessonList.setAdapter(new LiveTeachLessonAdapter(mContext, teachLessons));
+//
+//
+//        EnrolledLesson el1 = new EnrolledLesson();
+//        el1.setTitle("心理咨询师取证全攻略");
+//        el1.setFee(price);
+//        el1.setSchedule(schedule);
+//        Teacher teacher = new Teacher();
+//        Account.Basic basic = new Account.Basic();
+//        basic.setName("张大仙");
+//        teacher.setBasic(basic);
+//        el1.setTeacher(teacher);
+//        el1.setState(LessonState.PENDING_FOR_LIVE);
+//
+//        List<EnrolledLesson> enrolls = new ArrayList<>();
+//        enrolls.add(el1);
+//
+//        mLessonList2.setAdapter(new LiveEnrollLessonAdapter(mContext, enrolls));
 
-        Publish publish = new Publish();
-        publish.accessible = false;
+        mCriteria = new Criteria();
+        Duration duration = new Duration();
+        duration.setStart(TimeUtil.original());
+        duration.setEnd(TimeUtil.yearAfter(10));
 
-        Schedule schedule = new Schedule();
-        schedule.setDuration(88);
-        schedule.setStart(new Date(System.currentTimeMillis() + 3600 * 1000 * 12));
-        tl1.setSchedule(schedule);
-        tl1.setPublish(publish);
-        teachLessons.add(tl1);
+        mCriteria = new Criteria();
+        mCriteria.setSource(Ctl.LessonSource.ALL);
+        mCriteria.setDuration(duration);
 
-        TeachLesson tl2 = new TeachLesson();
-        tl2.setTitle("灵枢针灸-中医入门");
-        tl2.setFee(price);
-        tl2.setEnroll(enroll);
-        tl2.setState(LessonState.LIVE);
-        tl2.setSchedule(schedule);
-        tl2.setPublish(publish);
-        teachLessons.add(tl2);
-        mLessonList.setAdapter(new LiveTeachLessonAdapter(mContext, teachLessons));
+        mPagination = new Pagination();
+        mPagination.setPage(1);
+        mPagination.setMaxNumOfObjectsPerPage(3);
+        getEnrollLessons();
+    }
 
+    private void getTeachLessons() {
+        LessonDataManager.requestGetLessons(mContext, mCriteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
+            @Override
+            public void onSuccess(GetLessonsResponse object) {
+                Logger.d("onSuccess-----------");
+                if (object != null) {
+                    mTeachLessons = object.getObjectsOfPage();
+                }
+                initLessons();
+            }
 
-        EnrolledLesson el1 = new EnrolledLesson();
-        el1.setTitle("心理咨询师取证全攻略");
-        el1.setFee(price);
-        el1.setSchedule(schedule);
-        Teacher teacher = new Teacher();
-        Account.Basic basic = new Account.Basic();
-        basic.setName("张大仙");
-        teacher.setBasic(basic);
-        el1.setTeacher(teacher);
-        el1.setState(LessonState.PENDING_FOR_LIVE);
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                Logger.d("onFailure-----------");
+                initLessons();
+            }
+        });
+    }
 
-        List<EnrolledLesson> enrolls = new ArrayList<>();
-        enrolls.add(el1);
+    private void getEnrollLessons() {
+        LessonDataManager.requestGetEnrolledLessons(mContext, mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
+            @Override
+            public void onSuccess(GELessonsResponse object) {
+                Logger.d("onSuccess-----------");
+                if (object.getObjectsOfPage() != null) {
+                    mEnrollLessons = object.getObjectsOfPage();
+                }
+                getTeachLessons();
+            }
 
-        mLessonList2.setAdapter(new LiveEnrollLessonAdapter(mContext, enrolls));
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                Logger.d("onFailure-----------");
+                getTeachLessons();
+            }
+        });
+    }
+
+    private void initLessons() {
+        if (mEnrollLessons == null || mTeachLessons == null || mEnrollLessons.size() <= 0 || mTeachLessons.size() <= 0) {
+            //没有教的课也没有学的课
+            if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)) {
+                //当前用户是老师
+                mTeacherWrapper.setVisibility(View.VISIBLE);
+                mStudentWrapper.setVisibility(View.GONE);
+                mTeacherEmpty.setVisibility(View.VISIBLE);
+                mStudentEmpty.setVisibility(View.GONE);
+            } else {
+                mTeacherEmpty.setVisibility(View.GONE);
+                mStudentEmpty.setVisibility(View.VISIBLE);
+                mTeacherWrapper.setVisibility(View.GONE);
+                mStudentWrapper.setVisibility(View.VISIBLE);
+            }
+        } else if ((mEnrollLessons == null || mEnrollLessons.size() <= 0) && (mTeachLessons != null && mTeachLessons.size() > 0)) {
+            //只有教的课，没有学的课
+            LiveTeachLessonAdapter adapter = new LiveTeachLessonAdapter(mContext, mTeachLessons);
+            mLessonList.setAdapter(adapter);
+            mLessonList2.setVisibility(View.GONE);
+            mLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Intent i = new Intent(mContext, LessonHomeActivity.class);
+                    i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+                    i.putExtra(CourseConstant.KEY_LESSON_ID, mTeachLessons.get(position).getId());
+                    mContext.startActivity(i);
+                }
+            });
+        } else if ((mEnrollLessons != null && mEnrollLessons.size() > 0) && (mTeachLessons == null || mTeachLessons.size() <= 0)) {
+            //只有学的课，没有教的课
+            LiveEnrollLessonAdapter adapter = new LiveEnrollLessonAdapter(mContext, mEnrollLessons);
+            mLessonList2.setAdapter(adapter);
+            mLessonList.setVisibility(View.GONE);
+            mLessonList2.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Intent i = new Intent(mContext, LessonHomeActivity.class);
+                    i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+                    i.putExtra(CourseConstant.KEY_LESSON_ID, mEnrollLessons.get(position).getId());
+                    mContext.startActivity(i);
+                }
+            });
+        } else {
+            //有教的课也有学的课
+            if (mTeachLessons.size() == 1 && mEnrollLessons.size() == 3) {
+                mEnrollLessons = mEnrollLessons.subList(0, MAX - 1);
+            } else if (mTeachLessons.size() == 2 && mEnrollLessons.size() > 1) {
+                mEnrollLessons = mEnrollLessons.subList(0, MAX - 2);
+            } else if (mTeachLessons.size() == 3) {
+                mTeachLessons = mTeachLessons.subList(0, MAX - 1);
+                if (mEnrollLessons.size() > 1) {
+                    mEnrollLessons = mEnrollLessons.subList(0, MAX - 2);
+                }
+            }
+            LiveTeachLessonAdapter teach = new LiveTeachLessonAdapter(mContext, mTeachLessons);
+            mLessonList.setAdapter(teach);
+            LiveEnrollLessonAdapter enroll = new LiveEnrollLessonAdapter(mContext, mEnrollLessons);
+            mLessonList2.setAdapter(enroll);
+            mLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Intent i = new Intent(mContext, LessonHomeActivity.class);
+                    i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+                    i.putExtra(CourseConstant.KEY_LESSON_ID, mTeachLessons.get(position).getId());
+                    mContext.startActivity(i);
+                }
+            });
+            mLessonList2.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Intent i = new Intent(mContext, LessonHomeActivity.class);
+                    i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+                    i.putExtra(CourseConstant.KEY_LESSON_ID, mEnrollLessons.get(position).getId());
+                    mContext.startActivity(i);
+                }
+            });
+        }
     }
 
     @Override
