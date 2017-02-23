@@ -35,6 +35,7 @@ import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.order.Orderp;
 import cn.xiaojs.xma.model.order.PaymentCharge;
+import cn.xiaojs.xma.model.order.PaymentOrder;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
@@ -217,11 +218,11 @@ public interface XiaojsService {
 
     //Create Order
     @POST("/v1/order")
-    Call<ResponseBody> createOrder(@Body Orderp orderp);
+    Call<PaymentOrder> createOrder(@Body Orderp orderp);
 
     //CreatePaymentCharge
     @GET("/v1/order/{order}/charge/{channel}")
-    Call<PaymentCharge> createPaymentCharge(@Path("order") String order,
+    Call<ResponseBody> createPaymentCharge(@Path("order") String order,
                                             @Path("channel") String channel);
 
 

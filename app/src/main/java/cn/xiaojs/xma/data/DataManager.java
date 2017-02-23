@@ -76,10 +76,9 @@ public class DataManager {
     }
 
     public static void getFriendsOnly(Context context,
-                                        int followType,
                                         DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
         DataLoder dataLoder = new DataLoder(context,new ContactDao());
-        dataLoder.load(callback,-1,followType);
+        dataLoder.load(callback,-2,DataManager.getGroupData(context));
     }
 
 

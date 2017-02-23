@@ -20,8 +20,10 @@ import android.widget.Toast;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -92,21 +94,30 @@ public class ChoiceContactActivity extends BaseActivity {
     // load contact data and bind to view
 
     private void loadContactData() {
-        SocialManager.getContacts(this, new APIServiceCallback<ArrayList<ContactGroup>>() {
+
+        DataManager.getFriendsOnly(this, new DataLoder.DataLoaderCallback<ArrayList<ContactGroup>>() {
             @Override
-            public void onSuccess(ArrayList<ContactGroup> object) {
-
-                bindDataView(object);
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-                //bindDataView(null);
-
-               // Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            public void loadCompleted(ArrayList<ContactGroup> contactGroups) {
+                bindDataView(contactGroups);
             }
         });
+
+
+//        SocialManager.getContacts(this, new APIServiceCallback<ArrayList<ContactGroup>>() {
+//            @Override
+//            public void onSuccess(ArrayList<ContactGroup> object) {
+//
+//                bindDataView(object);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//                //bindDataView(null);
+//
+//               // Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     private void bindDataView(ArrayList<ContactGroup> contactData) {

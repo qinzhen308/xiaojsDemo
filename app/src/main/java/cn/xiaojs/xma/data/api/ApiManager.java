@@ -130,6 +130,29 @@ public class ApiManager {
 
     }
 
+    public static OkHttpClient getPayClient() {
+        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
+        if (XiaojsConfig.DEBUG) {
+            logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+
+            logInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .addInterceptor(logInterceptor)
+                .addNetworkInterceptor(logInterceptor)
+                .connectTimeout(30,TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30,TimeUnit.SECONDS);
+
+        if (XiaojsConfig.DEBUG) {
+            builder.addNetworkInterceptor(new StethoInterceptor());
+        }
+
+        return builder.build();
+    }
+
     private Cache createCache(Context context) {
 
         File cacheDirectory = context.getCacheDir();
