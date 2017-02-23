@@ -163,6 +163,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     ImageView mTakePicBtn;
     @BindView(R.id.publish_camera_switcher)
     ImageView mCameraSwitcher;
+    @BindView(R.id.finish_btn)
+    ImageView mFinishBtn;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
@@ -254,6 +256,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 break;
             case STUDENT:
                 mCameraSwitcher.setVisibility(View.GONE);
+                mFinishBtn.setVisibility(View.GONE);
+                //TODO
+                mPlayPauseBtn.setVisibility(View.GONE);
                 break;
             case ADMINISTRATOR:
             case AUDITOR:
@@ -338,7 +343,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         //    }
         //});
     }
-
+  
     /**
      * 显示设置导航提示
      */
