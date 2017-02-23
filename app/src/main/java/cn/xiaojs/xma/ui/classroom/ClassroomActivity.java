@@ -237,7 +237,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         //init data
         initData();
 
-        PermissionGen.needPermission(this, 100, Manifest.permission.CAMERA);
+        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT};
+        PermissionGen.needPermission(this, 100, permissions);
     }
 
     private void initParams() {

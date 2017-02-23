@@ -81,13 +81,16 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
         if (!v.isSelected()) {
             v.setSelected(true);
         }
-
+        SharedPreferences.Editor editor = XjsUtils.getSharedPreferences().edit();
         switch (v.getId()) {
             case R.id.fluent:
+                editor.putInt(KEY_QUALITY, QUALITY_FLUENT);
                 break;
             case R.id.standard_definition:
+                editor.putInt(KEY_QUALITY, QUALITY_STANDARD);
                 break;
             case R.id.high_definition:
+                editor.putInt(KEY_QUALITY, QUALITY_HIGH);
                 break;
         }
     }

@@ -49,10 +49,12 @@ import java.nio.ByteBuffer;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.live.core.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.gles.FBO;
 import cn.xiaojs.xma.util.ToastUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
 public class LiveRecordView extends BaseMediaView implements
         SurfaceTextureCallback,
@@ -76,6 +78,7 @@ public class LiveRecordView extends BaseMediaView implements
     private StreamingStateChangedListener mOuterStreamingStateChangedListener;
 
     private boolean mMute;
+    private int mQuality = Constants.QUALITY_STANDARD;
 
     private int mCurrentCamFacingIndex;
     private boolean mIsReady;
@@ -156,12 +159,28 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void init() {
+        mQuality = XjsUtils.getSharedPreferences().getInt(Constants.KEY_QUALITY, Constants.QUALITY_STANDARD);
+        int fps = Config.VIDEO_STANDARD_FPS;
+        int bps = Config.VIDEO_STANDARD_BITRATE;
+        switch (mQuality) {
+            case Constants.QUALITY_FLUENT:
+                fps = Config.VIDEO_FLUENT_FPS;
+                bps = Config.VIDEO_FLUENT_BITRATE;
+                break;
+            case Constants.QUALITY_STANDARD:
+                fps = Config.VIDEO_STANDARD_FPS;
+                bps = Config.VIDEO_STANDARD_BITRATE;
+                break;
+            case Constants.QUALITY_HIGH:
+                fps = Config.VIDEO_STANDARD_FPS;
+                bps = Config.VIDEO_HIGH_BITRATE;
+                break;
+        }
+
         //设置音频的采样率为 44100 HZ，码率为 48 kbps。44100 是 Android 平台唯一保证所有设备支持的采样率
         StreamingProfile.AudioProfile aProfile = new StreamingProfile.AudioProfile(Config.AUDIO_SAMPLING_RATE, Config.AUDIO_BITRATE);
         // fps is 24, video bitrate is 512 * 1024 bps, maxKeyFrameInterval is 48
-        StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(Config.VIDEO_FPS,
-                Config.VIDEO_BITRATE,
-                Config.VIDEO_MAX_KEY_FRAME_INTERVAL);
+        StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(fps, bps, Config.VIDEO_MAX_KEY_FRAME_INTERVAL);
         StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
         mAspect.setShowMode(AspectFrameLayout.SHOW_MODE.REAL);
         mProfile = new StreamingProfile();
