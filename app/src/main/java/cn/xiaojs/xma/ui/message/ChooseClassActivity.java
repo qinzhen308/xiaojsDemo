@@ -1,10 +1,13 @@
 package cn.xiaojs.xma.ui.message;
 
 import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,7 +39,7 @@ public class ChooseClassActivity extends BaseActivity {
         setMiddleTitle(R.string.cls_moment);
         setRightText(R.string.finish);
         setRightTextColor(getResources().getColor(R.color.font_orange));
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         getData();
 
     }
@@ -49,7 +52,7 @@ public class ChooseClassActivity extends BaseActivity {
                 break;
             case R.id.right_image:
                 //TODO finifsh
-                //choiceComplete();
+                choiceComplete();
                 break;
         }
 
@@ -88,14 +91,13 @@ public class ChooseClassActivity extends BaseActivity {
     }
 
 
-
     private void getData() {
         DataManager.getClasses(this,
                 new DataLoder.DataLoaderCallback<ArrayList<ContactGroup>>() {
 
                     @Override
                     public void loadCompleted(ArrayList<ContactGroup> contacts) {
-                        if (contacts == null || contacts.size()==0){
+                        if (contacts == null || contacts.size() == 0) {
                             showEmptyView();
                             return;
                         }
@@ -104,10 +106,31 @@ public class ChooseClassActivity extends BaseActivity {
                 });
     }
 
+    private void choiceComplete() {
+
+        Intent i = new Intent();
+
+        if (adapter != null) {
+            int pos = listView.getCheckedItemPosition();
+            if (pos >= 0) {
+                ArrayList<Contact> contacts = new ArrayList<>(1);
+                Contact contact = adapter.getItem(pos);
+                contacts.add(contact);
+                i.putExtra(ChoiceContactActivity.CHOOSE_CONTACT_EXTRA, contacts);
+                //i.putExtra(CHECKED_POS,pos);
+                setResult(RESULT_OK, i);
+            }
+
+        }
+        setResult(RESULT_OK, i);
+
+        finish();
+    }
+
 
     private class ChoiceAdapter extends ArrayAdapter<Contact> {
         public ChoiceAdapter(Context context, int resource, int tid, List<Contact> objects) {
-            super(context, resource,tid,objects);
+            super(context, resource, tid, objects);
         }
 
         @Override

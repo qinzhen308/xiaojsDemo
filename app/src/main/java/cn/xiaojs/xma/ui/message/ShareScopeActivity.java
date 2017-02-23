@@ -104,9 +104,9 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         if (position == 2) {
-
-            // TODO 班级圈
-            startActivity(new Intent(this, ChooseClassActivity.class));
+            // 班级圈
+            startActivityForResult(new Intent(this, ChooseClassActivity.class),
+                    REQUEST_CHOOSE_CLASS_CODE);
         } else if (position == 3) {
 
             //FIXME 如果用户再次进入选择联系人，需要将之前以选择的联系人删除清零。
@@ -141,7 +141,26 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
 
             }
         } else if (requestCode == REQUEST_CHOOSE_CLASS_CODE) {
-            //TODO class
+            if (resultCode == RESULT_OK) {
+                choiceContacts = (ArrayList<Contact>) data.getSerializableExtra(
+                        ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
+
+                if (choiceContacts != null && choiceContacts.size() > 0) {
+
+                    if (docs == null) {
+                        docs = new ArrayList<>(choiceContacts.size());
+                    } else {
+                        docs.clear();
+                    }
+
+                    for (Contact contact : choiceContacts) {
+                        Doc doc = new Doc();
+                        doc.id = contact.account;
+                        doc.subtype = contact.subtype;
+                        docs.add(doc);
+                    }
+                }
+            }
         }
     }
 
