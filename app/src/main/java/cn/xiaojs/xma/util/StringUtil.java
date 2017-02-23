@@ -17,8 +17,11 @@ package cn.xiaojs.xma.util;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 
 public class StringUtil {
 
@@ -35,5 +38,17 @@ public class StringUtil {
 
     public static Spannable getSpecialString(String origin,String target,int fontColor){
         return getSpecialString(origin,target,0,fontColor);
+    }
+
+    public static String getTa(String sex){
+        if (TextUtils.isEmpty(sex))
+            return "Ta";
+        if (Account.Sex.MALE.equalsIgnoreCase(sex)){
+            return "他";
+        }else if (Account.Sex.FEMALE.equalsIgnoreCase(sex)){
+            return "她";
+        }else {
+            return "Ta";
+        }
     }
 }

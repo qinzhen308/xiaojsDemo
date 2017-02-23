@@ -217,7 +217,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void onSuccess(GELessonsResponse object) {
                 Logger.d("onSuccess-----------");
-                if (object.getObjectsOfPage() != null) {
+                if (object != null) {
                     mEnrollLessons = object.getObjectsOfPage();
                 }
                 getTeachLessons();
@@ -232,7 +232,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void initLessons() {
-        if (mEnrollLessons == null || mTeachLessons == null || mEnrollLessons.size() <= 0 || mTeachLessons.size() <= 0) {
+        if ((mEnrollLessons == null && mTeachLessons == null) || (mEnrollLessons.size() <= 0 && mTeachLessons.size() <= 0)) {
             //没有教的课也没有学的课
             if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)) {
                 //当前用户是老师
@@ -260,6 +260,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                     mContext.startActivity(i);
                 }
             });
+            mStudentWrapper.setVisibility(View.GONE);
         } else if ((mEnrollLessons != null && mEnrollLessons.size() > 0) && (mTeachLessons == null || mTeachLessons.size() <= 0)) {
             //只有学的课，没有教的课
             LiveEnrollLessonAdapter adapter = new LiveEnrollLessonAdapter(mContext, mEnrollLessons);
@@ -274,6 +275,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                     mContext.startActivity(i);
                 }
             });
+            mTeacherWrapper.setVisibility(View.GONE);
         } else {
             //有教的课也有学的课
             if (mTeachLessons.size() == 1 && mEnrollLessons.size() == 3) {
