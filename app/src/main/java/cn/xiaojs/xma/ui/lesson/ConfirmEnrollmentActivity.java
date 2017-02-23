@@ -1,30 +1,43 @@
 package cn.xiaojs.xma.ui.lesson;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
+import com.pingplusplus.android.Pingpp;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.OrderManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.LessonDetail;
+import cn.xiaojs.xma.model.Promotion;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.ctl.Price;
+import cn.xiaojs.xma.model.order.Orderp;
+import cn.xiaojs.xma.model.order.PaymentOrder;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.TimeUtil;
+import okhttp3.ResponseBody;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -64,11 +77,26 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
     private LessonDetail mLessonDetail;
     private ListBottomDialog mPayDialog;
 
+    private String orderNo;
+    private Orderp orderp;
+    private boolean confirmed = false;
+
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_confirm_enrollment);
         mLessonOriMoneyTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         needHeader(false);
+
+        mLessonDetail = (LessonDetail)getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
+        String lesson = mLessonDetail != null ? mLessonDetail.getId() : null;
+        if (TextUtils.isEmpty(lesson)) {
+            finish();
+            return;
+        }
+
+        createOrder();
+
         setData();
         loadData();
     }
@@ -96,16 +124,16 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
         LessonDataManager.requestLessonEnrollment(this, lesson, registrant, new APIServiceCallback<CLEResponse>() {
             @Override
             public void onSuccess(CLEResponse cleResponse) {
-
+                confirmed = true;
                 if (cleResponse == null)
                     return;
-
                 updateLessonDetail(cleResponse);
                 setData();
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+                confirmed = true;
                 cancelProgress();
             }
         });
@@ -130,13 +158,6 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
     }
 
     private void setData() {
-        mLessonDetail = (LessonDetail)getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
-        String lesson = mLessonDetail != null ? mLessonDetail.getId() : null;
-        if (TextUtils.isEmpty(lesson)) {
-            finish();
-            return;
-        }
-
 
         Dimension dimension = new Dimension();
         dimension.width = mLessonCoverImg.getMeasuredWidth();
@@ -191,13 +212,18 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
     private void setSalePromotion(Price fee) {
         Price.Applied[] appliedArr = fee.discounted != null ? fee.discounted.applied : null;
         if (appliedArr == null || appliedArr.length == 0) {
-            mPromotionInfoTv.setVisibility(View.GONE);
+            if (!confirmed){
+                mPromotionInfoTv.setVisibility(View.GONE);
+            }
+
             return;
         }
 
         Price.Applied applied = appliedArr[0];
         if (applied == null) {
-            mPromotionInfoTv.setVisibility(View.GONE);
+            if (!confirmed) {
+                mPromotionInfoTv.setVisibility(View.GONE);
+            }
             return;
         }
 
@@ -240,6 +266,7 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
                     switch (position) {
                         case 0:
                             //ali pay
+                            toPay();
                             break;
                     }
                 }
@@ -248,4 +275,119 @@ public class ConfirmEnrollmentActivity extends BaseActivity {
         mPayDialog.show();
     }
 
+    private void toPay() {
+
+        showProgress(false);
+
+        OrderManager.toPay(ConfirmEnrollmentActivity.this,
+                orderNo, Finance.PayChannel.ALIPAY, orderp, new APIServiceCallback<String>() {
+
+            @Override
+            public void onSuccess(String data) {
+
+                cancelProgress();
+
+                if (data == null) {
+                    Toast.makeText(ConfirmEnrollmentActivity.this, R.string.pay_failed,Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Pingpp.createPayment(ConfirmEnrollmentActivity.this, data,XiaojsConfig.PING_WALLET);
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+
+                cancelProgress();
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the pay has failed, code:%s, msg:%s", errorCode, errorMessage);
+                }
+
+                Toast.makeText(ConfirmEnrollmentActivity.this, R.string.pay_failed,Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void createOrder() {
+
+        float pri = mLessonDetail.getFee().discounted.subtotal;
+
+        Orderp.BuyItem buyItem = new Orderp.BuyItem();
+        buyItem.id = mLessonDetail.getId();
+        buyItem.type = Finance.ProductType.LESSON;
+        buyItem.total = pri;
+
+        Promotion[] promotions = mLessonDetail.getPromotion();
+        if (promotions != null && promotions.length>0) {
+            buyItem.promotion = promotions[0].getId();
+        }
+
+        orderp = new Orderp();
+        orderp.items = new Orderp.BuyItem[1];
+        orderp.items[0] = buyItem;
+        orderp.amount = pri;
+
+        OrderManager.createOrder(this, orderp, new APIServiceCallback<PaymentOrder>() {
+            @Override
+            public void onSuccess(PaymentOrder paymentOrder) {
+
+                if (paymentOrder == null) return;
+
+                orderNo = paymentOrder.id;
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("createOrder failed");
+                }
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //支付页面返回处理
+        if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getExtras().getString("pay_result");
+                if (result.equals("success")){
+                    result = "支付成功";
+                } else if (result.equals("cancel")){
+                    result = "支付取消";
+                }else{
+                    result = "支付失败";
+                }
+                /* 处理返回值
+                 * "success" - payment succeed
+                 * "fail"    - payment failed
+                 * "cancel"  - user canceld
+                 * "invalid" - payment plugin not installed
+                 */
+                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+                showMsg(result, errorMsg, extraMsg);
+            }
+        }
+    }
+
+    public void showMsg(String title, String msg1, String msg2) {
+        String str = title;
+        if (null !=msg1 && msg1.length() != 0) {
+            str += "\n" + msg1;
+        }
+        if (null !=msg2 && msg2.length() != 0) {
+            str += "\n" + msg2;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(str);
+        builder.setTitle("提示");
+        builder.setPositiveButton("确定", null);
+        builder.create().show();
+    }
 }

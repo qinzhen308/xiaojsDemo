@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
- * Created by maxiaobao on 2017/2/21.
+ * Created by maxiaobao on 2017/2/23.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PaymentCharge {
-    public String id;
-    public float amount;
-    public Refunds refunds;
+public class PaymentOrder {
 
-    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Refunds{
-        public String url;
-    }
+    public String id;
+    public String order_no;
+    public float amount;
+    public String createdOn;
+    public String body;
+
+
+
 }

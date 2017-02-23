@@ -25,6 +25,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ELResponse;
@@ -243,6 +244,11 @@ public class LessonHomeActivity extends BaseActivity {
         } else {
             mReportLayout.setVisibility(View.GONE);
             mReportDivideLine.setVisibility(View.GONE);
+            mLessonEnrollLayout.setVisibility(View.GONE);
+        }
+
+        String accId = AccountDataManager.getAccountID(this);
+        if (mLessonDetail.getCreatedBy().equals(accId)){
             mLessonEnrollLayout.setVisibility(View.GONE);
         }
     }

@@ -6,6 +6,19 @@ package cn.xiaojs.xma.common.xf_foundation.schemas;
 
 public class Finance {
 
+    public class PayChannel{
+        public static final String ALIPAY = "alipay";
+        public static final String ALIPAY_WAP = "alipay_wap";
+        public static final String ALIPAY_PC_DIRECT = "alipay_pc_direct";
+    }
+
+    public class ProductType {
+        public static final int LESSON = 1;
+        public static final int COURSE = 2;
+        public static final int VALUE_ADDED = 3;
+        public static final int MEMBER = 4;
+    }
+
     //
     // Defines the pricing types.
     //

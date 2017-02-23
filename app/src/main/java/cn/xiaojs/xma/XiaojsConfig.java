@@ -44,4 +44,7 @@ public class XiaojsConfig {
     //QQ
     public static final String QQ_APP_ID = "1105023462";
 
+
+    public static final String PING_WALLET = "con.xiaojs.xma.wallet";
+
 }
