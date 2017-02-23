@@ -533,10 +533,10 @@ public class ContactActivity extends BaseActivity {
 
             final Contact c = getChild(groupPosition, childPosition);
 
-//            String avatar = Account.getAvatar(c.account, holder.size);
-//            Glide.with(ContactActivity.this)
-//                    .load(avatar).error(R.drawable.default_avatar)
-//                    .into(holder.avatarView);
+            String avatar = Account.getAvatar(c.account, holder.size);
+            Glide.with(ContactActivity.this)
+                    .load(avatar).error(R.drawable.default_avatar)
+                    .into(holder.avatarView);
 
             String name = TextUtils.isEmpty(c.title)? c.alias : c.title;
             holder.nameView.setText(name);

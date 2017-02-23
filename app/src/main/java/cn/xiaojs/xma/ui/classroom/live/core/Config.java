@@ -12,8 +12,11 @@ public class Config {
 
     public static final int AUDIO_SAMPLING_RATE = 44100;
     public static final int AUDIO_BITRATE = 48 * 1024;
-    public static final int VIDEO_FPS = 24;
-    public static final int VIDEO_BITRATE = 512 * 1024;
+    public static final int VIDEO_FLUENT_FPS = 24;
+    public static final int VIDEO_STANDARD_FPS = 30;
+    public static final int VIDEO_FLUENT_BITRATE = 264 * 1024;
+    public static final int VIDEO_STANDARD_BITRATE = 512 * 1024;
+    public static final int VIDEO_HIGH_BITRATE = 1000 * 1024;
     public static final int VIDEO_MAX_KEY_FRAME_INTERVAL = 48;
 
     public static final int NORMAL_WIDTH = R.dimen.px160;

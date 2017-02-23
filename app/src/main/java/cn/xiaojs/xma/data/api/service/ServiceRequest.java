@@ -91,7 +91,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
     }
 
     //Convert object to JSON string
-    public String objectToJsonString(Object object) {
+    public static String objectToJsonString(Object object) {
 
         String jsonStr = null;
         try {

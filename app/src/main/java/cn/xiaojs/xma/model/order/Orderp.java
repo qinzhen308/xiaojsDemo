@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class Orderp {
 
     public BuyItem[] items;
-    public String amount;
+    public float amount;
     public String remarks;
     public String description;
     public String currency;
@@ -22,10 +22,10 @@ public class Orderp {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class BuyItem{
         public String id;
-        public String type;
+        public int type;
         public String promotion;
-        public String quantity;
-        public String total;
+        public int quantity = 1;
+        public float total;
         public String remarks;
     }
 

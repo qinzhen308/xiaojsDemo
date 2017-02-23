@@ -39,6 +39,7 @@ public class DataLoder {
 
 
         protected DataRunnable(int type, Object[] params) {
+            ptype = type;
             loadParams = params;
         }
 

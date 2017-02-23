@@ -23,8 +23,15 @@ public interface Constants {
     public final static String KEY_CAMERA_OPEN = "key_camera_open";
     public final static String KEY_MICROPHONE_OPEN = "key_microphone_open";
     public final static String KEY_MULTI_TALK_OPEN = "key_multi_talk_open";
-
+    public final static String KEY_QUALITY = "key_quality";
     public final static String KEY_TICKET = "key_ticket";
+
+    /**
+     * quality
+     */
+    public final static int QUALITY_HIGH = 0; // 高清
+    public final static int QUALITY_STANDARD = 1; // 标准
+    public final static int QUALITY_FLUENT = 2; // 流畅
 
     /**
      * classroom url

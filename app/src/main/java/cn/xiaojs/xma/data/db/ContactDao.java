@@ -37,7 +37,12 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
         if (params != null && params.length >0){
             if (params[0] instanceof Map) {
                 Map<Long, ContactGroup> map = (Map<Long, ContactGroup>) params[0];
-                return getContacts(context, map);
+                if (ptype == -2) {
+                    return getContactsOnly(context,map);
+                }else{
+                    return getContacts(context, map);
+                }
+
             }else if (params[0] instanceof Integer) {
                 int type = (int)params[0];
                 if (type == -1){
@@ -148,6 +153,8 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
 //                            .getColumnIndexOrThrow(DBTables.TContact.FOLLOW_TYPE));
                     String name = cursor.getString(cursor
                             .getColumnIndexOrThrow(DBTables.TContact.NAME));
+                    String subtype = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.SUBTYPE));
 
 //                    String avatar = cursor.getString(cursor
 //                            .getColumnIndexOrThrow(DBTables.TContact.AVATOR));
@@ -155,6 +162,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     Contact contact = new Contact();
                     contact.account = id;
                     contact.alias = name;
+                    contact.subtype = subtype;
 
                     contacts.add(contact);
 
