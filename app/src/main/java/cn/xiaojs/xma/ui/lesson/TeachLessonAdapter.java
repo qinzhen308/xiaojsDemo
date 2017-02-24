@@ -29,8 +29,10 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
@@ -40,6 +42,7 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
+import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
@@ -731,6 +734,35 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     protected void onDataFailed() {
         if (mFragment != null) {
             mFragment.showTop();
+        }
+    }
+
+    @Override
+    protected void onEmptyButtonClick() {
+        if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)){
+            //老师可以开课
+            Intent intent = new Intent(mContext,LessonCreationActivity.class);
+            ((BaseActivity)mContext).startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
+        }else {
+            //提示申明教学能力
+            final CommonDialog dialog = new CommonDialog(mContext);
+            dialog.setTitle(R.string.declare_teaching_ability);
+            dialog.setDesc(R.string.declare_teaching_ability_tip);
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    Intent intent = new Intent(mContext, TeachAbilityDemoActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
         }
     }
 

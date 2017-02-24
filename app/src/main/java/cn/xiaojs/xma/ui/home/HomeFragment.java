@@ -74,6 +74,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void init() {
         mAdapter = new HomeMomentAdapter(mContext,mList);
+        mAdapter.setDesc(mContent.getResources().getString(R.string.moment_data_empty));
         mAdapter.setFragment(this);
         mList.setAdapter(mAdapter);
 

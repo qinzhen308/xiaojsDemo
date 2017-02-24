@@ -35,6 +35,7 @@ import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 public class PersonalInfoActivity extends BaseActivity {
@@ -53,6 +54,7 @@ public class PersonalInfoActivity extends BaseActivity {
 
     private String mAccount;
     private PublicHome mBean;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_personal_info);
@@ -61,10 +63,11 @@ public class PersonalInfoActivity extends BaseActivity {
 //        mName.setIcon(R.drawable.ic_male);
 
         Intent intent = getIntent();
-        if (intent != null){
+        if (intent != null) {
             mAccount = intent.getStringExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT);
         }
 
+        getData();
     }
 
     private void getData() {
@@ -89,7 +92,7 @@ public class PersonalInfoActivity extends BaseActivity {
         });
     }
 
-    private void initView(PublicHome bean){
+    private void initView(PublicHome bean) {
         if (bean == null)
             return;
         mBean = bean;
@@ -98,13 +101,14 @@ public class PersonalInfoActivity extends BaseActivity {
                 .error(R.drawable.default_avatar)
                 .into(mImage);
         mName.setText(bean.profile.name);
-        if (Account.Sex.MALE.equalsIgnoreCase(bean.profile.sex)){
+        if (Account.Sex.MALE.equalsIgnoreCase(bean.profile.sex)) {
             mName.setIcon(R.drawable.ic_male);
-        }else if (Account.Sex.FEMALE.equalsIgnoreCase(bean.profile.sex)){
+        } else if (Account.Sex.FEMALE.equalsIgnoreCase(bean.profile.sex)) {
             mName.setIcon(R.drawable.ic_female);
-        }else {
+        } else {
             mName.setIcon(0);
         }
+        mFollow.setText(getString(R.string.follow_and_send_message, StringUtil.getTa(bean.profile.sex)));
     }
 
 
@@ -126,24 +130,33 @@ public class PersonalInfoActivity extends BaseActivity {
     }
 
     private void follow() {
-        if (mBean != null && !mBean.isFollowed) {//这里需要弹框选择分组
-            SocialManager.followContact(this, mAccount, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
-                @Override
-                public void onSuccess(Relation object) {
-                    ToastUtil.showToast(getApplicationContext(), R.string.followed);
-                    mBean.isFollowed = true;
-                    //跳转到聊天界面
-                    final Intent intent = new Intent(PersonalInfoActivity.this, ChatActivity.class);
-                    intent.putExtra(ChatActivity.TARGET_ID, "1234567");
-                    intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
-                    startActivity(intent);
-                }
+        if (mBean != null) {//这里需要弹框选择分组
+            if (!mBean.isFollowed) {
+                SocialManager.followContact(this, mAccount, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+                    @Override
+                    public void onSuccess(Relation object) {
+                        ToastUtil.showToast(getApplicationContext(), R.string.followed);
+                        mBean.isFollowed = true;
+                        //跳转到聊天界面
+                        final Intent intent = new Intent(PersonalInfoActivity.this, ChatActivity.class);
+                        intent.putExtra(ChatActivity.TARGET_ID, "1234567");
+                        intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+                        startActivity(intent);
+                    }
 
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    ToastUtil.showToast(getApplicationContext(), errorMessage);
-                }
-            });
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        ToastUtil.showToast(getApplicationContext(), errorMessage);
+                    }
+                });
+            } else {
+                //已关注，直接跳转到聊天界面
+                final Intent intent = new Intent(PersonalInfoActivity.this, ChatActivity.class);
+                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
+                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+                startActivity(intent);
+            }
+
         }
     }
 }

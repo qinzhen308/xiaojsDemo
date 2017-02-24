@@ -29,7 +29,10 @@ import okhttp3.OkHttpClient;
 
 public class MainActivity extends BaseTabActivity {
 
+    public static final String KEY_POSITION = "key_position";
+
     private long time;
+
     @Override
     protected void initView() {
         //setMiddleTitle(R.string.app_name);
@@ -40,32 +43,49 @@ public class MainActivity extends BaseTabActivity {
         fs.add(new NotificationFragment());
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);
-        addViews(new int[]{R.string.home_tab_index,R.string.home_tab_live ,R.string.home_tab_message , R.string.home_tab_mine},
+        addViews(new int[]{R.string.home_tab_index, R.string.home_tab_live, R.string.home_tab_message, R.string.home_tab_mine},
                 new int[]{R.drawable.home_tab_selector, R.drawable.live_tab_selector, R.drawable.message_tab_selector, R.drawable.mine_tab_selector},
                 fs);
         new OkHttpClient();
 
         //JMessageClient.registerEventReceiver(this);
+        Intent intent = getIntent();
+        if (intent != null) {
+            int position = intent.getIntExtra(KEY_POSITION, -1);
+            if (position >= 0) {
+                setTabSelected(position);
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent != null) {
+            int position = intent.getIntExtra(KEY_POSITION, -1);
+            if (position >= 0) {
+                setTabSelected(position);
+            }
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Fragment fragment = getFragmentByPosition(2);
-        if (fragment != null && fragment instanceof NotificationFragment){
-            ((NotificationFragment)fragment).notifyConversation();
+        if (fragment != null && fragment instanceof NotificationFragment) {
+            ((NotificationFragment) fragment).notifyConversation();
         }
     }
 
     @Override
     protected void onGooeyMenuClick(int position) {
-        switch (position){
+        switch (position) {
             case 1://开课
-                if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)){
+                if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)) {
                     //老师可以开课
-                    Intent intent = new Intent(this,LessonCreationActivity.class);
+                    Intent intent = new Intent(this, LessonCreationActivity.class);
                     startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
-                }else {
+                } else {
                     //提示申明教学能力
                     final CommonDialog dialog = new CommonDialog(this);
                     dialog.setTitle(R.string.declare_teaching_ability);
@@ -88,7 +108,7 @@ public class MainActivity extends BaseTabActivity {
                 }
                 break;
             case 2:
-                startActivity(new Intent(this,GradeHomeActivity.class));
+                startActivity(new Intent(this, GradeHomeActivity.class));
                 break;
             case 3:
 //                ArrayList<String> urls = new ArrayList<>();
@@ -103,9 +123,9 @@ public class MainActivity extends BaseTabActivity {
                 //startActivity(new Intent(this, CertificationActivity.class));
                 //startActivity(new Intent(this, TestActivity.class));
 
-                if (JMessageClient.getMyInfo() != null){
+                if (JMessageClient.getMyInfo() != null) {
                     Intent intent = new Intent(this, ChatActivity.class);
-                    intent.putExtra(ChatActivity.TARGET_ID,"1234567");
+                    intent.putExtra(ChatActivity.TARGET_ID, "1234567");
                     startActivity(intent);
                 }
 
@@ -113,7 +133,7 @@ public class MainActivity extends BaseTabActivity {
 //                startActivity(intent);
                 break;
             case 4:
-                startActivity(new Intent(this,PersonHomeActivity.class));
+                startActivity(new Intent(this, PersonHomeActivity.class));
                 break;
             case 5:
                 startActivityForResult(new Intent(this, PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
@@ -126,16 +146,16 @@ public class MainActivity extends BaseTabActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Fragment fragment = getCurrentFragment();
-        if (fragment != null){
-            fragment.onActivityResult(requestCode,resultCode,data);
+        if (fragment != null) {
+            fragment.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onBackPressed() {
-        if (System.currentTimeMillis() - time > XiaojsConfig.EXIT_DELAY){
-            ToastUtil.showToast(this,R.string.exit_tips);
+        if (System.currentTimeMillis() - time > XiaojsConfig.EXIT_DELAY) {
+            ToastUtil.showToast(this, R.string.exit_tips);
             time = System.currentTimeMillis();
             return;
         }

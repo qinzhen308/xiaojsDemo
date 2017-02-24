@@ -194,7 +194,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             fragments.add(f2);
             fragments.add(f3);
             String[] tabs = new String[]{
-                    getString(R.string.person_lesson),
+                    getString(R.string.person_lesson,StringUtil.getTa(home.profile.sex)),
                     getString(R.string.person_comment),
                     getString(R.string.person_moment)};
             if (mIsMyself) {
@@ -344,6 +344,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 final Intent intent = new Intent(this, ChatActivity.class);
                 intent.putExtra(ChatActivity.TARGET_ID, "1234567");
                 intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+                intent.putExtra(ChatActivity.ACCOUNT_ID, mAccount);
                 startActivity(intent);
             } else {//未关注先提示去关注
                 final CommonDialog dialog = new CommonDialog(this);
@@ -351,8 +352,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                     mBean.basic = new cn.xiaojs.xma.model.account.Account.Basic();
                     mBean.basic.setSex("true");
                 }
-                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.basic.getSex()),StringUtil.getTa(mBean.basic.getSex())));
-                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.basic.getSex())));
+                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.profile.sex),StringUtil.getTa(mBean.profile.sex)));
+                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.profile.sex)));
                 dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
                     @Override
                     public void onClick() {

@@ -33,6 +33,8 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
@@ -88,56 +90,9 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-//        holder.enter.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-//        holder.enter.getPaint().setAntiAlias(true);
-////        holder.time.setText("12:00");
-////        holder.image.setImageResource(R.drawable.default_portrait);
-////        holder.title.setText("titletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitle");
-////        holder.stuNum.setText("111人学过");
-//        Bitmap b1 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b2 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b3 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b4 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b5 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b6 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b7 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b8 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b9= BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b10 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//
-//        List<Bitmap> list = new ArrayList<>();
-//        list.add(b1);
-//        list.add(b2);
-//        list.add(b3);
-//        list.add(b4);
-//        list.add(b5);
-//        list.add(b6);
-//        list.add(b7);
-//        list.add(b8);
-//        list.add(b9);
-//        list.add(b10);
-        //holder.imageFlow.showWithNum(list,mContext.getResources().getDimensionPixelSize(R.dimen.px20),mContext.getResources().getDimensionPixelSize(R.dimen.px2));
-        //holder.imageFlow.show(list,mContext.getResources().getDimensionPixelSize(R.dimen.px20),mContext.getResources().getDimensionPixelSize(R.dimen.px5));
         holder.reset();
         final TeachLesson bean = lessons.get(position);
         holder.name.setText(bean.getTitle());
-//        String state = LessonBusiness.getStateByPosition(position,true);
-//        if (!TextUtils.isEmpty(state)){
-//            bean.setState(state);
-//        }
-        /*if (position == 0){
-            bean.setState(LessonState.FINISHED);
-        }else if (position == 1){
-            bean.setState(LessonState.CANCELLED);
-        }else if (position == 2){
-            bean.setState(LessonState.DRAFT);
-        }else if (position == 3){
-            bean.setState(LessonState.LIVE);
-        }else if (position == 4){
-            bean.setState(LessonState.PENDING_FOR_APPROVAL);
-        }else if (position == 5){
-            bean.setState(LessonState.REJECTED);
-        }*/
         holder.price.setVisibility(View.VISIBLE);
         if (bean.getFee().free) {
             holder.price.setText(R.string.free);
@@ -396,7 +351,10 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
 
     //进入教室
     private void enterClass(TeachLesson bean) {
-
+        Intent i = new Intent();
+        i.putExtra(Constants.KEY_TICKET, bean.getTicket());
+        i.setClass(mContext, ClassroomActivity.class);
+        mContext.startActivity(i);
     }
 
     private void modifyLesson(TeachLesson bean) {

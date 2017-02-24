@@ -436,6 +436,14 @@
     <string name="follow_num">%1$d&#160;关注</string>
     <string name="follow_somebody">关注%1$s</string>
     <string name="none_follow_tip">您只有关注了%1$s，才能给%2$s发消息哦~</string>
+    <string name="follow_and_send_message">关注%1$s，发消息</string>
+
+    <!-- empty tips -->
+    <string name="moment_data_empty">此人还没有动态</string>
+    <string name="message_data_empty">暂时还没有消息哦~</string>
+    <string name="teach_data_empty">你还没开过课哦~</string>
+    <string name="enroll_data_empty">学的更多，才能飞得更高</string>
+    <string name="find_lesson">发现好课</string>
 
     <!-- certification -->
     <string name="certification">实名认证</string>
