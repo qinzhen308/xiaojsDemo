@@ -107,6 +107,8 @@ public class LessonCreationActivity extends BaseActivity {
     TextView mPublicTv;
     @BindView(R.id.on_shelves)
     TextView mOnShelvesTv;
+    @BindView(R.id.publish_to_circle)
+    TextView mPublishToCircleTv;
 
     private boolean mEnrollWayOpen = false;
     private long mLessonStartTime;
@@ -136,7 +138,7 @@ public class LessonCreationActivity extends BaseActivity {
     @OnClick({R.id.left_image, R.id.lesson_subject, R.id.teach_form, R.id.enroll_switcher,
             R.id.charge_way_switcher, R.id.by_total_price_title, R.id.by_duration_title,
             R.id.lesson_start_time, R.id.optional_info, R.id.sub_btn, R.id.on_shelves,
-            R.id.publish_personal_page})
+            R.id.publish_personal_page, R.id.publish_to_circle})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -181,6 +183,7 @@ public class LessonCreationActivity extends BaseActivity {
                 break;
             case R.id.on_shelves:
             case R.id.publish_personal_page:
+            case R.id.publish_to_circle:
                 v.setSelected(!v.isSelected() ? true : false);
                 break;
             case R.id.sub_btn:
@@ -694,6 +697,7 @@ public class LessonCreationActivity extends BaseActivity {
         ll.setSchedule(sch);
         ll.setAccessible(mPublicTv.isSelected());
         ll.setAutoOnShelves(mOnShelvesTv.isSelected());
+        //mPublishToCircleTv.isSelected();
 
         //add optional info
         if (mLessonOptionalInfo != null) {

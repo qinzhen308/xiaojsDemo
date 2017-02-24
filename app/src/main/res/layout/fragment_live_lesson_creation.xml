@@ -434,6 +434,18 @@
                         android:text="@string/publish_personal_page_tips"/>
 
             </LinearLayout>
+
+            <TextView
+                    android:id="@+id/publish_to_circle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/multi_check_selector"
+                    android:drawablePadding="@dimen/px25"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
+                    android:text="@string/publish_to_circle"/>
+
         </LinearLayout>
 
         <View
