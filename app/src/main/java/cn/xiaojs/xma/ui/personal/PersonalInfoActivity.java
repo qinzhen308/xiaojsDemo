@@ -26,13 +26,13 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.StringUtil;
@@ -132,21 +132,12 @@ public class PersonalInfoActivity extends BaseActivity {
     private void follow() {
         if (mBean != null) {//这里需要弹框选择分组
             if (!mBean.isFollowed) {
-                SocialManager.followContact(this, mAccount, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+                BaseBusiness.showFollowDialog(this, new BaseBusiness.OnFollowListener() {
                     @Override
-                    public void onSuccess(Relation object) {
-                        ToastUtil.showToast(getApplicationContext(), R.string.followed);
-                        mBean.isFollowed = true;
-                        //跳转到聊天界面
-                        final Intent intent = new Intent(PersonalInfoActivity.this, ChatActivity.class);
-                        intent.putExtra(ChatActivity.TARGET_ID, "1234567");
-                        intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onFailure(String errorCode, String errorMessage) {
-                        ToastUtil.showToast(getApplicationContext(), errorMessage);
+                    public void onFollow(long group) {
+                        if (group > 0) {
+                            follow(group);
+                        }
                     }
                 });
             } else {
@@ -158,5 +149,25 @@ public class PersonalInfoActivity extends BaseActivity {
             }
 
         }
+    }
+
+    private void follow(long group) {
+        SocialManager.followContact(this, mAccount, group, new APIServiceCallback<Relation>() {
+            @Override
+            public void onSuccess(Relation object) {
+                ToastUtil.showToast(getApplicationContext(), R.string.followed);
+                mBean.isFollowed = true;
+                //跳转到聊天界面
+                final Intent intent = new Intent(PersonalInfoActivity.this, ChatActivity.class);
+                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
+                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ToastUtil.showToast(getApplicationContext(), errorMessage);
+            }
+        });
     }
 }

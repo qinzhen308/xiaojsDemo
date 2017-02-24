@@ -31,7 +31,6 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
@@ -39,6 +38,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -62,6 +62,7 @@ public class MomentHeader extends RelativeLayout {
     FollowView mFollow;
 
     private Dynamic.DynOwner mOwner;
+
     public MomentHeader(Context context) {
         super(context);
         init();
@@ -96,19 +97,19 @@ public class MomentHeader extends RelativeLayout {
             return;
 
         Glide.with(getContext())
-                .load(Account.getAvatar(AccountDataManager.getAccountID(getContext()),300))
+                .load(Account.getAvatar(AccountDataManager.getAccountID(getContext()), 300))
                 .signature(new StringSignature(DeviceUtil.getSignature()))
                 .error(R.drawable.default_avatar)
                 .into(mHead);
 
         mOwner = dynamic.owner;
 
-        String url = Account.getAvatar(dynamic.owner.account,XiaojsConfig.PORTRAIT_SIZE);
-        if (mOwner.myself || VerifyUtils.isMyself(mOwner.account)){
+        String url = Account.getAvatar(dynamic.owner.account, XiaojsConfig.PORTRAIT_SIZE);
+        if (mOwner.myself || VerifyUtils.isMyself(mOwner.account)) {
             mName.setText(XiaojsConfig.mLoginUser.getName());
             mTag.setText("自己");
             mDesc.setText("");
-        }else {
+        } else {
             //mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
             mDesc.setText("");
             mName.setText(dynamic.owner.alias);
@@ -140,24 +141,35 @@ public class MomentHeader extends RelativeLayout {
     private void follow() {
         if (mOwner == null || mOwner.followed)
             return;
-        SocialManager.followContact(getContext(), mOwner.id, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+
+        BaseBusiness.showFollowDialog(getContext(), new BaseBusiness.OnFollowListener() {
+            @Override
+            public void onFollow(long group) {
+                if (group > 0) {
+                    follow(group);
+                }
+            }
+        });
+    }
+
+    private void follow(final long group) {
+        SocialManager.followContact(getContext(), mOwner.id, group, new APIServiceCallback<Relation>() {
             @Override
             public void onSuccess(Relation object) {
-                ToastUtil.showToast(getContext(),R.string.followed);
+                ToastUtil.showToast(getContext(), R.string.followed);
                 mFollow.setVisibility(GONE);
 
                 Contact contact = new Contact();
                 contact.alias = mOwner.alias;
                 contact.account = mOwner.id;
 
-                DataManager.addContact(getContext(),Social.ContactGroup.FRIENDS,contact);
+                DataManager.addContact(getContext(), group, contact);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                ToastUtil.showToast(getContext(),errorMessage);
+                ToastUtil.showToast(getContext(), errorMessage);
             }
         });
-
     }
 }

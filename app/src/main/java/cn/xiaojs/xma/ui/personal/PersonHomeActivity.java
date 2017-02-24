@@ -42,12 +42,12 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 import cn.xiaojs.xma.ui.view.RelationshipView;
@@ -333,7 +333,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
                 break;
             case R.id.scroll_tab_right_view://加关注
-                follow();
+                showFollowDialog();
                 break;
         }
     }
@@ -364,7 +364,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                     @Override
                     public void onClick() {
                         dialog.dismiss();
-                        follow();
+                        //follow();
+                        showFollowDialog();
                     }
                 });
 
@@ -373,9 +374,20 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         }
     }
 
-    private void follow() {
+    private void showFollowDialog(){
+        BaseBusiness.showFollowDialog(this, new BaseBusiness.OnFollowListener() {
+            @Override
+            public void onFollow(long group) {
+                if (group > 0){
+                    follow(group);
+                }
+            }
+        });
+    }
+
+    private void follow(long group) {
         if (mBean != null && !mBean.isFollowed) {//这里需要弹框选择分组
-            SocialManager.followContact(this, mAccount, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+            SocialManager.followContact(this, mAccount, group, new APIServiceCallback<Relation>() {
                 @Override
                 public void onSuccess(Relation object) {
                     ToastUtil.showToast(getApplicationContext(), R.string.followed);

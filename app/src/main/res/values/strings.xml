@@ -400,6 +400,7 @@
     <string name="send_again">重新发送</string>
     <string name="group_has_exist">组已存在</string>
     <string name="closed_tips">只有相互关注的才可以被提醒哦～</string>
+    <string name="add_contact_to">添加联系人至</string>
 
     <!-- live tab -->
     <string name="lesson_of_choiceness">精选课</string>
