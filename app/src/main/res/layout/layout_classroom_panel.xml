@@ -230,7 +230,7 @@
         </RelativeLayout>
 
         <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
-                android:id="@+id/my_video"
+                android:id="@+id/stu_preview_video"
                 android:visibility="gone"
                 android:layout_width="@dimen/px144"
                 android:layout_height="@dimen/px81"
@@ -468,6 +468,15 @@
 
     </LinearLayout>
 
+    <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
+            android:id="@+id/tea_live_video"
+            android:layout_width="@dimen/px160"
+            android:layout_height="@dimen/px90"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="@dimen/px20"
+            android:layout_marginLeft="@dimen/px20"
+            android:visibility="gone"/>
 
 </cn.xiaojs.xma.ui.classroom.MainPanel>
 

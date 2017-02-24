@@ -3,9 +3,14 @@ package cn.xiaojs.xma.ui.classroom;
 import android.Manifest;
 import android.animation.Animator;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -221,6 +226,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private int mPageState = PAGE_TOP;
     private Bitmap mCaptureFrame;
     private String mPlayUrl;
+    private NetworkChangedBReceiver mNetworkChangedBReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -242,6 +248,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT};
         PermissionGen.needPermission(this, 100, permissions);
+
+        //register network
+        registerNetworkReceiver();
     }
 
     private void initParams() {
@@ -333,6 +342,18 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         //init whiteboard
         mClassroomController = new ClassroomController(ClassroomActivity.this, mContentRoot, mUser, mAppType);
     }
+
+    private void registerNetworkReceiver() {
+        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        mNetworkChangedBReceiver = new NetworkChangedBReceiver();
+        registerReceiver(mNetworkChangedBReceiver, filter);
+    }
+
+    private void unregisterNetworkReceiver() {
+        if (mNetworkChangedBReceiver != null) {
+            unregisterReceiver(mNetworkChangedBReceiver);
+        }
+    }
   
     /**
      * 显示设置导航提示
@@ -387,7 +408,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             mClassroomController.publishStream(ctlSession.publishUrl);
                         } else if (mUser == Constants.User.STUDENT) {
                             mPlayUrl = ctlSession.playUrl;
-                            mClassroomController.playWhiteboardVideo(mPlayUrl);
+                            mClassroomController.playVideo(mPlayUrl);
                         }
                     } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
                             Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
@@ -725,6 +746,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
                     openInviteFriend();
                 }
+            }).setPanelItemClick(new OnPanelItemClick() {
+                @Override
+                public void onItemClick(int action, String accountId) {
+                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+                    applyOpenStuVideo(accountId);
+                }
             });
         }
         mTalkPanel.with(mode).show(mDrawerLayout, mRightDrawer);
@@ -792,6 +819,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 showWhiteBoardPanel(true);
             }
         }
+    }
+
+    /**
+     * 申请打开学生视频
+     */
+    private void applyOpenStuVideo(String accountId) {
+        Toast.makeText(ClassroomActivity.this, "apply open student video", Toast.LENGTH_SHORT).show();
     }
 
     private void enterVideoEditing() {
@@ -935,6 +969,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         cancelAllAnim();
         disConnectIO();
+        unregisterNetworkReceiver();
     }
 
     public int getInteractiveLevel() {
@@ -1441,7 +1476,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
                 if (startedNotify != null) {
                     mPlayUrl = startedNotify.RTMPPlayUrl;
-                    mClassroomController.playWhiteboardVideo(mPlayUrl);
+                    mClassroomController.playVideo(mPlayUrl);
                 }
             }
         }
@@ -1544,7 +1579,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         break;
                     case MSG_PLAY_VIDEO:
                         if (mClassroomController != null) {
-                            mClassroomController.playWhiteboardVideo(mPlayUrl);
+                            mClassroomController.playVideo(mPlayUrl);
                         }
                         break;
                     case MSG_DELAY_TO_FINISH:
@@ -1557,4 +1592,30 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             }
         }
     };
+
+    public class NetworkChangedBReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mobileInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            NetworkInfo wifiInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            NetworkInfo activeInfo = manager.getActiveNetworkInfo();
+
+            boolean mobileNet = mobileInfo == null ? false : mobileInfo.isConnected();
+            boolean wifiNet = wifiInfo == null ? false : wifiInfo.isConnected();
+            String activeNet = activeInfo == null ? "null" : activeInfo.getTypeName();
+
+            if (activeInfo == null) {
+                // have no active network
+
+            } else if (wifiNet) {
+                // wifi network
+
+            } else if (mobileNet) {
+                // mobile network
+
+            }
+        }
+    }
 }

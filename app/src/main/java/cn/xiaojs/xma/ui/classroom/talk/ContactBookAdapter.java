@@ -31,6 +31,7 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
 import cn.xiaojs.xma.ui.classroom.TalkPanel;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 
@@ -39,6 +40,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private boolean mContactManagementMode = false;
     private List<String> mChoiceList;
     private OnPortraitClickListener mListener;
+    private OnPanelItemClick mOnPanelItemClick;
     private LiveCollection<Attendee> mLiveCollection;
     private ArrayList<Attendee> mAttendeeList;
     private int mOffset;
@@ -51,6 +53,10 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
     public void setOnPortraitClickListener(OnPortraitClickListener listener) {
         mListener = listener;
+    }
+
+    public void setOnPanelItemClick (OnPanelItemClick panelItemClick) {
+        mOnPanelItemClick = panelItemClick;
     }
 
     public void setData(LiveCollection<Attendee> liveCollection) {
@@ -171,6 +177,9 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                         break;
                     case R.id.video:
                         s = "video";
+                        if (mOnPanelItemClick != null) {
+                            mOnPanelItemClick.onItemClick(OnPanelItemClick.ACTION_OPEN_CAMERA, mAttendeeList.get(pos).accountId);
+                        }
                         break;
                     case R.id.microphone:
                         s = "microphone";

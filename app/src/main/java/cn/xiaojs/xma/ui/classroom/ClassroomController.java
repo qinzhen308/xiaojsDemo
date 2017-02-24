@@ -90,9 +90,14 @@ public class ClassroomController implements
     //whiteboard adapter
     private WhiteboardAdapter mWhiteboardAdapter;
 
+    //学生端直播view
     private PlayerTextureView mLiveVideo;
+    //学生端在推流的时候预览自己的view
+    private LiveRecordView mStuPreviewVideo;
+    //老师端推流的view
     private LiveRecordView mPublishVideo;
-    private LiveRecordView mMyVideo;
+    //老师端播放的学生流的view
+    private PlayerTextureView mTeaLiveVideo;
 
     private ImageView mSelection;
     private ImageView mHandWriting;
@@ -149,7 +154,8 @@ public class ClassroomController implements
 
         mLiveVideo = (PlayerTextureView) root.findViewById(R.id.live_video);
         mPublishVideo = (LiveRecordView) root.findViewById(R.id.publish_video);
-        mMyVideo = (LiveRecordView) root.findViewById(R.id.my_video);
+        mStuPreviewVideo = (LiveRecordView) root.findViewById(R.id.stu_preview_video);
+        mTeaLiveVideo = (PlayerTextureView) root.findViewById(R.id.tea_live_video);
 
         mWhiteboardSv = (WhiteboardScrollerView) root.findViewById(R.id.white_board_scrollview);
         mWhiteboardLayout = (WhiteboardLayout) root.findViewById(R.id.white_board_layout);
@@ -176,7 +182,7 @@ public class ClassroomController implements
 
     private void initVideo() {
         mPublishVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
-        mMyVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
+        mStuPreviewVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.setVisibility(View.VISIBLE);
         } else if (mUser == Constants.User.STUDENT) {
@@ -184,22 +190,9 @@ public class ClassroomController implements
         }
     }
 
-    public void publishStream(String url) {
-        if (mUser == Constants.User.TEACHER) {
-            mPublishVideo.setVisibility(View.VISIBLE);
-            mPublishVideo.setPath(url);
-            if (!mInitPublishVideo) {
-                mPublishVideo.start();
-            } else {
-                mPublishVideo.resume();
-            }
-        } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.setVisibility(View.VISIBLE);
-            mMyVideo.setPath(url);
-            mMyVideo.resume();
-        }
-    }
-
+    /**
+     * 初始白板数据(第一期暂时不用)
+     */
     private void initWhiteboardData(Context context) {
         mWhiteboardAdapter = new WhiteboardAdapter(context);
         mWhiteboardSv.setOffscreenPageLimit(2);
@@ -484,7 +477,7 @@ public class ClassroomController implements
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.resume();
         } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.resume();
+            mStuPreviewVideo.resume();
         }
     }
 
@@ -496,7 +489,7 @@ public class ClassroomController implements
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.pause();
         } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.pause();
+            mStuPreviewVideo.pause();
         }
     }
 
@@ -508,7 +501,7 @@ public class ClassroomController implements
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.destroy();
         } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.destroy();
+            mStuPreviewVideo.destroy();
         }
     }
 
@@ -572,6 +565,9 @@ public class ClassroomController implements
         mEraser.setSelected(false);
     }
 
+    /**
+     * 进入视频编辑页面
+     */
     public void enterVideoEditing(Bitmap bmp) {
         if (mWhiteboardLayout != null) {
             mVideoFrameBitmap = bmp.copy(Bitmap.Config.ARGB_4444, true);
@@ -583,20 +579,29 @@ public class ClassroomController implements
         }
     }
 
+    /**
+     * 切换摄像头
+     */
     public void switchCamera() {
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.switchCamera();
         } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.switchCamera();
+            mStuPreviewVideo.switchCamera();
         }
     }
 
+    /**
+     * 退出视频编辑页面
+     */
     public void exitVideoEditing() {
         if (mWhiteboardLayout != null) {
             mWhiteboardLayout.setVisibility(View.GONE);
         }
     }
 
+    /**
+     * 捕获视频帧
+     */
     public void takeVideoFrame(FrameCapturedCallback callback) {
         Bitmap bmp = null;
         if (mUser == Constants.User.TEACHER) {
@@ -607,13 +612,16 @@ public class ClassroomController implements
             if (callback != null) {
                 callback.onFrameCaptured(bmp);
             }
-            //mMyVideo.captureOriginalFrame(callback);
-            //mMyVideo.captureBeautyFrame(callback);
+            //mStuPreviewVideo.captureOriginalFrame(callback);
+            //mStuPreviewVideo.captureBeautyFrame(callback);
         }
 
         //callback.onFrameCaptured(bmp);
     }
 
+    /**
+     * 选择分享联系人
+     */
     public void selectShareContact(View anchor) {
         if (mSharePopWindow == null) {
             mSharePopWindow = new ShareDoodlePopWindow(mContext);
@@ -643,12 +651,18 @@ public class ClassroomController implements
         }
     }
 
+    /**
+     * 白板撤销
+     */
     private void undo() {
         if (mCurrWhiteboard != null) {
             mCurrWhiteboard.undo();
         }
     }
 
+    /**
+     * 白板反撤销
+     */
     private void redo() {
         if (mCurrWhiteboard != null) {
             mCurrWhiteboard.redo();
@@ -834,16 +848,52 @@ public class ClassroomController implements
         return app == Platform.AppType.WEB_CLASSROOM || app == Platform.AppType.MOBILE_WEB;
     }
 
-    public void playWhiteboardVideo(String url) {
+    /**
+     * 直播
+     */
+    public void playVideo(String url) {
         mLiveVideo.setPath(url);
         mLiveVideo.resume();
     }
 
+    /**
+     * 暂停推流
+     */
     public void pauseVideo() {
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.pause();
         } else if (mUser == Constants.User.STUDENT) {
-            mMyVideo.pause();
+            mStuPreviewVideo.pause();
+        }
+    }
+
+    /**
+     * 开始推流
+     */
+    public void publishStream(String url) {
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.setVisibility(View.VISIBLE);
+            mPublishVideo.setPath(url);
+            if (!mInitPublishVideo) {
+                mPublishVideo.start();
+            } else {
+                mPublishVideo.resume();
+            }
+        } else if (mUser == Constants.User.STUDENT) {
+            mStuPreviewVideo.setVisibility(View.VISIBLE);
+            mStuPreviewVideo.setPath(url);
+            mStuPreviewVideo.resume();
+        }
+    }
+
+    /**
+     * 老师端播放学生端视频
+     * @param url
+     */
+    public void playStuVideo(String url) {
+        if (mUser == Constants.User.STUDENT) {
+            mTeaLiveVideo.setPath(url);
+            mTeaLiveVideo.resume();
         }
     }
 

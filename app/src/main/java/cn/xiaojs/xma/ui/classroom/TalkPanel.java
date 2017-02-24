@@ -131,6 +131,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private LiveCollection<Attendee> mLiveCollection;
     private LiveCollection<Attendee> mSearchLiveCollection;
     private PanelCallback mCallback;
+    private OnPanelItemClick mOnPanelItemClick;
     private final Object LOCK = new Object();
     private String mTicket;
     private Socket mSocket;
@@ -153,6 +154,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
     public TalkPanel setPanelCallback(PanelCallback callback) {
         mCallback = callback;
+        return this;
+    }
+
+    public TalkPanel setPanelItemClick(OnPanelItemClick itemClick) {
+        mOnPanelItemClick = itemClick;
         return this;
     }
 
@@ -390,6 +396,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         if (mContactBookAdapter == null) {
             mContactBookAdapter = new ContactBookAdapter(mContext);
             mContactBookAdapter.setOnPortraitClickListener(this);
+            mContactBookAdapter.setOnPanelItemClick(mOnPanelItemClick);
             mContactBook.setAdapter(mContactBookAdapter);
             mContactBook.setDividerHeight(0);
         }
