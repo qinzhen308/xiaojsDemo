@@ -62,7 +62,7 @@ public class SettingsActivity extends BaseActivity {
             case R.id.account_safe:
                 break;
             case R.id.clear_cache_layout:
-                DataManager.clearCacheFiles(mContext);
+                DataManager.clearbyUser(mContext);
                 Toast.makeText(mContext, R.string.clear_cache_completed, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.feedback_help:

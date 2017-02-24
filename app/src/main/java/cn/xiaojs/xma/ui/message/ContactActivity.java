@@ -42,6 +42,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.common.xf_foundation.schemas.Social.ContactGroup.CLASSES;
@@ -519,7 +520,7 @@ public class ContactActivity extends BaseActivity {
 
                 holder = new ViewHolder();
 
-                holder.avatarView = (ImageView) convertView.findViewById(R.id.contact_avatar);
+                holder.avatarView = (RoundedImageView) convertView.findViewById(R.id.contact_avatar);
                 holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
                 holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
                 holder.delBtn = (Button) convertView.findViewById(R.id.del_contact);
