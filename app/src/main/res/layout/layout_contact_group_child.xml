@@ -43,11 +43,12 @@
             android:paddingRight="10dp"
             android:layout_marginLeft="10dp"
             >
-        <ImageView
+        <cn.xiaojs.xma.ui.widget.RoundedImageView
                 android:id="@+id/contact_avatar"
                 android:layout_width="@dimen/contact_thumbnail_size"
                 android:layout_height="@dimen/contact_thumbnail_size"
-                android:src="@drawable/default_avatar"/>
+                swipe:oval="true"
+                />
         <TextView
                 android:id="@+id/contact_name"
                 android:layout_width="wrap_content"

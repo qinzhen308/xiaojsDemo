@@ -64,6 +64,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * 获取缓存的联系人分组
+     * @param context
+     * @return
+     */
     public static Map<Long, ContactGroup> getGroupData(Context context) {
         return getCache(context).getGroupData();
     }
@@ -99,29 +104,67 @@ public class DataManager {
     }
 
     /**
-     * Clear the cache and local data
+     * 清除内存、缓存文件、数据库数据
      * @param context
      */
     public static void clearAllData(Context context) {
-        //memory data
-        MemCache.getDataCache(context).clear();
-        //cache files
-        clearCacheFiles(context);
-        //local data
-        ContactDao.clear(context);
+        clearMemoryData(context);
+        clearLocalData(context,true);
     }
 
     /**
-     * Clear the cache and local data
+     * 用于用户清理缓存使用
      * @param context
      */
-    public static void clearCacheFiles(Context context) {
+    public static void clearbyUser(Context context) {
+        clearLocalData(context,false);
+    }
+
+    /**
+     * 清除内存缓存数据
+     * @param context
+     */
+    public static void clearMemoryData(Context context) {
+        //memory data
+        MemCache.getDataCache(context).clear();
+        Glide.get(context).clearMemory();
+    }
+
+
+
+    private static void clearLocalData(Context context, final boolean db) {
+        final Context appcontext = context.getApplicationContext();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //cache files
+                clearCacheFiles(appcontext);
+                if (db){
+                    //db data
+                    ContactDao.clear(appcontext);
+                }
+
+            }
+        }).start();
+
+    }
+
+    private static void clearCacheFiles(Context context) {
         //api cache
         clearAPICache(context);
+        //清除本地图片缓存
+        //Glide.get(context).clearMemory();
+        Glide.get(context).clearDiskCache();
+    }
 
-        //TODO 清除图片缓存
-        //img cache
-        //Glide.getPhotoCacheDir();
+    /**
+     * clear cache data which create by api service
+     */
+    private static void clearAPICache(Context context) {
+        File cacheDir = new File(context.getCacheDir(), XiaojsConfig.HTTP_CACHE_DIR);
+        FileUtil.clearDirFiles(cacheDir);
+
     }
 
     /**
@@ -320,15 +363,6 @@ public class DataManager {
         return false;
     }
 
-    /**
-     * clear cache data which create by api service
-     */
-    public static void clearAPICache(Context context) {
-
-        File cacheDir = new File(context.getCacheDir(), XiaojsConfig.HTTP_CACHE_DIR);
-        FileUtil.clearDirFiles(cacheDir);
-
-    }
 
 
 
