@@ -196,6 +196,7 @@
     <string name="on_shelves_tips">上架后，学生才可以报名直播课</string>
     <string name="publish_personal_page">发布到个人主页</string>
     <string name="publish_personal_page_tips">在个人主页中展示，才可以分享</string>
+    <string name="publish_to_circle">发布到小圈</string>
     <string name="live_lesson_name_error">请输入%1$d&#8211;%2$d个字的直播课名称</string>
     <string name="subject_empty">请选择学科类目</string>
     <string name="teach_form_empty">请选择教学形式</string>
