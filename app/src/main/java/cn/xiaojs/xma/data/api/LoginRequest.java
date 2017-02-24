@@ -16,6 +16,7 @@ import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.Privilege;
 
+import cn.xiaojs.xma.util.JpushUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -80,6 +81,9 @@ public class LoginRequest extends ServiceRequest {
 
             Intent i = new Intent(getContext(), SyncService.class);
             DataManager.syncData(getContext(),i);
+
+            //jush
+            JpushUtil.loginJpush();
 
         }
     }

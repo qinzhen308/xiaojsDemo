@@ -88,6 +88,21 @@ public class Social {
         public static final int STUDENT = 4;
     }
 
+    public static boolean isDefaultGroup(long gid) {
+        if (gid == ContactGroup.TEACHERS
+                || gid == ContactGroup.STUDENTS
+                || gid == ContactGroup.CLASSMATES
+                || gid == ContactGroup.FRIENDS
+                || gid == ContactGroup.ORGANIZATIONS
+                || gid == ContactGroup.COLLEAGUES
+                || gid == ContactGroup.STRANGERS
+                || gid == ContactGroup.CLASSES) {
+            return true;
+
+        }
+        return false;
+    }
+
     /**
      *
      * Returns the user-friendly name for the specified contact group.

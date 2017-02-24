@@ -18,6 +18,7 @@ import cn.xiaojs.xma.data.loader.SyncService;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.FileUtil;
+import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.SecurityUtil;
 import okhttp3.ResponseBody;
 
@@ -61,6 +62,9 @@ public class DataManager {
         if (AccountDataManager.isLogin(context)) {
             //init data cache
             getCache(context).init();
+
+            //init jpush
+            JpushUtil.loginJpush();
         }
     }
 

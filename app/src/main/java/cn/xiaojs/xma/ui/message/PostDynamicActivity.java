@@ -2,6 +2,8 @@ package cn.xiaojs.xma.ui.message;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -103,7 +105,7 @@ public class PostDynamicActivity extends BaseActivity {
 
                 Intent intent = new Intent(this, ShareScopeActivity.class);
                 intent.putExtra(ShareScopeActivity.CHOOSE_INDEX, checkedIndex);
-                intent.putExtra(EXTRA_CLASS_POS,checkClasspos);
+                intent.putExtra(EXTRA_CLASS_POS, checkClasspos);
 
                 startActivityForResult(intent, REQUEST_SHARE_SCOPE_CODE);
                 break;
@@ -112,8 +114,8 @@ public class PostDynamicActivity extends BaseActivity {
                 //TODO when specifyScope equals Social.ShareScope.CLASSES ,start classes activity only
 
                 Intent iat = new Intent(this, CloseFriendActivity.class);
-                if (atCheckedPos != null && atCheckedPos.length>0) {
-                    iat.putExtra(CloseFriendActivity.CHECKED_POS,atCheckedPos);
+                if (atCheckedPos != null && atCheckedPos.length > 0) {
+                    iat.putExtra(CloseFriendActivity.CHECKED_POS, atCheckedPos);
                 }
 
                 if (audience != null && audience.type == Social.ShareScope.SPECIFIC) {
@@ -121,7 +123,7 @@ public class PostDynamicActivity extends BaseActivity {
                             chooseContacts);
                 }
 
-                startActivityForResult(iat,REQUEST_AT_CODE);
+                startActivityForResult(iat, REQUEST_AT_CODE);
                 break;
             case R.id.right_image:
                 postDynamic();
@@ -147,7 +149,7 @@ public class PostDynamicActivity extends BaseActivity {
 
             Contact c = atContacts.get(i);
             builder.append(c.alias);
-            if (i != size-1){
+            if (i != size - 1) {
                 builder.append(", ");
             }
         }
@@ -241,8 +243,9 @@ public class PostDynamicActivity extends BaseActivity {
                 audience = data.getParcelableExtra(ShareScopeActivity.CHOOSE_DATA);
                 checkedIndex = data.getIntExtra(ShareScopeActivity.CHOOSE_INDEX, 0);
                 chooseContacts = (ArrayList<Contact>) data.getSerializableExtra(ShareScopeActivity.CHOOSE_C);
-                checkClasspos = data.getIntExtra(EXTRA_CLASS_POS,-1);
+                checkClasspos = data.getIntExtra(EXTRA_CLASS_POS, -1);
 
+                updateChange();
                 updateScope();
             } else if (requestCode == REQUEST_AT_CODE) {
                 atContacts = (ArrayList<Contact>) data.getSerializableExtra(
@@ -253,6 +256,12 @@ public class PostDynamicActivity extends BaseActivity {
             }
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        ChoiceContactActivity.checkedPositions = null;
+        super.onDestroy();
     }
 
     private void uploadPic(final String filePath, final int photoWidth, final int photoHeight) {
@@ -296,6 +305,27 @@ public class PostDynamicActivity extends BaseActivity {
         });
     }
 
+    private void updateChange() {
+        if (audience == null) {
+            ChoiceContactActivity.checkedPositions = null;
+            checkClasspos = -1;
+            return;
+        }
+
+        switch (audience.type) {
+            case Social.ShareScope.CLASSES:
+                ChoiceContactActivity.checkedPositions = null;
+                return;
+            case Social.ShareScope.SPECIFIC:
+                checkClasspos = -1;
+                return;
+            default:
+                checkClasspos = -1;
+                ChoiceContactActivity.checkedPositions = null;
+        }
+
+    }
+
     private void updateScope() {
         String name = getScopeName(audience.type);
         scope.setText(name);
@@ -303,7 +333,7 @@ public class PostDynamicActivity extends BaseActivity {
         if (audience.type == Social.ShareScope.CLASSES
                 || audience.type == Social.ShareScope.PRIVATE) {
             remindWrapper.setVisibility(View.GONE);
-        }else{
+        } else {
             clearRemid();
             remindWrapper.setVisibility(View.VISIBLE);
         }

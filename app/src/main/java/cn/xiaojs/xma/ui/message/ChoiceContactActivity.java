@@ -2,7 +2,7 @@ package cn.xiaojs.xma.ui.message;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -15,25 +15,22 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
+
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
 import cn.xiaojs.xma.data.DataManager;
-import cn.xiaojs.xma.data.SocialManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+
 import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+
 import java.util.List;
-import java.util.Map;
+
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -52,6 +49,8 @@ public class ChoiceContactActivity extends BaseActivity {
 
     private ChoiceAdapter choiceAdapter;
 
+    public static SparseArray<SparseBooleanArray> checkedPositions;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_contact);
@@ -62,6 +61,7 @@ public class ChoiceContactActivity extends BaseActivity {
         //listView.setDivider(getResources().getDrawable(R.color.common_list_line));
         //listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         editText.setVisibility(View.GONE);
+
 
         loadContactData();
     }
@@ -158,7 +158,6 @@ public class ChoiceContactActivity extends BaseActivity {
             ArrayList<Contact> contacts = choiceAdapter.getCheckedContacts();
             Intent i = new Intent();
             i.putExtra(CHOOSE_CONTACT_EXTRA,contacts);
-           // bundle.putSparseParcelableArray(CHOOSE_CONTACT_INDEX,choiceAdapter.getCheckedPositions());
 
             setResult(RESULT_OK,i);
         }else{
@@ -172,7 +171,7 @@ public class ChoiceContactActivity extends BaseActivity {
     private class ChoiceAdapter extends BaseExpandableListAdapter {
 
         private LayoutInflater inflater;
-        private SparseArray<SparseBooleanArray> checkedPositions;
+
 
         private ArrayList<Contact> checkedContacts;
 
@@ -187,8 +186,10 @@ public class ChoiceContactActivity extends BaseActivity {
             inflater = LayoutInflater.from(context);
 
             this.groupData = groupData;
-            checkedPositions = new SparseArray<>();
 
+            if (checkedPositions == null){
+                checkedPositions = new SparseArray<>();
+            }
         }
 
         public void changeData(ArrayList<ContactGroup> data) {
@@ -386,7 +387,7 @@ public class ChoiceContactActivity extends BaseActivity {
         public void setChoiceMode(int choiceMode) {
             this.choiceMode = choiceMode;
 
-            checkedPositions.clear();
+            //checkedPositions.clear();
 
         }
 
