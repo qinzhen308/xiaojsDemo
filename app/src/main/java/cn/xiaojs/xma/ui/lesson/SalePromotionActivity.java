@@ -197,7 +197,10 @@ public class SalePromotionActivity extends BaseActivity {
                     break;
                 case R.id.enroll_discount:
                     if (s.length() > 0) {
-                        if (checkDiscountLegal(s.toString(), true)) {
+                        if (isStartWhitDot(s.toString())) {
+                            mEnrollDiscountEdt.setText("0.");
+                            mEnrollDiscountEdt.setSelection(2);
+                        } else if (checkDiscountLegal(s.toString(), true)) {
                             mEnrollPromotionPriceTv.setText(formatPrice(mOriginalPrice * getDiscount(s.toString()) / 10.f, mPricingType));
                         } else {
                             mEnrollPromotionPriceTv.setText("");
@@ -209,7 +212,10 @@ public class SalePromotionActivity extends BaseActivity {
                     break;
                 case R.id.attend_lesson_discount:
                     if (s.length() > 0) {
-                        if (checkDiscountLegal(s.toString(), true)) {
+                        if (isStartWhitDot(s.toString())) {
+                            mLessonDiscountEdt.setText("0.");
+                            mLessonDiscountEdt.setSelection(2);
+                        } else if (checkDiscountLegal(s.toString(), true)) {
                             mLessonPromotionPriceTv.setText(formatPrice(mOriginalPrice * getDiscount(s.toString()) / 10.f, mPricingType));
                         } else {
                             mLessonPromotionPriceTv.setText("");
@@ -294,6 +300,14 @@ public class SalePromotionActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+    private boolean isStartWhitDot(String discount) {
+        if (!TextUtils.isEmpty(discount) && discount.charAt(0) == '.') {
+            return true;
+        }
+
+        return false;
     }
 
     private boolean checkDiscountLegal(String discount, boolean withTips) {

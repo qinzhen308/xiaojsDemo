@@ -75,18 +75,19 @@ public class TeachLessonActivity extends BaseActivity {
                 filter();
                 break;
             case R.id.right_image:
-                CommonPopupMenu menu = new CommonPopupMenu(this);
-                String[] items = getResources().getStringArray(R.array.my_course_list);
-                menu.addTextItems(items);
-                menu.addImgItems(new Integer[]{R.drawable.open_course_selector});
-                menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        handleRightClick(i);
-                    }
-                });
-                int offset = getResources().getDimensionPixelSize(R.dimen.px68);
-                menu.show(mBaseHeader,offset);
+                handleRightClick(0);
+                //CommonPopupMenu menu = new CommonPopupMenu(this);
+                //String[] items = getResources().getStringArray(R.array.my_course_list);
+                //menu.addTextItems(items);
+                //menu.addImgItems(new Integer[]{R.drawable.open_course_selector});
+                //menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                //    @Override
+                //    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //        handleRightClick(i);
+                //    }
+                //});
+                //int offset = getResources().getDimensionPixelSize(R.dimen.px68);
+                //menu.show(mBaseHeader,offset);
                 break;
         }
     }
