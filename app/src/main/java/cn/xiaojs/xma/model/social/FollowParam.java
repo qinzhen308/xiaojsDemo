@@ -12,6 +12,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class FollowParam {
 
     public String contact;
-    public int group;
+    public long group;
 
 }

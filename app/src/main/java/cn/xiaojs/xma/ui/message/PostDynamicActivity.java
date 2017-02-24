@@ -38,6 +38,8 @@ public class PostDynamicActivity extends BaseActivity {
     public static final int REQUEST_AT_CODE = 0x5;
     public static final String KEY_POST_TYPE = "key_post_type";
 
+    public static final String EXTRA_CLASS_POS = "cpos";
+
     @BindView(R.id.pic_thumbnail)
     ImageView thumbnailView;
 
@@ -58,6 +60,7 @@ public class PostDynamicActivity extends BaseActivity {
     private String photoKey;
     private Dimension photoDim;
     private long[] atCheckedPos;
+    private int checkClasspos = -1;
 
     private int specifyScope;
 
@@ -100,6 +103,7 @@ public class PostDynamicActivity extends BaseActivity {
 
                 Intent intent = new Intent(this, ShareScopeActivity.class);
                 intent.putExtra(ShareScopeActivity.CHOOSE_INDEX, checkedIndex);
+                intent.putExtra(EXTRA_CLASS_POS,checkClasspos);
 
                 startActivityForResult(intent, REQUEST_SHARE_SCOPE_CODE);
                 break;
@@ -237,6 +241,7 @@ public class PostDynamicActivity extends BaseActivity {
                 audience = data.getParcelableExtra(ShareScopeActivity.CHOOSE_DATA);
                 checkedIndex = data.getIntExtra(ShareScopeActivity.CHOOSE_INDEX, 0);
                 chooseContacts = (ArrayList<Contact>) data.getSerializableExtra(ShareScopeActivity.CHOOSE_C);
+                checkClasspos = data.getIntExtra(EXTRA_CLASS_POS,-1);
 
                 updateScope();
             } else if (requestCode == REQUEST_AT_CODE) {

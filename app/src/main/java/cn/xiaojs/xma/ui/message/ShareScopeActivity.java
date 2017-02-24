@@ -17,6 +17,8 @@ import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
+import static cn.xiaojs.xma.ui.message.PostDynamicActivity.EXTRA_CLASS_POS;
+
 public class ShareScopeActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     public static final int REQUEST_CHOOSE_CONTACT_CODE = 0x1;
@@ -34,12 +36,16 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
     private ArrayList<Doc> docs;
     private ArrayList<Contact> choiceContacts;
 
+    private static int class_pos = -1;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_share_scope);
         setMiddleTitle(R.string.who_can_see_me);
         setRightText(R.string.finish);
         setRightTextColor(getResources().getColor(R.color.font_orange));
+
+        class_pos = getIntent().getIntExtra(EXTRA_CLASS_POS, -1);
 
         initView();
     }
@@ -93,6 +99,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
         data.putExtra(CHOOSE_DATA, audience);
         data.putExtra(CHOOSE_INDEX, checkedPos);
         data.putExtra(CHOOSE_C,choiceContacts);
+        data.putExtra(EXTRA_CLASS_POS,class_pos);
         setResult(RESULT_OK, data);
 
         finish();
@@ -105,8 +112,9 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
 
         if (position == 2) {
             // 班级圈
-            startActivityForResult(new Intent(this, ChooseClassActivity.class),
-                    REQUEST_CHOOSE_CLASS_CODE);
+            Intent intent = new Intent(this, ChooseClassActivity.class);
+            intent.putExtra(EXTRA_CLASS_POS,class_pos);
+            startActivityForResult(intent, REQUEST_CHOOSE_CLASS_CODE);
         } else if (position == 3) {
 
             //FIXME 如果用户再次进入选择联系人，需要将之前以选择的联系人删除清零。
@@ -144,6 +152,8 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
             if (resultCode == RESULT_OK) {
                 choiceContacts = (ArrayList<Contact>) data.getSerializableExtra(
                         ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
+
+                class_pos = data.getIntExtra(EXTRA_CLASS_POS,-1);
 
                 if (choiceContacts != null && choiceContacts.size() > 0) {
 

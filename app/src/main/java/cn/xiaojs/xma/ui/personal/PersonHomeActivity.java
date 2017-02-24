@@ -51,12 +51,14 @@ import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 import cn.xiaojs.xma.ui.view.RelationshipView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.PortraitView;
 import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.FastBlur;
+import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 public class PersonHomeActivity extends BaseScrollTabActivity {
@@ -344,7 +346,28 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
                 startActivity(intent);
             } else {//未关注先提示去关注
+                final CommonDialog dialog = new CommonDialog(this);
+                if (mBean.basic == null){
+                    mBean.basic = new cn.xiaojs.xma.model.account.Account.Basic();
+                    mBean.basic.setSex("true");
+                }
+                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.basic.getSex()),StringUtil.getTa(mBean.basic.getSex())));
+                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.basic.getSex())));
+                dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        dialog.dismiss();
+                        follow();
+                    }
+                });
 
+                dialog.show();
             }
         }
     }
@@ -402,6 +425,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
         } else {
             mScrollRightText.setText("已关注");
+            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
         mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
         mScrollMiddleText.setText("");

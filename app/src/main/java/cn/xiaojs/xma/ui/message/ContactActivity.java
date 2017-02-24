@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -32,6 +33,7 @@ import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 
@@ -42,6 +44,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.common.xf_foundation.schemas.Social.ContactGroup.CLASSES;
@@ -55,6 +58,9 @@ public class ContactActivity extends BaseActivity {
     EditText editText;
 
     private ContactAdapter contactAdapter;
+
+
+    private static int class_pos = -1;
 
     @Override
     protected void addViewContent() {
@@ -126,20 +132,38 @@ public class ContactActivity extends BaseActivity {
 
     }
 
-    public void showMoveContactDlg() {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // move contact
+    public void showMoveContactDlg(int groupPosition, final Contact contact) {
 
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_dlg_list,null);
+        final ListView groupListView = (ListView) view;
 
-        View view = LayoutInflater.from(this).inflate(R.layout.layout_dlg_list, null);
-        ListView groupListView = (ListView) view;
+        List<ContactGroup> groupList= new ArrayList<>(contactAdapter.getGroupData());
 
+        if (class_pos != -1) {
+            groupList.remove(class_pos);
+
+            if (groupPosition > class_pos){
+                groupPosition--;
+            }
+
+        }
 
         MoveAdapter payAdapter = new MoveAdapter(this,
                 R.layout.layout_single_select_item,
                 R.id.title,
-                contactAdapter.getGroupData());
+                groupList);
 
-        groupListView.setAdapter(payAdapter);
         groupListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        groupListView.setAdapter(payAdapter);
+        groupListView.setItemChecked(groupPosition,true);
+        groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int p = position;
+            }
+        });
 
         final CommonDialog dialog = new CommonDialog(this);
         dialog.setTitle(R.string.move_contact_to);
@@ -154,10 +178,11 @@ public class ContactActivity extends BaseActivity {
         dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
-
-
-                // TODO 移动操作
                 dialog.dismiss();
+                //TODO 移动联系人
+//                int pos = groupListView.getCheckedItemPosition();
+//                ContactGroup group = (ContactGroup) groupListView.getItemAtPosition(pos);
+//                requestMove(contact,group.group);
             }
         });
 
@@ -165,10 +190,17 @@ public class ContactActivity extends BaseActivity {
 
     }
 
+    private void requestMove(Contact contact, long group) {
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Unfollow contact
 
-    private void requestUnfollow(final ContactGroup contactGroup, final Contact contact, final int groupPosition, final int childPosition) {
+    private void requestUnfollow(final ContactGroup contactGroup,
+                                 final Contact contact,
+                                 final int groupPosition,
+                                 final int childPosition) {
 
         showProgress(true);
         SocialManager.unfollowContact(this, contact.account, new APIServiceCallback() {
@@ -190,7 +222,10 @@ public class ContactActivity extends BaseActivity {
         });
     }
 
-    private void removeContact(ContactGroup contactGroup, Contact contact, int groupPosition, int childPosition) {
+    private void removeContact(ContactGroup contactGroup,
+                               Contact contact,
+                               int groupPosition,
+                               int childPosition) {
         if (contactAdapter == null)
             return;
 
@@ -368,12 +403,15 @@ public class ContactActivity extends BaseActivity {
 
         Map<Long, ContactGroup> tempMap = new HashMap<>(cacheMap);
 
-        for (ContactGroup contactGroup : contactData) {
+        for (int i=0;i< contactData.size(); i++) {
+
+            ContactGroup contactGroup = contactData.get(i);
 
             long id = contactGroup.group;
 
             if (id == CLASSES){
                 contactGroup.name = "班级";
+                class_pos = i;
                 continue;
             }
 
@@ -519,7 +557,7 @@ public class ContactActivity extends BaseActivity {
 
                 holder = new ViewHolder();
 
-                holder.avatarView = (ImageView) convertView.findViewById(R.id.contact_avatar);
+                holder.avatarView = (RoundedImageView) convertView.findViewById(R.id.contact_avatar);
                 holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
                 holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
                 holder.delBtn = (Button) convertView.findViewById(R.id.del_contact);
@@ -533,18 +571,27 @@ public class ContactActivity extends BaseActivity {
 
             final Contact c = getChild(groupPosition, childPosition);
 
-//            String avatar = Account.getAvatar(c.account, holder.size);
-//            Glide.with(ContactActivity.this)
-//                    .load(avatar).error(R.drawable.default_avatar)
-//                    .into(holder.avatarView);
+            String avatar = Account.getAvatar(c.account, holder.size);
+            Glide.with(ContactActivity.this)
+                    .load(avatar)
+                    .error(R.drawable.default_avatar)
+                    .into(holder.avatarView);
 
-            String name = TextUtils.isEmpty(c.title)? c.alias : c.title;
+            final boolean isclass = !TextUtils.isEmpty(c.title);
+
+            String name = isclass? c.title : c.alias;
             holder.nameView.setText(name);
 
             holder.moveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showMoveContactDlg();
+
+                    if (isclass){
+                        Toast.makeText(ContactActivity.this, R.string.cannt_move_class,Toast.LENGTH_SHORT).show();
+                    }else{
+                        showMoveContactDlg(groupPosition,c);
+                    }
+
                 }
             });
 
@@ -552,10 +599,7 @@ public class ContactActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
 
-
                     ContactGroup cg = getGroup(groupPosition);
-
-
                     requestUnfollow(cg, c, groupPosition, childPosition);
                 }
             });
