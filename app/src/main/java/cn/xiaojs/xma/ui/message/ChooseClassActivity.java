@@ -23,6 +23,8 @@ import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
+import static cn.xiaojs.xma.ui.message.PostDynamicActivity.EXTRA_CLASS_POS;
+
 public class ChooseClassActivity extends BaseActivity {
 
     @BindView(R.id.lv)
@@ -73,6 +75,11 @@ public class ChooseClassActivity extends BaseActivity {
                     contacts);
             listView.setAdapter(adapter);
 
+            int pos = getIntent().getIntExtra(EXTRA_CLASS_POS, -1);
+            if (pos >=0 && listView.getCount()>pos){
+                listView.setItemChecked(pos,true);
+            }
+
 
 //            long[] pos = getIntent().getLongArrayExtra(CHECKED_POS);
 //            if (pos !=null && pos.length >0) {
@@ -117,13 +124,12 @@ public class ChooseClassActivity extends BaseActivity {
                 Contact contact = adapter.getItem(pos);
                 contacts.add(contact);
                 i.putExtra(ChoiceContactActivity.CHOOSE_CONTACT_EXTRA, contacts);
-                //i.putExtra(CHECKED_POS,pos);
+                i.putExtra(EXTRA_CLASS_POS,pos);
                 setResult(RESULT_OK, i);
             }
 
         }
         setResult(RESULT_OK, i);
-
         finish();
     }
 

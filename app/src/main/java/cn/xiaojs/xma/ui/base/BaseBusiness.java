@@ -18,12 +18,17 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import java.text.DecimalFormat;
+import java.util.Iterator;
+import java.util.Map;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
-
-import java.text.DecimalFormat;
+import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.ui.widget.SingleSelectDialog;
 
 public class BaseBusiness {
     public final static DecimalFormat mPriceDecimalFormat = new DecimalFormat("0.00");
@@ -170,6 +175,51 @@ public class BaseBusiness {
 
     public static String formatDiscount(float price) {
         return mDiscountDecimalFormat.format(price);
+    }
+
+    public static void showFollowDialog(Context context, final OnFollowListener listener) {
+        SingleSelectDialog dialog = new SingleSelectDialog(context);
+        final Map<Long, ContactGroup> group = DataManager.getGroupData(context);
+        Iterator<ContactGroup> its = group.values().iterator();
+        if (its != null) {
+            final String[] items = new String[group.size()];
+            int i = 0;
+            while (its.hasNext()) {
+                ContactGroup cg = its.next();
+                items[i] = cg.name;
+                i++;
+            }
+            dialog.setItems(items);
+            dialog.setTitle(R.string.add_contact_to);
+            dialog.setOnOkClick(new SingleSelectDialog.OnOkClickListener() {
+                @Override
+                public void onOk(int position) {
+                    if (listener != null) {
+                        String name = items[position];
+                        long groupId = getGroup(group, name);
+                        listener.onFollow(groupId);
+                    }
+                }
+            });
+            dialog.show();
+        }
+
+    }
+
+    private static long getGroup(Map<Long, ContactGroup> group, String name) {
+        if (group != null && !TextUtils.isEmpty(name)) {
+            for (ContactGroup g : group.values()) {
+                if (g.name.equalsIgnoreCase(name)) {
+                    return g.group;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    public interface OnFollowListener {
+        void onFollow(long group);
     }
 
 }

@@ -52,6 +52,8 @@ import cn.xiaojs.xma.common.im.utils.FileHelper;
 import cn.xiaojs.xma.common.im.utils.HandleResponseCode;
 import cn.xiaojs.xma.common.im.utils.IdHelper;
 import cn.xiaojs.xma.common.im.utils.SharePreferenceManager;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
+import cn.xiaojs.xma.ui.personal.PersonalInfoActivity;
 import cn.xiaojs.xma.ui.widget.SingleSelectDialog;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -71,6 +73,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     public static final String TARGET_ID = "targetId";
     public static final String TARGET_APP_KEY = "targetAppKey";
     public static final String GROUP_ID = "groupId";
+    public static final String ACCOUNT_ID = "account_id";
     private static final int REQUEST_CODE_TAKE_PHOTO = 4;
     private static final int REQUEST_CODE_SELECT_PICTURE = 6;
     private static final int RESULT_CODE_SELECT_PICTURE = 8;
@@ -98,6 +101,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private String mTargetId;
     private String mTargetAppKey;
     private String mPhotoPath = null;
+    private String mAccount;
 
     Window mWindow;
     InputMethodManager mImm;
@@ -120,25 +124,26 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         Intent intent = getIntent();
         mTargetId = intent.getStringExtra(TARGET_ID);
         mTargetAppKey = intent.getStringExtra(TARGET_APP_KEY);
-        if (TextUtils.isEmpty(mTargetAppKey)){
+        mAccount = intent.getStringExtra(ACCOUNT_ID);
+        if (TextUtils.isEmpty(mTargetAppKey)) {
             mTargetAppKey = "e87cffb332432eec3c0807ba";
         }
         if (!TextUtils.isEmpty(mTargetId)) {
             mIsSingle = true;
             mConv = JMessageClient.getSingleConversation(mTargetId, mTargetAppKey);
             if (mConv != null) {
-                UserInfo userInfo = (UserInfo)mConv.getTargetInfo();
+                UserInfo userInfo = (UserInfo) mConv.getTargetInfo();
                 if (TextUtils.isEmpty(userInfo.getNickname())) {
                     mChatView.setChatTitle(userInfo.getUserName());
-                }else {
+                } else {
                     mChatView.setChatTitle(userInfo.getNickname());
                 }
             } else {
                 mConv = Conversation.createSingleConversation(mTargetId, mTargetAppKey);
-                UserInfo userInfo = (UserInfo)mConv.getTargetInfo();
+                UserInfo userInfo = (UserInfo) mConv.getTargetInfo();
                 if (TextUtils.isEmpty(userInfo.getNickname())) {
                     mChatView.setChatTitle(userInfo.getUserName());
-                }else {
+                } else {
                     mChatView.setChatTitle(userInfo.getNickname());
                 }
             }
@@ -225,7 +230,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             dialog.setTitle("消息设置");
             dialog.setItems(getResources().getStringArray(R.array.chat_setting));
             dialog.show();
-        }else if (v.getId() == IdHelper.getViewID(mContext, "jmui_right_btn2")){//聊天成员按钮，更多按钮之右
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_right_btn2")) {//聊天成员按钮，更多按钮之右
+            Intent intent = new Intent(this, PersonalInfoActivity.class);
+            intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, mAccount);
+            startActivity(intent);
 
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_switch_voice_ib")) {
             mChatView.dismissMoreMenu();
@@ -279,14 +287,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             Intent intent = new Intent();
             intent.setClass(this, CropImageMainActivity.class);
             intent.putExtra(CropImagePath.CROP_NEVER, true);
-            intent.putExtra(CropImageActivity.ACTION_DONE_TXT,getString(R.string.send));
+            intent.putExtra(CropImageActivity.ACTION_DONE_TXT, getString(R.string.send));
             startActivityForResult(intent, REQUEST_CODE_SELECT_PICTURE);
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_pick_from_camera_btn")) {
             takePhoto();
             if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
                 mChatView.dismissMoreMenu();
             }
-        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_pick_from_local_btn")){//图片
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_pick_from_local_btn")) {//图片
             if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
                 mChatView.dismissMoreMenu();
             }
@@ -298,7 +306,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 intent.putExtra(GROUP_ID, mGroupId);
             }
             if (!FileHelper.isSdCardExist()) {
-                ToastUtil.showToast(getApplicationContext(),"sdcard_not_exist_toast");
+                ToastUtil.showToast(getApplicationContext(), "sdcard_not_exist_toast");
             } else {
 //                //intent.setClass(this, PickPictureTotalActivity.class);
 //                intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -331,7 +339,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     /**
      * 处理发送图片，刷新界面
-     *
      */
     private void handleImgRefresh(int id) {
         mChatAdapter.setSendImg(id);
@@ -418,8 +425,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     /**
-     * 用于处理拍照发送图片返回结果以及从其他界面回来后刷新聊天标题
-     * 或者聊天消息
+     * 用于处理拍照发送图片返回结果以及从其他界面回来后刷新聊天标题 或者聊天消息
      *
      * @param requestCode 请求码
      * @param resultCode  返回码
@@ -447,7 +453,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         }
                     }
                 });
-            }  catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 Log.i(TAG, "onActivityResult unexpected result");
             }
         } else if (requestCode == REQUEST_CODE_SELECT_PICTURE) {
@@ -491,35 +497,35 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private void handleImage(Intent intent){
-        if (intent != null){
+    private void handleImage(Intent intent) {
+        if (intent != null) {
             String cropImgPath = intent.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
-            if (!TextUtils.isEmpty(cropImgPath)){
+            if (!TextUtils.isEmpty(cropImgPath)) {
                 File file = new File(cropImgPath);
-                if (BitmapLoader.verifyPictureSize(file.getAbsolutePath())){
+                if (BitmapLoader.verifyPictureSize(file.getAbsolutePath())) {
                     ImageContent.createImageContentAsync(file, new ImageContent.CreateImageContentCallback() {
                         @Override
                         public void gotResult(int status, String desc, ImageContent imageContent) {
                             int msgId = -1;
-                            if (status == 0){
+                            if (status == 0) {
                                 Message message = mConv.createSendMessage(imageContent);
                                 msgId = message.getId();
-                            }else {
+                            } else {
                                 HandleResponseCode.onHandle(ChatActivity.this, status, false);
                             }
                             handleImgRefresh(msgId);
                         }
                     });
-                }else {
+                } else {
                     Bitmap bitmap = BitmapLoader.getBitmapFromFile(cropImgPath, 720, 1280);
                     ImageContent.createImageContentAsync(bitmap, new ImageContent.CreateImageContentCallback() {
                         @Override
                         public void gotResult(int status, String desc, ImageContent imageContent) {
                             int msgId = -1;
-                            if (status == 0){
+                            if (status == 0) {
                                 Message message = mConv.createSendMessage(imageContent);
                                 msgId = message.getId();
-                            }else {
+                            } else {
                                 HandleResponseCode.onHandle(ChatActivity.this, status, false);
                             }
                             handleImgRefresh(msgId);
@@ -628,13 +634,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                             //检查自己是否在群组中
                             UserInfo info = activity.mGroupInfo.getGroupMemberInfo(JMessageClient
                                     .getMyInfo().getUserName());
-                            if (!TextUtils.isEmpty(activity.mGroupInfo.getGroupName())){
+                            if (!TextUtils.isEmpty(activity.mGroupInfo.getGroupName())) {
                                 activity.mGroupName = activity.mGroupInfo.getGroupName();
-                                if (info != null){
+                                if (info != null) {
                                     activity.mChatView.setChatTitle(activity.mGroupName,
                                             activity.mGroupInfo.getGroupMembers().size());
                                     activity.mChatView.showRightBtn();
-                                }else {
+                                } else {
                                     activity.mChatView.setChatTitle(activity.mGroupName);
                                     activity.mChatView.dismissRightBtn();
                                 }

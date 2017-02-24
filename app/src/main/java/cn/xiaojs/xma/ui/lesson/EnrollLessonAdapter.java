@@ -36,6 +36,7 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.model.GELessonsResponse;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
@@ -324,6 +325,13 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         if (mFragment != null) {
             mFragment.showTop();
         }
+    }
+
+    @Override
+    protected void onEmptyButtonClick() {
+        Intent intent = new Intent(mContext, MainActivity.class);
+        intent.putExtra(MainActivity.KEY_POSITION,1);
+        mContext.startActivity(intent);
     }
 
     public void request(Criteria criteria) {

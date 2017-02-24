@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.widget;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -31,6 +32,7 @@ public class CommonDialog extends Dialog {
 
     private TextView mTitle;
     private TextView mDesc;
+    private FrameLayout mNormal;
     private FrameLayout mContainer;
     private Button mLeftButton;
     private Button mRightButton;
@@ -38,9 +40,10 @@ public class CommonDialog extends Dialog {
     private OnClickListener rightListener;
     private String titleStr;
     private String descStr;
+    private String okStr;
 
     public CommonDialog(Context context) {
-        super(context,R.style.CommonDialog);
+        super(context, R.style.CommonDialog);
         init();
     }
 
@@ -61,6 +64,7 @@ public class CommonDialog extends Dialog {
         mTitle = (TextView) findViewById(R.id.common_dialog_title);
         mDesc = (TextView) findViewById(R.id.common_dialog_desc);
         mContainer = (FrameLayout) findViewById(R.id.common_dialog_container);
+        mNormal = (FrameLayout) findViewById(R.id.common_dialog_normal_wrapper);
         mLeftButton = (Button) findViewById(R.id.left_btn);
         mRightButton = (Button) findViewById(R.id.right_btn);
         WindowManager.LayoutParams params = dialogWindow.getAttributes();
@@ -73,7 +77,7 @@ public class CommonDialog extends Dialog {
         mLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (leftListener != null){
+                if (leftListener != null) {
                     leftListener.onClick();
                 }
             }
@@ -81,7 +85,7 @@ public class CommonDialog extends Dialog {
         mRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (rightListener != null){
+                if (rightListener != null) {
                     rightListener.onClick();
                 }
             }
@@ -97,7 +101,6 @@ public class CommonDialog extends Dialog {
 //        }
 
 
-
     }
 
     public void setDialogLayout(int w, int h) {
@@ -111,9 +114,9 @@ public class CommonDialog extends Dialog {
     public void setCustomView(View customView) {
 
         if (mContainer != null) {
+            mContainer.setVisibility(View.VISIBLE);
             mContainer.addView(customView);
         }
-
         mDesc.setVisibility(View.GONE);
     }
 
@@ -123,36 +126,60 @@ public class CommonDialog extends Dialog {
 
     @Override
     public void show() {
-        mTitle.setText(titleStr);
-        mDesc.setText(descStr);
+        if (TextUtils.isEmpty(titleStr) && TextUtils.isEmpty(descStr)) {
+            mNormal.setVisibility(View.GONE);
+        } else {
+            mNormal.setVisibility(View.VISIBLE);
+        }
+
+        if (!TextUtils.isEmpty(titleStr)) {
+            mTitle.setText(titleStr);
+        } else {
+            mTitle.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(descStr)) {
+            mDesc.setText(descStr);
+        } else {
+            mDesc.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(okStr)) {
+            mRightButton.setText(okStr);
+        }
+
         super.show();
     }
 
-    public void setOnLeftClickListener(OnClickListener l){
+    public void setOkText(String str) {
+        okStr = str;
+    }
+
+    public void setOnLeftClickListener(OnClickListener l) {
         leftListener = l;
     }
 
-    public void setOnRightClickListener(OnClickListener l){
+    public void setOnRightClickListener(OnClickListener l) {
         rightListener = l;
     }
 
-    public void setTitle(int resId){
+    public void setTitle(int resId) {
         setTitle(getContext().getString(resId));
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         titleStr = title;
     }
 
-    public void setDesc(int resId){
+    public void setDesc(int resId) {
         setDesc(getContext().getString(resId));
     }
 
-    public void setDesc(String desc){
+    public void setDesc(String desc) {
         descStr = desc;
     }
 
-    public interface OnClickListener{
+    public interface OnClickListener {
         void onClick();
     }
 

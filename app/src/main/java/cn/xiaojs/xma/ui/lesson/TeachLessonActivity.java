@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.lesson;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.View;
@@ -60,6 +61,9 @@ public class TeachLessonActivity extends BaseActivity {
         needHeaderDivider(false);
         setMiddleTitle(R.string.course_of_teach);
         mAdapter = new TeachLessonAdapter(this, mList);
+        mAdapter.setDesc(getString(R.string.teach_data_empty));
+        mAdapter.setIcon(R.drawable.ic_teach_empty);
+        mAdapter.setButtonDesc(getString(R.string.lesson_creation));
         mList.setAdapter(mAdapter);
         mSearch.setHint("课程名称");
     }
@@ -75,18 +79,19 @@ public class TeachLessonActivity extends BaseActivity {
                 filter();
                 break;
             case R.id.right_image:
-                CommonPopupMenu menu = new CommonPopupMenu(this);
-                String[] items = getResources().getStringArray(R.array.my_course_list);
-                menu.addTextItems(items);
-                menu.addImgItems(new Integer[]{R.drawable.open_course_selector});
-                menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        handleRightClick(i);
-                    }
-                });
-                int offset = getResources().getDimensionPixelSize(R.dimen.px68);
-                menu.show(mBaseHeader,offset);
+                handleRightClick(0);
+                //CommonPopupMenu menu = new CommonPopupMenu(this);
+                //String[] items = getResources().getStringArray(R.array.my_course_list);
+                //menu.addTextItems(items);
+                //menu.addImgItems(new Integer[]{R.drawable.open_course_selector});
+                //menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                //    @Override
+                //    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //        handleRightClick(i);
+                //    }
+                //});
+                //int offset = getResources().getDimensionPixelSize(R.dimen.px68);
+                //menu.show(mBaseHeader,offset);
                 break;
         }
     }
@@ -97,7 +102,7 @@ public class TeachLessonActivity extends BaseActivity {
                 if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)){
                     //老师可以开课
                     Intent intent = new Intent(this,LessonCreationActivity.class);
-                    startActivityForResult(intent,CourseConstant.CODE_CREATE_LESSON);
+                    startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
                 }else {
                     //提示申明教学能力
                     final CommonDialog dialog = new CommonDialog(this);
@@ -157,5 +162,21 @@ public class TeachLessonActivity extends BaseActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //do something
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case CourseConstant.CODE_CREATE_LESSON:
+                if (resultCode == Activity.RESULT_OK){
+                    if (mAdapter != null){
+                        mAdapter.refresh();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

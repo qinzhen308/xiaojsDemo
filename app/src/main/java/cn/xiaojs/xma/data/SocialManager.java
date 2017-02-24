@@ -241,7 +241,7 @@ public class SocialManager {
      */
     public static void followContact(Context context,
                                      String contact,
-                                     int group,
+                                     long group,
                                      APIServiceCallback<Relation> callback) {
 
 

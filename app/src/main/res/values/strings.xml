@@ -401,6 +401,7 @@
     <string name="send_again">重新发送</string>
     <string name="group_has_exist">组已存在</string>
     <string name="closed_tips">只有相互关注的才可以被提醒哦～</string>
+    <string name="add_contact_to">添加联系人至</string>
 
     <!-- live tab -->
     <string name="lesson_of_choiceness">精选课</string>
@@ -414,7 +415,7 @@
     <string name="detail">详情</string>
     <string name="look_person_tip">查看他的个人资料</string>
     <string name="my_lesson">我的课</string>
-    <string name="person_lesson">Ta的课</string>
+    <string name="person_lesson">%1$s的课</string>
     <string name="person_comment">评价</string>
     <string name="person_moment">动态</string>
     <string name="send">发送</string>
@@ -435,6 +436,16 @@
     <string name="edit_material">编辑资料</string>
     <string name="fans_num">%1$d&#160;粉丝</string>
     <string name="follow_num">%1$d&#160;关注</string>
+    <string name="follow_somebody">关注%1$s</string>
+    <string name="none_follow_tip">您只有关注了%1$s，才能给%2$s发消息哦~</string>
+    <string name="follow_and_send_message">关注%1$s，发消息</string>
+
+    <!-- empty tips -->
+    <string name="moment_data_empty">此人还没有动态</string>
+    <string name="message_data_empty">暂时还没有消息哦~</string>
+    <string name="teach_data_empty">你还没开过课哦~</string>
+    <string name="enroll_data_empty">学的更多，才能飞得更高</string>
+    <string name="find_lesson">发现好课</string>
 
     <!-- certification -->
     <string name="certification">实名认证</string>
@@ -607,4 +618,5 @@
     <string name="group_notification">[群成员变动]</string>
     <string name="type_custom">[自定义消息]</string>
     <string name="pay_failed">支付失败</string>
+    <string name="cannt_move_class">不能移动班级</string>
 </resources>

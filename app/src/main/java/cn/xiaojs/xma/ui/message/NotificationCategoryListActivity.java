@@ -19,6 +19,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 
+import java.util.Date;
+import java.util.List;
+
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.NotificationDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -30,9 +34,6 @@ import cn.xiaojs.xma.ui.base.BaseListActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.ToastUtil;
-
-import java.util.Date;
-import java.util.List;
 
 public class NotificationCategoryListActivity extends BaseListActivity {
     private String categoryId;
@@ -55,6 +56,8 @@ public class NotificationCategoryListActivity extends BaseListActivity {
             criteria.state = Platform.NotificationState.NONE;
             criteria.category = categoryId;
             adapter.setCriteria(criteria);
+            adapter.setIcon(R.drawable.ic_message_empty);
+            adapter.setDesc1(getString(R.string.message_data_empty));
             mList.setAdapter(adapter);
         }
     }

@@ -51,6 +51,9 @@ public class EnrollLessonActivity extends BaseActivity {
         needHeaderDivider(false);
         setMiddleTitle(R.string.course_of_learn);
         mAdapter = new EnrollLessonAdapter(this, mList);
+        mAdapter.setDesc(getString(R.string.enroll_data_empty));
+        mAdapter.setIcon(R.drawable.ic_class_empty);
+        mAdapter.setButtonDesc(getString(R.string.find_lesson));
         mList.setAdapter(mAdapter);
         mSearch.setHint("课程名称");
     }

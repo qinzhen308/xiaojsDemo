@@ -42,21 +42,23 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 import cn.xiaojs.xma.ui.view.RelationshipView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.PortraitView;
 import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.FastBlur;
+import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 public class PersonHomeActivity extends BaseScrollTabActivity {
@@ -192,7 +194,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             fragments.add(f2);
             fragments.add(f3);
             String[] tabs = new String[]{
-                    getString(R.string.person_lesson),
+                    getString(R.string.person_lesson,StringUtil.getTa(home.profile.sex)),
                     getString(R.string.person_comment),
                     getString(R.string.person_moment)};
             if (mIsMyself) {
@@ -331,7 +333,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
                 break;
             case R.id.scroll_tab_right_view://加关注
-                follow();
+                showFollowDialog();
                 break;
         }
     }
@@ -342,16 +344,50 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 final Intent intent = new Intent(this, ChatActivity.class);
                 intent.putExtra(ChatActivity.TARGET_ID, "1234567");
                 intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+                intent.putExtra(ChatActivity.ACCOUNT_ID, mAccount);
                 startActivity(intent);
             } else {//未关注先提示去关注
+                final CommonDialog dialog = new CommonDialog(this);
+                if (mBean.basic == null){
+                    mBean.basic = new cn.xiaojs.xma.model.account.Account.Basic();
+                    mBean.basic.setSex("true");
+                }
+                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.profile.sex),StringUtil.getTa(mBean.profile.sex)));
+                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.profile.sex)));
+                dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        dialog.dismiss();
+                        //follow();
+                        showFollowDialog();
+                    }
+                });
 
+                dialog.show();
             }
         }
     }
 
-    private void follow() {
+    private void showFollowDialog(){
+        BaseBusiness.showFollowDialog(this, new BaseBusiness.OnFollowListener() {
+            @Override
+            public void onFollow(long group) {
+                if (group > 0){
+                    follow(group);
+                }
+            }
+        });
+    }
+
+    private void follow(long group) {
         if (mBean != null && !mBean.isFollowed) {//这里需要弹框选择分组
-            SocialManager.followContact(this, mAccount, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+            SocialManager.followContact(this, mAccount, group, new APIServiceCallback<Relation>() {
                 @Override
                 public void onSuccess(Relation object) {
                     ToastUtil.showToast(getApplicationContext(), R.string.followed);
@@ -402,6 +438,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
         } else {
             mScrollRightText.setText("已关注");
+            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
         mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
         mScrollMiddleText.setText("");

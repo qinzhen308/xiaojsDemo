@@ -270,6 +270,6 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
 
     @Override
     protected boolean showEmptyView() {
-        return false;
+        return true;
     }
 }

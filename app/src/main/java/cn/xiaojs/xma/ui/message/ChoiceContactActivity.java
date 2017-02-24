@@ -61,7 +61,6 @@ public class ChoiceContactActivity extends BaseActivity {
         //listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expand_selector));
         //listView.setDivider(getResources().getDrawable(R.color.common_list_line));
         //listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
         editText.setVisibility(View.GONE);
 
         loadContactData();
@@ -86,7 +85,6 @@ public class ChoiceContactActivity extends BaseActivity {
         for (int i = 0; i < groupCount; i++) {
 
             listView.expandGroup(i, false);
-
         }
     }
 
