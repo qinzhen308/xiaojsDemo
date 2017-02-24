@@ -63,6 +63,8 @@ public class Su {
         public static final int SYNC_STATE = 640000;
 
         public static final int PRoVISION_FEEDBACK = 630002;
+        public static final int CLAIM_STREAMING = 670012;
+
     }
 
 }
