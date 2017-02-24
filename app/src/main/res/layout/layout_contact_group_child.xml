@@ -47,6 +47,7 @@
                 android:id="@+id/contact_avatar"
                 android:layout_width="@dimen/contact_thumbnail_size"
                 android:layout_height="@dimen/contact_thumbnail_size"
+                swipe:oval="true"
                 />
         <TextView
                 android:id="@+id/contact_name"

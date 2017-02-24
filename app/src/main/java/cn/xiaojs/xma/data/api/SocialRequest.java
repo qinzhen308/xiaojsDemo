@@ -146,7 +146,7 @@ public class SocialRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_UPDATES,call);
     }
 
-    public void followContact(String contact, int group) {
+    public void followContact(String contact, long group) {
 
         FollowParam param = new FollowParam();
         param.contact = contact;

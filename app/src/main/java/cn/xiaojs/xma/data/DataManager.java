@@ -64,6 +64,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * 获取缓存的联系人分组
+     * @param context
+     * @return
+     */
     public static Map<Long, ContactGroup> getGroupData(Context context) {
         return getCache(context).getGroupData();
     }
