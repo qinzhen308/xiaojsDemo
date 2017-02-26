@@ -42,17 +42,31 @@
 
     </LinearLayout>
 
-    <ListView
-            android:id="@+id/contact_book"
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/search_layout"
             android:layout_above="@+id/action_line"
-            android:layout_marginTop="@dimen/px8"
-            android:listSelector="@android:color/transparent"
-            android:scrollbars="none">
+            android:layout_marginTop="@dimen/px8">
+        <ListView
+                android:id="@+id/contact_book"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none">
 
-    </ListView>
+        </ListView>
+
+        <TextView
+                android:id="@+id/empty_contact_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_white"
+                android:layout_gravity="center"
+                android:text="@string/cr_contact_empty"
+                android:visibility="gone"/>
+    </FrameLayout>
 
     <View
             android:id="@+id/action_line"

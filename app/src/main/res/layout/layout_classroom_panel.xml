@@ -71,8 +71,8 @@
                 android:id="@+id/back_in_doodle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_back_pressed"
-                android:padding="@dimen/px36"/>
+                android:src="@drawable/cr_video_edit_back_btn"
+                android:padding="@dimen/px20"/>
 
         <TextView
                 android:id="@+id/share_doodle"
@@ -469,7 +469,7 @@
     </LinearLayout>
 
     <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
-            android:id="@+id/tea_live_video"
+            android:id="@+id/stu_player_video"
             android:layout_width="@dimen/px160"
             android:layout_height="@dimen/px90"
             android:layout_alignParentBottom="true"
