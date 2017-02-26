@@ -22,12 +22,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import cn.xiaojs.xma.R;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.view.AnimationView;
-import cn.xiaojs.xma.util.DeviceUtil;
 
 public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdapter.Holder> {
 
@@ -62,7 +60,7 @@ public class LiveBrilliantAdapter extends RecyclerView.Adapter<LiveBrilliantAdap
         }
         holder.wrapper.setLayoutParams(mlp);
         holder.animation.start();
-        holder.cover.setImageResource(DeviceUtil.getLesson());
+        //holder.cover.setImageResource(DeviceUtil.getLesson());
     }
 
     @Override

@@ -24,7 +24,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.util.DeviceUtil;
 
 public class PersonalProfile extends LinearLayout {
 
@@ -71,6 +70,6 @@ public class PersonalProfile extends LinearLayout {
         } else {
             mType.setVisibility(GONE);
         }
-        mImage.setImageResource(DeviceUtil.getPor());
+        //mImage.setImageResource(DeviceUtil.getPor());
     }
 }
