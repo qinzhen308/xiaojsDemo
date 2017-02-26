@@ -1,31 +1,24 @@
 package cn.xiaojs.xma.data.api;
 
 import android.content.Context;
+import android.text.TextUtils;
+
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
-import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.interceptor.CommonHeaderInterceptor;
 import cn.xiaojs.xma.data.api.service.LiveService;
 import cn.xiaojs.xma.data.api.service.XiaojsService;
-
-import cn.xiaojs.xma.util.APPUtils;
-import cn.xiaojs.xma.util.UIUtils;
-import com.facebook.stetho.okhttp3.StethoInterceptor;
-
-import java.io.File;
-import java.net.CookieManager;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import cn.xiaojs.xma.model.live.ClassResponse;
+import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import okhttp3.Cache;
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -191,5 +184,20 @@ public class ApiManager {
     }
 
 
+    public static ClassResponse getClassResponse(ResponseBody body) {
+        if (body == null) return null;
+
+        try {
+            String j = body.string();
+            if (TextUtils.isEmpty(j)) return null;
+
+            return ClassroomBusiness.parseSocketBean(new JSONObject(j), ClassResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
 
 }

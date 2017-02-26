@@ -43,6 +43,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
@@ -172,7 +173,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @BindView(R.id.publish_camera_switcher)
     ImageView mCameraSwitcher;
     @BindView(R.id.finish_btn)
-    ImageView mFinishBtn;
+    ImageView mFinishClassBtn;
 
     //live, whiteboard list
     @BindView(R.id.white_board_scrollview)
@@ -270,7 +271,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 break;
             case STUDENT:
                 mCameraSwitcher.setVisibility(View.GONE);
-                mFinishBtn.setVisibility(View.GONE);
+                mFinishClassBtn.setVisibility(View.GONE);
                 break;
             case ADMINISTRATOR:
             case AUDITOR:
@@ -396,7 +397,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                     //init ui
                     initPanel();
-                    setPlayPauseBtnStyle(ctlSession.state);
+                    setControllerBtnStyle(ctlSession.state);
                     mLessonDuration = ctlSession.ctl != null ? ctlSession.ctl.duration : 0;
                     mTotalTimeTv.setText(TimeUtil.formatMinuteTime(mLessonDuration));
 
@@ -431,11 +432,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         });
     }
 
-    private void setPlayPauseBtnStyle(String liveSessionState) {
+    private void setControllerBtnStyle(String liveSessionState) {
         if (Live.LiveSessionState.SCHEDULED.equals(liveSessionState) ||
                 Live.LiveSessionState.FINISHED.equals(liveSessionState)) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             mPlayPauseBtn.setVisibility(View.VISIBLE);
+            if (Live.LiveSessionState.FINISHED.equals(liveSessionState)) {
+                mFinishClassBtn.setVisibility(View.GONE);
+            }
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState) ||
                 Live.LiveSessionState.RESET.equals(liveSessionState)) {
             if (mUser == Constants.User.TEACHER) {
@@ -616,7 +620,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                     //stop stream
                     mLiveSessionState = Live.LiveSessionState.RESET;
-                    setPlayPauseBtnStyle(Live.LiveSessionState.RESET);
+                    setControllerBtnStyle(Live.LiveSessionState.RESET);
 
                     mClassroomController.pauseVideo();
                 }
@@ -628,13 +632,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 }
             });
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(mLiveSessionState)) {
-            LiveManager.beginClass(this, mTicket, Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
+            LiveManager.beginClass(this, mTicket, Live.StreamMode.MUTE, new APIServiceCallback<ResponseBody>() {
                 @Override
-                public void onSuccess(ClassResponse object) {
+                public void onSuccess(ResponseBody object) {
                     cancelProgress();
+                    ClassResponse response = ApiManager.getClassResponse(object);
+
                     mLiveSessionState = Live.LiveSessionState.LIVE;
-                    setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
-                    mClassroomController.publishStream(object != null ? object.publishUrl : null);
+                    setControllerBtnStyle(Live.LiveSessionState.LIVE);
+                    mClassroomController.publishStream(response != null ? response.publishUrl : null);
                 }
 
                 @Override
@@ -649,7 +655,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 public void onSuccess(ClassResponse object) {
                     cancelProgress();
                     mLiveSessionState = Live.LiveSessionState.LIVE;
-                    setPlayPauseBtnStyle(Live.LiveSessionState.LIVE);
+                    setControllerBtnStyle(Live.LiveSessionState.LIVE);
                     mClassroomController.publishStream(object != null ? object.publishUrl : null);
                 }
 
@@ -1344,13 +1350,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private void finishClassroom() {
         showProgress(true);
-        LiveManager.finishClass(this, mTicket, new APIServiceCallback<ClassResponse>() {
+        LiveManager.finishClass(this, mTicket, new APIServiceCallback<ResponseBody>() {
             @Override
-            public void onSuccess(ClassResponse object) {
+            public void onSuccess(ResponseBody object) {
                 cancelProgress();
                 //ClassroomActivity.this.finish();
                 mLiveSessionState = Live.LiveSessionState.FINISHED;
-                setPlayPauseBtnStyle(mLiveSessionState);
+                setControllerBtnStyle(mLiveSessionState);
             }
 
             @Override
@@ -1579,7 +1585,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         }
                         break;
                     case MSG_PLAY_BTN_SETTING:
-                        setPlayPauseBtnStyle(mLiveSessionState);
+                        setControllerBtnStyle(mLiveSessionState);
                         break;
                     case MSG_PLAY_VIDEO:
                         if (mClassroomController != null) {
@@ -1590,7 +1596,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         if (mUser == Constants.User.STUDENT) {
                             //学生对课程的评价
                         }
-                        setPlayPauseBtnStyle(mLiveSessionState);
+                        setControllerBtnStyle(mLiveSessionState);
                         break;
                 }
             }
