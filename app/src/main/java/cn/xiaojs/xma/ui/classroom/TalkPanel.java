@@ -73,6 +73,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
      */
     private ListView mContactBook;
     private ContactBookAdapter mContactBookAdapter;
+    private TextView mEmptyContactView;
 
     /**
      * Talk界面联系人列表（头像）
@@ -218,6 +219,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         mContactBook = (ListView) root.findViewById(R.id.contact_book);
         mTalkContactLv = (ListView) root.findViewById(R.id.talk_simple_contact);
         mTalkMsgLv = (PullToRefreshListView) root.findViewById(R.id.chat_msg);
+        mEmptyContactView = (TextView) root.findViewById(R.id.empty_contact_view);
 
         mCloseMsgLv = (ImageView) root.findViewById(R.id.close_msg_list_view);
         mDelPeerTalkBtn = (ImageView) root.findViewById(R.id.del_peer_talk_btn);
@@ -403,20 +405,39 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
         if (mLiveCollection != null) {
             mContactBookAdapter.setData(mLiveCollection);
+            setEmptyContactView();
         } else {
             LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
                 @Override
                 public void onSuccess(LiveCollection<Attendee> liveCollection) {
                     mLiveCollection = liveCollection;
                     mContactBookAdapter.setData(mLiveCollection);
+                    setEmptyContactView();
                     Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
+                    setEmptyContactView();
                     Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    /**
+     * 设置联系人空列表
+     */
+    private void setEmptyContactView() {
+        if (mLiveCollection == null) {
+            mEmptyContactView.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (mLiveCollection.attendees == null || mLiveCollection.attendees.isEmpty()) {
+            mEmptyContactView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyContactView.setVisibility(View.GONE);
         }
     }
 
@@ -643,6 +664,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 }
             }
         }
+
+        setEmptyContactView();
     }
 
     /**
