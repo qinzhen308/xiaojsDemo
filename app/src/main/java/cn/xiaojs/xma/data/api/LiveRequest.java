@@ -112,7 +112,7 @@ public class LiveRequest extends ServiceRequest{
     }
 
     public void finishClass(String ticket) {
-        Call<ResponseBody> call = getLiveService().finishClass(ticket);
+        Call<ClassResponse> call = getLiveService().finishClass(ticket);
         enqueueRequest(APIType.FINISH_CLASS,call);
     }
 

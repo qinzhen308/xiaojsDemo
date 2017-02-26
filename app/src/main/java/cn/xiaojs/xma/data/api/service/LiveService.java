@@ -81,7 +81,7 @@ public interface LiveService {
 
     //Finish Class
     @PATCH("/v1/live/{ticket}/end")
-    Call<ResponseBody> finishClass(@Path("ticket") String ticket);
+    Call<ClassResponse> finishClass(@Path("ticket") String ticket);
 
     //Resume Class
     @PATCH("/v1/live/{ticket}/resume")
