@@ -214,7 +214,8 @@ public class MineFragment extends BaseFragment {
     }
 
     private void initProfileBg() {
-        mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        //mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        mBlurPortraitView.setImageResource(R.drawable.portrait_default_bg);
     }
 
     private void setDefaultPortrait() {

@@ -254,7 +254,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
     }
 
     private void initProfileBg() {
-        mBlur.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        //mBlur.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        mBlur.setImageResource(R.drawable.portrait_default_bg);
     }
 
     private void setDefaultPortrait() {
