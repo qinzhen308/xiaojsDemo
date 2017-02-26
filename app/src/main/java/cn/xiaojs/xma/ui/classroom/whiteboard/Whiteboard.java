@@ -1313,6 +1313,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mSocket = null;
     }
 
+    public void recycleCourseBmp() {
+        if (mCourseBmp != null && !mCourseBmp.isRecycled()) {
+            mCourseBmp.recycle();
+            mCourseBmp = null;
+        }
+    }
+
     public void release() {
         recycle();
         if (mDoodleBitmapPool != null) {

@@ -3,6 +3,10 @@ package cn.xiaojs.xma.model.live;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import okhttp3.MediaType;
+import okhttp3.ResponseBody;
+import okio.BufferedSource;
+
 /**
  * Created by maxiaobao on 2017/2/10.
  */

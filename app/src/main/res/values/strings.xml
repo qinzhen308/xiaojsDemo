@@ -375,7 +375,8 @@
     <!--whiteboard-->
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>
-
+    <string name="cr_contact_empty">暂无成员</string>
+    <string name="cr_notify_empty">暂无消息</string>
 
     <!-- 社交-->
     <string name="contact">联系人</string>
