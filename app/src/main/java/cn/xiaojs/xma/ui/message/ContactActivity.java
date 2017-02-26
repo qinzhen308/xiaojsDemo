@@ -594,6 +594,7 @@ public class ContactActivity extends BaseActivity {
             String avatar = Account.getAvatar(c.account, holder.size);
             Glide.with(ContactActivity.this)
                     .load(avatar)
+                    .placeholder(R.drawable.default_avatar)
                     .error(R.drawable.default_avatar)
                     .into(holder.avatarView);
 
