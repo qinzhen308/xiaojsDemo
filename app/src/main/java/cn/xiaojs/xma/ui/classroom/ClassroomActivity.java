@@ -228,6 +228,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private String mPlayUrl;
     private NetworkChangedBReceiver mNetworkChangedBReceiver;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -408,7 +409,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             mClassroomController.publishStream(ctlSession.publishUrl);
                         } else if (mUser == Constants.User.STUDENT) {
                             mPlayUrl = ctlSession.playUrl;
-                            mClassroomController.playVideo(mPlayUrl);
+                            mClassroomController.playTeaVideo(mPlayUrl);
                         }
                     } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
                             Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
@@ -826,6 +827,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      */
     private void applyOpenStuVideo(String accountId) {
         Toast.makeText(ClassroomActivity.this, "apply open student video", Toast.LENGTH_SHORT).show();
+        if (mUser == Constants.User.TEACHER) {
+            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA));
+        }
     }
 
     private void enterVideoEditing() {
@@ -1476,7 +1480,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
                 if (startedNotify != null) {
                     mPlayUrl = startedNotify.RTMPPlayUrl;
-                    mClassroomController.playVideo(mPlayUrl);
+                    mClassroomController.playTeaVideo(mPlayUrl);
                 }
             }
         }
@@ -1579,7 +1583,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         break;
                     case MSG_PLAY_VIDEO:
                         if (mClassroomController != null) {
-                            mClassroomController.playVideo(mPlayUrl);
+                            mClassroomController.playTeaVideo(mPlayUrl);
                         }
                         break;
                     case MSG_DELAY_TO_FINISH:
