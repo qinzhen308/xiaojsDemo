@@ -12,22 +12,7 @@ import okio.BufferedSource;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClassResponse extends ResponseBody{
+public class ClassResponse {
     public String publishUrl;
     public String playbackUrl;
-
-    @Override
-    public MediaType contentType() {
-        return null;
-    }
-
-    @Override
-    public long contentLength() {
-        return 0;
-    }
-
-    @Override
-    public BufferedSource source() {
-        return null;
-    }
 }

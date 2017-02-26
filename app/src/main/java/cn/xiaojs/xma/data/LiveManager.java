@@ -113,7 +113,7 @@ public class LiveManager {
     public static void beginClass(Context context,
                                   String ticket,
                                   int mode,
-                                  APIServiceCallback<ClassResponse> callback) {
+                                  APIServiceCallback<ResponseBody> callback) {
 
         ClassMode classMode = new ClassMode();
         classMode.mode = mode;
@@ -210,7 +210,7 @@ public class LiveManager {
      */
     public static void finishClass(Context context,
                                      String ticket,
-                                     APIServiceCallback<ClassResponse> callback) {
+                                     APIServiceCallback<ResponseBody> callback) {
         LiveRequest request = new LiveRequest(context,callback);
         request.finishClass(ticket);
     }
