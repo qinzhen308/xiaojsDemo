@@ -470,26 +470,22 @@ public class ClassroomController implements
     }
 
     public void onResumeVideo() {
-        if (mLiveVideo != null) {
-            mLiveVideo.resume();
-        }
-
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.resume();
+            mPlayStuView.destroy();
         } else if (mUser == Constants.User.STUDENT) {
             mStuPublishVideo.resume();
+            mLiveVideo.resume();
         }
     }
 
     public void onPauseVideo() {
-        if (mLiveVideo != null) {
-            mLiveVideo.pause();
-        }
-
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.pause();
+            mPlayStuView.pause();
         } else if (mUser == Constants.User.STUDENT) {
             mStuPublishVideo.pause();
+            mLiveVideo.pause();
         }
     }
 
@@ -922,7 +918,11 @@ public class ClassroomController implements
                                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                                     if (response != null && response.result) {
                                         Toast.makeText(mContext, "推流开始", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        onPauseVideo();
                                     }
+                                } else {
+                                    onPauseVideo();
                                 }
                             }
                         });
