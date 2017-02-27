@@ -23,20 +23,21 @@ public class ErrorPrompts {
 
     public static String getErrorMessage(int apiType, String errorCode) {
 
-        if (errorCode.equals(Errors.UNAUTHORIZED) || errorCode.equals(Errors.BAD_SESSION)) {
-            return "请重新登陆";
+        if (errorCode.equals(Errors.UNAUTHORIZED)
+                || errorCode.equals(Errors.BAD_SESSION)
+                || errorCode.equals(Errors.BAD_CSRF)) {
+            return "登录过期，请重新登录";
         } else if (errorCode.equals(Errors.BAD_PARAMETER)) {
             return "参数错误";
-        } else if (errorCode.equals(Errors.BAD_CSRF)) {
-            if (XiaojsConfig.DEBUG) {
-                return "Bad CSRF token";
-            }
-            return "请求失败";
         }
 
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.GET_PUBLIC_HOME:
+            case APIType.GET_PRIVATE_HOME:
+                errorMessage = "加载失败";
+                break;
             case APIType.BEGIN_CLASS:
                 if (errorCode.equals(Errors.ACCESS_VIOLATION)){
                     errorMessage = "你没有权限";
@@ -130,13 +131,13 @@ public class ErrorPrompts {
 
                 break;
             case APIType.EDIT_PROFILE:
-                errorMessage = "编辑个人资料失败";
+                errorMessage = "修改失败";
                 break;
             case APIType.GET_CENTER_DATA:
-                errorMessage = "获取个人中心数据失败";
+                errorMessage = "加载失败";
                 break;
             case APIType.GET_PROFILE:
-                errorMessage = "获取个人资料失败";
+                errorMessage = "加载失败";
                 break;
             case APIType.GET_UPTOKEN:
                 errorMessage = "获取上传token失败";
@@ -144,9 +145,9 @@ public class ErrorPrompts {
             case APIType.REGISTER:
 
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
-                    errorMessage = "手机号已被注册";
+                    errorMessage = "该手机号已注册，请直接登录";
                 } else if (errorCode.equals(Errors.BAD_CODE)) {
-                    errorMessage = "验证码已过期，请重新发送";
+                    errorMessage = "验证码已过期";
                 } else if (errorCode.equals(Errors.INVALID_CODE)) {
                     errorMessage = "验证码错误";
                 } else {
@@ -212,19 +213,19 @@ public class ErrorPrompts {
 
                 break;
             case APIType.GET_ENROLLED_LESSONS:
-                errorMessage = "获取已报名课程失败";
+                errorMessage = "加载失败";
                 break;
 //            case APIType.GET_LESSON_COVER_UPTOKEN:
 //                errorMessage = "获取上传封面token失败";
 //                break;
             case APIType.GET_LESSON_DATA:
-                errorMessage = "获取课程详情失败";
+                errorMessage = "加载失败";
                 break;
             case APIType.GET_LESSON_DETAILS:
                 errorMessage = "获取直播课主页失败";
                 break;
             case APIType.GET_LESSONS:
-                errorMessage = "获取课程失败";
+                errorMessage = "加载失败";
                 break;
             case APIType.PUT_LESSON_ON_SHELVES:
 
@@ -257,26 +258,26 @@ public class ErrorPrompts {
 
                 if (errorCode.equals(Errors.NOT_IMPLEMENTED)) {
                     errorMessage = "目前不支持机构用户登陆";
-                } else if (errorCode.equals(Errors.INVALID_CREDENTIAL)) {
-                    errorMessage = "手机号或密码错误";
+                } else if(errorCode.equals(Errors.DOC_NOT_FOUND)) {
+                    errorMessage = "账号不存在";
                 } else if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
                     errorMessage = "此账户禁止登陆";
                 } else {
-                    errorMessage = "登陆失败";
+                    errorMessage = "登录失败，请检查账号或密码";
                 }
 
                 break;
             case APIType.LOGOUT:
-                errorMessage = "退出登陆失败";
+                errorMessage = "退出失败";
                 break;
             case APIType.VERIFY_MOBILE:
 
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
-                    errorMessage = "手机号已被注册";
+                    errorMessage = "该手机号已注册，请直接登录";
                 } else if (errorCode.equals(Errors.BAD_REQUEST)) {
-                    errorMessage = "等60秒后，再发送";
+                    errorMessage = "请求过于频繁，请稍后再试";
                 } else {
-                    errorMessage = "发送验证码失败";
+                    errorMessage = "验证码发送失败";
                 }
                 break;
             case APIType.VALIDATE_CODE:
