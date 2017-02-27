@@ -61,11 +61,11 @@ public class PostDynamicActivity extends BaseActivity {
 
     private String photoKey;
     private Dimension photoDim;
+
     private long[] atCheckedPos;
+
     private int checkClasspos = -1;
-
     private int specifyScope;
-
     private ArrayList<Contact> chooseContacts;
 
     @Override
