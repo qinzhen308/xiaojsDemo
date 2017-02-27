@@ -46,8 +46,8 @@ public class Su {
         // Live/Classroom events
         public static final int SAVE_MEDIA_DEVICES = 670005;
         public static final int SET_PRIMARY = 610001;
-        public static final int STREAMING_STARTED = 670008;
-        public static final int STREAMING_STOPPED = 670009;
+        public static final int STREAMING_STARTED = 670010;
+        public static final int STREAMING_STOPPED = 670011;
 
         // Live/Classroom events (StartMedia, StartStreaming)
         public static final int OPEN_MEDIA = 670001;
@@ -64,6 +64,7 @@ public class Su {
 
         public static final int PRoVISION_FEEDBACK = 630002;
         public static final int CLAIM_STREAMING = 670012;
+        public static final int MEDIA_FEEDBACK = 670018;
 
     }
 

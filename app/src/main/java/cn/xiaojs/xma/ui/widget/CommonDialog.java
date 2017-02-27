@@ -77,6 +77,7 @@ public class CommonDialog extends Dialog {
         mLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dismiss();
                 if (leftListener != null) {
                     leftListener.onClick();
                 }
