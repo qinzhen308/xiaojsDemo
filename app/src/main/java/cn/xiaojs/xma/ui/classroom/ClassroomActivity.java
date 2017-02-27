@@ -607,7 +607,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * @see mSyncStateListener
      */
     private void playOrPauseLesson(final View view) {
-        if (TextUtils.isEmpty(mTicket)) {
+        if (TextUtils.isEmpty(mTicket) || !mSktConnected) {
+            initData();
             return;
         }
 
@@ -1370,12 +1371,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void initSocketIO(String ticket, String secret) {
         SocketManager.init(ticket, secret);
         mSocket = SocketManager.getSocket();
+        Log.i("aaa","==================initSocketIO==============="+mSocket);
         if (mSocket != null) {
             mSocket.connect();
         }
     }
 
     private void listenSocket() {
+        Log.i("aaa","==================listenSocket==============="+mSocket);
         if (mSocket == null) {
             return;
         }

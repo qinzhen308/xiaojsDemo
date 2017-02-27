@@ -144,7 +144,7 @@ public class CloseFriendActivity extends BaseActivity {
 
     private void getData() {
         DataManager.getFriendsByType(this,
-                Social.FllowType.NA,//FIXME 测试，正常需要用 MUTUAL
+                Social.FllowType.MUTUAL,
                 new DataLoder.DataLoaderCallback<ArrayList<ContactGroup>>() {
 
             @Override

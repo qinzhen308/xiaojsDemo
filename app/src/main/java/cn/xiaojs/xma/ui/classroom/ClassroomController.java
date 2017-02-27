@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom;
  * ======================================================================================== */
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -36,6 +37,7 @@ import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
+import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
@@ -62,6 +64,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.setting.HandwritingPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.CacheUtil;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
@@ -143,7 +146,8 @@ public class ClassroomController implements
     private boolean mInitPublishVideo = false;
     private String mPublishUrl;
     private Bitmap mVideoFrameBitmap;
-    ShareDoodlePopWindow mSharePopWindow;
+    private ShareDoodlePopWindow mSharePopWindow;
+    private CommonDialog mAgreeOpenCamera;
 
     public ClassroomController(Context context, View root, Constants.User client, int appType) {
         mContext = context;
@@ -178,6 +182,7 @@ public class ClassroomController implements
 
         initVideo();
         //initWhiteboardData(context);
+        listenerSocket();
     }
 
     private void initVideo() {
@@ -190,6 +195,12 @@ public class ClassroomController implements
         }
 
         onResumeVideo();
+    }
+
+    private void listenerSocket() {
+        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), mReceiveMediaAborted);
     }
 
     /**
@@ -472,26 +483,22 @@ public class ClassroomController implements
     }
 
     public void onResumeVideo() {
-        if (mLiveVideo != null) {
-            mLiveVideo.resume();
-        }
-
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.resume();
+            mPlayStuView.destroy();
         } else if (mUser == Constants.User.STUDENT) {
             mStuPublishVideo.resume();
+            mLiveVideo.resume();
         }
     }
 
     public void onPauseVideo() {
-        if (mLiveVideo != null) {
-            mLiveVideo.pause();
-        }
-
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.pause();
+            mPlayStuView.pause();
         } else if (mUser == Constants.User.STUDENT) {
             mStuPublishVideo.pause();
+            mLiveVideo.pause();
         }
     }
 
@@ -859,6 +866,10 @@ public class ClassroomController implements
      * 开始推流
      */
     public void publishStream(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.setVisibility(View.VISIBLE);
             mPublishVideo.setPath(url);
@@ -912,14 +923,34 @@ public class ClassroomController implements
                 case STREAMING:
                     mInitPublishVideo = true;
                     if (mSocket != null) {
-                        mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new Ack() {
+                        int eventType = -1;
+                        if (mUser == Constants.User.TEACHER) {
+                            eventType = Su.EventType.STREAMING_STARTED;
+                        } else if (mUser == Constants.User.STUDENT) {
+                            eventType = Su.EventType.MEDIA_FEEDBACK;
+                        }
+                        if (eventType < 0) {
+                            return;
+                        }
+
+                        mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), new Ack() {
                             @Override
                             public void call(final Object... args) {
                                 if (args != null && args.length > 0) {
                                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                    final String prefix = mUser == Constants.User.TEACHER ? "老师" : "学生";
                                     if (response != null && response.result) {
-                                        Toast.makeText(mContext, "推流开始", Toast.LENGTH_SHORT).show();
+                                        ((Activity)mContext).runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(mContext, prefix + "推流开始", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                    } else {
+                                        onPauseVideo();
                                     }
+                                } else {
+                                    onPauseVideo();
                                 }
                             }
                         });
@@ -930,6 +961,62 @@ public class ClassroomController implements
                     break;
             }
 
+        }
+    };
+
+    private Emitter.Listener mReceiveStreamStarted = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, "流开始", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener mReceiveMediaAborted = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, "流被中断", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener mReceiveOpenMedia = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, "收到打开学生视频", Toast.LENGTH_LONG).show();
+                    if (mAgreeOpenCamera == null) {
+                        mAgreeOpenCamera = new CommonDialog(mContext);
+                        mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
+                        mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
+
+                        mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                            @Override
+                            public void onClick() {
+                                mAgreeOpenCamera.dismiss();
+                                if (args != null && args.length > 0) {
+                                    OpenMediaNotify openMediaNotify = ClassroomBusiness.parseSocketBean(args[0], OpenMediaNotify.class);
+                                    if (openMediaNotify != null) {
+                                        publishStream(openMediaNotify.publishUrl);
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    mAgreeOpenCamera.show();
+                }
+            });
         }
     };
 }
