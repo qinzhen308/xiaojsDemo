@@ -267,6 +267,7 @@
                     android:layout_marginLeft="@dimen/px12"
                     android:layout_marginRight="@dimen/px12"
                     android:maxHeight="@dimen/px2"
+                    android:minHeight="@dimen/px2"
                     android:thumbOffset="@dimen/px7"
                     android:foregroundGravity="center_vertical"
                     android:thumb="@null"

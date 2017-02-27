@@ -84,23 +84,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     protected void setViewContent(Holder holder, final TeachLesson bean, int position) {
         holder.reset();
         holder.name.setText(bean.getTitle());
-//        String state = LessonBusiness.getStateByPosition(position,true);
-//        if (!TextUtils.isEmpty(state)){
-//            bean.setState(state);
-//        }
-        /*if (position == 0){
-            bean.setState(LessonState.FINISHED);
-        }else if (position == 1){
-            bean.setState(LessonState.CANCELLED);
-        }else if (position == 2){
-            bean.setState(LessonState.DRAFT);
-        }else if (position == 3){
-            bean.setState(LessonState.LIVE);
-        }else if (position == 4){
-            bean.setState(LessonState.PENDING_FOR_APPROVAL);
-        }else if (position == 5){
-            bean.setState(LessonState.REJECTED);
-        }*/
         holder.price.setVisibility(View.VISIBLE);
         if (bean.getFee().free) {
             holder.price.setText(R.string.free);
