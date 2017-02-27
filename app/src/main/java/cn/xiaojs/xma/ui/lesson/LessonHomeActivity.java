@@ -39,6 +39,7 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.BlockTabView;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
@@ -296,6 +297,8 @@ public class LessonHomeActivity extends BaseActivity {
                 String avator = Account.getAvatar(tea._id, mTeaAvatarImg.getMeasuredWidth());
 
                 Glide.with(this).load(avator)
+                        .bitmapTransform(new CircleTransform(this))
+                        .placeholder(R.drawable.default_avatar)
                         .error(R.drawable.default_avatar)
                         .into(mTeaAvatarImg);
                 mTeaNameTv.setText(tea.getBasic().getName());

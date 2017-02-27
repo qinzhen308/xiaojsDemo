@@ -33,6 +33,7 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
+import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.model.order.Orderp;
 import cn.xiaojs.xma.model.order.PaymentCharge;
 import cn.xiaojs.xma.model.order.PaymentOrder;
@@ -213,7 +214,7 @@ public interface XiaojsService {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    //OrderGroup
+    //Order
     //
 
     //Create Order
@@ -224,6 +225,10 @@ public interface XiaojsService {
     @GET("/v1/order/{order}/charge/{channel}")
     Call<ResponseBody> createPaymentCharge(@Path("order") String order,
                                             @Path("channel") String channel);
+
+    //Get Orders
+    @GET("/v1/orders?page={page}&limit={limit}")
+    Call<List<EnrollOrder>> getOrders(@Path("page") int page, @Path("limit") int limit);
 
 
 

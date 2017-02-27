@@ -116,5 +116,6 @@ public class APIType {
     public static final int CREATE_ORDER = 63;
     public static final int CREATE_PAYMENT_CHARGE = 64;
     public static final int GET_ACCOUNT_ACTIVITIES = 65;
+    public static final int GET_ORDERS = 66;
 
 }
