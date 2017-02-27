@@ -61,6 +61,7 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 
 /**
@@ -227,8 +228,8 @@ public interface XiaojsService {
                                             @Path("channel") String channel);
 
     //Get Orders
-    @GET("/v1/orders?page={page}&limit={limit}")
-    Call<List<EnrollOrder>> getOrders(@Path("page") int page, @Path("limit") int limit);
+    @GET("/v1/orders")
+    Call<List<EnrollOrder>> getOrders(@Query("page") int page, @Query("limit") int limit);
 
 
 
