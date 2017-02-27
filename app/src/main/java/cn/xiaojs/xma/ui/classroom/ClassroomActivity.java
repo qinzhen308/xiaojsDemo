@@ -239,9 +239,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classroom);
 
-        //init log test
-        ClassroomLogUtils.initClassroomSocketLog();
-
         //init params
         initParams();
 

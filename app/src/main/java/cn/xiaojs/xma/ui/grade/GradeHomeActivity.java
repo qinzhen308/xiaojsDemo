@@ -34,7 +34,6 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshScrollView;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.chat.ChatActivity;
 import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.widget.CustomScrollView;
@@ -105,8 +104,8 @@ public class GradeHomeActivity extends BaseActivity {
         mTeacherGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+//                startActivity(intent);
             }
         });
 
