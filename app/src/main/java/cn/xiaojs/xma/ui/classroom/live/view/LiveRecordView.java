@@ -158,7 +158,7 @@ public class LiveRecordView extends BaseMediaView implements
         mMediaStreamingManager.setStreamingProfile(mProfile);
     }
 
-    private void init() {
+    public void init() {
         mQuality = XjsUtils.getSharedPreferences().getInt(Constants.KEY_QUALITY, Constants.QUALITY_STANDARD);
         int fps = Config.VIDEO_STANDARD_FPS;
         int bps = Config.VIDEO_STANDARD_BITRATE;
@@ -229,7 +229,6 @@ public class LiveRecordView extends BaseMediaView implements
         //mMediaStreamingManager.setStreamingSessionListener(this);
         //mMediaStreamingManager.setStreamingPreviewCallback(this);
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
-        resume();
     }
 
     public void setPublishUrl(String url){
@@ -452,7 +451,18 @@ public class LiveRecordView extends BaseMediaView implements
 
     @Override
     public void destroy() {
-        stopStreamingInternal();
+        if (mHandler != null){
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                stopStreamingInternal();
+            }
+        }).start();
+        mAspect = null;
+        mPreviewFrameView = null;
     }
 
     @Override
@@ -475,28 +485,11 @@ public class LiveRecordView extends BaseMediaView implements
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING),50);
     }
 
-//    private void startStreamingInThread(){
-//       Thread t = new T();
-//        t.start();
-//    }
-
-//    private class T extends Thread{
-//        @Override
-//        public void run() {
-//            if (mMediaStreamingManager != null){
-//                boolean success = mMediaStreamingManager.startStreaming();
-//                Log.i("publish",success+"");
-//            }
-//        }
-//    }
-
     private void stopStreamingInternal(){
         if (mMediaStreamingManager != null){
             mMediaStreamingManager.destroy();
             mMediaStreamingManager = null;
         }
-        mAspect = null;
-        mPreviewFrameView = null;
     }
 
     private static DnsManager getMyDnsManager() {

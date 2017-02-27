@@ -20,15 +20,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.util.DeviceUtil;
 
 public class SearchOrganizationAdapter extends CanInScrollviewListView.Adapter {
 
@@ -87,7 +89,10 @@ public class SearchOrganizationAdapter extends CanInScrollviewListView.Adapter {
         }
 
         holder.name.setText(mBeans.get(position)._source.basic.getName());
-        holder.head.setImageResource(DeviceUtil.getPor());
+        Glide.with(mContext)
+                .load(Account.getAvatar(mBeans.get(position)._id,300))
+                .error(R.drawable.default_avatar)
+                .into(holder.head);
         return convertView;
     }
 

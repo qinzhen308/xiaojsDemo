@@ -70,8 +70,8 @@ public class LiveAdapter extends AbsGridViewAdapter<LiveBean,LiveAdapter.Holder>
 
         holder.item.setLayoutParams(mlp);
 
-        holder.image.setImageResource(DeviceUtil.getLesson());
-        holder.portrait.setImageResource(DeviceUtil.getPor());
+        //holder.image.setImageResource(DeviceUtil.getLesson());
+        //holder.portrait.setImageResource(DeviceUtil.getPor());
         holder.teacher.setText("冰冰");
 
     }

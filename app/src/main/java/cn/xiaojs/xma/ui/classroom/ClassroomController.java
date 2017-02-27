@@ -193,6 +193,8 @@ public class ClassroomController implements
             mLiveVideo.setVisibility(View.VISIBLE);
             mStuPublishVideo.setOnStreamingStateListener(mStreamingStateChangedListener);
         }
+
+        onResumeVideo();
     }
 
     private void listenerSocket() {
@@ -501,18 +503,13 @@ public class ClassroomController implements
     }
 
     public void onDestroyVideo() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (mUser == Constants.User.TEACHER) {
-                    mPublishVideo.destroy();
-                    mPlayStuView.destroy();
-                } else if (mUser == Constants.User.STUDENT) {
-                    mStuPublishVideo.destroy();
-                    mLiveVideo.destroy();
-                }
-            }
-        });
+        if (mUser == Constants.User.TEACHER) {
+            mPublishVideo.destroy();
+            mPlayStuView.destroy();
+        } else if (mUser == Constants.User.STUDENT) {
+            mStuPublishVideo.destroy();
+            mLiveVideo.destroy();
+        }
     }
 
     /**

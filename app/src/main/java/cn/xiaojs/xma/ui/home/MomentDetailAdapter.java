@@ -21,11 +21,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
@@ -33,6 +36,7 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
@@ -49,6 +53,10 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAd
 
     @Override
     protected void setViewContent(Holder holder, Comment bean, int position) {
+        Glide.with(mContext)
+                .load(Account.getAvatar(bean.createdBy.getId(),300))
+                .error(R.drawable.default_avatar)
+                .into(holder.head);
         if (bean.target == null) {//普通评论
             holder.reply(false);
             holder.name.setText(bean.createdBy.getBasic().getName());
@@ -140,6 +148,8 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAd
         TextView content;
         @BindView(R.id.moment_comment_reply)
         TextView reply;
+        @BindView(R.id.moment_comment_image)
+        RoundedImageView head;
 
         public void reply(boolean reply) {
             if (reply){

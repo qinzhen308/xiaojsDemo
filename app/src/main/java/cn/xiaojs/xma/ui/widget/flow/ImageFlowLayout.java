@@ -28,7 +28,6 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.BitmapUtils;
-import cn.xiaojs.xma.util.DeviceUtil;
 
 public class ImageFlowLayout extends ViewGroup {
 
@@ -165,7 +164,7 @@ public class ImageFlowLayout extends ViewGroup {
         mlp.leftMargin = margin;
         mlp.rightMargin = margin;
         image.setLayoutParams(mlp);
-        image.setImageResource(DeviceUtil.getPor());
+        //image.setImageResource(DeviceUtil.getPor());
         image.setOval(true);
         image.setCornerRadius((float) radius);
         return image;

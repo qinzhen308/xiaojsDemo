@@ -177,11 +177,12 @@
 
                 <cn.xiaojs.xma.ui.widget.RoundedImageView
                         android:id="@+id/tea_avatar"
+                        app:oval="true"
                         android:layout_width="@dimen/px120"
                         android:layout_height="@dimen/px120"
                         android:layout_marginRight="@dimen/px24"
-                        android:src="@drawable/default_avatar"
-                        app:oval="true"/>
+                        android:scaleType="fitXY"
+                        android:src="@drawable/default_avatar"/>
 
                 <ImageView
                         android:id="@+id/nav_right"

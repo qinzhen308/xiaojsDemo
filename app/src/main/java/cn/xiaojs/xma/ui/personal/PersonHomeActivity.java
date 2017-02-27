@@ -254,7 +254,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
     }
 
     private void initProfileBg() {
-        mBlur.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        //mBlur.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        mBlur.setImageResource(R.drawable.portrait_default_bg);
     }
 
     private void setDefaultPortrait() {
@@ -292,7 +293,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         int width = DeviceUtil.getScreenWidth(this);
         int height = (int) (width * mCoverScale);
         mFreeCover.getLayoutParams().height = height;
-        mFreeCover.setImageResource(DeviceUtil.getLesson());
+        //mFreeCover.setImageResource(DeviceUtil.getLesson());
         List<Bitmap> lists = new ArrayList<>();
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));

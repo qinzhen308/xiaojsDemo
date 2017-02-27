@@ -19,7 +19,7 @@
 
     <cn.xiaojs.xma.ui.widget.PortraitView
             android:id="@+id/portrait"
-            android:src="@drawable/por_1"
+            android:src="@drawable/default_avatar"
             android:layout_width="@dimen/px140"
             android:layout_height="@dimen/px140"/>
     <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView

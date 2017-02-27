@@ -5,9 +5,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+    <FrameLayout
+            android:id="@+id/scroll_tab_footer_container"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+    </FrameLayout>
 
     <cn.xiaojs.xma.ui.widget.ScrollableViewPager
             android:id="@+id/scroll_tab_pager"
+            android:layout_above="@+id/scroll_tab_footer_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
@@ -33,14 +41,6 @@
                 android:background="@color/white"/>
     </LinearLayout>
 
-
-    <FrameLayout
-            android:id="@+id/scroll_tab_footer_container"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-    </FrameLayout>
 
     <LinearLayout
             android:id="@+id/pager_content"

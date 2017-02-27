@@ -90,7 +90,7 @@ public class GradeHomeActivity extends BaseActivity {
                 }
             }
         });
-        mCover.setImageResource(DeviceUtil.getLesson());
+        //mCover.setImageResource(DeviceUtil.getLesson());
 
         List<Date> dates = new ArrayList<>();
         dates.add(new Date());
