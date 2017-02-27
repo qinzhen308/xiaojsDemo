@@ -653,8 +653,13 @@ public class ContactActivity extends BaseActivity {
 
                     ArrayList<Contact> newList = new ArrayList<Contact>();
                     for (Contact contact : group.collection) {
-                        String name = contact.alias.toLowerCase();
-                        if (name.contains(query)) {
+                        String name = contact.alias;
+                        if (name == null){
+                            name  = contact.title;
+                        }
+                        if (name == null) continue;
+
+                        if (name.toLowerCase().contains(query)) {
                             newList.add(contact);
                         }
                     }
