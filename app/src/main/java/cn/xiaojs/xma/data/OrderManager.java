@@ -49,7 +49,7 @@ public class OrderManager {
 
     }
 
-    public void getOrders(Context context, Pagination pagination, APIServiceCallback<List<EnrollOrder>> callback) {
+    public static void getOrders(Context context, Pagination pagination, APIServiceCallback<List<EnrollOrder>> callback) {
 
         int page = 1;
         int limit = 10;
