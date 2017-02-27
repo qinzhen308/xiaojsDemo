@@ -34,10 +34,6 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
-            case APIType.GET_PUBLIC_HOME:
-            case APIType.GET_PRIVATE_HOME:
-                errorMessage = "加载失败";
-                break;
             case APIType.BEGIN_CLASS:
                 if (errorCode.equals(Errors.ACCESS_VIOLATION)){
                     errorMessage = "你没有权限";
@@ -62,7 +58,7 @@ public class ErrorPrompts {
                 break;
             case APIType.UNFOLLOW_CONTACT:
                 if (errorCode.equals(Errors.INVALID_OPERATION)) {
-                    errorMessage = "您未关注此人";
+                    errorMessage = "没有关注";
                 } else {
                     errorMessage = "取消关注失败";
                 }
@@ -74,36 +70,19 @@ public class ErrorPrompts {
                 errorMessage = "回复失败";
                 break;
             case APIType.POST_ACTIVITY:
-                errorMessage = "发布动态失败";
+                errorMessage = "发布失败";
                 break;
             case APIType.LIKE_ACTIVITY:
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
-                    errorMessage = "您已赞过";
+                    errorMessage = "已赞过";
                 } else {
-                    errorMessage = "点赞失败";
+                    errorMessage = "操作失败";
                 }
                 break;
-            case APIType.GET_UPDATES:
-                errorMessage = "获取动态更新失败";
-                break;
-            case APIType.GET_LINKED_RECORDS:
-                errorMessage = "获取赞失败";
-                break;
-            case APIType.GET_CONTACTS:
-                errorMessage = "获取联系人失败";
-                break;
-            case APIType.GET_COMMENTS:
-                errorMessage = "获取评论失败";
-                break;
-            case APIType.GET_ACTIVITY_DETAILS:
-                errorMessage = "获取详情失败";
-                break;
-            case APIType.GET_ACTIVITIES:
-                errorMessage = "获取动态失败";
-                break;
+
             case APIType.FOLLOW_CONTACT:
                 if (errorCode.equals(Errors.INVALID_OPERATION)) {
-                    errorMessage = "您已关注";
+                    errorMessage = "已关注";
                 } else {
                     errorMessage = "关注失败";
                 }
@@ -113,9 +92,9 @@ public class ErrorPrompts {
                 break;
             case APIType.ADD_CONTACT_GROUP:
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
-                    errorMessage = "组已存在";
+                    errorMessage = "组名已存在";
                 } else {
-                    errorMessage = "新建组失败";
+                    errorMessage = "操作失败";
                 }
                 break;
             case APIType.HAVE_PROVILEGES:
@@ -132,12 +111,6 @@ public class ErrorPrompts {
                 break;
             case APIType.EDIT_PROFILE:
                 errorMessage = "修改失败";
-                break;
-            case APIType.GET_CENTER_DATA:
-                errorMessage = "加载失败";
-                break;
-            case APIType.GET_PROFILE:
-                errorMessage = "加载失败";
                 break;
             case APIType.GET_UPTOKEN:
                 errorMessage = "获取上传token失败";
@@ -162,22 +135,22 @@ public class ErrorPrompts {
                 if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
                     errorMessage = "您不能取消上架";
                 } else {
-                    errorMessage = "取消上架失败";
+                    errorMessage = "取消失败";
                 }
 
                 break;
             case APIType.CONFIRM_LESSON_ENROLLMENT:
 
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
-                    errorMessage = "已报名该课程";
+                    errorMessage = "你已报名";
                 } else if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
-                    errorMessage = "用户不存在";
+                    errorMessage = "该课已下架";
                 } else if (errorCode.equals(Errors.QUOTA_LIMIT)) {
                     errorMessage = "名额已满";
                 } else if (errorCode.equals(Errors.NO_ENROLL)) {
-                    errorMessage = "报名已截止";
+                    errorMessage = "停止招生";
                 } else {
-                    errorMessage = "确认报名失败";
+                    errorMessage = "报名失败";
                 }
 
                 break;
@@ -185,26 +158,28 @@ public class ErrorPrompts {
 
                 if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
                     errorMessage = "请先声明教学能力";
-                } else if (errorCode.equals(Errors.BAD_PARAMETER)) {
-                    errorMessage = "参数错误";
+                } else if (errorCode.equals(Errors.TEACHER_NOT_INVITED)) {
+                    errorMessage = "主讲老师没有被邀请";
+                } else if (errorCode.equals(Errors.SUBJECT_NOT_RESOLVED)) {
+                    errorMessage = "科目无效";
                 } else {
-                    errorMessage = "创建课程失败";
+                    errorMessage = "创建失败";
                 }
 
                 break;
             case APIType.EDIT_LESSON:
-                errorMessage = "修改直播课失败";
+                errorMessage = "保存失败";
                 break;
             case APIType.ENROLL_LESSON:
 
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
-                    errorMessage = "已报名该课程";
+                    errorMessage = "你已报名";
                 } else if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
-                    errorMessage = "用户不存在";
+                    errorMessage = "该课已下架";
                 } else if (errorCode.equals(Errors.QUOTA_LIMIT)) {
                     errorMessage = "名额已满";
                 } else if (errorCode.equals(Errors.NO_ENROLL)) {
-                    errorMessage = "报名已截止";
+                    errorMessage = "停止报名";
                 } else if (errorCode.equals(Errors.BAD_SUBTOTAL)) {
                     errorMessage = "折扣或者促销已过期";
                 } else {
@@ -212,27 +187,12 @@ public class ErrorPrompts {
                 }
 
                 break;
-            case APIType.GET_ENROLLED_LESSONS:
-                errorMessage = "加载失败";
-                break;
-//            case APIType.GET_LESSON_COVER_UPTOKEN:
-//                errorMessage = "获取上传封面token失败";
-//                break;
-            case APIType.GET_LESSON_DATA:
-                errorMessage = "加载失败";
-                break;
-            case APIType.GET_LESSON_DETAILS:
-                errorMessage = "获取直播课主页失败";
-                break;
-            case APIType.GET_LESSONS:
-                errorMessage = "加载失败";
-                break;
             case APIType.PUT_LESSON_ON_SHELVES:
 
                 if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
                     errorMessage = "您不能上架该课程";
                 } else {
-                    errorMessage = "上架失败";
+                    errorMessage = "操作失败";
                 }
 
                 break;
@@ -240,20 +200,14 @@ public class ErrorPrompts {
                 errorMessage = "公开／取消公开失败";
                 break;
             case APIType.GET_SUBJECT:
-                errorMessage = "获取能力失败";
+                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+                    errorMessage = "已声明教学能力";
+                } else {
+                    errorMessage = "声明教学能力失败";
+                }
+
                 break;
-            case APIType.DELETE_NOTIFICATION:
-                errorMessage = "删除消息失败";
-                break;
-            case APIType.GET_NOTIFICATIONS_OVERVIEW:
-                errorMessage = "获取消息类别失败";
-                break;
-            case APIType.GET_NOTIFICATIONS:
-                errorMessage = "获取消息失败";
-                break;
-            case APIType.IGNORE_NOTIFICATIONS:
-                errorMessage = "忽略消息失败";
-                break;
+
             case APIType.LOGIN:
 
                 if (errorCode.equals(Errors.NOT_IMPLEMENTED)) {
@@ -280,8 +234,42 @@ public class ErrorPrompts {
                     errorMessage = "验证码发送失败";
                 }
                 break;
-            case APIType.VALIDATE_CODE:
-            case APIType.GET_HOME_DATA:
+            case APIType.CREATE_ORDER:
+                errorMessage = "创建订单失败";
+                break;
+            case APIType.CREATE_PAYMENT_CHARGE:
+                errorMessage = "创建第三方支付失败";
+                break;
+            case APIType.ADD_TO_LIBRARY:
+                if (errorCode.equals(Errors.NO_ENOUGH_QUOTA)) {
+                    errorMessage = "存储已满";
+                } else {
+                    errorMessage = "上传文档失败";
+                }
+                break;
+            case APIType.DELETE_NOTIFICATION:
+            case APIType.IGNORE_NOTIFICATIONS:
+                errorMessage = "操作失败";
+                break;
+            case APIType.GET_UPDATES:
+            case APIType.GET_LINKED_RECORDS:
+            case APIType.GET_CONTACTS:
+            case APIType.GET_COMMENTS:
+            case APIType.GET_ACTIVITY_DETAILS:
+            case APIType.GET_ACTIVITIES:
+            case APIType.GET_CENTER_DATA:
+            case APIType.GET_PROFILE:
+            case APIType.GET_ENROLLED_LESSONS:
+            case APIType.GET_LESSON_DATA:
+            case APIType.GET_LESSON_DETAILS:
+            case APIType.GET_LESSONS:
+            case APIType.GET_NOTIFICATIONS_OVERVIEW:
+            case APIType.GET_NOTIFICATIONS:
+            case APIType.GET_PUBLIC_HOME:
+            case APIType.GET_PRIVATE_HOME:
+            case APIType.GET_LIBRARY_OVERVIEW:
+                errorMessage = "加载失败";
+                break;
             default:
                 break;
         }
