@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.Competency;
 
 /*  =======================================================================================
@@ -81,8 +82,9 @@ public class SubjectSelectorAdapter extends BaseAdapter implements View.OnClickL
     private void bindData(int position, Holder holder) {
         Competency competency = mData.get(position);
         holder.position = position;
-        if (competency != null) {
-            holder.subjectTv.setText(competency.getSubject());
+        CSubject subject = null;
+        if (competency != null && (subject = competency.getSubject()) != null) {
+            holder.subjectTv.setText(subject.getName());
         }
 
         holder.selectedStatus.setVisibility(competency.isChecked() ? View.VISIBLE : View.GONE);

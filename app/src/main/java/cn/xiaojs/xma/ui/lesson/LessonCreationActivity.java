@@ -778,10 +778,11 @@ public class LessonCreationActivity extends BaseActivity {
         } else if (requestCode == REQUEST_SELECT_SUBJECT) {
             if (data != null) {
                 Competency competency = (Competency)data.getSerializableExtra(KEY_COMPETENCY);
-                if (competency != null) {
+                CSubject subject = null;
+                if (competency != null && (subject = competency.getSubject()) != null) {
                     mLessonSubjectTv.setTextColor(mBlackFont);
-                    mCompetency = competency.getSubject();
-                    mLessonSubjectTv.setText(competency.getSubject());
+                    mCompetency = subject.getId();
+                    mLessonSubjectTv.setText(subject.getName());
                 }
             }
         }
