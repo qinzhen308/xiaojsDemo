@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.List;
+
 /**
  * Created by maxiaobao on 2016/11/4.
  */
@@ -11,5 +13,5 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class ClaimCompetency {
 
     public int claimed;
-    public Competency[] competencies;
+    public List<Competency> competencies;
 }

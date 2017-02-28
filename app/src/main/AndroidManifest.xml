@@ -90,6 +90,8 @@
         <activity android:name=".ui.lesson.LessonCreationActivity"/>
         <activity android:name=".ui.lesson.TeachingSubjectActivity"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.SubjectSelectorActivity"
+                  android:screenOrientation="portrait"/>
         <activity android:name=".ui.mine.ProfileActivity"/>
         <activity
                 android:name=".ui.lesson.LessonSearchActivity"

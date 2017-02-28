@@ -11,7 +11,7 @@ import java.io.Serializable;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CSubject implements Serializable{
-    private final static int TYPE_NO_CHILD = 12;
+    public final static int TYPE_NO_CHILD = 12;
 
     private String id;
     private String remarks;
