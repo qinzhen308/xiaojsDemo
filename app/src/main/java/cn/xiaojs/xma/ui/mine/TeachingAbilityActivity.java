@@ -43,28 +43,15 @@ public class TeachingAbilityActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_TEACHING_ABILITY && data != null) {
-            CSubject subject = (CSubject) data.getSerializableExtra(KEY_SUBJECT);
-            if (subject != null) {
-                CompetencyParams params = new CompetencyParams();
-                params.setSubject(subject.getId());
-                AccountDataManager.requestClaimCompetency(this, params, new APIServiceCallback<CompetencySubject>() {
-                    @Override
-                    public void onSuccess(CompetencySubject object) {
-                        Toast.makeText(TeachingAbilityActivity.this, R.string.claim_succ, Toast.LENGTH_SHORT).show();
-                        SecurityManager.updatePermission(TeachingAbilityActivity.this, Su.Permission.COURSE_OPEN_CREATE, true);
-                    }
-
-                    @Override
-                    public void onFailure(String errorCode, String errorMessage) {
-                        Toast.makeText(TeachingAbilityActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == REQUEST_TEACHING_ABILITY && data != null) {
+//            CSubject subject = (CSubject) data.getSerializableExtra(KEY_SUBJECT);
+//            if (subject != null) {
+//
+//            }
+//        }
+//    }
 }
