@@ -40,7 +40,7 @@ public class SubjectSelectorActivity extends BaseActivity {
 
     @Override
     protected void addViewContent() {
-        setTitle(R.string.subject_category_select);
+        setMiddleTitle(R.string.subject_category_select);
         setRightText(R.string.finish);
         mRightText.setTextColor(getResources().getColor(R.color.font_orange));
 
