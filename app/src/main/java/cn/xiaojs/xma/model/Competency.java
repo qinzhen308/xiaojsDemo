@@ -12,25 +12,16 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Competency implements Serializable {
 
-    private String subject;
-    private String subjectName;
+    private CSubject subject;
     private Current current;
     private boolean checked;
 
-    public String getSubject() {
+    public CSubject getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(CSubject subject) {
         this.subject = subject;
-    }
-
-    public String getSubjectName() {
-        return subjectName;
-    }
-
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
     }
 
     public Current getCurrent() {
@@ -55,20 +46,20 @@ public class Competency implements Serializable {
         private int TSIL;
         private int popularity;
 
-        public int getPopularity() {
-            return popularity;
-        }
-
-        public void setPopularity(int popularity) {
-            this.popularity = popularity;
-        }
-
         public int getTSIL() {
             return TSIL;
         }
 
         public void setTSIL(int TSIL) {
             this.TSIL = TSIL;
+        }
+
+        public int getPopularity() {
+            return popularity;
+        }
+
+        public void setPopularity(int popularity) {
+            this.popularity = popularity;
         }
     }
 
