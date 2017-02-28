@@ -29,3 +29,7 @@ developer #开发人员渠道
 #
 # 应用宝
 #myapp
+
+
+#build apk
+#./gradlew clean assembleReleaseChannels -PchannelFile=channel
