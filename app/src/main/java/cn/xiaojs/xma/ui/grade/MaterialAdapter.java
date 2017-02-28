@@ -31,15 +31,18 @@ import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.colla.LibDoc;
 import cn.xiaojs.xma.model.colla.UserDoc;
+import cn.xiaojs.xma.util.FileUtil;
+import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
 public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Holder> {
 
     private boolean mIsMine;
     private String mOwner;
 
-    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView,String owner) {
+    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView, String owner) {
         super(context, listView);
-        if (TextUtils.isEmpty(owner)){
+        if (TextUtils.isEmpty(owner)) {
             mIsMine = true;
         }
         mOwner = owner;
@@ -48,8 +51,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
     @Override
     protected void setViewContent(final Holder holder, LibDoc bean, int position) {
         holder.showOpera(false);
-        if (mIsMine){
-            holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.share_selector,0,0);
+        if (mIsMine) {
+            holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.share_selector, 0, 0);
             holder.opera2.setText(R.string.share);
         }
         holder.item.setOnClickListener(new View.OnClickListener() {
@@ -59,19 +62,26 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             }
         });
 
-//        if (FileUtil.DOC == FileUtil.getFileType(bean.)) {
-//            holder.image.setImageResource(R.drawable.ic_word);
-//        } else if (position % 6 == 1) {
-//            holder.image.setImageResource(R.drawable.ic_ppt);
-//        } else if (position % 6 == 2) {
-//            holder.image.setImageResource(R.drawable.ic_excel);
-//        } else if (position % 6 == 3) {
-//            holder.image.setImageResource(R.drawable.ic_picture);
-//        } else if (position % 6 == 4) {
-//            holder.image.setImageResource(R.drawable.ic_pdf);
-//        } else if (position % 6 == 5) {
-//            holder.image.setImageResource(R.drawable.ic_unknown);
-//        }
+        if (FileUtil.DOC == FileUtil.getFileType(bean.mimeType)) {
+            holder.image.setImageResource(R.drawable.ic_word);
+        } else if (FileUtil.PPT == FileUtil.getFileType(bean.mimeType)) {
+            holder.image.setImageResource(R.drawable.ic_ppt);
+        } else if (FileUtil.XLS == FileUtil.getFileType(bean.mimeType)) {
+            holder.image.setImageResource(R.drawable.ic_excel);
+        } else if (FileUtil.PICTURE == FileUtil.getFileType(bean.mimeType)) {
+            holder.image.setImageResource(R.drawable.ic_picture);
+        } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
+            holder.image.setImageResource(R.drawable.ic_pdf);
+        } else {
+            holder.image.setImageResource(R.drawable.ic_unknown);
+        }
+        //holder.name.setText();
+        StringBuilder sb = new StringBuilder();
+        sb.append(XjsUtils.getSizeFormatText(bean.used));
+        sb.append("  ");
+        sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+
+        holder.desc.setText(sb);
     }
 
     @Override
@@ -91,16 +101,17 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         CollaManager.getDocuments(mContext, mOwner, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
-                if (object != null){
+                if (object != null && object.documents.size() > 0) {
+                    object.documents.remove(0);
                     MaterialAdapter.this.onSuccess(object.documents);
-                }else {
+                } else {
                     MaterialAdapter.this.onSuccess(null);
                 }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                MaterialAdapter.this.onFailure(errorCode,errorMessage);
+                MaterialAdapter.this.onFailure(errorCode, errorMessage);
             }
         });
     }
