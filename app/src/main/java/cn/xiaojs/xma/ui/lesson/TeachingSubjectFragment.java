@@ -94,7 +94,6 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
 
     private void loadData() {
         mSubjectAdapter = new TeachingSubjectAdapter(mContext, mSubjectListView, mParentId);
-        //mSubjectAdapter.setHasChild(mParentCSubject != null ? mParentCSubject.getType() == CSubject.TYPE_NO_CHILD : true);
         mSubjectAdapter.setOnSubjectSelectedListener(this);
         mSubjectListView.setAdapter(mSubjectAdapter);
     }
@@ -111,9 +110,17 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
 
     @Override
     public void onSubjectSelected(CSubject subject) {
-        Activity activity = getActivity();
-        if (activity instanceof TeachingSubjectActivity) {
-            ((TeachingSubjectActivity) activity).onSubjectSelected(subject);
+        if (subject != null) {
+            if (subject.getType() == CSubject.TYPE_NO_CHILD) {
+                mRightView.setVisibility(View.VISIBLE);
+                mRightView.setText(getResources().getText(R.string.finish));
+            } else {
+                mRightView.setVisibility(View.GONE);
+                Activity activity = getActivity();
+                if (activity instanceof TeachingSubjectActivity) {
+                    ((TeachingSubjectActivity) activity).onSubjectSelected(subject);
+                }
+            }
         }
     }
 }

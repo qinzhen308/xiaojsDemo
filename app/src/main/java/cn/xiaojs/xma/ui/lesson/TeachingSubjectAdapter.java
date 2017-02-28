@@ -16,6 +16,7 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.CategoriesManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
+import retrofit2.http.PUT;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -35,7 +36,6 @@ import cn.xiaojs.xma.model.CSubject;
 public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSubjectAdapter.Holder> implements View.OnClickListener{
     private String mParentId;
     private OnSubjectSelectedListener mSelectedListener;
-    private boolean mHasChild = true;
 
     public TeachingSubjectAdapter(Context context, PullToRefreshSwipeListView listView, String parentId) {
         super(context, listView);
@@ -44,10 +44,6 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
 
     public void setOnSubjectSelectedListener(OnSubjectSelectedListener listener) {
         mSelectedListener = listener;
-    }
-
-    public void setHasChild(boolean hasChild) {
-        mHasChild = hasChild;
     }
 
     @Override
@@ -61,11 +57,11 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
             CSubject subject = data.get(holder.position);
             subject.setCheck(true);
 
-            if (mHasChild) {
-                if (mSelectedListener != null) {
-                    mSelectedListener.onSubjectSelected(subject);
-                }
-            } else {
+            if (mSelectedListener != null) {
+                mSelectedListener.onSubjectSelected(subject);
+            }
+
+            if (subject.getType() == CSubject.TYPE_NO_CHILD) {
                 notifyDataSetChanged();
             }
         }
@@ -135,7 +131,8 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
         }
     }
 
-    public static interface OnSubjectSelectedListener {
+    public interface OnSubjectSelectedListener {
         public void onSubjectSelected(CSubject subject);
     }
+
 }

@@ -6,7 +6,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.CompetencyParams;
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 import butterknife.OnClick;
@@ -43,9 +47,21 @@ public class TeachingAbilityActivity extends BaseActivity {
 
         if (requestCode == REQUEST_TEACHING_ABILITY && data != null) {
             CSubject subject = (CSubject) data.getSerializableExtra(KEY_SUBJECT);
-            //TODO
             if (subject != null) {
                 Toast.makeText(this, subject.getName(), Toast.LENGTH_SHORT).show();
+                CompetencyParams params = new CompetencyParams();
+                params.setSubject(subject.getId());
+                AccountDataManager.requestClaimCompetency(this, params, new APIServiceCallback<CompetencySubject>() {
+                    @Override
+                    public void onSuccess(CompetencySubject object) {
+                        Toast.makeText(TeachingAbilityActivity.this, R.string.claim_succ, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        Toast.makeText(TeachingAbilityActivity.this, R.string.claim_fail, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }

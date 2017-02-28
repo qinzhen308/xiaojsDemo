@@ -88,8 +88,10 @@
                 android:name=".ui.lesson.MyLessonActivity"
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.LessonCreationActivity"/>
-        <activity android:name=".ui.lesson.TeachingSubjectActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.lesson.TeachingSubjectActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".ui.lesson.SubjectSelectorActivity"
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.mine.ProfileActivity"/>
