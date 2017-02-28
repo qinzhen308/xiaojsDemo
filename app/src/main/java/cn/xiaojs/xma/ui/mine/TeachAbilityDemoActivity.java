@@ -14,6 +14,7 @@ import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.CompetencyParams;
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.UIUtils;
 
@@ -118,13 +119,13 @@ public class TeachAbilityDemoActivity extends BaseActivity {
 
         CompetencyParams cp = new CompetencyParams();
         cp.setSubject(subId);
-        AccountDataManager.requestClaimCompetency(this, cp, new APIServiceCallback<Competency>() {
+        AccountDataManager.requestClaimCompetency(this, cp, new APIServiceCallback<CompetencySubject>() {
             @Override
-            public void onSuccess(Competency object) {
+            public void onSuccess(CompetencySubject object) {
                 Toast.makeText(TeachAbilityDemoActivity.this,"声明成功",Toast.LENGTH_SHORT).show();
                 SecurityManager.updatePermission(TeachAbilityDemoActivity.this, Su.Permission.COURSE_OPEN_CREATE,true);
 
-                AccountDataManager.saveSubject(TeachAbilityDemoActivity.this,object.getSubject());
+                AccountDataManager.saveSubject(TeachAbilityDemoActivity.this,object.competency.getSubject());
 
             }
 

@@ -20,6 +20,7 @@ import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.UpTokenParam;
@@ -172,7 +173,7 @@ public class AccountDataManager {
      */
     public static void requestClaimCompetency(Context context,
                                               @NonNull CompetencyParams competencyParams,
-                                              @NonNull APIServiceCallback<Competency> callback) {
+                                              @NonNull APIServiceCallback<CompetencySubject> callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {

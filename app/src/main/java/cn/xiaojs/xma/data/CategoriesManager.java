@@ -8,6 +8,8 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.CategoriesRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.Pagination;
+
 import com.orhanobut.logger.Logger;
 
 import java.util.List;
@@ -35,14 +37,22 @@ public class CategoriesManager {
 
     public static void getSubjects(@NonNull Context context,
                                    String parent,
+                                   Pagination pagination,
                                    @NonNull APIServiceCallback<List<CSubject>> callback){
 
         if (TextUtils.isEmpty(parent)){
             parent = "root";
         }
 
+        int page = 1;
+        int limit = 10;
+        if (pagination != null){
+            page = pagination.getPage();
+            limit = pagination.getMaxNumOfObjectsPerPage();
+        }
+
         CategoriesRequest categoriesRequest = new CategoriesRequest(context,callback);
-        categoriesRequest.getSubjects(parent);
+        categoriesRequest.getSubjects(parent,page,limit);
     }
 
 }

@@ -121,7 +121,7 @@ public class CollaManager {
 
         if (TextUtils.isEmpty(owner)) owner = "";
 
-        int page = 0;
+        int page = 1;
         int limit = 10;
         if (pagination!=null){
             page = pagination.getPage();
