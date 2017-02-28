@@ -1,15 +1,17 @@
-package cn.xiaojs.xma.model;
+package cn.xiaojs.xma.model.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cn.xiaojs.xma.model.Competency;
+
 /**
- * Created by maxiaobao on 2016/11/4.
+ * Created by maxiaobao on 2017/2/28.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClaimCompetency {
+public class CompetencySubject {
 
     public int claimed;
-    public Competency[] competencies;
+    public Competency competency;
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
 import cn.xiaojs.xma.model.Competency;
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.colla.LibOverview;
@@ -88,7 +89,7 @@ public interface XiaojsService {
     //Claim Competency
     @Headers("Content-Type: application/json")
     @POST("/v1/accounts/competencies")
-    Call<Competency> claimCompetency(@Body CompetencyParams competencyParams);
+    Call<CompetencySubject> claimCompetency(@Body CompetencyParams competencyParams);
 
     //Get Competencies
     @GET("/v1/accounts/competencies")
@@ -221,7 +222,9 @@ public interface XiaojsService {
 
     //Get Subjects
     @GET("/v1/categories/subjects/{parent}")
-    Call<List<CSubject>>getSubjects(@Path("parent") String parent);
+    Call<List<CSubject>>getSubjects(@Path("parent") String parent,
+                                    @Query("page") int page,
+                                    @Query("limit") int limit);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

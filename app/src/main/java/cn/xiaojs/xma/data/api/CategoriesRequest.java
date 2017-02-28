@@ -30,9 +30,9 @@ public class CategoriesRequest extends ServiceRequest {
 
     }
 
-    public void getSubjects(String parent) {
+    public void getSubjects(String parent, int page, int limit) {
 
-        Call<List<CSubject>> call = getService().getSubjects(parent);
+        Call<List<CSubject>> call = getService().getSubjects(parent,page, limit);
         enqueueRequest(APIType.GET_SUBJECTS,call);
 
     }

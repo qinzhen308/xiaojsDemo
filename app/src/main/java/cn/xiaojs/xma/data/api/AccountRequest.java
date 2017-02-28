@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 
 
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.UpToken;
@@ -56,7 +57,7 @@ public class AccountRequest extends ServiceRequest {
 
     public void claimCompetency(CompetencyParams competencyParams) {
 
-        Call<Competency> call = getService().claimCompetency(competencyParams);
+        Call<CompetencySubject> call = getService().claimCompetency(competencyParams);
         enqueueRequest(APIType.CLAIM_COMPETENCY,call);
 
     }
