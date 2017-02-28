@@ -34,10 +34,20 @@ import cn.xiaojs.xma.model.CSubject;
 
 public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSubjectAdapter.Holder> implements View.OnClickListener{
     private String mParentId;
+    private OnSubjectSelectedListener mSelectedListener;
+    private boolean mHasChild = true;
 
     public TeachingSubjectAdapter(Context context, PullToRefreshSwipeListView listView, String parentId) {
         super(context, listView);
         mParentId = parentId;
+    }
+
+    public void setOnSubjectSelectedListener(OnSubjectSelectedListener listener) {
+        mSelectedListener = listener;
+    }
+
+    public void setHasChild(boolean hasChild) {
+        mHasChild = hasChild;
     }
 
     @Override
@@ -50,8 +60,15 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
             }
             CSubject subject = data.get(holder.position);
             subject.setCheck(true);
+
+            if (mHasChild) {
+                if (mSelectedListener != null) {
+                    mSelectedListener.onSubjectSelected(subject);
+                }
+            } else {
+                notifyDataSetChanged();
+            }
         }
-        notifyDataSetChanged();
     }
 
     @Override
@@ -95,6 +112,19 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
         });
     }
 
+    public CSubject getSelectedSubject() {
+        List<CSubject> data = getList();
+        if (data != null) {
+            for (CSubject subject : data) {
+                if (subject.isCheck()) {
+                    return subject;
+                }
+            }
+        }
+
+        return null;
+    }
+
     static class Holder extends BaseHolder{
         public TextView subjectTv;
         public ImageView selectedStatus;
@@ -103,5 +133,9 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
         public Holder(View view) {
             super(view);
         }
+    }
+
+    public static interface OnSubjectSelectedListener {
+        public void onSubjectSelected(CSubject subject);
     }
 }

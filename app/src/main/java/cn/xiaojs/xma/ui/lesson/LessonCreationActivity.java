@@ -13,6 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
@@ -20,6 +27,7 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
@@ -32,14 +40,6 @@ import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.DataPicker;
 import cn.xiaojs.xma.util.TimeUtil;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -60,6 +60,8 @@ public class LessonCreationActivity extends BaseActivity {
     private final int MAX_STUDENT_COUNT = 9999; //
     private final int MAX_LESSON_DURATION = 600; //600 minutes, 10 hours
     private final int REQUEST_CODE_OPTIONAL_INFO = 2000;
+    private final static int REQUEST_SELECT_SUBJECT = 2001;
+
     private final int DEFAULT_SUT_COUNT = 50;
 
     private final int MIN_LESSON_CHAR = 3;
@@ -67,7 +69,7 @@ public class LessonCreationActivity extends BaseActivity {
 
     private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
 
-    private final static int REQUEST_SELECT_SUBJECT = 100;
+    public final static String KEY_COMPETENCY = "key_competency";
 
     @BindView(R.id.status_fail_reason)
     TextView mStatusFailReason;
@@ -430,7 +432,7 @@ public class LessonCreationActivity extends BaseActivity {
     private void selectSubject() {
         //mLessonSubjectTv.setTextColor(mBlackFont);
         Intent intent = new Intent();
-        intent.setClass(mContext, TeachingSubjectActivity.class);
+        intent.setClass(mContext, SubjectSelectorActivity.class);
         startActivityForResult(intent, REQUEST_SELECT_SUBJECT);
     }
 
@@ -770,6 +772,14 @@ public class LessonCreationActivity extends BaseActivity {
                 Object obj = data.getSerializableExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO);
                 if (obj instanceof LiveLesson) {
                     mLessonOptionalInfo = (LiveLesson) obj;
+                }
+            }
+        } else if (requestCode == REQUEST_SELECT_SUBJECT) {
+            if (data != null) {
+                Competency competency = (Competency)data.getSerializableExtra(KEY_COMPETENCY);
+                if (competency != null) {
+                    mLessonSubjectTv.setTextColor(mBlackFont);
+                    mLessonSubjectTv.setText(competency.getSubject());
                 }
             }
         }

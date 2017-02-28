@@ -3,16 +3,19 @@ package cn.xiaojs.xma.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
+
 /**
  * Created by maxiaobao on 2016/11/4.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Competency {
+public class Competency implements Serializable {
 
     private String subject;
     private String subjectName;
     private Current current;
+    private boolean checked;
 
     public String getSubject() {
         return subject;
@@ -38,9 +41,17 @@ public class Competency {
         this.current = current;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Current {
+    public static class Current implements Serializable {
         private int TSIL;
         private int popularity;
 

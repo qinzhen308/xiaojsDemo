@@ -2,15 +2,15 @@ package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Intent;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -23,19 +23,24 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
  * Date:2017/2/28
- * Desc:选择学科类目，教学能力
+ * Desc: 教学能力声明科目选择
  *
  * ======================================================================================== */
 
 public class TeachingSubjectActivity extends BaseActivity {
+    public final static String KEY_TYPE = "key_type";
+
     private List<TeachingSubjectFragment> mFragments;
 
     @Override
     protected void addViewContent() {
         needHeader(false);
-
-        mFragments = new ArrayList<TeachingSubjectFragment>();
+        initData();
         initPage();
+    }
+
+    private void initData() {
+        mFragments = new ArrayList<TeachingSubjectFragment>();
     }
 
     private void initPage() {
@@ -45,13 +50,27 @@ public class TeachingSubjectActivity extends BaseActivity {
         mFragments.add(subjectFragment);
     }
 
-    private void enterNextPage() {
+    private void enterNextPage(CSubject subject) {
         TeachingSubjectFragment subjectFragment = new TeachingSubjectFragment();
+        subjectFragment.setParentSubject(subject);
         getSupportFragmentManager().beginTransaction().add(R.id.base_content, subjectFragment).commit();
+        mFragments.add(subjectFragment);
     }
 
-    public void onBackClicked() {
+    public void onBackBtnClicked() {
         exitCurrentPage();
+    }
+
+    public void onSubjectSelected(CSubject subject) {
+        enterNextPage(subject);
+    }
+
+    public void onFinishBtnClicked(CSubject subject) {
+        if (subject == null) {
+            Toast.makeText(this, R.string.subject_not_select, Toast.LENGTH_SHORT).show();
+        } else {
+            finishWithResult(subject);
+        }
     }
 
     @Override
@@ -69,7 +88,7 @@ public class TeachingSubjectActivity extends BaseActivity {
         if (mFragments != null && !mFragments.isEmpty()) {
             if (mFragments.size() == 1) {
                 //退出页面
-                finishWithResult();
+                finishWithResult(null);
                 return true;
             } else {
                 //退回上一级页面
@@ -83,8 +102,10 @@ public class TeachingSubjectActivity extends BaseActivity {
         return true;
     }
 
-    private void finishWithResult() {
+    private void finishWithResult(CSubject subject) {
         Intent intent = new Intent();
+        intent.putExtra(TeachingAbilityActivity.KEY_SUBJECT, subject);
         setResult(RESULT_OK, intent);
+        finish();
     }
 }

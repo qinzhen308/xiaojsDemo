@@ -24,16 +24,19 @@
             android:drawableLeft="@drawable/ic_search"
             android:background="@drawable/ic_search_bg"
             android:layout_marginTop="@dimen/px16"
-            android:layout_marginBottom="@dimen/px16"/>
+            android:layout_marginBottom="@dimen/px16"
+            android:visibility="gone"/>
 
     <LinearLayout
+            android:id="@+id/selected_subject_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="@dimen/px30"
             android:paddingBottom="@dimen/px30"
             android:paddingLeft="@dimen/px26"
-            android:paddingRight="@dimen/px26">
+            android:paddingRight="@dimen/px26"
+            android:visibility="gone">
 
         <TextView
                 android:id="@+id/title"
@@ -57,6 +60,7 @@
             android:layout_height="match_parent"
             android:divider="@android:color/transparent"
             android:listSelector="@android:color/transparent"
-            android:dividerHeight="0px"/>
+            android:dividerHeight="0px"
+            android:background="@color/white"/>
 
 </LinearLayout>

@@ -3,13 +3,18 @@ package cn.xiaojs.xma.ui.mine;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 import butterknife.OnClick;
+import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 
 public class TeachingAbilityActivity extends BaseActivity {
+    private final static int REQUEST_TEACHING_ABILITY = 100;
+    public final static String KEY_SUBJECT = "key_subject";
 
     @Override
     protected void addViewContent() {
@@ -25,8 +30,23 @@ public class TeachingAbilityActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.edit_ability_layout:
-                startActivity(new Intent(TeachingAbilityActivity.this,TeachAbilityDemoActivity.class));
+                //startActivity(new Intent(TeachingAbilityActivity.this,TeachAbilityDemoActivity.class));
+                Intent intent = new Intent(this, TeachingSubjectActivity.class);
+                startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_TEACHING_ABILITY && data != null) {
+            CSubject subject = (CSubject) data.getSerializableExtra(KEY_SUBJECT);
+            //TODO
+            if (subject != null) {
+                Toast.makeText(this, subject.getName(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
