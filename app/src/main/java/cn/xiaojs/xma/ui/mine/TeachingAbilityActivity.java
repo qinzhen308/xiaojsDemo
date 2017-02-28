@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CompetencyParams;
@@ -27,9 +29,9 @@ public class TeachingAbilityActivity extends BaseActivity {
         setLeftImage(R.drawable.back_arrow);
     }
 
-    @OnClick({R.id.left_image,R.id.edit_ability_layout})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.left_image, R.id.edit_ability_layout})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.left_image:
                 finish();
                 break;
@@ -48,18 +50,18 @@ public class TeachingAbilityActivity extends BaseActivity {
         if (requestCode == REQUEST_TEACHING_ABILITY && data != null) {
             CSubject subject = (CSubject) data.getSerializableExtra(KEY_SUBJECT);
             if (subject != null) {
-                Toast.makeText(this, subject.getName(), Toast.LENGTH_SHORT).show();
                 CompetencyParams params = new CompetencyParams();
                 params.setSubject(subject.getId());
                 AccountDataManager.requestClaimCompetency(this, params, new APIServiceCallback<CompetencySubject>() {
                     @Override
                     public void onSuccess(CompetencySubject object) {
                         Toast.makeText(TeachingAbilityActivity.this, R.string.claim_succ, Toast.LENGTH_SHORT).show();
+                        SecurityManager.updatePermission(TeachingAbilityActivity.this, Su.Permission.COURSE_OPEN_CREATE, true);
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
-                        Toast.makeText(TeachingAbilityActivity.this, R.string.claim_fail, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TeachingAbilityActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
