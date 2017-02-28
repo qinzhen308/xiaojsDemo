@@ -80,7 +80,7 @@ public class MaterialActivity extends BaseActivity {
         } else {
             mTitle.setText(R.string.data_bank);
         }
-        mAdapter = new MaterialAdapter(this, mList, mIsMine);
+        mAdapter = new MaterialAdapter(this, mList, "");
         mList.setAdapter(mAdapter);
         mRightImage2.setImageResource(R.drawable.upload_selector);
         mRightImage.setImageResource(R.drawable.ic_my_download);
@@ -140,36 +140,36 @@ public class MaterialActivity extends BaseActivity {
                             cursor.close();
                             file = new File(picturePath);
                         }
-
-                        if (file == null)
-                            return;
-                        mUploadName.setText(file.getName());
-                        mUploadingWrapper.setVisibility(View.VISIBLE);
-                        mManager = new CollaManager();
-                        String t = "869f6f9be63c3ee2157b4188e709718638f7e8faf2e1223f389631a3f2dfc5f8f9025c1208dacc1b32ab324f5d9da842";
-                        mManager.addToLibrary(this, file.getPath(), file.getName(), t, new QiniuService() {
-                            @Override
-                            public void uploadSuccess(String key, UploadReponse reponse) {
-                                mUploadingWrapper.setVisibility(View.GONE);
-                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_success);
-                            }
-
-                            @Override
-                            public void uploadProgress(String key, double percent) {
-                                mUploadProgress.setProgress((int) (percent * 100));
-                            }
-
-                            @Override
-                            public void uploadFailure(boolean cancel) {
-                                mUploadingWrapper.setVisibility(View.GONE);
-                                if (cancel) {
-                                    ToastUtil.showToast(getApplicationContext(), R.string.up_load_cancel);
-                                } else {
-                                    ToastUtil.showToast(getApplicationContext(), R.string.up_load_failure);
-                                }
-                            }
-                        });
                     }
+                    if (file == null)
+                        return;
+                    mUploadName.setText(file.getName());
+                    mUploadingWrapper.setVisibility(View.VISIBLE);
+                    mManager = new CollaManager();
+                    String t = "869f6f9be63c3ee2157b4188e709718638f7e8faf2e1223f389631a3f2dfc5f8f9025c1208dacc1b32ab324f5d9da842";
+                    mManager.addToLibrary(this, file.getPath(), file.getName(), t, new QiniuService() {
+                        @Override
+                        public void uploadSuccess(String key, UploadReponse reponse) {
+                            mUploadingWrapper.setVisibility(View.GONE);
+                            ToastUtil.showToast(getApplicationContext(), R.string.up_load_success);
+                        }
+
+                        @Override
+                        public void uploadProgress(String key, double percent) {
+                            mUploadProgress.setProgress((int) (percent * 100));
+                        }
+
+                        @Override
+                        public void uploadFailure(boolean cancel) {
+                            mUploadingWrapper.setVisibility(View.GONE);
+                            if (cancel) {
+                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_cancel);
+                            } else {
+                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_failure);
+                            }
+                        }
+                    });
+
                 }
             }
         }

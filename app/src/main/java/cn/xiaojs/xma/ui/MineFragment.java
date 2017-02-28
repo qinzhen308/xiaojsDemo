@@ -43,6 +43,7 @@ import cn.xiaojs.xma.ui.certification.CertificationActivity;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
+import cn.xiaojs.xma.ui.mine.MyOrderActivity;
 import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
@@ -121,6 +122,7 @@ public class MineFragment extends BaseFragment {
                 startActivityForResult(new Intent(mContext, ProfileActivity.class),REQUEST_EDIT);
                 break;
             case R.id.my_order_layout:
+                startActivity(new Intent(mContext, MyOrderActivity.class));
                 break;
             default:
                 break;
