@@ -107,10 +107,14 @@ public class AccountDataManager {
         AccountPref.setAccountID(context,id);
         AccountPref.setLoginStatus(context,true);
 
-        AccountPref.setUser(context,user);
+        setUserInfo(context,user);
 
         DataManager.init(context);
 
+    }
+
+    public static void setUserInfo(Context context, User user) {
+        AccountPref.setUser(context,user);
     }
 
     public static User getUserInfo(Context context) {
