@@ -47,4 +47,7 @@ public class XiaojsConfig {
 
     public static final String PING_WALLET = "con.xiaojs.xma.wallet";
 
+    //默认渠道
+    public static final String DEFAULT_CHANNEL = "N/A";
+
 }

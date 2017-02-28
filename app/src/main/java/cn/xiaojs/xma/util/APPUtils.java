@@ -28,9 +28,11 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.meituan.android.walle.WalleChannelReader;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.ui.account.LoginActivity;
@@ -47,7 +49,12 @@ public class APPUtils {
      * @return
      */
     public static String getChannel(Context context) {
-        return WalleChannelReader.getChannel(context.getApplicationContext());
+        String channel = WalleChannelReader.getChannel(context.getApplicationContext());
+        if (TextUtils.isEmpty(channel)) {
+            channel = XiaojsConfig.DEFAULT_CHANNEL;
+        }
+
+        return channel;
     }
 
     public static boolean isBackgroundThread(){
