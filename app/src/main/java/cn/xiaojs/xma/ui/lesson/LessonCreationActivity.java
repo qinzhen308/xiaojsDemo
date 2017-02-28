@@ -129,6 +129,7 @@ public class LessonCreationActivity extends BaseActivity {
     private int mType = CourseConstant.TYPE_LESSON_CREATE;
     private String mLessonId;
     private Context mContext;
+    private String mCompetency;
 
 
     @Override
@@ -686,7 +687,7 @@ public class LessonCreationActivity extends BaseActivity {
         ll.setTitle(mLessonNameEdt.getText().toString());
 
         CSubject subject1 = new CSubject();
-        subject1.setId(AccountDataManager.getSubject(this));
+        subject1.setId(mCompetency);
 
         ll.setSubject(subject1);
         ll.setEnroll(enroll);
@@ -697,7 +698,7 @@ public class LessonCreationActivity extends BaseActivity {
         ll.setAutoOnShelves(mOnShelvesTv.isSelected());
         //mPublishToCircleTv.isSelected();
 
-        //add optional info
+        //add optional 6
         if (mLessonOptionalInfo != null) {
             ll.setCover(mLessonOptionalInfo.getCover());
             ll.setOverview(mLessonOptionalInfo.getOverview());
@@ -779,6 +780,7 @@ public class LessonCreationActivity extends BaseActivity {
                 Competency competency = (Competency)data.getSerializableExtra(KEY_COMPETENCY);
                 if (competency != null) {
                     mLessonSubjectTv.setTextColor(mBlackFont);
+                    mCompetency = competency.getSubject();
                     mLessonSubjectTv.setText(competency.getSubject());
                 }
             }
