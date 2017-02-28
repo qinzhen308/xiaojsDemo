@@ -45,7 +45,7 @@ public class XiaojsApplication extends Application {
         }
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setAppChannel(channel);
-        CrashReport.initCrashReport(getApplicationContext(), appid, true, strategy);
+        CrashReport.initCrashReport(getApplicationContext(), appid, false, strategy);
 
         //init data cache
         DataManager.init(this);
