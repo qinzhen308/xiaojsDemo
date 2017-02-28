@@ -163,9 +163,6 @@
         <activity
                 android:name=".ui.home.MomentUpdateActivity"
                 android:screenOrientation="portrait"/>
-        <activity
-                android:name=".ui.mine.ScrollTabActivity"
-                android:screenOrientation="portrait"/>
         <activity android:name=".ui.message.ShareScopeActivity">
         </activity>
         <activity
@@ -196,10 +193,6 @@
         <activity
                 android:name=".ui.personal.PersonalInfoActivity"
                 android:screenOrientation="portrait"/>
-        <activity
-                android:name=".ui.chat.ChatActivity"
-                android:screenOrientation="portrait"
-                android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity android:name=".ui.message.CloseFriendActivity"/>
         <activity
                 android:name=".TestActivity"

@@ -6,10 +6,8 @@ import android.support.v4.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jpush.im.android.api.JMessageClient;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
@@ -21,6 +19,7 @@ import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.NotificationFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
+import cn.xiaojs.xma.ui.mine.MyOrderActivity;
 import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -123,14 +122,14 @@ public class MainActivity extends BaseTabActivity {
                 //startActivity(new Intent(this, CertificationActivity.class));
                 //startActivity(new Intent(this, TestActivity.class));
 
-                if (JMessageClient.getMyInfo() != null) {
-                    Intent intent = new Intent(this, ChatActivity.class);
-                    intent.putExtra(ChatActivity.TARGET_ID, "1234567");
-                    startActivity(intent);
-                }
+//                if (JMessageClient.getMyInfo() != null) {
+//                    Intent intent = new Intent(this, ChatActivity.class);
+//                    intent.putExtra(ChatActivity.TARGET_ID, "1234567");
+//                    startActivity(intent);
+//                }
 
-//                Intent intent = new Intent(this, MyOrderActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(this, MyOrderActivity.class);
+                startActivity(intent);
                 break;
             case 4:
                 startActivity(new Intent(this, PersonHomeActivity.class));
