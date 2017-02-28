@@ -42,7 +42,6 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
-import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
@@ -735,7 +734,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 @Override
                 public void onClick() {
                     dialog.dismiss();
-                    Intent intent = new Intent(mContext, TeachAbilityDemoActivity.class);
+                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
                     mContext.startActivity(intent);
                 }
             });
