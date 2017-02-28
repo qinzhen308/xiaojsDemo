@@ -210,11 +210,12 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<StickyListHeadersListView>() {
                 @Override
                 public void onPullDownToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
-                    mPagination.setPage(mPagination.getPage() + 1);
                     if (mCurrentState != STATE_DOWN_REFRESH) {
                         mCurrentState = STATE_DOWN_REFRESH;
+                        mPagination.setPage(mPagination.getPage() + 1);
+                        request();
                     }
-                    request();
+
                 }
 
                 @Override
@@ -235,12 +236,12 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
                 @Override
                 public void onPullUpToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
-                    mPagination.setPage(mPagination.getPage() + 1);
                     if (mCurrentState != STATE_DOWN_REFRESH) {
                         mCurrentState = STATE_DOWN_REFRESH;
+                        mPagination.setPage(mPagination.getPage() + 1);
+                        request();
                     }
                     //Log.i("mPagination page = ",mPagination.getPage() + "");
-                    request();
                 }
             });
         }
