@@ -67,6 +67,8 @@ public class LessonCreationActivity extends BaseActivity {
 
     private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
 
+    private final static int REQUEST_SELECT_SUBJECT = 100;
+
     @BindView(R.id.status_fail_reason)
     TextView mStatusFailReason;
     @BindView(R.id.place_hold_area)
@@ -242,11 +244,6 @@ public class LessonCreationActivity extends BaseActivity {
         }
 
         mLessonNameEdt.setText(lessonDetail.getTitle());
-        //TODO need to get subject name by id
-        //mLessonSubjectTv.setText(lessonDetail.getSubject());
-        //test data
-        mLessonSubjectTv.setText(TEST_SUBJECT);
-        mLessonSubjectTv.setTextColor(mBlackFont);
 
         Enroll enroll = lessonDetail.getEnroll();
         if (enroll != null) {
@@ -321,10 +318,6 @@ public class LessonCreationActivity extends BaseActivity {
         //get color
         mBlackFont = getResources().getColor(R.color.font_black);
         mGrayFont = getResources().getColor(R.color.font_gray);
-
-        //TODO  //test
-        mLessonSubjectTv.setText(TEST_SUBJECT);
-        mLessonSubjectTv.setTextColor(mBlackFont);
     }
 
 
@@ -435,7 +428,10 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void selectSubject() {
-        mLessonSubjectTv.setTextColor(mBlackFont);
+        //mLessonSubjectTv.setTextColor(mBlackFont);
+        Intent intent = new Intent();
+        intent.setClass(mContext, TeachingSubjectActivity.class);
+        startActivityForResult(intent, REQUEST_SELECT_SUBJECT);
     }
 
     private void selectTeachForm() {
