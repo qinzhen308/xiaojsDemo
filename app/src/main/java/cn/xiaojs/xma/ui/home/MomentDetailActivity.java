@@ -276,6 +276,11 @@ public class MomentDetailActivity extends BaseActivity {
                         mDetail.liked = !mDetail.liked;
                         mPraiseNum.setText(getString(R.string.praise_summary, mDetail.stats.liked));
                         LikedRecord record = new LikedRecord();
+
+                        if (XiaojsConfig.mLoginUser == null){
+                            XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(MomentDetailActivity.this);
+                        }
+
                         record.createdBy = XiaojsConfig.mLoginUser.getAccount();
                         mExpand.add(record);
                     }

@@ -106,6 +106,11 @@ public class MomentHeader extends RelativeLayout {
 
         String url = Account.getAvatar(dynamic.owner.account, XiaojsConfig.PORTRAIT_SIZE);
         if (mOwner.myself || VerifyUtils.isMyself(mOwner.account)) {
+
+            if (XiaojsConfig.mLoginUser == null) {
+                XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(getContext());
+            }
+
             mName.setText(XiaojsConfig.mLoginUser.getName());
             mTag.setText("自己");
             mDesc.setText("");

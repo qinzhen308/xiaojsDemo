@@ -122,6 +122,12 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mIsMyself = intent.getBooleanExtra(PersonalBusiness.KEY_IS_MYSELF, false);
+
+            if (XiaojsConfig.mLoginUser == null) {
+                XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(this);
+            }
+
+
             if (!mIsMyself) {
                 mAccount = intent.getStringExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT);
                 if (!TextUtils.isEmpty(mAccount)) {
