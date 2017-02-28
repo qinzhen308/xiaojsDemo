@@ -28,7 +28,6 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.ui.base.BaseTopTabActivity;
-import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 
@@ -102,7 +101,7 @@ public class MyLessonActivity extends BaseTopTabActivity {
                         @Override
                         public void onClick() {
                             dialog.dismiss();
-                            Intent intent = new Intent(MyLessonActivity.this, TeachAbilityDemoActivity.class);
+                            Intent intent = new Intent(MyLessonActivity.this, TeachingSubjectActivity.class);
                             startActivity(intent);
                         }
                     });
