@@ -120,4 +120,8 @@ public class APIType {
 
     public static final int GET_SUBJECTS = 67;
 
+    public static final int GET_DOCUMENTS = 68;
+
+    public static final int GET_COMPETENCIES = 69;
+
 }

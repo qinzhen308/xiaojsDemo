@@ -14,6 +14,7 @@ import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
@@ -171,7 +172,7 @@ public class AccountDataManager {
      */
     public static void requestClaimCompetency(Context context,
                                               @NonNull CompetencyParams competencyParams,
-                                              @NonNull APIServiceCallback<ClaimCompetency> callback) {
+                                              @NonNull APIServiceCallback<Competency> callback) {
 
         if (callback == null) {
             if (XiaojsConfig.DEBUG) {
@@ -344,6 +345,16 @@ public class AccountDataManager {
                                      @NonNull APIServiceCallback<PublicHome> callback) {
         AccountRequest accountRequest = new AccountRequest(context,callback);
         accountRequest.getPublicHome(account);
+    }
+
+    /**
+     * 获取已声明的能力.
+     * @param context
+     * @param callback
+     */
+    public static void getCompetencies(Context context, APIServiceCallback<ClaimCompetency> callback) {
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.getCompetencies();
     }
 
 

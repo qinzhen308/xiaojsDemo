@@ -223,18 +223,18 @@ public class ExampleInstrumentedTest {
         cp.setSubject(subject);
 
 
-        AccountDataManager.requestClaimCompetency(context, cp, new APIServiceCallback<ClaimCompetency>() {
-            @Override
-            public void onSuccess(ClaimCompetency object) {
-                Logger.d("onSuccess-----------");
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-                Logger.d("onFailure-----------");
-            }
-        });
+//        AccountDataManager.requestClaimCompetency(context, cp, new APIServiceCallback<ClaimCompetency>() {
+//            @Override
+//            public void onSuccess(ClaimCompetency object) {
+//                Logger.d("onSuccess-----------");
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//                Logger.d("onFailure-----------");
+//            }
+//        });
 
     }
 

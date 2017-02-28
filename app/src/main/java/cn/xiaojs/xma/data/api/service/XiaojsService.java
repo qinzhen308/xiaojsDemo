@@ -5,6 +5,7 @@ import java.util.List;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
+import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.colla.LibOverview;
@@ -33,6 +34,7 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
+import cn.xiaojs.xma.model.colla.UserDoc;
 import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.model.order.Orderp;
 import cn.xiaojs.xma.model.order.PaymentCharge;
@@ -86,7 +88,12 @@ public interface XiaojsService {
     //Claim Competency
     @Headers("Content-Type: application/json")
     @POST("/v1/accounts/competencies")
-    Call<ClaimCompetency> claimCompetency(@Body CompetencyParams competencyParams);
+    Call<Competency> claimCompetency(@Body CompetencyParams competencyParams);
+
+    //Get Competencies
+    @GET("/v1/accounts/competencies")
+    Call<ClaimCompetency> getCompetencies();
+
 
     //Register
     @Headers("Content-Type: application/json")
@@ -419,6 +426,13 @@ public interface XiaojsService {
     @GET("/v1/collaboration/overview/{criteria}/{pagination}")
     Call<LibOverview> getLibraryOverview(@Path("criteria") String criteria,
                                          @Path("pagination") String pagination);
+
+
+    //Get Documents
+    @GET("/v1/collaboration/documents/{owner}")
+    Call<UserDoc> getDocuments(@Path("owner") String owner,
+                               @Query("page") int page,
+                               @Query("limit") int limit);
 
 
 }

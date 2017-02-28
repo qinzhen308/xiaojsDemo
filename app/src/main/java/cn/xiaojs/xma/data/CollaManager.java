@@ -2,6 +2,7 @@ package cn.xiaojs.xma.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.CollaRequest;
@@ -12,6 +13,8 @@ import cn.xiaojs.xma.model.colla.LibCriteria;
 import cn.xiaojs.xma.model.colla.LibOverview;
 import cn.xiaojs.xma.model.colla.UploadParam;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.colla.UserDoc;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/2/6.
@@ -103,4 +106,31 @@ public class CollaManager {
         CollaRequest request = new CollaRequest(context,callback);
         request.getLibraryOverview(criteria, pagination);
     }
+
+    /**
+     *
+     * @param context
+     * @param owner
+     * @param pagination
+     * @param callback
+     */
+    public static void getDocuments(Context context,
+                                    String owner,
+                                    Pagination pagination,
+                                    APIServiceCallback<UserDoc> callback) {
+
+        if (TextUtils.isEmpty(owner)) owner = "";
+
+        int page = 0;
+        int limit = 10;
+        if (pagination!=null){
+            page = pagination.getPage();
+            limit = pagination.getMaxNumOfObjectsPerPage();
+        }
+
+        CollaRequest request = new CollaRequest(context,callback);
+        request.getDocuments(owner,page,limit);
+    }
+
+
 }
