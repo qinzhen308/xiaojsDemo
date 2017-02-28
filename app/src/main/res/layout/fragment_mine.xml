@@ -21,7 +21,8 @@
                     android:id="@+id/blur_portrait"
                     android:scaleType="centerCrop"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:background="@drawable/portrait_default_bg"/>
 
             <ImageView
                     android:id="@+id/profile_cover"
@@ -53,7 +54,7 @@
                         app:oval="true"
                         app:border_color="@color/white"
                         app:border_width="@dimen/px1"
-                        android:src="@drawable/ic_ad"
+                        android:src="@drawable/default_avatar"
                         android:layout_marginTop="@dimen/px100"
                         android:layout_gravity="center_horizontal"
                         android:layout_width="@dimen/px140"
