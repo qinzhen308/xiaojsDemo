@@ -233,7 +233,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="替换真正的APPID"/>
+                <data android:scheme="1105919395"/>
             </intent-filter>
         </activity>
         <activity
