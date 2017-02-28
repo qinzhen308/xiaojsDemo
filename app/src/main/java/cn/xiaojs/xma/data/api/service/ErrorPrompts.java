@@ -251,6 +251,7 @@ public class ErrorPrompts {
             case APIType.IGNORE_NOTIFICATIONS:
                 errorMessage = "操作失败";
                 break;
+            case APIType.GET_SUBJECTS:
             case APIType.GET_UPDATES:
             case APIType.GET_LINKED_RECORDS:
             case APIType.GET_CONTACTS:

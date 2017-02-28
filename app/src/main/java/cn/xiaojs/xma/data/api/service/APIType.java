@@ -118,4 +118,6 @@ public class APIType {
     public static final int GET_ACCOUNT_ACTIVITIES = 65;
     public static final int GET_ORDERS = 66;
 
+    public static final int GET_SUBJECTS = 67;
+
 }

@@ -2,6 +2,8 @@ package cn.xiaojs.xma.data.api;
 
 import android.content.Context;
 
+import java.util.List;
+
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
@@ -25,6 +27,13 @@ public class CategoriesRequest extends ServiceRequest {
 
         Call<CSubject> call = getService().getSubject();
         enqueueRequest(APIType.GET_SUBJECT,call);
+
+    }
+
+    public void getSubjects(String parent) {
+
+        Call<List<CSubject>> call = getService().getSubjects(parent);
+        enqueueRequest(APIType.GET_SUBJECTS,call);
 
     }
 

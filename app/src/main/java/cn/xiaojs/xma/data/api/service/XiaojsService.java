@@ -212,6 +212,10 @@ public interface XiaojsService {
     @GET("/v1/categories/subjects/demo")
     Call<CSubject> getSubject();
 
+    //Get Subjects
+    @GET("/v1/categories/subjects/{parent}")
+    Call<List<CSubject>>getSubjects(@Path("parent") String parent);
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
