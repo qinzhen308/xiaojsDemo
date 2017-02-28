@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -31,8 +30,6 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
-import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 
 public class TeachLessonActivity extends BaseActivity {
@@ -112,7 +109,7 @@ public class TeachLessonActivity extends BaseActivity {
                         @Override
                         public void onClick() {
                             dialog.dismiss();
-                            Intent intent = new Intent(TeachLessonActivity.this, TeachAbilityDemoActivity.class);
+                            Intent intent = new Intent(TeachLessonActivity.this, TeachingSubjectActivity.class);
                             startActivity(intent);
                         }
                     });

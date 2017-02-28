@@ -16,11 +16,11 @@ import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.home.HomeFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
+import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.NotificationFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.mine.MyOrderActivity;
-import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -93,7 +93,7 @@ public class MainActivity extends BaseTabActivity {
                         @Override
                         public void onClick() {
                             dialog.dismiss();
-                            Intent intent = new Intent(MainActivity.this, TeachAbilityDemoActivity.class);
+                            Intent intent = new Intent(MainActivity.this, TeachingSubjectActivity.class);
                             startActivity(intent);
                         }
                     });

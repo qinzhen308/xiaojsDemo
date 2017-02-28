@@ -90,7 +90,7 @@ public class HomeFragment extends BaseFragment {
         List<BannerBean> beanList = new ArrayList<>();
         beanList.add(b1);
         beanList.add(b2);
-        beanList.add(b3);
+//        beanList.add(b3);
         //beanList.add(b4);
         BannerAdapter adapter = new BannerAdapter(mContext,beanList);
         mBanner.setAdapter(adapter);
