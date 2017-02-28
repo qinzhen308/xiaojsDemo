@@ -15,14 +15,12 @@ package cn.xiaojs.xma.ui.grade;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
@@ -31,21 +29,24 @@ import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.colla.LibCategory;
-import cn.xiaojs.xma.model.colla.LibCriteria;
-import cn.xiaojs.xma.model.colla.LibOverview;
+import cn.xiaojs.xma.model.colla.LibDoc;
+import cn.xiaojs.xma.model.colla.UserDoc;
 
-public class MaterialAdapter extends AbsSwipeAdapter<LibCategory, MaterialAdapter.Holder> {
+public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Holder> {
 
     private boolean mIsMine;
+    private String mOwner;
 
-    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView,boolean isMine) {
+    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView,String owner) {
         super(context, listView);
-        mIsMine = isMine;
+        if (TextUtils.isEmpty(owner)){
+            mIsMine = true;
+        }
+        mOwner = owner;
     }
 
     @Override
-    protected void setViewContent(final Holder holder, LibCategory bean, int position) {
+    protected void setViewContent(final Holder holder, LibDoc bean, int position) {
         holder.showOpera(false);
         if (mIsMine){
             holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.share_selector,0,0);
@@ -87,16 +88,11 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibCategory, MaterialAdapte
 
     @Override
     protected void doRequest() {
-        LibCriteria criteria = new LibCriteria();
-        CollaManager.getLibraryOverview(mContext, criteria, mPagination, new APIServiceCallback<LibOverview>() {
+        CollaManager.getDocuments(mContext, mOwner, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
-            public void onSuccess(LibOverview object) {
-                if (object != null && object.categories != null){
-                    List<LibCategory> list = new ArrayList<LibCategory>();
-                    for (LibCategory category : object.categories){
-                        list.add(category);
-                    }
-                    MaterialAdapter.this.onSuccess(list);
+            public void onSuccess(UserDoc object) {
+                if (object != null){
+                    MaterialAdapter.this.onSuccess(object.documents);
                 }else {
                     MaterialAdapter.this.onSuccess(null);
                 }
