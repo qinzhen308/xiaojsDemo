@@ -90,7 +90,7 @@ public class MineFragment extends BaseFragment {
 
     @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,
             R.id.my_favorites_layout, R.id.teach_ability_layout, R.id.name_auth_layout, R.id.person_home,R.id.portrait,
-            R.id.user_name})
+            R.id.user_name, R.id.my_order_layout})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_teaching_layout:
@@ -119,6 +119,8 @@ public class MineFragment extends BaseFragment {
             case R.id.portrait:
             case R.id.user_name:
                 startActivityForResult(new Intent(mContext, ProfileActivity.class),REQUEST_EDIT);
+                break;
+            case R.id.my_order_layout:
                 break;
             default:
                 break;

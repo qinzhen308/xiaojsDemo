@@ -79,7 +79,6 @@ public class LoginActivity extends BaseActivity {
         initRegGuideStyle();
         initLoginInfo();
 
-        //FIXME 临时做法，先调试开发用
         checkSession();
         changeBaseUrl();
     }

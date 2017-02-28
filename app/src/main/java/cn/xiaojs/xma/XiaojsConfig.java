@@ -42,7 +42,7 @@ public class XiaojsConfig {
     //wechat
     public static final String WX_APP_ID = "wxb0290782ab5b55b5";
     //QQ
-    public static final String QQ_APP_ID = "1105023462";
+    public static final String QQ_APP_ID = "1105919395";
 
 
     public static final String PING_WALLET = "con.xiaojs.xma.wallet";
