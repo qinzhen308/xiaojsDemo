@@ -45,14 +45,14 @@ public class CategoriesManager {
         }
 
         int page = 1;
-        int limit = 10;
+        int limit = 100;
         if (pagination != null){
             page = pagination.getPage();
             limit = pagination.getMaxNumOfObjectsPerPage();
         }
 
         CategoriesRequest categoriesRequest = new CategoriesRequest(context,callback);
-        categoriesRequest.getSubjects(parent,page,limit);
+        categoriesRequest.getSubjects(parent, page, limit);
     }
 
 }
