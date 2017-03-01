@@ -152,9 +152,12 @@ public class TestAPIActivity extends Activity {
 
     public void testCache() {
 
-        Intent i = new Intent(this, UpdateService.class);
-        i.putExtra(DConstants.EXTRA_URL,"http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk");
-        startService(i);
+        Intent i = new Intent(this, UpgradeActivity.class);
+        startActivity(i);
+
+//        Intent i = new Intent(this, UpdateService.class);
+//        i.putExtra(DConstants.EXTRA_URL,"http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk");
+//        startService(i);
 
         //WechatUtil.shareWebpage(this,iwxapi,"小教室","小教室，大世界","http://sports.qq.com/nba/?ptag=baidu.ald.sc.nba",false);
         //WechatUtil.shareText(iwxapi,"小教室，大世界", false);

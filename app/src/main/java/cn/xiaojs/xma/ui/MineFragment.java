@@ -161,6 +161,8 @@ public class MineFragment extends BaseFragment {
             mUserName.setText(basic.getName());
         }
 
+        //FIXME 更新用户信息
+
 
         //set title
         if (basic != null) {

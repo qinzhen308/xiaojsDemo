@@ -1,5 +1,8 @@
 package cn.xiaojs.xma.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -9,60 +12,52 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Upgrade {
+public class Upgrade implements Parcelable{
 
-    private int app;
-    private int verNum;
-    private String verStr;
-    private String uri;
-    private String remarks;
-    private int action;
+    public int app;
+    public int verNum;
+    public String verStr;
+    public String uri;
+    public String remarks;
+    public int action;
 
-    public int getApp() {
-        return app;
+    public Upgrade() {
+
     }
 
-    public void setApp(int app) {
-        this.app = app;
+    protected Upgrade(Parcel in) {
+        app = in.readInt();
+        verNum = in.readInt();
+        verStr = in.readString();
+        uri = in.readString();
+        remarks = in.readString();
+        action = in.readInt();
     }
 
-    public int getVerNum() {
-        return verNum;
+    public static final Creator<Upgrade> CREATOR = new Creator<Upgrade>() {
+        @Override
+        public Upgrade createFromParcel(Parcel in) {
+            return new Upgrade(in);
+        }
+
+        @Override
+        public Upgrade[] newArray(int size) {
+            return new Upgrade[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setVerNum(int verNum) {
-        this.verNum = verNum;
-    }
-
-    public String getVerStr() {
-        return verStr;
-    }
-
-    public void setVerStr(String verStr) {
-        this.verStr = verStr;
-    }
-
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public int getAction() {
-        return action;
-    }
-
-    public void setAction(int action) {
-        this.action = action;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(app);
+        dest.writeInt(verNum);
+        dest.writeString(verStr);
+        dest.writeString(uri);
+        dest.writeString(remarks);
+        dest.writeInt(action);
     }
 }

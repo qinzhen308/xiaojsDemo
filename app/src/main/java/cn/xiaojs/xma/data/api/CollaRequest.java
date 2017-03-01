@@ -53,8 +53,8 @@ public class CollaRequest extends ServiceRequest{
         enqueueRequest(APIType.GET_LIBRARY_OVERVIEW, call);
     }
 
-    public void getDocuments(String owner,int page, int limit) {
-        Call<UserDoc> call = getService().getDocuments(owner,page,limit);
+    public void getDocuments(String id, String subtype, int page, int limit) {
+        Call<UserDoc> call = getService().getDocuments(id,subtype,page,limit);
         enqueueRequest(APIType.GET_DOCUMENTS, call);
     }
 }

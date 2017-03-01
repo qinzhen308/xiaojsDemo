@@ -14,7 +14,9 @@ import java.io.File;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.db.DBTables;
+import cn.xiaojs.xma.data.download.DConstants;
 import cn.xiaojs.xma.data.download.DownloadProvider;
+import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.data.preference.DataPref;
 
 /**
@@ -24,6 +26,8 @@ import cn.xiaojs.xma.data.preference.DataPref;
 public class DownloadManager {
 
     public static final String DEL_ACTION = "xiaojs.action.del.download";
+
+
 
     /**
      * 下载文件

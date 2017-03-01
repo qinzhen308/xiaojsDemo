@@ -432,8 +432,9 @@ public interface XiaojsService {
 
 
     //Get Documents
-    @GET("/v1/collaboration/documents/{owner}")
-    Call<UserDoc> getDocuments(@Path("owner") String owner,
+    @GET("/v1/collaboration/documents")
+    Call<UserDoc> getDocuments(@Query("id") String id,
+                               @Query("subtype") String subtype,
                                @Query("page") int page,
                                @Query("limit") int limit);
 

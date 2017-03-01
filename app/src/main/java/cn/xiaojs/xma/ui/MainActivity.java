@@ -10,6 +10,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
@@ -45,7 +46,6 @@ public class MainActivity extends BaseTabActivity {
         addViews(new int[]{R.string.home_tab_index, R.string.home_tab_live, R.string.home_tab_message, R.string.home_tab_mine},
                 new int[]{R.drawable.home_tab_selector, R.drawable.live_tab_selector, R.drawable.message_tab_selector, R.drawable.mine_tab_selector},
                 fs);
-        new OkHttpClient();
 
         //JMessageClient.registerEventReceiver(this);
         Intent intent = getIntent();
@@ -55,6 +55,8 @@ public class MainActivity extends BaseTabActivity {
                 setTabSelected(position);
             }
         }
+
+        UpgradeManager.checkUpgrade(MainActivity.this);
     }
 
     @Override

@@ -107,19 +107,21 @@ public class CollaManager {
         request.getLibraryOverview(criteria, pagination);
     }
 
+
     /**
      *
      * @param context
-     * @param owner
+     * @param id
+     * @param subtype
      * @param pagination
      * @param callback
      */
     public static void getDocuments(Context context,
-                                    String owner,
+                                    String id,
+                                    String subtype,
                                     Pagination pagination,
                                     APIServiceCallback<UserDoc> callback) {
 
-        if (TextUtils.isEmpty(owner)) owner = "";
 
         int page = 1;
         int limit = 10;
@@ -129,7 +131,7 @@ public class CollaManager {
         }
 
         CollaRequest request = new CollaRequest(context,callback);
-        request.getDocuments(owner,page,limit);
+        request.getDocuments(id,subtype,page,limit);
     }
 
 

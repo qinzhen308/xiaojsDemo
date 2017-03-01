@@ -26,13 +26,13 @@ public class Platform {
     public static class AvailableAction{
 
         // Ignore this version
-        private static final int IGNORE = 1;
+        public static final int IGNORE = 1;
 
         // Show available tips
-        private static final int TIPS = 2;
+        public static final int TIPS = 2;
 
         // Require upgrade
-        private static  final int UPGRADE = 3;
+        public static  final int UPGRADE = 3;
 
     }
 

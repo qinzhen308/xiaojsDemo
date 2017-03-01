@@ -53,4 +53,7 @@ public class XiaojsConfig {
     //默认渠道
     public static final String DEFAULT_CHANNEL = "N/A";
 
+    //file provider
+    public static final String FILE_PROVIDER= "cn.xiaojs.xma.fileprovider";
+
 }

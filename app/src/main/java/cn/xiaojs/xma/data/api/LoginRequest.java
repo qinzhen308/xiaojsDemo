@@ -6,6 +6,7 @@ import android.content.Intent;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -76,6 +77,7 @@ public class LoginRequest extends ServiceRequest {
         if (apiType == APIType.LOGIN) {
             LoginInfo info = (LoginInfo) responseBody;
             AccountDataManager.saveUserInfo(getApiManager().getAppContext(), info.getUser());
+            UpgradeManager.setUpgrade(getContext(),info.getUpgrade());
 
             initPermission();
 
