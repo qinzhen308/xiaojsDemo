@@ -37,6 +37,7 @@ import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
+import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -198,9 +199,10 @@ public class ClassroomController implements
     }
 
     private void listenerSocket() {
-        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), mReceiveMediaAborted);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
     }
 
     /**
@@ -886,7 +888,6 @@ public class ClassroomController implements
             } else {
                 mStuPublishVideo.resume();
             }
-            mStuPublishVideo.resume();
         }
     }
 
@@ -923,15 +924,15 @@ public class ClassroomController implements
                 case STREAMING:
                     mInitPublishVideo = true;
                     if (mSocket != null) {
-                        int eventType = -1;
-                        if (mUser == Constants.User.TEACHER) {
+                        int eventType = Su.EventType.STREAMING_STARTED;
+                        /*if (mUser == Constants.User.TEACHER) {
                             eventType = Su.EventType.STREAMING_STARTED;
                         } else if (mUser == Constants.User.STUDENT) {
                             eventType = Su.EventType.MEDIA_FEEDBACK;
                         }
                         if (eventType < 0) {
                             return;
-                        }
+                        }*/
 
                         mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), new Ack() {
                             @Override
@@ -946,6 +947,25 @@ public class ClassroomController implements
                                                 Toast.makeText(mContext, prefix + "推流开始", Toast.LENGTH_LONG).show();
                                             }
                                         });
+
+                                        if (mUser == Constants.User.STUDENT) {
+                                            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.MEDIA_FEEDBACK), new Ack() {
+                                                @Override
+                                                public void call(Object... args) {
+                                                    if (args != null && args.length > 0) {
+                                                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                                        if (response != null && response.result) {
+                                                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    Toast.makeText(mContext, prefix + "发送feedback 成功", Toast.LENGTH_LONG).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
                                     } else {
                                         onPauseVideo();
                                     }
@@ -954,6 +974,8 @@ public class ClassroomController implements
                                 }
                             }
                         });
+
+
                     }
                     break;
                 case READY:
@@ -983,6 +1005,24 @@ public class ClassroomController implements
                 @Override
                 public void run() {
                     Toast.makeText(mContext, "流被中断", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener mReceiveFeedback = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, "receive feedback", Toast.LENGTH_LONG).show();
+                    if (args != null && args.length > 0) {
+                        MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
+                        if (response != null && response.playUrl != null) {
+                            playStuVideo(response.playUrl);
+                        }
+                    }
                 }
             });
         }

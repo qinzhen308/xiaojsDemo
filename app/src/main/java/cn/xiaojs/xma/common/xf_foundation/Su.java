@@ -54,6 +54,7 @@ public class Su {
         // Live/Classroom events (StopStreaming, StopMedia)
         public static final int CLOSE_MEDIA = 670002;
 
+
         //进入教室
         public static final int JOIN = 660000;
         //离开教室
@@ -65,6 +66,7 @@ public class Su {
         public static final int PRoVISION_FEEDBACK = 630002;
         public static final int CLAIM_STREAMING = 670012;
         public static final int MEDIA_FEEDBACK = 670018;
+        public static final int MEDIA_ABORTED = 670019;
 
     }
 
