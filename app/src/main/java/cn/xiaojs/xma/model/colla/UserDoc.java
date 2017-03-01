@@ -12,6 +12,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDoc {
 
-    public int total;
+    public String id;
+    public long used;
+    public long quota;
     public List<LibDoc> documents;
 }
