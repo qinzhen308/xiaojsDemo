@@ -29,6 +29,8 @@ import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,15 +38,19 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
+import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom.socketio.StreamingMode;
 import cn.xiaojs.xma.ui.classroom.whiteboard.ShareDoodlePopWindow;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
@@ -198,9 +204,10 @@ public class ClassroomController implements
     }
 
     private void listenerSocket() {
-        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), mReceiveMediaAborted);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
+        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
     }
 
     /**
@@ -485,7 +492,7 @@ public class ClassroomController implements
     public void onResumeVideo() {
         if (mUser == Constants.User.TEACHER) {
             mPublishVideo.resume();
-            mPlayStuView.destroy();
+            mPlayStuView.resume();
         } else if (mUser == Constants.User.STUDENT) {
             mStuPublishVideo.resume();
             mLiveVideo.resume();
@@ -886,7 +893,6 @@ public class ClassroomController implements
             } else {
                 mStuPublishVideo.resume();
             }
-            mStuPublishVideo.resume();
         }
     }
 
@@ -923,37 +929,50 @@ public class ClassroomController implements
                 case STREAMING:
                     mInitPublishVideo = true;
                     if (mSocket != null) {
-                        int eventType = -1;
                         if (mUser == Constants.User.TEACHER) {
-                            eventType = Su.EventType.STREAMING_STARTED;
-                        } else if (mUser == Constants.User.STUDENT) {
-                            eventType = Su.EventType.MEDIA_FEEDBACK;
-                        }
-                        if (eventType < 0) {
-                            return;
-                        }
-
-                        mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), new Ack() {
-                            @Override
-                            public void call(final Object... args) {
-                                if (args != null && args.length > 0) {
-                                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                    final String prefix = mUser == Constants.User.TEACHER ? "老师" : "学生";
-                                    if (response != null && response.result) {
-                                        ((Activity)mContext).runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(mContext, prefix + "推流开始", Toast.LENGTH_LONG).show();
-                                            }
-                                        });
+                            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new Ack() {
+                                @Override
+                                public void call(final Object... args) {
+                                    if (args != null && args.length > 0) {
+                                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                        if (response != null && response.result) {
+                                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(mContext, "老师推流开始", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                        } else {
+                                            onPauseVideo();
+                                        }
                                     } else {
                                         onPauseVideo();
                                     }
-                                } else {
-                                    onPauseVideo();
                                 }
-                            }
-                        });
+                            });
+                        } else if (mUser == Constants.User.STUDENT) {
+                            FeedbackStatus fbStatus = new FeedbackStatus();
+                            fbStatus.status = Live.MediaStatus.READY;
+                            JSONObject data = ClassroomBusiness.wrapSocketBean(fbStatus);
+                            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.MEDIA_FEEDBACK), data, new Ack() {
+                                @Override
+                                public void call(Object... args) {
+                                    if (args != null && args.length > 0) {
+                                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                        if (response != null && response.result) {
+                                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(mContext, "学生发送feedback 成功", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                        } else {
+                                            onPauseVideo();
+                                        }
+                                    }
+                                }
+                            });
+                        }
                     }
                     break;
                 case READY:
@@ -983,6 +1002,24 @@ public class ClassroomController implements
                 @Override
                 public void run() {
                     Toast.makeText(mContext, "流被中断", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener mReceiveFeedback = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, "receive feedback", Toast.LENGTH_LONG).show();
+                    if (args != null && args.length > 0) {
+                        MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
+                        if (response != null && response.playUrl != null) {
+                            playStuVideo(response.playUrl);
+                        }
+                    }
                 }
             });
         }

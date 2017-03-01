@@ -30,13 +30,13 @@ public class SocketManager {
 
     private static Socket mSocket;
 
-    public synchronized static void init(String ticket, String secret) {
+    public synchronized static void init(String ticket, String secret, boolean videoSupported, boolean audioSupported) {
         if (mSocket == null) {
             try {
                 IO.Options opts = new IO.Options();
-                opts.query = "secret=" + secret;
+                opts.query = "secret=" + secret + "&" + "avc={\"video\":" + videoSupported + ",\"audio\":" + audioSupported + "}";
                 opts.timeout = 10000; //ms
-                opts.transports = new String[] {"websocket"};
+                opts.transports = new String[]{"websocket"};
                 mSocket = IO.socket(getClassroomSocketUrl(ticket), opts);
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);

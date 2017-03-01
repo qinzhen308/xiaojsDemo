@@ -9,14 +9,13 @@ package cn.xiaojs.xma.ui.classroom.bean;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/2/13
- * Desc: 推流started和stopped
+ * Date:2017/3/1
+ * Desc:
  *
  * ======================================================================================== */
 
-public class StreamingResponse {
-    public boolean result;
-    public String ec;
+public class MediaFeedback {
     public String to;
-    public Object details;
+    public int status;
+    public String playUrl;
 }

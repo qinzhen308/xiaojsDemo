@@ -570,7 +570,8 @@ public class LessonCreationActivity extends BaseActivity {
                 return false;
             }
 
-            if (TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
+            if (selectTip.equals(mLessonSubjectTv.getText().toString()) ||
+                    TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
                 Toast.makeText(mContext, R.string.subject_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -651,8 +652,7 @@ public class LessonCreationActivity extends BaseActivity {
 
         String studentNum = mLessonStuCount.getText().toString();
 
-        //FIXME 测试临时用：当不需要报名的课程时，报名位数默认为100，如果为0 ，接口回报参数错误
-        int limitPeople = TextUtils.isEmpty(studentNum) ? 100: Integer.parseInt(studentNum);
+        int limitPeople = TextUtils.isEmpty(studentNum) ? 0: Integer.parseInt(studentNum);
         enroll.max = limitPeople;
         enroll.mandatory = mEnrollSwitcher.isChecked();
 

@@ -252,7 +252,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         //init data
         initData();
 
-        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT};
+        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT,
+                Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
         PermissionGen.needPermission(this, 100, permissions);
 
         //register network
@@ -521,10 +522,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (mClassroomController != null) {
-            mClassroomController.onResumeVideo();
-        }
     }
 
     private boolean m = false;
@@ -1400,7 +1397,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
 
     private void initSocketIO(String ticket, String secret) {
-        SocketManager.init(ticket, secret);
+        SocketManager.init(ticket, secret, true, true);
         mSocket = SocketManager.getSocket();
     }
 
