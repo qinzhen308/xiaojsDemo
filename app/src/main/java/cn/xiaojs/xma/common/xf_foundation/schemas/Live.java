@@ -52,4 +52,14 @@ public class Live {
         public static final String RESET = "Rest";
     }
 
+    public class MediaStatus {
+        public static final int READY = 1;
+        public static final int FAILED_DUE_TO_NETWORK_ISSUES = 5;
+        public static final int FAILED_DUE_TO_NO_DEVICE = 6;
+        public static final int FAILED_DUE_TO_PRIVACY = 7;
+        public static final int FAILED_DUE_TO_DENIED = 8;
+        public static final int FAILED_DUE_TO_OTHER_ISSUES = 9;
+
+    }
+
 }

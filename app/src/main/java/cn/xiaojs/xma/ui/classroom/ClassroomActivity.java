@@ -522,10 +522,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (mClassroomController != null) {
-            mClassroomController.onResumeVideo();
-        }
     }
 
     private boolean m = false;
