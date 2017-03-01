@@ -8,7 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.CompetencyParams;
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
 
@@ -103,9 +109,35 @@ public class TeachingSubjectActivity extends BaseActivity {
     }
 
     private void finishWithResult(CSubject subject) {
-        Intent intent = new Intent();
-        intent.putExtra(TeachingAbilityActivity.KEY_SUBJECT, subject);
-        setResult(RESULT_OK, intent);
-        finish();
+
+        if (subject == null) return;
+
+        CompetencyParams params = new CompetencyParams();
+        params.setSubject(subject.getId());
+
+        showProgress(false);
+        AccountDataManager.requestClaimCompetency(this, params, new APIServiceCallback<CompetencySubject>() {
+            @Override
+            public void onSuccess(CompetencySubject object) {
+
+                cancelProgress();
+                Toast.makeText(TeachingSubjectActivity.this, R.string.claim_succ, Toast.LENGTH_SHORT).show();
+                SecurityManager.updatePermission(TeachingSubjectActivity.this, Su.Permission.COURSE_OPEN_CREATE, true);
+
+                finish();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(TeachingSubjectActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
+//        Intent intent = new Intent();
+//        intent.putExtra(TeachingAbilityActivity.KEY_SUBJECT, subject);
+//        setResult(RESULT_OK, intent);
+
     }
 }
