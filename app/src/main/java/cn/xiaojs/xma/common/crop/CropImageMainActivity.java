@@ -31,6 +31,7 @@ import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.BottomSheet;
 import cn.xiaojs.xma.util.FileUtil;
@@ -51,6 +52,7 @@ import cn.xiaojs.xma.util.FileUtil;
  * ======================================================================================== */
 public class CropImageMainActivity extends BaseActivity implements BottomSheet.OnDialogCloseListener {
     private static final int REQUEST_GALLERY_PERMISSION = 1000;
+    private static final int REQUEST_CAMERA_PERMISSION = 10001;
     private static final String LOG_TAG = "CropImageMainActivity";
     public static final String NEED_DELETE = "need_delete";// 需要删除按钮
     public static final String NEED_LOOK = "need_look";// 需要预览
@@ -105,9 +107,9 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
     }
 
     private void showCropImageDialogP() {
+        ListView lv = new ListView(this);
         final BottomSheet bottomSheet = new BottomSheet(this);
         bottomSheet.setTitleVisibility(View.GONE);
-        ListView lv = new ListView(this);
         String[] actions = getResources().getStringArray(R.array.selects_pic_p);
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
@@ -516,6 +518,11 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         setImgPathToResult(new File(path));
     }
 
+    @PermissionSuccess(requestCode = REQUEST_CAMERA_PERMISSION)
+    public void getCameraSuccess() {
+        enterCamera();
+    }
+
     @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
     public void getGalleryFailure() {
         if (mDialog != null) {
@@ -560,14 +567,22 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
      */
     private void takePhoto() {
         try {
-            Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent1.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(new File(
-                            CropImagePath.UPLOAD_IMAGE_PATH)));
-            startActivityForResult(intent1, CropImagePath.TAKE_PHOTO);
-        } catch (Exception e) {
-
+            if (PermissionUtil.isOverMarshmallow()) {
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA};
+                PermissionGen.needPermission(CropImageMainActivity.this, REQUEST_CAMERA_PERMISSION, permissions);
+            } else {
+                enterCamera();
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
+    }
+
+    private void enterCamera() {
+        Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent1.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(CropImagePath.UPLOAD_IMAGE_PATH)));
+        startActivityForResult(intent1, CropImagePath.TAKE_PHOTO);
     }
 
     @Override
