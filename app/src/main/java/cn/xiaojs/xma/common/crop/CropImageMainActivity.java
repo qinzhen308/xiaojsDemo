@@ -393,6 +393,10 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                 startActivityForResult(intent, CropImagePath.CHOOSE_IMAGE);
             }
         }
+
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
     }
 
     @TargetApi(19)
@@ -529,6 +533,13 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         }
     }
 
+    @PermissionFail(requestCode = REQUEST_CAMERA_PERMISSION)
+    public void getCameraFailure() {
+        if (mDialog != null) {
+            mDialog.cancel();
+        }
+    }
+
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
@@ -575,6 +586,10 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
             }
         } catch (SecurityException e) {
             e.printStackTrace();
+        }
+
+        if (mDialog != null) {
+            mDialog.dismiss();
         }
     }
 
