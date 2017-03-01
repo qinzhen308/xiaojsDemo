@@ -31,7 +31,6 @@ import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.BottomSheet;
 import cn.xiaojs.xma.util.FileUtil;
