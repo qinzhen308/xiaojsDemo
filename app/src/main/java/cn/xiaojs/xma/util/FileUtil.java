@@ -442,8 +442,7 @@ public class FileUtil {
      * @param destFile      目的地址
      * @param shouldOverlay 是否覆盖
      */
-    public static boolean copyFiles(String sourceFile, String destFile,
-                                    boolean shouldOverlay) {
+    public static boolean copyFiles(String sourceFile, String destFile, boolean shouldOverlay) {
         try {
             if (shouldOverlay) {
                 deleteFile(destFile);
