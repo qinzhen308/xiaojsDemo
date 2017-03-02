@@ -16,8 +16,20 @@ package cn.xiaojs.xma.ui.classroom.live;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
+import com.qiniu.pili.droid.streaming.StreamingState;
+
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
+import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 
 public class TeacherVideoManager extends VideoManager {
     public TeacherVideoManager(Context context, View root) {
@@ -26,51 +38,69 @@ public class TeacherVideoManager extends VideoManager {
 
     @Override
     protected void init(View root) {
+        mPlayView = (PlayerTextureView) root.findViewById(R.id.stu_player_video);
+        mPlayView.setVisibility(View.VISIBLE);
 
+        mPublishView = (LiveRecordView) root.findViewById(R.id.publish_video);
     }
 
     @Override
     protected void listenerSocket() {
-
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
     }
 
     @Override
     public void onResume() {
-
+        mPlayView.resume();
+        mPublishView.resume();
     }
 
     @Override
     public void onPause() {
-
+        mPlayView.pause();
+        mPublishView.pause();
     }
 
     @Override
     public void onDestroy() {
-
-    }
-
-    @Override
-    public void switchCamera() {
-
+        mPlayView.destroy();
+        mPublishView.destroy();
     }
 
     @Override
     public void takeVideoFrame(FrameCapturedCallback callback) {
-
+        mPublishView.captureOriginalFrame(callback);
     }
 
     @Override
-    public void pausePublishStream() {
-
+    public void onSteamStateChanged(StreamingState streamingState, Object data) {
+        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new SocketManager.AckListener() {
+            @Override
+            public void call(final Object... args) {
+                if (args != null && args.length > 0) {
+                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                    if (response != null && response.result) {
+                        Toast.makeText(mContext, "老师推流开始", Toast.LENGTH_LONG).show();
+                    } else {
+                        onPause();
+                    }
+                } else {
+                    onPause();
+                }
+            }
+        });
     }
 
-    @Override
-    public void publishStream(String url) {
-
-    }
-
-    @Override
-    public void playStream(String url) {
-
-    }
+    private SocketManager.EventListener mReceiveFeedback = new SocketManager.EventListener() {
+        @Override
+        public void call(final Object... args) {
+            Toast.makeText(mContext, "收到 feedback", Toast.LENGTH_LONG).show();
+            if (args != null && args.length > 0) {
+                MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
+                if (response != null && response.playUrl != null) {
+                    playStream(response.playUrl);
+                }
+            }
+        }
+    };
 }

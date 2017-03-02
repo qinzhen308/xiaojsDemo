@@ -91,7 +91,7 @@ public class SocketManager {
                     JSONObject[] data = null;
                     if (args.length > 1) {
                         data = new JSONObject[args.length - 1];
-                        for (int i = 0; i < args.length - 2; i++) {
+                        for (int i = 0; i < args.length - 1; i++) {
                             data[i] = ClassroomBusiness.wrapSocketBean(args[i]);
                         }
                         mSocket.emit(event, data, new Ack() {

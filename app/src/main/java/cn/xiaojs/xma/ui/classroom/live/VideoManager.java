@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.classroom.live;
 
 import android.content.Context;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
@@ -24,6 +25,7 @@ import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
+import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 
 public abstract class VideoManager {
     protected Context mContext;
@@ -32,6 +34,9 @@ public abstract class VideoManager {
 
     private Handler mHandler;
     protected LiveRecordView mPublishView;
+    protected PlayerTextureView mPlayView;
+
+    protected boolean mInitPublishVideo = false;
 
     public VideoManager(Context context, View root) {
         mContext = context;
@@ -73,7 +78,11 @@ public abstract class VideoManager {
     /**
      * 切换摄像头
      */
-    public abstract void switchCamera();
+    public void switchCamera() {
+        if (mPublishView != null) {
+            mPublishView.switchCamera();
+        }
+    }
 
     /**
      * 截视频帧
@@ -83,17 +92,39 @@ public abstract class VideoManager {
     /**
      * 暂停推流
      */
-    public abstract void pausePublishStream();
+    public void pausePublishStream() {
+        if (mPublishView != null) {
+            mPublishView.pause();
+        }
+    }
 
     /**
      * 开始推流
      */
-    public abstract void publishStream(String url);
+    public void publishStream(String url) {
+        if (TextUtils.isEmpty(url) || mPublishView == null) {
+            return;
+        }
+
+        mPublishView.setVisibility(View.VISIBLE);
+        mPublishView.setPath(url);
+        if (!mInitPublishVideo) {
+            mPublishView.start();
+        } else {
+            mPublishView.resume();
+        }
+    }
 
     /**
      * 播放流
      */
-    public abstract void playStream(String url);
+    public void playStream(String url) {
+        if (mPlayView != null) {
+            mPlayView.setVisibility(View.VISIBLE);
+            mPlayView.setPath(url);
+            mPlayView.resume();
+        }
+    }
 
     /**
      * 推流的流状态发生变化回调
@@ -105,10 +136,14 @@ public abstract class VideoManager {
     private StreamingStateChangedListener mStreamingStateChangedListener = new StreamingStateChangedListener() {
         @Override
         public void onStateChanged(StreamingState streamingState, Object o) {
+            switch (streamingState) {
+                case STREAMING:
+                    mInitPublishVideo = true;
+                    break;
+            }
             onSteamStateChanged(streamingState, o);
         }
     };
-
 
     public void release() {
         if (mHandler != null) {
