@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui.lesson;
 
-import android.content.Intent;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -16,7 +15,6 @@ import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -110,7 +108,10 @@ public class TeachingSubjectActivity extends BaseActivity {
 
     private void finishWithResult(CSubject subject) {
 
-        if (subject == null) return;
+        if (subject == null){
+            finish();
+            return;
+        }
 
         CompetencyParams params = new CompetencyParams();
         params.setSubject(subject.getId());
