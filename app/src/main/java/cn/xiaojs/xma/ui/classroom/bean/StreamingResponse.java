@@ -18,5 +18,6 @@ public class StreamingResponse {
     public boolean result;
     public String ec;
     public String to;
+    public String publishUrl;
     public Object details;
 }

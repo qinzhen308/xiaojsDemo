@@ -446,6 +446,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             } else {
                 mPlayPauseBtn.setVisibility(View.GONE);
             }
+        } else if (Live.LiveSessionState.CLAIM_STREAM_STOPPED.equals(liveSessionState)) {
+            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
         }
     }
 
@@ -681,24 +683,26 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), streamMode, new SocketManager.AckListener() {
                 @Override
                 public void call(final Object... args) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (args != null) {
-                                StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                if (response.result) {
-                                    Toast.makeText(ClassroomActivity.this, "claim streaming succ", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ClassroomActivity.this, "claim streaming fail:" + response.details, Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Toast.makeText(ClassroomActivity.this, "claim streaming fail", Toast.LENGTH_SHORT).show();
+                    if (args != null && args.length > 0) {
+                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                        if (response.result) {
+                            mLiveSessionState = Live.LiveSessionState.CLAIM_STREAM_STOPPED;
+                            if (mClassroomController != null) {
+                                //mClassroomController.publishStream();
                             }
+                            setControllerBtnStyle(mLiveSessionState);
+                            Toast.makeText(ClassroomActivity.this, "claim streaming succ", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ClassroomActivity.this, "claim streaming fail:" + response.details, Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    } else {
+                        Toast.makeText(ClassroomActivity.this, "claim streaming fail", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
-        } else {
+        } else if (Live.LiveSessionState.CLAIM_STREAM_STOPPED.equals(mLiveSessionState)) {
+
+        }else {
             cancelProgress();
         }
     }

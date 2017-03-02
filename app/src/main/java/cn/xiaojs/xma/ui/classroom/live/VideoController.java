@@ -23,14 +23,12 @@ import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
-import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 
 public abstract class VideoController {
     protected Context mContext;
     protected View mRoot;
-    protected Constants.User mUser;
 
     private Handler mHandler;
     protected LiveRecordView mPublishView;
