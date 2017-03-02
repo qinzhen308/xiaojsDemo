@@ -13,7 +13,7 @@ import cn.xiaojs.xma.data.api.CollaRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.ClaimCompetency;
-import cn.xiaojs.xma.model.colla.TokenPair;
+import cn.xiaojs.xma.model.material.TokenPair;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;

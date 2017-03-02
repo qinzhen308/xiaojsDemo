@@ -20,15 +20,16 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.colla.TokenPair;
-import cn.xiaojs.xma.model.colla.UploadParam;
-import cn.xiaojs.xma.model.colla.UploadReponse;
+import cn.xiaojs.xma.model.material.TokenPair;
+import cn.xiaojs.xma.model.material.UploadParam;
+import cn.xiaojs.xma.model.material.UploadReponse;
+
 
 /**
  * Created by maxiaobao on 2016/11/15.
  */
 
-public class QiniuRequest implements APIServiceCallback<TokenPair[]>{
+public class QiniuRequest implements APIServiceCallback<TokenPair[]> {
 
     private Context context;
     private CollaRequest collaRequest;

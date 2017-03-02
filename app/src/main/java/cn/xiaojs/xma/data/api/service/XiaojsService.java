@@ -5,14 +5,10 @@ import java.util.List;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
-import cn.xiaojs.xma.model.Competency;
+
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
-import cn.xiaojs.xma.model.colla.LibOverview;
-import cn.xiaojs.xma.model.colla.TokenPair;
-import cn.xiaojs.xma.model.colla.UploadParam;
-import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
@@ -35,10 +31,14 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
-import cn.xiaojs.xma.model.colla.UserDoc;
+
+import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.TokenPair;
+import cn.xiaojs.xma.model.material.UploadParam;
+import cn.xiaojs.xma.model.material.UploadReponse;
+import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.model.order.Orderp;
-import cn.xiaojs.xma.model.order.PaymentCharge;
 import cn.xiaojs.xma.model.order.PaymentOrder;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
