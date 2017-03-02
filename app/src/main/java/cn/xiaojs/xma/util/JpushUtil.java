@@ -2,8 +2,11 @@ package cn.xiaojs.xma.util;
 
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.api.BasicCallback;
+import cn.xiaojs.xma.XiaojsConfig;
 
 /**
  * Created by maxiaobao on 2017/2/24.
@@ -21,9 +24,14 @@ public class JpushUtil {
             public void gotResult(int status, String desc) {
                 if (status == 0) {
                     //登录成功
-                    Log.i("imLogin", "im登录成功" + status);
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("im登录成功" + status);
+                    }
+
                 } else {
-                    Log.i("imLogin", "im登录失败" + status);
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("im登录失败" + status);
+                    }
                 }
             }
         });

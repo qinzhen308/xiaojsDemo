@@ -42,6 +42,7 @@ import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.android.eventbus.EventBus;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.crop.CropImageActivity;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
@@ -126,7 +127,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mTargetAppKey = intent.getStringExtra(TARGET_APP_KEY);
         mAccount = intent.getStringExtra(ACCOUNT_ID);
         if (TextUtils.isEmpty(mTargetAppKey)) {
-            mTargetAppKey = "e87cffb332432eec3c0807ba";
+            mTargetAppKey = XiaojsConfig.JPUSH_APP_KEY;
         }
         if (!TextUtils.isEmpty(mTargetId)) {
             mIsSingle = true;

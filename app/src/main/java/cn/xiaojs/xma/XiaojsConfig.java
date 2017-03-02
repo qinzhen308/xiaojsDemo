@@ -50,6 +50,9 @@ public class XiaojsConfig {
     //bugly
     public static final String BUGLY_APP_ID = "900060174";
 
+    //Jpush app key
+    public static final String JPUSH_APP_KEY = "e87cffb332432eec3c0807ba";
+
 
     public static final String PING_WALLET = "con.xiaojs.xma.wallet";
 

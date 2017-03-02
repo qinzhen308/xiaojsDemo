@@ -46,9 +46,6 @@ public class XiaojsApplication extends Application {
         strategy.setAppChannel(channel);
         CrashReport.initCrashReport(getApplicationContext(), XiaojsConfig.BUGLY_APP_ID, false, strategy);
 
-        //init data cache
-        DataManager.init(this);
-
         //init xiaojs utils
         XjsUtils.init(this);
 
@@ -67,6 +64,9 @@ public class XiaojsApplication extends Application {
 
         JPushInterface.setDebugMode(XiaojsConfig.DEBUG);
         JPushInterface.init(getApplicationContext());
+
+        //init data cache
+        DataManager.init(this);
     }
 
 }
