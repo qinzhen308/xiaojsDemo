@@ -32,8 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -56,9 +54,7 @@ import cn.xiaojs.xma.ui.classroom.talk.ContactBookAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.OnPortraitClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.TalkSimpleContactAdapter;
-import io.socket.client.Ack;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class TalkPanel extends Panel implements View.OnClickListener, OnPortraitClickListener {
     public final static int MODE_CONTACT = 0;
@@ -189,12 +185,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
     @Override
     public void initData() {
-        mSocket = SocketManager.getSocket();
-        if (mSocket != null) {
-            mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
-            mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
-            mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
-        }
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
 
         mMyAccountId = AccountDataManager.getAccountID(mContext);
 
@@ -595,36 +588,22 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     /**
      * 加入事件
      */
-    private Emitter.Listener mOnJoin = new Emitter.Listener() {
+    private SocketManager.EventListener mOnJoin = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            if (mContext instanceof Activity && args != null && args.length > 0) {
-                ((Activity) mContext).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(mContext, "有人加入", Toast.LENGTH_SHORT).show();
-                        updateContactList(true, args);
-                    }
-                });
-            }
+            Toast.makeText(mContext, "有人加入", Toast.LENGTH_SHORT).show();
+            updateContactList(true, args);
         }
     };
 
     /**
      * 退出事件
      */
-    private Emitter.Listener mOnLeave = new Emitter.Listener() {
+    private SocketManager.EventListener mOnLeave = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            if (mContext instanceof Activity && args != null && args.length > 0) {
-                ((Activity) mContext).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(mContext, "有人退出", Toast.LENGTH_SHORT).show();
-                        updateContactList(false, args);
-                    }
-                });
-            }
+            Toast.makeText(mContext, "有人退出", Toast.LENGTH_SHORT).show();
+            updateContactList(false, args);
         }
     };
 
@@ -671,17 +650,12 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     /**
      * 接收到消息
      */
-    private Emitter.Listener mOnReceiveTalk = new Emitter.Listener() {
+    private SocketManager.EventListener mOnReceiveTalk = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
             if (mContext instanceof Activity && args != null && args.length > 0) {
-                ((Activity) mContext).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
-                        handleReceivedMsg(args);
-                    }
-                });
+                Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
+                handleReceivedMsg(args);
             }
         }
     };
@@ -763,18 +737,13 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 }
                 break;
         }
-        JSONObject data = ClassroomBusiness.wrapSocketBean(talkBean);
-        if (data != null && mSocket != null) {
-            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK), data, new Ack() {
+        if (talkBean != null && mSocket != null) {
+            String event = Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK);
+            SocketManager.emit(event, talkBean, new SocketManager.AckListener() {
                 @Override
                 public void call(final Object... args) {
-                    ((Activity) mContext).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //TalkResponse
-                            handSendResponse(args);
-                        }
-                    });
+                    //TalkResponse
+                    handSendResponse(args);
                 }
             });
         }

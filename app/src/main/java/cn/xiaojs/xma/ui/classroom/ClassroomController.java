@@ -15,7 +15,6 @@ package cn.xiaojs.xma.ui.classroom;
  * ======================================================================================== */
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -28,8 +27,6 @@ import android.widget.Toast;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +47,6 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
-import cn.xiaojs.xma.ui.classroom.socketio.StreamingMode;
 import cn.xiaojs.xma.ui.classroom.whiteboard.ShareDoodlePopWindow;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
@@ -72,7 +68,6 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.CacheUtil;
-import io.socket.client.Ack;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -204,10 +199,10 @@ public class ClassroomController implements
     }
 
     private void listenerSocket() {
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
     }
 
     /**
@@ -930,18 +925,13 @@ public class ClassroomController implements
                     mInitPublishVideo = true;
                     if (mSocket != null) {
                         if (mUser == Constants.User.TEACHER) {
-                            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new Ack() {
+                            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new SocketManager.AckListener() {
                                 @Override
                                 public void call(final Object... args) {
                                     if (args != null && args.length > 0) {
                                         StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                                         if (response != null && response.result) {
-                                            ((Activity)mContext).runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Toast.makeText(mContext, "老师推流开始", Toast.LENGTH_LONG).show();
-                                                }
-                                            });
+                                            Toast.makeText(mContext, "老师推流开始", Toast.LENGTH_LONG).show();
                                         } else {
                                             onPauseVideo();
                                         }
@@ -953,19 +943,13 @@ public class ClassroomController implements
                         } else if (mUser == Constants.User.STUDENT) {
                             FeedbackStatus fbStatus = new FeedbackStatus();
                             fbStatus.status = Live.MediaStatus.READY;
-                            JSONObject data = ClassroomBusiness.wrapSocketBean(fbStatus);
-                            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.MEDIA_FEEDBACK), data, new Ack() {
+                            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.MEDIA_FEEDBACK), fbStatus, new SocketManager.AckListener() {
                                 @Override
                                 public void call(Object... args) {
                                     if (args != null && args.length > 0) {
                                         StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                                         if (response != null && response.result) {
-                                            ((Activity)mContext).runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Toast.makeText(mContext, "学生发送feedback 成功", Toast.LENGTH_LONG).show();
-                                                }
-                                            });
+                                            Toast.makeText(mContext, "学生发送feedback 成功", Toast.LENGTH_LONG).show();
                                         } else {
                                             onPauseVideo();
                                         }
@@ -983,77 +967,57 @@ public class ClassroomController implements
         }
     };
 
-    private Emitter.Listener mReceiveStreamStarted = new Emitter.Listener() {
+    private SocketManager.EventListener mReceiveStreamStarted = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            ((Activity)mContext).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(mContext, "流开始", Toast.LENGTH_LONG).show();
-                }
-            });
+            Toast.makeText(mContext, "流开始", Toast.LENGTH_LONG).show();
         }
     };
 
-    private Emitter.Listener mReceiveMediaAborted = new Emitter.Listener() {
+    private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            ((Activity)mContext).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(mContext, "流被中断", Toast.LENGTH_LONG).show();
-                }
-            });
+            Toast.makeText(mContext, "流被中断", Toast.LENGTH_LONG).show();
         }
     };
 
-    private Emitter.Listener mReceiveFeedback = new Emitter.Listener() {
+    private SocketManager.EventListener mReceiveFeedback = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            ((Activity)mContext).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(mContext, "receive feedback", Toast.LENGTH_LONG).show();
-                    if (args != null && args.length > 0) {
-                        MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
-                        if (response != null && response.playUrl != null) {
-                            playStuVideo(response.playUrl);
+            Toast.makeText(mContext, "receive feedback", Toast.LENGTH_LONG).show();
+            if (args != null && args.length > 0) {
+                MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
+                if (response != null && response.playUrl != null) {
+                    playStuVideo(response.playUrl);
+                }
+            }
+        }
+    };
+
+    private SocketManager.EventListener mReceiveOpenMedia = new SocketManager.EventListener() {
+        @Override
+        public void call(final Object... args) {
+            Toast.makeText(mContext, "收到打开学生视频", Toast.LENGTH_LONG).show();
+            if (mAgreeOpenCamera == null) {
+                mAgreeOpenCamera = new CommonDialog(mContext);
+                mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
+                mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
+
+                mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        mAgreeOpenCamera.dismiss();
+                        if (args != null && args.length > 0) {
+                            OpenMediaNotify openMediaNotify = ClassroomBusiness.parseSocketBean(args[0], OpenMediaNotify.class);
+                            if (openMediaNotify != null) {
+                                publishStream(openMediaNotify.publishUrl);
+                            }
                         }
                     }
-                }
-            });
-        }
-    };
+                });
+            }
 
-    private Emitter.Listener mReceiveOpenMedia = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            ((Activity)mContext).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(mContext, "收到打开学生视频", Toast.LENGTH_LONG).show();
-                    if (mAgreeOpenCamera == null) {
-                        mAgreeOpenCamera = new CommonDialog(mContext);
-                        mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
-                        mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
-
-                        mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                            @Override
-                            public void onClick() {
-                                mAgreeOpenCamera.dismiss();
-                                if (args != null && args.length > 0) {
-                                    OpenMediaNotify openMediaNotify = ClassroomBusiness.parseSocketBean(args[0], OpenMediaNotify.class);
-                                    if (openMediaNotify != null) {
-                                        publishStream(openMediaNotify.publishUrl);
-                                    }
-                                }
-                            }
-                        });
-                    }
-
-                    mAgreeOpenCamera.show();
-                }
-            });
+            mAgreeOpenCamera.show();
         }
     };
 }
