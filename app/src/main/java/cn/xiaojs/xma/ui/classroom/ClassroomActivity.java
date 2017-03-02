@@ -30,8 +30,6 @@ import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,7 +72,6 @@ import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 import okhttp3.ResponseBody;
 
 /*  =======================================================================================
@@ -613,6 +610,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
 
         if (!mSktConnected) {
+            if (mClassroomController != null) {
+                mClassroomController.onDestroyVideo();
+            }
             SocketManager.close();
             initData();
             return;
@@ -630,6 +630,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     setControllerBtnStyle(Live.LiveSessionState.RESET);
 
                     mClassroomController.pauseVideo();
+                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                            new SocketManager.AckListener () {
+                        @Override
+                        public void call(Object... args) {
+                            if (args != null && args.length > 0) {
+                                Toast.makeText(ClassroomActivity.this, "推流暂停", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
 
                 @Override
@@ -678,8 +687,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             cancelProgress();
             StreamingMode streamMode = new StreamingMode();
             streamMode.mode = Live.StreamMode.AV;
-            JSONObject data = ClassroomBusiness.wrapSocketBean(streamMode);
-            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), data, new Ack() {
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), streamMode, new SocketManager.AckListener() {
                 @Override
                 public void call(final Object... args) {
                     runOnUiThread(new Runnable() {
@@ -845,23 +853,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (mUser == Constants.User.TEACHER) {
             OpenMedia openMedia = new OpenMedia();
             openMedia.to = accountId;
-            JSONObject data = ClassroomBusiness.wrapSocketBean(openMedia);
-            mSocket.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), data, new Ack() {
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), openMedia, new SocketManager.AckListener() {
                 @Override
                 public void call(final Object... args) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (args != null && args.length > 0) {
-                                StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                if (response != null && response.result) {
-                                    Toast.makeText(ClassroomActivity.this, "申请打开学生视频开始", Toast.LENGTH_LONG).show();
-                                } else {
+                    if (args != null && args.length > 0) {
+                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                        if (response != null && response.result) {
+                            Toast.makeText(ClassroomActivity.this, "申请打开学生视频开始", Toast.LENGTH_LONG).show();
+                        } else {
 
-                                }
-                            }
                         }
-                    });
+                    }
                 }
             });
         }
@@ -1328,14 +1330,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             int width = DeviceUtil.getScreenWidth(this) / 2;
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             mExitDialog.setDialogLayout(width, height);
-
-            mExitDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    mExitDialog.dismiss();
-                }
-            });
-
             mExitDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {
@@ -1406,14 +1400,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             return;
         }
 
-        mSocket.on(Socket.EVENT_CONNECT, mOnConnect);
-        mSocket.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
-        mSocket.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
-        mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
-        mSocket.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
-        mSocket.connect();
+        SocketManager.on(Socket.EVENT_CONNECT, mOnConnect);
+        SocketManager.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
+        SocketManager.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
+        SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
+        SocketManager.connect();
     }
 
     private void disConnectIO() {
@@ -1432,47 +1426,32 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         SocketManager.close();
     }
 
-    private Emitter.Listener mOnConnect = new Emitter.Listener() {
+    private SocketManager.EventListener mOnConnect = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (!mSktConnected) {
-                        Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
-                        mSktConnected = true;
-                    }
-                }
-            });
+            if (!mSktConnected) {
+                Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
+                mSktConnected = true;
+            }
         }
     };
 
-    private Emitter.Listener mOnDisconnect = new Emitter.Listener() {
+    private SocketManager.EventListener mOnDisconnect = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mSktConnected = false;
-                    Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
-                }
-            });
+            mSktConnected = false;
+            Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
         }
     };
 
-    private Emitter.Listener mOnConnectError = new Emitter.Listener() {
+    private SocketManager.EventListener mOnConnectError = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
-                }
-            });
+            Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
         }
     };
 
-    private Emitter.Listener mSyncStateListener = new Emitter.Listener() {
+    private SocketManager.EventListener mSyncStateListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
             if (args != null && args.length > 0) {
@@ -1506,7 +1485,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     };
 
-    private Emitter.Listener mStreamingStartedListener = new Emitter.Listener() {
+    private SocketManager.EventListener mStreamingStartedListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
             if (args != null && args.length > 0) {
@@ -1519,7 +1498,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     };
 
-    private Emitter.Listener mStreamingStoppedListener = new Emitter.Listener() {
+    private SocketManager.EventListener mStreamingStoppedListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
             if (args != null && args.length > 0) {

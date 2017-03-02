@@ -2,19 +2,19 @@ package cn.xiaojs.xma.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.CollaRequest;
 import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.colla.LibCriteria;
-import cn.xiaojs.xma.model.colla.LibOverview;
-import cn.xiaojs.xma.model.colla.UploadParam;
+
 import cn.xiaojs.xma.model.Pagination;
-import cn.xiaojs.xma.model.colla.UserDoc;
-import okhttp3.ResponseBody;
+import cn.xiaojs.xma.model.material.LibCriteria;
+import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.UploadParam;
+import cn.xiaojs.xma.model.material.UserDoc;
+
 
 /**
  * Created by maxiaobao on 2017/2/6.

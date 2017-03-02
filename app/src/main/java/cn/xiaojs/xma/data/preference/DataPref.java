@@ -22,11 +22,23 @@ public class DataPref {
 
     //private static final String PREF_CONTACT_GROUP = "self_groups";
 
+    private static final String PREF_VCODE = "vcode";
     private static final String PREF_ALLOW_DOWNLOAD = "download_allow";
     private static final String PREF_UPGRADE = "upgrade";
 
     protected static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static void setVersionCode(final Context context,int vcode) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putInt(PREF_VCODE, vcode).apply();
+
+    }
+
+    public static int getVersionCode(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getInt(PREF_VCODE,-1);
     }
 
 

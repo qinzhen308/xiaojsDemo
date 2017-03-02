@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.model.colla;
+package cn.xiaojs.xma.model.material;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,7 +12,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LibDoc {
     public String id;
-    public LibAssociate associated;
+    public LibCapacity.LibAssociate associated;
     public DocExport exported;
     public long used;
     public String mimeType;

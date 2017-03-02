@@ -142,6 +142,32 @@ public class APPUtils {
     }
 
     /**
+     * 比较版本号
+     * @param context
+     * @param updateVersion
+     * @return
+     */
+    public static boolean comparisonCode(Context context, String updateVersion) {
+
+        int currentCode = getAPPVersionCode(context);
+
+        if (TextUtils.isEmpty(updateVersion)) return false;
+        String[] codes = updateVersion.split("\\.");
+
+        //版本号是四位
+        if (codes==null || codes.length < XiaojsConfig.VERSION_BITS) return false;
+
+        String updateCode = codes[XiaojsConfig.VERSION_BITS - 1];
+
+        if (!TextUtils.isEmpty(updateCode)) {
+            int uCode = Integer.valueOf(updateCode);
+             return uCode > currentCode;
+        }
+
+        return false;
+    }
+
+    /**
      * return current APP client type
      * @param context
      * @return

@@ -14,6 +14,9 @@ public class XiaojsConfig {
     //日志tag
     public static final String LOG_TAG = "XiaoJS-Log";
 
+    //客户端版本号位数
+    public static final int VERSION_BITS = 4;
+
     //BASE_URL
     public static String BASE_URL = "http://192.168.100.3";
 
@@ -55,5 +58,7 @@ public class XiaojsConfig {
 
     //file provider
     public static final String FILE_PROVIDER= "cn.xiaojs.xma.fileprovider";
+
+
 
 }

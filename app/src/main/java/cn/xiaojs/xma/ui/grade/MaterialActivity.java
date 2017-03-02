@@ -34,7 +34,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.colla.UploadReponse;
+import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.util.ToastUtil;

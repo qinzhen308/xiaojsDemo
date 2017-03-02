@@ -229,9 +229,13 @@ public class ExampleUnitTest {
 ////        System.out.println("=============="+p.quota);
 
 
-        int a = 5;
-        int b = ++a;
-        System.out.println("=============="+b);
+//        int a = 5;
+//        int b = ++a;
+
+        String v = "0.1.4.7";
+        String[] s = v.split("\\.");
+
+        System.out.println("=============="+s);
 
     }
 

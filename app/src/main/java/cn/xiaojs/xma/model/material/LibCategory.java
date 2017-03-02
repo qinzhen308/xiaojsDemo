@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.model.colla;
+package cn.xiaojs.xma.model.material;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -8,8 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LibCriteria {
-
-    public LibAssociate associated;
+public class LibCategory {
+    public String titile;
+    public String subtype;
+    public int total;
+    public LibDoc[] docs;
 
 }

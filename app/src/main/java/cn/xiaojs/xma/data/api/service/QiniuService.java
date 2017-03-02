@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.data.api.service;
 
-import cn.xiaojs.xma.model.colla.UploadReponse;
+
+import cn.xiaojs.xma.model.material.UploadReponse;
 
 /**
  * Created by maxiaobao on 2016/11/15.
