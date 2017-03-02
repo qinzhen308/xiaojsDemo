@@ -113,6 +113,7 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.state.setText(R.string.pending_shelves);
             holder.state.setBackgroundResource(R.drawable.course_state_draft_bg);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -138,6 +139,7 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.state.setText(R.string.examine_failure);
             holder.state.setBackgroundResource(R.drawable.course_state_failure_bg);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -161,6 +163,7 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.state.setText(R.string.course_state_cancel);
             holder.state.setBackgroundResource(R.drawable.course_state_cancel_bg);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -182,6 +185,7 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.state.setText(R.string.force_stop);
             holder.state.setBackgroundResource(R.drawable.course_state_stop_bg);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -204,6 +208,7 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
             String[] items = new String[]{mContext.getString(R.string.cancel_examine),
                     mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.examining);
+            holder.operation.enableEnter(false);
             holder.state.setBackgroundResource(R.drawable.course_state_examine_bg);
             holder.operation.enableMore(false);
             holder.operation.setItems(items);
@@ -233,6 +238,7 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
 //                items[0] = mContext.getString(R.string.lesson_again);
 //            }
             holder.operation.enableMore(true);
+            holder.operation.enableEnter(true);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -251,6 +257,9 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
                             break;
                         case MORE:
                             more(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
                             break;
                     }
                 }

@@ -28,6 +28,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.model.EnrolledLesson;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.view.LessonPersonView;
@@ -132,6 +134,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(true);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
@@ -142,6 +145,9 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
                             break;
                         case 2:
                             databank(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
                             break;
                     }
                 }
@@ -153,10 +159,15 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             String[] items = new String[]{mContext.getString(R.string.data_bank)};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(true);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
-                    databank(bean);
+                    if (position == ENTER){
+                        enterClass(bean);
+                    }else {
+                        databank(bean);
+                    }
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
@@ -166,6 +177,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(true);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
@@ -176,6 +188,9 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
                             break;
                         case 2:
                             databank(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
                             break;
                     }
                 }
@@ -202,6 +217,14 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
     //评价
     private void evaluate(EnrolledLesson bean) {
 
+    }
+
+    //进入教室
+    private void enterClass(EnrolledLesson bean) {
+        Intent i = new Intent();
+        i.putExtra(Constants.KEY_TICKET, bean.getTicket());
+        i.setClass(mContext, ClassroomActivity.class);
+        mContext.startActivity(i);
     }
 
     class Holder extends BaseHolder {
