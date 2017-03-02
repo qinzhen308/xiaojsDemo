@@ -1,12 +1,21 @@
 package cn.xiaojs.xma.util;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.api.BasicCallback;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.model.AliasTags;
 
 /**
  * Created by maxiaobao on 2017/2/24.
@@ -35,5 +44,23 @@ public class JpushUtil {
                 }
             }
         });
+    }
+
+
+    /**
+     * 设置别名和标签
+     * @param context
+     */
+    public static void setAliasAndTags(final Context context, AliasTags aliasTags, TagAliasCallback callback) {
+
+        if (aliasTags == null) return;
+
+        List<String> ptags = aliasTags.getTags();
+        Set<String> tags = new HashSet<>();
+        if (ptags != null) {
+            tags.addAll(ptags);
+        }
+
+        JPushInterface.setAliasAndTags(context, aliasTags.getAlias(), tags, callback);
     }
 }

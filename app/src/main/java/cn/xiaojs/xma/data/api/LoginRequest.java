@@ -13,6 +13,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.data.loader.SyncService;
 import cn.xiaojs.xma.data.preference.SecurityPref;
+import cn.xiaojs.xma.model.AliasTags;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.Privilege;

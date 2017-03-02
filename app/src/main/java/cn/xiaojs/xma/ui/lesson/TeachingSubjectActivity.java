@@ -125,6 +125,11 @@ public class TeachingSubjectActivity extends BaseActivity {
                 Toast.makeText(TeachingSubjectActivity.this, R.string.claim_succ, Toast.LENGTH_SHORT).show();
                 SecurityManager.updatePermission(TeachingSubjectActivity.this, Su.Permission.COURSE_OPEN_CREATE, true);
 
+                //更新alias and tags
+                AccountDataManager.saveAliaTags(getApplicationContext(), object.aliasAndTags);
+                AccountDataManager.submitAliaTags(getApplicationContext());
+
+
                 finish();
             }
 

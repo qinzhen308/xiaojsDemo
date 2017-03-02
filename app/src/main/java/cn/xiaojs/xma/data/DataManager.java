@@ -4,7 +4,9 @@ package cn.xiaojs.xma.data;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import cn.jpush.android.api.TagAliasCallback;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
@@ -16,6 +18,7 @@ import cn.xiaojs.xma.data.db.ContactDao;
 import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.data.loader.SyncService;
 import cn.xiaojs.xma.data.preference.DataPref;
+import cn.xiaojs.xma.model.AliasTags;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.Contact;
@@ -61,7 +64,7 @@ public class DataManager {
     /**
      * init memory data cache when the user already logined
      */
-    public static void init(Context context) {
+    public static void init(final Context context) {
 
         saveVersionCode(context, APPUtils.getAPPVersionCode(context));
 
@@ -69,24 +72,25 @@ public class DataManager {
             //init data cache
             getCache(context).init();
 
-            //init jpush
+            //jpush alias/tags
+            AccountDataManager.setAliaTagsWithCheck(context);
+
+            //jmessage login
             JpushUtil.loginJpush();
         }
     }
 
+
+
     /**
      * 持久化客户端version code
-     * @param context
-     * @param code
      */
-    private static void saveVersionCode(Context context,int code) {
-        DataPref.setVersionCode(context,code);
+    private static void saveVersionCode(Context context, int code) {
+        DataPref.setVersionCode(context, code);
     }
 
     /**
      * 获取缓存的联系人分组
-     * @param context
-     * @return
      */
     public static Map<Long, ContactGroup> getGroupData(Context context) {
         return getCache(context).getGroupData();
@@ -95,28 +99,28 @@ public class DataManager {
     public static void getFriendsByType(Context context,
                                         int followType,
                                         DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
-        DataLoder dataLoder = new DataLoder(context,new ContactDao());
-        dataLoder.load(callback,-1,followType);
+        DataLoder dataLoder = new DataLoder(context, new ContactDao());
+        dataLoder.load(callback, -1, followType);
     }
 
     public static void getFriendsOnly(Context context,
-                                        DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
-        DataLoder dataLoder = new DataLoder(context,new ContactDao());
-        dataLoder.load(callback,-2,DataManager.getGroupData(context));
+                                      DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
+        DataLoder dataLoder = new DataLoder(context, new ContactDao());
+        dataLoder.load(callback, -2, DataManager.getGroupData(context));
     }
 
 
     public static void getClasses(Context context,
                                   DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
-        DataLoder dataLoder = new DataLoder(context,new ContactDao());
-        dataLoder.load(callback,-1,-1);
+        DataLoder dataLoder = new DataLoder(context, new ContactDao());
+        dataLoder.load(callback, -1, -1);
     }
 
 //    public static ArrayList<ContactGroup> getContactGroupData(Context context) {
 //        return getCache(context).getContactGroupData();
 //    }
 
-    public static void syncData(Context context,Intent intent) {
+    public static void syncData(Context context, Intent intent) {
 
         //intent.setClass(context,SyncService.class);
         context.startService(intent);
@@ -124,31 +128,27 @@ public class DataManager {
 
     /**
      * 清除内存、缓存文件、数据库数据
-     * @param context
      */
     public static void clearAllData(Context context) {
         clearMemoryData(context);
-        clearLocalData(context,true);
+        clearLocalData(context, true);
     }
 
     /**
      * 用于用户清理缓存使用
-     * @param context
      */
     public static void clearbyUser(Context context) {
-        clearLocalData(context,false);
+        clearLocalData(context, false);
     }
 
     /**
      * 清除内存缓存数据
-     * @param context
      */
     public static void clearMemoryData(Context context) {
         //memory data
         MemCache.getDataCache(context).clear();
         Glide.get(context).clearMemory();
     }
-
 
 
     private static void clearLocalData(Context context, final boolean db) {
@@ -159,7 +159,7 @@ public class DataManager {
             public void run() {
                 //cache files
                 clearCacheFiles(appcontext);
-                if (db){
+                if (db) {
                     //db data
                     ContactDao.clear(appcontext);
                 }
@@ -206,7 +206,7 @@ public class DataManager {
 
     }
 
-    public static void syncGroupData(Context context,Map<Long, ContactGroup> map) {
+    public static void syncGroupData(Context context, Map<Long, ContactGroup> map) {
 
         if (map == null) {
             return;
@@ -223,7 +223,7 @@ public class DataManager {
 
     }
 
-    public static void syncContactData(Context context,ArrayList<ContactGroup> contactGroups) {
+    public static void syncContactData(Context context, ArrayList<ContactGroup> contactGroups) {
 
         if (contactGroups == null) {
             return;
@@ -249,14 +249,14 @@ public class DataManager {
     public static void removeContact(Context context, String cid) {
 
         ContactDao contactDao = new ContactDao();
-        contactDao.deleteContact(context,cid);
+        contactDao.deleteContact(context, cid);
 
     }
 
-    public static void addContact(Context context,long gid,Contact contact) {
+    public static void addContact(Context context, long gid, Contact contact) {
 
         ContactDao contactDao = new ContactDao();
-        contactDao.addGroup(context,gid,contact);
+        contactDao.addGroup(context, gid, contact);
     }
 
     /**
@@ -298,7 +298,6 @@ public class DataManager {
 //            }
 //        });
 //    }
-
     public static void refreshContact(Context context) {
 
         SocialManager.getContacts(context, new APIServiceCallback<ArrayList<ContactGroup>>() {
@@ -332,7 +331,7 @@ public class DataManager {
         try {
             JSONObject jo = new JSONObject(body);
             String node = "contactGroups";
-            if(jo.has(node)) {
+            if (jo.has(node)) {
                 JSONObject jobject = jo.getJSONObject(node);
 
                 Iterator<String> iterator = jobject.keys();
@@ -383,10 +382,6 @@ public class DataManager {
     }
 
 
-
-
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Cache class
 
@@ -429,7 +424,7 @@ public class DataManager {
 
         protected void clear() {
 
-            if (groupMap !=null) {
+            if (groupMap != null) {
                 groupMap.clear();
             }
         }
