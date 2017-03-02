@@ -15,19 +15,26 @@ package cn.xiaojs.xma.ui.grade;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.CollaManager;
+import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.colla.LibDoc;
 import cn.xiaojs.xma.model.colla.UserDoc;
@@ -49,7 +56,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
     }
 
     @Override
-    protected void setViewContent(final Holder holder, LibDoc bean, int position) {
+    protected void setViewContent(final Holder holder, final LibDoc bean, int position) {
         holder.showOpera(false);
         if (mIsMine) {
             holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.share_selector, 0, 0);
@@ -63,25 +70,57 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         });
 
         if (FileUtil.DOC == FileUtil.getFileType(bean.mimeType)) {
-            holder.image.setImageResource(R.drawable.ic_word);
+            thumbnail(bean.key, R.drawable.ic_word, holder);
         } else if (FileUtil.PPT == FileUtil.getFileType(bean.mimeType)) {
-            holder.image.setImageResource(R.drawable.ic_ppt);
+            thumbnail(bean.key, R.drawable.ic_ppt, holder);
         } else if (FileUtil.XLS == FileUtil.getFileType(bean.mimeType)) {
-            holder.image.setImageResource(R.drawable.ic_excel);
+            thumbnail(bean.key, R.drawable.ic_excel, holder);
         } else if (FileUtil.PICTURE == FileUtil.getFileType(bean.mimeType)) {
-            holder.image.setImageResource(R.drawable.ic_picture);
+            thumbnail(bean.key, R.drawable.ic_picture, holder);
         } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
-            holder.image.setImageResource(R.drawable.ic_pdf);
+            thumbnail(bean.key, R.drawable.ic_pdf, holder);
         } else {
             holder.image.setImageResource(R.drawable.ic_unknown);
         }
-        //holder.name.setText();
+        holder.name.setText(bean.name);
         StringBuilder sb = new StringBuilder();
         sb.append(XjsUtils.getSizeFormatText(bean.used));
         sb.append("  ");
         sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
 
         holder.desc.setText(sb);
+
+        holder.opera1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                download(bean);
+            }
+        });
+
+        holder.opera2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    private void download(LibDoc bean) {
+        if (DownloadManager.allowDownload(mContext)) {
+            DownloadManager.enqueueDownload(mContext, bean.name, bean.key, Social.getDrawing(bean.key, false), bean.mimeType, Social.getDrawing(bean.key, true));
+        } else {
+            Toast.makeText(mContext, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
+        }
+
+        Intent intent = new Intent(mContext, MaterialDownloadActivity.class);
+        mContext.startActivity(intent);
+    }
+
+    private void thumbnail(String key, int errorResId, Holder holder) {
+        Glide.with(mContext)
+                .load(Social.getDrawing(key, true))
+                .error(errorResId)
+                .into(holder.image);
     }
 
     @Override
@@ -98,11 +137,10 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
     @Override
     protected void doRequest() {
-        CollaManager.getDocuments(mContext, mOwner, mPagination, new APIServiceCallback<UserDoc>() {
+        CollaManager.getDocuments(mContext, mOwner, Collaboration.SubType.PERSON, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
                 if (object != null && object.documents.size() > 0) {
-                    object.documents.remove(0);
                     MaterialAdapter.this.onSuccess(object.documents);
                 } else {
                     MaterialAdapter.this.onSuccess(null);
