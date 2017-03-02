@@ -29,6 +29,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -37,11 +38,12 @@ import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.DeviceUtil;
 
-public class StudentVideoManager extends VideoManager {
+public class StudentVideoController extends VideoController {
     private CommonDialog mAgreeOpenCamera;
 
-    public StudentVideoManager(Context context, View root) {
+    public StudentVideoController(Context context, View root) {
         super(context, root);
+        listenerSocket();
     }
 
     @Override
@@ -57,6 +59,8 @@ public class StudentVideoManager extends VideoManager {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
     }
 
     @Override
@@ -78,6 +82,12 @@ public class StudentVideoManager extends VideoManager {
     }
 
     @Override
+    public void publishStream(String url) {
+        mPublishView.setVisibility(View.VISIBLE);
+        super.publishStream(url);
+    }
+
+    @Override
     public void takeVideoFrame(FrameCapturedCallback callback) {
         Bitmap bmp = mPlayView.getPlayer().getTextureView().getBitmap();
         if (callback != null) {
@@ -87,23 +97,28 @@ public class StudentVideoManager extends VideoManager {
 
     @Override
     public void onSteamStateChanged(StreamingState streamingState, Object data) {
-        FeedbackStatus fbStatus = new FeedbackStatus();
-        fbStatus.status = Live.MediaStatus.READY;
-        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.MEDIA_FEEDBACK), fbStatus, new SocketManager.AckListener() {
-            @Override
-            public void call(Object... args) {
-                if (args != null && args.length > 0) {
-                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                    if (response != null && response.result) {
-                        Toast.makeText(mContext, "学生发送feedback 成功", Toast.LENGTH_LONG).show();
-                    } else {
-                        onPause();
+        switch (streamingState) {
+            case STREAMING:
+                FeedbackStatus fbStatus = new FeedbackStatus();
+                fbStatus.status = Live.MediaStatus.READY;
+                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.MEDIA_FEEDBACK), fbStatus, new SocketManager.AckListener() {
+                    @Override
+                    public void call(Object... args) {
+                        if (args != null && args.length > 0) {
+                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                            if (response != null && response.result) {
+                                Toast.makeText(mContext, "学生发送feedback 成功", Toast.LENGTH_LONG).show();
+                            } else {
+                                onPause();
+                            }
+                        } else {
+                            onPause();
+                        }
                     }
-                } else {
-                    onPause();
-                }
-            }
-        });
+                });
+                break;
+
+        }
     }
 
 
@@ -148,6 +163,27 @@ public class StudentVideoManager extends VideoManager {
         @Override
         public void call(Object... args) {
             Toast.makeText(mContext, "学生端流被中断", Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private SocketManager.EventListener mStreamingStartedListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            if (args != null && args.length > 0) {
+                StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
+                if (startedNotify != null) {
+                    playStream(startedNotify.RTMPPlayUrl);
+                }
+            }
+        }
+    };
+
+    private SocketManager.EventListener mStreamingStoppedListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            if (args != null && args.length > 0) {
+                Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
+            }
         }
     };
 }

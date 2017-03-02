@@ -27,7 +27,7 @@ import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 
-public abstract class VideoManager {
+public abstract class VideoController {
     protected Context mContext;
     protected View mRoot;
     protected Constants.User mUser;
@@ -38,7 +38,7 @@ public abstract class VideoManager {
 
     protected boolean mInitPublishVideo = false;
 
-    public VideoManager(Context context, View root) {
+    public VideoController(Context context, View root) {
         mContext = context;
         mRoot = root;
         mHandler = new Handler();
@@ -106,7 +106,6 @@ public abstract class VideoManager {
             return;
         }
 
-        mPublishView.setVisibility(View.VISIBLE);
         mPublishView.setPath(url);
         if (!mInitPublishVideo) {
             mPublishView.start();
@@ -120,7 +119,6 @@ public abstract class VideoManager {
      */
     public void playStream(String url) {
         if (mPlayView != null) {
-            mPlayView.setVisibility(View.VISIBLE);
             mPlayView.setPath(url);
             mPlayView.resume();
         }
