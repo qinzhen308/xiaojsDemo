@@ -60,12 +60,13 @@ public class UpgradeManager {
      */
     public static void checkUpgrade(Context context) {
         Upgrade upgrade = getUpgrade(context);
-        int code = APPUtils.getAPPVersionCode(context);
         if (upgrade != null
                 && !TextUtils.isEmpty(upgrade.uri)
-                //&& upgrade.verNum > code FIXME vercode比较
+                && !TextUtils.isEmpty(upgrade.verStr)
+                && APPUtils.comparisonCode(context,upgrade.verStr)
                 && upgrade.app == Platform.AppType.MOBILE_ANDROID
                 && upgrade.action != Platform.AvailableAction.IGNORE) {
+
             showDlg(context,upgrade);
         }
     }
