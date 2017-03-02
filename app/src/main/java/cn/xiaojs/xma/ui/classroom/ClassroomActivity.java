@@ -1330,14 +1330,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             int width = DeviceUtil.getScreenWidth(this) / 2;
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             mExitDialog.setDialogLayout(width, height);
-
-            mExitDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    mExitDialog.dismiss();
-                }
-            });
-
             mExitDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {

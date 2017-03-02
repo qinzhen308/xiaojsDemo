@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.CacheUtil;
+import cn.xiaojs.xma.util.DeviceUtil;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -1000,6 +1002,9 @@ public class ClassroomController implements
             Toast.makeText(mContext, "收到打开学生视频", Toast.LENGTH_LONG).show();
             if (mAgreeOpenCamera == null) {
                 mAgreeOpenCamera = new CommonDialog(mContext);
+                int width = DeviceUtil.getScreenWidth(mContext) / 2;
+                int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                mAgreeOpenCamera.setDialogLayout(width, height);
                 mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
                 mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
 
