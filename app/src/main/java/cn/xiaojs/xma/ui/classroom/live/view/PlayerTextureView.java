@@ -139,6 +139,9 @@ public class PlayerTextureView extends BaseMediaView {
         if (mCaptureView != null) {
             mCaptureView.stop();
         }
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
         mHandler = null;
     }
 

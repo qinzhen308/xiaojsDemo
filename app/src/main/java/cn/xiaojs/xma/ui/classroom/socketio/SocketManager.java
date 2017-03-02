@@ -71,6 +71,12 @@ public class SocketManager {
         }
     }
 
+    public static void off() {
+        if (mSocket != null) {
+            mSocket.off();
+        }
+    }
+
     public static void close() {
         if (mSocket != null) {
             mSocket.close();
