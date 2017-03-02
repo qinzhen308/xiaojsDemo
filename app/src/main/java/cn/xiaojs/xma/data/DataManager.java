@@ -20,6 +20,7 @@ import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.SecurityUtil;
@@ -62,6 +63,8 @@ public class DataManager {
      */
     public static void init(Context context) {
 
+        saveVersionCode(context, APPUtils.getAPPVersionCode(context));
+
         if (AccountDataManager.isLogin(context)) {
             //init data cache
             getCache(context).init();
@@ -69,6 +72,15 @@ public class DataManager {
             //init jpush
             JpushUtil.loginJpush();
         }
+    }
+
+    /**
+     * 持久化客户端version code
+     * @param context
+     * @param code
+     */
+    private static void saveVersionCode(Context context,int code) {
+        DataPref.setVersionCode(context,code);
     }
 
     /**
