@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by maxiaobao on 2016/10/31.
@@ -13,7 +14,7 @@ import java.io.Serializable;
 public class AliasTags implements Serializable{
 
     private String alias;
-    private String[] tags;
+    private List<String> tags;
 
     public String getAlias() {
         return alias;
@@ -23,11 +24,11 @@ public class AliasTags implements Serializable{
         this.alias = alias;
     }
 
-    public String[] getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 }

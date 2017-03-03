@@ -3,7 +3,9 @@ package cn.xiaojs.xma.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import cn.jpush.android.api.TagAliasCallback;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Xu;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
@@ -14,6 +16,7 @@ import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.model.AliasTags;
 import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
@@ -26,6 +29,7 @@ import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.util.JpushUtil;
 import okhttp3.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -63,6 +68,7 @@ public class AccountDataManager {
         AccountPref.setAuthToken(context,session);
     }
 
+
     /**
      * 获取账户ID
      * @param context
@@ -89,6 +95,22 @@ public class AccountDataManager {
         return false;
     }
 
+    public static void saveAliaTags(Context context, AliasTags aliasTags){
+        AccountPref.setPrefAliasTags(context,aliasTags);
+    }
+
+    public static AliasTags getAliasTags(Context context) {
+        return AccountPref.getPrefAliasTags(context);
+    }
+
+    public static void setATagsSuccess(Context context, boolean success) {
+        AccountPref.setAtagsSuccess(context,success);
+    }
+
+    public static boolean isATagsSuccess(Context context) {
+        return AccountPref.getAtagsSuccess(context);
+    }
+
     public static void saveUserInfo(Context context,@NonNull User user) {
 
         if (user == null){
@@ -106,6 +128,7 @@ public class AccountDataManager {
         String id = user.getId();
         AccountPref.setAccountID(context,id);
         AccountPref.setLoginStatus(context,true);
+        saveAliaTags(context,user.getAliasAndTags());
 
         setUserInfo(context,user);
 
@@ -131,10 +154,52 @@ public class AccountDataManager {
         AccountPref.setAccountID(context,"");
         AccountPref.setLoginStatus(context,false);
         AccountPref.setUser(context,null);
+        saveAliaTags(context, null);
+        AccountPref.setAtagsSuccess(context,false);
         SecurityManager.saveCSRFToken(context,"");
 
 
         DataManager.clearAllData(context);
+    }
+
+
+    public static void setAliaTagsWithCheck(Context context) {
+
+        if (isATagsSuccess(context)){
+            return;
+        }
+
+        submitAliaTags(context);
+    }
+
+    public static void submitAliaTags(final Context context) {
+        AliasTags aliasTags = AccountDataManager.getAliasTags(context);
+        if (aliasTags != null) {
+            JpushUtil.setAliasAndTags(context, aliasTags, new TagAliasCallback() {
+                @Override
+                public void gotResult(int responseCode, String s, Set<String> set) {
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("setAliasAndTags code:" + responseCode);
+                    }
+
+                    if (responseCode == 0) {
+
+                        AccountDataManager.setATagsSuccess(context.getApplicationContext(),true);
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(context, "注册别名成功", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        AccountDataManager.setATagsSuccess(context.getApplicationContext(),false);
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(context, "注册别名失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+            });
+        }
     }
 
 
@@ -361,6 +426,9 @@ public class AccountDataManager {
         AccountRequest accountRequest = new AccountRequest(context,callback);
         accountRequest.getCompetencies();
     }
+
+
+
 
 
 }
