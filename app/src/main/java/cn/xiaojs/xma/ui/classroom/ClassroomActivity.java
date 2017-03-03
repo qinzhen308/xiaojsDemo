@@ -203,6 +203,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private PanelAnimListener mPanelAnimListener;
     private boolean mNeedOpenWhiteBoardPanel = false;
     private String mLiveSessionState = Live.LiveSessionState.PENDING_FOR_JOIN;
+    private String mBeforeClamSteamState;
 
     private ClassroomController mClassroomController;
     private Bundle mExtraData;
@@ -686,9 +687,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     if (args != null && args.length > 0) {
                         StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                         if (response.result) {
+                            mBeforeClamSteamState = mLiveSessionState;
                             mLiveSessionState = Live.LiveSessionState.CLAIM_STREAM_STOPPED;
                             if (mClassroomController != null) {
-                                //mClassroomController.publishStream();
+                                mClassroomController.publishStream(response.publishUrl);
                             }
                             setControllerBtnStyle(mLiveSessionState);
                             Toast.makeText(ClassroomActivity.this, "claim streaming succ", Toast.LENGTH_SHORT).show();
@@ -701,7 +703,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 }
             });
         } else if (Live.LiveSessionState.CLAIM_STREAM_STOPPED.equals(mLiveSessionState)) {
-
+            cancelProgress();
+            mLiveSessionState = mBeforeClamSteamState;
+            setControllerBtnStyle(mLiveSessionState);
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED));
         }else {
             cancelProgress();
         }
