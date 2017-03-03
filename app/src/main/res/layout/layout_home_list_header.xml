@@ -10,6 +10,27 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/px360"/>
 
+    <ImageView
+            android:id="@+id/empty_image"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_data_empty"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"/>
+
+    <TextView
+            android:id="@+id/empty_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px30"
+            android:text="@string/empty_activity_tip"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_28px"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"/>
+
     <!--  <cn.xiaojs.xma.ui.widget.function.FunctionArea
               android:id="@+id/home_function_area"
               android:layout_marginTop="@dimen/px30"
