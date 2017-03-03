@@ -125,6 +125,7 @@ public class TeacherVideoController extends VideoController {
                 Toast.makeText(mContext, "流开始", Toast.LENGTH_LONG).show();
                 StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
                 if (startedNotify != null) {
+                    mPlayStreamUrl = startedNotify.RTMPPlayUrl;
                     playStream(startedNotify.RTMPPlayUrl);
                 }
             }

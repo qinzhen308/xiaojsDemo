@@ -131,7 +131,14 @@ public class StudentVideoController extends VideoController {
     private SocketManager.EventListener mReceiveStreamStarted = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            Toast.makeText(mContext, "学生端流开始", Toast.LENGTH_LONG).show();
+            if (args != null && args.length > 0) {
+                Toast.makeText(mContext, "学生端流开始", Toast.LENGTH_LONG).show();
+                StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
+                if (startedNotify != null) {
+                    mPlayStreamUrl = startedNotify.RTMPPlayUrl;
+                    playStream(startedNotify.RTMPPlayUrl);
+                }
+            }
         }
     };
 
@@ -175,21 +182,21 @@ public class StudentVideoController extends VideoController {
     private SocketManager.EventListener mStreamingStartedListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            if (args != null && args.length > 0) {
-                StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
-                if (startedNotify != null) {
-                    playStream(startedNotify.RTMPPlayUrl);
-                }
+        if (args != null && args.length > 0) {
+            StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
+            if (startedNotify != null) {
+                playStream(startedNotify.RTMPPlayUrl);
             }
+        }
         }
     };
 
     private SocketManager.EventListener mStreamingStoppedListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            if (args != null && args.length > 0) {
-                Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
-            }
+        if (args != null && args.length > 0) {
+            Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
+        }
         }
     };
 }

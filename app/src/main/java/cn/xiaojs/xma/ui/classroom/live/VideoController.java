@@ -37,6 +37,8 @@ public abstract class VideoController {
     protected boolean mInitPublishVideo = false;
     protected boolean mLive;
 
+    protected String mPlayStreamUrl;
+
     public VideoController(Context context, View root) {
         mContext = context;
         mRoot = root;
@@ -117,8 +119,11 @@ public abstract class VideoController {
      * 播放流
      */
     public void playStream(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            mPlayStreamUrl = url;
+        }
         if (mPlayView != null) {
-            mPlayView.setPath(url);
+            mPlayView.setPath(mPlayStreamUrl);
             mPlayView.resume();
         }
     }

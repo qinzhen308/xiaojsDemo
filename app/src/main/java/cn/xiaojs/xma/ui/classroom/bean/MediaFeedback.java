@@ -14,6 +14,11 @@ package cn.xiaojs.xma.ui.classroom.bean;
  *
  * ======================================================================================== */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MediaFeedback {
     public String to;
     public int status;
