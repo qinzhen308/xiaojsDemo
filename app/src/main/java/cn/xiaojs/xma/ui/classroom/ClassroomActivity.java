@@ -690,7 +690,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             mBeforeClamSteamState = mLiveSessionState;
                             mLiveSessionState = Live.LiveSessionState.CLAIM_STREAM_STOPPED;
                             if (mClassroomController != null) {
-                                mClassroomController.publishStream(response.publishUrl);
+                                mClassroomController.publishStream(response.publishUrl, false);
                             }
                             setControllerBtnStyle(mLiveSessionState);
                             Toast.makeText(ClassroomActivity.this, "claim streaming succ", Toast.LENGTH_SHORT).show();
@@ -704,9 +704,19 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             });
         } else if (Live.LiveSessionState.CLAIM_STREAM_STOPPED.equals(mLiveSessionState)) {
             cancelProgress();
-            mLiveSessionState = mBeforeClamSteamState;
-            setControllerBtnStyle(mLiveSessionState);
-            SocketManager.emit(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED));
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED), new SocketManager.AckListener() {
+                @Override
+                public void call(Object... args) {
+                    if (args != null && args.length > 0) {
+                        Toast.makeText(ClassroomActivity.this, "个人推流暂停", Toast.LENGTH_SHORT).show();
+                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                        if (response.result) {
+                            mLiveSessionState = mBeforeClamSteamState;
+                            setControllerBtnStyle(mLiveSessionState);
+                        }
+                    }
+                }
+            });
         }else {
             cancelProgress();
         }

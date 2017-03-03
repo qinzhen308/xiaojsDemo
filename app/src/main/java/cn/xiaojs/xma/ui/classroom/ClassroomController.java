@@ -167,10 +167,18 @@ public class ClassroomController {
     }
 
     /**
-     * 开始推流
+     * 开始推流, 直播推流
      */
     public void publishStream(String url) {
-        mVideoController.publishStream(url);
+        mVideoController.publishStream(url, true);
+    }
+
+    /**
+     * 开始推流
+     * @param live 是否是直播(true:直播推流 false:个人推流)
+     */
+    public void publishStream(String url, boolean live) {
+        mVideoController.publishStream(url, live);
     }
 
     /**
