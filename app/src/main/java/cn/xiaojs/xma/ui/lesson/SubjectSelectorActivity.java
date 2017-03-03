@@ -33,10 +33,13 @@ import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
  * ======================================================================================== */
 
 public class SubjectSelectorActivity extends BaseActivity {
+    private final static int REQUEST_ADD_SUBJECT = 100;
+
     @BindView(R.id.subject_list)
     ListView mSubjectListView;
 
     private SubjectSelectorAdapter mSubjectAdapter;
+    private Competency mSelectedCompetency;
 
     @Override
     protected void addViewContent() {
@@ -45,14 +48,16 @@ public class SubjectSelectorActivity extends BaseActivity {
         mRightText.setTextColor(getResources().getColor(R.color.font_orange));
 
         addView(R.layout.activity_select_subject);
+        init();
         loadData();
     }
 
-    private void initView () {
-
+    private void init () {
+        Intent intent = getIntent();
+        mSelectedCompetency = (Competency) intent.getSerializableExtra(CourseConstant.KEY_SUBJECT);
     }
 
-    @OnClick({R.id.left_image, R.id.right_view})
+    @OnClick({R.id.left_image, R.id.right_view, R.id.add_subject})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -61,9 +66,18 @@ public class SubjectSelectorActivity extends BaseActivity {
             case R.id.right_view:
                 finishWithResult();
                 break;
+            case R.id.add_subject:
+                addSubject();
+                break;
             default:
                 break;
         }
+    }
+
+    private void addSubject() {
+        Intent intent = new Intent();
+        intent.setClass(this, TeachingSubjectActivity.class);
+        startActivityForResult(intent, REQUEST_ADD_SUBJECT);
     }
 
     private void loadData() {
@@ -73,7 +87,7 @@ public class SubjectSelectorActivity extends BaseActivity {
             public void onSuccess(ClaimCompetency object) {
                 cancelProgress();
                 if (object != null) {
-                    mSubjectAdapter = new SubjectSelectorAdapter(SubjectSelectorActivity.this, object.competencies);
+                    mSubjectAdapter = new SubjectSelectorAdapter(SubjectSelectorActivity.this, object.competencies, mSelectedCompetency);
                     mSubjectListView.setAdapter(mSubjectAdapter);
                 }
             }
@@ -99,5 +113,12 @@ public class SubjectSelectorActivity extends BaseActivity {
         intent.putExtra(LessonCreationActivity.KEY_COMPETENCY, competency);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ADD_SUBJECT && resultCode == RESULT_OK) {
+            loadData();
+        }
     }
 }

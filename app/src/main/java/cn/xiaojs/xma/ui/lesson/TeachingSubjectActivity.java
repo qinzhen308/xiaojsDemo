@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.lesson;
 
+import android.content.Intent;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -106,7 +107,7 @@ public class TeachingSubjectActivity extends BaseActivity {
         return true;
     }
 
-    private void finishWithResult(CSubject subject) {
+    private void finishWithResult(final CSubject subject) {
 
         if (subject == null){
             finish();
@@ -129,7 +130,9 @@ public class TeachingSubjectActivity extends BaseActivity {
                 AccountDataManager.saveAliaTags(getApplicationContext(), object.aliasAndTags);
                 AccountDataManager.submitAliaTags(getApplicationContext());
 
-
+                Intent intent = new Intent();
+                intent.putExtra(CourseConstant.KEY_SUBJECT, subject);
+                setResult(RESULT_OK, intent);
                 finish();
             }
 

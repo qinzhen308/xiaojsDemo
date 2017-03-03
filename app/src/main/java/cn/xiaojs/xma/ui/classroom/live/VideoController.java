@@ -35,6 +35,7 @@ public abstract class VideoController {
     protected PlayerTextureView mPlayView;
 
     protected boolean mInitPublishVideo = false;
+    protected boolean mLive;
 
     public VideoController(Context context, View root) {
         mContext = context;
@@ -99,7 +100,7 @@ public abstract class VideoController {
     /**
      * 开始推流
      */
-    public void publishStream(String url) {
+    public void publishStream(String url, boolean live) {
         if (TextUtils.isEmpty(url) || mPublishView == null) {
             return;
         }

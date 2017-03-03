@@ -81,10 +81,15 @@ public class StudentVideoController extends VideoController {
         mPublishView.destroy();
     }
 
-    @Override
     public void publishStream(String url) {
+        publishStream(url, true);
+    }
+
+    @Override
+    public void publishStream(String url, boolean live) {
+        mLive = live;
         mPublishView.setVisibility(View.VISIBLE);
-        super.publishStream(url);
+        super.publishStream(url, live);
     }
 
     @Override
@@ -101,13 +106,14 @@ public class StudentVideoController extends VideoController {
             case STREAMING:
                 FeedbackStatus fbStatus = new FeedbackStatus();
                 fbStatus.status = Live.MediaStatus.READY;
-                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.MEDIA_FEEDBACK), fbStatus, new SocketManager.AckListener() {
+                int eventType = mLive ? Su.EventType.MEDIA_FEEDBACK : Su.EventType.STREAMING_STARTED;
+                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), fbStatus, new SocketManager.AckListener() {
                     @Override
                     public void call(Object... args) {
                         if (args != null && args.length > 0) {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
-                                Toast.makeText(mContext, "学生发送feedback 成功", Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, "学生推流成功", Toast.LENGTH_LONG).show();
                             } else {
                                 onPause();
                             }
