@@ -42,6 +42,12 @@ public class SubjectSelectorAdapter extends BaseAdapter implements View.OnClickL
         mData = data;
     }
 
+    public SubjectSelectorAdapter(Context context, List<Competency> data, Competency selectedCompetency) {
+        mContext = context;
+        mData = data;
+        setSelectedCompetency(selectedCompetency);
+    }
+
     public void setData(List<Competency> data) {
         mData = data;
     }
@@ -114,6 +120,24 @@ public class SubjectSelectorAdapter extends BaseAdapter implements View.OnClickL
         }
 
         return null;
+    }
+
+    public void setSelectedCompetency(Competency selectedCompetency) {
+        if (mData == null | selectedCompetency == null) {
+            return;
+        }
+
+        for (Competency competency : mData) {
+            CSubject selectedSubject = null;
+            if (selectedCompetency != null && (selectedSubject = selectedCompetency.getSubject()) != null) {
+                CSubject subject = competency.getSubject();
+                String id = selectedSubject.getId();
+                if (id != null && id.equals(subject.getId())) {
+                    competency.setChecked(true);
+                    break;
+                }
+            }
+        }
     }
 
     static class Holder {

@@ -129,8 +129,8 @@ public class LessonCreationActivity extends BaseActivity {
     private int mType = CourseConstant.TYPE_LESSON_CREATE;
     private String mLessonId;
     private Context mContext;
-    private String mCompetency;
-
+    private String mCompetencyId;
+    private Competency mCompetency;
 
     @Override
     protected void addViewContent() {
@@ -434,6 +434,7 @@ public class LessonCreationActivity extends BaseActivity {
         //mLessonSubjectTv.setTextColor(mBlackFont);
         Intent intent = new Intent();
         intent.setClass(mContext, SubjectSelectorActivity.class);
+        intent.putExtra(CourseConstant.KEY_SUBJECT, mCompetency);
         startActivityForResult(intent, REQUEST_SELECT_SUBJECT);
     }
 
@@ -687,7 +688,7 @@ public class LessonCreationActivity extends BaseActivity {
         ll.setTitle(mLessonNameEdt.getText().toString());
 
         CSubject subject1 = new CSubject();
-        subject1.setId(mCompetency);
+        subject1.setId(mCompetencyId);
 
         ll.setSubject(subject1);
         ll.setEnroll(enroll);
@@ -777,11 +778,11 @@ public class LessonCreationActivity extends BaseActivity {
             }
         } else if (requestCode == REQUEST_SELECT_SUBJECT) {
             if (data != null) {
-                Competency competency = (Competency)data.getSerializableExtra(KEY_COMPETENCY);
+                mCompetency = (Competency)data.getSerializableExtra(KEY_COMPETENCY);
                 CSubject subject = null;
-                if (competency != null && (subject = competency.getSubject()) != null) {
+                if (mCompetency != null && (subject = mCompetency.getSubject()) != null) {
                     mLessonSubjectTv.setTextColor(mBlackFont);
-                    mCompetency = subject.getId();
+                    mCompetencyId = subject.getId();
                     mLessonSubjectTv.setText(subject.getName());
                 }
             }
