@@ -19,7 +19,9 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -56,6 +58,11 @@ public class HomeFragment extends BaseFragment {
     LinearLayout mRightMark;
     @BindView(R.id.home_right_moment_tip)
     TextView mRightMarkTip;
+
+    @BindView(R.id.empty_desc)
+    TextView mEmptyDesc;
+    @BindView(R.id.empty_image)
+    ImageView mEmptyImage;
 
     PullToRefreshSwipeListView mList;
     private boolean mScrolled;
@@ -190,6 +197,21 @@ public class HomeFragment extends BaseFragment {
             mRightMark.setVisibility(View.INVISIBLE);
             mMark.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void showOrHiddenEmptyViiew(boolean hidden,String error) {
+        if (hidden){
+            mEmptyDesc.setVisibility(View.GONE);
+            mEmptyImage.setVisibility(View.GONE);
+        }else{
+            mEmptyDesc.setVisibility(View.VISIBLE);
+            if(!TextUtils.isEmpty(error)){
+                mEmptyDesc.setText(error);
+            }
+
+            mEmptyImage.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
