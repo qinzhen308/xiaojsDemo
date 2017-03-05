@@ -25,8 +25,6 @@ import retrofit2.http.Path;
 
 public interface LiveService {
 
-    String SERVICE_PORT = "3004";
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Live Sessions

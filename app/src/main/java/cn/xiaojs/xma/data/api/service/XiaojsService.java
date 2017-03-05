@@ -72,10 +72,6 @@ import retrofit2.http.Query;
  */
 
 public interface XiaojsService {
-
-    //Xiaojs rest api 中接口公共URL
-    String SERVICE_PORT = "3000";
-
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
     String METHOD_GET = "GET";

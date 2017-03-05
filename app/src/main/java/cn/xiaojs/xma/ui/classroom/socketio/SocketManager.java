@@ -61,7 +61,7 @@ public class SocketManager {
     }
 
     public static String getClassroomSocketUrl(String ticket) {
-        String url = XiaojsConfig.BASE_URL + ":" + LiveService.SERVICE_PORT + "/" + ticket;
+        String url = XiaojsConfig.BASE_URL + ":" + XiaojsConfig.LIVE_PORT + "/" + ticket;
         return url;
     }
 

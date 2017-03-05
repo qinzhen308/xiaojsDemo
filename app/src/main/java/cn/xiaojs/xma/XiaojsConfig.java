@@ -19,6 +19,10 @@ public class XiaojsConfig {
 
     //BASE_URL
     public static String BASE_URL = "http://192.168.100.3";
+    //Xiaojs rest api 中接口公共URL
+    public static String SERVICE_PORT = "3000";
+    //Live port
+    public static String LIVE_PORT = "3004";
 
     //HTTP缓存目录
     public static final String HTTP_CACHE_DIR = "hcache";
