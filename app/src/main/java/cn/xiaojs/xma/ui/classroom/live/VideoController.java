@@ -122,7 +122,7 @@ public abstract class VideoController {
         if (!TextUtils.isEmpty(url)) {
             mPlayStreamUrl = url;
         }
-        if (mPlayView != null) {
+        if (mPlayView != null && !TextUtils.isEmpty(mPlayStreamUrl)) {
             mPlayView.setPath(mPlayStreamUrl);
             mPlayView.resume();
         }
