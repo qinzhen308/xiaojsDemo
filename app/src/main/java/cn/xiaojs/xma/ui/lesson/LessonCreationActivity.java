@@ -204,6 +204,9 @@ public class LessonCreationActivity extends BaseActivity {
         loadData();
         initView();
         addViewListener();
+
+        //TODO test
+        mChargeWaySwitcher.setEnabled(false);
     }
 
     private void loadData() {
