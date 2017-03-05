@@ -22,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +44,8 @@ import cn.xiaojs.xma.ui.certification.CertificationActivity;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
+import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.mine.MyOrderActivity;
 import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
@@ -56,6 +59,7 @@ import cn.xiaojs.xma.util.FastBlur;
 
 public class MineFragment extends BaseFragment {
     private final static int REQUEST_EDIT = 1000;
+    private final static int REQUEST_TEACHING_ABILITY = 100;
 
     @BindView(R.id.portrait)
     PortraitView mPortraitView;
@@ -72,6 +76,12 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.following)
     TextView mFollowingTv;
 
+    @BindView(R.id.my_order_layout)
+    RelativeLayout orderLayout;
+
+    @BindView(R.id.name_auth_layout)
+    RelativeLayout authLayout;
+
     private Drawable mBlurFloatUpBg;
 
     @Override
@@ -82,15 +92,16 @@ public class MineFragment extends BaseFragment {
     @Override
     protected void init() {
         //initProfileBg();
-
+        orderLayout.setEnabled(false);
+        authLayout.setEnabled(false);
         mBlurFloatUpBg = new ColorDrawable(getResources().getColor(R.color.blur_float_up_bg));
         mEvaluation.setGrading(EvaluationStar.Grading.THREE_HALF);
         loadData();
     }
 
     @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,
-            R.id.my_favorites_layout, R.id.teach_ability_layout, R.id.name_auth_layout, R.id.person_home,R.id.portrait,
-            R.id.user_name})
+             R.id.teach_ability_layout, R.id.name_auth_layout, R.id.person_home,R.id.portrait,
+            R.id.user_name,R.id.my_order_layout})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_teaching_layout:
@@ -102,10 +113,12 @@ public class MineFragment extends BaseFragment {
             case R.id.my_document_layout:
                 startActivity(new Intent(mContext, MaterialActivity.class).putExtra(MaterialActivity.KEY_IS_MINE,true));
                 break;
-            case R.id.my_favorites_layout:
-                break;
+//            case R.id.my_favorites_layout:
+//                break;
             case R.id.teach_ability_layout:
-                startActivity(new Intent(mContext, TeachingAbilityActivity.class));
+                //startActivity(new Intent(mContext, TeachingAbilityActivity.class));
+                Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+                startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
                 break;
             case R.id.name_auth_layout:
                 startActivity(new Intent(mContext, CertificationActivity.class));
@@ -119,6 +132,9 @@ public class MineFragment extends BaseFragment {
             case R.id.portrait:
             case R.id.user_name:
                 startActivityForResult(new Intent(mContext, ProfileActivity.class),REQUEST_EDIT);
+                break;
+            case R.id.my_order_layout:
+                startActivity(new Intent(mContext, MyOrderActivity.class));
                 break;
             default:
                 break;
@@ -156,6 +172,8 @@ public class MineFragment extends BaseFragment {
         if (basic != null && !TextUtils.isEmpty(basic.getName())) {
             mUserName.setText(basic.getName());
         }
+
+        //FIXME 更新用户信息
 
 
         //set title
@@ -214,7 +232,8 @@ public class MineFragment extends BaseFragment {
     }
 
     private void initProfileBg() {
-        mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        //mBlurPortraitView.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        mBlurPortraitView.setImageResource(R.drawable.portrait_default_bg);
     }
 
     private void setDefaultPortrait() {

@@ -157,6 +157,10 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		((AdapterView<ListAdapter>) mRefreshableView).setAdapter(adapter);
 	}
 
+//	public boolean setSelectedChild(int groupPosition, int childPosition,boolean shouldExpandGroup) {
+//		return ((ExpandableListView) mRefreshableView).
+//				setOnChildClickListener();
+//		}
 	public void setExAdapter(ExpandableListAdapter adapter) {
 		((ExpandableListView) mRefreshableView).setAdapter(adapter);
 	}

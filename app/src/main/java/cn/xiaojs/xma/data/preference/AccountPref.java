@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.model.AliasTags;
 import cn.xiaojs.xma.model.account.User;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,6 +30,9 @@ public class AccountPref{
     private static final String PREF_USER = "active_u";
     //private static final String PREF_NAME = "active_name";
 
+    //
+    private static final String PREF_ALIAS_TAGS = "alias_tags";
+    private static final String PREF_ATAGS = "atgs";
 
 
 
@@ -36,6 +40,48 @@ public class AccountPref{
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
+
+    public static void setAtagsSuccess(final Context context,boolean success) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putBoolean(PREF_ATAGS, success).apply();
+
+    }
+
+    public static boolean getAtagsSuccess(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getBoolean(PREF_ATAGS,false);
+    }
+
+    public static void setPrefAliasTags(final Context context, AliasTags aliasTags) {
+
+        String userJson = "";
+        try {
+            userJson =  new ObjectMapper().writeValueAsString(aliasTags);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_ALIAS_TAGS, userJson).apply();
+
+    }
+
+    public static AliasTags getPrefAliasTags(final Context context) {
+
+        AliasTags aliasTags = null;
+
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        String userJson = sp.getString(PREF_ALIAS_TAGS,"");
+        if (!TextUtils.isEmpty(userJson)){
+            try {
+                aliasTags = new ObjectMapper().readValue(userJson,AliasTags.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return aliasTags;
+    }
 
 
     public static void setLoginStatus(final Context context,boolean status) {

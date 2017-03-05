@@ -152,9 +152,12 @@ public class TestAPIActivity extends Activity {
 
     public void testCache() {
 
-        Intent i = new Intent(this, UpdateService.class);
-        i.putExtra(DConstants.EXTRA_URL,"http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk");
-        startService(i);
+        Intent i = new Intent(this, UpgradeActivity.class);
+        startActivity(i);
+
+//        Intent i = new Intent(this, UpdateService.class);
+//        i.putExtra(DConstants.EXTRA_URL,"http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk");
+//        startService(i);
 
         //WechatUtil.shareWebpage(this,iwxapi,"小教室","小教室，大世界","http://sports.qq.com/nba/?ptag=baidu.ald.sc.nba",false);
         //WechatUtil.shareText(iwxapi,"小教室，大世界", false);
@@ -800,18 +803,18 @@ public class TestAPIActivity extends Activity {
         cp.setSubject(subject);
 
 
-        AccountDataManager.requestClaimCompetency(context, cp, new APIServiceCallback<ClaimCompetency>() {
-            @Override
-            public void onSuccess(ClaimCompetency object) {
-                Logger.d("onSuccess-----------");
-            }
-
-            @Override
-            public void onFailure(String errorCode,String errorMessage) {
-
-                Logger.d("onFailure-----------");
-            }
-        });
+//        AccountDataManager.requestClaimCompetency(context, cp, new APIServiceCallback<ClaimCompetency>() {
+//            @Override
+//            public void onSuccess(ClaimCompetency object) {
+//                Logger.d("onSuccess-----------");
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode,String errorMessage) {
+//
+//                Logger.d("onFailure-----------");
+//            }
+//        });
 
     }
 

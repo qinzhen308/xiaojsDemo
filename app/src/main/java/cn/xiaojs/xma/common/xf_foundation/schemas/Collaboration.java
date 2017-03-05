@@ -54,4 +54,12 @@ public class Collaboration {
         public static final String PDF = "application/pdf";
     }
 
+    public class SubType{
+        public static final String STANDA_LONE_LESSON = "StandaloneLesson";
+        public static final String PERSON = "Person";
+        public static final String ORGANIZATION = "Organization";
+
+
+    }
+
 }

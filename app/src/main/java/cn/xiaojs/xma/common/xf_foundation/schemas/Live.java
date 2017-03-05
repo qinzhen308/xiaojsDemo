@@ -50,6 +50,17 @@ public class Live {
         public static final String ABORTED = "Aborted";
         public static final String CANCELLED = "Cancelled";
         public static final String RESET = "Rest";
+        public static final String CLAIM_STREAM_STOPPED = "ClamSteamStopped";
+    }
+
+    public class MediaStatus {
+        public static final int READY = 1;
+        public static final int FAILED_DUE_TO_NETWORK_ISSUES = 5;
+        public static final int FAILED_DUE_TO_NO_DEVICE = 6;
+        public static final int FAILED_DUE_TO_PRIVACY = 7;
+        public static final int FAILED_DUE_TO_DENIED = 8;
+        public static final int FAILED_DUE_TO_OTHER_ISSUES = 9;
+
     }
 
 }

@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.message;
 
 import android.content.Intent;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,6 +36,7 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
     private ArrayAdapter<String> adapter;
     private ArrayList<Doc> docs;
     private ArrayList<Contact> choiceContacts;
+
 
     private static int class_pos = -1;
 

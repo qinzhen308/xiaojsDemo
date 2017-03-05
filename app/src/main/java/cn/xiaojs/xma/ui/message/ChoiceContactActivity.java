@@ -2,7 +2,7 @@ package cn.xiaojs.xma.ui.message;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -15,28 +15,30 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+
+import com.bumptech.glide.Glide;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
+
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.DataManager;
-import cn.xiaojs.xma.data.SocialManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+
 import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+
 import java.util.List;
-import java.util.Map;
+
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 public class ChoiceContactActivity extends BaseActivity {
 
@@ -52,6 +54,8 @@ public class ChoiceContactActivity extends BaseActivity {
 
     private ChoiceAdapter choiceAdapter;
 
+    public static SparseArray<SparseBooleanArray> checkedPositions;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_contact);
@@ -62,6 +66,7 @@ public class ChoiceContactActivity extends BaseActivity {
         //listView.setDivider(getResources().getDrawable(R.color.common_list_line));
         //listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         editText.setVisibility(View.GONE);
+
 
         loadContactData();
     }
@@ -158,7 +163,6 @@ public class ChoiceContactActivity extends BaseActivity {
             ArrayList<Contact> contacts = choiceAdapter.getCheckedContacts();
             Intent i = new Intent();
             i.putExtra(CHOOSE_CONTACT_EXTRA,contacts);
-           // bundle.putSparseParcelableArray(CHOOSE_CONTACT_INDEX,choiceAdapter.getCheckedPositions());
 
             setResult(RESULT_OK,i);
         }else{
@@ -172,7 +176,7 @@ public class ChoiceContactActivity extends BaseActivity {
     private class ChoiceAdapter extends BaseExpandableListAdapter {
 
         private LayoutInflater inflater;
-        private SparseArray<SparseBooleanArray> checkedPositions;
+
 
         private ArrayList<Contact> checkedContacts;
 
@@ -181,14 +185,19 @@ public class ChoiceContactActivity extends BaseActivity {
 
         private List<ContactGroup> groupData;
         private String defaultCountFromat = getResources().getString(R.string.group_select_count);
+        private CircleTransform circleTransform;
 
         public ChoiceAdapter(Context context, List<ContactGroup> groupData) {
 
             inflater = LayoutInflater.from(context);
 
             this.groupData = groupData;
-            checkedPositions = new SparseArray<>();
 
+            if (checkedPositions == null){
+                checkedPositions = new SparseArray<>();
+            }
+
+            circleTransform = new CircleTransform(context);
         }
 
         public void changeData(ArrayList<ContactGroup> data) {
@@ -275,7 +284,7 @@ public class ChoiceContactActivity extends BaseActivity {
                 holder.checkedView = (CheckedTextView) convertView.findViewById(R.id.check_view);
                 holder.avatarView = (ImageView) convertView.findViewById(R.id.contact_avatar);
                 holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
-
+                holder.size = holder.avatarView.getMeasuredWidth();
                 convertView.setTag(holder);
 
             } else {
@@ -289,8 +298,17 @@ public class ChoiceContactActivity extends BaseActivity {
                 holder.checkedView.setChecked(false);
             }
 
+            Contact contact = getChild(groupPosition, childPosition);
+            holder.nameView.setText(contact.alias);
 
-            holder.nameView.setText(getChild(groupPosition, childPosition).alias);
+            String avatar = Account.getAvatar(contact.account, holder.size);
+            Glide.with(ChoiceContactActivity.this)
+                    .load(avatar)
+                    .bitmapTransform(circleTransform)
+                    .placeholder(R.drawable.default_avatar)
+                    .error(R.drawable.default_avatar)
+                    .into(holder.avatarView);
+
 
             return convertView;
         }
@@ -386,7 +404,7 @@ public class ChoiceContactActivity extends BaseActivity {
         public void setChoiceMode(int choiceMode) {
             this.choiceMode = choiceMode;
 
-            checkedPositions.clear();
+            //checkedPositions.clear();
 
         }
 
@@ -419,6 +437,7 @@ public class ChoiceContactActivity extends BaseActivity {
         TextView countView;
         ImageView avatarView;
         CheckedTextView checkedView;
+        int size;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

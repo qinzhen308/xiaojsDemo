@@ -51,6 +51,7 @@ import cn.xiaojs.xma.util.FileUtil;
  * ======================================================================================== */
 public class CropImageMainActivity extends BaseActivity implements BottomSheet.OnDialogCloseListener {
     private static final int REQUEST_GALLERY_PERMISSION = 1000;
+    private static final int REQUEST_CAMERA_PERMISSION = 10001;
     private static final String LOG_TAG = "CropImageMainActivity";
     public static final String NEED_DELETE = "need_delete";// 需要删除按钮
     public static final String NEED_LOOK = "need_look";// 需要预览
@@ -105,9 +106,9 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
     }
 
     private void showCropImageDialogP() {
+        ListView lv = new ListView(this);
         final BottomSheet bottomSheet = new BottomSheet(this);
         bottomSheet.setTitleVisibility(View.GONE);
-        ListView lv = new ListView(this);
         String[] actions = getResources().getStringArray(R.array.selects_pic_p);
         ActionAdapter adapter = new ActionAdapter(actions);
         lv.setAdapter(adapter);
@@ -309,7 +310,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                 if (resultCode == RESULT_OK && data != null) {
                     Uri imageUri = data.getData();
                     if (imageUri != null && ContentResolver.SCHEME_FILE.equalsIgnoreCase(imageUri.getScheme())) {
-                        setImgPathToResult(new File(imageUri.getPath()), true);
+                        setImgPathToResult(new File(imageUri.getPath()));
                     } else if (imageUri != null && ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(imageUri.getScheme())) {
                         String[] filePathColumn = {MediaColumns.DATA};
                         Cursor cursor = getContentResolver().query(imageUri, filePathColumn, null, null, null);
@@ -321,14 +322,14 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                             if (picturePath == null) {
                                 picturePath = getPath(CropImageMainActivity.this, imageUri);
                                 if (!PermissionUtil.isOverMarshmallow()) {
-                                    setImgPathToResult(new File(picturePath), true);
+                                    setImgPathToResult(new File(picturePath));
                                 }
                             } else {
-                                setImgPathToResult(new File(picturePath), true);
+                                setImgPathToResult(new File(picturePath));
                             }
                         } else {
                             URI uri = URI.create(data.getData().toString());
-                            setImgPathToResult(new File(uri), true);
+                            setImgPathToResult(new File(uri));
                         }
                     } else {
                         finish();
@@ -341,7 +342,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
             case CropImagePath.TAKE_PHOTO: // 拍照
                 if (resultCode == RESULT_OK) {
                     File file = new File(CropImagePath.UPLOAD_IMAGE_PATH);
-                    setImgPathToResult(file, true);
+                    setImgPathToResult(file);
                 } else {
                     // 未拍照
                     setFailure();
@@ -391,6 +392,10 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                 intent.setType("*/*");
                 startActivityForResult(intent, CropImagePath.CHOOSE_IMAGE);
             }
+        }
+
+        if (mDialog != null) {
+            mDialog.dismiss();
         }
     }
 
@@ -513,11 +518,23 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
                 cursor.close();
         }
 
-        setImgPathToResult(new File(path), true);
+        setImgPathToResult(new File(path));
+    }
+
+    @PermissionSuccess(requestCode = REQUEST_CAMERA_PERMISSION)
+    public void getCameraSuccess() {
+        enterCamera();
     }
 
     @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
     public void getGalleryFailure() {
+        if (mDialog != null) {
+            mDialog.cancel();
+        }
+    }
+
+    @PermissionFail(requestCode = REQUEST_CAMERA_PERMISSION)
+    public void getCameraFailure() {
         if (mDialog != null) {
             mDialog.cancel();
         }
@@ -560,14 +577,26 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
      */
     private void takePhoto() {
         try {
-            Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent1.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(new File(
-                            CropImagePath.UPLOAD_IMAGE_PATH)));
-            startActivityForResult(intent1, CropImagePath.TAKE_PHOTO);
-        } catch (Exception e) {
-
+            if (PermissionUtil.isOverMarshmallow()) {
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA};
+                PermissionGen.needPermission(CropImageMainActivity.this, REQUEST_CAMERA_PERMISSION, permissions);
+            } else {
+                enterCamera();
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
+
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
+    }
+
+    private void enterCamera() {
+        Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent1.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(CropImagePath.UPLOAD_IMAGE_PATH)));
+        startActivityForResult(intent1, CropImagePath.TAKE_PHOTO);
     }
 
     @Override
@@ -618,9 +647,11 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-    private void setImgPathToResult(File file, boolean needFinish) {
+    private void setImgPathToResult(File file) {
         if (file.exists()) {
-            FileUtil.copyFiles(file.getAbsolutePath(), CropImagePath.UPLOAD_IMAGE_PATH, true);
+            if (!CropImagePath.UPLOAD_IMAGE_PATH.equals(file.getAbsolutePath())) {
+                FileUtil.copyFiles(file.getAbsolutePath(), CropImagePath.UPLOAD_IMAGE_PATH, true);
+            }
             Intent intent = new Intent();
             intent.setClass(this, CropImageActivity.class);
             intent.putExtra(CropImagePath.CROP_IMAGE_WIDTH, mWidth);
@@ -630,9 +661,7 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
             intent.putExtra(CropImageActivity.ACTION_DONE_TXT, mActionDoneTxt);
             startActivityForResult(intent, CropImagePath.CROP_IMAGE_REQUEST_CODE);
         } else {
-            if (needFinish) {
-                finish();
-            }
+            finish();
         }
     }
 }

@@ -55,7 +55,7 @@ public interface LiveService {
 
     //Begin Class
     @PATCH("/v1/live/{ticket}/begin")
-    Call<ClassResponse> beginClass(@Path("ticket") String ticket, @Body ClassMode mode);
+    Call<ResponseBody> beginClass(@Path("ticket") String ticket, @Body ClassMode mode);
 
     //Close Board
     @PATCH("/v1/live/{ticket}/boards/{board}")
@@ -81,7 +81,7 @@ public interface LiveService {
 
     //Finish Class
     @PATCH("/v1/live/{ticket}/end")
-    Call<ClassResponse> finishClass(@Path("ticket") String ticket);
+    Call<ResponseBody> finishClass(@Path("ticket") String ticket);
 
     //Resume Class
     @PATCH("/v1/live/{ticket}/resume")

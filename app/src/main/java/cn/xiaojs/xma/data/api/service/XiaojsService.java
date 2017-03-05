@@ -5,12 +5,10 @@ import java.util.List;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
+
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
-import cn.xiaojs.xma.model.colla.LibOverview;
-import cn.xiaojs.xma.model.colla.TokenPair;
-import cn.xiaojs.xma.model.colla.UploadParam;
-import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
@@ -33,8 +31,14 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
+
+import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.TokenPair;
+import cn.xiaojs.xma.model.material.UploadParam;
+import cn.xiaojs.xma.model.material.UploadReponse;
+import cn.xiaojs.xma.model.material.UserDoc;
+import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.model.order.Orderp;
-import cn.xiaojs.xma.model.order.PaymentCharge;
 import cn.xiaojs.xma.model.order.PaymentOrder;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
@@ -60,6 +64,7 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 
 /**
@@ -84,7 +89,12 @@ public interface XiaojsService {
     //Claim Competency
     @Headers("Content-Type: application/json")
     @POST("/v1/accounts/competencies")
-    Call<ClaimCompetency> claimCompetency(@Body CompetencyParams competencyParams);
+    Call<CompetencySubject> claimCompetency(@Body CompetencyParams competencyParams);
+
+    //Get Competencies
+    @GET("/v1/accounts/competencies")
+    Call<ClaimCompetency> getCompetencies();
+
 
     //Register
     @Headers("Content-Type: application/json")
@@ -210,10 +220,16 @@ public interface XiaojsService {
     @GET("/v1/categories/subjects/demo")
     Call<CSubject> getSubject();
 
+    //Get Subjects
+    @GET("/v1/categories/subjects/{parent}")
+    Call<List<CSubject>>getSubjects(@Path("parent") String parent,
+                                    @Query("page") int page,
+                                    @Query("limit") int limit);
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    //OrderGroup
+    //Order
     //
 
     //Create Order
@@ -224,6 +240,10 @@ public interface XiaojsService {
     @GET("/v1/order/{order}/charge/{channel}")
     Call<ResponseBody> createPaymentCharge(@Path("order") String order,
                                             @Path("channel") String channel);
+
+    //Get Orders
+    @GET("/v1/orders")
+    Call<List<EnrollOrder>> getOrders(@Query("page") int page, @Query("limit") int limit);
 
 
 
@@ -409,6 +429,14 @@ public interface XiaojsService {
     @GET("/v1/collaboration/overview/{criteria}/{pagination}")
     Call<LibOverview> getLibraryOverview(@Path("criteria") String criteria,
                                          @Path("pagination") String pagination);
+
+
+    //Get Documents
+    @GET("/v1/collaboration/documents")
+    Call<UserDoc> getDocuments(@Query("id") String id,
+                               @Query("subtype") String subtype,
+                               @Query("page") int page,
+                               @Query("limit") int limit);
 
 
 }

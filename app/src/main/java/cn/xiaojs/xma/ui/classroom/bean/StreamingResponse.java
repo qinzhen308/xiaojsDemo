@@ -1,4 +1,8 @@
 package cn.xiaojs.xma.ui.classroom.bean;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -13,9 +17,12 @@ package cn.xiaojs.xma.ui.classroom.bean;
  * Desc: 推流started和stopped
  *
  * ======================================================================================== */
-
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamingResponse {
     public boolean result;
     public String ec;
+    public String to;
+    public String publishUrl;
     public Object details;
 }

@@ -15,40 +15,51 @@ package cn.xiaojs.xma.ui.grade;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.CollaManager;
+import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.colla.LibCategory;
-import cn.xiaojs.xma.model.colla.LibCriteria;
-import cn.xiaojs.xma.model.colla.LibOverview;
+import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.model.material.UserDoc;
+import cn.xiaojs.xma.util.FileUtil;
+import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
-public class MaterialAdapter extends AbsSwipeAdapter<LibCategory, MaterialAdapter.Holder> {
+public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Holder> {
 
     private boolean mIsMine;
+    private String mOwner;
 
-    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView,boolean isMine) {
+    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView, String owner) {
         super(context, listView);
-        mIsMine = isMine;
+        if (TextUtils.isEmpty(owner)) {
+            mIsMine = true;
+        }
+        mOwner = owner;
     }
 
     @Override
-    protected void setViewContent(final Holder holder, LibCategory bean, int position) {
+    protected void setViewContent(final Holder holder, final LibDoc bean, int position) {
         holder.showOpera(false);
-        if (mIsMine){
-            holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.share_selector,0,0);
+        if (mIsMine) {
+            holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.share_selector, 0, 0);
             holder.opera2.setText(R.string.share);
         }
         holder.item.setOnClickListener(new View.OnClickListener() {
@@ -58,19 +69,58 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibCategory, MaterialAdapte
             }
         });
 
-//        if (FileUtil.DOC == FileUtil.getFileType(bean.)) {
-//            holder.image.setImageResource(R.drawable.ic_word);
-//        } else if (position % 6 == 1) {
-//            holder.image.setImageResource(R.drawable.ic_ppt);
-//        } else if (position % 6 == 2) {
-//            holder.image.setImageResource(R.drawable.ic_excel);
-//        } else if (position % 6 == 3) {
-//            holder.image.setImageResource(R.drawable.ic_picture);
-//        } else if (position % 6 == 4) {
-//            holder.image.setImageResource(R.drawable.ic_pdf);
-//        } else if (position % 6 == 5) {
-//            holder.image.setImageResource(R.drawable.ic_unknown);
-//        }
+        if (FileUtil.DOC == FileUtil.getFileType(bean.mimeType)) {
+            thumbnail(bean.key, R.drawable.ic_word, holder);
+        } else if (FileUtil.PPT == FileUtil.getFileType(bean.mimeType)) {
+            thumbnail(bean.key, R.drawable.ic_ppt, holder);
+        } else if (FileUtil.XLS == FileUtil.getFileType(bean.mimeType)) {
+            thumbnail(bean.key, R.drawable.ic_excel, holder);
+        } else if (FileUtil.PICTURE == FileUtil.getFileType(bean.mimeType)) {
+            thumbnail(bean.key, R.drawable.ic_picture, holder);
+        } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
+            thumbnail(bean.key, R.drawable.ic_pdf, holder);
+        } else {
+            holder.image.setImageResource(R.drawable.ic_unknown);
+        }
+        holder.name.setText(bean.name);
+        StringBuilder sb = new StringBuilder();
+        sb.append(XjsUtils.getSizeFormatText(bean.used));
+        sb.append("  ");
+        sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+
+        holder.desc.setText(sb);
+
+        holder.opera1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                download(bean);
+            }
+        });
+
+        holder.opera2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    private void download(LibDoc bean) {
+        if (DownloadManager.allowDownload(mContext)) {
+            DownloadManager.enqueueDownload(mContext, bean.name, bean.key, Social.getDrawing(bean.key, false), bean.mimeType, Social.getDrawing(bean.key, true));
+        } else {
+            Toast.makeText(mContext, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
+        }
+
+        Intent intent = new Intent(mContext, MaterialDownloadActivity.class);
+        mContext.startActivity(intent);
+    }
+
+    private void thumbnail(String key, int errorResId, Holder holder) {
+        Glide.with(mContext)
+                .load(Social.getDrawing(key, true))
+                .error(errorResId)
+                .into(holder.image);
     }
 
     @Override
@@ -87,24 +137,19 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibCategory, MaterialAdapte
 
     @Override
     protected void doRequest() {
-        LibCriteria criteria = new LibCriteria();
-        CollaManager.getLibraryOverview(mContext, criteria, mPagination, new APIServiceCallback<LibOverview>() {
+        CollaManager.getDocuments(mContext, mOwner, Collaboration.SubType.PERSON, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
-            public void onSuccess(LibOverview object) {
-                if (object != null && object.categories != null){
-                    List<LibCategory> list = new ArrayList<LibCategory>();
-                    for (LibCategory category : object.categories){
-                        list.add(category);
-                    }
-                    MaterialAdapter.this.onSuccess(list);
-                }else {
+            public void onSuccess(UserDoc object) {
+                if (object != null && object.documents.size() > 0) {
+                    MaterialAdapter.this.onSuccess(object.documents);
+                } else {
                     MaterialAdapter.this.onSuccess(null);
                 }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                MaterialAdapter.this.onFailure(errorCode,errorMessage);
+                MaterialAdapter.this.onFailure(errorCode, errorMessage);
             }
         });
     }

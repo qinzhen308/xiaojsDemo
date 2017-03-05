@@ -17,13 +17,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.account.Account;
-import cn.xiaojs.xma.model.colla.UploadReponse;
+import cn.xiaojs.xma.model.account.User;
+import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -245,7 +247,7 @@ public class ProfileActivity extends BaseActivity {
         if (mBasic == null) {
             mBasic = new Account.Basic();
         }
-        Account.Basic basic = mBasic;
+        final Account.Basic basic = mBasic;
         basic.setName(mNameEdt.getText().toString());
         basic.setTitle(mUserTitleEdt.getText().toString());
 
@@ -271,6 +273,9 @@ public class ProfileActivity extends BaseActivity {
                 Intent i = new Intent();
                 //update display url
                 mBasic.setAvatar(mAvatarUrl);
+
+                updateUser(basic);
+
                 i.putExtra(KEY_BASE_BEAN, mBasic);
                 setResult(RESULT_OK, i);
                 finish();
@@ -281,6 +286,19 @@ public class ProfileActivity extends BaseActivity {
                 Toast.makeText(ProfileActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateUser(Account.Basic basic) {
+        if (basic == null) return;
+
+        User user = XiaojsConfig.mLoginUser;
+        if ( user!= null &&  user.getAccount() != null){
+            user.getAccount().setBasic(basic);
+
+            AccountDataManager.setUserInfo(this, user);
+
+        }
+
     }
 
     private void editPortrait() {

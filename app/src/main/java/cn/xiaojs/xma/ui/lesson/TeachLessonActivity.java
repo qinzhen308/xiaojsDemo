@@ -14,10 +14,10 @@ package cn.xiaojs.xma.ui.lesson;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -30,8 +30,6 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
-import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 
 public class TeachLessonActivity extends BaseActivity {
@@ -60,6 +58,9 @@ public class TeachLessonActivity extends BaseActivity {
         needHeaderDivider(false);
         setMiddleTitle(R.string.course_of_teach);
         mAdapter = new TeachLessonAdapter(this, mList);
+        mAdapter.setDesc(getString(R.string.teach_data_empty));
+        mAdapter.setIcon(R.drawable.ic_teach_empty);
+        mAdapter.setButtonDesc(getString(R.string.lesson_creation));
         mList.setAdapter(mAdapter);
         mSearch.setHint("课程名称");
     }
@@ -98,7 +99,7 @@ public class TeachLessonActivity extends BaseActivity {
                 if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)){
                     //老师可以开课
                     Intent intent = new Intent(this,LessonCreationActivity.class);
-                    startActivityForResult(intent,CourseConstant.CODE_CREATE_LESSON);
+                    startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
                 }else {
                     //提示申明教学能力
                     final CommonDialog dialog = new CommonDialog(this);
@@ -108,7 +109,7 @@ public class TeachLessonActivity extends BaseActivity {
                         @Override
                         public void onClick() {
                             dialog.dismiss();
-                            Intent intent = new Intent(TeachLessonActivity.this, TeachAbilityDemoActivity.class);
+                            Intent intent = new Intent(TeachLessonActivity.this, TeachingSubjectActivity.class);
                             startActivity(intent);
                         }
                     });
@@ -158,5 +159,21 @@ public class TeachLessonActivity extends BaseActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //do something
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case CourseConstant.CODE_CREATE_LESSON:
+                if (resultCode == Activity.RESULT_OK){
+                    if (mAdapter != null){
+                        mAdapter.refresh();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

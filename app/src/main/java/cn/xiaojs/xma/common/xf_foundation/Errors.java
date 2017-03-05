@@ -85,6 +85,12 @@ public class Errors {
 
     // The specific API is not served by a gateway.
     public static final String BAD_GATEWAY = "0x01000006";
+    //
+    // Specific name, e.g. username, was occupied.
+    public static final String BAD_NAME = "0x01000007";
+
+    // Subject not found.
+    public static final String SUBJECT_NOT_RESOLVED = "0x01000008";
 
     //endregion
 
@@ -220,6 +226,12 @@ public class Errors {
     public static final String ACTION_NOT_FOUND = "0xA1000005";
 
     //endregion
+
+
+    //
+    // Storage is almost full.
+    public static final String NO_ENOUGH_QUOTA = "0xB0000001";
+
 
     /**
      * 根据错误码判断是不是需要用户重新登陆

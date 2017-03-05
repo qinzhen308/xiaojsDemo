@@ -92,6 +92,14 @@ public class LessonOperationView extends RelativeLayout {
 
     private boolean enable;
 
+    public void enableEnter(boolean enable) {
+        if (enable) {
+            enter.setVisibility(VISIBLE);
+        } else {
+            enter.setVisibility(INVISIBLE);
+        }
+    }
+
     public void setItems(String[] items) {
         if (items == null || items.length <= 0)
             return;
@@ -140,8 +148,8 @@ public class LessonOperationView extends RelativeLayout {
             opera2.setText(items[1]);
             opera3.setText(items[2]);
         }
-        if (more.getVisibility() == VISIBLE){
-            DeviceUtil.expandViewTouch(more,50);
+        if (more.getVisibility() == VISIBLE) {
+            DeviceUtil.expandViewTouch(more, 50);
         }
     }
 

@@ -19,8 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,16 +26,19 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.OrderManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
-public class MyOrderAdapter extends AbsSwipeAdapter<Date, MyOrderAdapter.Holder> {
+public class MyOrderAdapter extends AbsSwipeAdapter<EnrollOrder, MyOrderAdapter.Holder> {
 
     public MyOrderAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
     }
 
     @Override
-    protected void setViewContent(Holder holder, Date bean, int position) {
+    protected void setViewContent(Holder holder, EnrollOrder bean, int position) {
 
     }
 
@@ -55,14 +56,17 @@ public class MyOrderAdapter extends AbsSwipeAdapter<Date, MyOrderAdapter.Holder>
 
     @Override
     protected void doRequest() {
-        List<Date> dates = new ArrayList<>();
-        dates.add(new Date());
-        dates.add(new Date());
-        dates.add(new Date());
-        dates.add(new Date());
-        dates.add(new Date());
+        OrderManager.getOrders(mContext, mPagination, new APIServiceCallback<List<EnrollOrder>>() {
+            @Override
+            public void onSuccess(List<EnrollOrder> object) {
+                MyOrderAdapter.this.onSuccess(object);
+            }
 
-        onSuccess(dates);
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                MyOrderAdapter.this.onFailure(errorCode, errorMessage);
+            }
+        });
     }
 
     class Holder extends BaseHolder {

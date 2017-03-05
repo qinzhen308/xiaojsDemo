@@ -14,6 +14,11 @@ package cn.xiaojs.xma.ui.classroom.bean;
  *
  * ======================================================================================== */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TalkItem {
 
     public String from;
@@ -21,6 +26,8 @@ public class TalkItem {
     public long time;
     public TalkContent body;
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TalkContent{
         public String text;
         public int contentType;

@@ -181,6 +181,7 @@
                         android:layout_width="@dimen/px120"
                         android:layout_height="@dimen/px120"
                         android:layout_marginRight="@dimen/px24"
+                        android:scaleType="fitXY"
                         android:src="@drawable/default_avatar"/>
 
                 <ImageView

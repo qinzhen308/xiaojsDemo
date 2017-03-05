@@ -19,7 +19,9 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -57,6 +59,11 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.home_right_moment_tip)
     TextView mRightMarkTip;
 
+    @BindView(R.id.empty_desc)
+    TextView mEmptyDesc;
+    @BindView(R.id.empty_image)
+    ImageView mEmptyImage;
+
     PullToRefreshSwipeListView mList;
     private boolean mScrolled;
 
@@ -74,6 +81,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void init() {
         mAdapter = new HomeMomentAdapter(mContext,mList);
+        mAdapter.setDesc(mContent.getResources().getString(R.string.moment_data_empty));
         mAdapter.setFragment(this);
         mList.setAdapter(mAdapter);
 
@@ -89,7 +97,7 @@ public class HomeFragment extends BaseFragment {
         List<BannerBean> beanList = new ArrayList<>();
         beanList.add(b1);
         beanList.add(b2);
-        beanList.add(b3);
+//        beanList.add(b3);
         //beanList.add(b4);
         BannerAdapter adapter = new BannerAdapter(mContext,beanList);
         mBanner.setAdapter(adapter);
@@ -189,6 +197,21 @@ public class HomeFragment extends BaseFragment {
             mRightMark.setVisibility(View.INVISIBLE);
             mMark.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void showOrHiddenEmptyViiew(boolean hidden,String error) {
+        if (hidden){
+            mEmptyDesc.setVisibility(View.GONE);
+            mEmptyImage.setVisibility(View.GONE);
+        }else{
+            mEmptyDesc.setVisibility(View.VISIBLE);
+            if(!TextUtils.isEmpty(error)){
+                mEmptyDesc.setText(error);
+            }
+
+            mEmptyImage.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

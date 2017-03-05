@@ -21,7 +21,7 @@
 
                 <ImageView
                         android:id="@+id/grade_home_cover"
-                        android:src="@drawable/lesson_11"
+                        android:src="@drawable/ic_ad"
                         android:scaleType="fitXY"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"/>

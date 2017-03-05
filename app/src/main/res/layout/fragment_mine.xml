@@ -21,7 +21,8 @@
                     android:id="@+id/blur_portrait"
                     android:scaleType="centerCrop"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:background="@drawable/portrait_default_bg"/>
 
             <ImageView
                     android:id="@+id/profile_cover"
@@ -53,7 +54,7 @@
                         app:oval="true"
                         app:border_color="@color/white"
                         app:border_width="@dimen/px1"
-                        android:src="@drawable/por_58"
+                        android:src="@drawable/default_avatar"
                         android:layout_marginTop="@dimen/px100"
                         android:layout_gravity="center_horizontal"
                         android:layout_width="@dimen/px140"
@@ -354,8 +355,46 @@
                 style="@style/DividerHorizontal2"/>
 
         <!--我的收藏-->
+        <!--<RelativeLayout-->
+                <!--android:id="@+id/my_favorites_layout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/MinePageItem">-->
+
+            <!--<TextView-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/font_black"-->
+                    <!--android:textSize="@dimen/px26"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:drawableLeft="@drawable/ic_my_favorites"-->
+                    <!--android:drawablePadding="@dimen/px20"-->
+                    <!--android:text="@string/my_collections"/>-->
+
+            <!--<TextView-->
+                    <!--android:id="@+id/my_favorites"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_toLeftOf="@+id/enter_my_favorites"-->
+                    <!--android:textColor="@color/font_black"-->
+                    <!--android:textSize="@dimen/px26"-->
+                    <!--android:layout_marginRight="@dimen/px20"/>-->
+
+            <!--<ImageView-->
+                    <!--android:id="@+id/enter_my_favorites"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@drawable/ic_entrance"/>-->
+        <!--</RelativeLayout>-->
+
+        <View
+                style="@style/DividerHorizontal2"/>
+
+        <!--我的订单-->
         <RelativeLayout
-                android:id="@+id/my_favorites_layout"
+                android:id="@+id/my_order_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/MinePageItem">
@@ -367,21 +406,21 @@
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/px26"
                     android:textStyle="bold"
-                    android:drawableLeft="@drawable/ic_my_favorites"
+                    android:drawableLeft="@drawable/ic_my_order"
                     android:drawablePadding="@dimen/px20"
-                    android:text="@string/my_collections"/>
+                    android:text="@string/my_order"/>
 
             <TextView
-                    android:id="@+id/my_favorites"
+                    android:id="@+id/my_order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/enter_my_favorites"
+                    android:layout_toLeftOf="@+id/enter_my_order"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/px26"
                     android:layout_marginRight="@dimen/px20"/>
 
             <ImageView
-                    android:id="@+id/enter_my_favorites"
+                    android:id="@+id/enter_my_order"
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -413,8 +452,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/enter_teach_ability"
-                    android:textColor="@color/font_black"
+                    android:textColor="@color/font_dark_gray"
                     android:textSize="@dimen/px26"
+                    android:text="@string/be_teacher"
                     android:layout_marginRight="@dimen/px20"/>
 
             <ImageView

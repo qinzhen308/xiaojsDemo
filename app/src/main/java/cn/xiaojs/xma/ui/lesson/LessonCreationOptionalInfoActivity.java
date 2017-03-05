@@ -27,7 +27,7 @@ import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.LiveLesson;
-import cn.xiaojs.xma.model.colla.UploadReponse;
+import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 /*  =======================================================================================

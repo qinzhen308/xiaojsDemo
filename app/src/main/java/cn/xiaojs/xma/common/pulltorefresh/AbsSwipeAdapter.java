@@ -16,6 +16,7 @@ package cn.xiaojs.xma.common.pulltorefresh;
 
 import android.content.Context;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +115,17 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private boolean mRefreshOnLoad = true;
     private int mRefreshMode = MODE_DOWN_REFRESH_MORE;
 
+
+    private ImageView mEmptyImage;
+    private TextView mEmptyDesc;
+    private TextView mEmptyDesc1;
+    private Button mEmptyButton;
+
+    private String mDesc;
+    private String mDesc1;
+    private String mButtonDesc;
+    private int mIconResId;
+
     public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView, List<B> data) {
         this(context, listView, false);
         mBeanList = data;
@@ -152,6 +164,11 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             return;
         }
         mEmptyView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty, null);
+        mEmptyDesc = (TextView) mEmptyView.findViewById(R.id.empty_desc);
+        mEmptyDesc1 = (TextView) mEmptyView.findViewById(R.id.empty_desc1);
+        mEmptyButton = (Button) mEmptyView.findViewById(R.id.empty_click);
+        mEmptyImage = (ImageView) mEmptyView.findViewById(R.id.empty_image);
+
         mPagination = new Pagination();
         mPagination.setPage(PAGE_FIRST);
         mPagination.setMaxNumOfObjectsPerPage(getPageSize());
@@ -193,11 +210,12 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<StickyListHeadersListView>() {
                 @Override
                 public void onPullDownToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
-                    mPagination.setPage(mPagination.getPage() + 1);
                     if (mCurrentState != STATE_DOWN_REFRESH) {
                         mCurrentState = STATE_DOWN_REFRESH;
+                        mPagination.setPage(mPagination.getPage() + 1);
+                        request();
                     }
-                    request();
+
                 }
 
                 @Override
@@ -218,12 +236,12 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
                 @Override
                 public void onPullUpToRefresh(PullToRefreshBase<StickyListHeadersListView> refreshView) {
-                    mPagination.setPage(mPagination.getPage() + 1);
                     if (mCurrentState != STATE_DOWN_REFRESH) {
                         mCurrentState = STATE_DOWN_REFRESH;
+                        mPagination.setPage(mPagination.getPage() + 1);
+                        request();
                     }
                     //Log.i("mPagination page = ",mPagination.getPage() + "");
-                    request();
                 }
             });
         }
@@ -552,12 +570,62 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         ((BaseActivity) mContext).cancelProgress();
     }
 
+    public void setDesc(String desc) {
+        mDesc = desc;
+    }
+
+    public void setDesc1(String desc) {
+        mDesc1 = desc;
+    }
+
+    public void setIcon(int resId) {
+        mIconResId = resId;
+    }
+
+    public void setButtonDesc(String desc) {
+        mButtonDesc = desc;
+    }
+
     private void addEmptyView() {
         if (showEmptyView()) {
+            if (!TextUtils.isEmpty(mDesc)) {
+                mEmptyDesc.setVisibility(View.VISIBLE);
+                mEmptyDesc.setText(mDesc);
+            } else {
+                mEmptyDesc.setVisibility(View.GONE);
+            }
+
+            if (!TextUtils.isEmpty(mDesc1)) {
+                mEmptyDesc1.setVisibility(View.VISIBLE);
+                mEmptyDesc1.setText(mDesc1);
+            } else {
+                mEmptyDesc1.setVisibility(View.GONE);
+            }
+
+            if (!TextUtils.isEmpty(mButtonDesc)) {
+                mEmptyButton.setVisibility(View.VISIBLE);
+                mEmptyButton.setText(mButtonDesc);
+                mEmptyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onEmptyButtonClick();
+                    }
+                });
+            } else {
+                mEmptyButton.setVisibility(View.GONE);
+            }
+
+            if (mIconResId > 0) {
+                mEmptyImage.setImageResource(mIconResId);
+            }
             mListView.removeEmptyView(mFailedView);
             mListView.setEmptyView(mEmptyView);
             onDataEmpty();
         }
+    }
+
+    protected void onEmptyButtonClick() {
+
     }
 
     private void addFailedView() {

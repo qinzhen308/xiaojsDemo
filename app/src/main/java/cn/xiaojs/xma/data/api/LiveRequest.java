@@ -70,7 +70,7 @@ public class LiveRequest extends ServiceRequest{
 
     public void beginClass(String ticket, ClassMode mode) {
 
-        Call<ClassResponse> call = getLiveService().beginClass(ticket, mode);
+        Call<ResponseBody> call = getLiveService().beginClass(ticket, mode);
         enqueueRequest(APIType.BEGIN_CLASS, call);
     }
 
@@ -112,7 +112,7 @@ public class LiveRequest extends ServiceRequest{
     }
 
     public void finishClass(String ticket) {
-        Call<ClassResponse> call = getLiveService().finishClass(ticket);
+        Call<ResponseBody> call = getLiveService().finishClass(ticket);
         enqueueRequest(APIType.FINISH_CLASS,call);
     }
 

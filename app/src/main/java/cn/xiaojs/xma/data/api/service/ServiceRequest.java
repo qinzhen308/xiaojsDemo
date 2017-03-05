@@ -425,6 +425,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
             @Override
             public void onFailure(Call<T> call, Throwable t) {
 
+                //if (cache) return;
+
                 onFailures(apiType, t);
             }
         });

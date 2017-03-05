@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.lesson;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -29,8 +30,10 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
@@ -46,6 +49,7 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
 import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.NumberUtil;
+import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -81,23 +85,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     protected void setViewContent(Holder holder, final TeachLesson bean, int position) {
         holder.reset();
         holder.name.setText(bean.getTitle());
-//        String state = LessonBusiness.getStateByPosition(position,true);
-//        if (!TextUtils.isEmpty(state)){
-//            bean.setState(state);
-//        }
-        /*if (position == 0){
-            bean.setState(LessonState.FINISHED);
-        }else if (position == 1){
-            bean.setState(LessonState.CANCELLED);
-        }else if (position == 2){
-            bean.setState(LessonState.DRAFT);
-        }else if (position == 3){
-            bean.setState(LessonState.LIVE);
-        }else if (position == 4){
-            bean.setState(LessonState.PENDING_FOR_APPROVAL);
-        }else if (position == 5){
-            bean.setState(LessonState.REJECTED);
-        }*/
         holder.price.setVisibility(View.VISIBLE);
         if (bean.getFee().free) {
             holder.price.setText(R.string.free);
@@ -118,6 +105,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setText(R.string.pending_shelves);
             holder.state.setBackgroundResource(R.drawable.course_state_draft_bg);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -146,6 +134,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setText(R.string.examine_failure);
             holder.state.setBackgroundResource(R.drawable.course_state_failure_bg);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -172,6 +161,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setText(R.string.course_state_cancel);
             holder.state.setBackgroundResource(R.drawable.course_state_cancel_bg);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -196,6 +186,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setText(R.string.force_stop);
             holder.state.setBackgroundResource(R.drawable.course_state_stop_bg);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -223,6 +214,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setText(R.string.examining);
             holder.state.setBackgroundResource(R.drawable.course_state_examine_bg);
             holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -253,6 +245,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 //                items[0] = mContext.getString(R.string.lesson_again);
 //            }
             holder.operation.enableMore(true);
+            holder.operation.enableEnter(true);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -426,6 +419,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     //分享
     private void share(TeachLesson bean) {
 
+        ShareUtil.show((Activity) mContext,bean.getTitle(),"今晚（3月1日）19:00，综合素质课应考技巧公益讲座就要开讲啦！","https://www.baidu.com");
     }
 
     //报名注册
@@ -731,6 +725,35 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     protected void onDataFailed() {
         if (mFragment != null) {
             mFragment.showTop();
+        }
+    }
+
+    @Override
+    protected void onEmptyButtonClick() {
+        if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)){
+            //老师可以开课
+            Intent intent = new Intent(mContext,LessonCreationActivity.class);
+            ((BaseActivity)mContext).startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
+        }else {
+            //提示申明教学能力
+            final CommonDialog dialog = new CommonDialog(mContext);
+            dialog.setTitle(R.string.declare_teaching_ability);
+            dialog.setDesc(R.string.declare_teaching_ability_tip);
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
         }
     }
 

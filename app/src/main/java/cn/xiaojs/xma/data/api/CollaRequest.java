@@ -8,13 +8,15 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
-import cn.xiaojs.xma.model.colla.LibCriteria;
-import cn.xiaojs.xma.model.colla.LibOverview;
-import cn.xiaojs.xma.model.colla.TokenPair;
-import cn.xiaojs.xma.model.colla.UploadParam;
-import cn.xiaojs.xma.model.colla.UploadReponse;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.material.LibCriteria;
+import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.TokenPair;
+import cn.xiaojs.xma.model.material.UploadParam;
+import cn.xiaojs.xma.model.material.UploadReponse;
+import cn.xiaojs.xma.model.material.UserDoc;
 import retrofit2.Call;
+
 
 /**
  * Created by maxiaobao on 2017/2/4.
@@ -49,5 +51,10 @@ public class CollaRequest extends ServiceRequest{
         Call<LibOverview> call = getService().getLibraryOverview(criteriaJsonstr,
                 paginationJsonstr);
         enqueueRequest(APIType.GET_LIBRARY_OVERVIEW, call);
+    }
+
+    public void getDocuments(String id, String subtype, int page, int limit) {
+        Call<UserDoc> call = getService().getDocuments(id,subtype,page,limit);
+        enqueueRequest(APIType.GET_DOCUMENTS, call);
     }
 }

@@ -6,16 +6,19 @@ import android.content.Intent;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.data.loader.SyncService;
 import cn.xiaojs.xma.data.preference.SecurityPref;
+import cn.xiaojs.xma.model.AliasTags;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.Privilege;
 
+import cn.xiaojs.xma.util.JpushUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -75,11 +78,15 @@ public class LoginRequest extends ServiceRequest {
         if (apiType == APIType.LOGIN) {
             LoginInfo info = (LoginInfo) responseBody;
             AccountDataManager.saveUserInfo(getApiManager().getAppContext(), info.getUser());
+            UpgradeManager.setUpgrade(getContext(),info.getUpgrade());
 
             initPermission();
 
             Intent i = new Intent(getContext(), SyncService.class);
             DataManager.syncData(getContext(),i);
+
+            //jush
+            JpushUtil.loginJpush();
 
         }
     }

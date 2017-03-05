@@ -3,13 +3,23 @@ package cn.xiaojs.xma.ui.mine;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.CompetencyParams;
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 import butterknife.OnClick;
+import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 
 public class TeachingAbilityActivity extends BaseActivity {
+    public final static String KEY_SUBJECT = "key_subject";
 
     @Override
     protected void addViewContent() {
@@ -18,15 +28,29 @@ public class TeachingAbilityActivity extends BaseActivity {
         setLeftImage(R.drawable.back_arrow);
     }
 
-    @OnClick({R.id.left_image,R.id.edit_ability_layout})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.left_image, R.id.edit_ability_layout})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.left_image:
                 finish();
                 break;
             case R.id.edit_ability_layout:
-                startActivity(new Intent(TeachingAbilityActivity.this,TeachAbilityDemoActivity.class));
+                //startActivity(new Intent(TeachingAbilityActivity.this,TeachAbilityDemoActivity.class));
+//                Intent intent = new Intent(this, TeachingSubjectActivity.class);
+//                startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
                 break;
         }
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == REQUEST_TEACHING_ABILITY && data != null) {
+//            CSubject subject = (CSubject) data.getSerializableExtra(KEY_SUBJECT);
+//            if (subject != null) {
+//
+//            }
+//        }
+//    }
 }

@@ -14,8 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.im.ChatActivity;
+import cn.xiaojs.xma.common.im.CircleImageView;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
@@ -33,8 +35,8 @@ import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
-import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 
 import java.util.ArrayList;
@@ -73,6 +75,20 @@ public class ContactActivity extends BaseActivity {
 
         listView.setVerticalScrollBarEnabled(false);
         //listView.setDivider(getResources().getDrawable(R.color.common_list_line));
+
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                //FIXME 跳转到聊天界面
+//                final Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
+//                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
+//                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+//                startActivity(intent);
+
+                return false;
+            }
+        });
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -409,16 +425,22 @@ public class ContactActivity extends BaseActivity {
 
             long id = contactGroup.group;
 
-            if (id == CLASSES){
+            //判断subject是为了解决从网络回调回来的问题
+            if (id == CLASSES || contactGroup.subject != null){
                 contactGroup.name = "班级";
                 class_pos = i;
                 continue;
             }
 
-            if (tempMap.get(id) != null) {
+            ContactGroup mapCG = tempMap.get(id);
+            if (mapCG != null) {
                 tempMap.remove(id);
 
-                contactGroup.name = Social.getContactName((int) id);
+                if (Social.isDefaultGroup(id)){
+                    contactGroup.name = Social.getContactName((int) id);
+                }else{
+                    contactGroup.name = mapCG.name;
+                }
             }
 
 //            if (tempMap.isEmpty()) {
@@ -442,6 +464,8 @@ public class ContactActivity extends BaseActivity {
 
         private String defaultCountFromat = getResources().getString(R.string.group_count);
 
+        private CircleTransform circleTransform;
+
         public ContactAdapter(Context context, List<ContactGroup> groupData) {
 
             inflater = LayoutInflater.from(context);
@@ -450,6 +474,8 @@ public class ContactActivity extends BaseActivity {
 
             this.groupData = new ArrayList<>();
             this.groupData.addAll(originData);
+
+            circleTransform = new CircleTransform(context);
 
         }
 
@@ -557,7 +583,7 @@ public class ContactActivity extends BaseActivity {
 
                 holder = new ViewHolder();
 
-                holder.avatarView = (RoundedImageView) convertView.findViewById(R.id.contact_avatar);
+                holder.avatarView = (ImageView) convertView.findViewById(R.id.contact_avatar);
                 holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
                 holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
                 holder.delBtn = (Button) convertView.findViewById(R.id.del_contact);
@@ -574,6 +600,8 @@ public class ContactActivity extends BaseActivity {
             String avatar = Account.getAvatar(c.account, holder.size);
             Glide.with(ContactActivity.this)
                     .load(avatar)
+                    .bitmapTransform(circleTransform)
+                    .placeholder(R.drawable.default_avatar)
                     .error(R.drawable.default_avatar)
                     .into(holder.avatarView);
 
@@ -632,8 +660,13 @@ public class ContactActivity extends BaseActivity {
 
                     ArrayList<Contact> newList = new ArrayList<Contact>();
                     for (Contact contact : group.collection) {
-                        String name = contact.alias.toLowerCase();
-                        if (name.contains(query)) {
+                        String name = contact.alias;
+                        if (name == null){
+                            name  = contact.title;
+                        }
+                        if (name == null) continue;
+
+                        if (name.toLowerCase().contains(query)) {
                             newList.add(contact);
                         }
                     }

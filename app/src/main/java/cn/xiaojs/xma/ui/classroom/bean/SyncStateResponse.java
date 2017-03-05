@@ -14,8 +14,13 @@ package cn.xiaojs.xma.ui.classroom.bean;
  *
  * ======================================================================================== */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.util.Date;
 
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SyncStateResponse {
     public String event;
     public String from;
@@ -26,6 +31,8 @@ public class SyncStateResponse {
      * The timeline details. Use with cautious due to several attributes are available on specific
      * states only.
      */
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TimeLine {
         public boolean hasPostponed;
         public Duration currentDuration;
@@ -43,6 +50,8 @@ public class SyncStateResponse {
     /**
      * The current duration.
      */
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Duration {
         public Date start;
         public long duration;

@@ -14,6 +14,9 @@ public class XiaojsConfig {
     //日志tag
     public static final String LOG_TAG = "XiaoJS-Log";
 
+    //客户端版本号位数
+    public static final int VERSION_BITS = 4;
+
     //BASE_URL
     public static String BASE_URL = "http://192.168.100.3";
 
@@ -40,11 +43,25 @@ public class XiaojsConfig {
 
 
     //wechat
-    public static final String WX_APP_ID = "wxb0290782ab5b55b5";
+    public static final String WX_APP_ID = "wxecffc72c21a94f5a";
     //QQ
-    public static final String QQ_APP_ID = "1105023462";
+    public static final String QQ_APP_ID = "1105994736";
+
+    //bugly
+    public static final String BUGLY_APP_ID = "900060174";
+
+    //Jpush app key
+    public static final String JPUSH_APP_KEY = "e87cffb332432eec3c0807ba";
 
 
     public static final String PING_WALLET = "con.xiaojs.xma.wallet";
+
+    //默认渠道
+    public static final String DEFAULT_CHANNEL = "N/A";
+
+    //file provider
+    public static final String FILE_PROVIDER= "cn.xiaojs.xma.fileprovider";
+
+
 
 }

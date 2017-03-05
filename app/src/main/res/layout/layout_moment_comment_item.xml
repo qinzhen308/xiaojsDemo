@@ -16,7 +16,7 @@
         <cn.xiaojs.xma.ui.widget.RoundedImageView
                 android:id="@+id/moment_comment_image"
                 app:oval="true"
-                android:src="@drawable/default_portrait"
+                android:src="@drawable/default_avatar"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
                 android:layout_width="@dimen/px80"

@@ -8,10 +8,13 @@ import cn.xiaojs.xma.data.api.CollaRequest;
 import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.colla.LibCriteria;
-import cn.xiaojs.xma.model.colla.LibOverview;
-import cn.xiaojs.xma.model.colla.UploadParam;
+
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.material.LibCriteria;
+import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.UploadParam;
+import cn.xiaojs.xma.model.material.UserDoc;
+
 
 /**
  * Created by maxiaobao on 2017/2/6.
@@ -103,4 +106,33 @@ public class CollaManager {
         CollaRequest request = new CollaRequest(context,callback);
         request.getLibraryOverview(criteria, pagination);
     }
+
+
+    /**
+     *
+     * @param context
+     * @param id
+     * @param subtype
+     * @param pagination
+     * @param callback
+     */
+    public static void getDocuments(Context context,
+                                    String id,
+                                    String subtype,
+                                    Pagination pagination,
+                                    APIServiceCallback<UserDoc> callback) {
+
+
+        int page = 1;
+        int limit = 10;
+        if (pagination!=null){
+            page = pagination.getPage();
+            limit = pagination.getMaxNumOfObjectsPerPage();
+        }
+
+        CollaRequest request = new CollaRequest(context,callback);
+        request.getDocuments(id,subtype,page,limit);
+    }
+
+
 }

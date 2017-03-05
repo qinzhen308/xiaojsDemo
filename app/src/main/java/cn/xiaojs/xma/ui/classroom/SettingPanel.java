@@ -57,8 +57,7 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
         mStandardTv.setOnClickListener(this);
         mHighTv.setOnClickListener(this);
 
-        //default fluent
-        mFluentTv.setSelected(true);
+        setQuality();
 
         SharedPreferences sf = XjsUtils.getSharedPreferences();
         mMicroPhoneSwitcher.setChecked(sf.getBoolean(KEY_MICROPHONE_OPEN, true));
@@ -93,6 +92,8 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
                 editor.putInt(KEY_QUALITY, QUALITY_HIGH);
                 break;
         }
+
+        editor.apply();
     }
 
     private void reset() {
@@ -116,5 +117,21 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
                 break;
         }
         editor.commit();
+    }
+
+    private void setQuality() {
+        SharedPreferences spf = XjsUtils.getSharedPreferences();
+        int quality = spf.getInt(KEY_QUALITY, QUALITY_STANDARD);
+        switch (quality) {
+            case QUALITY_FLUENT:
+                mFluentTv.setSelected(true);
+                break;
+            case QUALITY_STANDARD:
+                mStandardTv.setSelected(true);
+                break;
+            case QUALITY_HIGH:
+                mHighTv.setSelected(true);
+                break;
+        }
     }
 }

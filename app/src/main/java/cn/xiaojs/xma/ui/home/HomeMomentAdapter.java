@@ -190,7 +190,21 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         SocialManager.getActivities(mContext, criteria, mPagination, new APIServiceCallback<CollectionPage<Dynamic>>() {
             @Override
             public void onSuccess(CollectionPage<Dynamic> object) {
+
+                if (mPagination.getPage() == 1) {
+                    if (object == null || object.objectsOfPage == null || object.objectsOfPage.size() == 0) {
+                        if (mFragment != null) {
+                            mFragment.showOrHiddenEmptyViiew(false, mContext.getResources().getString(R.string.empty_activity_tip));
+                        }
+                    } else {
+                        if (mFragment != null) {
+                            mFragment.showOrHiddenEmptyViiew(true, "");
+                        }
+                    }
+                }
+
                 if (object != null) {
+
                     notifyUpdates(object.totalUpdates);
                     HomeMomentAdapter.this.onSuccess(object.objectsOfPage);
                 } else {
@@ -201,6 +215,11 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+
+                if (getCount()<=0 && mPagination.getPage() == 1 && mFragment !=null){
+                    mFragment.showOrHiddenEmptyViiew(false,mContext.getResources().getString(R.string.load_failed_tip));
+                }
+
                 HomeMomentAdapter.this.onFailure(errorCode, errorMessage);
             }
         });
@@ -272,4 +291,5 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
     protected boolean showEmptyView() {
         return false;
     }
+
 }

@@ -11,10 +11,13 @@ import java.io.Serializable;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CSubject implements Serializable{
+    public final static int TYPE_NO_CHILD = 12;
 
     private String id;
     private String remarks;
     private String name;
+    private int type;
+    private boolean check;
 
     public String getId() {
         return id;
@@ -38,5 +41,21 @@ public class CSubject implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
     }
 }

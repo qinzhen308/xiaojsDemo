@@ -8,6 +8,7 @@ import android.text.format.Formatter;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -125,12 +126,15 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        FileOutputStream fos = null;
         try {
-            FileOutputStream fos = new FileOutputStream(f, true);
+            fos = new FileOutputStream(f, true);
             fos.write(str.getBytes());
-            fos.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            closeStream(fos);
         }
     }
 
@@ -138,13 +142,14 @@ public class FileUtil {
         File file = new File(path);
         long s = 0;
         if (file.exists()) {
+            FileInputStream fis = null;
             try {
-                FileInputStream fis = null;
                 fis = new FileInputStream(file);
                 s = fis.available();
-                fis.close();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                closeStream(fis);
             }
         } else {
             //Log.e(TAG, "file is not exist: ");
@@ -167,16 +172,11 @@ public class FileUtil {
             return buffer;
         } catch (Exception e) {
             e.printStackTrace();
-            if (fin != null) {
-                try {
-                    fin.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            return null;
+        } finally {
+            closeStream(fin);
         }
 
+        return null;
     }
 
     public static long getCacheSize(String path) {
@@ -342,20 +342,17 @@ public class FileUtil {
         return false;
     }
 
-    public static boolean appendFile(String filename, byte[] data, int datapos,
-                                     int dataLength) {
+    public static boolean appendFile(String filename, byte[] data, int datapos, int dataLength) {
+        RandomAccessFile rf = null;
         try {
             createFile(filename);
-
-            RandomAccessFile rf = new RandomAccessFile(filename, "rw");
+            rf = new RandomAccessFile(filename, "rw");
             rf.seek(rf.length());
             rf.write(data, datapos, dataLength);
-            if (rf != null) {
-                rf.close();
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            closeStream(rf);
         }
 
         return true;
@@ -433,14 +430,7 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (null != os) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                os = null;
-            }
+            closeStream(os);
         }
         return null;
     }
@@ -452,8 +442,7 @@ public class FileUtil {
      * @param destFile      目的地址
      * @param shouldOverlay 是否覆盖
      */
-    public static boolean copyFiles(String sourceFile, String destFile,
-                                    boolean shouldOverlay) {
+    public static boolean copyFiles(String sourceFile, String destFile, boolean shouldOverlay) {
         try {
             if (shouldOverlay) {
                 deleteFile(destFile);
@@ -698,11 +687,16 @@ public class FileUtil {
             //LogUtil.d("FileUtil", "save " + file + "error! " + e.getMessage());
             return false;
         } finally {
+            closeStream(os);
+        }
+    }
+
+    private static void closeStream(Closeable closeable) {
+        if (closeable != null) {
             try {
-                if (os != null)
-                    os.close();
+                closeable.close();
             } catch (IOException e) {
-                e.printStackTrace();
+
             }
         }
     }

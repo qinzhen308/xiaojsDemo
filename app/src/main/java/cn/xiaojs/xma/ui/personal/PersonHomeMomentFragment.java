@@ -14,12 +14,14 @@ package cn.xiaojs.xma.ui.personal;
  *
  * ======================================================================================== */
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 
 public class PersonHomeMomentFragment extends BaseScrollTabFragment {
 
     @Override
     protected void initData() {
+        mList.getRefreshableView().getWrappedList().setDividerHeight(getResources().getDimensionPixelSize(R.dimen.px30));
         PersonHomeMomentAdapter adapter = new PersonHomeMomentAdapter(getContext(), mList);
         mList.setAdapter(adapter);
     }

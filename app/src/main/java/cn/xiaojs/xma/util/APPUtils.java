@@ -27,10 +27,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Looper;
+import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 
 import com.meituan.android.walle.WalleChannelReader;
 
+import java.io.File;
+
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.ui.account.LoginActivity;
@@ -47,7 +54,12 @@ public class APPUtils {
      * @return
      */
     public static String getChannel(Context context) {
-        return WalleChannelReader.getChannel(context.getApplicationContext());
+        String channel = WalleChannelReader.getChannel(context.getApplicationContext());
+        if (TextUtils.isEmpty(channel)) {
+            channel = XiaojsConfig.DEFAULT_CHANNEL;
+        }
+
+        return channel;
     }
 
     public static boolean isBackgroundThread(){
@@ -130,6 +142,32 @@ public class APPUtils {
     }
 
     /**
+     * 比较版本号
+     * @param context
+     * @param updateVersion
+     * @return
+     */
+    public static boolean comparisonCode(Context context, String updateVersion) {
+
+        int currentCode = getAPPVersionCode(context);
+
+        if (TextUtils.isEmpty(updateVersion)) return false;
+        String[] codes = updateVersion.split("\\.");
+
+        //版本号是四位
+        if (codes==null || codes.length < XiaojsConfig.VERSION_BITS) return false;
+
+        String updateCode = codes[XiaojsConfig.VERSION_BITS - 1];
+
+        if (!TextUtils.isEmpty(updateCode)) {
+            int uCode = Integer.valueOf(updateCode);
+             return uCode > currentCode;
+        }
+
+        return false;
+    }
+
+    /**
      * return current APP client type
      * @param context
      * @return
@@ -150,5 +188,25 @@ public class APPUtils {
         Intent i = new Intent(context, LoginActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
+    }
+
+    /**
+     * 打开APK包
+     * @param context
+     * @param filePath
+     */
+    public static void openPkg(Context context, String filePath) {
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri contentUri = FileProvider.getUriForFile(context, XiaojsConfig.FILE_PROVIDER, new File(filePath));
+            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(new File(filePath)), "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+
+        context.startActivity(intent);
     }
 }

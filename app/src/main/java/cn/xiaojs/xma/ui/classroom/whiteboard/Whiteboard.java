@@ -51,13 +51,11 @@ import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.InteractiveLevel;
 import cn.xiaojs.xma.ui.classroom.socketio.Commend;
 import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
-import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Packer;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
 import cn.xiaojs.xma.ui.classroom.socketio.Receiver;
 import cn.xiaojs.xma.ui.classroom.socketio.Sender;
-import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.action.Selector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.ActionRecord;
@@ -77,7 +75,6 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Oval;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
-import io.socket.client.Socket;
 
 public class Whiteboard extends View implements ViewGestureListener.ViewRectChangedListener,
         Receiver<List<CommendLine>>, Sender<String> {
@@ -182,7 +179,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private List<Integer> mRedoRecordIds;
 
     private BitmapPool mDoodleBitmapPool;
-    private Socket mSocket;
 
     public Whiteboard(Context context) {
         super(context);
@@ -1310,7 +1306,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mInputMethodManager = null;
         mViewGestureListener = null;
         mClassroomGestureDetector = null;
-        mSocket = null;
+    }
+
+    public void recycleCourseBmp() {
+        if (mCourseBmp != null && !mCourseBmp.isRecycled()) {
+            mCourseBmp.recycle();
+            mCourseBmp = null;
+        }
     }
 
     public void release() {
@@ -1644,11 +1646,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     @Override
     public void onSend(String cmd) {
-        mSocket = SocketManager.getSocket();
         if (!TextUtils.isEmpty(cmd) && (mLayer != null && mLayer.isCanSend())) {
             Log.i("aaa", "************ send=" + cmd);
-            mSocket.emit(Event.BOARD, cmd);
-            mSocket.emit(Event.SYNC);
+            //to do something
         }
     }
 

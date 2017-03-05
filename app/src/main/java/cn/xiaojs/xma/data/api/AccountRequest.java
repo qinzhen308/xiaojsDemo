@@ -8,12 +8,14 @@ import java.io.IOException;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
+import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 
 
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.UpToken;
@@ -55,8 +57,15 @@ public class AccountRequest extends ServiceRequest {
 
     public void claimCompetency(CompetencyParams competencyParams) {
 
-        Call<ClaimCompetency> call = getService().claimCompetency(competencyParams);
+        Call<CompetencySubject> call = getService().claimCompetency(competencyParams);
         enqueueRequest(APIType.CLAIM_COMPETENCY,call);
+
+    }
+
+    public void getCompetencies() {
+
+        Call<ClaimCompetency> call = getService().getCompetencies();
+        enqueueRequest(APIType.GET_COMPETENCIES,call);
 
     }
 

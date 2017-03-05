@@ -135,8 +135,8 @@ public class MomentContent extends RelativeLayout {
     }
 
     public void show(Dynamic dynamic){
-        mSpecialImage.setImageResource(DeviceUtil.getLesson());
-        mLessonImage.setImageResource(DeviceUtil.getLesson());
+        //mSpecialImage.setImageResource(DeviceUtil.getLesson());
+        //mLessonImage.setImageResource(DeviceUtil.getLesson());
         if (dynamic == null || TextUtils.isEmpty(dynamic.typeName))
             return;
         //个人动态
@@ -187,7 +187,7 @@ public class MomentContent extends RelativeLayout {
             mSpecialContent.setText(span);
             Glide.with(getContext())
                     .load(dynamic.body.ref.snap)
-                    .error(DeviceUtil.getLesson())
+                    .error(R.drawable.default_lesson_cover)
                     .into(mLessonImage);
             mLessonDuration.setText(dynamic.body.ref.duration);
             if (dynamic.body.ref.free){
@@ -222,7 +222,7 @@ public class MomentContent extends RelativeLayout {
                     mSpecialImage.setVisibility(VISIBLE);
                     Glide.with(getContext())
                             .load(dynamic.body.ref.snap)
-                            .error(DeviceUtil.getLesson())
+                            .error(R.drawable.default_lesson_cover)
                             .into(mSpecialImage);
                 }
             }

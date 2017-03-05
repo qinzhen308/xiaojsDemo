@@ -11,6 +11,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.XjsUtils;
 
 /**
@@ -37,11 +38,13 @@ public class XiaojsApplication extends Application {
         }
 
         //发布Release版本时，需要引入crash report
-        String appid = "900060174";
-        CrashReport.initCrashReport(getApplicationContext(), appid, false);
-
-        //init data cache
-        DataManager.init(this);
+        String channel = APPUtils.getChannel(getApplicationContext());
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the channel:%s",channel);
+        }
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
+        strategy.setAppChannel(channel);
+        CrashReport.initCrashReport(getApplicationContext(), XiaojsConfig.BUGLY_APP_ID, false, strategy);
 
         //init xiaojs utils
         XjsUtils.init(this);
@@ -61,6 +64,9 @@ public class XiaojsApplication extends Application {
 
         JPushInterface.setDebugMode(XiaojsConfig.DEBUG);
         JPushInterface.init(getApplicationContext());
+
+        //init data cache
+        DataManager.init(this);
     }
 
 }

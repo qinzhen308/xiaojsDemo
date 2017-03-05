@@ -42,12 +42,12 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 import cn.xiaojs.xma.ui.view.RelationshipView;
@@ -122,6 +122,12 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mIsMyself = intent.getBooleanExtra(PersonalBusiness.KEY_IS_MYSELF, false);
+
+            if (XiaojsConfig.mLoginUser == null) {
+                XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(this);
+            }
+
+
             if (!mIsMyself) {
                 mAccount = intent.getStringExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT);
                 if (!TextUtils.isEmpty(mAccount)) {
@@ -194,7 +200,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             fragments.add(f2);
             fragments.add(f3);
             String[] tabs = new String[]{
-                    getString(R.string.person_lesson),
+                    getString(R.string.person_lesson,StringUtil.getTa(home.profile.sex)),
                     getString(R.string.person_comment),
                     getString(R.string.person_moment)};
             if (mIsMyself) {
@@ -254,7 +260,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
     }
 
     private void initProfileBg() {
-        mBlur.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        //mBlur.setBackgroundColor(getResources().getColor(R.color.main_blue));
+        mBlur.setImageResource(R.drawable.portrait_default_bg);
     }
 
     private void setDefaultPortrait() {
@@ -292,7 +299,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         int width = DeviceUtil.getScreenWidth(this);
         int height = (int) (width * mCoverScale);
         mFreeCover.getLayoutParams().height = height;
-        mFreeCover.setImageResource(DeviceUtil.getLesson());
+        //mFreeCover.setImageResource(DeviceUtil.getLesson());
         List<Bitmap> lists = new ArrayList<>();
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
@@ -333,7 +340,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
                 break;
             case R.id.scroll_tab_right_view://加关注
-                follow();
+                showFollowDialog();
                 break;
         }
     }
@@ -344,6 +351,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                 final Intent intent = new Intent(this, ChatActivity.class);
                 intent.putExtra(ChatActivity.TARGET_ID, "1234567");
                 intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+                intent.putExtra(ChatActivity.ACCOUNT_ID, mAccount);
                 startActivity(intent);
             } else {//未关注先提示去关注
                 final CommonDialog dialog = new CommonDialog(this);
@@ -351,8 +359,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                     mBean.basic = new cn.xiaojs.xma.model.account.Account.Basic();
                     mBean.basic.setSex("true");
                 }
-                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.basic.getSex()),StringUtil.getTa(mBean.basic.getSex())));
-                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.basic.getSex())));
+                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.profile.sex),StringUtil.getTa(mBean.profile.sex)));
+                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.profile.sex)));
                 dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -363,7 +371,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                     @Override
                     public void onClick() {
                         dialog.dismiss();
-                        follow();
+                        //follow();
+                        showFollowDialog();
                     }
                 });
 
@@ -372,9 +381,20 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         }
     }
 
-    private void follow() {
+    private void showFollowDialog(){
+        BaseBusiness.showFollowDialog(this, new BaseBusiness.OnFollowListener() {
+            @Override
+            public void onFollow(long group) {
+                if (group > 0){
+                    follow(group);
+                }
+            }
+        });
+    }
+
+    private void follow(long group) {
         if (mBean != null && !mBean.isFollowed) {//这里需要弹框选择分组
-            SocialManager.followContact(this, mAccount, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
+            SocialManager.followContact(this, mAccount, group, new APIServiceCallback<Relation>() {
                 @Override
                 public void onSuccess(Relation object) {
                     ToastUtil.showToast(getApplicationContext(), R.string.followed);

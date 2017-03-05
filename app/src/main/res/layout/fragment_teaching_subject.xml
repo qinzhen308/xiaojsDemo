@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:focusable="true"
+              android:focusableInTouchMode="true">
+
+    <include layout="@layout/layout_base_header"/>
+
+    <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/search_subject"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px60"
+            android:paddingLeft="@dimen/px10"
+            android:paddingRight="@dimen/px10"
+            android:textSize="@dimen/font_26px"
+            android:textColor="@color/font_dark_gray"
+            android:textColorHint="@color/font_dark_gray"
+            android:hint="@string/search_subject_tips"
+            android:layout_marginLeft="@dimen/px26"
+            android:drawablePadding="@dimen/px10"
+            android:layout_marginRight="@dimen/px26"
+            android:drawableLeft="@drawable/ic_search"
+            android:background="@drawable/ic_search_bg"
+            android:layout_marginTop="@dimen/px16"
+            android:layout_marginBottom="@dimen/px16"
+            android:visibility="gone"/>
+
+    <LinearLayout
+            android:id="@+id/selected_subject_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/px30"
+            android:paddingBottom="@dimen/px30"
+            android:paddingLeft="@dimen/px26"
+            android:paddingRight="@dimen/px26"
+            android:visibility="gone">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_for_you"
+                android:textColor="@color/font_dark_gray"/>
+
+        <TextView
+                android:id="@+id/selected_subject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px20"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_dark_gray"/>
+    </LinearLayout>
+
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
+            android:id="@+id/subject_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:dividerHeight="0px"
+            android:background="@color/white"/>
+
+</LinearLayout>

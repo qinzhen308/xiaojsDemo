@@ -118,5 +118,5 @@ dependencies {
 walle {
     apkOutputFolder = new File("${project.buildDir}/outputs/channels");
     apkFileNameFormat = 'xiaojs_${buildType}_${channel}_v${versionName}_${versionCode}.apk';
-    channelFile = "channel";
+    channelFile = "./channel";
 }

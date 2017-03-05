@@ -4,7 +4,9 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import com.orhanobut.logger.Logger;
@@ -21,6 +23,9 @@ import java.net.URL;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.DownloadManager;
+import cn.xiaojs.xma.data.UpgradeManager;
+import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.IOUtils;
 
 import static cn.xiaojs.xma.data.download.DownloadInfo.DownloadStatus.STATUS_FILE_ERROR;
@@ -65,8 +70,10 @@ public class UpdateService extends IntentService {
             } finally {
                 if (success) {
                     notifier.removeNotify();
+
                 } else {
                     notifier.showErrorNotify();
+
                 }
             }
         }
@@ -190,22 +197,19 @@ public class UpdateService extends IntentService {
             }
 
             if (isDownloadOk) {
-                openPkg(filePath);
+                APPUtils.openPkg(this,filePath);
+                Intent i = new Intent(UpgradeManager.ACTION_UPGRADE_DOWNLOAD_COMPLETED);
+                i.putExtra(UpgradeManager.EXTRA_OPEN_PATH,filePath);
+                sendBroadcast(i);
                 return true;
             }
+
+            sendBroadcast(new Intent(UpgradeManager.ACTION_UPGRADE_DOWNLOAD_ERROR));
             return false;
         }
     }
 
 
-    private void openPkg(String filepath) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        // intent.setDataAndType(Uri.fromFile(new File(filepath)),
-        // "application/vnd.android.package-archive");
-        intent.setDataAndType(Uri.parse("file://" + filepath),
-                "application/vnd.android.package-archive");
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(intent);
-    }
+
 
 }

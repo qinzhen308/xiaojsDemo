@@ -24,18 +24,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.CollaManager;
-import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.colla.UploadReponse;
+import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -80,7 +79,7 @@ public class MaterialActivity extends BaseActivity {
         } else {
             mTitle.setText(R.string.data_bank);
         }
-        mAdapter = new MaterialAdapter(this, mList, mIsMine);
+        mAdapter = new MaterialAdapter(this, mList, XiaojsConfig.mLoginUser.getId());
         mList.setAdapter(mAdapter);
         mRightImage2.setImageResource(R.drawable.upload_selector);
         mRightImage.setImageResource(R.drawable.ic_my_download);
@@ -93,11 +92,11 @@ public class MaterialActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.material_right_image://我的下载
-                if (DownloadManager.allowDownload(this)) {
-                    DownloadManager.enqueueDownload(this, "vipkid" + System.currentTimeMillis() + ".apk", "key", "http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk", "", "");
-                } else {
-                    Toast.makeText(this, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
-                }
+//                if (DownloadManager.allowDownload(this)) {
+//                    DownloadManager.enqueueDownload(this, "vipkid" + System.currentTimeMillis() + ".apk", "key", "http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk", "", "");
+//                } else {
+//                    Toast.makeText(this, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
+//                }
 
                 Intent intent = new Intent(this, MaterialDownloadActivity.class);
                 startActivity(intent);
@@ -140,36 +139,36 @@ public class MaterialActivity extends BaseActivity {
                             cursor.close();
                             file = new File(picturePath);
                         }
-
-                        if (file == null)
-                            return;
-                        mUploadName.setText(file.getName());
-                        mUploadingWrapper.setVisibility(View.VISIBLE);
-                        mManager = new CollaManager();
-                        String t = "869f6f9be63c3ee2157b4188e709718638f7e8faf2e1223f389631a3f2dfc5f8f9025c1208dacc1b32ab324f5d9da842";
-                        mManager.addToLibrary(this, file.getPath(), file.getName(), t, new QiniuService() {
-                            @Override
-                            public void uploadSuccess(String key, UploadReponse reponse) {
-                                mUploadingWrapper.setVisibility(View.GONE);
-                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_success);
-                            }
-
-                            @Override
-                            public void uploadProgress(String key, double percent) {
-                                mUploadProgress.setProgress((int) (percent * 100));
-                            }
-
-                            @Override
-                            public void uploadFailure(boolean cancel) {
-                                mUploadingWrapper.setVisibility(View.GONE);
-                                if (cancel) {
-                                    ToastUtil.showToast(getApplicationContext(), R.string.up_load_cancel);
-                                } else {
-                                    ToastUtil.showToast(getApplicationContext(), R.string.up_load_failure);
-                                }
-                            }
-                        });
                     }
+                    if (file == null)
+                        return;
+                    mUploadName.setText(file.getName());
+                    mUploadingWrapper.setVisibility(View.VISIBLE);
+                    mManager = new CollaManager();
+                    String t = "869f6f9be63c3ee2157b4188e709718638f7e8faf2e1223f389631a3f2dfc5f8f9025c1208dacc1b32ab324f5d9da842";
+                    mManager.addToLibrary(this, file.getPath(), file.getName(), t, new QiniuService() {
+                        @Override
+                        public void uploadSuccess(String key, UploadReponse reponse) {
+                            mUploadingWrapper.setVisibility(View.GONE);
+                            ToastUtil.showToast(getApplicationContext(), R.string.up_load_success);
+                        }
+
+                        @Override
+                        public void uploadProgress(String key, double percent) {
+                            mUploadProgress.setProgress((int) (percent * 100));
+                        }
+
+                        @Override
+                        public void uploadFailure(boolean cancel) {
+                            mUploadingWrapper.setVisibility(View.GONE);
+                            if (cancel) {
+                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_cancel);
+                            } else {
+                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_failure);
+                            }
+                        }
+                    });
+
                 }
             }
         }

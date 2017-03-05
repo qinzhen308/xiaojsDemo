@@ -2,9 +2,14 @@ package cn.xiaojs.xma.data;
 
 import android.content.Context;
 
+import java.util.List;
+
 import cn.xiaojs.xma.data.api.OrderRequest;
 import cn.xiaojs.xma.data.api.PayRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.model.order.Orderp;
 import cn.xiaojs.xma.model.order.PaymentCharge;
 import cn.xiaojs.xma.model.order.PaymentOrder;
@@ -44,4 +49,17 @@ public class OrderManager {
 
     }
 
+    public static void getOrders(Context context, Pagination pagination, APIServiceCallback<List<EnrollOrder>> callback) {
+
+        int page = 1;
+        int limit = 10;
+
+        if (pagination!=null){
+            page = pagination.getPage();
+            limit = pagination.getMaxNumOfObjectsPerPage();
+        }
+
+        OrderRequest request = new OrderRequest(context,callback);
+        request.getOrders(page,limit);
+    }
 }

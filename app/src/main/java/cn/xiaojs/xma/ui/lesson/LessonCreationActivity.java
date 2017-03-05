@@ -13,6 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
@@ -20,6 +27,7 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
@@ -32,14 +40,6 @@ import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.DataPicker;
 import cn.xiaojs.xma.util.TimeUtil;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -60,12 +60,16 @@ public class LessonCreationActivity extends BaseActivity {
     private final int MAX_STUDENT_COUNT = 9999; //
     private final int MAX_LESSON_DURATION = 600; //600 minutes, 10 hours
     private final int REQUEST_CODE_OPTIONAL_INFO = 2000;
+    private final static int REQUEST_SELECT_SUBJECT = 2001;
+
     private final int DEFAULT_SUT_COUNT = 50;
 
     private final int MIN_LESSON_CHAR = 3;
     private final int MAX_LESSON_CHAR = 25;
 
     private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
+
+    public final static String KEY_COMPETENCY = "key_competency";
 
     @BindView(R.id.status_fail_reason)
     TextView mStatusFailReason;
@@ -107,6 +111,8 @@ public class LessonCreationActivity extends BaseActivity {
     TextView mPublicTv;
     @BindView(R.id.on_shelves)
     TextView mOnShelvesTv;
+    @BindView(R.id.publish_to_circle)
+    TextView mPublishToCircleTv;
 
     private boolean mEnrollWayOpen = false;
     private long mLessonStartTime;
@@ -123,7 +129,8 @@ public class LessonCreationActivity extends BaseActivity {
     private int mType = CourseConstant.TYPE_LESSON_CREATE;
     private String mLessonId;
     private Context mContext;
-
+    private String mCompetencyId;
+    private Competency mCompetency;
 
     @Override
     protected void addViewContent() {
@@ -136,7 +143,7 @@ public class LessonCreationActivity extends BaseActivity {
     @OnClick({R.id.left_image, R.id.lesson_subject, R.id.teach_form, R.id.enroll_switcher,
             R.id.charge_way_switcher, R.id.by_total_price_title, R.id.by_duration_title,
             R.id.lesson_start_time, R.id.optional_info, R.id.sub_btn, R.id.on_shelves,
-            R.id.publish_personal_page})
+            R.id.publish_personal_page, R.id.publish_to_circle})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -181,6 +188,7 @@ public class LessonCreationActivity extends BaseActivity {
                 break;
             case R.id.on_shelves:
             case R.id.publish_personal_page:
+            case R.id.publish_to_circle:
                 v.setSelected(!v.isSelected() ? true : false);
                 break;
             case R.id.sub_btn:
@@ -239,11 +247,6 @@ public class LessonCreationActivity extends BaseActivity {
         }
 
         mLessonNameEdt.setText(lessonDetail.getTitle());
-        //TODO need to get subject name by id
-        //mLessonSubjectTv.setText(lessonDetail.getSubject());
-        //test data
-        mLessonSubjectTv.setText(TEST_SUBJECT);
-        mLessonSubjectTv.setTextColor(mBlackFont);
 
         Enroll enroll = lessonDetail.getEnroll();
         if (enroll != null) {
@@ -318,10 +321,6 @@ public class LessonCreationActivity extends BaseActivity {
         //get color
         mBlackFont = getResources().getColor(R.color.font_black);
         mGrayFont = getResources().getColor(R.color.font_gray);
-
-        //TODO  //test
-        mLessonSubjectTv.setText(TEST_SUBJECT);
-        mLessonSubjectTv.setTextColor(mBlackFont);
     }
 
 
@@ -432,7 +431,11 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void selectSubject() {
-        mLessonSubjectTv.setTextColor(mBlackFont);
+        //mLessonSubjectTv.setTextColor(mBlackFont);
+        Intent intent = new Intent();
+        intent.setClass(mContext, SubjectSelectorActivity.class);
+        intent.putExtra(CourseConstant.KEY_SUBJECT, mCompetency);
+        startActivityForResult(intent, REQUEST_SELECT_SUBJECT);
     }
 
     private void selectTeachForm() {
@@ -568,7 +571,8 @@ public class LessonCreationActivity extends BaseActivity {
                 return false;
             }
 
-            if (TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
+            if (selectTip.equals(mLessonSubjectTv.getText().toString()) ||
+                    TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
                 Toast.makeText(mContext, R.string.subject_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -649,8 +653,7 @@ public class LessonCreationActivity extends BaseActivity {
 
         String studentNum = mLessonStuCount.getText().toString();
 
-        //FIXME 测试临时用：当不需要报名的课程时，报名位数默认为100，如果为0 ，接口回报参数错误
-        int limitPeople = TextUtils.isEmpty(studentNum) ? 100: Integer.parseInt(studentNum);
+        int limitPeople = TextUtils.isEmpty(studentNum) ? 0: Integer.parseInt(studentNum);
         enroll.max = limitPeople;
         enroll.mandatory = mEnrollSwitcher.isChecked();
 
@@ -685,7 +688,7 @@ public class LessonCreationActivity extends BaseActivity {
         ll.setTitle(mLessonNameEdt.getText().toString());
 
         CSubject subject1 = new CSubject();
-        subject1.setId(AccountDataManager.getSubject(this));
+        subject1.setId(mCompetencyId);
 
         ll.setSubject(subject1);
         ll.setEnroll(enroll);
@@ -694,8 +697,9 @@ public class LessonCreationActivity extends BaseActivity {
         ll.setSchedule(sch);
         ll.setAccessible(mPublicTv.isSelected());
         ll.setAutoOnShelves(mOnShelvesTv.isSelected());
+        //mPublishToCircleTv.isSelected();
 
-        //add optional info
+        //add optional 6
         if (mLessonOptionalInfo != null) {
             ll.setCover(mLessonOptionalInfo.getCover());
             ll.setOverview(mLessonOptionalInfo.getOverview());
@@ -770,6 +774,16 @@ public class LessonCreationActivity extends BaseActivity {
                 Object obj = data.getSerializableExtra(CourseConstant.KEY_LESSON_OPTIONAL_INFO);
                 if (obj instanceof LiveLesson) {
                     mLessonOptionalInfo = (LiveLesson) obj;
+                }
+            }
+        } else if (requestCode == REQUEST_SELECT_SUBJECT) {
+            if (data != null) {
+                mCompetency = (Competency)data.getSerializableExtra(KEY_COMPETENCY);
+                CSubject subject = null;
+                if (mCompetency != null && (subject = mCompetency.getSubject()) != null) {
+                    mLessonSubjectTv.setTextColor(mBlackFont);
+                    mCompetencyId = subject.getId();
+                    mLessonSubjectTv.setText(subject.getName());
                 }
             }
         }

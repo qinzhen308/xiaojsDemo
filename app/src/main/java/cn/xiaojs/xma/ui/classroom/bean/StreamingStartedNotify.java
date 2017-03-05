@@ -1,4 +1,8 @@
 package cn.xiaojs.xma.ui.classroom.bean;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -13,10 +17,12 @@ package cn.xiaojs.xma.ui.classroom.bean;
  * Desc:
  *
  * ======================================================================================== */
-
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamingStartedNotify extends StreamingNotify {
     public String RTMPPlayUrl;
     public String HLSPlayUrl;
-    public int mode;
-    public int type;
+    public String claimedBy;
+    public int streamMode;
+    public int streamType;
 }
