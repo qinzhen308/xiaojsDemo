@@ -234,7 +234,8 @@
                     android:id="@+id/report_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:visibility="gone">
 
                 <TextView
                         android:id="@+id/report"
@@ -283,7 +284,8 @@
                         android:text="@string/lesson_apply"
                         android:textColor="@drawable/common_btn_white_text_selector"
                         android:background="@drawable/big_submit_btn_selector"
-                        android:textSize="@dimen/font_32px"/>
+                        android:textSize="@dimen/font_32px"
+                        />
 
             </LinearLayout>
 

@@ -74,7 +74,7 @@ import retrofit2.http.Query;
 public interface XiaojsService {
 
     //Xiaojs rest api 中接口公共URL
-    String SERVICE_PORT = "3000";
+    String SERVICE_PORT = "8000";//3000
 
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
@@ -155,6 +155,14 @@ public interface XiaojsService {
     @GET("/v1/ctl/lessons/{criteria}/{pagination}")
     Call<GetLessonsResponse> getLessons(@Path("criteria") String criteria,
                                         @Path("pagination") String pagination);
+
+    //Get lessons (Taught by user)
+    @GET("/v1/ctl/taught/lessons/{userId}")
+    Call<GetLessonsResponse> getLessons(@Path("userId") String userId,
+                                        @Query("page") int page,
+                                        @Query("limit") int limit);
+
+
 
     //Put Lesson On Shelves
     @POST("/v1/ctl/lessons/{lesson}/onshelves")

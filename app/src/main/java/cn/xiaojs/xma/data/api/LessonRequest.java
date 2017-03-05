@@ -45,6 +45,10 @@ public class LessonRequest extends ServiceRequest {
 
     }
 
+    public void getLessons(String account,int page, int limit){
+        Call<GetLessonsResponse> call = getService().getLessons(account,page,limit);
+        enqueueRequest(APIType.GET_LESSONS_BY_USER, call);
+    }
 
     public void getLessons(@NonNull Criteria criteria,
                            @NonNull Pagination pagination) {
@@ -156,6 +160,8 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.TOGGLE_ACCESS_TO_LESSON, call);
 
     }
+
+
 
 
 }

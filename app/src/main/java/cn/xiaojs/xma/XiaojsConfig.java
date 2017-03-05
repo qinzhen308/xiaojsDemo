@@ -18,7 +18,7 @@ public class XiaojsConfig {
     public static final int VERSION_BITS = 4;
 
     //BASE_URL
-    public static String BASE_URL = "http://192.168.100.3";
+    public static String BASE_URL = "http://120.76.199.243";//
 
     //HTTP缓存目录
     public static final String HTTP_CACHE_DIR = "hcache";

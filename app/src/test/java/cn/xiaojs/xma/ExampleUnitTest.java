@@ -17,6 +17,10 @@ import org.junit.Test;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Error;
@@ -77,7 +81,7 @@ public class ExampleUnitTest {
 //        System.out.println(jj);
 //
 //
-        ObjectMapper objectMapper = new ObjectMapper();
+ //       ObjectMapper objectMapper = new ObjectMapper();
 
         //JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Haha.class, Haha.No.class);
 
@@ -232,10 +236,17 @@ public class ExampleUnitTest {
 //        int a = 5;
 //        int b = ++a;
 
-        String v = "0.1.4.7";
-        String[] s = v.split("\\.");
+//        String v = "0.1.4.7";
+//        String[] s = v.split("\\.");
+//
+//        System.out.println("=============="+s);
 
-        System.out.println("=============="+s);
+
+        long tt = System.currentTimeMillis();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+        long time= sdf.parse("2017-03-03T08:30:00.000Z").getTime();
 
     }
 

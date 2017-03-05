@@ -124,4 +124,6 @@ public class APIType {
 
     public static final int GET_COMPETENCIES = 69;
 
+    public static final int GET_LESSONS_BY_USER= 70;
+
 }
