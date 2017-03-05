@@ -38,6 +38,7 @@ public class LiveAdapter extends AbsGridViewAdapter<LiveBean,LiveAdapter.Holder>
 
     private final float SCALE = 2f / 3;
     private int margin;
+    private boolean mLoadingTrue;
 
 
     public LiveAdapter(Context context, PullToRefreshGridView gridview) {
@@ -99,14 +100,15 @@ public class LiveAdapter extends AbsGridViewAdapter<LiveBean,LiveAdapter.Holder>
 
     @Override
     protected void doRequest() {
+        //test TODO
         List<LiveBean> beens = new ArrayList<>();
-        beens.add(new LiveBean());
-        beens.add(new LiveBean());
-        beens.add(new LiveBean());
-        beens.add(new LiveBean());
-        beens.add(new LiveBean());
-        beens.add(new LiveBean());
-        beens.add(new LiveBean());
+        //beens.add(new LiveBean());
+        //beens.add(new LiveBean());
+        //beens.add(new LiveBean());
+        //beens.add(new LiveBean());
+        //beens.add(new LiveBean());
+        //beens.add(new LiveBean());
+        //beens.add(new LiveBean());
         beens.add(new LiveBean());
 
         onSuccess(beens);
