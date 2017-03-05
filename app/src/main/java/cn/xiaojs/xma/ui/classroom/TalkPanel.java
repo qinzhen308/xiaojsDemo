@@ -131,7 +131,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private OnPanelItemClick mOnPanelItemClick;
     private final Object LOCK = new Object();
     private String mTicket;
-    private Socket mSocket;
     private int mTalkCriteria = MULTI_TALK;
     private Attendee mTalkAttendee;
     private String mPeerTalkAccountId = "";
@@ -737,7 +736,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 }
                 break;
         }
-        if (talkBean != null && mSocket != null) {
+        if (talkBean != null) {
             String event = Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK);
             SocketManager.emit(event, talkBean, new SocketManager.AckListener() {
                 @Override
