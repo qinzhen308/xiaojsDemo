@@ -35,7 +35,9 @@ import com.bumptech.glide.signature.StringSignature;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.account.Account;
@@ -69,6 +71,8 @@ public class MineFragment extends BaseFragment {
     IconTextView mUserName;
     @BindView(R.id.evaluation_star)
     EvaluationStar mEvaluation;
+    @BindView(R.id.lesson_teaching_duration)
+    TextView mLessonTeachingDurationTv;
 
     //ugc
     @BindView(R.id.fans)
@@ -162,6 +166,17 @@ public class MineFragment extends BaseFragment {
             //mFansTv.setText(String.valueOf(personUgc.getLikedCount()));
             //mFollowingTv.setText(String.valueOf(personUgc.getFollowedCount()));
         }
+
+        //set default
+        //TODO
+        boolean isTeacher = SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE);
+        String duration;
+        if (isTeacher) {
+            duration = getString(R.string.tea_lesson_duration, 0);
+        } else {
+            duration = getString(R.string.stu_lesson_duration, 0);
+        }
+        mLessonTeachingDurationTv.setText(duration);
     }
 
     private void setPersonBaseInfo(Account.Basic basic) {

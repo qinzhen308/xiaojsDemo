@@ -43,7 +43,6 @@
                     android:id="@+id/person_home_name"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/px10"
-                    android:text="林妙可"
                     android:textSize="@dimen/font_30px"
                     android:textColor="@color/white"
                     app:gravity="center"
@@ -51,11 +50,13 @@
                     android:layout_height="wrap_content"/>
 
             <LinearLayout
+                    android:id="@+id/person_home_layout"
                     android:orientation="horizontal"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/px15"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                 <TextView
                         android:textColor="@color/white"
@@ -85,7 +86,7 @@
             <TextView
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_28px"
-                    android:text="疯狂是个儿童，在理智的花园里，做着美好的游戏"
+                    android:text="@string/default_profile_txt"
                     android:layout_marginTop="@dimen/px15"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
@@ -138,7 +139,7 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_28px"
                         android:layout_marginLeft="@dimen/px15"
-                        android:text="239 教学时长(小时)"
+                        android:text="0 教学时长(小时)"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>

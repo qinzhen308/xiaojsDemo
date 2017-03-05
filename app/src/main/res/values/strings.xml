@@ -119,8 +119,10 @@
     <string name="get_more_right">可享更多权益</string>
     <string name="settings">设置</string>
     <string name="recommend_to_friends">推荐给好友</string>
-    <string name="my_profile_txt">为自己写一句个性签名，让别人更了解你</string>
+    <string name="default_profile_txt">为自己写一句个性签名，让别人更了解你</string>
     <string name="my_order">我的订单</string>
+    <string name="stu_lesson_duration">%1$s 学时（小时）</string>
+    <string name="tea_lesson_duration">%1$s 教学时长（小时）</string>
     <!--setting-->
     <string name="mobile_network_watch_live">允许2G/3G/4G观看直播</string>
     <string name="message_notify_set">消息提醒设置</string>
