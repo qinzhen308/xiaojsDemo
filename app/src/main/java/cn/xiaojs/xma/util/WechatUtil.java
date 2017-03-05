@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.orhanobut.logger.Logger;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
@@ -77,6 +78,7 @@ public class WechatUtil {
 
         sendRequest(api,msg,"webpage",session);
 
+
     }
 
     private static void sendRequest(IWXAPI api,
@@ -89,7 +91,11 @@ public class WechatUtil {
         req.message = msg;
         req.scene = session? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
 
-        api.sendReq(req);
+        boolean send = api.sendReq(req);
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("wechat send request:"+ (send? "true": "false"));
+        }
+
     }
 
     private static String buildTransaction(final String type) {

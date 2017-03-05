@@ -131,13 +131,12 @@ public class LessonHomeActivity extends BaseActivity {
     }
 
     private void loadData() {
-        int type = getIntent().getIntExtra(CourseConstant.KEY_ENTRANCE_TYPE, ENTRANCE_FROM_TEACH_LESSON);
-        //TODO not implemented
-        //if (type == ENTRANCE_FROM_TEACH_LESSON) {
-        //    mReportLayout.setVisibility(View.GONE);
-        //    mReportDivideLine.setVisibility(View.GONE);
-        //    mLessonEnrollLayout.setVisibility(View.GONE);
-        //}
+        int type = getIntent().getIntExtra(CourseConstant.KEY_ENTRANCE_TYPE, -1);
+        if (type == ENTRANCE_FROM_ENROLL_LESSON) {
+            //mReportLayout.setVisibility(View.GONE);
+            //mReportDivideLine.setVisibility(View.GONE);
+            mLessonEnrollLayout.setVisibility(View.GONE);
+        }
 
         String lessonId = getIntent().getStringExtra(CourseConstant.KEY_LESSON_ID);
         if (TextUtils.isEmpty(lessonId)) {

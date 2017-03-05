@@ -75,6 +75,25 @@ public class LessonDataManager {
     }
 
     /**
+     * 通过用户ID获取用户授的课
+     * @param context
+     * @param account
+     * @param page
+     * @param limit
+     * @param callback
+     */
+    public static void getLessonsById(Context context,
+                                      String account,
+                                      int page,
+                                      int limit,
+                                      APIServiceCallback<GetLessonsResponse> callback){
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getLessons(account, page, limit);
+
+    }
+
+    /**
      * 上架直播课
      */
     public static void requestPutLessonOnShelves(Context context,
