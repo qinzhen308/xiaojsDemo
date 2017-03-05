@@ -497,6 +497,13 @@
     <string name="click_install">点击安装</string>
     <string name="upgrade_error_reclick">更新失败，点击重试</string>
 
+    <!-- share-->
+    <string name="share_to">分享到</string>
+    <string name="qq">qq</string>
+    <string name="微信">wechat</string>
+    <string name="wechat">微信</string>
+    <string name="friend_circle">朋友圈</string>
+
 
     <!-- im -->
     <string name="jmui_action_settings">Settings</string>
@@ -641,7 +648,9 @@
     <string name="cannt_move_class">不能移动班级</string>
     <string name="title_activity_upgrade">UpgradeActivity</string>
     <string name="upgrade_title">小教室升级</string>
-
+    <string name="xjs_friend">小教室好友</string>
+    <string name="classes_circle">班级圈</string>
+    <string name="be_teacher">声明教学能力，成为老师</string>
 
 
 </resources>

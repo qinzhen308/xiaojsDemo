@@ -19,7 +19,6 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 
 public class TeachingAbilityActivity extends BaseActivity {
-    private final static int REQUEST_TEACHING_ABILITY = 100;
     public final static String KEY_SUBJECT = "key_subject";
 
     @Override
@@ -37,8 +36,8 @@ public class TeachingAbilityActivity extends BaseActivity {
                 break;
             case R.id.edit_ability_layout:
                 //startActivity(new Intent(TeachingAbilityActivity.this,TeachAbilityDemoActivity.class));
-                Intent intent = new Intent(this, TeachingSubjectActivity.class);
-                startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
+//                Intent intent = new Intent(this, TeachingSubjectActivity.class);
+//                startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
                 break;
         }
     }

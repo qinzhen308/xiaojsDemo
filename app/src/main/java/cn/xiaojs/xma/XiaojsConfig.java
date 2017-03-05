@@ -43,9 +43,9 @@ public class XiaojsConfig {
 
 
     //wechat
-    public static final String WX_APP_ID = "wxb0290782ab5b55b5";
+    public static final String WX_APP_ID = "wxecffc72c21a94f5a";
     //QQ
-    public static final String QQ_APP_ID = "1105919395";
+    public static final String QQ_APP_ID = "1105994736";
 
     //bugly
     public static final String BUGLY_APP_ID = "900060174";

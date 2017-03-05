@@ -355,39 +355,39 @@
                 style="@style/DividerHorizontal2"/>
 
         <!--我的收藏-->
-        <RelativeLayout
-                android:id="@+id/my_favorites_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/MinePageItem">
+        <!--<RelativeLayout-->
+                <!--android:id="@+id/my_favorites_layout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/MinePageItem">-->
 
-            <TextView
-                    android:layout_alignParentLeft="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/px26"
-                    android:textStyle="bold"
-                    android:drawableLeft="@drawable/ic_my_favorites"
-                    android:drawablePadding="@dimen/px20"
-                    android:text="@string/my_collections"/>
+            <!--<TextView-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/font_black"-->
+                    <!--android:textSize="@dimen/px26"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:drawableLeft="@drawable/ic_my_favorites"-->
+                    <!--android:drawablePadding="@dimen/px20"-->
+                    <!--android:text="@string/my_collections"/>-->
 
-            <TextView
-                    android:id="@+id/my_favorites"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/enter_my_favorites"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/px26"
-                    android:layout_marginRight="@dimen/px20"/>
+            <!--<TextView-->
+                    <!--android:id="@+id/my_favorites"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_toLeftOf="@+id/enter_my_favorites"-->
+                    <!--android:textColor="@color/font_black"-->
+                    <!--android:textSize="@dimen/px26"-->
+                    <!--android:layout_marginRight="@dimen/px20"/>-->
 
-            <ImageView
-                    android:id="@+id/enter_my_favorites"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_entrance"/>
-        </RelativeLayout>
+            <!--<ImageView-->
+                    <!--android:id="@+id/enter_my_favorites"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@drawable/ic_entrance"/>-->
+        <!--</RelativeLayout>-->
 
         <View
                 style="@style/DividerHorizontal2"/>
@@ -452,8 +452,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/enter_teach_ability"
-                    android:textColor="@color/font_black"
+                    android:textColor="@color/font_dark_gray"
                     android:textSize="@dimen/px26"
+                    android:text="@string/be_teacher"
                     android:layout_marginRight="@dimen/px20"/>
 
             <ImageView

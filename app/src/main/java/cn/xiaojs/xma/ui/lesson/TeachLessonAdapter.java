@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.lesson;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -48,6 +49,7 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
 import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.NumberUtil;
+import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -417,6 +419,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     //分享
     private void share(TeachLesson bean) {
 
+        ShareUtil.show((Activity) mContext,bean.getTitle(),"今晚（3月1日）19:00，综合素质课应考技巧公益讲座就要开讲啦！","https://www.baidu.com");
     }
 
     //报名注册
