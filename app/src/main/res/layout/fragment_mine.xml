@@ -389,8 +389,8 @@
         <!--android:src="@drawable/ic_entrance"/>-->
         <!--</RelativeLayout>-->
 
-        <View
-                style="@style/DividerHorizontal2"/>
+        <!--<View
+                style="@style/DividerHorizontal2"/>-->
 
         <!--我的订单-->
         <RelativeLayout
