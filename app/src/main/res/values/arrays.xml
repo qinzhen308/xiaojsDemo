@@ -69,9 +69,10 @@
     </string-array>
     <string-array name="center_tab_items">
         <item>发动态</item>
-        <item>聊天</item>
+        <item>联系人</item>
+        <!--<item>聊天</item>
         <item>约辅导</item>
-        <item>提问</item>
+        <item>提问</item>-->
         <item>开课</item>
     </string-array>
     <string-array name="course_block_tabs">

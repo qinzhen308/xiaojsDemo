@@ -148,6 +148,7 @@ public abstract class BaseTabActivity extends BaseActivity {
 
             @Override
             public void menuItemClicked(int menuNumber) {
+                mGooeyMenu.close();
                 onGooeyMenuClick(menuNumber);
             }
         });

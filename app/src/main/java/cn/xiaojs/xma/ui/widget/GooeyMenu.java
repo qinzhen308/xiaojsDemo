@@ -31,7 +31,7 @@ import java.util.List;
 public class GooeyMenu extends View {
 
     private static final long ANIMATION_DURATION = 1000;
-    private static final int DEFUALT_MENU_NO = 5;
+    private static final int DEFUALT_MENU_NO = 3;
     private final float START_ANGLE = 0f;
     private final float END_ANGLE = 45f;
     private int mNumberOfMenu;//Todo
@@ -53,9 +53,10 @@ public class GooeyMenu extends View {
     private GooeyMenuInterface mGooeyMenuInterface;
     private List<Drawable> mDrawableArray;
     private int[] icons = new int[]{R.drawable.ic_tab_dynamic,
-                                    R.drawable.ic_tab_chat,
+                                    /*R.drawable.ic_tab_chat,
                                     R.drawable.ic_acounse,
-                                    R.drawable.ic_tab_query,
+                                    R.drawable.ic_tab_query,*/
+                                    R.drawable.ic_tab_contact,
                                     R.drawable.ic_tab_open_course};
 
     public static final int[] STATE_ACTIVE =

@@ -19,6 +19,7 @@ import cn.xiaojs.xma.ui.home.HomeFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
+import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.NotificationFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.mine.TeachAbilityDemoActivity;
@@ -88,9 +89,11 @@ public class MainActivity extends BaseTabActivity {
                 }
                 break;
             case 2:
-                startActivity(new Intent(this,GradeHomeActivity.class));
+                //startActivity(new Intent(this,GradeHomeActivity.class));
+                startActivity(new Intent(this, ContactActivity.class));
                 break;
             case 3:
+                startActivityForResult(new Intent(this, PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
 //                ArrayList<String> urls = new ArrayList<>();
 //                urls.add("http://c.hiphotos.baidu.com/image/pic/item/5bafa40f4bfbfbed91fbb0837ef0f736aec31faf.jpg");
 //                urls.add("http://h.hiphotos.baidu.com/image/pic/item/4ec2d5628535e5dd2820232370c6a7efce1b623a.jpg");
@@ -103,20 +106,20 @@ public class MainActivity extends BaseTabActivity {
                 //startActivity(new Intent(this, CertificationActivity.class));
                 //startActivity(new Intent(this, TestActivity.class));
 
-                if (JMessageClient.getMyInfo() != null){
-                    Intent intent = new Intent(this, ChatActivity.class);
-                    intent.putExtra(ChatActivity.TARGET_ID,"1234567");
-                    startActivity(intent);
-                }
+                //if (JMessageClient.getMyInfo() != null){
+                //    Intent intent = new Intent(this, ChatActivity.class);
+                //    intent.putExtra(ChatActivity.TARGET_ID,"1234567");
+                //    startActivity(intent);
+                //}
 
 //                Intent intent = new Intent(this, MyOrderActivity.class);
 //                startActivity(intent);
                 break;
             case 4:
-                startActivity(new Intent(this,PersonHomeActivity.class));
+                //startActivity(new Intent(this,PersonHomeActivity.class));
                 break;
             case 5:
-                startActivityForResult(new Intent(this, PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
+                //startActivityForResult(new Intent(this, PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
                 break;
         }
 
