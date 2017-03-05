@@ -132,8 +132,8 @@ public class StudentVideoController extends VideoController {
         @Override
         public void call(Object... args) {
             if (args != null && args.length > 0) {
-                Toast.makeText(mContext, "学生端流开始", Toast.LENGTH_LONG).show();
                 StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
+                Toast.makeText(mContext, "学生端流开始" + (startedNotify != null ? startedNotify.RTMPPlayUrl : null), Toast.LENGTH_LONG).show();
                 if (startedNotify != null) {
                     mPlayStreamUrl = startedNotify.RTMPPlayUrl;
                     playStream(startedNotify.RTMPPlayUrl);
