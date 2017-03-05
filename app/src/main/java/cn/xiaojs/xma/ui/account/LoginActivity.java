@@ -16,9 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -26,15 +29,11 @@ import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginParams;
-import cn.xiaojs.xma.ui.SplashActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.VerifyUtils;
 import cn.xiaojs.xma.util.XjsUtils;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -93,14 +92,27 @@ public class LoginActivity extends BaseActivity {
                 final CommonDialog commonDialog = new CommonDialog(LoginActivity.this);
                 commonDialog.setTitle("修改服务器地址");
                 commonDialog.show();
-                final EditText edt = new EditText(LoginActivity.this);
-                commonDialog.setCustomView(edt);
-                edt.setText("http://");
+                LinearLayout layout = new LinearLayout(LoginActivity.this);
+                layout.setOrientation(LinearLayout.VERTICAL);
+                final EditText urlEdt = new EditText(LoginActivity.this);
+                final EditText xasPort = new EditText(LoginActivity.this);
+                final EditText xlsPort = new EditText(LoginActivity.this);
+                layout.addView(urlEdt);
+                layout.addView(xasPort);
+                layout.addView(xlsPort);
+
+                commonDialog.setCustomView(layout);
+                urlEdt.setHint("请输入服务器地址");
+                xasPort.setHint("请输入XAS端口");
+                xlsPort.setHint("请输入XLS端口");
+                urlEdt.setText("http://");
                 commonDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                     @Override
                     public void onClick() {
                         commonDialog.dismiss();
-                        XiaojsConfig.BASE_URL = edt.getText().toString();
+                        XiaojsConfig.BASE_URL = urlEdt.getText().toString();
+                        XiaojsConfig.SERVICE_PORT = xasPort.getText().toString();
+                        XiaojsConfig.LIVE_PORT = xlsPort.getText().toString();
                     }
                 });
                 commonDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
