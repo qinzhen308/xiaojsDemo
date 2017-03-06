@@ -183,7 +183,7 @@
         <activity
                 android:name=".ui.common.ImageViewActivity"
                 android:screenOrientation="portrait"
-                android:theme="@style/CustomerDialog"/>
+                android:theme="@style/scan_image_activity"/>
         <activity
                 android:name=".ui.certification.CertificationActivity"
                 android:screenOrientation="portrait"/>

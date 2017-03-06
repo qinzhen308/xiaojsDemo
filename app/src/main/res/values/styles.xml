@@ -247,6 +247,11 @@
     </style>
 
     <!-- 透明Activity的dialog样式 -->
+    <style name="scan_image_activity" parent="android:Theme.Light.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <!-- 透明Activity的dialog样式 -->
     <style name="CustomerDialog" parent="android:Theme.Translucent">
 
         <!-- 无标题 -->
