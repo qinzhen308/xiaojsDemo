@@ -73,7 +73,7 @@
     <color name="common_btn_white_text_press">#88ffffff</color>
     <color name="translucent_50">#7d000000</color>
     <color name="translucent_30">#6f000000</color>
-    <color name="search_gray">#bfbfbf</color>
+    <color name="search_gray">#999999</color>
     <color name="common_text">#8a8a8a</color>
     <color name="course_state_on">#0066ff</color>
     <color name="course_state_cancel">#cccccc</color>

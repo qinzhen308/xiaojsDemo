@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.view;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -255,7 +256,7 @@ public class MomentContent extends RelativeLayout {
             mNormalImage.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UIUtils.toImageViewActivity(getContext(),body.drawings);
+                    UIUtils.toImageViewActivity((Activity)getContext(),body.drawings);
                 }
             });
         }else {

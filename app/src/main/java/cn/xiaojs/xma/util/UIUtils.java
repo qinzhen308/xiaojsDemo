@@ -71,7 +71,7 @@ public class UIUtils {
 
     }
 
-    public static void toImageViewActivity(Context context, Dynamic.DynPhoto[] photos){
+    public static void toImageViewActivity(Activity context, Dynamic.DynPhoto[] photos){
         if (photos != null && photos.length > 0){
             ArrayList<String> us = new ArrayList<>();
             for ( Dynamic.DynPhoto photo:photos) {
@@ -80,6 +80,7 @@ public class UIUtils {
             Intent intent = new Intent(context, ImageViewActivity.class);
             intent.putExtra(ImageViewActivity.IMAGE_PATH_KEY,us);
             context.startActivity(intent);
+            context.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
 }

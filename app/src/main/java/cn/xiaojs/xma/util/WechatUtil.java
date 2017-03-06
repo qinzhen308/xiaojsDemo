@@ -38,7 +38,7 @@ public class WechatUtil {
      * @param text
      * @param session true分享到好友会话，否则分享到朋友圈
      */
-    public static void shareText(IWXAPI api, String text, boolean session){
+    public static boolean shareText(IWXAPI api, String text, boolean session){
         WXTextObject textObject = new WXTextObject();
         textObject.text = text;
 
@@ -46,7 +46,7 @@ public class WechatUtil {
         msg.mediaObject = textObject;
         msg.description = text;
 
-        sendRequest(api,msg,"text",session);
+        return sendRequest(api,msg,"text",session);
 
     }
 
@@ -59,7 +59,7 @@ public class WechatUtil {
      * @param url
      * @param session true分享到好友会话，否则分享到朋友圈
      */
-    public static void shareWebpage(Context context,
+    public static boolean shareWebpage(Context context,
                                     IWXAPI api,
                                     String title,
                                     String description,
@@ -73,15 +73,15 @@ public class WechatUtil {
         msg.title = title;
         msg.description = description;
 
-        Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+        Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_share_avator);
         msg.thumbData = BitmapUtils.bmpToByteArray(bmp, true);
 
-        sendRequest(api,msg,"webpage",session);
+        return sendRequest(api,msg,"webpage",session);
 
 
     }
 
-    private static void sendRequest(IWXAPI api,
+    private static boolean sendRequest(IWXAPI api,
                                     WXMediaMessage msg,
                                     String transaction,
                                     boolean session) {
@@ -95,6 +95,8 @@ public class WechatUtil {
         if (XiaojsConfig.DEBUG) {
             Logger.d("wechat send request:"+ (send? "true": "false"));
         }
+
+        return send;
 
     }
 

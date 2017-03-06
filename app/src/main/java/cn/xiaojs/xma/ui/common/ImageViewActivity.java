@@ -234,21 +234,22 @@ public class ImageViewActivity extends BaseActivity {
                 Glide.with(mContext)
                         .load(new File(mList.get(position % mList.size())))
                         .asBitmap()
-                        .placeholder(R.drawable.default_lesson_cover)
-                        .error(R.drawable.default_lesson_cover)
+                        //.placeholder(R.drawable.ic_home_picture)
+                        .error(R.drawable.ic_home_picture)
                         .into(imageView);
             }else {
                 Glide.with(mContext)
                         .load(Social.getDrawing(mList.get(position % mList.size()),false))
                         .asBitmap()
-                        .placeholder(R.drawable.default_lesson_cover)
-                        .error(R.drawable.default_lesson_cover)
+                        //.placeholder(R.drawable.ic_home_picture)
+                        .error(R.drawable.ic_home_picture)
                         .into(imageView);
             }
 
-            imageView.setClickListener(new PhotoViewAttacher.onClickListener() {
+            imageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick() {
+                public boolean onLongClick(View v) {
+
                     ListBottomDialog dialog = new ListBottomDialog(mContext);
                     String[] items = new String[]{"保存图片"};
                     dialog.setItems(items);
@@ -272,6 +273,16 @@ public class ImageViewActivity extends BaseActivity {
                         }
                     });
                     dialog.show();
+
+                    return false;
+                }
+            });
+
+            imageView.setClickListener(new PhotoViewAttacher.onClickListener() {
+                @Override
+                public void onClick() {
+                    finish();
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
             });
             ((ViewPager) container).addView(view, 0);
@@ -330,4 +341,10 @@ public class ImageViewActivity extends BaseActivity {
             }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
 }

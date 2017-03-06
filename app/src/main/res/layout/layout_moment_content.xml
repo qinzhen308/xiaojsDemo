@@ -14,12 +14,12 @@
         <TextView
                 android:id="@+id/moment_content_normal_txt"
                 android:textColor="@color/font_black"
-                android:textSize="@dimen/font_30px"
+                android:textSize="@dimen/font_31px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
         <ImageView
-                android:layout_marginTop="@dimen/px30"
+                android:layout_marginTop="@dimen/px23"
                 android:id="@+id/moment_content_normal_image"
                 android:scaleType="fitXY"
                 android:layout_width="wrap_content"

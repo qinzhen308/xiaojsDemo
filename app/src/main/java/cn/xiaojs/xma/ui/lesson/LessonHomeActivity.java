@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.lesson;
 
 import com.google.android.flexbox.FlexboxLayout;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Html;
@@ -43,6 +44,7 @@ import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
+import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -120,6 +122,7 @@ public class LessonHomeActivity extends BaseActivity {
             case R.id.favourite_btn:
                 break;
             case R.id.share_wb_btn:
+                ShareUtil.show(LessonHomeActivity.this,mLessonDetail.getTitle(),"今晚（3月1日）19:00，综合素质课应考技巧公益讲座就要开讲啦！","https://www.baidu.com");
                 break;
             case R.id.report:
                 break;

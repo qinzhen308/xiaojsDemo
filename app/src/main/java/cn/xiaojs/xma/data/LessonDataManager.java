@@ -78,15 +78,25 @@ public class LessonDataManager {
      * 通过用户ID获取用户授的课
      * @param context
      * @param account
-     * @param page
-     * @param limit
+     * @param pagination
      * @param callback
      */
-    public static void getLessonsById(Context context,
+    public static void getLessonsByUser(Context context,
                                       String account,
-                                      int page,
-                                      int limit,
+                                      Pagination pagination,
                                       APIServiceCallback<GetLessonsResponse> callback){
+
+        int page = 1;
+        int limit = 10;
+
+        if (pagination != null) {
+            page = pagination.getPage();
+            limit = pagination.getMaxNumOfObjectsPerPage();
+        }
+
+        if (account == null) {
+            account = "";
+        }
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLessons(account, page, limit);
