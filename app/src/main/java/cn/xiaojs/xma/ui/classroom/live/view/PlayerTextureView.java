@@ -60,7 +60,7 @@ public class PlayerTextureView extends BaseMediaView {
 
     private void init(int ratio) {
         mPlayer.setBufferingIndicator(mLoadingView);
-        showLoading(true);
+        //showLoading(true);
         AVOptions options = new AVOptions();
 
         // the unit of timeout is ms
@@ -245,7 +245,7 @@ public class PlayerTextureView extends BaseMediaView {
         if (mHandler == null)
             return;
         Logger.i(TAG, "正在重连...");
-        showLoading(true);
+        //showLoading(true);
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_ID_RECONNECTING), 500);
     }

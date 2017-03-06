@@ -162,18 +162,30 @@ public class LiveRecordView extends BaseMediaView implements
         mQuality = XjsUtils.getSharedPreferences().getInt(Constants.KEY_QUALITY, Constants.QUALITY_STANDARD);
         int fps = Config.VIDEO_STANDARD_FPS;
         int bps = Config.VIDEO_STANDARD_BITRATE;
+        int resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
+        String bpsStr= "";
+        String resStr = "";
         switch (mQuality) {
             case Constants.QUALITY_FLUENT:
                 fps = Config.VIDEO_FLUENT_FPS;
                 bps = Config.VIDEO_FLUENT_BITRATE;
+                resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_240;
+                bpsStr = "512";
+                resStr = "240p";
                 break;
             case Constants.QUALITY_STANDARD:
                 fps = Config.VIDEO_STANDARD_FPS;
                 bps = Config.VIDEO_STANDARD_BITRATE;
+                resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
+                bpsStr = "800";
+                resStr = "480p";
                 break;
             case Constants.QUALITY_HIGH:
                 fps = Config.VIDEO_STANDARD_FPS;
                 bps = Config.VIDEO_HIGH_BITRATE;
+                resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_720;
+                bpsStr = "1200";
+                resStr = "720p";
                 break;
         }
 
@@ -192,7 +204,7 @@ public class LiveRecordView extends BaseMediaView implements
 
         mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3)
                 .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
-                .setEncodingSizeLevel(Config.ENCODING_LEVEL)
+                .setEncodingSizeLevel(resolution)
                 .setEncoderRCMode(StreamingProfile.EncoderRCModes.BITRATE_PRIORITY)//码率优先
                 .setAVProfile(avProfile)
                 .setDnsManager(getMyDnsManager())
@@ -210,11 +222,11 @@ public class LiveRecordView extends BaseMediaView implements
                 .setRecordingHint(false)
                 //.setFrontCameraMirror(false)//避免前置摄像头字体镜像反转
                 .setCameraFacingId(cameraFacingId)
-                .setBuiltInFaceBeautyEnabled(true)
+                //.setBuiltInFaceBeautyEnabled(true)
                 .setResetTouchFocusDelayInMs(3000)
                 .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.SMALL)
                 .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9)
-                .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
+                //.setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
                 .setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
         mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
         mMicrophoneStreamingSetting.setBluetoothSCOEnabled(false);//麦克风蓝牙支持
