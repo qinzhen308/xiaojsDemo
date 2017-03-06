@@ -1309,6 +1309,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (mOpenedDrawer != null && mOpenedPanel != null) {
                 mOpenedPanel.close(mDrawerLayout, mOpenedDrawer);
                 return false;
+            } else if (mPageState == PAGE_EDIT_VIDEO) {
+                exitVideoEditing();
+                return false;
             } else {
                 showExitDialog();
                 return false;
