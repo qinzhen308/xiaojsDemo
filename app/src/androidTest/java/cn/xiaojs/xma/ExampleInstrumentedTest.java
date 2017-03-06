@@ -3,6 +3,7 @@ package cn.xiaojs.xma;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.text.TextUtils;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -26,6 +27,11 @@ import com.orhanobut.logger.Logger;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -62,7 +68,7 @@ public class ExampleInstrumentedTest {
         //testCenterData(appContext);
         //testGetData(appContext);
         //testToggleLesson(appContext);
-        testT(appContext);
+        //testT(appContext);
 
 
 //        String json = "{\"1482891322185\":\"xiao peng you\"}";
@@ -77,7 +83,61 @@ public class ExampleInstrumentedTest {
 //        String cc = jobject.keys().next();
 //        System.out.println("===========:"+cc);
 
+        String dd = "2017-03-03T08:30:00.000Z";
+        String datew = distanceDay(dd);
 
+        Logger.d("d:"+datew);
+
+        System.out.println(datew);
+
+
+    }
+
+    public static String distanceDay(String date) {
+        String reulst = "";
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date = formatDate(date, "yyyy-MM-dd HH:mm:ss");
+        // 给定的时间
+        Date end = null;
+        try {
+            end = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        // 当前时间
+        Date now = new Date();
+        // 得到时间差
+        long diff = (end.getTime() - now.getTime()) / 1000;
+        long mm = (diff / 60) % 60;
+        long hh = (diff / 60 / 60) % 24;
+        long dd = (diff / 60 / 60 / 24);
+
+        reulst = (dd + "天" + hh + "小时" + mm + "分");
+
+        return reulst;
+    }
+
+    public static String formatDate(String date, String format) {
+        if (TextUtils.isEmpty(date)) {
+            return "";
+        }
+        String str = date;
+        if (str.contains("T")) {
+            str = str.replace("T", " ");
+        }
+        if (str.contains("/")) {
+            str = str.replaceAll("/", "-");
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
+        Date d = null;
+        try {
+            d = sdf.parse(str);
+            return sdf.format(d);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
 

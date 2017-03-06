@@ -10,7 +10,7 @@
             android:layout_centerInParent="true"
             android:paddingTop="@dimen/px30"
             android:paddingBottom="@dimen/px30"
-            android:text="进入教室"
+            android:text="进入教室>>"
             android:textColor="@color/font_orange"
             android:textSize="@dimen/font_26px"
             android:layout_width="wrap_content"

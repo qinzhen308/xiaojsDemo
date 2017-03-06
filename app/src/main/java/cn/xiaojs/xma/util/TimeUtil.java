@@ -405,6 +405,37 @@ public class TimeUtil {
         return timeStr;
     }
 
+    public static String distanceDay(Date end) {
+
+        StringBuilder strBuilder = new StringBuilder();
+        // 当前时间
+        Date now = new Date();
+        // 得到时间差
+        long diff = (end.getTime() - now.getTime()) / 1000;
+        long dd = (diff / 60 / 60 / 24);
+        long hh = (diff / 60 / 60) % 24;
+        long mm = (diff / 60) % 60;
+
+        if (dd > 0) {
+            strBuilder.append(dd).append("天");
+        }
+
+        if (hh > 0) {
+            strBuilder.append(hh).append("小时");
+        }
+
+        if (dd <=0 && mm >0) {
+            strBuilder.append(mm).append("分钟");
+        }
+
+        if (strBuilder.length() == 0) {
+            strBuilder.append("0天");
+        }
+
+        return strBuilder.toString();
+    }
+
+
     /**
      * @return 1天5小时20分
      */
