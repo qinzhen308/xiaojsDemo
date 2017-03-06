@@ -55,6 +55,7 @@ public class QQUtil {
         //分享的消息摘要，最长50个字
         bundle.putString(SocialConstants.PARAM_SUMMARY, summary);
 
+        bundle.putString(SocialConstants.PARAM_IMG_URL, "");
         String appname = activity.getString(R.string.app_name);
 
         //标识该消息的来源应用，值为应用名称+AppId。

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.tauth.IUiListener;
@@ -37,6 +38,11 @@ public class ShareUtil {
         TextView tvWechat = (TextView) view.findViewById(R.id.tv_wechat);
         TextView tvFriends = (TextView) view.findViewById(R.id.tv_fcircle);
 
+        final BottomSheet bottomSheet = new BottomSheet(activity);
+        bottomSheet.setTitleVisibility(View.GONE);
+        bottomSheet.setContent(view);
+
+
         tvQq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,18 +51,21 @@ public class ShareUtil {
                     @Override
                     public void onComplete(Object o) {
 
+                        //Toast.makeText(activity, "分享成功", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(UiError uiError) {
-
+                        //Toast.makeText(activity, "分享失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onCancel() {
-
+                        //Toast.makeText(activity, "分享已取消", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+                bottomSheet.dismiss();
             }
         });
 
@@ -65,6 +74,8 @@ public class ShareUtil {
             public void onClick(View v) {
                 IWXAPI iwxapi = WechatUtil.registerToWechat(activity.getApplicationContext());
                 WechatUtil.shareWebpage(activity, iwxapi,title,message,url,true);
+
+                bottomSheet.dismiss();
             }
         });
 
@@ -72,14 +83,14 @@ public class ShareUtil {
             @Override
             public void onClick(View v) {
                 IWXAPI iwxapi = WechatUtil.registerToWechat(activity.getApplicationContext());
-                WechatUtil.shareWebpage(activity, iwxapi,title,message,url,false);
+                boolean send = WechatUtil.shareWebpage(activity, iwxapi,title,message,url,false);
+//                String tip = send? "分享成功": "分享失败";
+//                Toast.makeText(activity, tip, Toast.LENGTH_SHORT).show();
+                bottomSheet.dismiss();
             }
         });
 
 
-        final BottomSheet bottomSheet = new BottomSheet(activity);
-        bottomSheet.setTitleVisibility(View.GONE);
-        bottomSheet.setContent(view);
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
