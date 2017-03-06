@@ -22,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
@@ -104,9 +108,12 @@ public class LessonStatusView extends RelativeLayout {
             this.status.setText(R.string.force_stop);
             this.status.setBackgroundResource(R.drawable.course_state_stop_bg);
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
-            time.setText(TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
-            String s = "距离上课还有3天";
-            title.setText(StringUtil.getSpecialString(s, String.valueOf(3), DeviceUtil.getColor(getContext(), R.color.font_orange)));
+
+            Date date =bean.getSchedule().getStart();
+            time.setText(TimeUtil.format(date, TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
+            String dday = TimeUtil.distanceDay(date);
+            String s = String.format("距离上课还有%s", dday);
+            title.setText(StringUtil.getSpecialString(s, dday, DeviceUtil.getColor(getContext(), R.color.font_orange)));
         }
     }
 

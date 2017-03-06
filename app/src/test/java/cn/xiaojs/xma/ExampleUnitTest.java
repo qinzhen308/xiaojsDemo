@@ -1,5 +1,7 @@
 package cn.xiaojs.xma;
 
+import android.text.TextUtils;
+
 import com.fasterxml.jackson.core.Base64Variant;
 import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -10,6 +12,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.orhanobut.logger.Logger;
 
 import org.json.JSONObject;
 import org.junit.Test;
@@ -17,8 +20,10 @@ import org.junit.Test;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
@@ -242,13 +247,50 @@ public class ExampleUnitTest {
 //        System.out.println("=============="+s);
 
 
-        long tt = System.currentTimeMillis();
+//        long tt = System.currentTimeMillis();
+//
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//
+//        long time= sdf.parse("2017-03-03T08:30:00.000Z").getTime();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//        String md = "7E:64:4C:AB:E3:FE:25:60:4E:B1:E4:6E:8D:EB:19:95";
+//        String r = md.replaceAll(":","").toLowerCase();
+//        System.out.println(r);　
 
-        long time= sdf.parse("2017-03-03T08:30:00.000Z").getTime();
+//        String dd = "2017-03-05T18:30:30.000Z";
+//        String datew = distanceDay(dd);
+//
+//
+//        System.out.println(datew);
 
     }
+
+
+
+
+//    public static String formatDate(String date, String format) {
+////        if (TextUtils.isEmpty(date)) {
+////            return "";
+////        }
+//        String str = date;
+//        if (str.contains("T")) {
+//            str = str.replace("T", " ");
+//        }
+//        if (str.contains("/")) {
+//            str = str.replaceAll("/", "-");
+//        }
+//        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
+//        Date d = null;
+//        try {
+//            d = sdf.parse(str);
+//            return sdf.format(d);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//            return "";
+//        }
+//    }
+
+
 
 
 }
