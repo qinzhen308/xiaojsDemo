@@ -405,16 +405,21 @@ public class TimeUtil {
         return timeStr;
     }
 
-    public static String distanceDay(Date end) {
+    public static String distanceDay(Date end, boolean isTeacher) {
 
         StringBuilder strBuilder = new StringBuilder();
         // 当前时间
         Date now = new Date();
         // 得到时间差
         long diff = (end.getTime() - now.getTime()) / 1000;
+        if (diff < 0) {
+            return isTeacher ? "已到上课时间" : "老师正在途中";
+        }
+
         long dd = (diff / 60 / 60 / 24);
         long hh = (diff / 60 / 60) % 24;
         long mm = (diff / 60) % 60;
+        String pre = "距离上课";
 
         if (dd > 0) {
             strBuilder.append(dd).append("天");
@@ -429,10 +434,10 @@ public class TimeUtil {
         }
 
         if (strBuilder.length() == 0) {
-            strBuilder.append("0天");
+            return "即将上课";
+        } else {
+            return pre + strBuilder.toString();
         }
-
-        return strBuilder.toString();
     }
 
 

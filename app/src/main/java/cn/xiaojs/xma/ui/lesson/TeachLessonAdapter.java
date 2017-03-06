@@ -283,6 +283,12 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 holder.end.setVisibility(View.VISIBLE);
             }
         }
+
+        if (LessonState.PENDING_FOR_LIVE.equalsIgnoreCase(bean.getState())
+                || LessonState.DRAFT.equalsIgnoreCase(bean.getState())) {
+            holder.distance.setVisibility(View.VISIBLE);
+            holder.distance.setText(TimeUtil.distanceDay(bean.getSchedule().getStart(), true));
+        }
     }
 
     //上架
