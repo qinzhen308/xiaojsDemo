@@ -189,7 +189,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     //gesture
     private GestureDetector mMainPanelGestureDetector;
     private GestureDetector mWhiteboardGestureDetector;
-    private GestureDetector mSyncWhitboardGestureDetector;
+    private GestureDetector mSyncWhiteboardGestureDetector;
 
     private ProgressHUD mProgress;
 
@@ -298,10 +298,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void initGestureDetector() {
         mMainPanelGestureDetector = new GestureDetector(this, new MainPanelGestureListener());
         mWhiteboardGestureDetector = new GestureDetector(this, new WhiteBoardGestureListener());
-        mSyncWhitboardGestureDetector = new GestureDetector(this, new SyncWhiteBoardGestureListener());
+        mSyncWhiteboardGestureDetector = new GestureDetector(this, new SyncWhiteBoardGestureListener());
 
         mMainPanel.setMainPanelGestureDetector(mMainPanelGestureDetector);
-        mMainPanel.setSyncWhiteboardGestureDetector(mSyncWhitboardGestureDetector);
+        mMainPanel.setSyncWhiteboardGestureDetector(mSyncWhiteboardGestureDetector);
         mMainPanel.setWhiteboardSv(mWhiteboardSv);
     }
 

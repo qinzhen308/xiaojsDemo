@@ -59,7 +59,7 @@ public class PlayerTextureView extends BaseMediaView {
     }
 
     private void init(int ratio) {
-        mPlayer.setBufferingIndicator(mLoadingView);
+        mPlayer.setBufferingIndicator(mLoadingLayout);
         //showLoading(true);
         AVOptions options = new AVOptions();
 
@@ -245,7 +245,7 @@ public class PlayerTextureView extends BaseMediaView {
         if (mHandler == null)
             return;
         Logger.i(TAG, "正在重连...");
-        //showLoading(true);
+        showLoading(true);
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_ID_RECONNECTING), 500);
     }

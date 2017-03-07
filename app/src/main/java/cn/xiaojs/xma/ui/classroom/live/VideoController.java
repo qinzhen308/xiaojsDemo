@@ -23,8 +23,11 @@ import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 
 public abstract class VideoController {
     protected Context mContext;
@@ -49,6 +52,10 @@ public abstract class VideoController {
             mPublishView.setOnStreamingStateListener(mStreamingStateChangedListener);
         }
         onResume();
+
+        //监听流开始或暂停
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
     }
 
     /**
@@ -125,6 +132,17 @@ public abstract class VideoController {
         if (mPlayView != null && !TextUtils.isEmpty(mPlayStreamUrl)) {
             mPlayView.setPath(mPlayStreamUrl);
             mPlayView.resume();
+            mPlayView.showLoading(true);
+        }
+    }
+
+    /**
+     * 暂停播放流
+     */
+    public void pauseStream() {
+        if (mPlayView != null) {
+            mPlayView.pause();
+            mPlayView.showLoading(false);
         }
     }
 
@@ -152,4 +170,22 @@ public abstract class VideoController {
             mHandler.removeCallbacksAndMessages(null);
         }
     }
+
+    private SocketManager.EventListener mStreamingStartedListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            onStreamingStarted(args);
+        }
+    };
+
+    private SocketManager.EventListener mStreamingStoppedListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            onStringingStopped(args);
+        }
+    };
+
+    protected abstract void onStreamingStarted(Object... args);
+
+    protected abstract void onStringingStopped(Object... args);
 }

@@ -14,16 +14,18 @@ package cn.xiaojs.xma.ui.grade;
  *
  * ======================================================================================== */
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.ParcelFileDescriptor;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -31,14 +33,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
@@ -48,6 +50,7 @@ import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.util.ToastUtil;
 
 public class MaterialActivity extends BaseActivity {
+    private static final int REQUEST_PERMISSION = 1000;
 
     public static final String KEY_IS_MINE = "key_is_mine";
 
@@ -72,6 +75,7 @@ public class MaterialActivity extends BaseActivity {
 
     MaterialAdapter mAdapter;
     CollaManager mManager;
+    private Uri mUri;
 
     @Override
     protected void addViewContent() {
@@ -135,58 +139,200 @@ public class MaterialActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BaseConstant.REQUEST_CODE_CHOOSE_FILE) {
             if (resultCode == RESULT_OK && data != null) {//是否选择，没选择就不会继续
-                Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
-                if (uri != null) {
-                    File file = null;
-                    if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(uri.getScheme())) {
-                        file = new File(uri.getPath());
-                    } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(uri.getScheme())) {
-
-                        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
-                        Cursor cursor = getContentResolver().query(uri,
-                                filePathColumn, null, null, null);
-                        if (cursor != null) {
-                            cursor.moveToFirst();
-                            int columnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
-                            String picturePath = cursor.getString(columnIndex);
-                            cursor.close();
-                            if (picturePath !=null){
-                                file = new File(picturePath);
-                            }
+                mUri = data.getData();//得到uri，后面就是将uri转化成file的过程。
+                if (mUri != null) {
+                    if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(mUri.getScheme())) {
+                        addToLibrary(new File(mUri.getPath()));
+                    } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(mUri.getScheme())) {
+                        if (PermissionUtil.isOverMarshmallow()) {
+                            PermissionGen.needPermission(MaterialActivity.this, REQUEST_PERMISSION,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE);
+                        } else {
+                            addToLibrary(queryFileFromDataBase());
                         }
                     }
-                    if (file == null)
-                        return;
-
-                    mUploadName.setText(file.getName());
-                    mUploadingWrapper.setVisibility(View.VISIBLE);
-                    mManager = new CollaManager();
-                    mManager.addToLibrary(this, file.getPath(), file.getName(), null, new QiniuService() {
-                        @Override
-                        public void uploadSuccess(String key, UploadReponse reponse) {
-                            mUploadingWrapper.setVisibility(View.GONE);
-                            ToastUtil.showToast(getApplicationContext(), R.string.up_load_success);
-                        }
-
-                        @Override
-                        public void uploadProgress(String key, double percent) {
-                            mUploadProgress.setProgress((int) (percent * 100));
-                        }
-
-                        @Override
-                        public void uploadFailure(boolean cancel) {
-                            mUploadingWrapper.setVisibility(View.GONE);
-                            if (cancel) {
-                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_cancel);
-                            } else {
-                                ToastUtil.showToast(getApplicationContext(), R.string.up_load_failure);
-                            }
-                        }
-                    });
-
                 }
             }
         }
+    }
+
+    @PermissionSuccess(requestCode = REQUEST_PERMISSION)
+    public void accessExternalStorageSuccess() {
+        addToLibrary(queryFileFromDataBase());
+    }
+
+    private File queryFileFromDataBase() {
+        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
+        Cursor cursor = getContentResolver().query(mUri,
+                filePathColumn, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            if (picturePath !=null){
+                return new File(picturePath);
+            } else {
+                return new File(getPath(MaterialActivity.this, mUri));
+            }
+        }
+
+        return null;
+    }
+
+    private void addToLibrary(File file) {
+        if (file == null) {
+            return;
+        }
+
+        mUploadName.setText(file.getName());
+        mUploadingWrapper.setVisibility(View.VISIBLE);
+        mManager = new CollaManager();
+        mManager.addToLibrary(this, file.getPath(), file.getName(), null, new QiniuService() {
+            @Override
+            public void uploadSuccess(String key, UploadReponse reponse) {
+                mUploadingWrapper.setVisibility(View.GONE);
+                ToastUtil.showToast(getApplicationContext(), R.string.up_load_success);
+            }
+
+            @Override
+            public void uploadProgress(String key, double percent) {
+                mUploadProgress.setProgress((int) (percent * 100));
+            }
+
+            @Override
+            public void uploadFailure(boolean cancel) {
+                mUploadingWrapper.setVisibility(View.GONE);
+                if (cancel) {
+                    ToastUtil.showToast(getApplicationContext(), R.string.up_load_cancel);
+                } else {
+                    ToastUtil.showToast(getApplicationContext(), R.string.up_load_failure);
+                }
+            }
+        });
+    }
+
+    @TargetApi(19)
+    public String getPath(final Context context, final Uri uri) {
+        final boolean isKitKat = Build.VERSION.SDK_INT >= 19; //Build.VERSION_CODES.KITKAT
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+                // TODO handle non-primary volumes
+            }
+
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                return getDataColumn(context, contentUri, null, null);
+            }
+
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{split[1]};
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(uri.getScheme())) {
+            // MediaStore (and general)
+            // Return the remote address
+            if (isGooglePhotosUri(uri)) {
+                return uri.getLastPathSegment();
+            }
+
+            return getDataColumn(context, uri, null, null);
+        } else if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(uri.getScheme())) {
+            // File
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the value of the data column for this Uri. This is useful for MediaStore Uris, and other
+     * file-based ContentProviders.
+     *
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
+     * @param selectionArgs (Optional) Selection arguments used in the query.
+     * @return The value of the _data column, which is typically a file path.
+     */
+    public String getDataColumn(Context context, Uri uri, String selection,
+                                String[] selectionArgs) {
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {column};
+        try {
+            cursor = getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
+    public static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
 
