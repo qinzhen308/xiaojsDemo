@@ -52,7 +52,6 @@ import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -70,7 +69,6 @@ import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
-import io.socket.client.Ack;
 import io.socket.client.Socket;
 import okhttp3.ResponseBody;
 
@@ -247,7 +245,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         //init data
         initData();
 
-        //grant permisson
+        //grant permission
         String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT,
                 Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
         PermissionGen.needPermission(this, 100, permissions);
@@ -605,7 +603,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         if (!mSktConnected) {
             if (mClassroomController != null) {
-                mClassroomController.onDestroyVideo();
+                mClassroomController.onPauseVideo();
             }
             SocketManager.close();
             initData();

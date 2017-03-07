@@ -14,9 +14,9 @@ public class Config {
     public static final int AUDIO_BITRATE = 48 * 1024;
     public static final int VIDEO_FLUENT_FPS = 24;
     public static final int VIDEO_STANDARD_FPS = 30;
-    public static final int VIDEO_FLUENT_BITRATE = 264 * 1024;
-    public static final int VIDEO_STANDARD_BITRATE = 512 * 1024;
-    public static final int VIDEO_HIGH_BITRATE = 1000 * 1024;
+    public static final int VIDEO_FLUENT_BITRATE = 512 * 1024;
+    public static final int VIDEO_STANDARD_BITRATE = 800 * 1024;
+    public static final int VIDEO_HIGH_BITRATE = 1200 * 1024;
     public static final int VIDEO_MAX_KEY_FRAME_INTERVAL = 48;
 
     public static final int NORMAL_WIDTH = R.dimen.px160;
@@ -28,7 +28,6 @@ public class Config {
     public static final int MAX_PLAYERS = 8;//老师端显示学生视频的最大数量
     public static final boolean DEBUG_MODE = false;
     public static final boolean FILTER_ENABLED = false;
-    public static final int ENCODING_LEVEL = StreamingProfile.VIDEO_ENCODING_HEIGHT_240;
     public static final int SCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
     public static final String EXTRA_PUBLISH_URL_PREFIX = "URL:";

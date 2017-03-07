@@ -111,9 +111,7 @@ public class LessonStatusView extends RelativeLayout {
 
             Date date =bean.getSchedule().getStart();
             time.setText(TimeUtil.format(date, TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
-            String dday = TimeUtil.distanceDay(date);
-            String s = String.format("距离上课还有%s", dday);
-            title.setText(StringUtil.getSpecialString(s, dday, DeviceUtil.getColor(getContext(), R.color.font_orange)));
+            title.setText(TimeUtil.distanceDay(date, false));
         }
     }
 
