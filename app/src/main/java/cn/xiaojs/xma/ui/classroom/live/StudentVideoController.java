@@ -59,6 +59,7 @@ public class StudentVideoController extends VideoController {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
     }
 
     @Override
@@ -173,7 +174,16 @@ public class StudentVideoController extends VideoController {
     private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            Toast.makeText(mContext, "学生端流被中断", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "老师端中断了视频", Toast.LENGTH_LONG).show();
+            pausePublishStream();
+        }
+    };
+
+    private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            Toast.makeText(mContext, "老师端关闭了视频", Toast.LENGTH_LONG).show();
+            pausePublishStream();
         }
     };
 

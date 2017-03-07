@@ -889,10 +889,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         public void run() {
             if (mCaptureFrame != null) {
                 mPageState = PAGE_EDIT_VIDEO;
-                /*mLeftPanel.setVisibility(View.VISIBLE);
-                mTakePicBtn.setVisibility(View.GONE);
-                mPublishVideoPanel.setVisibility(View.GONE);
-                mEnterTalkBtn.setVisibility(View.GONE);*/
                 mClassroomController.enterVideoEditing(mCaptureFrame);
                 hideTopBottomPanel();
             } else {
@@ -905,10 +901,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (mClassroomController != null) {
             mPageState = PAGE_TOP;
             mCurrentControllerLevel = InteractiveLevel.MAIN_PANEL;
-            /*mLeftPanel.setVisibility(View.GONE);
-            mTakePicBtn.setVisibility(View.VISIBLE);
-            mPublishVideoPanel.setVisibility(View.VISIBLE);
-            mEnterTalkBtn.setVisibility(View.VISIBLE);*/
             mClassroomController.exitVideoEditing();
             hideWhiteBoardPanel();
         }
