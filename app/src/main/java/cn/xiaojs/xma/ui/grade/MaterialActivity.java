@@ -17,8 +17,13 @@ package cn.xiaojs.xma.ui.grade;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,6 +31,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -113,8 +121,12 @@ public class MaterialActivity extends BaseActivity {
     }
 
     private void upload() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
+
+        String action =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT?
+                Intent.ACTION_OPEN_DOCUMENT: Intent.ACTION_GET_CONTENT;
+
+        Intent intent = new Intent(action);
+        intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(intent, BaseConstant.REQUEST_CODE_CHOOSE_FILE);
     }
@@ -129,6 +141,7 @@ public class MaterialActivity extends BaseActivity {
                     if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(uri.getScheme())) {
                         file = new File(uri.getPath());
                     } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(uri.getScheme())) {
+
                         String[] filePathColumn = {MediaStore.MediaColumns.DATA};
                         Cursor cursor = getContentResolver().query(uri,
                                 filePathColumn, null, null, null);
@@ -137,16 +150,18 @@ public class MaterialActivity extends BaseActivity {
                             int columnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
                             String picturePath = cursor.getString(columnIndex);
                             cursor.close();
-                            file = new File(picturePath);
+                            if (picturePath !=null){
+                                file = new File(picturePath);
+                            }
                         }
                     }
                     if (file == null)
                         return;
+
                     mUploadName.setText(file.getName());
                     mUploadingWrapper.setVisibility(View.VISIBLE);
                     mManager = new CollaManager();
-                    String t = "869f6f9be63c3ee2157b4188e709718638f7e8faf2e1223f389631a3f2dfc5f8f9025c1208dacc1b32ab324f5d9da842";
-                    mManager.addToLibrary(this, file.getPath(), file.getName(), t, new QiniuService() {
+                    mManager.addToLibrary(this, file.getPath(), file.getName(), null, new QiniuService() {
                         @Override
                         public void uploadSuccess(String key, UploadReponse reponse) {
                             mUploadingWrapper.setVisibility(View.GONE);
@@ -173,4 +188,23 @@ public class MaterialActivity extends BaseActivity {
             }
         }
     }
+
+
+//    private class BytesTask extends AsyncTask<Uri,Integer, String ad>{
+//
+//        @Override
+//        protected byte[] doInBackground(Uri... params) {
+//
+//            if(){
+//
+//            }
+//
+//            return new byte[0];
+//        }
+//
+//        @Override
+//        protected void onPostExecute(byte[] bytes) {
+//            super.onPostExecute(bytes);
+//        }
+//    }
 }
