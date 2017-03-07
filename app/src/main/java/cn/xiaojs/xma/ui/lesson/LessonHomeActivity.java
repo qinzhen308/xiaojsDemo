@@ -122,7 +122,18 @@ public class LessonHomeActivity extends BaseActivity {
             case R.id.favourite_btn:
                 break;
             case R.id.share_wb_btn:
-                ShareUtil.show(LessonHomeActivity.this,mLessonDetail.getTitle(),"今晚（3月1日）19:00，综合素质课应考技巧公益讲座就要开讲啦！","https://www.baidu.com");
+
+                if (mLessonDetail == null) {
+                    return;
+                }
+
+                String startTime = TimeUtil.format(mLessonDetail.getSchedule().getStart().getTime(),
+                        TimeUtil.TIME_YYYY_MM_DD_HH_MM);
+
+                ShareUtil.show(LessonHomeActivity.this,
+                        mLessonDetail.getTitle(),
+                        new StringBuilder(startTime).append("\r\n").append(mLessonDetail.getTeacher().getBasic().getName()).toString(),
+                        "https://www.baidu.com");
                 break;
             case R.id.report:
                 break;
