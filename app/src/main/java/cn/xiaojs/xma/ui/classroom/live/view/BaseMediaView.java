@@ -22,16 +22,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
+import cn.xiaojs.xma.ui.widget.LoadingView;
 import cn.xiaojs.xma.util.DeviceUtil;
 
 public abstract class BaseMediaView extends FrameLayout {
 
     private FrameLayout mContainer;
-    protected FrameLayout mLoadingView;
+    protected FrameLayout mLoadingLayout;
+    protected LoadingView mLoadingView;
+    protected TextView mLadingDesc;
     private GestureDetector mGesture;
     private String mPath;
     private boolean touchable = true;
@@ -55,7 +59,9 @@ public abstract class BaseMediaView extends FrameLayout {
         setKeepScreenOn(true);
         LayoutInflater.from(getContext()).inflate(R.layout.layout_media_base_view, this, true);
         mContainer = (FrameLayout) findViewById(R.id.media_container);
-        mLoadingView = (FrameLayout) findViewById(R.id.loading_view);
+        mLoadingLayout = (FrameLayout) findViewById(R.id.loading_layout);
+        mLoadingView = (LoadingView) findViewById(R.id.loading_progress);
+        mLadingDesc = (TextView) findViewById(R.id.loading_desc);
 
         mContainer.addView(initMediaView());
         mGesture = new GestureDetector(getContext(), new CustomerOnGestureListener());
@@ -178,11 +184,21 @@ public abstract class BaseMediaView extends FrameLayout {
 
     }
 
-    protected void showLoading(boolean b) {
+    public void showLoading(boolean b) {
         if (b) {
-            mLoadingView.setVisibility(VISIBLE);
+            mLoadingLayout.setVisibility(VISIBLE);
         } else {
-            mLoadingView.setVisibility(GONE);
+            mLoadingLayout.setVisibility(GONE);
+        }
+    }
+
+    public void showLoading(boolean b, int loadingSize, int txtSize) {
+        if (b) {
+            mLoadingView.setSize(loadingSize);
+            mLadingDesc.getPaint().setTextSize(txtSize);
+            mLoadingLayout.setVisibility(VISIBLE);
+        } else {
+            mLoadingLayout.setVisibility(GONE);
         }
     }
 

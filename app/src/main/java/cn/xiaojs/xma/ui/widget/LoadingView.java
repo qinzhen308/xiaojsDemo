@@ -40,7 +40,8 @@ public class LoadingView extends View {
     private int mCircleWidth = DEFAULT_SIZE / 2;
     private int mCircleHeight = DEFAULT_SIZE / 2;
     private float mRadius = DEFAULT_SIZE / 4.0f;
-    private float mMinX = DEFAULT_SIZE / 4.0f;;
+    private float mMinX = DEFAULT_SIZE / 4.0f;
+    ;
     private float mMaxX = DEFAULT_SIZE * 3 / 4.0f;
     private float mDistance = DEFAULT_SIZE / 2;
     private Handler mHandler;
@@ -61,8 +62,8 @@ public class LoadingView extends View {
     public LoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.load_attr);
-        int lsize = a.getDimensionPixelSize(R.styleable.load_attr_lsize,-1);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.load_attr);
+        int lsize = a.getDimensionPixelSize(R.styleable.load_attr_lsize, -1);
         a.recycle();
 
         init(lsize);
@@ -70,8 +71,8 @@ public class LoadingView extends View {
 
     public LoadingView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.load_attr);
-        int lsize = a.getDimensionPixelSize(R.styleable.load_attr_lsize,-1);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.load_attr);
+        int lsize = a.getDimensionPixelSize(R.styleable.load_attr_lsize, -1);
         a.recycle();
 
         init(lsize);
@@ -80,14 +81,14 @@ public class LoadingView extends View {
     @TargetApi(21)
     public LoadingView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.load_attr);
-        int lsize = a.getDimensionPixelSize(R.styleable.load_attr_lsize,-1);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.load_attr);
+        int lsize = a.getDimensionPixelSize(R.styleable.load_attr_lsize, -1);
         a.recycle();
 
         init(lsize);
     }
 
-    private void init (int size) {
+    private void init(int size) {
         if (size <= 0) {
             mSize = getResources().getDimensionPixelSize(R.dimen.px70);
         } else {
@@ -95,10 +96,10 @@ public class LoadingView extends View {
         }
 
         mCircleWidth = mSize / 2;
-        mCircleHeight = mSize /2;
+        mCircleHeight = mSize / 2;
         mRadius = mSize / 4.0f;
         mDistance = mSize / 2.0f;
-        mMinX = mSize / 4.0f;;
+        mMinX = mSize / 4.0f;
         mMaxX = (mSize * 3) / 4.0f;
 
         mPaint = new Paint();
@@ -113,6 +114,35 @@ public class LoadingView extends View {
         createHandler();
     }
 
+    public void setSize(int size) {
+        if (size <= 0) {
+            mSize = getResources().getDimensionPixelSize(R.dimen.px70);
+        } else {
+            mSize = size;
+        }
+
+        mCircleWidth = mSize / 2;
+        mCircleHeight = mSize / 2;
+        mRadius = mSize / 4.0f;
+        mDistance = mSize / 2.0f;
+        mMinX = mSize / 4.0f;
+        mMaxX = (mSize * 3) / 4.0f;
+        invalidate();
+    }
+
+    public void pause() {
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            setVisibility(GONE);
+        }
+    }
+
+    public void resume() {
+        mCurrFrame = 0;
+        setVisibility(VISIBLE);
+        invalidate();
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int horPadding = getPaddingLeft() + getPaddingRight();
@@ -120,23 +150,22 @@ public class LoadingView extends View {
         setMeasuredDimension(mSize + horPadding, mSize + verPadding);
         mOffsetX = horPadding / 2;
         mOffsetY = verPadding / 2;
-
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
         canvas.translate(mOffsetX, mOffsetY);
-        if (mCurrFrame <= HALF_FRAME_COUNT ) {
+        if (mCurrFrame <= HALF_FRAME_COUNT) {
             //first draw blue circle, then draw orange circle.
             //Blue circle moves from left to right. Orange moves from the right to the left.
             drawCircle(canvas, mMinX + mDistance * ((float) mCurrFrame / HALF_FRAME_COUNT), mBlueColor);
             drawCircle(canvas, mMaxX - mDistance * ((float) mCurrFrame / HALF_FRAME_COUNT), mOrangeColor);
-        } else if (mCurrFrame > HALF_FRAME_COUNT){
+        } else if (mCurrFrame > HALF_FRAME_COUNT) {
             //first draw orange circle, then draw blue circle.
             //Orange circle moves from left to right. Blue moves from the right to the left.
-            drawCircle(canvas, mMinX + mDistance * ((float)(mCurrFrame - HALF_FRAME_COUNT) / HALF_FRAME_COUNT), mOrangeColor);
-            drawCircle(canvas, mMaxX - mDistance * ((float)(mCurrFrame - HALF_FRAME_COUNT) / HALF_FRAME_COUNT), mBlueColor);
+            drawCircle(canvas, mMinX + mDistance * ((float) (mCurrFrame - HALF_FRAME_COUNT) / HALF_FRAME_COUNT), mOrangeColor);
+            drawCircle(canvas, mMaxX - mDistance * ((float) (mCurrFrame - HALF_FRAME_COUNT) / HALF_FRAME_COUNT), mBlueColor);
         }
         canvas.restore();
 

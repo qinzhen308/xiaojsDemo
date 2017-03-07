@@ -51,6 +51,11 @@
     <methods>;
 }
 
+-keepclassmembers class cn.xiaojs.xma.ui.classroom.bean.** {
+    <fields>;
+    <methods>;
+}
+
 #
 -keep class cn.xiaojs.xma.ui.classroom.whiteboard.core.ViewGestureListener$* {*;}
 

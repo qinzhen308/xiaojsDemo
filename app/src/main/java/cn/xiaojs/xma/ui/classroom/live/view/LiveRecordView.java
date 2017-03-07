@@ -220,13 +220,13 @@ public class LiveRecordView extends BaseMediaView implements
         mCameraStreamingSetting.setCameraId(mCurrentCamFacingIndex)
                 .setContinuousFocusModeEnabled(true)
                 .setRecordingHint(false)
-                //.setFrontCameraMirror(false)//避免前置摄像头字体镜像反转
+                .setFrontCameraMirror(false)//避免前置摄像头字体镜像反转
                 .setCameraFacingId(cameraFacingId)
-                //.setBuiltInFaceBeautyEnabled(true)
+                .setBuiltInFaceBeautyEnabled(true)
                 .setResetTouchFocusDelayInMs(3000)
                 .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.SMALL)
                 .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9)
-                //.setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
+                .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(0.5f, 0.5f, 0.5f))
                 .setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
         mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
         mMicrophoneStreamingSetting.setBluetoothSCOEnabled(false);//麦克风蓝牙支持

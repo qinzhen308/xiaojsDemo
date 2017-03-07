@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.live;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -33,14 +34,19 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 
 public class TeacherVideoController extends VideoController {
+    private int loadingSize = 36;
+    private int loadingDesc = 20;
+
     public TeacherVideoController(Context context, View root) {
         super(context, root);
         listenerSocket();
+        loadingSize = context.getResources().getDimensionPixelSize(R.dimen.px36);
+        loadingDesc = context.getResources().getDimensionPixelSize(R.dimen.font_20px);
     }
 
     @Override
     protected void init(View root) {
-        mPlayView = (PlayerTextureView) root.findViewById(R.id.stu_player_video);
+        mPlayView = (PlayerTextureView) root.findViewById(R.id.tea_player_video);
 
         mPublishView = (LiveRecordView) root.findViewById(R.id.publish_video);
         mPublishView.setVisibility(View.VISIBLE);
@@ -49,8 +55,6 @@ public class TeacherVideoController extends VideoController {
     @Override
     protected void listenerSocket() {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
     }
 
     @Override
@@ -73,8 +77,11 @@ public class TeacherVideoController extends VideoController {
 
     @Override
     public void playStream(String url) {
-        mPlayView.setVisibility(View.VISIBLE);
         super.playStream(url);
+        mPlayView.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(mPlayStreamUrl)) {
+            mPlayView.showLoading(true, loadingSize, loadingDesc);
+        }
     }
 
     @Override
@@ -86,6 +93,7 @@ public class TeacherVideoController extends VideoController {
     public void onSteamStateChanged(StreamingState streamingState, Object data) {
         switch (streamingState) {
             case STREAMING:
+
                 SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new SocketManager.AckListener() {
                     @Override
                     public void call(final Object... args) {
@@ -118,27 +126,23 @@ public class TeacherVideoController extends VideoController {
         }
     };
 
-    private SocketManager.EventListener mStreamingStartedListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (args != null && args.length > 0) {
-                Toast.makeText(mContext, "流开始", Toast.LENGTH_LONG).show();
-                StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
-                if (startedNotify != null) {
-                    mPlayStreamUrl = startedNotify.RTMPPlayUrl;
-                    playStream(startedNotify.RTMPPlayUrl);
-                }
+    @Override
+    protected void onStreamingStarted(Object... args) {
+        if (args != null && args.length > 0) {
+            Toast.makeText(mContext, "流开始", Toast.LENGTH_LONG).show();
+            StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
+            if (startedNotify != null) {
+                mPlayStreamUrl = startedNotify.RTMPPlayUrl;
+                playStream(startedNotify.RTMPPlayUrl);
             }
         }
-    };
+    }
 
-    private SocketManager.EventListener mStreamingStoppedListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (args != null && args.length > 0) {
-                Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
-                onPause();
-            }
+    @Override
+    protected void onStringingStopped(Object... args) {
+        if (args != null && args.length > 0) {
+            Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
+            pauseStream();
         }
-    };
+    }
 }

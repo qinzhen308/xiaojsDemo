@@ -51,7 +51,7 @@ public class StudentVideoController extends VideoController {
         mPlayView = (PlayerTextureView) root.findViewById(R.id.live_video);
         mPlayView.setVisibility(View.VISIBLE);
 
-        mPublishView = (LiveRecordView) root.findViewById(R.id.stu_preview_video);
+        mPublishView = (LiveRecordView) root.findViewById(R.id.stu_publish_video);
     }
 
     @Override
@@ -59,8 +59,6 @@ public class StudentVideoController extends VideoController {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
     }
 
     @Override
@@ -133,7 +131,7 @@ public class StudentVideoController extends VideoController {
         public void call(Object... args) {
             if (args != null && args.length > 0) {
                 StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
-                Toast.makeText(mContext, "学生端流开始" + (startedNotify != null ? startedNotify.RTMPPlayUrl : null), Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "学生端流开始", Toast.LENGTH_LONG).show();
                 if (startedNotify != null) {
                     mPlayStreamUrl = startedNotify.RTMPPlayUrl;
                     playStream(startedNotify.RTMPPlayUrl);
@@ -179,24 +177,21 @@ public class StudentVideoController extends VideoController {
         }
     };
 
-    private SocketManager.EventListener mStreamingStartedListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
+    @Override
+    protected void onStreamingStarted(Object... args) {
         if (args != null && args.length > 0) {
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
                 playStream(startedNotify.RTMPPlayUrl);
             }
         }
-        }
-    };
+    }
 
-    private SocketManager.EventListener mStreamingStoppedListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
+    @Override
+    protected void onStringingStopped(Object... args) {
         if (args != null && args.length > 0) {
             Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
+            pauseStream();
         }
-        }
-    };
+    }
 }
