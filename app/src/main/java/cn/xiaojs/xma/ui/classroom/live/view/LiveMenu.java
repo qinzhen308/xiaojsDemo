@@ -118,13 +118,13 @@ public class LiveMenu extends PopupWindow {
         if (mIsTeacher){
             int margin = mContext.getResources().getDimensionPixelSize(R.dimen.px30) - mRootView.getMeasuredWidth() / 2;
             mLayout.setIndicatorOffsetX(margin);
-            showAsDropDown(anchor);
+            showAsDropDown(anchor, 0, -mContext.getResources().getDimensionPixelSize(R.dimen.px180));
         }else {
             int leftOffset = mRootView.getMeasuredWidth() + mContext.getResources().getDimensionPixelSize(R.dimen.px13);
             int topOffset = anchor.getMeasuredHeight() - (anchor.getMeasuredHeight() - mRootView.getMeasuredHeight()) / 2;
             int margin= (mRootView.getMeasuredHeight() - mContext.getResources().getDimensionPixelSize(R.dimen.px22)) / 2;
             mLayout.setIndicatorOffsetX(margin);
-            showAsDropDown(anchor,-leftOffset,-topOffset);
+            showAsDropDown(anchor,-leftOffset,0);
         }
 
     }

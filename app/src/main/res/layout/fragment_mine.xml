@@ -95,6 +95,7 @@
                 </LinearLayout>
 
                 <TextView
+                        android:id="@+id/my_profile_txt"
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_26px"
                         android:text="@string/default_profile_txt"

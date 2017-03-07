@@ -66,6 +66,8 @@ public class MineFragment extends BaseFragment {
     EvaluationStar mEvaluation;
     @BindView(R.id.lesson_teaching_duration)
     TextView mLessonTeachingDurationTv;
+    @BindView(R.id.my_profile_txt)
+    TextView mMyProfileTxtTv;
 
     //ugc
     @BindView(R.id.fans)
@@ -181,20 +183,17 @@ public class MineFragment extends BaseFragment {
             mUserName.setText(basic.getName());
         }
 
-        //FIXME 更新用户信息
-
-
         //set title
         if (basic != null) {
             mPortraitView.setSex(basic.getSex());
             String title = basic.getTitle();
             if (TextUtils.isEmpty(title)) {
-                //mUserTitle.setText(R.string.my_profile_txt);
+                mMyProfileTxtTv.setText(R.string.default_profile_txt);
             } else {
-                //mUserTitle.setText(basic.getTitle());
+                mMyProfileTxtTv.setText(basic.getTitle());
             }
         } else {
-            //mUserTitle.setText(R.string.my_profile_txt);
+            mMyProfileTxtTv.setText(R.string.default_profile_txt);
         }
     }
 
