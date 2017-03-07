@@ -30,6 +30,12 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
 
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
+    <!--用于申请获取蓝牙信息进行室内定位-->
+    <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
+
     <!-- live -->
     <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-feature
@@ -41,10 +47,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <!-- bugly -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_LOGS"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
             android:name=".XiaojsApplication"
@@ -421,6 +424,13 @@
 
         <activity android:name=".ui.message.ChooseClassActivity">
         </activity>
+
+        <!-- 高德-->
+        <meta-data
+                android:name="com.amap.api.v2.apikey"
+                android:value="d19701b38830e88772d8325797c8073a"/>
+
+        <service android:name="com.amap.api.location.APSService"></service>
 
 
 

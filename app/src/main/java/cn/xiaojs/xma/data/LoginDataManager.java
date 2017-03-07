@@ -8,10 +8,15 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.data.api.LoginRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.orhanobut.logger.Logger;
 
 /**
@@ -29,8 +34,8 @@ public class LoginDataManager {
                                          @NonNull final LoginParams params,
                                          @NonNull final APIServiceCallback<LoginInfo> callback) {
 
-        if (callback == null){
-            if(XiaojsConfig.DEBUG){
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
                 Logger.d("the api service callback is null,so cancel the login request");
             }
             return;
@@ -38,7 +43,7 @@ public class LoginDataManager {
 
         if (SecurityManager.needCheckSession(context)) {
 
-            if(XiaojsConfig.DEBUG){
+            if (XiaojsConfig.DEBUG) {
                 Logger.d("the token or session is null, so check session first");
             }
 
@@ -54,26 +59,26 @@ public class LoginDataManager {
 
                     //save token and session
                     SecurityManager.saveCSRFToken(context, csrf);
-                    AccountDataManager.saveSessionID(context,status.sessionID);
+                    AccountDataManager.saveSessionID(context, status.sessionID);
 
                     //now to login
-                    LoginRequest loginRequest = new LoginRequest(context,callback);
+                    LoginRequest loginRequest = new LoginRequest(context, callback);
                     loginRequest.login(params);
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
 
-                    if(XiaojsConfig.DEBUG){
+                    if (XiaojsConfig.DEBUG) {
                         Logger.d("reuest token failed,so login failed");
                     }
 
-                    callback.onFailure(errorCode,errorMessage);
+                    callback.onFailure(errorCode, errorMessage);
                 }
             });
 
-        }else{
-            LoginRequest loginRequest = new LoginRequest(context,callback);
+        } else {
+            LoginRequest loginRequest = new LoginRequest(context, callback);
             loginRequest.login(params);
         }
     }
@@ -84,17 +89,59 @@ public class LoginDataManager {
     public static void requestLogoutByAPI(@NonNull Context context,
                                           @NonNull APIServiceCallback callback) {
 
-        if (callback == null){
-            if(XiaojsConfig.DEBUG){
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
                 Logger.d("the api service callback is null,so cancel the logout request");
             }
             return;
         }
 
 
-
-
-        LoginRequest loginRequest = new LoginRequest(context,callback);
+        LoginRequest loginRequest = new LoginRequest(context, callback);
         loginRequest.logout();
+    }
+
+    public static void requestLocation(Context context) {
+
+        final AMapLocationClient locationClient = new AMapLocationClient(context.getApplicationContext());
+        locationClient.setLocationListener(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+
+                if (aMapLocation != null) {
+                    if (aMapLocation.getErrorCode() == 0) {
+
+                        Location location = new Location();
+                        location.lat = aMapLocation.getLatitude();
+                        location.lon = aMapLocation.getLongitude();
+                        location.adCode = aMapLocation.getAdCode();
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d(location);
+                        }
+
+                    } else {
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("AmapError", "location Error, ErrCode:"
+                                    + aMapLocation.getErrorCode() + ", errInfo:"
+                                    + aMapLocation.getErrorInfo());
+                        }
+                    }
+                }
+
+                locationClient.stopLocation();//停止定位后，本地定位服务并不会被销毁
+                locationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
+            }
+        });
+
+        AMapLocationClientOption clientOption = new AMapLocationClientOption();
+        clientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        clientOption.setOnceLocation(true);
+        clientOption.setOnceLocationLatest(true);
+
+        locationClient.setLocationOption(clientOption);
+        locationClient.startLocation();
+        ;
+
     }
 }

@@ -25,6 +25,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
@@ -80,6 +81,8 @@ public class LoginActivity extends BaseActivity {
 
         checkSession();
         changeBaseUrl();
+
+        LoginDataManager.requestLocation(getApplicationContext());
     }
 
     /**
