@@ -59,56 +59,6 @@
 
     </RelativeLayout>
 
-    <!--视频涂鸦面板-->
-    <RelativeLayout
-            android:id="@+id/video_doodle_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:visibility="gone">
-
-        <ImageView
-                android:id="@+id/back_in_doodle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/cr_video_edit_back_btn"
-                android:padding="@dimen/px20"/>
-
-        <TextView
-                android:id="@+id/share_doodle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/px20"
-                android:layout_marginTop="@dimen/px20"
-                android:layout_toLeftOf="@+id/save_doodle"
-                android:paddingLeft="@dimen/px20"
-                android:paddingRight="@dimen/px20"
-                android:paddingTop="@dimen/px10"
-                android:paddingBottom="@dimen/px10"
-                android:textSize="@dimen/px28"
-                android:textColor="@color/font_white"
-                android:text="@string/share"
-                android:background="@drawable/cr_corner_blue_bg"/>
-
-        <TextView
-                android:id="@+id/save_doodle"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/px20"
-                android:layout_marginTop="@dimen/px20"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/px20"
-                android:paddingRight="@dimen/px20"
-                android:paddingTop="@dimen/px10"
-                android:paddingBottom="@dimen/px10"
-                android:textSize="@dimen/px28"
-                android:textColor="@color/font_white"
-                android:text="@string/save"
-                android:background="@drawable/cr_corner_blue_bg"/>
-
-    </RelativeLayout>
-
-
     <ImageView
             android:id="@+id/publish_take_pic"
             android:layout_alignParentRight="true"

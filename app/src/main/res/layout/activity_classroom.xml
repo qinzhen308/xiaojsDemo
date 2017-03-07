@@ -48,6 +48,13 @@
                 android:id="@+id/main_panel"
                 layout="@layout/layout_classroom_panel"/>
 
+        <FrameLayout
+                android:id="@+id/video_edit_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+        </FrameLayout>
+
     </FrameLayout>
 
     <FrameLayout

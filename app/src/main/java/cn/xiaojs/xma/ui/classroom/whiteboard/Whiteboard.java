@@ -216,7 +216,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 return false;
             }
         } else {
-            return false;
+            mViewGestureListener.onTouchEvent(event);
+            return true;
         }
     }
 

@@ -25,17 +25,17 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.ui.classroom.live.StudentVideoController;
 import cn.xiaojs.xma.ui.classroom.live.TeacherVideoController;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
-import cn.xiaojs.xma.ui.classroom.whiteboard.ShareDoodlePopWindow;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 
 public class ClassroomController {
 
     private Context mContext;
-    private ShareDoodlePopWindow mSharePopWindow;
 
     private VideoController mVideoController;
     private WhiteboardController mBoardController;
+    protected Constants.User mUser;
+    private VideoEditingFragment mVideoEditFragment;
 
     public ClassroomController(Context context, View root, Constants.User client, int appType) {
         init(context, root, client, appType);
@@ -43,6 +43,8 @@ public class ClassroomController {
 
     private void init(Context context, View root, Constants.User client, int appType) {
         mContext = context;
+        mUser = client;
+
         //init video controller
         if (client == Constants.User.TEACHER) {
             mVideoController = new TeacherVideoController(context, root);
@@ -74,14 +76,22 @@ public class ClassroomController {
      * 进入视频编辑页面
      */
     public void enterVideoEditing(Bitmap bmp) {
-        mBoardController.showWhiteboardLayout(bmp);
+        if (mContext instanceof ClassroomActivity) {
+            mVideoEditFragment = new VideoEditingFragment();
+            mVideoEditFragment.setBitmap(bmp);
+            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+                    .add(R.id.video_edit_layout, mVideoEditFragment).commit();
+        }
     }
 
     /**
      * 退出视频编辑页面
      */
     public void exitVideoEditing() {
-        mBoardController.hideWhiteboardLayout();
+        if (mContext instanceof ClassroomActivity && mVideoEditFragment != null) {
+            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+                    .remove(mVideoEditFragment).commit();
+        }
     }
 
     /**
@@ -97,20 +107,6 @@ public class ClassroomController {
     public void takeVideoFrame(FrameCapturedCallback callback) {
         mVideoController.takeVideoFrame(callback);
     }
-
-    /**
-     * 选择分享联系人
-     */
-    public void selectShareContact(View anchor) {
-        if (mSharePopWindow == null) {
-            mSharePopWindow = new ShareDoodlePopWindow(mContext);
-        }
-
-        int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);
-        int offsetY = -mContext.getResources().getDimensionPixelSize(R.dimen.px58);
-        mSharePopWindow.showAsDropDown(anchor, offsetX, offsetY);
-    }
-
 
     /**
      * 设置白板为主屏

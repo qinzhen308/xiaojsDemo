@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <!--白板,本地手绘-->
+    <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayout
+            android:id="@+id/white_board_layout"
+            android:background="#FAEEEEEE"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    <!--视频涂鸦面板-->
+    <RelativeLayout
+            android:id="@+id/video_doodle_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
+
+        <ImageView
+                android:id="@+id/back_in_doodle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cr_video_edit_back_btn"
+                android:padding="@dimen/px20"/>
+
+        <TextView
+                android:id="@+id/share_doodle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_toLeftOf="@+id/save_doodle"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10"
+                android:textSize="@dimen/px28"
+                android:textColor="@color/font_white"
+                android:text="@string/share"
+                android:background="@drawable/cr_corner_blue_bg"/>
+
+        <TextView
+                android:id="@+id/save_doodle"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px10"
+                android:textSize="@dimen/px28"
+                android:textColor="@color/font_white"
+                android:text="@string/save"
+                android:background="@drawable/cr_corner_blue_bg"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+            android:id="@+id/white_board_panel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/px20"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/wb_conner_bg">
+
+        <ImageView
+                android:id="@+id/select_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/px25"
+                android:src="@drawable/wb_selection_selector"/>
+
+        <ImageView
+                android:id="@+id/handwriting_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wb_brush_selector"
+                android:padding="@dimen/px25"/>
+
+        <ImageView
+                android:id="@+id/shape_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/px25"/>
+
+        <ImageView
+                android:id="@+id/eraser_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wb_eraser_selector"
+                android:padding="@dimen/px25"/>
+
+        <ImageView
+                android:id="@+id/text_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wb_text_selector"
+                android:padding="@dimen/px25"/>
+
+        <cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView
+                android:id="@+id/color_picker_btn"
+                android:layout_width="@dimen/px40"
+                android:layout_height="@dimen/px40"
+                android:layout_marginLeft="@dimen/px25"
+                android:layout_marginRight="@dimen/px25"/>
+
+        <ImageView
+                android:id="@+id/undo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wb_undo_selector"
+                android:padding="@dimen/px25"/>
+
+        <ImageView
+                android:id="@+id/redo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wb_redo_selector"
+                android:padding="@dimen/px25"/>
+
+    </LinearLayout>
+</RelativeLayout>

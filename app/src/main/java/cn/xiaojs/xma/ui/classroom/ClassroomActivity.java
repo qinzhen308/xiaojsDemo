@@ -132,8 +132,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     MessageImageView mEnterTalkBtn;
     @BindView(R.id.notify_msg_btn)
     MessageImageView mNotifyImgBtn;
-    @BindView(R.id.video_doodle_panel)
-    View mVideoDoodlePanel;
     @BindView(R.id.publish_video_panel)
     View mPublishVideoPanel;
 
@@ -519,8 +517,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             R.id.play_pause_btn, R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.enter_talk_btn,
             R.id.wb_toolbar_btn, R.id.color_picker_btn, R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn,
             R.id.eraser_btn, R.id.text_btn, R.id.finish_btn, R.id.main_screen_setting, R.id.save_white_board_btn,
-            R.id.undo, R.id.redo, R.id.publish_camera_switcher, R.id.publish_take_pic, R.id.back_in_doodle,
-            R.id.save_doodle, R.id.share_doodle})
+            R.id.undo, R.id.redo, R.id.publish_camera_switcher, R.id.publish_take_pic, R.id.title_bar, R.id.live_progress_layout})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -578,13 +575,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case R.id.publish_take_pic:
                 enterVideoEditing();
                 break;
-            case R.id.back_in_doodle:
-                exitVideoEditing();
-                break;
-            case R.id.save_doodle:
-                break;
-            case R.id.share_doodle:
-                selectShareContact(v);
+            case R.id.title_bar:
+            case R.id.live_progress_layout:
+                //do nothing
                 break;
             default:
                 break;
@@ -896,11 +889,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         public void run() {
             if (mCaptureFrame != null) {
                 mPageState = PAGE_EDIT_VIDEO;
-                mLeftPanel.setVisibility(View.VISIBLE);
+                /*mLeftPanel.setVisibility(View.VISIBLE);
                 mTakePicBtn.setVisibility(View.GONE);
-                mVideoDoodlePanel.setVisibility(View.VISIBLE);
                 mPublishVideoPanel.setVisibility(View.GONE);
-                mEnterTalkBtn.setVisibility(View.GONE);
+                mEnterTalkBtn.setVisibility(View.GONE);*/
                 mClassroomController.enterVideoEditing(mCaptureFrame);
                 hideTopBottomPanel();
             } else {
@@ -909,15 +901,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     };
 
-    private void exitVideoEditing() {
+    public void exitVideoEditing() {
         if (mClassroomController != null) {
             mPageState = PAGE_TOP;
             mCurrentControllerLevel = InteractiveLevel.MAIN_PANEL;
-            mLeftPanel.setVisibility(View.GONE);
+            /*mLeftPanel.setVisibility(View.GONE);
             mTakePicBtn.setVisibility(View.VISIBLE);
-            mVideoDoodlePanel.setVisibility(View.GONE);
             mPublishVideoPanel.setVisibility(View.VISIBLE);
-            mEnterTalkBtn.setVisibility(View.VISIBLE);
+            mEnterTalkBtn.setVisibility(View.VISIBLE);*/
             mClassroomController.exitVideoEditing();
             hideWhiteBoardPanel();
         }
@@ -926,12 +917,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void switchCamera() {
         if (mClassroomController != null) {
             mClassroomController.switchCamera();
-        }
-    }
-
-    private void selectShareContact(View view) {
-        if (mClassroomController != null) {
-            mClassroomController.selectShareContact(view);
         }
     }
 

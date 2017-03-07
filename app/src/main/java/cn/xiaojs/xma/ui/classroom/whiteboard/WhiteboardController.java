@@ -202,7 +202,6 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             mWhiteboardLayer = new WhiteboardLayer();
             mCurrWhiteboard.setLayer(mWhiteboardLayer);
             mCurrWhiteboard.setSrcBitmap(bmp);
-            onWhiteboardSelected(mCurrWhiteboard);
         }
     }
 
