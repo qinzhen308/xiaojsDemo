@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.model.AliasTags;
+import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.account.User;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,7 +19,7 @@ import java.io.IOException;
  * Created by maxiaobao on 2016/11/21.
  */
 
-public class AccountPref{
+public class AccountPref {
 
     private static final String PREF_AUTH_TOKEN = "auth_token";
 
@@ -34,14 +35,45 @@ public class AccountPref{
     private static final String PREF_ALIAS_TAGS = "alias_tags";
     private static final String PREF_ATAGS = "atgs";
 
-
+    private static final String PREF_LOCATION = "location";
 
 
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
 
-    public static void setAtagsSuccess(final Context context,boolean success) {
+    public static void setLocation(final Context context, Location location) {
+
+        String userJson = "";
+        try {
+            userJson = new ObjectMapper().writeValueAsString(location);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_LOCATION, userJson).apply();
+
+    }
+
+    public static Location getLocation(final Context context) {
+
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        String locationJson = sp.getString(PREF_LOCATION, "");
+
+        if (TextUtils.isEmpty(locationJson)) return null;
+
+        try {
+            return new ObjectMapper().readValue(locationJson, Location.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+    public static void setAtagsSuccess(final Context context, boolean success) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
         sp.edit().putBoolean(PREF_ATAGS, success).apply();
 
@@ -49,14 +81,14 @@ public class AccountPref{
 
     public static boolean getAtagsSuccess(final Context context) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        return sp.getBoolean(PREF_ATAGS,false);
+        return sp.getBoolean(PREF_ATAGS, false);
     }
 
     public static void setPrefAliasTags(final Context context, AliasTags aliasTags) {
 
         String userJson = "";
         try {
-            userJson =  new ObjectMapper().writeValueAsString(aliasTags);
+            userJson = new ObjectMapper().writeValueAsString(aliasTags);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,10 +103,10 @@ public class AccountPref{
         AliasTags aliasTags = null;
 
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        String userJson = sp.getString(PREF_ALIAS_TAGS,"");
-        if (!TextUtils.isEmpty(userJson)){
+        String userJson = sp.getString(PREF_ALIAS_TAGS, "");
+        if (!TextUtils.isEmpty(userJson)) {
             try {
-                aliasTags = new ObjectMapper().readValue(userJson,AliasTags.class);
+                aliasTags = new ObjectMapper().readValue(userJson, AliasTags.class);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -84,7 +116,7 @@ public class AccountPref{
     }
 
 
-    public static void setLoginStatus(final Context context,boolean status) {
+    public static void setLoginStatus(final Context context, boolean status) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
         sp.edit().putBoolean(PREF_LOGIN, status).apply();
 
@@ -92,14 +124,14 @@ public class AccountPref{
 
     public static boolean getLoginStatus(final Context context) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        return sp.getBoolean(PREF_LOGIN,false);
+        return sp.getBoolean(PREF_LOGIN, false);
     }
 
     public static void setUser(final Context context, User user) {
 
         String userJson = "";
         try {
-            userJson =  new ObjectMapper().writeValueAsString(user);
+            userJson = new ObjectMapper().writeValueAsString(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,10 +146,10 @@ public class AccountPref{
         User user = null;
 
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        String userJson = sp.getString(PREF_USER,"");
-        if (!TextUtils.isEmpty(userJson)){
+        String userJson = sp.getString(PREF_USER, "");
+        if (!TextUtils.isEmpty(userJson)) {
             try {
-                user = new ObjectMapper().readValue(userJson,User.class);
+                user = new ObjectMapper().readValue(userJson, User.class);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -127,7 +159,7 @@ public class AccountPref{
     }
 
 
-    public static void setSubject(final Context context,String subject) {
+    public static void setSubject(final Context context, String subject) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
         sp.edit().putString(PREF_SUBJECT, subject).apply();
 
@@ -135,10 +167,10 @@ public class AccountPref{
 
     public static String getSubject(final Context context) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        return sp.getString(PREF_SUBJECT,"");
+        return sp.getString(PREF_SUBJECT, "");
     }
 
-    public static void setAccountID(final Context context,String id) {
+    public static void setAccountID(final Context context, String id) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
         sp.edit().putString(PREF_ID, id).apply();
 
@@ -146,7 +178,7 @@ public class AccountPref{
 
     public static String getAccountID(final Context context) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        return sp.getString(PREF_ID,"");
+        return sp.getString(PREF_ID, "");
     }
 
     public static void setPhone(final Context context, final String phone) {
@@ -159,13 +191,13 @@ public class AccountPref{
     public static String getPhone(final Context context) {
 
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        return sp.getString(PREF_PHONE,"");
+        return sp.getString(PREF_PHONE, "");
     }
 
 
     public static void setAuthToken(final Context context, final String authToken) {
 
-        if (XiaojsConfig.DEBUG){
+        if (XiaojsConfig.DEBUG) {
             Logger.d("Auth token of length "
                     + (TextUtils.isEmpty(authToken) ? 0 : authToken.length()));
         }
@@ -173,7 +205,7 @@ public class AccountPref{
         SharedPreferences sp = DataPref.getSharedPreferences(context);
         sp.edit().putString(PREF_AUTH_TOKEN, authToken).apply();
 
-        if (XiaojsConfig.DEBUG){
+        if (XiaojsConfig.DEBUG) {
             Logger.d("Auth Token: " + authToken);
         }
 
@@ -181,7 +213,7 @@ public class AccountPref{
 
     public static String getAuthToken(final Context context) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        return sp.getString(PREF_AUTH_TOKEN,"");
+        return sp.getString(PREF_AUTH_TOKEN, "");
     }
 
 

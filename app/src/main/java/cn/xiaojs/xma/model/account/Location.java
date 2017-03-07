@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class Location {
     public double lon;
     public double lat;
-    public String adCode;
+    public int adCode;
 
     @Override
     public String toString() {

@@ -3,6 +3,7 @@ package cn.xiaojs.xma.model.security;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.model.account.Location;
 
 /**
@@ -15,7 +16,7 @@ public class LoginParams {
     private long mobile;
     private String password;
 
-    private int ct;
+    private int ct = Security.CredentialType.PERSION;
 
     public Location geo;
 

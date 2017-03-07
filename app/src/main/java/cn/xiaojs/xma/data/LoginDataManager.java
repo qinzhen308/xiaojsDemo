@@ -3,6 +3,8 @@ package cn.xiaojs.xma.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
@@ -101,7 +103,7 @@ public class LoginDataManager {
         loginRequest.logout();
     }
 
-    public static void requestLocation(Context context) {
+    public static void requestLocation(final Context context) {
 
         final AMapLocationClient locationClient = new AMapLocationClient(context.getApplicationContext());
         locationClient.setLocationListener(new AMapLocationListener() {
@@ -114,15 +116,25 @@ public class LoginDataManager {
                         Location location = new Location();
                         location.lat = aMapLocation.getLatitude();
                         location.lon = aMapLocation.getLongitude();
-                        location.adCode = aMapLocation.getAdCode();
+                        location.adCode = Integer.valueOf(aMapLocation.getAdCode());
+
+                        AccountDataManager.setLocation(context.getApplicationContext(), location);
+
+
+//                        Toast.makeText(context,location.toString(),Toast.LENGTH_SHORT).show();
 
                         if (XiaojsConfig.DEBUG) {
                             Logger.d(location);
                         }
 
                     } else {
+
+//                        Toast.makeText(context,"location Error, ErrCode:"
+//                                + aMapLocation.getErrorCode() + ", errInfo:"
+//                                + aMapLocation.getErrorInfo(),Toast.LENGTH_SHORT).show();
+
                         if (XiaojsConfig.DEBUG) {
-                            Logger.d("AmapError", "location Error, ErrCode:"
+                            Logger.d("location Error, ErrCode:"
                                     + aMapLocation.getErrorCode() + ", errInfo:"
                                     + aMapLocation.getErrorInfo());
                         }

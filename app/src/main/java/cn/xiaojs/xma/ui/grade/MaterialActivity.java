@@ -188,7 +188,8 @@ public class MaterialActivity extends BaseActivity {
         mUploadName.setText(file.getName());
         mUploadingWrapper.setVisibility(View.VISIBLE);
         mManager = new CollaManager();
-        mManager.addToLibrary(this, file.getPath(), file.getName(), null, new QiniuService() {
+        String ticket = "869f6f9be63c3ee2157b4188e709718638f7e8faf2e1223f389631a3f2dfc5f8f9025c1208dacc1b32ab324f5d9da842";
+        mManager.addToLibrary(this, file.getPath(), file.getName(), ticket, new QiniuService() {
             @Override
             public void uploadSuccess(String key, UploadReponse reponse) {
                 mUploadingWrapper.setVisibility(View.GONE);
