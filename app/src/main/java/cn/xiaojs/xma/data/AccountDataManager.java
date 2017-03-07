@@ -24,6 +24,7 @@ import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.account.CompetencySubject;
+import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.UpTokenParam;
@@ -44,6 +45,14 @@ import java.util.Set;
  */
 
 public class AccountDataManager {
+
+    public static Location getLocation(Context context){
+        return AccountPref.getLocation(context);
+    }
+
+    public static void setLocation(Context context,Location location){
+        AccountPref.setLocation(context, location);
+    }
 
     //保存已声明的能力
     public static void saveSubject(Context context,String subject) {
@@ -154,6 +163,7 @@ public class AccountDataManager {
         AccountPref.setAccountID(context,"");
         AccountPref.setLoginStatus(context,false);
         AccountPref.setUser(context,null);
+        AccountPref.setLocation(context,null);
         saveAliaTags(context, null);
         AccountPref.setAtagsSuccess(context,false);
         SecurityManager.saveCSRFToken(context,"");

@@ -255,6 +255,12 @@ public class LessonHomeActivity extends BaseActivity {
             }
 
             setTeacherInfo(lesson);
+
+            if (lesson.getOverview() != null && textViews != null) {
+                textViews.get(0).setText(lesson.getOverview().getText());
+                //evaluate: not implemented
+            }
+
         } else {
             mReportLayout.setVisibility(View.GONE);
             mReportDivideLine.setVisibility(View.GONE);
@@ -329,11 +335,6 @@ public class LessonHomeActivity extends BaseActivity {
 
                 //TODO test
                 //mTeaEvalStar.setGrading(EvaluationStar.Grading.FOUR);
-            }
-
-            if (lesson.getTeachersIntro() != null && textViews != null) {
-                textViews.get(0).setText(lesson.getTeachersIntro().getText());
-                //evaluate: not implemented
             }
         }
     }

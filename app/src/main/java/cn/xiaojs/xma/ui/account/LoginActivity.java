@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.account;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,7 +25,11 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
@@ -51,6 +56,9 @@ import cn.xiaojs.xma.util.XjsUtils;
  * ======================================================================================== */
 
 public class LoginActivity extends BaseActivity {
+
+    private final int PERMISSION_CODE = 0x1;
+
     @BindView(R.id.reg_guide)
     TextView mRegGuide;
     @BindView(R.id.login_name)
@@ -80,6 +88,27 @@ public class LoginActivity extends BaseActivity {
 
         checkSession();
         changeBaseUrl();
+
+
+        String[] needPermissions = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.READ_PHONE_STATE
+        };
+
+        if (PermissionUtil.isOverMarshmallow()){
+            PermissionGen.needPermission(this,PERMISSION_CODE,needPermissions);
+        }else{
+            LoginDataManager.requestLocation(getApplicationContext());
+        }
+
+    }
+
+    @PermissionSuccess(requestCode = PERMISSION_CODE)
+    public void accessSuccess() {
+        LoginDataManager.requestLocation(getApplicationContext());
     }
 
     /**
