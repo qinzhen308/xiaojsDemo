@@ -125,6 +125,6 @@
     <string-array name="chat_setting">
         <item>接收消息，并提醒我</item>
         <item>接收消息，但不提醒我</item>
-        <item>不接收任何消息</item>
+        <!--<item>不接收任何消息</item>-->
     </string-array>
 </resources>

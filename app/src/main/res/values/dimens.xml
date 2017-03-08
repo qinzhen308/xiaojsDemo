@@ -36,7 +36,7 @@
     <dimen name="default_padding_right">15dp</dimen>
     <dimen name="default_padding_left">15dp</dimen>
     <dimen name="contact_item_padding_left">5dp</dimen>
-    <dimen name="item_head_icon_size">50dp</dimen>
+    <dimen name="item_head_icon_size">@dimen/px77</dimen>
     <dimen name="chat_head_icon_size">40dp</dimen>
     <dimen name="save_btn_height">30dp</dimen>
     <dimen name="me_head_icon_size">75dp</dimen>

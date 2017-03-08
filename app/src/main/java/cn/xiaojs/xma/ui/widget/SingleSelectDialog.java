@@ -68,6 +68,7 @@ public class SingleSelectDialog {
             SelectAdapter adapter = new SelectAdapter(mContext, R.layout.layout_single_select_item, R.id.title, items);
             groupListView.setAdapter(adapter);
             groupListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            groupListView.setItemChecked(selectPosition,true);
             dialog.setCustomView(groupListView);
             groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
