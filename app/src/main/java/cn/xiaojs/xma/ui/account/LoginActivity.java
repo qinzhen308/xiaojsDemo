@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.Keep;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -21,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.qiniu.pili.droid.streaming.widget.AspectFrameLayout;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -32,6 +35,7 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -87,8 +91,10 @@ public class LoginActivity extends BaseActivity {
         initLoginInfo();
 
         checkSession();
-        changeBaseUrl();
 
+        if (XiaojsConfig.SHOW_DEMO){
+            changeBaseUrl();
+        }
 
         String[] needPermissions = {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -106,6 +112,7 @@ public class LoginActivity extends BaseActivity {
 
     }
 
+    @Keep
     @PermissionSuccess(requestCode = PERMISSION_CODE)
     public void accessSuccess() {
         LoginDataManager.requestLocation(getApplicationContext());
@@ -139,9 +146,14 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onClick() {
                         commonDialog.dismiss();
-                        XiaojsConfig.BASE_URL = urlEdt.getText().toString();
-                        XiaojsConfig.SERVICE_PORT = xasPort.getText().toString();
-                        XiaojsConfig.LIVE_PORT = xlsPort.getText().toString();
+                        String baseurl = urlEdt.getText().toString();
+                        String aPort = xasPort.getText().toString();
+                        String lPort = xlsPort.getText().toString();
+
+                        DataPref.setServerIP(LoginActivity.this, baseurl);
+                        DataPref.setXASPort(LoginActivity.this, aPort);
+                        DataPref.setXLSPort(LoginActivity.this, lPort);
+
                     }
                 });
                 commonDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.User;
 
@@ -25,10 +26,48 @@ public class DataPref {
     private static final String PREF_VCODE = "vcode";
     private static final String PREF_ALLOW_DOWNLOAD = "download_allow";
     private static final String PREF_UPGRADE = "upgrade";
+    private static final String PREF_SERVER_IP = "sip";
+    private static final String PREF_XAS_PORT = "xas_port";
+    private static final String PREF_XLS_PORT = "xls_port";
 
     protected static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
+
+    public static void setXLSPort(final Context context,String port) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_XLS_PORT, port).apply();
+
+    }
+
+    public static String getXLSPort(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_XLS_PORT, XiaojsConfig.LIVE_PORT);
+    }
+
+
+    public static void setXASPort(final Context context,String port) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_XAS_PORT, port).apply();
+
+    }
+
+    public static String getXASPort(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_XAS_PORT, XiaojsConfig.SERVICE_PORT);
+    }
+
+    public static void setServerIP(final Context context,String ip) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_SERVER_IP, ip).apply();
+
+    }
+
+    public static String getServerIP(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_SERVER_IP, XiaojsConfig.BASE_URL);
+    }
+
 
     public static void setVersionCode(final Context context,int vcode) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);

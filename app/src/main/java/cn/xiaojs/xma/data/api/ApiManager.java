@@ -2,6 +2,7 @@ package cn.xiaojs.xma.data.api;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
@@ -14,6 +15,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.interceptor.CommonHeaderInterceptor;
 import cn.xiaojs.xma.data.api.service.LiveService;
 import cn.xiaojs.xma.data.api.service.XiaojsService;
+import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import okhttp3.Cache;
@@ -93,9 +95,9 @@ public class ApiManager {
                 .addInterceptor(new CommonHeaderInterceptor(appContext))
                 //.addInterceptor(new CacheInterceptor())
                 .cache(createCache(appContext))
-                .connectTimeout(20,TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(20,TimeUnit.SECONDS);
+                .writeTimeout(20, TimeUnit.SECONDS);
 //                .cookieJar(new CookieJar() {
 //                    //private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
 //
@@ -135,9 +137,9 @@ public class ApiManager {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(logInterceptor)
                 .addNetworkInterceptor(logInterceptor)
-                .connectTimeout(30,TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30,TimeUnit.SECONDS);
+                .writeTimeout(30, TimeUnit.SECONDS);
 
         if (XiaojsConfig.DEBUG) {
             builder.addNetworkInterceptor(new StethoInterceptor());
@@ -152,17 +154,21 @@ public class ApiManager {
         if (cacheDirectory == null) {
             return null;
         }
-        File realDir = new File(cacheDirectory,XiaojsConfig.HTTP_CACHE_DIR);
+        File realDir = new File(cacheDirectory, XiaojsConfig.HTTP_CACHE_DIR);
 
-        return new Cache(realDir,XiaojsConfig.HTTP_CACHE_SIZE);
+        return new Cache(realDir, XiaojsConfig.HTTP_CACHE_SIZE);
     }
 
     private XiaojsService createXiaojsService() {
+
+        String url = getXASUrl();
+
+        if (XiaojsConfig.SHOW_DEMO) {
+            Log.d("HTTP_LOG", "XAS url:" + url);
+        }
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(new StringBuilder(XiaojsConfig.BASE_URL)
-                        .append(":")
-                        .append(XiaojsConfig.SERVICE_PORT)
-                        .toString())
+                .baseUrl(url)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
@@ -171,11 +177,15 @@ public class ApiManager {
     }
 
     private LiveService createLiveService() {
+
+
+        String url = getXLSUrl();
+        if (XiaojsConfig.SHOW_DEMO) {
+            Log.d("HTTP_LOG", "XLS url:" + url);
+        }
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(new StringBuilder(XiaojsConfig.BASE_URL)
-                        .append(":")
-                        .append(XiaojsConfig.LIVE_PORT)
-                        .toString())
+                .baseUrl(url)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
@@ -198,6 +208,26 @@ public class ApiManager {
 
         return null;
 
+    }
+
+    private String getXASUrl() {
+
+        String port = XiaojsConfig.SHOW_DEMO ? DataPref.getXASPort(appContext) : XiaojsConfig.SERVICE_PORT;
+        return createUrl(port);
+    }
+
+    private String getXLSUrl() {
+
+        String port = XiaojsConfig.SHOW_DEMO ? DataPref.getXLSPort(appContext) : XiaojsConfig.LIVE_PORT;
+        return createUrl(port);
+    }
+
+    private String createUrl(String port) {
+        String baseUrl = XiaojsConfig.SHOW_DEMO ? DataPref.getServerIP(appContext) : XiaojsConfig.BASE_URL;
+        return new StringBuilder(baseUrl)
+                .append(":")
+                .append(port)
+                .toString();
     }
 
 }

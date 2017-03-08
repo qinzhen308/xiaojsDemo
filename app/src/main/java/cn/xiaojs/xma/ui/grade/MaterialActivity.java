@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.Keep;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -156,6 +157,7 @@ public class MaterialActivity extends BaseActivity {
         }
     }
 
+    @Keep
     @PermissionSuccess(requestCode = REQUEST_PERMISSION)
     public void accessExternalStorageSuccess() {
         addToLibrary(queryFileFromDataBase());

@@ -19,6 +19,18 @@
 
 #-keep public class * extends android.support.v4.app.**
 
+#手动启用support keep注解
+#http://tools.android.com/tech-docs/support-annotations
+-dontskipnonpubliclibraryclassmembers
+-printconfiguration
+-keep,allowobfuscation @interface android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+-keepclassmembers class * {
+    @android.support.annotation.Keep *;
+}
+
+
 
 # retrofit
 # Platform calls Class.forName on types which do not exist on Android to determine platform.

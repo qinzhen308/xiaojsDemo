@@ -9,7 +9,10 @@ import cn.xiaojs.xma.model.account.User;
 public class XiaojsConfig {
 
     //是否为debug版本
-    public static final boolean DEBUG= BuildConfig.DEBUG;
+    public static final boolean DEBUG = BuildConfig.DEBUG;
+
+    //是否是演示版本
+    public static final boolean SHOW_DEMO = true;
 
     //日志tag
     public static final String LOG_TAG = "XiaoJS-Log";

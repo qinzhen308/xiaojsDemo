@@ -81,10 +81,10 @@ public class ContactActivity extends BaseActivity {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 //FIXME 跳转到聊天界面
-//                final Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
-//                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
-//                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
-//                startActivity(intent);
+                final Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
+                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
+                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+                startActivity(intent);
 
                 return false;
             }
