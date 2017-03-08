@@ -93,7 +93,7 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
         holder.name.setText(mBeans.get(position)._source.basic.getName());
         Glide.with(mContext)
                 .load(Account.getAvatar(mBeans.get(position)._id,300))
-                .error(R.drawable.default_avatar)
+                .error(R.drawable.default_avatar_grey)
                 .into(holder.head);
         return convertView;
     }

@@ -29,6 +29,8 @@ import retrofit2.Call;
 
 public class LoginRequest extends ServiceRequest {
 
+    private LoginParams loginParams;
+
     public LoginRequest(Context context, APIServiceCallback callback) {
 
         super(context, callback);
@@ -36,6 +38,8 @@ public class LoginRequest extends ServiceRequest {
     }
 
     public void login(LoginParams params) {
+
+        loginParams = params;
 
         Location location = AccountDataManager.getLocation(getContext());
         if (location !=null && params !=null) {
@@ -93,7 +97,11 @@ public class LoginRequest extends ServiceRequest {
             DataManager.syncData(getContext(),i);
 
             //jush
-            JpushUtil.loginJpush();
+            if (loginParams != null){
+                String up = String.valueOf(loginParams.getMobile());
+                JpushUtil.loginJpush(up,up);
+            }
+
 
         }
     }

@@ -76,7 +76,7 @@ public class DataManager {
             AccountDataManager.setAliaTagsWithCheck(context);
 
             //jmessage login
-            JpushUtil.loginJpush();
+            JpushUtil.loginJpush("","");
         }
     }
 

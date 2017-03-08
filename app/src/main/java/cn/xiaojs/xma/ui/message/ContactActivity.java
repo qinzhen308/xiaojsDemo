@@ -601,8 +601,8 @@ public class ContactActivity extends BaseActivity {
             Glide.with(ContactActivity.this)
                     .load(avatar)
                     .bitmapTransform(circleTransform)
-                    .placeholder(R.drawable.default_avatar)
-                    .error(R.drawable.default_avatar)
+                    .placeholder(R.drawable.default_avatar_grey)
+                    .error(R.drawable.default_avatar_grey)
                     .into(holder.avatarView);
 
             final boolean isclass = !TextUtils.isEmpty(c.title);

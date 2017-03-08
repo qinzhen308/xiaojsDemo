@@ -317,8 +317,8 @@ public class LessonHomeActivity extends BaseActivity {
 
                 Glide.with(this).load(avator)
                         .bitmapTransform(new CircleTransform(this))
-                        .placeholder(R.drawable.default_avatar)
-                        .error(R.drawable.default_avatar)
+                        .placeholder(R.drawable.default_avatar_grey)
+                        .error(R.drawable.default_avatar_grey)
                         .into(mTeaAvatarImg);
                 mTeaNameTv.setText(tea.getBasic().getName());
 

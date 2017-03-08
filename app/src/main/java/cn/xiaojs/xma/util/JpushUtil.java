@@ -23,12 +23,13 @@ import cn.xiaojs.xma.model.AliasTags;
 
 public class JpushUtil {
 
+
     /**
      * 登陆JPUSH
      */
-    public static void loginJpush() {
+    public static void loginJpush(String userName, String password) {
         //FIXME 临时测试用
-        JMessageClient.login("123456", "123456", new BasicCallback() {
+        JMessageClient.login(userName, password, new BasicCallback() {
             @Override
             public void gotResult(int status, String desc) {
                 if (status == 0) {

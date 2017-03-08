@@ -161,7 +161,7 @@ public class ApiManager {
 
     private XiaojsService createXiaojsService() {
 
-        String url = getXASUrl();
+        String url = getXASUrl(getAppContext());
 
         if (XiaojsConfig.SHOW_DEMO) {
             Log.d("HTTP_LOG", "XAS url:" + url);
@@ -179,7 +179,7 @@ public class ApiManager {
     private LiveService createLiveService() {
 
 
-        String url = getXLSUrl();
+        String url = getXLSUrl(getAppContext());
         if (XiaojsConfig.SHOW_DEMO) {
             Log.d("HTTP_LOG", "XLS url:" + url);
         }
@@ -210,20 +210,20 @@ public class ApiManager {
 
     }
 
-    private String getXASUrl() {
+    public static String getXASUrl(Context context) {
 
-        String port = XiaojsConfig.SHOW_DEMO ? DataPref.getXASPort(appContext) : XiaojsConfig.SERVICE_PORT;
-        return createUrl(port);
+        String port = XiaojsConfig.SHOW_DEMO ? DataPref.getXASPort(context) : XiaojsConfig.SERVICE_PORT;
+        return createUrl(context,port);
     }
 
-    private String getXLSUrl() {
+    public static String getXLSUrl(Context context) {
 
-        String port = XiaojsConfig.SHOW_DEMO ? DataPref.getXLSPort(appContext) : XiaojsConfig.LIVE_PORT;
-        return createUrl(port);
+        String port = XiaojsConfig.SHOW_DEMO ? DataPref.getXLSPort(context) : XiaojsConfig.LIVE_PORT;
+        return createUrl(context,port);
     }
 
-    private String createUrl(String port) {
-        String baseUrl = XiaojsConfig.SHOW_DEMO ? DataPref.getServerIP(appContext) : XiaojsConfig.BASE_URL;
+    private static String createUrl(Context context,String port) {
+        String baseUrl = XiaojsConfig.SHOW_DEMO ? DataPref.getServerIP(context) : XiaojsConfig.BASE_URL;
         return new StringBuilder(baseUrl)
                 .append(":")
                 .append(port)

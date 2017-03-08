@@ -92,6 +92,7 @@ public class BaseActivity extends Activity {
 //                dialog = DialogCreator.createBaseCustomDialog(mContext, title, msg, onClickListener);
                 break;
             case user_logout:
+                //FIXME 下线弹出框应该去掉
                 String title = mContext.getString(IdHelper.getString(mContext,
                         "jmui_user_logout_dialog_title"));
                 String msg = mContext.getString(IdHelper.getString(mContext, "jmui_user_logout_dialog_message"));

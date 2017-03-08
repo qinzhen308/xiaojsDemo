@@ -49,7 +49,7 @@ public class NotifyMsgAdapter extends AbsSwipeAdapter<TalkItem, NotifyMsgAdapter
 
     @Override
     protected void setViewContent(Holder holder, TalkItem bean, int position) {
-        Glide.with(mContext).load(bean.from.avatar).error(R.drawable.default_avatar).into(holder.portrait);
+        Glide.with(mContext).load(bean.from.avatar).error(R.drawable.default_avatar_grey).into(holder.portrait);
         holder.msgContent.setText(bean.body != null ? bean.body.text : null);
     }
 

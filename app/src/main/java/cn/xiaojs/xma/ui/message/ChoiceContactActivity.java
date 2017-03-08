@@ -305,8 +305,8 @@ public class ChoiceContactActivity extends BaseActivity {
             Glide.with(ChoiceContactActivity.this)
                     .load(avatar)
                     .bitmapTransform(circleTransform)
-                    .placeholder(R.drawable.default_avatar)
-                    .error(R.drawable.default_avatar)
+                    .placeholder(R.drawable.default_avatar_grey)
+                    .error(R.drawable.default_avatar_grey)
                     .into(holder.avatarView);
 
 

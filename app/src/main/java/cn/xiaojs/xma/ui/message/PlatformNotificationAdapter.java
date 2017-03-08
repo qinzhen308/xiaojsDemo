@@ -173,12 +173,12 @@ public class PlatformNotificationAdapter extends BaseAdapter {
                                 if (status == 0) {
                                     finalHolder.image.setImageBitmap(bitmap);
                                 } else {
-                                    finalHolder.image.setImageResource(R.drawable.default_avatar);
+                                    finalHolder.image.setImageResource(R.drawable.default_avatar_grey);
                                 }
                             }
                         });
                     } else {
-                        holder.image.setImageResource(R.drawable.default_avatar);
+                        holder.image.setImageResource(R.drawable.default_avatar_grey);
                     }
                 }
             }
