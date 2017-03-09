@@ -357,20 +357,20 @@ public class ExampleInstrumentedTest {
         params.setCt(Security.CredentialType.PERSION);
         params.setMobile(12222222222l);
 
-        LoginDataManager.requestLoginByAPI(context, params, new APIServiceCallback<LoginInfo>() {
-            @Override
-            public void onSuccess(LoginInfo object) {
-
-                Logger.d("onSuccess-----------");
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-                Logger.d("onFailure-----------");
-            }
-        });
+//        LoginDataManager.requestLoginByAPI(context, params, new APIServiceCallback<LoginInfo>() {
+//            @Override
+//            public void onSuccess(LoginInfo object) {
+//
+//                Logger.d("onSuccess-----------");
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//                Logger.d("onFailure-----------");
+//            }
+//        });
     }
 
     private void testLogout(Context context) {
