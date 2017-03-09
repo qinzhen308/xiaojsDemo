@@ -28,7 +28,7 @@
                     android:paddingLeft="@dimen/px32"
                     android:textColor="@color/font_gray"
                     android:drawableLeft="@drawable/ic_add"
-                    android:drawablePadding="@dimen/px12"
+                    android:drawablePadding="@dimen/px16"
                     android:paddingTop="@dimen/px32"
                     android:paddingBottom="@dimen/px32"
                     android:text="@string/add_label"
@@ -43,8 +43,8 @@
             android:id="@+id/sub_btn"
             style="@style/BigSubmitBtn"
             android:text="@string/finish"
-            android:layout_marginTop="@dimen/px90"
-            android:layout_marginLeft="@dimen/px40"
-            android:layout_marginRight="@dimen/px40"/>
+            android:layout_marginTop="@dimen/px96"
+            android:layout_marginLeft="@dimen/px57"
+            android:layout_marginRight="@dimen/px57"/>
 
 </LinearLayout>

@@ -24,15 +24,15 @@
                     android:layout_height="wrap_content"
                     android:text="@string/add_cover"
                     android:textColor="@color/font_dark_gray"
-                    android:textSize="@dimen/font_32px"
+                    android:textSize="@dimen/font_28px"
                     android:drawableLeft="@drawable/ic_add_lesson_cover"
-                    android:drawablePadding="@dimen/px16"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20"
+                    android:drawablePadding="@dimen/px20"
+                    android:paddingTop="@dimen/px26"
+                    android:paddingBottom="@dimen/px26"
                     android:paddingLeft="@dimen/px40"
                     android:paddingRight="@dimen/px40"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/px148"/>
+                    android:layout_marginTop="@dimen/px160"/>
 
             <TextView
                     android:id="@+id/add_cover_tips"
@@ -40,8 +40,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/add_cover_tips"
                     android:textColor="@color/font_light_gray"
-                    android:textSize="@dimen/font_30px"
-                    android:layout_marginTop="@dimen/px54"
+                    android:textSize="@dimen/font_26px"
+                    android:layout_marginTop="@dimen/px2"
                     android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
@@ -49,7 +49,7 @@
         <ImageView
                 android:id="@+id/cover_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
     </FrameLayout>
 
 

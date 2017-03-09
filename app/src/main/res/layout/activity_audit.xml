@@ -5,16 +5,12 @@
               android:orientation="vertical"
               android:background="@color/main_bg">
 
-    <View
-            style="@style/DividerHorizontal"
-            android:layout_marginTop="@dimen/px20"/>
-
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/audit_allowed"
             android:background="@color/white"
-            android:textSize="@dimen/font_30px"
+            android:textSize="@dimen/font_28px"
             android:textColor="@color/font_black"
             android:paddingLeft="@dimen/px32"
             android:paddingTop="@dimen/px28"
@@ -45,7 +41,7 @@
                     android:paddingTop="@dimen/px28"
                     android:paddingBottom="@dimen/px28"
                     android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_28px"
+                    android:textSize="@dimen/font_26px"
                     android:text="@string/audit_people"/>
 
             <LinearLayout
@@ -67,7 +63,7 @@
                     android:drawablePadding="@dimen/px22"
                     android:text="@string/please_select"
                     android:textColor="@color/font_light_gray"
-                    android:textSize="@dimen/font_28px"
+                    android:textSize="@dimen/font_26px"
                     android:drawableRight="@drawable/ic_entrance"/>
         </LinearLayout>
 
@@ -88,7 +84,7 @@
                     android:paddingTop="@dimen/px28"
                     android:paddingBottom="@dimen/px28"
                     android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_28px"
+                    android:textSize="@dimen/font_26px"
                     android:text="@string/audit_visible_to_stu"/>
 
             <ToggleButton
@@ -105,14 +101,11 @@
 
     </LinearLayout>
 
-    <View
-            style="@style/DividerHorizontal"/>
-
     <Button
             android:id="@+id/sub_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px90"
+            android:layout_marginTop="@dimen/px86"
             style="@style/BigSubmitBtn"
             android:layout_marginLeft="@dimen/px40"
             android:layout_marginRight="@dimen/px40"
