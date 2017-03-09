@@ -49,6 +49,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.JpushUtil;
 import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.common.xf_foundation.schemas.Social.ContactGroup.CLASSES;
@@ -82,14 +83,10 @@ public class ContactActivity extends BaseActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                //FIXME 跳转到聊天界面
+                Contact contact = contactAdapter.getChild(groupPosition, childPosition);
+                String tid = contact.account;
 
-                String tid = AccountDataManager.getPhone(ContactActivity.this).equals("18701686975")? "18701686976": "18701686975";
-
-                final Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
-                intent.putExtra(ChatActivity.TARGET_ID, tid);
-                intent.putExtra(ChatActivity.TARGET_APP_KEY, XiaojsConfig.JPUSH_APP_KEY);
-                startActivity(intent);
+                JpushUtil.launchChat(ContactActivity.this, tid);
 
                 return false;
             }

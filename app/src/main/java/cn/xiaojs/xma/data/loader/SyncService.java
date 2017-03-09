@@ -53,13 +53,13 @@ public class SyncService extends IntentService {
                 default:
 
                     //FIXME
-                    if(SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)) {
+                    //if(SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)) {
 
                         Privilege[] privileges = SecurityManager.havePrivilegeSync(context,
                                 Su.Permission.COURSE_OPEN_CREATE);
                         SecurityManager.savePermission(context, privileges);
 
-                    }
+                    //}
 
                     ArrayList<ContactGroup> contactGroups = SocialManager.getContacts(context);
                     DataManager.syncContactData(context,contactGroups);

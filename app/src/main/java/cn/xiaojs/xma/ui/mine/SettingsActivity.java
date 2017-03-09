@@ -18,6 +18,7 @@ import cn.xiaojs.xma.util.CacheUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.util.JpushUtil;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -92,6 +93,9 @@ public class SettingsActivity extends BaseActivity {
         Toast.makeText(mContext, R.string.logout_tips, Toast.LENGTH_SHORT).show();
         XiaojsConfig.mLoginUser = null;
         AccountDataManager.clearUserInfo(mContext);
+
+        //jpush logout
+        JpushUtil.logoutJpush();
 
         //jump login page
         Intent i = new Intent(mContext, LoginActivity.class);

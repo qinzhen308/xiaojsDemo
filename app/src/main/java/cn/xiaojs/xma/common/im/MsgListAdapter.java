@@ -66,7 +66,9 @@ import cn.xiaojs.xma.common.im.utils.FileHelper;
 import cn.xiaojs.xma.common.im.utils.HandleResponseCode;
 import cn.xiaojs.xma.common.im.utils.IdHelper;
 import cn.xiaojs.xma.common.im.utils.TimeFormat;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.ui.common.ImageViewActivity;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 
 @SuppressLint("NewApi")
 public class MsgListAdapter extends BaseAdapter {
@@ -123,6 +125,8 @@ public class MsgListAdapter extends BaseAdapter {
     private ContentLongClickListener mLongClickListener;
     private String mTargetAppKey;
 
+    private CircleTransform circleTransform;
+
     public MsgListAdapter(Context context, String targetId, String appKey,
                           ContentLongClickListener longClickListener) {
         initData(context);
@@ -151,6 +155,8 @@ public class MsgListAdapter extends BaseAdapter {
             });
         }
         checkSendingImgMsg();
+
+        circleTransform = new CircleTransform(mContext);
     }
 
     private void reverse(List<Message> list) {
@@ -439,7 +445,7 @@ public class MsgListAdapter extends BaseAdapter {
             convertView = createViewByType(msg, position);
             switch (msg.getContentType()) {
                 case text:
-                    holder.headIcon = (CircleImageView) convertView
+                    holder.headIcon = (ImageView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_avatar_iv"));
                     holder.displayName = (TextView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_display_name_tv"));
@@ -451,7 +457,7 @@ public class MsgListAdapter extends BaseAdapter {
                             .findViewById(IdHelper.getViewID(mContext, "jmui_fail_resend_ib"));
                     break;
                 case image:
-                    holder.headIcon = (CircleImageView) convertView
+                    holder.headIcon = (ImageView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_avatar_iv"));
                     holder.displayName = (TextView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_display_name_tv"));
@@ -465,7 +471,7 @@ public class MsgListAdapter extends BaseAdapter {
                             .findViewById(IdHelper.getViewID(mContext, "jmui_fail_resend_ib"));
                     break;
                 case voice:
-                    holder.headIcon = (CircleImageView) convertView
+                    holder.headIcon = (ImageView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_avatar_iv"));
                     holder.displayName = (TextView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_display_name_tv"));
@@ -483,7 +489,7 @@ public class MsgListAdapter extends BaseAdapter {
                             .findViewById(IdHelper.getViewID(mContext, "jmui_fail_resend_ib"));
                     break;
                 case location:
-                    holder.headIcon = (CircleImageView) convertView
+                    holder.headIcon = (ImageView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_avatar_iv"));
                     holder.displayName = (TextView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_display_name_tv"));
@@ -549,22 +555,33 @@ public class MsgListAdapter extends BaseAdapter {
 
         //显示头像
         if (holder.headIcon != null) {
-            if (userInfo != null && !TextUtils.isEmpty(userInfo.getAvatar())) {
-                userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
-                    @Override
-                    public void gotResult(int status, String desc, Bitmap bitmap) {
-                        if (status == 0) {
-                            holder.headIcon.setImageBitmap(bitmap);
-                        } else {
-                            holder.headIcon.setImageResource(IdHelper.getDrawable(mContext,
-                                    "default_avatar"));
-                            HandleResponseCode.onHandle(mContext, status, false);
-                        }
-                    }
-                });
-            } else {
-                holder.headIcon.setImageResource(IdHelper.getDrawable(mContext, "default_avatar"));
-            }
+
+
+            String avatar = Account.getAvatar(userInfo.getUserName(),holder.headIcon.getMeasuredWidth());
+
+            Glide.with(mContext)
+                    .load(avatar)
+                    .bitmapTransform(circleTransform)
+                    .placeholder(R.drawable.default_avatar_grey)
+                    .error(R.drawable.default_avatar_grey)
+                    .into(holder.headIcon);
+
+//            if (userInfo != null && !TextUtils.isEmpty(userInfo.getAvatar())) {
+//                userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
+//                    @Override
+//                    public void gotResult(int status, String desc, Bitmap bitmap) {
+//                        if (status == 0) {
+//                            holder.headIcon.setImageBitmap(bitmap);
+//                        } else {
+//                            holder.headIcon.setImageResource(IdHelper.getDrawable(mContext,
+//                                    "default_avatar"));
+//                            HandleResponseCode.onHandle(mContext, status, false);
+//                        }
+//                    }
+//                });
+//            } else {
+//                holder.headIcon.setImageResource(IdHelper.getDrawable(mContext, "default_avatar"));
+//            }
 
             // 点击头像跳转到个人信息界面
             holder.headIcon.setOnClickListener(new OnClickListener() {
@@ -1307,7 +1324,7 @@ public class MsgListAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        CircleImageView headIcon;
+        ImageView headIcon;
         TextView displayName;
         TextView txtContent;
         ImageView picture;

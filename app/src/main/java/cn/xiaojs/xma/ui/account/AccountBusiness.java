@@ -35,22 +35,22 @@ public class AccountBusiness {
     public final static String USER_INFO = "user_info";
 
 
-    public static void login(final Activity activity, final LoginParams loginParams, OnLoginListener listener) {
-        login(activity, loginParams, null, listener);
+    public static void login(final Activity activity, boolean register, final LoginParams loginParams, OnLoginListener listener) {
+        login(activity, register,loginParams, null, listener);
     }
 
-    public static void login(final Activity activity, final LoginParams loginParams) {
-        login(activity, loginParams, null, null);
+    public static void login(final Activity activity,boolean register, final LoginParams loginParams) {
+        login(activity, register, loginParams, null, null);
     }
 
-    public static void login(final Activity activity, final LoginParams loginParams, final View submitBtn,
+    public static void login(final Activity activity,boolean register, final LoginParams loginParams, final View submitBtn,
                              final OnLoginListener listener) {
         if (submitBtn != null) {
             submitBtn.setEnabled(false);
         }
 
         try {
-            LoginDataManager.requestLoginByAPI(activity, loginParams, new APIServiceCallback<LoginInfo>() {
+            LoginDataManager.requestLoginByAPI(activity, register,loginParams, new APIServiceCallback<LoginInfo>() {
 
                 @Override
                 public void onSuccess(LoginInfo loginInfo) {

@@ -255,8 +255,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
 
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_right_btn2")) {//聊天成员按钮，更多按钮之右
+
+            final UserInfo userInfo = (UserInfo) mConv.getTargetInfo();
+            if (userInfo == null) return;
+
             Intent intent = new Intent(this, PersonalInfoActivity.class);
-            intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, mAccount);
+            intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, mTargetId);
+            //intent.putExtra(PersonalBusiness.KEY_PERSONAL_NAME, userInfo.getNickname());
+            //intent.putExtra(PersonalBusiness.KEY_PERSONAL_SIGN, userInfo.getSignature());
+            //intent.putExtra(PersonalBusiness.KEY_PERSONAL_SEX, userInfo.getGender());
             startActivity(intent);
 
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_switch_voice_ib")) {

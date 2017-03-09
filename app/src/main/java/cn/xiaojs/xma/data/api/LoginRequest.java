@@ -30,11 +30,16 @@ import retrofit2.Call;
 public class LoginRequest extends ServiceRequest {
 
     private LoginParams loginParams;
+    private boolean register;
 
     public LoginRequest(Context context, APIServiceCallback callback) {
 
         super(context, callback);
 
+    }
+
+    public void setFromRegister(boolean register) {
+        this.register = register;
     }
 
     public void login(LoginParams params) {
@@ -59,23 +64,23 @@ public class LoginRequest extends ServiceRequest {
 
     }
 
-    private void initPermission() {
-
-        SecurityManager.requestHavePrivilege(getApiManager().getAppContext(), new APIServiceCallback<Privilege[]>() {
-            @Override
-            public void onSuccess(Privilege[] privileges) {
-
-                SecurityManager.savePermission(getApiManager().getAppContext(), privileges);
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        }, Su.Permission.COURSE_OPEN_CREATE);
-
-    }
+//    private void initPermission() {
+//
+//        SecurityManager.requestHavePrivilege(getApiManager().getAppContext(), new APIServiceCallback<Privilege[]>() {
+//            @Override
+//            public void onSuccess(Privilege[] privileges) {
+//
+//                SecurityManager.savePermission(getApiManager().getAppContext(), privileges);
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        }, Su.Permission.COURSE_OPEN_CREATE);
+//
+//    }
 
 //    private void initDataCache(Context context) {
 //
@@ -91,15 +96,20 @@ public class LoginRequest extends ServiceRequest {
             AccountDataManager.saveUserInfo(getApiManager().getAppContext(), info.getUser());
             UpgradeManager.setUpgrade(getContext(),info.getUpgrade());
 
-            initPermission();
-
             Intent i = new Intent(getContext(), SyncService.class);
             DataManager.syncData(getContext(),i);
 
-            //jush
-            if (loginParams != null){
-                String up = String.valueOf(loginParams.getMobile());
-                JpushUtil.loginJpush(up,up);
+            //jpush
+            if (info != null){
+
+                if (register) {
+                    //注册成功后，会自动登录
+                    JpushUtil.register(info.getUser());
+                }else {
+                    String aid = info.getUser().getId();
+                    JpushUtil.loginJpush(aid, aid);
+                }
+
             }
 
 

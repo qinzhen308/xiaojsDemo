@@ -33,6 +33,7 @@ public class LoginDataManager {
      * @param params 登陆API中需要上传的参数
      */
     public static void requestLoginByAPI(@NonNull final Context context,
+                                         final boolean register,
                                          @NonNull final LoginParams params,
                                          @NonNull final APIServiceCallback<LoginInfo> callback) {
 
@@ -65,6 +66,7 @@ public class LoginDataManager {
 
                     //now to login
                     LoginRequest loginRequest = new LoginRequest(context, callback);
+                    loginRequest.setFromRegister(register);
                     loginRequest.login(params);
                 }
 
@@ -81,6 +83,7 @@ public class LoginDataManager {
 
         } else {
             LoginRequest loginRequest = new LoginRequest(context, callback);
+            loginRequest.setFromRegister(register);
             loginRequest.login(params);
         }
     }

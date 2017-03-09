@@ -24,10 +24,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.ImageView;
 
 import cn.xiaojs.xma.R;
 
-public class MessageImageView extends RoundedImageView {
+import static java.security.AccessController.getContext;
+
+public class MessageImageView extends ImageView {
     private Bitmap mBackground;
     private Paint mPaint;
     private int mValue = 0;
