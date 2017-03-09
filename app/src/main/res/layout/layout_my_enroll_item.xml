@@ -133,7 +133,7 @@
                 android:layout_height="wrap_content">
 
             <View
-                    style="@style/DividerHorizontal2"/>
+                    style="@style/DividerHorizontal"/>
 
             <RelativeLayout
                     android:layout_width="match_parent"

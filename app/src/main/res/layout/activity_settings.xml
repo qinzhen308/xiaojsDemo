@@ -14,7 +14,7 @@
             style="@style/MinePageItem"/>
 
     <View
-            style="@style/DividerHorizontal2"/>
+            style="@style/DividerHorizontal"/>
 
     <!--账号安全-->
     <TextView
@@ -26,7 +26,7 @@
             style="@style/MinePageItem"/>
 
     <View
-            style="@style/DividerHorizontal2"/>
+            style="@style/DividerHorizontal"/>
 
     <!--清除缓存-->
     <RelativeLayout
@@ -72,7 +72,7 @@
             style="@style/MinePageItem"/>
 
     <View
-            style="@style/DividerHorizontal2"/>
+            style="@style/DividerHorizontal"/>
 
     <!--关于我们-->
     <TextView

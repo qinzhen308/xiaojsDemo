@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
        android:shape="oval"
        android:useLevel="false">
-    <solid android:color="@color/hor_divide_line2"/>
+    <solid android:color="@color/hor_divide_line"/>
     <size
             android:height="@dimen/px50"
             android:width="@dimen/px50"/>

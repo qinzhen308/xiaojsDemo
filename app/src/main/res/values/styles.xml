@@ -41,19 +41,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/px1</item>
     </style>
-
-    <style name="DividerHorizontal2">
-        <item name="android:background">@color/hor_divide_line2</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/px1</item>
-    </style>
-
-    <style name="DividerHorizontal3">
-        <item name="android:background">@color/hor_divide_line3</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/px1</item>
-    </style>
-
+    
     <style name="DividerVertical">
         <item name="android:background">@color/ver_divide_line</item>
         <item name="android:layout_width">@dimen/px1</item>

@@ -140,7 +140,7 @@
     </LinearLayout>
 
     <View
-            style="@style/DividerHorizontal2"
+            style="@style/DividerHorizontal"
             android:layout_marginLeft="@dimen/px24"
             android:layout_marginRight="@dimen/px24"/>
 
