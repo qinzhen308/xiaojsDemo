@@ -23,7 +23,6 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
-import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
@@ -73,6 +72,8 @@ public class LessonCreationActivity extends BaseActivity {
 
     @BindView(R.id.status_fail_reason)
     TextView mStatusFailReason;
+    @BindView(R.id.lesson_creation_tips)
+    View mLessonCreateTipsView;
     @BindView(R.id.place_hold_area)
     View mPlaceHoldArea;
     @BindView(R.id.live_lesson_name)
@@ -140,14 +141,18 @@ public class LessonCreationActivity extends BaseActivity {
         init();
     }
 
-    @OnClick({R.id.left_image, R.id.lesson_subject, R.id.teach_form, R.id.enroll_switcher,
-            R.id.charge_way_switcher, R.id.by_total_price_title, R.id.by_duration_title,
-            R.id.lesson_start_time, R.id.optional_info, R.id.sub_btn, R.id.on_shelves,
-            R.id.publish_personal_page, R.id.publish_to_circle})
+    @OnClick({R.id.left_image, R.id.lesson_creation_tips_close, R.id.lesson_subject, R.id.teach_form,
+            R.id.enroll_switcher, R.id.charge_way_switcher, R.id.by_total_price_title,
+            R.id.by_duration_title, R.id.lesson_start_time, R.id.optional_info, R.id.sub_btn,
+            R.id.on_shelves, R.id.publish_personal_page, R.id.publish_to_circle})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 finish();
+                break;
+            case R.id.lesson_creation_tips_close:
+                mPlaceHoldArea.setVisibility(View.VISIBLE);
+                mLessonCreateTipsView.setVisibility(View.GONE);
                 break;
             case R.id.lesson_subject:
                 selectSubject();
@@ -201,6 +206,16 @@ public class LessonCreationActivity extends BaseActivity {
 
     protected void init() {
         mContext = this;
+        Bundle data = getIntent().getExtras();
+        mLessonId = data != null ? data.getString(CourseConstant.KEY_LESSON_ID) : null;
+        mType = data != null ? data.getInt(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_CREATE)
+                : CourseConstant.TYPE_LESSON_CREATE;
+
+        if (mType == CourseConstant.TYPE_LESSON_CREATE) {
+            mPlaceHoldArea.setVisibility(View.GONE);
+            mLessonCreateTipsView.setVisibility(View.VISIBLE);
+        }
+
         loadData();
         initView();
         addViewListener();
@@ -210,10 +225,7 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void loadData() {
-        Bundle data = getIntent().getExtras();
-        mLessonId = data != null ? data.getString(CourseConstant.KEY_LESSON_ID) : null;
-        mType = data != null ? data.getInt(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_CREATE)
-                : CourseConstant.TYPE_LESSON_CREATE;
+
         if (!TextUtils.isEmpty(mLessonId)) {
             showProgress(false);
             LessonDataManager.requestLessonData(mContext, mLessonId, new APIServiceCallback<LessonDetail>() {
