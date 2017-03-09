@@ -245,8 +245,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         initDrawer();
         initLiveProgress();
         initGestureDetector();
-        //init nav tips
-        showSettingNav();
 
         //init data
         initData();
