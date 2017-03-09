@@ -42,7 +42,7 @@
     </LinearLayout>
 
     <view
-            style="@style/DividerHorizontal2"
+            style="@style/DividerHorizontal"
             android:layout_below="@+id/content_layout"
             android:layout_marginTop="@dimen/px28"/>
 

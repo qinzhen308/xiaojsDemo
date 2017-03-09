@@ -25,8 +25,9 @@ public class WhiteboardConfigs {
     public static final float WHITE_BOARD_MAX_SCALE = 5.0f;
     public static final float WHITE_BOARD_MIN_SCALE = 1.0f;
 
-    public static final int DEFAULT_PAINT_COLOR = Color.BLACK;
     public static final float DEFAULT_PAINT_STROKE_WIDTH = 10.0f;
+
+    public static int DEFAULT_PAINT_COLOR = Color.BLACK;
 
     public static int BORDER_PADDING = 10;
     public static int BORDER_STROKE_WIDTH = 5;
@@ -58,6 +59,7 @@ public class WhiteboardConfigs {
         TEXT_BORDER_PADDING = rs.getDimensionPixelOffset(R.dimen.px12);
 
         BORDER_COLOR = rs.getColor(R.color.main_blue);
+        DEFAULT_PAINT_COLOR = rs.getColor(R.color.wb_color_4);
         BORDER_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px4);
         BORDER_DASH_WIDTH = rs.getDimensionPixelOffset(R.dimen.px10);
         BORDER_PADDING = rs.getDimensionPixelOffset(R.dimen.px10);

@@ -103,6 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/cr_add_contact"
+                    android:visibility="gone"
                     android:scaleType="fitCenter"/>
 
             <ImageView
@@ -110,6 +111,7 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     android:src="@drawable/cr_contact_manage"
                     android:scaleType="fitCenter"/>
         </LinearLayout>

@@ -2,7 +2,8 @@
 <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
     <LinearLayout
             android:orientation="vertical"
@@ -12,6 +13,37 @@
             android:focusableInTouchMode="true"
             android:background="@color/main_bg"
             android:layout_above="@+id/sub_btn">
+
+        <LinearLayout
+                android:id="@+id/lesson_creation_tips"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/px28"
+                android:background="@color/main_orange"
+                android:visibility="gone">
+            <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="@dimen/px40"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
+                    android:text="@string/lesson_creation_tips"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/font_white"/>
+            <ImageView
+                    android:id="@+id/lesson_creation_tips_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px26"
+                    android:paddingRight="@dimen/px26"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
+                    android:src="@drawable/ic_edit_text_del"/>
+        </LinearLayout>
+
 
         <TextView
                 android:id="@+id/status_fail_reason"
@@ -24,8 +56,8 @@
                 android:gravity="center_vertical"
                 android:drawableLeft="@drawable/ic_state_fail_msg_tips"
                 android:drawablePadding="@dimen/px10"
-                android:textColor="@color/font_error_red"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:textColor="@color/font_error_red"/>
 
         <View
                 android:id="@+id/place_hold_area"
@@ -33,9 +65,6 @@
                 android:layout_height="@dimen/px32"/>
 
         <!--直播课-->
-        <View
-                style="@style/DividerHorizontal"/>
-
         <LinearLayout
                 style="@style/LiveLessonItem">
 
@@ -69,15 +98,10 @@
                     android:text="@string/please_select"/>
         </LinearLayout>
 
-        <View
-                style="@style/DividerHorizontal"/>
 
         <!--报名方式-->
-        <View
-                android:layout_marginTop="@dimen/px32"
-                style="@style/DividerHorizontal"/>
-
         <LinearLayout
+                android:layout_marginTop="@dimen/px32"
                 style="@style/LiveLessonItem">
 
             <TextView
@@ -97,10 +121,9 @@
         </LinearLayout>
 
         <!--学生人数-->
-        <View
+        <include
                 android:id="@+id/stu_count_divide"
-                style="@style/DividerHorizontal"
-                android:layout_marginLeft="@dimen/px30"/>
+                layout="@layout/layout_horizontal_line"/>
 
         <LinearLayout
                 android:id="@+id/stu_count_layout"
@@ -128,12 +151,13 @@
                     android:gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/person"/>
+                    android:text="@string/person"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/font_black"/>
         </LinearLayout>
 
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginLeft="@dimen/px32"/>
+        <include
+                layout="@layout/layout_horizontal_line"/>
 
         <!--教学形式-->
 
@@ -276,15 +300,9 @@
         </LinearLayout>
 
 
-        <View
-                style="@style/DividerHorizontal"/>
-
         <!--上课时间-->
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginTop="@dimen/px32"/>
-
         <LinearLayout
+                android:layout_marginTop="@dimen/px32"
                 style="@style/LiveLessonItem">
 
             <TextView
@@ -298,9 +316,8 @@
 
         </LinearLayout>
 
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginLeft="@dimen/px32"/>
+        <include
+                layout="@layout/layout_horizontal_line"/>
 
         <!--上课时长-->
         <LinearLayout
@@ -328,21 +345,15 @@
                     android:gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/LessonText"
                     android:text="@string/minute"
-                    android:textSize="@dimen/font_28px"/>
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_26px"/>
 
         </LinearLayout>
 
-        <View
-                style="@style/DividerHorizontal"/>
-
         <!--选填信息-->
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginTop="@dimen/px32"/>
-
         <LinearLayout
+                android:layout_marginTop="@dimen/px32"
                 style="@style/LiveLessonItem">
 
             <TextView
@@ -356,18 +367,10 @@
 
         </LinearLayout>
 
-        <View
-                style="@style/DividerHorizontal"/>
-
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginTop="@dimen/px32"/>
-
         <LinearLayout
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px24"
-                android:paddingTop="@dimen/px16"
-                android:paddingBottom="@dimen/px16"
+                android:layout_marginTop="@dimen/px32"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px26"
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -377,8 +380,8 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
+                    android:paddingTop="@dimen/px25"
+                    android:paddingBottom="@dimen/px28"
                     android:text="@string/other_settings"
                     android:background="@color/white"/>
 
@@ -386,7 +389,7 @@
                     android:id="@+id/on_shelves_layout"
                     android:layout_width="match_parent"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/px30"
+                    android:paddingLeft="@dimen/px22"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
                     android:layout_height="wrap_content">
@@ -396,7 +399,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/multi_check_selector"
-                        android:drawablePadding="@dimen/px25"
+                        android:drawablePadding="@dimen/px28"
                         android:text="@string/on_shelves"/>
 
                 <TextView
@@ -413,7 +416,7 @@
                     android:id="@+id/publish_personal_page_layout"
                     android:layout_width="match_parent"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/px30"
+                    android:paddingLeft="@dimen/px22"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
                     android:layout_height="wrap_content">
@@ -423,7 +426,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/multi_check_selector"
-                        android:drawablePadding="@dimen/px25"
+                        android:drawablePadding="@dimen/px28"
                         android:text="@string/publish_personal_page"/>
 
                 <TextView
@@ -442,25 +445,27 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/multi_check_selector"
                     android:drawablePadding="@dimen/px25"
-                    android:paddingLeft="@dimen/px30"
+                    android:paddingLeft="@dimen/px22"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
+                    android:textSize="@dimen/font_28px"
                     android:text="@string/publish_to_circle"/>
+            
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px35"></View>
 
         </LinearLayout>
-
-        <View
-                style="@style/DividerHorizontal"/>
 
         <Button
                 android:id="@+id/sub_btn"
                 android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px20"
-                android:layout_marginBottom="@dimen/px20"
-                android:layout_marginLeft="@dimen/px40"
-                android:layout_marginRight="@dimen/px40"
+                android:layout_marginTop="@dimen/px86"
+                android:layout_marginBottom="@dimen/px80"
+                android:layout_marginLeft="@dimen/px56"
+                android:layout_marginRight="@dimen/px56"
                 android:text="@string/finish"
                 style="@style/BigSubmitBtn"/>
 

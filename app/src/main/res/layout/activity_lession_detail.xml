@@ -52,7 +52,7 @@
 
     <View
             android:id="@+id/base_header_divider"
-            style="@style/DividerHorizontal2"/>
+            style="@style/DividerHorizontal"/>
 
     <ScrollView
             android:layout_width="match_parent"

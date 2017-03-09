@@ -28,24 +28,28 @@
 
     </LinearLayout>
 
-    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
-            android:id="@+id/contact_list"
+    <FrameLayout
             android:layout_width="@dimen/px340"
-            android:layout_height="@dimen/px400"
-            android:scrollbars="none"
-            android:divider="@null"
-            android:listSelector="@android:color/transparent"
-            android:dividerHeight="0px"/>
+            android:layout_height="@dimen/px400">
+        <ListView
+                android:id="@+id/contact_list"
+                android:layout_width="@dimen/px340"
+                android:layout_height="@dimen/px400"
+                android:scrollbars="none"
+                android:divider="@null"
+                android:listSelector="@android:color/transparent"
+                android:dividerHeight="0px"/>
 
-    <TextView
-            android:id="@+id/empty_view"
-            android:layout_width="@dimen/px340"
-            android:layout_height="@dimen/px400"
-            android:textColor="@color/font_white"
-            android:gravity="center"
-            android:text="@string/share_target_empty"
-            android:textSize="@dimen/font_22px"
-            android:visibility="gone"/>
+        <TextView
+                android:id="@+id/empty_view"
+                android:layout_width="@dimen/px340"
+                android:layout_height="@dimen/px400"
+                android:textColor="@color/font_white"
+                android:gravity="center"
+                android:text="@string/share_target_empty"
+                android:textSize="@dimen/font_22px"
+                android:visibility="gone"/>
+    </FrameLayout>
 
     <TextView
             android:id="@+id/confirm_share"

@@ -29,7 +29,7 @@ import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 
-public abstract class VideoController {
+public abstract class VideoController implements StreamConfirmCallback{
     protected Context mContext;
     protected View mRoot;
 
@@ -41,10 +41,16 @@ public abstract class VideoController {
     protected boolean mLive;
 
     protected String mPlayStreamUrl;
+    protected String mPublishStreamUrl;
 
-    public VideoController(Context context, View root) {
+    protected boolean mStreamPlaying;
+    protected boolean mStreamPublishing;
+    protected OnStreamUseListener mOnStreamUseListener;
+
+    public VideoController(Context context, View root, OnStreamUseListener listener) {
         mContext = context;
         mRoot = root;
+        mOnStreamUseListener = listener;
         mHandler = new Handler();
 
         init(root);
@@ -71,17 +77,40 @@ public abstract class VideoController {
     /**
      * resume视频
      */
-    public abstract void onResume();
+    public void onResume() {
+        if (mPlayView != null) {
+            mPlayView.resume();
+        }
+        if (mPublishView != null) {
+            mPublishView.resume();
+        }
+    }
 
     /**
      * pause视频
      */
-    public abstract void onPause();
+    public void onPause() {
+        if (mPlayView != null) {
+            mStreamPlaying = false;
+            mPlayView.pause();
+        }
+        if (mPublishView != null) {
+            mStreamPublishing = false;
+            mPublishView.pause();
+        }
+    }
 
     /**
      * destroy视频
      */
-    public abstract void onDestroy();
+    public void onDestroy() {
+        if (mPlayView != null) {
+            mPlayView.destroy();
+        }
+        if (mPublishView != null) {
+            mPublishView.destroy();
+        }
+    }
 
     /**
      * 切换摄像头
@@ -102,6 +131,7 @@ public abstract class VideoController {
      */
     public void pausePublishStream() {
         if (mPublishView != null) {
+            mStreamPublishing = false;
             mPublishView.pause();
         }
     }
@@ -114,11 +144,10 @@ public abstract class VideoController {
             return;
         }
 
-        mPublishView.setPath(url);
-        if (!mInitPublishVideo) {
-            mPublishView.start();
-        } else {
-            mPublishView.resume();
+        mPublishStreamUrl = url;
+        if (mOnStreamUseListener != null) {
+            mLive = live;
+            mOnStreamUseListener.onStreamPublish(this);
         }
     }
 
@@ -130,9 +159,9 @@ public abstract class VideoController {
             mPlayStreamUrl = url;
         }
         if (mPlayView != null && !TextUtils.isEmpty(mPlayStreamUrl)) {
-            mPlayView.setPath(mPlayStreamUrl);
-            mPlayView.resume();
-            mPlayView.showLoading(true);
+            if (mOnStreamUseListener != null) {
+                mOnStreamUseListener.onStreamPlay(this);
+            }
         }
     }
 
@@ -141,6 +170,7 @@ public abstract class VideoController {
      */
     public void pauseStream() {
         if (mPlayView != null) {
+            mStreamPlaying = false;
             mPlayView.pause();
             mPlayView.showLoading(false);
         }
@@ -188,4 +218,27 @@ public abstract class VideoController {
     protected abstract void onStreamingStarted(Object... args);
 
     protected abstract void onStringingStopped(Object... args);
+
+    public boolean hasStreamUsing() {
+        return mStreamPlaying || mStreamPublishing;
+    }
+
+    @Override
+    public void confirmPlayStream(boolean confirm) {
+        mStreamPlaying = true;
+        mPlayView.setPath(mPlayStreamUrl);
+        mPlayView.resume();
+        mPlayView.showLoading(true);
+    }
+
+    @Override
+    public void confirmPublishStream(boolean confirm) {
+        mStreamPublishing = true;
+        mPublishView.setPath(mPublishStreamUrl);
+        if (!mInitPublishVideo) {
+            mPublishView.start();
+        } else {
+            mPublishView.resume();
+        }
+    }
 }

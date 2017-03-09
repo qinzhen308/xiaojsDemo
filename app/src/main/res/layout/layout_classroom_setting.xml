@@ -23,6 +23,34 @@
         <View
                 style="@style/DividerHorizontal"/>
 
+        <RelativeLayout
+                android:id="@+id/mobile_network_set_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:background="@color/white">
+
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_gray"
+                    android:textSize="@dimen/px26"
+                    android:text="@string/mobile_network_watch_live"/>
+
+            <ToggleButton
+                    android:id="@+id/mobile_network_watch_live"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_btn_selector"
+                    android:textOff=""
+                    android:textOn=""/>
+        </RelativeLayout>
+
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

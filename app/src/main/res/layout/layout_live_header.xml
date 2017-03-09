@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <View style="@style/DividerHorizontal2"/>
+        <View style="@style/DividerHorizontal"/>
 
         <FrameLayout
                 android:layout_width="match_parent"
@@ -127,7 +127,7 @@
                     android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <View style="@style/DividerHorizontal2"/>
+        <View style="@style/DividerHorizontal"/>
 
         <FrameLayout
                 android:layout_width="match_parent"

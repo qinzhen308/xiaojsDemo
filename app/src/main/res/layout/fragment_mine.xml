@@ -276,7 +276,7 @@
 
 
         <View
-                style="@style/DividerHorizontal2"/>
+                style="@style/DividerHorizontal"/>
 
         <!--我报的名-->
         <RelativeLayout
@@ -314,7 +314,7 @@
         </RelativeLayout>
 
         <View
-                style="@style/DividerHorizontal2"/>
+                style="@style/DividerHorizontal"/>
 
 
         <!--资料库-->
@@ -353,7 +353,7 @@
         </RelativeLayout>
 
         <View
-                style="@style/DividerHorizontal2"/>
+                style="@style/DividerHorizontal"/>
 
         <!--我的收藏-->
         <!--<RelativeLayout-->
@@ -467,7 +467,7 @@
         </RelativeLayout>
 
         <View
-                style="@style/DividerHorizontal2"/>
+                style="@style/DividerHorizontal"/>
 
         <!--实名认证-->
         <RelativeLayout

@@ -22,6 +22,7 @@ import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
+import cn.xiaojs.xma.ui.classroom.live.OnStreamUseListener;
 import cn.xiaojs.xma.ui.classroom.live.StudentVideoController;
 import cn.xiaojs.xma.ui.classroom.live.TeacherVideoController;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
@@ -37,19 +38,19 @@ public class ClassroomController {
     protected Constants.User mUser;
     private VideoEditingFragment mVideoEditFragment;
 
-    public ClassroomController(Context context, View root, Constants.User client, int appType) {
-        init(context, root, client, appType);
+    public ClassroomController(Context context, View root, Constants.User client, int appType, OnStreamUseListener listener) {
+        init(context, root, client, appType, listener);
     }
 
-    private void init(Context context, View root, Constants.User client, int appType) {
+    private void init(Context context, View root, Constants.User client, int appType, OnStreamUseListener listener) {
         mContext = context;
         mUser = client;
 
         //init video controller
         if (client == Constants.User.TEACHER) {
-            mVideoController = new TeacherVideoController(context, root);
+            mVideoController = new TeacherVideoController(context, root, listener);
         } else if (client == Constants.User.STUDENT) {
-            mVideoController = new StudentVideoController(context, root);
+            mVideoController = new StudentVideoController(context, root, listener);
         }
 
         //init whiteboard controller
@@ -58,6 +59,10 @@ public class ClassroomController {
 
     public void onPauseVideo() {
         mVideoController.onPause();
+    }
+
+    public void onResumeVideo() {
+        mVideoController.onResume();
     }
 
     public void onDestroyVideo() {
@@ -185,4 +190,7 @@ public class ClassroomController {
     }
 
 
+    public boolean hasStreamUsing() {
+        return mVideoController.hasStreamUsing();
+    }
 }

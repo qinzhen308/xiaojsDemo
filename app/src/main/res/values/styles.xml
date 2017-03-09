@@ -41,19 +41,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/px1</item>
     </style>
-
-    <style name="DividerHorizontal2">
-        <item name="android:background">@color/hor_divide_line2</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/px1</item>
-    </style>
-
-    <style name="DividerHorizontal3">
-        <item name="android:background">@color/hor_divide_line3</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/px1</item>
-    </style>
-
+    
     <style name="DividerVertical">
         <item name="android:background">@color/ver_divide_line</item>
         <item name="android:layout_width">@dimen/px1</item>
@@ -92,7 +80,7 @@
     <style name="LessonText">
         <item name="android:paddingTop">@dimen/px32</item>
         <item name="android:paddingBottom">@dimen/px32</item>
-        <item name="android:textSize">@dimen/font_30px</item>
+        <item name="android:textSize">@dimen/font_26px</item>
     </style>
 
     <style name="LessonItem">
@@ -118,8 +106,8 @@
     <style name="LiveLessonTitle" parent="LessonText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:minWidth">@dimen/px170</item>
-        <item name="android:textSize">@dimen/font_30px</item>
+        <item name="android:minWidth">@dimen/px160</item>
+        <item name="android:textSize">@dimen/font_28px</item>
         <item name="android:textColor">@color/font_black</item>
     </style>
 
@@ -130,7 +118,7 @@
     <style name="LiveLessonCreateEdt" parent="LessonText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/font_28px</item>
+        <item name="android:textSize">@dimen/font_26px</item>
         <item name="android:textColor">@color/font_black</item>
         <item name="android:textColorHint">@color/font_light_gray</item>
         <item name="android:background">@null</item>

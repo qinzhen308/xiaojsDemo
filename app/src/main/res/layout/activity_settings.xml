@@ -4,36 +4,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <!--设置-->
-    <RelativeLayout
-            android:id="@+id/mobile_network_set_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/MinePageItem"
-            android:background="@color/white">
-
-        <TextView
-                android:layout_alignParentLeft="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/font_black"
-                android:textSize="@dimen/px26"
-                android:text="@string/mobile_network_watch_live"/>
-
-
-        <ToggleButton
-                android:layout_alignParentRight="true"
-                android:id="@+id/mobile_network_watch_live"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/toggle_btn_selector"
-                android:textOff=""
-                android:textOn=""/>
-    </RelativeLayout>
-
-    <View
-            style="@style/DividerHorizontal2"/>
-
     <!--消息提醒设置-->
     <TextView
             android:id="@+id/message_notify_set"
@@ -44,7 +14,7 @@
             style="@style/MinePageItem"/>
 
     <View
-            style="@style/DividerHorizontal2"/>
+            style="@style/DividerHorizontal"/>
 
     <!--账号安全-->
     <TextView
@@ -56,7 +26,7 @@
             style="@style/MinePageItem"/>
 
     <View
-            style="@style/DividerHorizontal2"/>
+            style="@style/DividerHorizontal"/>
 
     <!--清除缓存-->
     <RelativeLayout
@@ -102,7 +72,7 @@
             style="@style/MinePageItem"/>
 
     <View
-            style="@style/DividerHorizontal2"/>
+            style="@style/DividerHorizontal"/>
 
     <!--关于我们-->
     <TextView

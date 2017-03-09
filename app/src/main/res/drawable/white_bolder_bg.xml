@@ -3,5 +3,5 @@
     <solid android:color="@color/white"/>
     <stroke
             android:width="@dimen/px1"
-            android:color="@color/hor_divide_line3"/>
+            android:color="@color/hor_divide_line"/>
 </shape>

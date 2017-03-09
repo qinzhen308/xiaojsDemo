@@ -34,11 +34,9 @@
     <!--disable color, eg btn-->
     <color name="disable_btn">#999999</color>
     <!--horizontal divide line-->
-    <color name="hor_divide_line">#d1d5db</color>
-    <color name="hor_divide_line2">#E5E5E5</color>
-    <color name="hor_divide_line3">#d1d5db</color>
+    <color name="hor_divide_line">#E5E5E5</color>
     <!--vertical divide line-->
-    <color name="ver_divide_line">#d1d5db</color>
+    <color name="ver_divide_line">#E5E5E5</color>
     <color name="link_hover">#0076ff</color>
     <!--font color-->
     <color name="font_dark_gray">#8b8b8b</color>

@@ -4,10 +4,6 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <View
-            style="@style/DividerHorizontal"
-            android:layout_marginTop="@dimen/px32"/>
-
     <EditText
             android:id="@+id/input_content"
             android:layout_width="match_parent"
@@ -22,27 +18,22 @@
     <TextView
             android:id="@+id/input_tips"
             android:layout_width="match_parent"
-            android:paddingLeft="@dimen/px28"
-            android:paddingRight="@dimen/px28"
-            android:paddingTop="@dimen/px20"
-            android:paddingBottom="@dimen/px20"
+            android:paddingRight="@dimen/px30"
+            android:paddingBottom="@dimen/px18"
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_22px"
             android:gravity="right"
             android:textColor="@color/font_gray"
             android:background="@color/white"/>
 
-    <View
-            style="@style/DividerHorizontal"/>
-
     <Button
             android:id="@+id/sub_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/finish"
-            android:layout_marginTop="@dimen/px90"
-            android:layout_marginLeft="@dimen/px40"
-            android:layout_marginRight="@dimen/px40"
+            android:layout_marginTop="@dimen/px86"
+            android:layout_marginLeft="@dimen/px57"
+            android:layout_marginRight="@dimen/px57"
             style="@style/BigSubmitBtn"/>
 
 
