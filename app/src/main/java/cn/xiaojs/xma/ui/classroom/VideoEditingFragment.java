@@ -1,14 +1,18 @@
 package cn.xiaojs.xma.ui.classroom;
 
+import android.animation.Animator;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.ShareDoodlePopWindow;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -26,10 +30,18 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
  * ======================================================================================== */
 
 public class VideoEditingFragment extends BaseFragment {
+    private final static int ANIM_SHOW = 1 << 1;
+    private final static int ANIM_HIDE = 1 << 2;
+
+    @BindView(R.id.white_board_panel)
+    View mWhiteBoardPanel;
+
     private WhiteboardController mBoardController;
     private Bitmap mBitmap;
     private ShareDoodlePopWindow mSharePopWindow;
     private Constants.User mUser = Constants.User.TEACHER;
+    private boolean mAnimating;
+    private PanelAnimListener mPanelAnimListener;
 
     @Override
     protected View getContentView() {
@@ -38,11 +50,14 @@ public class VideoEditingFragment extends BaseFragment {
 
     @Override
     protected void init() {
+        mPanelAnimListener = new PanelAnimListener();
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
+        mBoardController.onGeometryChange(GeometryShape.RECTANGLE);
+        mBoardController.onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
         mBoardController.showWhiteboardLayout(mBitmap);
     }
 
-    @OnClick({R.id.back_in_doodle, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,
+    @OnClick({R.id.wb_toolbar_btn, R.id.back_in_doodle, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,
             R.id.color_picker_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.undo, R.id.redo})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
@@ -66,6 +81,13 @@ public class VideoEditingFragment extends BaseFragment {
                 break;
             case R.id.save_doodle:
                 break;
+            case R.id.wb_toolbar_btn:
+                if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
+                    hideWhiteBoardPanel();
+                } else {
+                    showWhiteBoardPanel(true);
+                }
+                break;
             default:
                 break;
         }
@@ -81,7 +103,11 @@ public class VideoEditingFragment extends BaseFragment {
      */
     private void selectShareContact(View anchor) {
         if (mSharePopWindow == null) {
-            mSharePopWindow = new ShareDoodlePopWindow(mContext);
+            String ticket = null;
+            if (mContext instanceof ClassroomActivity) {
+                ticket = ((ClassroomActivity)mContext).getTicket();
+            }
+            mSharePopWindow = new ShareDoodlePopWindow(mContext, ticket);
         }
 
         int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);
@@ -93,5 +119,87 @@ public class VideoEditingFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mBoardController.hideWhiteboardLayout();
+    }
+
+
+    /**
+     * 隐藏白板操作面板
+     */
+    private void hideWhiteBoardPanel() {
+        if (mAnimating) {
+            return;
+        }
+        mWhiteBoardPanel.animate()
+                .alpha(0.0f)
+                .setListener(mPanelAnimListener.with(mWhiteBoardPanel).play(ANIM_HIDE))
+                .start();
+
+    }
+
+    /**
+     * 显示白板操作面板
+     */
+    private void showWhiteBoardPanel(boolean needAnim) {
+        if (mAnimating) {
+            return;
+        }
+
+        if (needAnim) {
+            mWhiteBoardPanel.animate()
+                    .alpha(1.0f)
+                    .setListener(mPanelAnimListener.with(mWhiteBoardPanel).play(ANIM_SHOW))
+                    .start();
+        } else {
+            mWhiteBoardPanel.setAlpha(1.0f);
+            mWhiteBoardPanel.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 动画监听器
+     */
+    private class PanelAnimListener implements Animator.AnimatorListener {
+        private View mV;
+        private int mAnimType;
+
+        public PanelAnimListener with(View v) {
+            mV = v;
+            return this;
+        }
+
+        public PanelAnimListener play(int type) {
+            mAnimType = type;
+            return this;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+            mAnimating = true;
+            if (mAnimType == ANIM_SHOW && mV != null) {
+                mV.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            mAnimating = false;
+            if (mAnimType == ANIM_HIDE && mV != null) {
+                mV.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            mAnimating = false;
+            mV = null;
+            if (mAnimType == ANIM_SHOW && mV != null) {
+                mV.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
     }
 }

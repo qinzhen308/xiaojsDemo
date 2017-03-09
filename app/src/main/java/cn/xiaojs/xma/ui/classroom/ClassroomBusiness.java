@@ -14,6 +14,9 @@ package cn.xiaojs.xma.ui.classroom;
  *
  * ======================================================================================== */
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +24,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 
 public class ClassroomBusiness {
+    public static final int NETWORK_NONE = 1;
+    public static final int NETWORK_WIFI = 2;
+    public static final int NETWORK_OTHER = 3;
+
     public static Constants.User getUser(String session) {
         Constants.User user = Constants.User.TEACHER;
         if ("LeadSession".equals(session)) {
@@ -51,7 +58,7 @@ public class ClassroomBusiness {
             String result = null;
             if (obj instanceof JSONObject) {
                 result = obj.toString();
-            } else if (obj instanceof String ){
+            } else if (obj instanceof String) {
                 result = (String) obj;
             } else {
                 result = obj.toString();
@@ -84,5 +91,17 @@ public class ClassroomBusiness {
         }
 
         return data;
+    }
+
+    public static int getCurrentNetwork(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo currentInfo = cm.getActiveNetworkInfo();
+        if (currentInfo == null || !currentInfo.isConnected()) {
+            return NETWORK_NONE;
+        } else if (currentInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            return NETWORK_WIFI;
+        } else {
+            return NETWORK_OTHER;
+        }
     }
 }

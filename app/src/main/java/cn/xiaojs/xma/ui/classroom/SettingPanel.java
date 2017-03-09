@@ -33,6 +33,7 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
     private ToggleButton mMicroPhoneSwitcher;
     private ToggleButton mCameraSwitcher;
     private ToggleButton mTalkSwitcher;
+    private ToggleButton mMobileNetworkLiveSwitcher;
 
     public SettingPanel(Context context) {
         super(context);
@@ -49,6 +50,7 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
         mStandardTv = (TextView) root.findViewById(R.id.standard_definition);
         mHighTv = (TextView) root.findViewById(R.id.high_definition);
 
+        mMobileNetworkLiveSwitcher = (ToggleButton) root.findViewById(R.id.mobile_network_watch_live);
         mMicroPhoneSwitcher = (ToggleButton) root.findViewById(R.id.microphone_switcher);
         mCameraSwitcher = (ToggleButton) root.findViewById(R.id.camera_switcher);
         mTalkSwitcher = (ToggleButton) root.findViewById(R.id.class_room_talk);
@@ -60,10 +62,12 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
         setQuality();
 
         SharedPreferences sf = XjsUtils.getSharedPreferences();
+        mMobileNetworkLiveSwitcher.setChecked(sf.getBoolean(KEY_MOBILE_NETWORK_LIVE, false));
         mMicroPhoneSwitcher.setChecked(sf.getBoolean(KEY_MICROPHONE_OPEN, true));
         mCameraSwitcher.setChecked(sf.getBoolean(KEY_CAMERA_OPEN, true));
         mTalkSwitcher.setChecked(sf.getBoolean(KEY_MULTI_TALK_OPEN, true));
 
+        mMobileNetworkLiveSwitcher.setOnCheckedChangeListener(this);
         mMicroPhoneSwitcher.setOnCheckedChangeListener(this);
         mCameraSwitcher.setOnCheckedChangeListener(this);
         mTalkSwitcher.setOnCheckedChangeListener(this);
@@ -106,6 +110,9 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         SharedPreferences.Editor editor = XjsUtils.getSharedPreferences().edit();
         switch (buttonView.getId()) {
+            case R.id.mobile_network_watch_live:
+                editor.putBoolean(KEY_MOBILE_NETWORK_LIVE, isChecked);
+                break;
             case R.id.camera_switcher:
                 editor.putBoolean(KEY_CAMERA_OPEN, isChecked);
                 break;

@@ -36,7 +36,6 @@
             android:layout_marginLeft="@dimen/px20"
             android:lines="1"
             android:ellipsize="end"
-            android:layout_gravity="center_vertical"
-            android:text="李阳阳"/>
+            android:layout_gravity="center_vertical"/>
 
 </LinearLayout>

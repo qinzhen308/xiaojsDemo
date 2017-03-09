@@ -37,8 +37,8 @@ public class TeacherVideoController extends VideoController {
     private int loadingSize = 36;
     private int loadingDesc = 20;
 
-    public TeacherVideoController(Context context, View root) {
-        super(context, root);
+    public TeacherVideoController(Context context, View root, OnStreamUseListener listener) {
+        super(context, root, listener);
         listenerSocket();
         loadingSize = context.getResources().getDimensionPixelSize(R.dimen.px36);
         loadingDesc = context.getResources().getDimensionPixelSize(R.dimen.font_20px);
@@ -58,26 +58,8 @@ public class TeacherVideoController extends VideoController {
     }
 
     @Override
-    public void onResume() {
-        mPlayView.resume();
-        mPublishView.resume();
-    }
-
-    @Override
-    public void onPause() {
-        mPlayView.pause();
-        mPublishView.pause();
-    }
-
-    @Override
-    public void onDestroy() {
-        mPlayView.destroy();
-        mPublishView.destroy();
-    }
-
-    @Override
-    public void playStream(String url) {
-        super.playStream(url);
+    public void confirmPlayStream(boolean confirm) {
+        super.confirmPlayStream(confirm);
         mPlayView.setVisibility(View.VISIBLE);
         if (!TextUtils.isEmpty(mPlayStreamUrl)) {
             mPlayView.showLoading(true, loadingSize, loadingDesc);

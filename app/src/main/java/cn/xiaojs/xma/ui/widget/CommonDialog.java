@@ -176,6 +176,14 @@ public class CommonDialog extends Dialog {
         setDesc(getContext().getString(resId));
     }
 
+    public void setLefBtnText(int resId) {
+        mLeftButton.setText(resId);
+    }
+
+    public void setRightBtnText(int resId) {
+        mRightButton.setText(resId);
+    }
+
     public void setDesc(String desc) {
         descStr = desc;
     }

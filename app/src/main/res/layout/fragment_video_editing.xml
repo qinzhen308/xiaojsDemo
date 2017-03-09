@@ -67,6 +67,7 @@
             android:layout_marginBottom="@dimen/px20"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:background="@drawable/wb_conner_bg">
 
         <ImageView
@@ -125,4 +126,13 @@
                 android:padding="@dimen/px25"/>
 
     </LinearLayout>
+
+    <ImageView
+            android:id="@+id/wb_toolbar_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/px20"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/cr_more"/>
 </RelativeLayout>

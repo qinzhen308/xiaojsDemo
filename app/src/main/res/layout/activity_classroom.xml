@@ -43,6 +43,21 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
 
+        <FrameLayout
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:visibility="gone">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/font_dark_gray"
+                    android:textSize="@dimen/font_28px"
+                    android:text="@string/no_network"/>
+        </FrameLayout>
+
         <!--控制面板, 直播-->
         <include
                 android:id="@+id/main_panel"

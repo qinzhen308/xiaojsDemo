@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *
  * ======================================================================================== */
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.LiveService;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import io.socket.client.Ack;
@@ -39,7 +41,7 @@ public class SocketManager {
     private static Socket mSocket;
     private static Handler mHandler;
 
-    public synchronized static void init(String ticket, String secret, boolean videoSupported, boolean audioSupported) {
+    public synchronized static void init(Context context, String ticket, String secret, boolean videoSupported, boolean audioSupported) {
         initHandler();
         if (mSocket == null) {
             try {
@@ -47,7 +49,7 @@ public class SocketManager {
                 opts.query = "secret=" + secret + "&" + "avc={\"video\":" + videoSupported + ",\"audio\":" + audioSupported + "}";
                 opts.timeout = 10000; //ms
                 opts.transports = new String[]{"websocket"};
-                mSocket = IO.socket(getClassroomSocketUrl(ticket), opts);
+                mSocket = IO.socket(getClassroomSocketUrl(context, ticket), opts);
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
@@ -60,8 +62,8 @@ public class SocketManager {
         return mSocket;
     }
 
-    public static String getClassroomSocketUrl(String ticket) {
-        String url = XiaojsConfig.BASE_URL + ":" + XiaojsConfig.LIVE_PORT + "/" + ticket;
+    public static String getClassroomSocketUrl(Context context, String ticket) {
+        String url = ApiManager.getXLSUrl(context) + "/" + ticket;
         return url;
     }
 

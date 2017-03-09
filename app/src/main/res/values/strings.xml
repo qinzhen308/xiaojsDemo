@@ -53,6 +53,11 @@
     <string name="all">全部</string>
     <string name="add">添加</string>
     <string name="exit_tips">再按一次返回键退出小教室</string>
+    <string name="no_network">无法连接到网络，请确保您的网络已经打开!</string>
+    <string name="mobile_network_title">你没有在WIFI环境下</string>
+    <string name="mobile_network_desc">是否使用手机流量小教室直播</string>
+    <string name="mobile_network_forbid">停止使用</string>
+    <string name="mobile_network_allow">继续使用</string>
 
     <string name="select_for_you">您已择:</string>
     <string name="search_subject_tips">请输入您要找的学科类目</string>

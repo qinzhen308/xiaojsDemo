@@ -41,8 +41,8 @@ import cn.xiaojs.xma.util.DeviceUtil;
 public class StudentVideoController extends VideoController {
     private CommonDialog mAgreeOpenCamera;
 
-    public StudentVideoController(Context context, View root) {
-        super(context, root);
+    public StudentVideoController(Context context, View root, OnStreamUseListener listener) {
+        super(context, root, listener);
         listenerSocket();
     }
 
@@ -62,33 +62,19 @@ public class StudentVideoController extends VideoController {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
     }
 
-    @Override
-    public void onResume() {
-        mPlayView.resume();
-        mPublishView.resume();
-    }
-
-    @Override
-    public void onPause() {
-        mPlayView.pause();
-        mPublishView.pause();
-    }
-
-    @Override
-    public void onDestroy() {
-        mPlayView.destroy();
-        mPublishView.destroy();
-    }
-
     public void publishStream(String url) {
         publishStream(url, true);
     }
 
     @Override
-    public void publishStream(String url, boolean live) {
-        mLive = live;
+    public void confirmPublishStream(boolean confirm) {
+        super.confirmPublishStream(confirm);
         mPublishView.setVisibility(View.VISIBLE);
-        super.publishStream(url, live);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

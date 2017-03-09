@@ -25,6 +25,10 @@ public interface Constants {
     public final static String KEY_MULTI_TALK_OPEN = "key_multi_talk_open";
     public final static String KEY_QUALITY = "key_quality";
     public final static String KEY_TICKET = "key_ticket";
+    /**
+     * if allow to live for mobile network
+     */
+    public final static String KEY_MOBILE_NETWORK_LIVE = "key_mobile_network_live";
 
     /**
      * quality
