@@ -46,6 +46,14 @@ import java.util.Set;
 
 public class AccountDataManager {
 
+    public static void setPhone(final Context context, final String phone) {
+        AccountPref.setPhone(context, phone);
+    }
+
+    public static String getPhone(final Context context) {
+        return AccountPref.getPhone(context);
+    }
+
     public static Location getLocation(Context context){
         return AccountPref.getLocation(context);
     }

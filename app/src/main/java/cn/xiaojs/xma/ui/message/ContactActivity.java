@@ -25,11 +25,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.im.CircleImageView;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -81,9 +83,12 @@ public class ContactActivity extends BaseActivity {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 //FIXME 跳转到聊天界面
+
+                String tid = AccountDataManager.getPhone(ContactActivity.this).equals("18701686975")? "18701686976": "18701686975";
+
                 final Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
-                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
-                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+                intent.putExtra(ChatActivity.TARGET_ID, tid);
+                intent.putExtra(ChatActivity.TARGET_APP_KEY, XiaojsConfig.JPUSH_APP_KEY);
                 startActivity(intent);
 
                 return false;

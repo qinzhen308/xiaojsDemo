@@ -98,7 +98,7 @@ public class PersonalInfoActivity extends BaseActivity {
         mBean = bean;
         Glide.with(getApplicationContext())
                 .load(Account.getAvatar(bean.profile.id, 300))
-                .error(R.drawable.default_avatar)
+                .error(R.drawable.default_avatar_grey)
                 .into(mImage);
         mName.setText(bean.profile.name);
         if (Account.Sex.MALE.equalsIgnoreCase(bean.profile.sex)) {

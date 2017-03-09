@@ -23,6 +23,7 @@ import android.widget.Toast;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.api.BasicCallback;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.security.LoginInfo;
@@ -59,8 +60,8 @@ public class AccountBusiness {
 
                     if (loginInfo != null) {
                         XiaojsConfig.mLoginUser = loginInfo.getUser();
-                        XjsUtils.getSharedPreferences().edit().putLong(XiaojsConfig.KEY_LOGIN_USERNAME,
-                                loginParams.getMobile()).commit();
+
+                        AccountDataManager.setPhone(activity,String.valueOf(loginParams.getMobile()));
                         //enter main page
                         Intent intent = new Intent(activity, MainActivity.class);
                         //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

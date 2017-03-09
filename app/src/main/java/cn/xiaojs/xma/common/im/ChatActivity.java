@@ -227,10 +227,33 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             }
             finish();
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_right_btn")) {//更多按钮
+
+            final UserInfo userInfo = (UserInfo) mConv.getTargetInfo();
+            if (userInfo == null) return;
+
+            // 1 -- 免打扰，其他 -- 非免打扰
+            final int disturb = userInfo.getNoDisturb();
+            int checkIndex = disturb == 1? 1 : 0;
+
             SingleSelectDialog dialog = new SingleSelectDialog(this);
             dialog.setTitle("消息设置");
             dialog.setItems(getResources().getStringArray(R.array.chat_setting));
+            dialog.setSelectPosition(checkIndex);
+            dialog.setOnOkClick(new SingleSelectDialog.OnOkClickListener() {
+                @Override
+                public void onOk(int position) {
+
+                    int newDisturb = position == 1? 1: 0;
+                    if (newDisturb != disturb){
+                        userInfo.setNoDisturb(newDisturb,null);
+                    }
+
+                }
+            });
             dialog.show();
+
+
+
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_right_btn2")) {//聊天成员按钮，更多按钮之右
             Intent intent = new Intent(this, PersonalInfoActivity.class);
             intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, mAccount);

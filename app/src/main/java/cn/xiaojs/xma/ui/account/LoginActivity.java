@@ -210,10 +210,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initLoginInfo() {
-        long phoneNum = XjsUtils.getSharedPreferences().getLong(XiaojsConfig.KEY_LOGIN_USERNAME, 0);
+        String phoneNum = AccountDataManager.getPhone(this);
 
-        if (phoneNum != 0) {
-            mLoginNamedEdit.setText(String.valueOf(phoneNum));
+        if (!TextUtils.isEmpty(phoneNum)) {
+            mLoginNamedEdit.setText(phoneNum);
         }
     }
 
