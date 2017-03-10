@@ -8,18 +8,14 @@
               android:focusable="true"
               android:focusableInTouchMode="true">
 
-    <View
-            android:layout_marginTop="@dimen/px32"
-            style="@style/DividerHorizontal"/>
-
     <RelativeLayout
             android:id="@+id/edit_portrait"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/px32"
-            android:paddingRight="@dimen/px32"
-            android:paddingTop="@dimen/px16"
-            android:paddingBottom="@dimen/px16"
+            android:paddingLeft="@dimen/px28"
+            android:paddingRight="@dimen/px26"
+            android:paddingTop="@dimen/px14"
+            android:paddingBottom="@dimen/px14"
             android:clickable="true"
             android:background="@drawable/item_pressed">
 
@@ -28,17 +24,17 @@
                 android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/font_28px"
-                android:textColor="@color/font_gray"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_dark_gray"
                 android:text="@string/edit_portrait"
                 android:layout_centerInParent="true"/>
 
         <cn.xiaojs.xma.ui.widget.RoundedImageView
                 android:id="@+id/portrait"
                 android:layout_toRightOf="@+id/edit_portrait_title"
-                android:layout_marginLeft="@dimen/px46"
-                android:layout_width="@dimen/px90"
-                android:layout_height="@dimen/px90"
+                android:layout_marginLeft="@dimen/px56"
+                android:layout_width="@dimen/px86"
+                android:layout_height="@dimen/px86"
                 android:layout_centerInParent="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/default_avatar"
@@ -52,27 +48,22 @@
                 android:src="@drawable/ic_entrance"/>
     </RelativeLayout>
 
-    <View
-            style="@style/DividerHorizontal"/>
-
-    <View
-            android:layout_marginTop="@dimen/px32"
-            style="@style/DividerHorizontal"/>
 
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:layout_marginTop="@dimen/px32"
             android:paddingTop="@dimen/px28"
             android:paddingBottom="@dimen/px28">
 
         <TextView
-                android:layout_width="@dimen/px170"
+                android:layout_width="@dimen/px190"
                 android:layout_height="wrap_content"
-                android:textColor="@color/font_gray"
-                android:textSize="@dimen/font_28px"
-                android:paddingLeft="@dimen/px32"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_26px"
+                android:paddingLeft="@dimen/px28"
                 android:text="@string/name"/>
 
         <cn.xiaojs.xma.ui.widget.EditTextDel
@@ -80,14 +71,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_black"
-                android:textSize="@dimen/font_30px"
+                android:textSize="@dimen/font_28px"
                 android:background="@null"
-                android:paddingRight="@dimen/px32"/>
+                android:paddingRight="@dimen/px26"/>
     </LinearLayout>
 
-    <View
-            android:paddingLeft="@dimen/px32"
-            style="@style/DividerHorizontal"/>
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginRight="@dimen/px38"
+                android:layout_marginLeft="@dimen/px38"/>
+    </FrameLayout>
 
     <LinearLayout
             android:orientation="horizontal"
@@ -98,11 +96,11 @@
             android:paddingBottom="@dimen/px28">
 
         <TextView
-                android:layout_width="@dimen/px170"
+                android:layout_width="@dimen/px190"
                 android:layout_height="wrap_content"
-                android:textColor="@color/font_gray"
-                android:textSize="@dimen/font_28px"
-                android:paddingLeft="@dimen/px32"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_26px"
+                android:paddingLeft="@dimen/px28"
                 android:text="@string/sex"/>
 
         <TextView
@@ -110,14 +108,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_black"
-                android:textSize="@dimen/font_30px"
-                android:paddingRight="@dimen/px32"
+                android:textSize="@dimen/font_28px"
+                android:paddingRight="@dimen/px26"
                 android:background="@null"/>
     </LinearLayout>
 
-    <View
-            android:paddingLeft="@dimen/px32"
-            style="@style/DividerHorizontal"/>
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginRight="@dimen/px38"
+                android:layout_marginLeft="@dimen/px38"/>
+    </FrameLayout>
 
     <LinearLayout
             android:orientation="horizontal"
@@ -128,11 +133,11 @@
             android:paddingBottom="@dimen/px28">
 
         <TextView
-                android:layout_width="@dimen/px170"
+                android:layout_width="@dimen/px190"
                 android:layout_height="wrap_content"
-                android:textColor="@color/font_gray"
-                android:textSize="@dimen/font_28px"
-                android:paddingLeft="@dimen/px32"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_26px"
+                android:paddingLeft="@dimen/px28"
                 android:text="@string/birthday"/>
 
         <TextView
@@ -142,12 +147,19 @@
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
                 android:background="@null"
-                android:paddingRight="@dimen/px32"/>
+                android:paddingRight="@dimen/px26"/>
     </LinearLayout>
 
-    <View
-            android:paddingLeft="@dimen/px32"
-            style="@style/DividerHorizontal"/>
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginRight="@dimen/px38"
+                android:layout_marginLeft="@dimen/px38"/>
+    </FrameLayout>
 
     <LinearLayout
             android:orientation="horizontal"
@@ -158,11 +170,11 @@
             android:paddingBottom="@dimen/px28">
 
         <TextView
-                android:layout_width="@dimen/px170"
+                android:layout_width="@dimen/px190"
                 android:layout_height="wrap_content"
-                android:textColor="@color/font_gray"
-                android:textSize="@dimen/font_28px"
-                android:paddingLeft="@dimen/px32"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_26px"
+                android:paddingLeft="@dimen/px28"
                 android:text="@string/personalized_sign"/>
 
         <cn.xiaojs.xma.ui.widget.EditTextDel
@@ -171,15 +183,10 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_28px"
-                android:paddingRight="@dimen/px32"
+                android:paddingRight="@dimen/px26"
                 android:maxLines="2"
                 android:maxLength="20"
                 android:background="@null"/>
     </LinearLayout>
-
-    <View
-            android:paddingLeft="@dimen/px32"
-            style="@style/DividerHorizontal"/>
-
 
 </LinearLayout>
