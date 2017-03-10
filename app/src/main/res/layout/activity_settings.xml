@@ -64,7 +64,7 @@
     <!--反馈帮助-->
     <TextView
             android:id="@+id/feedback_help"
-            android:layout_marginTop="@dimen/px20"
+            android:layout_marginTop="@dimen/px28"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/feedback_help"
@@ -85,7 +85,7 @@
 
     <Button
             android:id="@+id/exit_login"
-            android:layout_marginTop="@dimen/px80"
+            android:layout_marginTop="@dimen/px86"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/BigSubmitBtn"
