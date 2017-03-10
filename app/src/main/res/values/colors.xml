@@ -138,5 +138,6 @@
     <!-- 暗绿色 -->
 
     <color name="blue">#0000FF</color>
+    <color name="subject_selected_blue">#7598c1</color>
 
 </resources>

@@ -94,7 +94,6 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
 
     @Override
     protected void doRequest() {
-        Log.i("aaa", "=================doRequest===========page=" + mPagination.getPage());
         CategoriesManager.getSubjects(mContext, mParentId, mPagination, new APIServiceCallback<List<CSubject>>() {
             @Override
             public void onSuccess(List<CSubject> object) {

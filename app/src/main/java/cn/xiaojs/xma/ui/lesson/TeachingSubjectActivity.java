@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class TeachingSubjectActivity extends BaseActivity {
     public final static String KEY_TYPE = "key_type";
 
     private List<TeachingSubjectFragment> mFragments;
+    private StringBuilder mSelectedSubjectTxt;
 
     @Override
     protected void addViewContent() {
@@ -46,6 +48,7 @@ public class TeachingSubjectActivity extends BaseActivity {
 
     private void initData() {
         mFragments = new ArrayList<TeachingSubjectFragment>();
+        mSelectedSubjectTxt = new StringBuilder();
     }
 
     private void initPage() {
@@ -56,8 +59,10 @@ public class TeachingSubjectActivity extends BaseActivity {
     }
 
     private void enterNextPage(CSubject subject) {
+        String subjectTxt = updateSelectedSubjectTxt(true, subject.getName());
         TeachingSubjectFragment subjectFragment = new TeachingSubjectFragment();
         subjectFragment.setParentSubject(subject);
+        subjectFragment.setSelectedSubjectTxt(subjectTxt);
         getSupportFragmentManager().beginTransaction().add(R.id.base_content, subjectFragment).commit();
         mFragments.add(subjectFragment);
     }
@@ -99,12 +104,36 @@ public class TeachingSubjectActivity extends BaseActivity {
                 //退回上一级页面
                 TeachingSubjectFragment fragment = mFragments.remove(mFragments.size() - 1);
                 getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-
+                updateSelectedSubjectTxt(false, fragment.getParentSubjectTxt());
                 return false;
             }
         }
 
         return true;
+    }
+
+    private String updateSelectedSubjectTxt(boolean append, String name) {
+        if (TextUtils.isEmpty(name)) {
+            return mSelectedSubjectTxt.toString();
+        }
+
+        if (append) {
+            if (mSelectedSubjectTxt.length() == 0) {
+                mSelectedSubjectTxt.append(name);
+            } else {
+                mSelectedSubjectTxt.append("/");
+                mSelectedSubjectTxt.append(name);
+            }
+        } else {
+            int index = mSelectedSubjectTxt.lastIndexOf("/"+name);
+            if (index > -1) {
+                mSelectedSubjectTxt.delete(index, mSelectedSubjectTxt.length());
+            } else {
+                mSelectedSubjectTxt.delete(0, mSelectedSubjectTxt.length());
+            }
+        }
+
+        return mSelectedSubjectTxt.toString();
     }
 
     private void finishWithResult(final CSubject subject) {

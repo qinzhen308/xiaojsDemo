@@ -8,35 +8,47 @@
 
     <include layout="@layout/layout_base_header"/>
 
-    <cn.xiaojs.xma.ui.widget.EditTextDel
-            android:id="@+id/search_subject"
+    <LinearLayout
+            android:id="@+id/search_subject_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px60"
-            android:paddingLeft="@dimen/px10"
-            android:paddingRight="@dimen/px10"
-            android:textSize="@dimen/font_26px"
-            android:textColor="@color/font_dark_gray"
-            android:textColorHint="@color/font_dark_gray"
-            android:hint="@string/search_subject_tips"
-            android:layout_marginLeft="@dimen/px26"
-            android:drawablePadding="@dimen/px10"
-            android:layout_marginRight="@dimen/px26"
-            android:drawableLeft="@drawable/ic_search"
-            android:background="@drawable/ic_search_bg"
-            android:layout_marginTop="@dimen/px16"
-            android:layout_marginBottom="@dimen/px16"
-            android:visibility="gone"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:visibility="gone">
+        <View style="@style/DividerHorizontal"/>
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/search_subject"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px60"
+                android:paddingLeft="@dimen/px12"
+                android:paddingRight="@dimen/px12"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_dark_gray"
+                android:textColorHint="@color/font_dark_gray"
+                android:hint="@string/search_subject_tips"
+                android:drawablePadding="@dimen/px12"
+                android:drawableLeft="@drawable/ic_search"
+                android:background="@drawable/common_search_bg"
+                android:layout_marginLeft="@dimen/px28"
+                android:layout_marginRight="@dimen/px28"
+                android:layout_marginTop="@dimen/px16"
+                android:layout_marginBottom="@dimen/px16"
+                android:visibility="gone"/>
+
+        <View style="@style/DividerHorizontal"/>
+    </LinearLayout>
 
     <LinearLayout
             android:id="@+id/selected_subject_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/px30"
-            android:paddingBottom="@dimen/px30"
-            android:paddingLeft="@dimen/px26"
-            android:paddingRight="@dimen/px26"
-            android:visibility="gone">
+            android:background="#e8eef6"
+            android:paddingTop="@dimen/px28"
+            android:paddingBottom="@dimen/px28"
+            android:paddingLeft="@dimen/px28"
+            android:paddingRight="@dimen/px28">
 
         <TextView
                 android:id="@+id/title"
