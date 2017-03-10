@@ -62,10 +62,10 @@
     <style name="MinePageItem">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">@dimen/px40</item>
-        <item name="android:paddingRight">@dimen/px40</item>
-        <item name="android:paddingTop">@dimen/px35</item>
-        <item name="android:paddingBottom">@dimen/px35</item>
+        <item name="android:paddingLeft">@dimen/px38</item>
+        <item name="android:paddingRight">@dimen/px38</item>
+        <item name="android:paddingTop">@dimen/px28</item>
+        <item name="android:paddingBottom">@dimen/px28</item>
         <item name="android:textSize">@dimen/font_26px</item>
         <item name="android:textColor">@color/font_black</item>
         <item name="android:textStyle">bold</item>

@@ -60,6 +60,8 @@ public class MineFragment extends BaseFragment {
     PortraitView mPortraitView;
     @BindView(R.id.blur_portrait)
     ImageView mBlurPortraitView;
+    @BindView(R.id.profile_cover)
+    View mProfileCover;
     @BindView(R.id.user_name)
     IconTextView mUserName;
     @BindView(R.id.evaluation_star)
@@ -234,6 +236,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
+        mProfileCover.setVisibility(View.VISIBLE);
         Bitmap blurBitmap = FastBlur.smartBlur(portrait, 8, true);
         mBlurPortraitView.setImageBitmap(blurBitmap);
     }

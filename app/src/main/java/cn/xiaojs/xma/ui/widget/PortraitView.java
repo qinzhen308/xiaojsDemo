@@ -55,8 +55,8 @@ public class PortraitView extends RoundedImageView {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);// 防抖动
-        int padding = getResources().getDimensionPixelSize(R.dimen.px20);
-        setPadding(padding, padding, padding, padding);
+        //int padding = getResources().getDimensionPixelSize(R.dimen.px20);
+        //setPadding(padding, padding, padding, padding);
     }
 
     private int getBgLeft() {
@@ -72,7 +72,8 @@ public class PortraitView extends RoundedImageView {
         int r = drawableHeight / 2;
         int half = (int) Math.sqrt(r * r / 2);
         //return getHeight() / 2 - (half + getBg().getHeight() / 2);
-        return getHeight() / 2 + (half /*+ getBg().getHeight() / 2*/) - getPaddingBottom();
+        //return getHeight() / 2 + (half + getBg().getHeight() / 2) - getPaddingBottom();
+        return getHeight() / 2 + (getHeight() - getBg().getHeight()) / 4;
     }
 
     public void setSex(String sex) {
