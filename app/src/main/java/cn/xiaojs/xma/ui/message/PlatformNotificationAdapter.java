@@ -121,8 +121,19 @@ public class PlatformNotificationAdapter extends BaseAdapter {
                         Notification notification = category.notifications.get(0);
                         holder.time.setText(TimeUtil.format(notification.createdOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
                         holder.content.setText(notification.body);
+                    }else {
+                        holder.time.setText("");
+                        holder.content.setText("");
                     }
+                }else{
+                    holder.image.setCount(0);
+                    holder.time.setText("");
+                    holder.content.setText("");
                 }
+            }else{
+                holder.image.setCount(0);
+                holder.time.setText("");
+                holder.content.setText("");
             }
         } else {
             NotificationCategory category = beans.get(position);
@@ -197,7 +208,15 @@ public class PlatformNotificationAdapter extends BaseAdapter {
 //                    } else {
 //                        holder.image.setImageResource(R.drawable.default_avatar_grey);
 //                    }
+                }else{
+                    holder.image.setImageResource(R.drawable.default_avatar_grey);
+                    holder.title.setText("");
                 }
+            }else {
+                holder.image.setImageResource(R.drawable.default_avatar_grey);
+                holder.title.setText("");
+                holder.time.setText("");
+                holder.content.setText("");
             }
         }
 
@@ -215,7 +234,7 @@ public class PlatformNotificationAdapter extends BaseAdapter {
         return beans;
     }
 
-    public void setToTop(Conversation conv) {
+    public synchronized void setToTop(Conversation conv) {
         if (beans == null) {
             beans = new ArrayList<>();
         }
@@ -233,14 +252,15 @@ public class PlatformNotificationAdapter extends BaseAdapter {
                 mUIHandler.sendEmptyMessageDelayed(REFRESH_CONVERSATION_LIST, 200);
                 return;
             }
-
-            //如果是新会话
-            NotificationCategory cate = new NotificationCategory();
-            cate.conversation = conv;
-            beans.add(7, cate);
-            mUIHandler.removeMessages(REFRESH_CONVERSATION_LIST);
-            mUIHandler.sendEmptyMessageDelayed(REFRESH_CONVERSATION_LIST, 200);
         }
+
+
+        //如果是新会话
+        NotificationCategory cate = new NotificationCategory();
+        cate.conversation = conv;
+        beans.add(7, cate);
+        mUIHandler.removeMessages(REFRESH_CONVERSATION_LIST);
+        mUIHandler.sendEmptyMessageDelayed(REFRESH_CONVERSATION_LIST, 200);
     }
 
     class Holder extends BaseHolder {

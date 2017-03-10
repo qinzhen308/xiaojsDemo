@@ -72,12 +72,13 @@ public class DataManager {
             //init data cache
             getCache(context).init();
 
-            //jpush alias/tags
-            AccountDataManager.setAliaTagsWithCheck(context);
-
             String aid  = AccountDataManager.getAccountID(context);
             //jmessage login
             JpushUtil.loginJpush(aid,aid);
+
+            //jpush alias/tags
+            AccountDataManager.setAliaTagsWithCheck(context);
+
         }
     }
 

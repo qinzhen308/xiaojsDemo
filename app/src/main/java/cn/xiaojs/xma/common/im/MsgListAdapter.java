@@ -68,6 +68,8 @@ import cn.xiaojs.xma.common.im.utils.IdHelper;
 import cn.xiaojs.xma.common.im.utils.TimeFormat;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.ui.common.ImageViewActivity;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
+import cn.xiaojs.xma.ui.personal.PersonalInfoActivity;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 
 @SuppressLint("NewApi")
@@ -557,7 +559,7 @@ public class MsgListAdapter extends BaseAdapter {
         if (holder.headIcon != null) {
 
 
-            String avatar = Account.getAvatar(userInfo.getUserName(),holder.headIcon.getMeasuredWidth());
+            String avatar = Account.getAvatar(userInfo.getUserName(), holder.headIcon.getMeasuredWidth());
 
             Glide.with(mContext)
                     .load(avatar)
@@ -588,6 +590,15 @@ public class MsgListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View arg0) {
+
+
+                    Intent intent = new Intent(mContext, PersonalInfoActivity.class);
+                    intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, userInfo.getUserName());
+                    //intent.putExtra(PersonalBusiness.KEY_PERSONAL_NAME, userInfo.getNickname());
+                    //intent.putExtra(PersonalBusiness.KEY_PERSONAL_SIGN, userInfo.getSignature());
+                    //intent.putExtra(PersonalBusiness.KEY_PERSONAL_SEX, userInfo.getGender());
+                    mContext.startActivity(intent);
+
                     //TODO jump to InfoActivity
 //                    Intent intent = new Intent();
 //                    if (msg.getDirect() == MessageDirect.send) {
@@ -667,7 +678,7 @@ public class MsgListAdapter extends BaseAdapter {
     }
 
     private void handleCustomMsg(Message msg, ViewHolder holder) {
-        if( !(msg.getContent() instanceof CustomContent))
+        if (!(msg.getContent() instanceof CustomContent))
             return;
         CustomContent content = (CustomContent) msg.getContent();
         Boolean isBlackListHint = content.getBooleanValue("blackList");
@@ -866,7 +877,7 @@ public class MsgListAdapter extends BaseAdapter {
             // 点击预览图片
             holder.picture.setOnClickListener(new BtnOrTxtListener(position, holder));
 
-            holder.picture.setTag(R.string.app_name,position);
+            holder.picture.setTag(R.string.app_name, position);
             holder.picture.setOnLongClickListener(mLongClickListener);
 
         }

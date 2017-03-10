@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:swipe="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/px95"
+        android:layout_height="@dimen/px89"
         swipe:show_mode="pull_out"
         swipe:drag_edge="right"
         >
@@ -45,16 +45,16 @@
             >
         <ImageView
                 android:id="@+id/contact_avatar"
-                android:layout_width="@dimen/contact_thumbnail_size"
-                android:layout_height="@dimen/contact_thumbnail_size"
+                android:layout_width="@dimen/px58"
+                android:layout_height="@dimen/px58"
                 android:scaleType="fitXY"
                 />
         <TextView
                 android:id="@+id/contact_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/font_30px"
-                android:paddingLeft="8dp"
+                android:textSize="@dimen/font_29px"
+                android:paddingLeft="@dimen/px21"
                 android:textColor="@color/font_black"
                 />
     </LinearLayout>

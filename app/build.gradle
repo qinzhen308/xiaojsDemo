@@ -21,9 +21,9 @@ android {
     signingConfigs {
         release_config {
             storeFile file(ksPro['storeFile'])
-            storePassword  ksPro['storePwd']
+            storePassword ksPro['storePwd']
             keyAlias ksPro['keyAlias']
-            keyPassword  ksPro['keyPwd']
+            keyPassword ksPro['keyPwd']
 
         }
     }
@@ -42,7 +42,7 @@ android {
         }
     }
 
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LICENSE'
     }
 
@@ -55,18 +55,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //network & Rest api
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
     //image
-    compile 'com.github.bumptech.glide:glide:3.7.0'
     //butterknife
-    compile 'com.jakewharton:butterknife:8.4.0'
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
     //Logger
-    compile 'com.orhanobut:logger:1.15'
     //pull refresh
     //    compile project(':pulltorefresh')
     //compile files('libs/zxing.jar')
@@ -74,42 +65,28 @@ dependencies {
     compile project(':3d_wheelpicker')
     compile files('libs/android-support-v7-recyclerview.jar')
     //flex layout
-    compile 'com.google.android:flexbox:0.2.3'
     //qiniu
-    compile 'com.qiniu:qiniu-android-sdk:7.2.+'
     //crash report
-    compile 'com.tencent.bugly:crashreport:latest.release'
     //qiniu live dependencies
-    compile 'com.qiniu:happy-dns:0.2.+'
-    compile 'com.qiniu.pili:pili-android-qos:0.8.+'
     //wechat share
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
     //QQ
     compile files('libs/open_sdk_r5781_lite.jar')
     //
     compile files('libs/AMap_Location_V3.3.0_20170118.jar')
     //pay
-    compile 'com.pingxx:pingpp-core:2.1.7'
-    compile 'com.pingxx:pingpp-alipay:2.1.7'
     //build apk
-    compile 'com.meituan.android.walle:library:1.0.5'
     //gaode
     compile files('libs/AMap_Location_V3.3.0_20170118.jar')
     //suport test
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    testCompile 'junit:junit:4.12'
     //    compile files('libs/nineoldanimatin.jar')
     //    compile files('libs/pldroid-media-streaming-2.0.4.jar')
     //    compile files('libs/pldroid-player-1.3.2.jar')
     //compile files('libs/nineoldanimatin.jar')
     //debug only////////////////////////////////////////////////////////////////////////////////////
-    debugCompile 'com.facebook.stetho:stetho:1.4.1'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     //recyclerview
-    compile 'com.android.support:recyclerview-v7:22.0.0'
     compile('io.socket:socket.io-client:0.8.3') {
         exclude group: 'org.json', module: 'json'
     }
@@ -117,6 +94,30 @@ dependencies {
     //    compile files('libs/jmessage-android-2.0.0.jar')
     //    compile files('libs/jpush-android_v3.0.1.jar')
 
+    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.orhanobut:logger:1.15'
+    compile 'com.google.android:flexbox:0.2.3'
+    compile 'com.qiniu:qiniu-android-sdk:7.2.+'
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.qiniu:happy-dns:0.2.+'
+    compile 'com.qiniu.pili:pili-android-qos:0.8.+'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
+    compile 'com.pingxx:pingpp-core:2.1.7'
+    compile 'com.pingxx:pingpp-alipay:2.1.7'
+    compile 'com.meituan.android.walle:library:1.0.5'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    testCompile 'junit:junit:4.12'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    debugCompile 'com.facebook.stetho:stetho:1.4.1'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
 }
 
 walle {
