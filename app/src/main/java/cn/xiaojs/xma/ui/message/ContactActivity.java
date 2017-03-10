@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.w3c.dom.Text;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.im.ChatActivity;
@@ -83,9 +85,14 @@ public class ContactActivity extends BaseActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                Contact contact = contactAdapter.getChild(groupPosition, childPosition);
-                String tid = contact.account;
+                ContactGroup contactGroup = contactAdapter.getGroup(groupPosition);
+                if (contactGroup.group == CLASSES) {
+                    return false;
+                }
 
+                Contact contact = contactGroup.collection.get(childPosition);
+
+                String tid = contact.account;
                 JpushUtil.launchChat(ContactActivity.this, tid);
 
                 return false;
@@ -616,7 +623,9 @@ public class ContactActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
 
-                    if (isclass){
+                    ContactGroup gc = getGroup(groupPosition);
+
+                    if (gc.group == CLASSES){
                         Toast.makeText(ContactActivity.this, R.string.cannt_move_class,Toast.LENGTH_SHORT).show();
                     }else{
                         showMoveContactDlg(groupPosition,c);

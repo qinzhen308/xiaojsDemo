@@ -172,6 +172,7 @@ public class NotificationFragment extends BaseFragment {
                     intent.putExtra(NotificationConstant.KEY_NOTIFICATION_CATEGORY_ID, categoryId);
                     intent.putExtra(NotificationConstant.KEY_NOTIFICATION_TITLE, title);
                     ((BaseActivity) mContext).startActivityForResult(intent, NotificationConstant.REQUEST_NOTIFICATION_CATEGORY_LIST);
+                    //((BaseActivity) mContext).startActivity(intent);
                 } else {
                     //进入聊天界面
                     final Intent intent = new Intent();

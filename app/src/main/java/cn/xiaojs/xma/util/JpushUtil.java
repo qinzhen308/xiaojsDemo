@@ -79,6 +79,9 @@ public class JpushUtil {
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("Jpush注册失败:" + status);
                     }
+
+                    //注册失败后，重试一次
+                    register(user);
                 }
             }
         });
@@ -88,7 +91,7 @@ public class JpushUtil {
     /**
      * 登陆JPUSH
      */
-    public static void loginJpush(String userName, String password) {
+    public static void loginJpush(final String userName, final String password) {
         JMessageClient.login(userName, password, new BasicCallback() {
             @Override
             public void gotResult(int status, String desc) {
@@ -101,6 +104,9 @@ public class JpushUtil {
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("Jpush登录失败" + status);
                     }
+
+                    //登陆失败，重试登陆一次
+                    loginJpush(userName, password);
                 }
             }
         });
