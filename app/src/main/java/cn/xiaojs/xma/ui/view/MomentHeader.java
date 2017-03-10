@@ -54,6 +54,8 @@ public class MomentHeader extends RelativeLayout {
     TextView mName;
     @BindView(R.id.moment_header_time)
     TextView mTime;
+    @BindView(R.id.home_header_desc_wrapper)
+    View mDescWrapper;
     @BindView(R.id.moment_header_role)
     TextView mTag;
     @BindView(R.id.moment_header_image)
@@ -112,11 +114,12 @@ public class MomentHeader extends RelativeLayout {
             }
 
             mName.setText(XiaojsConfig.mLoginUser.getName());
-            mTag.setText("自己");
+            mDescWrapper.setVisibility(GONE);
             mDesc.setText("");
         } else {
             //mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
             mDesc.setText("");
+            mDescWrapper.setVisibility(VISIBLE);
             mName.setText(dynamic.owner.alias);
             mTag.setText(dynamic.owner.tag);
         }

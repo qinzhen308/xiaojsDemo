@@ -204,15 +204,15 @@ public class AccountDataManager {
                     if (responseCode == 0) {
 
                         AccountDataManager.setATagsSuccess(context.getApplicationContext(),true);
-                        if (XiaojsConfig.DEBUG) {
+                        /*if (XiaojsConfig.DEBUG) {
                             Toast.makeText(context, "注册别名成功", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
 
                     } else {
                         AccountDataManager.setATagsSuccess(context.getApplicationContext(),false);
-                        if (XiaojsConfig.DEBUG) {
+                        /*if (XiaojsConfig.DEBUG) {
                             Toast.makeText(context, "注册别名失败", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
                     }
 
                 }

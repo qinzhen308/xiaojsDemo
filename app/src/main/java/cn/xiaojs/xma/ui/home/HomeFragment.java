@@ -33,11 +33,14 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.DynamicStatus;
+import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.search.SearchActivity;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.banner.BannerAdapter;
 import cn.xiaojs.xma.ui.widget.banner.BannerBean;
 import cn.xiaojs.xma.ui.widget.banner.BannerView;
@@ -56,6 +59,8 @@ public class HomeFragment extends BaseFragment {
     TextView mMarkTip;
     @BindView(R.id.home_moment_mark_right_wrapper)
     LinearLayout mRightMark;
+    @BindView(R.id.portrait)
+    RoundedImageView mPortraitImg;
     @BindView(R.id.home_right_moment_tip)
     TextView mRightMarkTip;
 
@@ -179,7 +184,8 @@ public class HomeFragment extends BaseFragment {
         return endX - l[0];
     }
 
-    public void notifyUpdates(int updates){
+    public void notifyUpdates(CollectionPage<Dynamic> dynamic){
+        int updates = dynamic != null ? dynamic.totalUpdates : 0;
         if (updates > 0){
             if (mScrolled){
                 mRightMark.setVisibility(View.VISIBLE);

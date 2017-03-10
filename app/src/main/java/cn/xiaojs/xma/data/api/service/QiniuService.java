@@ -8,7 +8,6 @@ import cn.xiaojs.xma.model.material.UploadReponse;
  */
 
 public interface QiniuService {
-    String COVER_BASE_URL = "http://ognyt4ea0.bkt.clouddn.com/";
 
     /**
      * 文件上传成功

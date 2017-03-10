@@ -30,6 +30,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -68,7 +69,12 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
     @Override
     protected void setViewContent(Holder holder, TalkItem bean, int position) {
-        Glide.with(mContext).load(bean.from.avatar).error(R.drawable.default_avatar).into(holder.portrait);
+        int size = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
+        String portraitUrl = Account.getAvatar(bean.from != null ? bean.from.accountId : null, size);
+        Glide.with(mContext)
+                .load(portraitUrl)
+                .error(R.drawable.default_avatar)
+                .into(holder.portrait);
         holder.name.setText(bean.from.name);
         holder.msg.setText(bean.body != null ? bean.body.text : null);
         holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_MM_SS));

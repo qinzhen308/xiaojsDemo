@@ -42,6 +42,7 @@ public interface CourseConstant {
     public final static String KEY_ENTRANCE_TYPE = "key_entrance_type";
     public final static String KEY_TEACH_ACTION_TYPE = "teach_action_type";
     public final static String KEY_SUBJECT = "key_subject";
+    public final static String KEY_CLOSE_COURSE_CREATE_TIP = "key_close_course_create_tips";
     //创建直播课
     public final static int TYPE_LESSON_CREATE = 0;
     //编辑课

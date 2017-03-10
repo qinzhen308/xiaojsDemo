@@ -189,10 +189,10 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         Criteria criteria = new Criteria();
         SocialManager.getActivities(mContext, criteria, mPagination, new APIServiceCallback<CollectionPage<Dynamic>>() {
             @Override
-            public void onSuccess(CollectionPage<Dynamic> object) {
+            public void onSuccess(CollectionPage<Dynamic> dynamic) {
 
                 if (mPagination.getPage() == 1) {
-                    if (object == null || object.objectsOfPage == null || object.objectsOfPage.size() == 0) {
+                    if (dynamic == null || dynamic.objectsOfPage == null || dynamic.objectsOfPage.size() == 0) {
                         if (mFragment != null) {
                             mFragment.showOrHiddenEmptyViiew(false, mContext.getResources().getString(R.string.empty_activity_tip));
                         }
@@ -203,13 +203,12 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
                     }
                 }
 
-                if (object != null) {
-
-                    notifyUpdates(object.totalUpdates);
-                    HomeMomentAdapter.this.onSuccess(object.objectsOfPage);
+                if (dynamic != null) {
+                    notifyUpdates(dynamic);
+                    HomeMomentAdapter.this.onSuccess(dynamic.objectsOfPage);
                 } else {
                     HomeMomentAdapter.this.onSuccess(null);
-                    notifyUpdates(0);
+                    notifyUpdates(null);
                 }
             }
 
@@ -232,9 +231,9 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_MOMENT_DETAIL);
     }
 
-    private void notifyUpdates(int updates){
+    private void notifyUpdates(CollectionPage<Dynamic> dynamic){
         if (mFragment != null){
-            mFragment.notifyUpdates(updates);
+            mFragment.notifyUpdates(dynamic);
         }
     }
 

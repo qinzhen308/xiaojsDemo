@@ -100,6 +100,7 @@
             android:layout_height="wrap_content">
 
         <cn.xiaojs.xma.ui.widget.RoundedImageView
+                android:id="@+id/portrait"
                 android:layout_marginLeft="@dimen/px5"
                 android:layout_width="@dimen/px70"
                 android:layout_height="@dimen/px70"

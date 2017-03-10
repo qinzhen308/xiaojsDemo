@@ -24,10 +24,12 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.material.UploadReponse;
+import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 /*  =======================================================================================
@@ -176,10 +178,11 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 //set cover
                 if (!TextUtils.isEmpty(mLesson.getCover())) {
                     String cover = mLesson.getCover();
-                    if (!cover.startsWith("http")) {
-                        cover = QiniuService.COVER_BASE_URL + cover;
-                    }
-                    Glide.with(this).load(cover).into(new GlideDrawableImageViewTarget(mCoverImgView) {
+                    Dimension dimension = new Dimension();
+                    dimension.width = CourseConstant.COURSE_COVER_WIDTH;
+                    dimension.height = CourseConstant.COURSE_COVER_HEIGHT;
+                    String coverUrl = Ctl.getCover(cover, dimension);
+                    Glide.with(this).load(coverUrl).into(new GlideDrawableImageViewTarget(mCoverImgView) {
                         @Override
                         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                             super.onResourceReady(resource, animation);

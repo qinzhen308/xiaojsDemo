@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -100,7 +102,13 @@ public class TalkSimpleContactAdapter extends BaseAdapter implements View.OnClic
     private void bindData(Holder holder, int position) {
         holder.position = position;
         Attendee attendee = mAttendeeList.get(position);
-        Glide.with(mContext).load(attendee.avatar).error(R.drawable.default_avatar).into(holder.portrait);
+        int size = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
+        String portraitUrl = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(attendee.accountId, size);
+        Glide.with(mContext)
+                .load(portraitUrl)
+                .signature(new StringSignature(DeviceUtil.getSignature()))
+                .error(R.drawable.default_avatar)
+                .into(holder.portrait);
         //holder.portrait.setCount(5);
     }
 

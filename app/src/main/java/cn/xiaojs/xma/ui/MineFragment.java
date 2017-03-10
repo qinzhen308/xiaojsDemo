@@ -234,7 +234,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
-        Bitmap blurBitmap = FastBlur.smartBlur(portrait, 4, true);
+        Bitmap blurBitmap = FastBlur.smartBlur(portrait, 8, true);
         mBlurPortraitView.setImageBitmap(blurBitmap);
     }
 

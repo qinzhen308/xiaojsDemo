@@ -6,5 +6,5 @@ package cn.xiaojs.xma.common.xf_foundation;
 
 public class Constants {
 
-    public static final String XCFSUrl= "http://ok50ctnzl.bkt.clouddn.com";
+    public static final String XCFSUrl= "http://omjsoavuo.bkt.clouddn.com";
 }

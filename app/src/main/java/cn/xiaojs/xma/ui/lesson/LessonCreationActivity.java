@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -39,6 +40,7 @@ import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.DataPicker;
 import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -72,6 +74,8 @@ public class LessonCreationActivity extends BaseActivity {
 
     @BindView(R.id.status_fail_reason)
     TextView mStatusFailReason;
+    @BindView(R.id.status_fail_reason_info)
+    View mStatusFailReasonInfoView;
     @BindView(R.id.lesson_creation_tips)
     View mLessonCreateTipsView;
     @BindView(R.id.place_hold_area)
@@ -151,8 +155,7 @@ public class LessonCreationActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.lesson_creation_tips_close:
-                mPlaceHoldArea.setVisibility(View.VISIBLE);
-                mLessonCreateTipsView.setVisibility(View.GONE);
+                closeCourCreateTips();
                 break;
             case R.id.lesson_subject:
                 selectSubject();
@@ -211,7 +214,9 @@ public class LessonCreationActivity extends BaseActivity {
         mType = data != null ? data.getInt(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_CREATE)
                 : CourseConstant.TYPE_LESSON_CREATE;
 
-        if (mType == CourseConstant.TYPE_LESSON_CREATE) {
+        SharedPreferences spf = XjsUtils.getSharedPreferences();
+        boolean close = spf.getBoolean(CourseConstant.KEY_CLOSE_COURSE_CREATE_TIP, false);
+        if (mType == CourseConstant.TYPE_LESSON_CREATE && !close) {
             mPlaceHoldArea.setVisibility(View.GONE);
             mLessonCreateTipsView.setVisibility(View.VISIBLE);
         }
@@ -222,6 +227,13 @@ public class LessonCreationActivity extends BaseActivity {
 
         //TODO test
         mChargeWaySwitcher.setEnabled(false);
+    }
+
+    private void closeCourCreateTips() {
+        mPlaceHoldArea.setVisibility(View.VISIBLE);
+        mLessonCreateTipsView.setVisibility(View.GONE);
+        SharedPreferences spf = XjsUtils.getSharedPreferences();
+        spf.edit().putBoolean(CourseConstant.KEY_CLOSE_COURSE_CREATE_TIP, true).commit();
     }
 
     private void loadData() {
@@ -249,8 +261,8 @@ public class LessonCreationActivity extends BaseActivity {
         if (lessonDetail != null) {
             if (LessonState.REJECTED.equals(lessonDetail.getState())) {
                 //TODO
+                //mStatusFailReasonInfoView.setVisibility(View.VISIBLE);
                 //mStatusFailReason.setText();
-                //mStatusFailReason.setVisibility(View.VISIBLE);
                 //mPlaceHoldArea.setVisibility(View.GONE);
             }
         }

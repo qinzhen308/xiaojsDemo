@@ -41,23 +41,32 @@
                     android:paddingRight="@dimen/px26"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
-                    android:src="@drawable/ic_edit_text_del"/>
+                    android:src="@drawable/ic_light_del"/>
         </LinearLayout>
 
-
-        <TextView
-                android:id="@+id/status_fail_reason"
-                android:layout_width="wrap_content"
+        <LinearLayout
+                android:id="@+id/status_fail_reason_info"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:paddingLeft="@dimen/px32"
                 android:paddingRight="@dimen/px32"
                 android:paddingTop="@dimen/px40"
-                android:paddingBottom="@dimen/px40"
-                android:gravity="center_vertical"
-                android:drawableLeft="@drawable/ic_state_fail_msg_tips"
-                android:drawablePadding="@dimen/px10"
                 android:visibility="gone"
-                android:textColor="@color/font_error_red"/>
+                android:paddingBottom="@dimen/px40">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_state_fail_msg_tips"/>
+            <TextView
+                    android:id="@+id/status_fail_reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/px14"
+                    android:textColor="@color/font_error_red"/>
+        </LinearLayout>
 
         <View
                 android:id="@+id/place_hold_area"
@@ -450,7 +459,7 @@
                     android:paddingBottom="@dimen/px16"
                     android:textSize="@dimen/font_28px"
                     android:text="@string/publish_to_circle"/>
-            
+
             <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/px35"></View>

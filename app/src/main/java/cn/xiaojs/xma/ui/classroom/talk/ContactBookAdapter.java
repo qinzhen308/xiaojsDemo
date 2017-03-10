@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
-import cn.xiaojs.xma.ui.classroom.TalkPanel;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public class ContactBookAdapter extends BaseAdapter implements View.OnClickListener{
     private Context mContext;
@@ -123,7 +124,13 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private void bindData(Holder holder, int position) {
         holder.position = position;
         Attendee attendee = mAttendeeList.get(position);
-        Glide.with(mContext).load(attendee.avatar).error(R.drawable.default_avatar).into(holder.portrait);
+        int size = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
+        String portraitUrl = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(attendee.accountId, size);
+        Glide.with(mContext)
+                .load(portraitUrl)
+                .signature(new StringSignature(DeviceUtil.getSignature()))
+                .error(R.drawable.default_avatar)
+                .into(holder.portrait);
         holder.name.setText(attendee.name);
 
         if (mContactManagementMode) {
