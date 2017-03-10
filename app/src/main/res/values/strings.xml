@@ -661,5 +661,8 @@
     <string name="classes_circle">班级圈</string>
     <string name="be_teacher">声明教学能力，成为老师</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

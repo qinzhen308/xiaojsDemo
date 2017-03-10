@@ -73,10 +73,10 @@ public class MainActivity extends BaseTabActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Fragment fragment = getFragmentByPosition(2);
-        if (fragment != null && fragment instanceof NotificationFragment) {
-            ((NotificationFragment) fragment).notifyConversation();
-        }
+//        Fragment fragment = getFragmentByPosition(2);
+//        if (fragment != null && fragment instanceof NotificationFragment) {
+//            ((NotificationFragment) fragment).notifyConversation();
+//        }
     }
 
     @Override

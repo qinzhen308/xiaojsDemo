@@ -232,25 +232,25 @@ public class NotificationFragment extends BaseFragment {
             final String targetID = userInfo.getUserName();
             final Conversation conv = JMessageClient.getSingleConversation(targetID, userInfo.getAppKey());
             if (conv != null) {
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //如果设置了头像
-                        if (!TextUtils.isEmpty(userInfo.getAvatar())) {
-                            //如果本地不存在头像
-                            userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
-                                @Override
-                                public void gotResult(int status, String desc, Bitmap bitmap) {
-                                    if (status == 0) {
-                                        platformMessageAdapter.notifyDataSetChanged();
-                                    } else {
-                                        HandleResponseCode.onHandle(mContext, status, false);
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
+//                mContext.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        //如果设置了头像
+//                        if (!TextUtils.isEmpty(userInfo.getAvatar())) {
+//                            //如果本地不存在头像
+//                            userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
+//                                @Override
+//                                public void gotResult(int status, String desc, Bitmap bitmap) {
+//                                    if (status == 0) {
+//                                        platformMessageAdapter.notifyDataSetChanged();
+//                                    } else {
+//                                        HandleResponseCode.onHandle(mContext, status, false);
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }
+//                });
                 mBackgroundHandler.sendMessage(mBackgroundHandler.obtainMessage(REFRESH_CONVERSATION_LIST,
                         conv));
             }

@@ -215,7 +215,7 @@ public class PlatformNotificationAdapter extends BaseAdapter {
         return beans;
     }
 
-    public void setToTop(Conversation conv) {
+    public synchronized void setToTop(Conversation conv) {
         if (beans == null) {
             beans = new ArrayList<>();
         }
@@ -233,14 +233,15 @@ public class PlatformNotificationAdapter extends BaseAdapter {
                 mUIHandler.sendEmptyMessageDelayed(REFRESH_CONVERSATION_LIST, 200);
                 return;
             }
-
-            //如果是新会话
-            NotificationCategory cate = new NotificationCategory();
-            cate.conversation = conv;
-            beans.add(7, cate);
-            mUIHandler.removeMessages(REFRESH_CONVERSATION_LIST);
-            mUIHandler.sendEmptyMessageDelayed(REFRESH_CONVERSATION_LIST, 200);
         }
+
+
+        //如果是新会话
+        NotificationCategory cate = new NotificationCategory();
+        cate.conversation = conv;
+        beans.add(7, cate);
+        mUIHandler.removeMessages(REFRESH_CONVERSATION_LIST);
+        mUIHandler.sendEmptyMessageDelayed(REFRESH_CONVERSATION_LIST, 200);
     }
 
     class Holder extends BaseHolder {
