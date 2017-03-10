@@ -30,6 +30,7 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.DataPicker;
+import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /*  =======================================================================================
@@ -172,6 +173,7 @@ public class ProfileActivity extends BaseActivity {
         if ((TextUtils.isEmpty(title) && !TextUtils.isEmpty(basic.getTitle())) ||
                 (!TextUtils.isEmpty(title) && TextUtils.isEmpty(basic.getTitle())) ||
                 (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(basic.getTitle()) && !title.equals(basic.getTitle()))) {
+
             return true;
         }
 
@@ -298,6 +300,8 @@ public class ProfileActivity extends BaseActivity {
             AccountDataManager.setUserInfo(this, user);
 
         }
+
+        JpushUtil.updateUserInfo(basic);
 
     }
 

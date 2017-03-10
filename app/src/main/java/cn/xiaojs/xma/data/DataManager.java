@@ -75,9 +75,9 @@ public class DataManager {
             //jpush alias/tags
             AccountDataManager.setAliaTagsWithCheck(context);
 
-            String phone  = AccountDataManager.getPhone(context);
+            String aid  = AccountDataManager.getAccountID(context);
             //jmessage login
-            JpushUtil.loginJpush(phone,phone);
+            JpushUtil.loginJpush(aid,aid);
         }
     }
 

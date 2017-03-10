@@ -302,7 +302,7 @@
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/px31</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:textColor">@color/jmui_chat_text_color</item>

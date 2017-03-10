@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,9 +40,12 @@ import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.im.CircleImageView;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.Notification;
 import cn.xiaojs.xma.model.NotificationCategory;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.util.TimeUtil;
 
@@ -62,10 +67,13 @@ public class PlatformNotificationAdapter extends BaseAdapter {
     private UIHandler mUIHandler = new UIHandler(this);
     private static final int REFRESH_CONVERSATION_LIST = 0x3001;
 
+    private CircleTransform circleTransform;
+
     public PlatformNotificationAdapter(Context context, List<NotificationCategory> beans, String[] titles) {
         mContext = context;
         this.titles = titles;
         this.beans = beans;
+        circleTransform = new CircleTransform(context);
     }
 
     @Override
@@ -165,21 +173,30 @@ public class PlatformNotificationAdapter extends BaseAdapter {
                 if (category.conversation.getType().equals(ConversationType.single)) {
                     holder.title.setText(category.conversation.getTitle());
                     UserInfo user = (UserInfo) category.conversation.getTargetInfo();
-                    if (user != null && !TextUtils.isEmpty(user.getAvatar())) {
-                        final Holder finalHolder = holder;
-                        user.getAvatarBitmap(new GetAvatarBitmapCallback() {
-                            @Override
-                            public void gotResult(int status, String desc, Bitmap bitmap) {
-                                if (status == 0) {
-                                    finalHolder.image.setImageBitmap(bitmap);
-                                } else {
-                                    finalHolder.image.setImageResource(R.drawable.default_avatar_grey);
-                                }
-                            }
-                        });
-                    } else {
-                        holder.image.setImageResource(R.drawable.default_avatar_grey);
-                    }
+
+                    String avatar = Account.getAvatar(user.getUserName(),holder.image.getMeasuredWidth());
+
+                    Glide.with(mContext)
+                            .load(avatar)
+                            .bitmapTransform(circleTransform)
+                            .placeholder(R.drawable.default_avatar_grey)
+                            .error(R.drawable.default_avatar_grey)
+                            .into(holder.image);
+//                    if (user != null && !TextUtils.isEmpty(user.getAvatar())) {
+//                        final Holder finalHolder = holder;
+//                        user.getAvatarBitmap(new GetAvatarBitmapCallback() {
+//                            @Override
+//                            public void gotResult(int status, String desc, Bitmap bitmap) {
+//                                if (status == 0) {
+//                                    finalHolder.image.setImageBitmap(bitmap);
+//                                } else {
+//                                    finalHolder.image.setImageResource(R.drawable.default_avatar_grey);
+//                                }
+//                            }
+//                        });
+//                    } else {
+//                        holder.image.setImageResource(R.drawable.default_avatar_grey);
+//                    }
                 }
             }
         }

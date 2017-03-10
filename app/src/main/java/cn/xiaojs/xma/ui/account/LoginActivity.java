@@ -249,7 +249,7 @@ public class LoginActivity extends BaseActivity {
             loginParams.setMobile(Long.parseLong(userName));
             loginParams.setPassword(password);
             showProgress(true);
-            AccountBusiness.login(this, loginParams, new AccountBusiness.OnLoginListener() {
+            AccountBusiness.login(this, false, loginParams, new AccountBusiness.OnLoginListener() {
                 @Override
                 public void onLogin(boolean succ) {
                     if (succ) {

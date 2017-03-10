@@ -15,33 +15,47 @@ package cn.xiaojs.xma.ui.personal;
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.callback.DownloadAvatarCallback;
+import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
+import cn.jpush.im.android.api.callback.GetUserInfoCallback;
+import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
+import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 public class PersonalInfoActivity extends BaseActivity {
 
     @BindView(R.id.personal_info_image)
-    RoundedImageView mImage;
+    ImageView mImage;
     @BindView(R.id.personal_info_name)
     IconTextView mName;
     @BindView(R.id.personal_info_desc)
@@ -52,8 +66,7 @@ public class PersonalInfoActivity extends BaseActivity {
     @BindView(R.id.personal_info_follow)
     Button mFollow;
 
-    private String mAccount;
-    private PublicHome mBean;
+    private String accountID;
 
     @Override
     protected void addViewContent() {
@@ -62,53 +75,76 @@ public class PersonalInfoActivity extends BaseActivity {
 //        mName.setText("陈哲");
 //        mName.setIcon(R.drawable.ic_male);
 
+
         Intent intent = getIntent();
-        if (intent != null) {
-            mAccount = intent.getStringExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT);
+        accountID = intent.getStringExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT);
+        if(TextUtils.isEmpty(accountID)){
+            showFailedView(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getData();
+                }
+            });
+        }else{
+            getData();
         }
 
-        getData();
+
     }
 
     private void getData() {
-        showProgress(true);
-        AccountDataManager.getPublicHome(this, mAccount, new APIServiceCallback<PublicHome>() {
-            @Override
-            public void onSuccess(PublicHome object) {
-                cancelProgress();
-                initView(object);
-            }
 
+        showProgress(true);
+        JMessageClient.getUserInfo(accountID, new GetUserInfoCallback() {
             @Override
-            public void onFailure(String errorCode, String errorMessage) {
+            public void gotResult(int status, String responseMessage, UserInfo userInfo) {
+
                 cancelProgress();
-                showFailedView(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getData();
-                    }
-                });
+
+                if (status == JpushUtil.STATUS_OK && userInfo != null) {
+                    initView(userInfo);
+                } else {
+                    showFailedView(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getData();
+                        }
+                    });
+                }
             }
         });
+
     }
 
-    private void initView(PublicHome bean) {
-        if (bean == null)
+    private void initView(UserInfo info) {
+        if (info == null)
             return;
-        mBean = bean;
+
         Glide.with(getApplicationContext())
-                .load(Account.getAvatar(bean.profile.id, 300))
+                .load(Account.getAvatar(accountID, 300))
+                .bitmapTransform(new CircleTransform(this))
                 .error(R.drawable.default_avatar_grey)
+                .placeholder(R.drawable.default_avatar_grey)
                 .into(mImage);
-        mName.setText(bean.profile.name);
-        if (Account.Sex.MALE.equalsIgnoreCase(bean.profile.sex)) {
-            mName.setIcon(R.drawable.ic_male);
-        } else if (Account.Sex.FEMALE.equalsIgnoreCase(bean.profile.sex)) {
-            mName.setIcon(R.drawable.ic_female);
-        } else {
-            mName.setIcon(0);
+        mName.setText(info.getNickname());
+
+        UserInfo.Gender gender = info.getGender();
+        if (gender != null) {
+            if (gender == UserInfo.Gender.male) {
+                mName.setIcon(R.drawable.ic_male);
+            } else if (gender == UserInfo.Gender.female) {
+                mName.setIcon(R.drawable.ic_female);
+            } else {
+                mName.setIcon(0);
+            }
         }
-        mFollow.setText(getString(R.string.follow_and_send_message, StringUtil.getTa(bean.profile.sex)));
+
+        mFollow.setText(getString(R.string.follow_and_send_message, JpushUtil.getGenderTitle(gender)));
+
+        String sign = info.getSignature();
+        if (!TextUtils.isEmpty(sign)) {
+            mDesc.setText(sign);
+        }
     }
 
 
@@ -123,51 +159,51 @@ public class PersonalInfoActivity extends BaseActivity {
                 break;
             case R.id.grade_home_material://他的主页
                 Intent intent = new Intent(this, PersonHomeActivity.class);
-                intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, mAccount);
+                intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, accountID);
                 startActivity(intent);
                 break;
         }
     }
 
     private void follow() {
-        if (mBean != null) {//这里需要弹框选择分组
-            if (!mBean.isFollowed) {
-                BaseBusiness.showFollowDialog(this, new BaseBusiness.OnFollowListener() {
-                    @Override
-                    public void onFollow(long group) {
-                        if (group > 0) {
-                            follow(group);
-                        }
-                    }
-                });
-            } else {
-                //已关注，直接跳转到聊天界面
-                final Intent intent = new Intent(PersonalInfoActivity.this, ChatActivity.class);
-                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
-                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
-                startActivity(intent);
-            }
-
-        }
+//        if (mBean != null) {//这里需要弹框选择分组
+//            if (!mBean.isFollowed) {
+//                BaseBusiness.showFollowDialog(this, new BaseBusiness.OnFollowListener() {
+//                    @Override
+//                    public void onFollow(long group) {
+//                        if (group > 0) {
+//                            follow(group);
+//                        }
+//                    }
+//                });
+//            } else {
+//                //已关注，直接跳转到聊天界面
+//                final Intent intent = new Intent(PersonalInfoActivity.this, ChatActivity.class);
+//                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
+//                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
+//                startActivity(intent);
+//            }
+//
+//        }
     }
 
     private void follow(long group) {
-        SocialManager.followContact(this, mAccount, group, new APIServiceCallback<Relation>() {
-            @Override
-            public void onSuccess(Relation object) {
-                ToastUtil.showToast(getApplicationContext(), R.string.followed);
-                mBean.isFollowed = true;
-                //跳转到聊天界面
-                final Intent intent = new Intent(PersonalInfoActivity.this, ChatActivity.class);
-                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
-                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
-                startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                ToastUtil.showToast(getApplicationContext(), errorMessage);
-            }
-        });
+//        SocialManager.followContact(this, mAccount, group, new APIServiceCallback<Relation>() {
+//            @Override
+//            public void onSuccess(Relation object) {
+//                ToastUtil.showToast(getApplicationContext(), R.string.followed);
+//                mBean.isFollowed = true;
+//                //跳转到聊天界面
+//                final Intent intent = new Intent(PersonalInfoActivity.this, ChatActivity.class);
+//                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
+//                intent.putExtra(ChatActivity.TARGET_APP_KEY, XiaojsConfig.JPUSH_APP_KEY);
+//                startActivity(intent);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//                ToastUtil.showToast(getApplicationContext(), errorMessage);
+//            }
+//        });
     }
 }

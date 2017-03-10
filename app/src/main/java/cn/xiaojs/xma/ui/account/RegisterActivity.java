@@ -194,13 +194,15 @@ public class RegisterActivity extends BaseActivity {
                         @Override
                         public void onSuccess(Object object) {
                             //login immediately after successful registration
-                            cancelProgress();
+
                             final LoginParams loginParams = new LoginParams();
                             loginParams.setMobile(regInfo.mobile);
                             loginParams.setPassword(regInfo.password);
-                            AccountBusiness.login(mContext, loginParams, new AccountBusiness.OnLoginListener() {
+                            AccountBusiness.login(mContext, true,loginParams, new AccountBusiness.OnLoginListener() {
                                 @Override
                                 public void onLogin(boolean succ) {
+                                    cancelProgress();
+
                                     if (succ) {
                                         RegisterActivity.this.finish();
                                     } else {
