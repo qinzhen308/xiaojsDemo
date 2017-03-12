@@ -72,5 +72,7 @@
             android:layout_height="match_parent"
             android:dividerHeight="@dimen/px1"
             android:divider="@color/hor_divide_line"
-            android:paddingBottom="@dimen/px100"></ListView>
+            android:scrollbars="none"
+            android:layout_marginBottom="@dimen/px110"
+            ></ListView>
 </LinearLayout>
