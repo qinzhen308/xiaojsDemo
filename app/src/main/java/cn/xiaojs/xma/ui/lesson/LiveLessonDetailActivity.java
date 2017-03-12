@@ -62,6 +62,10 @@ public class LiveLessonDetailActivity extends BaseActivity {
     View mEnrolledDivideLine;
     @BindView(R.id.enrolled)
     TextView mEnrolledCountTv;
+    @BindView(R.id.lesson_viewed)
+    TextView mLessonViewedTv;
+    @BindView(R.id.lesson_collected)
+    TextView mLessonCollectedTv;
     @BindView(R.id.teach_form)
     TextView mTeachFormTv;
     @BindView(R.id.lesson_fee)
@@ -167,8 +171,8 @@ public class LiveLessonDetailActivity extends BaseActivity {
     }
 
     private void init() {
-        final int padding = getResources().getDimensionPixelOffset(R.dimen.px28);
-
+        final int padding = getResources().getDimensionPixelOffset(R.dimen.px24);
+        final int padding2 = getResources().getDimensionPixelOffset(R.dimen.px6);
         ViewTreeObserver observer = mLessonBriefTv.getViewTreeObserver();
         observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 
@@ -179,6 +183,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                     if (mUnfoldLessonBriefTv.getVisibility() != View.VISIBLE) {
                         mUnfoldLessonBriefTv.setVisibility(View.VISIBLE);
                     }
+                    mLessonBriefTv.setPadding(0, 0, 0, padding2);
                 } else {
                     mLessonBriefTv.setPadding(0, 0, 0, padding);
                 }
@@ -197,6 +202,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                     if (mUnfoldTeacherIntroTv.getVisibility() != View.VISIBLE) {
                         mUnfoldTeacherIntroTv.setVisibility(View.VISIBLE);
                     }
+                    mTeacherIntroTv.setPadding(0, 0, 0, padding2);
                 } else {
                     mTeacherIntroTv.setPadding(0, 0, 0, padding);
                 }
@@ -285,6 +291,9 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 mEnrolledView.setVisibility(View.GONE);
                 mEnrolledDivideLine.setVisibility(View.GONE);
             }
+
+            mLessonViewedTv.setText(String.valueOf(0));
+            mLessonCollectedTv.setText(String.valueOf(0));
 
             String p = getString(R.string.person);
             mLessonStuCountTv.setText(String.valueOf(enroll.max) + p);

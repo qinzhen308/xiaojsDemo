@@ -15,7 +15,6 @@
 
         <!--已报名，已浏览，已收藏-->
         <LinearLayout
-                android:layout_marginTop="@dimen/px32"
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -27,17 +26,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20">
+                    android:paddingTop="@dimen/px36"
+                    android:paddingBottom="@dimen/px36">
 
                 <TextView
                         android:id="@+id/enrolled"
                         android:gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
                         android:textColor="@color/font_orange"
-                        android:textSize="@dimen/font_26px"/>
+                        android:textSize="@dimen/font_32px"/>
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -45,14 +43,14 @@
                         android:text="@string/lesson_enrolled"
                         android:textColor="@color/font_gray"
                         android:textSize="@dimen/font_26px"
-                        android:layout_marginTop="@dimen/px20"/>
+                        android:layout_marginTop="@dimen/px14"/>
             </LinearLayout>
 
             <View
                     android:id="@+id/enrolled_divide_line"
                     style="@style/DividerVertical"
-                    android:layout_marginTop="@dimen/px20"
-                    android:layout_marginBottom="@dimen/px20"/>
+                    android:layout_marginTop="@dimen/px48"
+                    android:layout_marginBottom="@dimen/px48"/>
 
             <LinearLayout
                     android:orientation="vertical"
@@ -60,17 +58,16 @@
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20">
+                    android:paddingTop="@dimen/px36"
+                    android:paddingBottom="@dimen/px36">
 
                 <TextView
                         android:id="@+id/lesson_viewed"
                         android:gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
                         android:textColor="@color/font_orange"
-                        android:textSize="@dimen/font_26px"/>
+                        android:textSize="@dimen/font_32px"/>
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -78,13 +75,13 @@
                         android:text="@string/lesson_viewed"
                         android:textColor="@color/font_gray"
                         android:textSize="@dimen/font_26px"
-                        android:layout_marginTop="@dimen/px20"/>
+                        android:layout_marginTop="@dimen/px14"/>
             </LinearLayout>
 
             <View
                     style="@style/DividerVertical"
-                    android:layout_marginTop="@dimen/px20"
-                    android:layout_marginBottom="@dimen/px20"/>
+                    android:layout_marginTop="@dimen/px48"
+                    android:layout_marginBottom="@dimen/px48"/>
 
             <!--已收藏-->
             <LinearLayout
@@ -93,17 +90,16 @@
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px20">
+                    android:paddingTop="@dimen/px36"
+                    android:paddingBottom="@dimen/px36">
 
                 <TextView
                         android:id="@+id/lesson_collected"
                         android:gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
                         android:textColor="@color/font_orange"
-                        android:textSize="@dimen/font_26px"/>
+                        android:textSize="@dimen/font_32px"/>
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -111,7 +107,7 @@
                         android:text="@string/lesson_collected"
                         android:textColor="@color/font_gray"
                         android:textSize="@dimen/font_26px"
-                        android:layout_marginTop="@dimen/px20"/>
+                        android:layout_marginTop="@dimen/px14"/>
 
             </LinearLayout>
 
@@ -122,7 +118,8 @@
                 style="@style/DividerHorizontal"/>
 
         <LinearLayout
-                style="@style/LiveLessonItem">
+                android:paddingTop="@dimen/px25"
+                style="@style/LiveLessonDetailItem">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
@@ -148,7 +145,7 @@
 
         <!--学科类目-->
         <LinearLayout
-                style="@style/LiveLessonItem">
+                style="@style/LiveLessonDetailItem">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
@@ -161,7 +158,7 @@
 
         <!--学生人数-->
         <LinearLayout
-                style="@style/LiveLessonItem">
+                style="@style/LiveLessonDetailItem">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
@@ -174,7 +171,7 @@
 
         <!--教学形式-->
         <LinearLayout
-                style="@style/LiveLessonItem">
+                style="@style/LiveLessonDetailItem">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
@@ -187,7 +184,7 @@
 
         <!--收费-->
         <LinearLayout
-                style="@style/LiveLessonItem">
+                style="@style/LiveLessonDetailItem">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
@@ -201,7 +198,7 @@
 
         <!--上课时间-->
         <LinearLayout
-                style="@style/LiveLessonItem">
+                style="@style/LiveLessonDetailItem">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
@@ -214,7 +211,7 @@
 
         <!--上课时长-->
         <LinearLayout
-                style="@style/LiveLessonItem">
+                style="@style/LiveLessonDetailItem">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
@@ -244,41 +241,48 @@
         </LinearLayout>
 
         <View
-                style="@style/DividerHorizontal"/>
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:layout_height="@dimen/px22"/>
 
         <!--选填信息-->
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginTop="@dimen/px32"/>
-
         <TextView
+                android:layout_marginTop="@dimen/px26"
                 android:text="@string/optional_info"
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px32"
-                android:paddingTop="@dimen/px16"
-                android:paddingBottom="@dimen/px16"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px28"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_light_gray"
-                android:textSize="@dimen/font_30px"
+                android:textSize="@dimen/font_26px"
                 android:background="@color/white"/>
 
-        <include layout="@layout/layout_horizontal_line"/>
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+            <View
+                    style="@style/DividerHorizontal"
+                    android:layout_marginLeft="@dimen/px28"/>
+        </FrameLayout>
 
         <!--直播课封面-->
         <LinearLayout
                 android:id="@+id/lesson_cover_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px32"
-                android:paddingTop="@dimen/px10"
-                android:paddingBottom="@dimen/px10"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px28"
                 android:background="@color/white"
                 android:orientation="vertical">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
+                    android:paddingTop="@dimen/px38"
+                    android:paddingBottom="@dimen/px26"
                     android:text="@string/live_lesson_cover"/>
 
             <ImageView
@@ -299,16 +303,16 @@
                 android:id="@+id/lesson_label_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px32"
-                android:paddingTop="@dimen/px10"
-                android:paddingBottom="@dimen/px10"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px28"
                 android:background="@color/white"
                 android:orientation="vertical">
 
             <TextView
                     style="@style/LiveLessonDetailTitle"
-                    android:text="@string/live_lesson_label"/>
+                    android:text="@string/live_lesson_label"
+                    android:paddingTop="@dimen/px38"
+                    android:paddingBottom="@dimen/px26"/>
 
             <cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout
                     android:id="@+id/label_container"
@@ -317,7 +321,7 @@
 
             <View
                     style="@style/DividerHorizontal"
-                    android:layout_marginTop="@dimen/px40"/>
+                    android:layout_marginTop="@dimen/px30"/>
 
         </LinearLayout>
 
@@ -327,8 +331,8 @@
                 android:id="@+id/lesson_brief_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px32"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px28"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:visibility="gone">
@@ -347,6 +351,9 @@
                         android:id="@+id/live_lesson_brief"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/font_28px"
+                        android:textColor="@color/font_black"
                         android:maxLines="3"/>
 
                 <TextView
@@ -372,8 +379,8 @@
                 android:id="@+id/teacher_intro_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px32"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px28"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:visibility="gone">
@@ -392,6 +399,8 @@
                         android:id="@+id/teacher_introduction"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_28px"
+                        android:textColor="@color/font_black"
                         android:maxLines="3"/>
 
                 <TextView
@@ -418,8 +427,8 @@
                 android:id="@+id/sale_promotion_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px32"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px28"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:visibility="gone">
@@ -491,8 +500,8 @@
                 android:id="@+id/audit_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px32"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px28"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -535,8 +544,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:paddingTop="@dimen/px10"
-                    android:paddingBottom="@dimen/px10"
+                    android:paddingTop="@dimen/px16"
+                    android:paddingBottom="@dimen/px16"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -558,7 +567,6 @@
             </RelativeLayout>
 
         </LinearLayout>
-
 
         <View
                 style="@style/DividerHorizontal"

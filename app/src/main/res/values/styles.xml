@@ -115,6 +115,16 @@
         <item name="android:minWidth">@dimen/px160</item>
     </style>
 
+    <style name="LiveLessonDetailItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingLeft">@dimen/px28</item>
+        <item name="android:paddingRight">@dimen/px28</item>
+    </style>
+
     <style name="LiveLessonCreateEdt" parent="LessonText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -147,7 +157,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minWidth">@dimen/px170</item>
-        <item name="android:textSize">@dimen/font_30px</item>
+        <item name="android:textSize">@dimen/font_26px</item>
         <item name="android:paddingTop">@dimen/px16</item>
         <item name="android:paddingBottom">@dimen/px16</item>
         <item name="android:textColor">@color/font_light_gray</item>
@@ -156,7 +166,7 @@
     <style name="LiveLessonDetailText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/font_30px</item>
+        <item name="android:textSize">@dimen/font_28px</item>
         <item name="android:paddingTop">@dimen/px16</item>
         <item name="android:paddingBottom">@dimen/px16</item>
         <item name="android:textColor">@color/font_black</item>
