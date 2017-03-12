@@ -41,8 +41,10 @@ import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.im.ChatActivity;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
@@ -62,32 +64,40 @@ import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 public class PersonHomeActivity extends BaseScrollTabActivity {
-
     private Unbinder mBinder;
 
-    @BindView(R.id.person_home_header_blur)
-    ImageView mBlur;
-    @BindView(R.id.person_home_header_image_holder)
-    View mImageHolder;
-    @BindView(R.id.person_home_head)
-    PortraitView mHead;
-    @BindView(R.id.person_home_name)
+    @BindView(R.id.person_home)
+    View mPersonHomeBtn;
+    //profile info
+    @BindView(R.id.blur_portrait)
+    ImageView mBlurImgView;
+    @BindView(R.id.portrait)
+    PortraitView mPortrait;
+    @BindView(R.id.user_name)
     IconTextView mName;
+
+    //ugc
+    @BindView(R.id.fans)
+    TextView mFans;
+    @BindView(R.id.following)
+    TextView mFollows;
+    @BindView(R.id.lesson_teaching_duration)
+    TextView mTeachingLength;
+    @BindView(R.id.first_divider)
+    View mFirstDivider;
+    @BindView(R.id.second_divider)
+    View mSecondDivider;
+
+    //profile
+    @BindView(R.id.my_profile_txt)
+    TextView mProfileTv;
+
     @BindView(R.id.person_home_relationship)
     RelationshipView mRelationship;
     @BindView(R.id.person_home_follow_people)
     ImageFlowLayout mFollowPeople;
     @BindView(R.id.person_home_target)
     TextView mTarget;
-
-    @BindView(R.id.person_home_fans)
-    TextView mFans;
-    @BindView(R.id.person_home_follow)
-    TextView mFollows;
-    @BindView(R.id.person_home_teaching_length)
-    TextView mTeachingLength;
-    @BindView(R.id.person_home_follow_divider)
-    View mFollowDivider;
 
     @BindView(R.id.person_home_free_video_cover)
     ImageView mFreeCover;
@@ -118,15 +128,12 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
     @Override
     protected void initView() {
-
         Intent intent = getIntent();
         if (intent != null) {
             mIsMyself = intent.getBooleanExtra(PersonalBusiness.KEY_IS_MYSELF, false);
-
             if (XiaojsConfig.mLoginUser == null) {
                 XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(this);
             }
-
 
             if (!mIsMyself) {
                 mAccount = intent.getStringExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT);
@@ -140,25 +147,24 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             }
         }
 
-
         View header = LayoutInflater.from(this).inflate(R.layout.layout_person_home_header, null);
         View footer = LayoutInflater.from(this).inflate(R.layout.layout_person_home_footer, null);
 
-        addContent(header, footer);
+        addHeader(header);
+        addFooter(footer);
         mBinder = ButterKnife.bind(this);
         initHeader();
 
         getData();
-
     }
 
     private void getData() {
         showProgress(true);
         AccountDataManager.getPublicHome(this, mAccount, new APIServiceCallback<PublicHome>() {
             @Override
-            public void onSuccess(PublicHome object) {
+            public void onSuccess(PublicHome home) {
                 cancelProgress();
-                initView(object);
+                initData(home);
             }
 
             @Override
@@ -174,39 +180,39 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         });
     }
 
-    private void initView(PublicHome home) {
-        if (home == null)
+    private void initData(PublicHome home) {
+        if (home == null) {
             return;
-        mBean = home;
+        }
 
+        mBean = home;
         if (!mIsMyself) {
             headerNormal(home.isFollowed);
         }
         if (home.isTeacher) {//用户是老师
-
+            //一期暂时没有评价系统，暂时隐藏
             PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
             PersonHomeLessonFragment f2 = new PersonHomeLessonFragment();
-            PersonHomeMomentFragment f3 = new PersonHomeMomentFragment();
+            //PersonHomeMomentFragment f3 = new PersonHomeMomentFragment();
 
             Bundle b1 = new Bundle();
             b1.putSerializable(PersonalBusiness.KEY_PERSONAL_LESSON_LIST, mBean.lessons);
             f1.setArguments(b1);
             f1.setPagePosition(0);
             f2.setPagePosition(1);
-            f3.setPagePosition(2);
+            //f3.setPagePosition(2);
 
             List<BaseScrollTabFragment> fragments = new ArrayList<>();
             fragments.add(f1);
             fragments.add(f2);
-            fragments.add(f3);
+            //fragments.add(f3);
             String[] tabs = new String[]{
                     getString(R.string.person_lesson,StringUtil.getTa(home.profile.sex)),
-                    getString(R.string.person_comment),
+                    //getString(R.string.person_comment),
                     getString(R.string.person_moment)};
             if (mIsMyself) {
                 tabs[0] = getString(R.string.my_lesson);
             }
-
             addContent(fragments, tabs);
         } else {//用户不是老师
             PersonHomeMomentFragment f1 = new PersonHomeMomentFragment();
@@ -216,11 +222,11 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             addContent(fragments, null);
         }
 
-
+        //set avatar
         Glide.with(this)
                 .load(Account.getAvatar(home.profile.id, 300))
                 .error(R.drawable.default_avatar)
-                .into(new GlideDrawableImageViewTarget(mHead) {
+                .into(new GlideDrawableImageViewTarget(mPortrait) {
                     @Override
                     public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                         super.onResourceReady(resource, animation);
@@ -236,7 +242,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                         setDefaultPortrait();
                     }
                 });
-        mHead.setSex(home.profile.sex);
+        mPortrait.setSex(home.profile.sex);
         mName.setText(home.profile.name);
         mFans.setText(getString(R.string.fans_num, home.profile.stats.fans));
         mFollows.setText(getString(R.string.follow_num, home.profile.stats.followships));
@@ -256,38 +262,40 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
     private void setupBlurPortraitView(Bitmap portrait) {
         Bitmap blurBitmap = FastBlur.smartBlur(portrait, 4, true);
-        mBlur.setImageBitmap(blurBitmap);
-    }
-
-    private void initProfileBg() {
-        //mBlur.setBackgroundColor(getResources().getColor(R.color.main_blue));
-        //mBlur.setImageResource(R.drawable.portrait_default_bg);
+        mBlurImgView.setImageBitmap(blurBitmap);
     }
 
     private void setDefaultPortrait() {
-        mHead.setImageResource(R.drawable.default_avatar);
-        initProfileBg();
+        mPortrait.setImageResource(R.drawable.default_avatar);
+        mBlurImgView.setImageResource(R.drawable.portrait_default_bg);
     }
 
     private void initHeader() {
         needHeaderDivider(false);
-        mBack.setImageResource(R.drawable.ic_white_back);
         needHeader(false);
+        mBackBtn.setImageResource(R.drawable.ic_white_back);
+        mPersonHomeBtn.setVisibility(View.GONE);
         mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
         if (mIsMyself) {
-            mHead.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
+            mPortrait.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
             mName.setText(XiaojsConfig.mLoginUser.getName());
-
             mFollows.setVisibility(View.VISIBLE);
-            mFollowDivider.setVisibility(View.VISIBLE);
             needFooter(false);
             myself();
         } else {
-            mHead.setSex("true");
-
+            mPortrait.setSex("true");
             mFollows.setVisibility(View.GONE);
-            mFollowDivider.setVisibility(View.GONE);
+            mFirstDivider.setVisibility(View.GONE);
         }
+
+        boolean isTeacher = SecurityManager.checkPermission(PersonHomeActivity.this, Su.Permission.COURSE_OPEN_CREATE);
+        String duration;
+        if (isTeacher) {
+            duration = getString(R.string.tea_lesson_duration, 0);
+        } else {
+            duration = getString(R.string.stu_lesson_duration, 0);
+        }
+        mTeachingLength.setText(duration);
 
         int paddingv = getResources().getDimensionPixelSize(R.dimen.px10);
         int paddingh = getResources().getDimensionPixelSize(R.dimen.px15);
@@ -418,14 +426,14 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
     @Override
     public void onScrollY(int y) {
-        if (y > mBlur.getHeight()) {
+        if (y > mBlurImgView.getHeight()) {
             if (mIsMyself) {
                 mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
                 mScrollMiddleText.setText(mPersonName);
             } else {
                 headerScrolled(mBean.isFollowed);
             }
-            mBack.setImageResource(R.drawable.back_arrow);
+            mBackBtn.setImageResource(R.drawable.back_arrow);
         } else {
             if (mIsMyself) {
                 mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
@@ -433,7 +441,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             } else {
                 headerNormal(mBean.isFollowed);
             }
-            mBack.setImageResource(R.drawable.ic_white_back);
+            mBackBtn.setImageResource(R.drawable.ic_white_back);
         }
     }
 
@@ -502,6 +510,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         if (mBinder != null) {
             mBinder.unbind();
         }
+
         super.onDestroy();
     }
 

@@ -160,8 +160,11 @@ public class MineFragment extends BaseFragment {
     private void setUgc(CenterData centerData) {
         if (centerData != null && centerData.getUgc() != null) {
             CenterData.PersonUgc personUgc = centerData.getUgc();
-            //mFansTv.setText(String.valueOf(personUgc.getLikedCount()));
-            //mFollowingTv.setText(String.valueOf(personUgc.getFollowedCount()));
+            mFansTv.setText(getString(R.string.fans_num, personUgc.getLikedCount()));
+            mFollowingTv.setText(getString(R.string.follow_num, personUgc.getFollowedCount()));
+        } else {
+            mFansTv.setText(getString(R.string.fans_num, 0));
+            mFollowingTv.setText(getString(R.string.follow_num, 0));
         }
 
         //set default
@@ -201,7 +204,6 @@ public class MineFragment extends BaseFragment {
 
     private void setAvatar(Account.Basic basic) {
         mPortraitView.setBorderColor(getResources().getColor(R.color.round_img_border));
-        mPortraitView.setBorderWidth(R.dimen.px2);
 
         //set avatar
         if (basic != null) {

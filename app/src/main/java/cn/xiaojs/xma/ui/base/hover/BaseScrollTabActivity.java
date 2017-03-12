@@ -38,12 +38,12 @@ import cn.xiaojs.xma.ui.home.OnScrollYListener;
 import cn.xiaojs.xma.ui.widget.ScrollableViewPager;
 
 public abstract class BaseScrollTabActivity extends BaseActivity implements ScrollTabHolder, ViewPager.OnPageChangeListener {
-
-    ScrollableViewPager mPager;
-    LinearLayout mHeader;
-    FrameLayout mHeaderContainer;
-    FrameLayout mFooterContainer;
+    protected ScrollableViewPager mViewPager;
+    protected LinearLayout mTabHeader;
+    protected FrameLayout mHeaderContainer;
+    protected FrameLayout mFooterContainer;
     protected ScrollTabIndicator mIndicator;
+    protected View mTitleDivider;
 
     @BindView(R.id.scroll_tab_middle_view)
     protected TextView mScrollMiddleText;
@@ -52,8 +52,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
     @BindView(R.id.scroll_tab_title_bar)
     protected RelativeLayout mScrollTitleBar;
     @BindView(R.id.scroll_tab_left_image)
-    protected ImageView mBack;
-    private View mTitleDivider;
+    protected ImageView mBackBtn;
 
     private boolean reLocation = false;
     private int headerTop = 0;
@@ -68,44 +67,44 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_scroll_tab_base);
-        mPager = (ScrollableViewPager) findViewById(R.id.scroll_tab_pager);
-        mHeader = (LinearLayout) findViewById(R.id.scroll_tab_header);
+        mViewPager = (ScrollableViewPager) findViewById(R.id.scroll_tab_pager);
+        mTabHeader = (LinearLayout) findViewById(R.id.scroll_tab_header);
         mHeaderContainer = (FrameLayout) findViewById(R.id.scroll_tab_header_container);
         mFooterContainer = (FrameLayout) findViewById(R.id.scroll_tab_footer_container);
         mIndicator = (ScrollTabIndicator) findViewById(R.id.scroll_tab_indicator);
         mTitleDivider = findViewById(R.id.scroll_tab_title_divider);
 
         initView();
-        mHeader.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        mTabHeader.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                headerHeight = mHeader.getHeight();
+                headerHeight = mTabHeader.getHeight();
                 headerTranslationDis = mIndicator.getHeight() + getTitleHeight() - headerHeight;
-                if (Build.VERSION.SDK_INT > 15){
-                    mHeader.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }else {
-                    mHeader.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                if (Build.VERSION.SDK_INT > 15) {
+                    mTabHeader.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    mTabHeader.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
             }
         });
     }
 
-    protected int getTitleHeight(){
+    protected int getTitleHeight() {
         return 0;
     }
 
     @Override
     protected void needHeaderDivider(boolean need) {
         super.needHeaderDivider(false);
-        if (need){
+        if (need) {
             mTitleDivider.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mTitleDivider.setVisibility(View.GONE);
         }
     }
 
     protected void setPagerScrollable(boolean scrollable) {
-        mPager.setNoScroll(!scrollable);
+        mViewPager.setNoScroll(!scrollable);
     }
 
     protected abstract void initView();
@@ -116,14 +115,14 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
     }
 
     protected void addContent(List<BaseScrollTabFragment> fragments, String[] tabs, View header, View footer) {
-        mAdapter = new ScrollTabPageAdapter(getSupportFragmentManager(), fragments, tabs, mHeader);
+        mAdapter = new ScrollTabPageAdapter(getSupportFragmentManager(), fragments, tabs, mTabHeader);
         mAdapter.setTabHolderScrollingListener(this);
-        mPager.setOffscreenPageLimit(fragments.size());
-        mPager.setAdapter(mAdapter);
-        mPager.addOnPageChangeListener(this);
+        mViewPager.setOffscreenPageLimit(fragments.size());
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.addOnPageChangeListener(this);
 
         mIndicator.setShouldExpand(true);
-        mIndicator.setViewPager(mPager);
+        mIndicator.setViewPager(mViewPager);
 
         if (header != null) {
             mHeaderContainer.addView(header);
@@ -133,30 +132,33 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
         }
     }
 
-    protected void addContent(View header, View footer) {
+    protected void addHeader(View header) {
         if (header != null) {
             mHeaderContainer.addView(header);
         }
+    }
+
+    protected void addFooter(View footer) {
         if (footer != null) {
             mFooterContainer.addView(footer);
         }
     }
 
     protected void addContent(List<BaseScrollTabFragment> fragments, String[] tabs) {
-        mAdapter = new ScrollTabPageAdapter(getSupportFragmentManager(), fragments, tabs, mHeader);
+        mAdapter = new ScrollTabPageAdapter(getSupportFragmentManager(), fragments, tabs, mTabHeader);
         mAdapter.setTabHolderScrollingListener(this);
-        mPager.setOffscreenPageLimit(fragments.size());
-        mPager.setAdapter(mAdapter);
-        mPager.addOnPageChangeListener(this);
+        mViewPager.setOffscreenPageLimit(fragments.size());
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.addOnPageChangeListener(this);
 
         mIndicator.setShouldExpand(true);
-        mIndicator.setViewPager(mPager);
+        mIndicator.setViewPager(mViewPager);
     }
 
-    public void needFooter(boolean need){
-        if (need){
+    public void needFooter(boolean need) {
+        if (need) {
             mFooterContainer.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mFooterContainer.setVisibility(View.GONE);
         }
     }
@@ -169,7 +171,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
     // 刷新头部显示时，没有onScroll回调，只有刷新时有
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount, int pagePosition) {
-        if (mPager.getCurrentItem() != pagePosition) {
+        if (mViewPager.getCurrentItem() != pagePosition) {
             return;
         }
         if (headerScrollSize == 0 && reLocation) {
@@ -180,7 +182,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
         reLocation = false;
         final int scrollY = Math.max(-getScrollY(view), headerTranslationDis);
         Logger.i("onScroll " + scrollY + " -getScrollY(view)=" + -getScrollY(view) + " headerTranslationDis=" + headerTranslationDis);
-        ViewHelper.setTranslationY(mHeader, scrollY);
+        ViewHelper.setTranslationY(mTabHeader, scrollY);
 
     }
 
@@ -189,7 +191,8 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
      *
      * 当刷新时： 刷新头部显示，因此偏移量要加上刷新头的数值 未刷新时： 偏移量不计算头部。
      *
-     * firstVisiblePosition >1时，listview中的项开始显示，姑且认为每一项等高来计算偏移量（其实只要显示一个项，向上偏移 量已经大于头部的最大偏移量，因此不准确也没有关系）
+     * firstVisiblePosition >1时，listview中的项开始显示，姑且认为每一项等高来计算偏移量（其实只要显示一个项，向上偏移
+     * 量已经大于头部的最大偏移量，因此不准确也没有关系）
      */
     public int getScrollY(AbsListView view) {
         View c = view.getChildAt(0);
@@ -217,13 +220,13 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
      */
     @Override
     public void onHeaderScroll(boolean isRefreashing, int value, int pagePosition) {
-        if (mPager.getCurrentItem() != pagePosition) {
+        if (mViewPager.getCurrentItem() != pagePosition) {
             return;
         }
 
         headerScrollSize = value;
         Logger.i("onHeaderScroll " + value);
-        ViewHelper.setTranslationY(mHeader, -value);
+        ViewHelper.setTranslationY(mTabHeader, -value);
     }
 
     @Override
@@ -238,11 +241,11 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
         SparseArrayCompat<ScrollTabHolder> scrollTabHolders = mAdapter.getScrollTabHolders();
         ScrollTabHolder currentHolder = scrollTabHolders.valueAt(position);
         Logger.i("onPageSelected " + headerTop);
-        Logger.i("onPageSelected mHeader.getMeasuredHeight() " + mHeader.getMeasuredHeight());
-        Logger.i("onPageSelected ViewHelper.getTranslationY " + ViewHelper.getTranslationY(mHeader));
+        Logger.i("onPageSelected mHeader.getMeasuredHeight() " + mTabHeader.getMeasuredHeight());
+        Logger.i("onPageSelected ViewHelper.getTranslationY " + ViewHelper.getTranslationY(mTabHeader));
         Logger.i("onPageSelected Indicator H =  " + mIndicator.getMeasuredHeight());
 
-        currentHolder.adjustScroll((int) (mHeader.getMeasuredHeight() + ViewHelper.getTranslationY(mHeader)));// 修正滚出去的偏移量
+        currentHolder.adjustScroll((int) (mTabHeader.getMeasuredHeight() + ViewHelper.getTranslationY(mTabHeader)));// 修正滚出去的偏移量
 //        mOnChangedScroll = 0;
     }
 
@@ -256,7 +259,7 @@ public abstract class BaseScrollTabActivity extends BaseActivity implements Scro
 
     }
 
-    public void onScrollY(int y){
+    public void onScrollY(int y) {
         Logger.i("onScrollY = " + y);
     }
 }

@@ -46,7 +46,6 @@ import cn.xiaojs.xma.R;
 public class ScrollTabIndicator extends HorizontalScrollView implements OnPageChangeListener {
 
     public interface IconTabProvider {
-
         public int getPageIconResId(int position);
     }
 

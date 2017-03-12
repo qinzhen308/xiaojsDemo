@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scroll_tab_base_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+    <!--底部-->
     <FrameLayout
             android:id="@+id/scroll_tab_footer_container"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
     </FrameLayout>
 
+    <!--左右滑动的viewPager-->
     <cn.xiaojs.xma.ui.widget.ScrollableViewPager
             android:id="@+id/scroll_tab_pager"
             android:layout_above="@+id/scroll_tab_footer_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-
+    <!--左右滑动tab indicator 以及header-->
     <LinearLayout
             android:id="@+id/scroll_tab_header"
             android:layout_width="match_parent"
@@ -31,29 +32,23 @@
                 android:id="@+id/scroll_tab_header_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
         </FrameLayout>
 
+        <!--左右滑动tab indicator-->
         <cn.xiaojs.xma.ui.base.hover.ScrollTabIndicator
                 android:id="@+id/scroll_tab_indicator"
                 android:layout_width="match_parent"
-                android:layout_height="44dip"
+                android:layout_height="@dimen/px86"
                 android:background="@color/white"/>
     </LinearLayout>
 
-
-    <LinearLayout
-            android:id="@+id/pager_content"
+    <!--title bar-->
+    <RelativeLayout
+            android:id="@+id/scroll_tab_title_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"/>
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/scroll_tab_title_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/px90"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
+            android:layout_height="@dimen/px90"
+            android:background="@color/white"
+            android:orientation="horizontal">
 
         <TextView
                 android:id="@+id/scroll_tab_left_view"
@@ -63,6 +58,7 @@
                 android:paddingRight="@dimen/px32"
                 android:paddingTop="@dimen/px16"
                 android:paddingBottom="@dimen/px16"
+                android:textSize="@dimen/font_24px"
                 android:textColor="@color/font_black"/>
 
         <ImageView
@@ -82,7 +78,7 @@
                 android:id="@+id/scroll_tab_middle_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/font_34px"
+                android:textSize="@dimen/font_24px"
                 android:textStyle="bold"
                 android:layout_centerInParent="true"
                 android:textColor="@color/def"/>
@@ -98,6 +94,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
                 android:paddingBottom="@dimen/px16"
+                android:textSize="@dimen/font_24px"
                 android:textColor="@color/font_black"/>
 
         <ImageView
@@ -113,6 +110,7 @@
 
     </RelativeLayout>
 
+    <!--title 分割线-->
     <View
             android:id="@+id/scroll_tab_title_divider"
             android:layout_below="@id/scroll_tab_title_bar"
