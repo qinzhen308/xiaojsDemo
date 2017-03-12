@@ -29,6 +29,7 @@
             android:paddingLeft="@dimen/px26"
             android:paddingRight="@dimen/px26"
             android:paddingTop="@dimen/px24"
+            android:visibility="gone"
             android:paddingBottom="@dimen/px20"/>
 
     <TextView
@@ -116,12 +117,12 @@
                     android:id="@+id/following"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_23px"
-                    android:text="0 关注"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             <View
+                    android:id="@+id/first_divider"
                     android:layout_marginLeft="@dimen/px30"
                     android:layout_width="@dimen/px1"
                     android:layout_height="@dimen/px26"
@@ -133,12 +134,12 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_23px"
                     android:layout_marginLeft="@dimen/px30"
-                    android:text="0 粉丝"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             <View
+                    android:id="@+id/second_divider"
                     android:layout_marginLeft="@dimen/px30"
                     android:layout_width="@dimen/px1"
                     android:layout_height="@dimen/px26"
