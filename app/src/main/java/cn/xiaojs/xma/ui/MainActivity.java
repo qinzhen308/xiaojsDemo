@@ -20,6 +20,7 @@ import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.ContactActivity;
+import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.NotificationFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.mine.MyOrderActivity;
@@ -42,6 +43,7 @@ public class MainActivity extends BaseTabActivity {
         fs.add(new HomeFragment());
         fs.add(new LiveFragment());
         fs.add(new NotificationFragment());
+        //fs.add(new MessageFragment());
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);
         addViews(new int[]{R.string.home_tab_index, R.string.home_tab_live, R.string.home_tab_message, R.string.home_tab_mine},
@@ -149,8 +151,6 @@ public class MainActivity extends BaseTabActivity {
             return;
         }
         super.onBackPressed();
-        finish();
-        System.exit(1);
     }
 
     @Override

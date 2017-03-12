@@ -102,6 +102,7 @@ public class PlatformNotificationAdapter extends BaseAdapter {
             holder = (Holder) convertView.getTag();
         }
 
+        //NotificationCategory category = beans.get(position);
         if (position >= 0 && position <= 6) {
             holder.image.setImageResource(mIcons[position]);
             holder.title.setText(titles[position]);
@@ -113,28 +114,20 @@ public class PlatformNotificationAdapter extends BaseAdapter {
                 holder.normal();
             }
 
-            if (beans != null && beans.size() > 0) {
-                NotificationCategory category = NotificationBusiness.getPlatformMessageCategory(beans, position);
-                if (category != null) {
-                    holder.image.setCount(category.count);
-                    if (category.notifications != null && category.notifications.size() > 0) {
-                        Notification notification = category.notifications.get(0);
-                        holder.time.setText(TimeUtil.format(notification.createdOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
-                        holder.content.setText(notification.body);
-                    }else {
-                        holder.time.setText("");
-                        holder.content.setText("");
-                    }
-                }else{
-                    holder.image.setCount(0);
-                    holder.time.setText("");
-                    holder.content.setText("");
-                }
-            }else{
+            NotificationCategory category = NotificationBusiness.getPlatformMessageCategory(beans, position);
+
+            if (category.notifications != null && category.notifications.size() > 0) {
+                holder.image.setCount(category.count);
+                Notification notification = category.notifications.get(0);
+                holder.time.setText(TimeUtil.format(notification.createdOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                holder.content.setText(notification.body);
+            } else {
                 holder.image.setCount(0);
                 holder.time.setText("");
                 holder.content.setText("");
             }
+
+
         } else {
             NotificationCategory category = beans.get(position);
             if (category != null && category.conversation != null) {
@@ -185,7 +178,7 @@ public class PlatformNotificationAdapter extends BaseAdapter {
                     holder.title.setText(category.conversation.getTitle());
                     UserInfo user = (UserInfo) category.conversation.getTargetInfo();
 
-                    String avatar = Account.getAvatar(user.getUserName(),holder.image.getMeasuredWidth());
+                    String avatar = Account.getAvatar(user.getUserName(), holder.image.getMeasuredWidth());
 
                     Glide.with(mContext)
                             .load(avatar)
@@ -208,16 +201,19 @@ public class PlatformNotificationAdapter extends BaseAdapter {
 //                    } else {
 //                        holder.image.setImageResource(R.drawable.default_avatar_grey);
 //                    }
-                }else{
+                } else {
                     holder.image.setImageResource(R.drawable.default_avatar_grey);
                     holder.title.setText("");
                 }
-            }else {
+            } else {
+                holder.normal();
                 holder.image.setImageResource(R.drawable.default_avatar_grey);
                 holder.title.setText("");
                 holder.time.setText("");
                 holder.content.setText("");
             }
+
+
         }
 
         return convertView;
