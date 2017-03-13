@@ -97,6 +97,8 @@ public class MineFragment extends BaseFragment {
         authLayout.setEnabled(false);
         mBlurFloatUpBg = new ColorDrawable(getResources().getColor(R.color.blur_float_up_bg));
         mEvaluation.setGrading(EvaluationStar.Grading.THREE_HALF);
+        //set default ugc
+        setUgc(null);
         loadData();
     }
 

@@ -16,7 +16,7 @@ package cn.xiaojs.xma.ui.personal;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -24,12 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +53,7 @@ import cn.xiaojs.xma.ui.widget.PortraitView;
 import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.ExpandGlide;
 import cn.xiaojs.xma.util.FastBlur;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -72,7 +67,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
     @BindView(R.id.blur_portrait)
     ImageView mBlurImgView;
     @BindView(R.id.portrait)
-    PortraitView mPortrait;
+    PortraitView mPortraitView;
     @BindView(R.id.user_name)
     IconTextView mName;
 
@@ -154,7 +149,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         addFooter(footer);
         mBinder = ButterKnife.bind(this);
         initHeader();
-
+        setDefaultUgc();
         getData();
     }
 
@@ -223,26 +218,23 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         }
 
         //set avatar
-        Glide.with(this)
-                .load(Account.getAvatar(home.profile.id, 300))
+        mBlurImgView.setImageResource(R.drawable.portrait_default_bg);
+        String u = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(AccountDataManager.getAccountID(this),300);
+        ExpandGlide expandGlide = new ExpandGlide();
+        expandGlide.with(this)
+                .load(Uri.parse(u))
+                .placeHolder(R.drawable.default_avatar)
                 .error(R.drawable.default_avatar)
-                .into(new GlideDrawableImageViewTarget(mPortrait) {
+                .into(mPortraitView, new ExpandGlide.OnBitmapLoaded() {
                     @Override
-                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                        super.onResourceReady(resource, animation);
-                        if (resource instanceof GlideBitmapDrawable) {
-                            Bitmap bmp = ((GlideBitmapDrawable) resource).getBitmap();
+                    public void onLoaded(Bitmap bmp) {
+                        if (bmp != null) {
                             setupBlurPortraitView(bmp);
                         }
                     }
-
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        super.onLoadFailed(e, errorDrawable);
-                        setDefaultPortrait();
-                    }
                 });
-        mPortrait.setSex(home.profile.sex);
+
+        mPortraitView.setSex(home.profile.sex);
         mName.setText(home.profile.name);
         mFans.setText(getString(R.string.fans_num, home.profile.stats.fans));
         mFollows.setText(getString(R.string.follow_num, home.profile.stats.followships));
@@ -260,14 +252,22 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         }
     }
 
+    private void setDefaultUgc() {
+        mFans.setText(getString(R.string.fans_num, 0));
+        mFollows.setText(getString(R.string.follow_num, 0));
+        boolean isTeacher = SecurityManager.checkPermission(PersonHomeActivity.this, Su.Permission.COURSE_OPEN_CREATE);
+        String duration;
+        if (isTeacher) {
+            duration = getString(R.string.tea_lesson_duration, 0);
+        } else {
+            duration = getString(R.string.stu_lesson_duration, 0);
+        }
+        mTeachingLength.setText(duration);
+    }
+
     private void setupBlurPortraitView(Bitmap portrait) {
         Bitmap blurBitmap = FastBlur.smartBlur(portrait, 4, true);
         mBlurImgView.setImageBitmap(blurBitmap);
-    }
-
-    private void setDefaultPortrait() {
-        mPortrait.setImageResource(R.drawable.default_avatar);
-        mBlurImgView.setImageResource(R.drawable.portrait_default_bg);
     }
 
     private void initHeader() {
@@ -277,13 +277,13 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         mPersonHomeBtn.setVisibility(View.GONE);
         mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
         if (mIsMyself) {
-            mPortrait.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
+            mPortraitView.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
             mName.setText(XiaojsConfig.mLoginUser.getName());
             mFollows.setVisibility(View.VISIBLE);
             needFooter(false);
             myself();
         } else {
-            mPortrait.setSex("true");
+            mPortraitView.setSex("true");
             mFollows.setVisibility(View.GONE);
             mFirstDivider.setVisibility(View.GONE);
         }
