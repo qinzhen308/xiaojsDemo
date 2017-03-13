@@ -35,9 +35,10 @@ public class JpushUtil {
      * @param context
      * @param accountID
      */
-    public static void launchChat(Context context, String accountID) {
+    public static void launchChat(Context context, String accountID, String name) {
         final Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(ChatActivity.TARGET_ID, accountID);
+        intent.putExtra(ChatActivity.NICKNAME, name);
         intent.putExtra(ChatActivity.TARGET_APP_KEY, XiaojsConfig.JPUSH_APP_KEY);
         context.startActivity(intent);
     }

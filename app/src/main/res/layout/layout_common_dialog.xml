@@ -11,8 +11,7 @@
             android:layout_height="wrap_content">
 
         <RelativeLayout
-                android:layout_marginTop="@dimen/px50"
-                android:layout_marginBottom="@dimen/px50"
+                android:layout_marginTop="@dimen/px34"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_marginRight="@dimen/px30"
                 android:layout_width="match_parent"
@@ -21,11 +20,11 @@
             <TextView
                     android:id="@+id/common_dialog_title"
                     android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_36px"
-                    android:textStyle="bold"
+                    android:textSize="@dimen/font_27px"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    />
 
             <TextView
                     android:id="@+id/common_dialog_desc"
@@ -47,11 +46,12 @@
             android:visibility="gone"
             android:paddingLeft="@dimen/px30"
             android:paddingRight="@dimen/px30"
-            android:paddingBottom="@dimen/px30"/>
+            android:paddingTop="@dimen/px15"
+            android:paddingBottom="@dimen/px15"
+            />
 
     <View
-            style="@style/DividerHorizontal"
-            android:layout_marginTop="@dimen/px10"/>
+            style="@style/DividerHorizontal"/>
 
     <LinearLayout
             android:orientation="horizontal"
@@ -64,10 +64,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/common_white_bottomleft_cornor_selector"
                 android:text="@string/cancel"
-                android:textSize="@dimen/font_28px"
-                android:textColor="@color/font_blue"
-                android:paddingTop="@dimen/px30"
-                android:paddingBottom="@dimen/px30"
+                android:textSize="@dimen/font_31px"
+                android:textColor="@color/btn_blue"
+                android:paddingTop="@dimen/px27"
+                android:paddingBottom="@dimen/px27"
                 android:layout_height="wrap_content"/>
 
         <View style="@style/DividerVertical"/>
@@ -78,10 +78,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/common_white_bottomright_cornor_selector"
                 android:text="@string/ok"
-                android:textSize="@dimen/font_28px"
-                android:textColor="@color/font_blue"
-                android:paddingTop="@dimen/px30"
-                android:paddingBottom="@dimen/px30"
+                android:textSize="@dimen/font_31px"
+                android:textColor="@color/btn_blue"
+                android:paddingTop="@dimen/px27"
+                android:paddingBottom="@dimen/px27"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 

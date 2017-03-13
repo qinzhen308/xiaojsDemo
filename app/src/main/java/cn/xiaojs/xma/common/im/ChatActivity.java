@@ -103,6 +103,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private String mTargetAppKey;
     private String mPhotoPath = null;
     private String mAccount;
+    private String mNickName;
 
     Window mWindow;
     InputMethodManager mImm;
@@ -126,6 +127,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mTargetId = intent.getStringExtra(TARGET_ID);
         mTargetAppKey = intent.getStringExtra(TARGET_APP_KEY);
         mAccount = intent.getStringExtra(ACCOUNT_ID);
+        mNickName = intent.getStringExtra(NICKNAME);
         if (TextUtils.isEmpty(mTargetAppKey)) {
             mTargetAppKey = XiaojsConfig.JPUSH_APP_KEY;
         }
@@ -134,6 +136,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             mConv = JMessageClient.getSingleConversation(mTargetId, mTargetAppKey);
             if (mConv != null) {
                 UserInfo userInfo = (UserInfo) mConv.getTargetInfo();
+
+                if (!TextUtils.isEmpty(mNickName)) {
+                    userInfo.setNickname(mNickName);
+                }
+
                 if (TextUtils.isEmpty(userInfo.getNickname())) {
                     mChatView.setChatTitle(userInfo.getUserName());
                 } else {
@@ -233,7 +240,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
             // 1 -- 免打扰，其他 -- 非免打扰
             final int disturb = userInfo.getNoDisturb();
-            int checkIndex = disturb == 1? 1 : 0;
+            int checkIndex = disturb == 1 ? 1 : 0;
 
             SingleSelectDialog dialog = new SingleSelectDialog(this);
             dialog.setTitle("消息设置");
@@ -243,15 +250,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 @Override
                 public void onOk(int position) {
 
-                    int newDisturb = position == 1? 1: 0;
-                    if (newDisturb != disturb){
-                        userInfo.setNoDisturb(newDisturb,null);
+                    int newDisturb = position == 1 ? 1 : 0;
+                    if (newDisturb != disturb) {
+                        userInfo.setNoDisturb(newDisturb, null);
                     }
+
 
                 }
             });
             dialog.show();
-
 
 
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_right_btn2")) {//聊天成员按钮，更多按钮之右
