@@ -38,6 +38,7 @@
     <!--vertical divide line-->
     <color name="ver_divide_line">#E5E5E5</color>
     <color name="link_hover">#0076ff</color>
+    <color name="btn_blue">#0080ff</color>
     <!--font color-->
     <color name="font_dark_gray">#8b8b8b</color>
     <color name="font_gray">#bababa</color>
@@ -121,6 +122,7 @@
     <color name="jmui_chat_text_color">#373334</color>
     <color name="jmui_item_click_bg_color">#dddddd</color>
     <color name="jmui_jpush_blue">#3f80dc</color>
+
     <color name="jmui_send_press_color">#346fc3</color>
     <color name="jmui_default_cursor_color">#8db4eb</color>
     <color name="jmui_chat_detail_split_line_color">#d4d4d4</color>

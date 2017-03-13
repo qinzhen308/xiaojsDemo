@@ -2,7 +2,7 @@
 <cn.xiaojs.xma.ui.widget.CheckableLinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="@dimen/px90"
+              android:layout_height="@dimen/px80"
               android:orientation="horizontal"
               android:gravity="center_vertical"
         android:paddingLeft="15dp">
@@ -20,9 +20,9 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_34px"
+            android:textSize="@dimen/font_28px"
             android:textColor="@color/font_black"
-            android:layout_marginLeft="12dp"/>
+            android:layout_marginLeft="@dimen/px23"/>
 
 </cn.xiaojs.xma.ui.widget.CheckableLinearLayout>
 

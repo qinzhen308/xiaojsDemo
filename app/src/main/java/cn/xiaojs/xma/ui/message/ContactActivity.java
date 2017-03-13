@@ -92,8 +92,9 @@ public class ContactActivity extends BaseActivity {
 
                 Contact contact = contactGroup.collection.get(childPosition);
 
+                String name = TextUtils.isEmpty(contact.title)? contact.alias : contact.title;
                 String tid = contact.account;
-                JpushUtil.launchChat(ContactActivity.this, tid);
+                JpushUtil.launchChat(ContactActivity.this, tid,name);
 
                 return false;
             }
