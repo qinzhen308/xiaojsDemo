@@ -25,48 +25,6 @@
             android:paddingBottom="@dimen/px10"
             android:src="@drawable/ic_white_back"/>
 
-    <RelativeLayout
-            android:id="@+id/reg_name_info"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:paddingLeft="@dimen/px57"
-            android:paddingRight="@dimen/px57"
-            android:layout_marginTop="@dimen/px156"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/reg_back">
-
-        <ImageView
-                android:id="@+id/reg_name_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/ic_log_reg_name"
-                android:layout_centerInParent="true"/>
-
-        <cn.xiaojs.xma.ui.widget.EditTextDel
-                android:id="@+id/reg_name"
-                android:background="@null"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/px30"
-                android:paddingBottom="@dimen/px30"
-                android:layout_marginLeft="@dimen/px38"
-                android:textColorHint="@color/font_trans_white"
-                android:textColor="@color/font_white"
-                android:textSize="@dimen/font_28px"
-                android:hint="@string/name_empty"
-                android:lines="1"
-                android:maxLength="16"
-                android:layout_toRightOf="@+id/reg_name_icon"/>
-
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_marginLeft="@dimen/px73"
-                android:layout_below="@+id/reg_name"
-                android:background="@color/white"
-                android:alpha="0.4"/>
-    </RelativeLayout>
-
 
     <RelativeLayout
             android:id="@+id/reg_phone_info"
@@ -100,7 +58,7 @@
                 android:imeOptions="actionNext"
                 android:inputType="phone"
                 android:maxLength="11"
-                android:hint="@string/phone_empty"
+                android:hint="@string/login_reg_phone_hint"
                 android:layout_toRightOf="@+id/reg_phone_icon"/>
 
         <View
@@ -139,7 +97,7 @@
                     android:background="@null"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/verify_empty"
+                    android:hint="@string/reg_verify_code_hint"
                     android:imeOptions="actionNext"
                     android:paddingTop="@dimen/px30"
                     android:paddingBottom="@dimen/px30"
@@ -205,7 +163,7 @@
                 android:layout_marginLeft="@dimen/px38"
                 android:textColorHint="@color/font_trans_white"
                 android:textColor="@color/font_white"
-                android:hint="@string/pwd_hint"
+                android:hint="@string/reg_pwd_hint"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:layout_marginRight="@dimen/px22"
@@ -267,6 +225,48 @@
                 android:textColor="@color/white"
                 android:text="@string/register_protocol"/>
     </LinearLayout>
+    <RelativeLayout
+            android:id="@+id/reg_name_info"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="@dimen/px57"
+            android:paddingRight="@dimen/px57"
+            android:layout_marginTop="77dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reg_back" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+        <ImageView
+                android:id="@+id/reg_name_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_log_reg_name"
+                android:layout_centerInParent="true"/>
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/reg_name"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:layout_marginLeft="@dimen/px38"
+                android:textColorHint="@color/font_trans_white"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_28px"
+                android:hint="@string/login_reg_name_hint"
+                android:lines="1"
+                android:maxLength="16"
+                android:layout_toRightOf="@+id/reg_name_icon"/>
+
+        <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="@dimen/px73"
+                android:layout_below="@+id/reg_name"
+                android:background="@color/white"
+                android:alpha="0.4"/>
+    </RelativeLayout>
 
 
 </RelativeLayout>

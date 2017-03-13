@@ -92,6 +92,11 @@
     <string name="verify_empty">请输入验证码</string>
     <string name="pwd_empty">请输入密码</string>
     <string name="pwd_error">密码少于6位</string>
+    <string name="login_reg_phone_hint">手机号</string>
+    <string name="login_pwd_hint">密码</string>
+    <string name="login_reg_name_hint">姓名</string>
+    <string name="reg_verify_code_hint">验证码</string>
+    <string name="reg_pwd_hint">6&#8211;16位密码</string>
     <!--login-->
     <string name="login">登录</string>
     <string name="register_guide">还没有账号，立即注册</string>
