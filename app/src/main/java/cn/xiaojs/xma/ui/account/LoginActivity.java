@@ -269,7 +269,7 @@ public class LoginActivity extends BaseActivity {
      */
     private boolean checkSubmitInfo(String userName, String password) {
         if (TextUtils.isEmpty(userName)) {
-            Toast.makeText(this, R.string.name_empty, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.phone_empty, Toast.LENGTH_SHORT).show();
             return false;
         } else if (!VerifyUtils.checkPhoneNum(userName)) {
             Toast.makeText(this, R.string.phone_error, Toast.LENGTH_SHORT).show();
