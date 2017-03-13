@@ -522,13 +522,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    private boolean m = false;
-
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.course_ware_btn, R.id.setting_btn,
             R.id.play_pause_btn, R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.enter_talk_btn,
             R.id.wb_toolbar_btn, R.id.color_picker_btn, R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn,
@@ -642,7 +635,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     /**
      * 开启或暂停课，除老师外的其他参与者的状态变化在socket的回调里面进行处理
      *
-     * @see mSyncStateListener
+     * @see #mSyncStateListener
      */
     private void playOrPauseLesson() {
         if (TextUtils.isEmpty(mTicket)) {
@@ -1011,6 +1004,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             return super.onSingleTapConfirmed(e);
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //TODO 多测试其他平台，之前有个bug由于这个地方引起
+        if (mClassroomController != null) {
+            mClassroomController.onResumeVideo();
+        }
     }
 
     @Override

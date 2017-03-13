@@ -42,6 +42,8 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
     PullToRefreshSwipeListView mSubjectListView;
     @BindView(R.id.selected_subject_layout)
     View mSelectedSubjectLayout;
+    @BindView(R.id.selected_subject_divider)
+    View mSelectedSubjectDivider;
     @BindView(R.id.right_view)
     TextView mRightView;
     @BindView(R.id.middle_view)
@@ -102,8 +104,15 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
             mMiddleView.setText(mParentCSubject.getName());
         }
 
-        mSelectedSubjectTv.setText(mSelectedSubjectTxt);
-        mSelectedSubjectTv.setTextColor(mSubjectBlueColor);
+        if (TextUtils.isEmpty(mSelectedSubjectTxt)) {
+            mSelectedSubjectLayout.setVisibility(View.GONE);
+            mSelectedSubjectDivider.setVisibility(View.VISIBLE);
+        } else {
+            mSelectedSubjectLayout.setVisibility(View.VISIBLE);
+            mSelectedSubjectDivider.setVisibility(View.GONE);
+            mSelectedSubjectTv.setText(mSelectedSubjectTxt);
+            mSelectedSubjectTv.setTextColor(mSubjectBlueColor);
+        }
     }
 
     private void loadData() {

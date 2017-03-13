@@ -163,29 +163,21 @@ public class LiveRecordView extends BaseMediaView implements
         int fps = Config.VIDEO_STANDARD_FPS;
         int bps = Config.VIDEO_STANDARD_BITRATE;
         int resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
-        String bpsStr= "";
-        String resStr = "";
         switch (mQuality) {
             case Constants.QUALITY_FLUENT:
                 fps = Config.VIDEO_FLUENT_FPS;
                 bps = Config.VIDEO_FLUENT_BITRATE;
                 resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_240;
-                bpsStr = "512";
-                resStr = "240p";
                 break;
             case Constants.QUALITY_STANDARD:
                 fps = Config.VIDEO_STANDARD_FPS;
                 bps = Config.VIDEO_STANDARD_BITRATE;
                 resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
-                bpsStr = "800";
-                resStr = "480p";
                 break;
             case Constants.QUALITY_HIGH:
                 fps = Config.VIDEO_STANDARD_FPS;
                 bps = Config.VIDEO_HIGH_BITRATE;
                 resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_720;
-                bpsStr = "1200";
-                resStr = "720p";
                 break;
         }
 

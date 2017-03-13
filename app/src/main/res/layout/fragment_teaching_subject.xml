@@ -39,6 +39,9 @@
         <View style="@style/DividerHorizontal"/>
     </LinearLayout>
 
+    <View
+            android:id="@+id/selected_subject_divider"
+            style="@style/DividerHorizontal"/>
     <LinearLayout
             android:id="@+id/selected_subject_layout"
             android:layout_width="match_parent"

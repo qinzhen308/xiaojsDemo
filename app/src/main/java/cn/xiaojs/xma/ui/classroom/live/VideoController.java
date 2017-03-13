@@ -17,19 +17,22 @@ package cn.xiaojs.xma.ui.classroom.live;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 
-public abstract class VideoController implements StreamConfirmCallback{
+public abstract class VideoController implements StreamConfirmCallback {
     protected Context mContext;
     protected View mRoot;
 
@@ -43,9 +46,10 @@ public abstract class VideoController implements StreamConfirmCallback{
     protected String mPlayStreamUrl;
     protected String mPublishStreamUrl;
 
-    protected boolean mStreamPlaying;
-    protected boolean mStreamPublishing;
-    protected OnStreamUseListener mOnStreamUseListener;
+    private boolean mStreamPlaying;
+    private boolean mStreamPublishing;
+    private boolean mNeedStreamRePublishing = false;
+    private OnStreamUseListener mOnStreamUseListener;
 
     public VideoController(Context context, View root, OnStreamUseListener listener) {
         mContext = context;
@@ -84,20 +88,19 @@ public abstract class VideoController implements StreamConfirmCallback{
         if (mPublishView != null) {
             mPublishView.resume();
         }
+
+        if (mNeedStreamRePublishing) {
+            mNeedStreamRePublishing = false;
+            publishStream(mPublishStreamUrl, mLive);
+        }
     }
 
     /**
      * pause视频
      */
     public void onPause() {
-        if (mPlayView != null) {
-            mStreamPlaying = false;
-            mPlayView.pause();
-        }
-        if (mPublishView != null) {
-            mStreamPublishing = false;
-            mPublishView.pause();
-        }
+        pausePlayStream();
+        pausePublishStream();
     }
 
     /**
@@ -131,6 +134,19 @@ public abstract class VideoController implements StreamConfirmCallback{
      */
     public void pausePublishStream() {
         if (mPublishView != null) {
+            if (mStreamPublishing) {
+                //send stopped stream
+                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                        new SocketManager.AckListener() {
+                            @Override
+                            public void call(Object... args) {
+                                if (args != null && args.length > 0) {
+                                    mNeedStreamRePublishing = true;
+                                    Toast.makeText(mContext, "推流暂停", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
             mStreamPublishing = false;
             mPublishView.pause();
         }
@@ -168,7 +184,7 @@ public abstract class VideoController implements StreamConfirmCallback{
     /**
      * 暂停播放流
      */
-    public void pauseStream() {
+    public void pausePlayStream() {
         if (mPlayView != null) {
             mStreamPlaying = false;
             mPlayView.pause();
@@ -178,10 +194,12 @@ public abstract class VideoController implements StreamConfirmCallback{
 
     /**
      * 推流的流状态发生变化回调
+     *
      * @param streamingState 流状态
-     * @param data 额外数据
+     * @param data           额外数据
      */
-    public void onSteamStateChanged(StreamingState streamingState, Object data) {}
+    public void onSteamStateChanged(StreamingState streamingState, Object data) {
+    }
 
     private StreamingStateChangedListener mStreamingStateChangedListener = new StreamingStateChangedListener() {
         @Override
@@ -219,8 +237,25 @@ public abstract class VideoController implements StreamConfirmCallback{
 
     protected abstract void onStringingStopped(Object... args);
 
+    /**
+     * @return 是否是流在使用，播放流和推送流
+     */
     public boolean hasStreamUsing() {
         return mStreamPlaying || mStreamPublishing;
+    }
+
+    /**
+     * @return 是否有流在推送
+     */
+    public boolean hasStreamPublishing() {
+        return mStreamPublishing;
+    }
+
+    /**
+     * @return 是否有流在播放
+     */
+    public boolean hasStreamPlaying() {
+        return mStreamPlaying;
     }
 
     @Override
@@ -236,6 +271,7 @@ public abstract class VideoController implements StreamConfirmCallback{
         mStreamPublishing = true;
         mPublishView.setPath(mPublishStreamUrl);
         if (!mInitPublishVideo) {
+            Log.i("aaa","================confirmPublishStream===================");
             mPublishView.start();
         } else {
             mPublishView.resume();

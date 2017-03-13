@@ -187,7 +187,7 @@ public class StudentVideoController extends VideoController {
     protected void onStringingStopped(Object... args) {
         if (args != null && args.length > 0) {
             Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
-            pauseStream();
+            pausePlayStream();
         }
     }
 }

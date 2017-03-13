@@ -156,10 +156,6 @@ public class ClassroomController {
         mBoardController.onSwitchWhiteboardCollection(wbColl);
     }
 
-    private boolean isWebApp(int app) {
-        return app == Platform.AppType.WEB_CLASSROOM || app == Platform.AppType.MOBILE_WEB;
-    }
-
     /**
      * 暂停推流
      */
