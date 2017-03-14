@@ -6,6 +6,21 @@ package cn.xiaojs.xma.common.xf_foundation.schemas;
 
 public class Platform {
 
+
+
+    /**
+     * Defines the period types.
+     */
+    public static class PeriodType {
+        public static final int NA = 0;
+        public static final int DAILY = 1;
+        public static final int WEEKLY = 2;
+        public static final int MONTHLY = 3;
+        public static final int THREE_MONTHLY = 4;
+        public static final int YEARLY = 5;
+    }
+
+
     /**
      * Defines the client app types.
      */

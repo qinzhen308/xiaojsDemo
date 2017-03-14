@@ -9,6 +9,23 @@ import cn.xiaojs.xma.model.social.Dimension;
 
 public class Ctl {
 
+    /**
+     * Defines the live lesson lifecycle states, which inherits those common MSP states.
+     */
+    public static class LiveLessonState{
+        public static final String DRAFT = "Draft";
+        public static final String PENDING_FOR_ACK = "PendingForACK";
+        public static final String ACK_NOW_LEDGED = "Acknowledged";
+        public static final String PENDING_FOR_APPROVAL = "PendingForApproval";
+        public static final String PENDING_FOR_LIVE = "PendingForLive";
+        public static final String LIVE = "Live";
+        public static final String FINISHED = "Finished";
+        public static final String REJECTED = "Rejected";
+        public static final String CANCELLED = "Cancelled";
+        public static final String STOPPED = "Stopped";
+    }
+
+
     //region Objects
 
     //

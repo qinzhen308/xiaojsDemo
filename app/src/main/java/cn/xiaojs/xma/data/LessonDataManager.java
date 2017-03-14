@@ -25,8 +25,11 @@ import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.account.UpTokenParam;
+import cn.xiaojs.xma.model.ctl.LiveClass;
 
 import com.orhanobut.logger.Logger;
+
+import java.util.List;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -313,5 +316,42 @@ public class LessonDataManager {
         lessonRequest.toggleAccessLesson(lesson, accessible);
     }
 
+
+    /**
+     * 获取开的课程
+     */
+    public static void getClasses(Context context,
+                                  @NonNull Criteria criteria,
+                                  @NonNull Pagination pagination,
+                                  @NonNull APIServiceCallback<GetLessonsResponse> callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClasses(criteria, pagination);
+
+    }
+
+    /**
+     * 获取我报名的课
+     */
+    public static void getEnrolledClasses(Context context,
+                                          @NonNull Criteria criteria,
+                                          @NonNull Pagination pagination,
+                                          @NonNull APIServiceCallback<GELessonsResponse> callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getEnrolledClasses(criteria, pagination);
+
+    }
+
+
+    /**
+     * 直播课接口
+     * @param context
+     * @param callback
+     */
+    public void getLiveClasses(Context context, @NonNull APIServiceCallback<List<LiveClass>> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getLiveClasses();
+    }
 
 }

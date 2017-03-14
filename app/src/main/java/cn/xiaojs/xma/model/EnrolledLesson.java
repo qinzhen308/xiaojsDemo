@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 
 import cn.xiaojs.xma.model.ctl.Fee;
+import cn.xiaojs.xma.model.ctl.RoomData;
+import cn.xiaojs.xma.model.ctl.Statistic;
 
 /**
  * Created by maxiaobao on 2016/11/8.
@@ -20,15 +22,67 @@ public class EnrolledLesson implements Serializable{
     private String title;
     private CSubject subject;
     private int mode;
-    private Ugc ugc;
+    private Statistic stats;
     private Promotion[] promotion;
     private Schedule schedule;
+    private String cover;
     private Fee fee;
     private String state;
-    private Teacher teacher;
-    private Assistant[] assistants;
-    private String cover;
     private String ticket;
+    private RoomData classroom;
+    private Teacher teacher;
+    private Teacher[] assistants;
+    private String classType;
+    private String classId;
+    private String reason;
+
+    public Teacher[] getAssistants() {
+        return assistants;
+    }
+
+    public Statistic getStats() {
+        return stats;
+    }
+
+    public void setStats(Statistic stats) {
+        this.stats = stats;
+    }
+
+    public RoomData getClassroom() {
+        return classroom;
+    }
+
+    public void setClassroom(RoomData classroom) {
+        this.classroom = classroom;
+    }
+
+    public void setAssistants(Teacher[] assistants) {
+        this.assistants = assistants;
+    }
+
+    public String getClassType() {
+        return classType;
+    }
+
+    public void setClassType(String classType) {
+        this.classType = classType;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 
     public String getCover() {
         return cover;
@@ -70,14 +124,6 @@ public class EnrolledLesson implements Serializable{
         this.mode = mode;
     }
 
-    public Ugc getUgc() {
-        return ugc;
-    }
-
-    public void setUgc(Ugc ugc) {
-        this.ugc = ugc;
-    }
-
     public Promotion[] getPromotion() {
         return promotion;
     }
@@ -116,14 +162,6 @@ public class EnrolledLesson implements Serializable{
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
-    }
-
-    public Assistant[] getAssistants() {
-        return assistants;
-    }
-
-    public void setAssistants(Assistant[] assistants) {
-        this.assistants = assistants;
     }
 
     public String getTicket() {

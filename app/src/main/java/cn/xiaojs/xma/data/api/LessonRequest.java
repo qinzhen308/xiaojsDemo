@@ -23,6 +23,9 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 import com.orhanobut.logger.Logger;
 
+import java.util.List;
+
+import cn.xiaojs.xma.model.ctl.LiveClass;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -162,6 +165,48 @@ public class LessonRequest extends ServiceRequest {
     }
 
 
+    public void getClasses(@NonNull Criteria criteria,
+                           @NonNull Pagination pagination) {
 
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+
+        Call<GetLessonsResponse> call = getService().getClasses(criteriaJsonstr,
+                paginationJsonstr);
+
+        enqueueRequest(APIType.GET_CLASSES, call);
+
+    }
+
+    public void getEnrolledClasses(@NonNull Criteria criteria, @NonNull Pagination pagination) {
+
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+
+        Call<GELessonsResponse> call = getService().getEnrolledClasses(criteriaJsonstr,
+                paginationJsonstr);
+
+        enqueueRequest(APIType.GET_ENROLLED_CLASSESS, call);
+
+    }
+
+    public void getLiveClasses() {
+        Call<List<LiveClass>> call = getService().getLiveClasses();
+        enqueueRequest(APIType.GET_LIVE_CLASSES, call);
+    }
 
 }
