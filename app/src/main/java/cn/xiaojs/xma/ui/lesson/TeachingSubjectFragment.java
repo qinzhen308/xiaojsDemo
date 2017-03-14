@@ -104,6 +104,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
             mMiddleView.setText(mParentCSubject.getName());
         }
 
+        mSelectedSubjectLayout.setClickable(true);
         if (TextUtils.isEmpty(mSelectedSubjectTxt)) {
             mSelectedSubjectLayout.setVisibility(View.GONE);
             mSelectedSubjectDivider.setVisibility(View.VISIBLE);
