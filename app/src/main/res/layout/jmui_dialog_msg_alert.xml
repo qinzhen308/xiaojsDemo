@@ -27,18 +27,18 @@
         />
 
 
-    <View
-        android:id="@+id/jmui_forward_split_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#cbc9ca" />
+    <!--<View-->
+        <!--android:id="@+id/jmui_forward_split_line"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#cbc9ca" />-->
 
-    <Button
-        android:id="@+id/jmui_forward_msg_btn"
-        android:text="@string/jmui_forward_msg"
-        style="@style/jmui_dialog_msg_alert_txt_style"
-        android:background="@drawable/jmui_list_item_bg"
-        />
+    <!--<Button-->
+        <!--android:id="@+id/jmui_forward_msg_btn"-->
+        <!--android:text="@string/jmui_forward_msg"-->
+        <!--style="@style/jmui_dialog_msg_alert_txt_style"-->
+        <!--android:background="@drawable/jmui_list_item_bg"-->
+        <!--/>-->
 
     <View
         android:id="@+id/jmui_delete_split_line"

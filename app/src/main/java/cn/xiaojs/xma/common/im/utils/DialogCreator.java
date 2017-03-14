@@ -6,11 +6,15 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import cn.xiaojs.xma.R;
 
 
 public class DialogCreator {
@@ -49,25 +53,25 @@ public class DialogCreator {
 
     public static Dialog createLongPressMessageDialog(Context context, String title, boolean hide,
                                                       View.OnClickListener listener){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,AlertDialog.THEME_HOLO_LIGHT);
         View view = LayoutInflater.from(context).inflate(IdHelper.getLayout(context, "jmui_dialog_msg_alert"), null);
         builder.setView(view);
         Button copyBtn = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_copy_msg_btn"));
-        Button forwardBtn = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_forward_msg_btn"));
-        View line1 = view.findViewById(IdHelper.getViewID(context, "jmui_forward_split_line"));
+//        Button forwardBtn = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_forward_msg_btn"));
+//        View line1 = view.findViewById(IdHelper.getViewID(context, "jmui_forward_split_line"));
         View line2 = view.findViewById(IdHelper.getViewID(context, "jmui_delete_split_line"));
         Button deleteBtn = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_delete_msg_btn"));
         final TextView titleTv = (TextView) view.findViewById(IdHelper.getViewID(context, "jmui_dialog_title"));
         if (hide) {
             copyBtn.setVisibility(View.GONE);
-            forwardBtn.setVisibility(View.GONE);
-            line1.setVisibility(View.GONE);
+//            forwardBtn.setVisibility(View.GONE);
+//            line1.setVisibility(View.GONE);
             line2.setVisibility(View.GONE);
         }
         titleTv.setText(title);
         final Dialog dialog = builder.create();
         copyBtn.setOnClickListener(listener);
-        forwardBtn.setOnClickListener(listener);
+        //forwardBtn.setOnClickListener(listener);
         deleteBtn.setOnClickListener(listener);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
@@ -75,7 +79,7 @@ public class DialogCreator {
     }
 
     public static Dialog createResendDialog(Context context, View.OnClickListener listener){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
         View view = LayoutInflater.from(context).inflate(IdHelper.getLayout(context,
                 "jmui_dialog_base_with_button"), null);
         builder.setView(view);
