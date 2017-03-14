@@ -116,7 +116,7 @@ public class PlatformNotificationAdapter extends BaseAdapter {
 
             NotificationCategory category = NotificationBusiness.getPlatformMessageCategory(beans, position);
 
-            if (category.notifications != null && category.notifications.size() > 0) {
+            if (category != null && category.notifications != null && category.notifications.size() > 0) {
                 holder.image.setCount(category.count);
                 Notification notification = category.notifications.get(0);
                 holder.time.setText(TimeUtil.format(notification.createdOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
@@ -126,7 +126,6 @@ public class PlatformNotificationAdapter extends BaseAdapter {
                 holder.time.setText("");
                 holder.content.setText("");
             }
-
 
         } else {
             NotificationCategory category = beans.get(position);

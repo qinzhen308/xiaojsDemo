@@ -14,6 +14,7 @@ import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.ui.account.LoginActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.CacheUtil;
 
 import butterknife.BindView;
@@ -56,7 +57,7 @@ public class SettingsActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.exit_login:
-                exitLogin();
+                APPUtils.exitAndLogin(mContext,R.string.exit_login);
                 break;
             case R.id.message_notify_set:
                 break;
@@ -73,33 +74,5 @@ public class SettingsActivity extends BaseActivity {
             default:
                 break;
         }
-    }
-
-    private void exitLogin() {
-        LoginDataManager.requestLogoutByAPI(this, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                //Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //总是退出成功
-
-        Toast.makeText(mContext, R.string.logout_tips, Toast.LENGTH_SHORT).show();
-        XiaojsConfig.mLoginUser = null;
-        AccountDataManager.clearUserInfo(mContext);
-
-        //jpush logout
-        JpushUtil.logoutJpush();
-
-        //jump login page
-        Intent i = new Intent(mContext, LoginActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
     }
 }

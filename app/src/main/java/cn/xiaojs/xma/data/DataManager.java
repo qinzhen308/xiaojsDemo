@@ -74,7 +74,9 @@ public class DataManager {
 
             String aid  = AccountDataManager.getAccountID(context);
             //jmessage login
-            JpushUtil.loginJpush(aid,aid);
+            if(JpushUtil.needLogin()) {
+                JpushUtil.loginJpush(aid,aid);
+            }
 
             //jpush alias/tags
             AccountDataManager.setAliaTagsWithCheck(context);

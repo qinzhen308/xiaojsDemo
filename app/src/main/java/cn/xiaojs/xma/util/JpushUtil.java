@@ -16,6 +16,7 @@ import cn.jpush.android.api.TagAliasCallback;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.model.AliasTags;
@@ -36,11 +37,27 @@ public class JpushUtil {
      * @param accountID
      */
     public static void launchChat(Context context, String accountID, String name) {
+
+        if (needLogin()){
+            APPUtils.exitAndLogin(context, R.string.relogin);
+            return;
+        }
+
         final Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(ChatActivity.TARGET_ID, accountID);
         intent.putExtra(ChatActivity.NICKNAME, name);
         intent.putExtra(ChatActivity.TARGET_APP_KEY, XiaojsConfig.JPUSH_APP_KEY);
         context.startActivity(intent);
+    }
+
+    /**
+     * 是否需要登陆
+     * @return
+     */
+    public static boolean needLogin() {
+
+        UserInfo myInfo = JMessageClient.getMyInfo();
+        return myInfo == null? true : false;
     }
 
     public static void register(final User user) {
@@ -81,8 +98,10 @@ public class JpushUtil {
                         Logger.d("Jpush注册失败:" + status);
                     }
 
-                    //注册失败后，重试一次
-                    register(user);
+                    //注册失败后，重试
+                    if (isRetry(status)) {
+                        register(user);
+                    }
                 }
             }
         });
@@ -106,8 +125,11 @@ public class JpushUtil {
                         Logger.d("Jpush登录失败" + status);
                     }
 
-                    //登陆失败，重试登陆一次
-                    loginJpush(userName, password);
+                    //登陆失败，重试登陆
+                    if (isRetry(status)) {
+                        loginJpush(userName, password);
+                    }
+
                 }
             }
         });
@@ -238,5 +260,32 @@ public class JpushUtil {
         }else {
             return "Ta";
         }
+    }
+
+    /**
+     * 根据状态码，是否决定重试操作
+     * @param status
+     * @return
+     */
+    public static boolean isRetry(int status) {
+
+        switch(status){
+            case 898030:
+            case 898000:
+            case 899000:
+            case 899030:
+            case 800009:
+            case 800012:
+            case 800013:
+            case 871504:
+            case 871300:
+            case 871102:
+            case 871201://响应超时
+            case 871103:
+            case 871104:
+                return true;
+        }
+
+        return false;
     }
 }

@@ -5,38 +5,35 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <FrameLayout
+    <RelativeLayout
             android:id="@+id/common_dialog_normal_wrapper"
+            android:layout_marginTop="@dimen/px34"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <RelativeLayout
-                android:layout_marginTop="@dimen/px34"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginRight="@dimen/px30"
+        <TextView
+                android:id="@+id/common_dialog_title"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_31px"
+                android:textStyle="bold"
+                android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                />
 
-            <TextView
-                    android:id="@+id/common_dialog_title"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_27px"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
-
-            <TextView
-                    android:id="@+id/common_dialog_desc"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_28px"
-                    android:layout_below="@+id/common_dialog_title"
-                    android:layout_marginTop="@dimen/px30"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-        </RelativeLayout>
-    </FrameLayout>
+        <TextView
+                android:id="@+id/common_dialog_desc"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:layout_below="@+id/common_dialog_title"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_marginBottom="@dimen/px30"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
 
     <FrameLayout
