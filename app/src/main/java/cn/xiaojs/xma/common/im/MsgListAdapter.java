@@ -1234,7 +1234,12 @@ public class MsgListAdapter extends BaseAdapter {
 
         @Override
         public boolean onLongClick(View v) {
-            onContentLongClick((Integer) v.getTag(), v);
+            try {
+                onContentLongClick((Integer) v.getTag(), v);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+
             return true;
         }
 
