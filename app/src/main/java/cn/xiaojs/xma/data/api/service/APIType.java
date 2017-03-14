@@ -126,4 +126,8 @@ public class APIType {
 
     public static final int GET_LESSONS_BY_USER= 70;
 
+    public static final int GET_CLASSES= 71;
+    public static final int GET_ENROLLED_CLASSESS= 72;
+    public static final int GET_LIVE_CLASSES= 73;
+
 }

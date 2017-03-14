@@ -31,6 +31,7 @@ import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
@@ -40,15 +41,18 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
 
     private List<AccountSearch> mBeans;
     private Context mContext;
+    private CircleTransform circleTransform;
 
     public SearchPeopleAdapter(Context context, List<AccountSearch> beans) {
         mContext = context;
         mBeans = beans;
+        circleTransform = new CircleTransform(context);
     }
 
     public SearchPeopleAdapter(Context context, List<AccountSearch> beans,int max) {
         mContext = context;
         mBeans = beans;
+        circleTransform = new CircleTransform(context);
         MAX_COUNT = max;
     }
 
@@ -93,6 +97,8 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
         holder.name.setText(mBeans.get(position)._source.basic.getName());
         Glide.with(mContext)
                 .load(Account.getAvatar(mBeans.get(position)._id,300))
+                .bitmapTransform(circleTransform)
+                .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
                 .into(holder.head);
         return convertView;
@@ -103,7 +109,7 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
     }
     class Holder extends BaseHolder {
         @BindView(R.id.search_people_head)
-        RoundedImageView head;
+        ImageView head;
         @BindView(R.id.search_people_item_name)
         TextView name;
         @BindView(R.id.search_people_star)

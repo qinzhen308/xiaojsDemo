@@ -32,6 +32,7 @@ import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
 
+import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.TokenPair;
 import cn.xiaojs.xma.model.material.UploadParam;
@@ -159,8 +160,6 @@ public interface XiaojsService {
                                         @Query("page") int page,
                                         @Query("limit") int limit);
 
-
-
     //Put Lesson On Shelves
     @POST("/v1/ctl/lessons/{lesson}/onshelves")
     Call<ResponseBody> putLessonOnShelves(@Path("lesson") String lesson);
@@ -210,6 +209,21 @@ public interface XiaojsService {
     Call<ResponseBody> toggleAccessLesson(@Path("lesson") String lesson,
                                           @Body AccessLesson accessLesson);
 
+
+
+    //Get Classes
+    @GET("/v1/ctl/classes/{criteria}/{pagination}")
+    Call<GetLessonsResponse> getClasses(@Path("criteria") String criteria,
+                                        @Path("pagination") String pagination);
+
+    //Get Enrolled Classes
+    @GET("/v1/ctl/classes/enrolled/{criteria}/{pagination}")
+    Call<GELessonsResponse> getEnrolledClasses(@Path("criteria") String criteria,
+                                               @Path("pagination") String pagination);
+
+    //Get Live Classes
+    @GET("/v1/ctl/live")
+    Call<List<LiveClass>> getLiveClasses();
 
 
 

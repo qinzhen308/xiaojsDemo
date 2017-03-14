@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class SearchActivity extends BaseActivity {
     EditText mInput;
 
     @BindView(R.id.search_organization_head)
-    RoundedImageView mOrganizationHead;
+    ImageView mOrganizationHead;
     @BindView(R.id.search_organization_name)
     TextView mOrganizationName;
     @BindView(R.id.search_organization_level)
