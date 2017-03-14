@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TalkItem {
+public class TalkBean {
 
     public String from;
     public String to;

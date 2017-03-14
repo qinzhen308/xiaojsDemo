@@ -32,5 +32,37 @@ public class TalkItem {
     public static class TalkContent{
         public String text;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+
+        long mill = ((TalkItem)obj).time != null ? ((TalkItem)obj).time.getTime() : 0;
+        long thisMill = time != null ? time.getTime() : 0;
+
+        if (mill != thisMill) {
+            return false;
+        }
+
+        String fromAcc = ((TalkItem)obj).from != null ? ((TalkItem)obj).from.accountId : "";
+        String thisFromAcc = from != null ? from.accountId : "";
+
+        if (fromAcc != null && !fromAcc.equals(thisFromAcc)) {
+            return false;
+        }
+
+        String txt = ((TalkItem)obj).body != null ? ((TalkItem)obj).body.text : "";
+        String thisTxt = body != null ? body.text : "";
+
+        return mill == thisMill
+                && (fromAcc != null && fromAcc.equals(thisFromAcc))
+                && (txt != null && txt.equals(thisTxt));
+    }
 }
 

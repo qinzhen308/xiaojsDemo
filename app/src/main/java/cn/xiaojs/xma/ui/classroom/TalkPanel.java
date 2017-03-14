@@ -46,7 +46,8 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
-import cn.xiaojs.xma.ui.classroom.bean.TalkItem;
+import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.bean.TalkBean;
 import cn.xiaojs.xma.ui.classroom.bean.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
@@ -54,7 +55,6 @@ import cn.xiaojs.xma.ui.classroom.talk.ContactBookAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.OnPortraitClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.TalkSimpleContactAdapter;
-import io.socket.client.Socket;
 
 public class TalkPanel extends Panel implements View.OnClickListener, OnPortraitClickListener {
     public final static int MODE_CONTACT = 0;
@@ -508,7 +508,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
      * 更新talk消息数据
      * @param updateMsgListView 是否更新列表
      */
-    private void updateTalkMsgData(int criteria, cn.xiaojs.xma.model.live.TalkItem talkItem, boolean updateMsgListView) {
+    private void updateTalkMsgData(int criteria, TalkItem talkItem, boolean updateMsgListView) {
         switch (criteria) {
             case MULTI_TALK:
                 if (mMultiTalkAdapter != null) {
@@ -654,6 +654,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         public void call(final Object... args) {
             if (mContext instanceof Activity && args != null && args.length > 0) {
                 Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
+                //TODO fix同一条消息多次回调?
                 handleReceivedMsg(args);
             }
         }
@@ -668,12 +669,12 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         }
 
         try {
-            TalkItem receiveBean = ClassroomBusiness.parseSocketBean(args[0], TalkItem.class);
+            TalkBean receiveBean = ClassroomBusiness.parseSocketBean(args[0], TalkBean.class);
             if (receiveBean == null) {
                 return;
             }
 
-            cn.xiaojs.xma.model.live.TalkItem talkItem = new cn.xiaojs.xma.model.live.TalkItem();
+            TalkItem talkItem = new TalkItem();
             talkItem.time = new Date(receiveBean.time);
             talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
             talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
@@ -717,8 +718,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         updateTalkMsgData(mTalkCriteria, talkItem, true);
 
         //send socket info
-        TalkItem talkBean = new TalkItem();
-        talkBean.body = new TalkItem.TalkContent();
+        TalkBean talkBean = new TalkBean();
+        talkBean.body = new TalkBean.TalkContent();
         talkBean.body.text = text;
         talkBean.time = sendTime;
         switch (mTalkCriteria) {

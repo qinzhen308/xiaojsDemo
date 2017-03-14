@@ -472,6 +472,14 @@ public abstract class AbsChatAdapter<B, H extends BaseHolder> extends BaseAdapte
         mListView.getRefreshableView().setSelection(mBeanList.size());
     }
 
+    public boolean contains(B b) {
+        if (mBeanList != null) {
+            return mBeanList.contains(b);
+        }
+
+        return false;
+    }
+
     private void adjustScroll(int appendSize) {
         if (appendSize <= 0 || mFirstVisiblePosition < 0) {
             return;

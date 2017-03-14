@@ -63,8 +63,11 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         mLiveCriteria = liveCriteria;
     }
 
-    public void addData(TalkItem talkItem) {
-
+    @Override
+    public void add(TalkItem talkItem) {
+        if (!contains(talkItem)) {
+            super.add(talkItem);
+        }
     }
 
     @Override
