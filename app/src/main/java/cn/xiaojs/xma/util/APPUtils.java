@@ -30,16 +30,22 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
+import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.meituan.android.walle.WalleChannelReader;
 
 import java.io.File;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LoginDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.ui.account.LoginActivity;
 
 /**
@@ -183,7 +189,22 @@ public class APPUtils {
 
     public static void lanuchLogin(Context context) {
 
+        Intent i = new Intent(context, LoginActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
+    }
+
+    public static void exitAndLogin(Context context,@StringRes int exitTips) {
+        LoginDataManager.requestLogoutByAPI(context, null);
+
+        //总是退出成功
+        Toast.makeText(context, exitTips, Toast.LENGTH_SHORT).show();
+        XiaojsConfig.mLoginUser = null;
         AccountDataManager.clearUserInfo(context);
+
+        //jpush logout
+        JpushUtil.logoutJpush();
+
         //jump login page
         Intent i = new Intent(context, LoginActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

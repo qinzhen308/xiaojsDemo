@@ -23,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
@@ -32,7 +33,7 @@ public class CommonDialog extends Dialog {
 
     private TextView mTitle;
     private TextView mDesc;
-    private FrameLayout mNormal;
+    private RelativeLayout mNormal;
     private FrameLayout mContainer;
     private Button mLeftButton;
     private Button mRightButton;
@@ -64,7 +65,7 @@ public class CommonDialog extends Dialog {
         mTitle = (TextView) findViewById(R.id.common_dialog_title);
         mDesc = (TextView) findViewById(R.id.common_dialog_desc);
         mContainer = (FrameLayout) findViewById(R.id.common_dialog_container);
-        mNormal = (FrameLayout) findViewById(R.id.common_dialog_normal_wrapper);
+        mNormal = (RelativeLayout) findViewById(R.id.common_dialog_normal_wrapper);
         mLeftButton = (Button) findViewById(R.id.left_btn);
         mRightButton = (Button) findViewById(R.id.right_btn);
         WindowManager.LayoutParams params = dialogWindow.getAttributes();

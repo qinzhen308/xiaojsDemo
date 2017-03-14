@@ -19,6 +19,7 @@ import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.util.APPUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -286,8 +287,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
     private boolean needToLogin(String errorCode) {
         if (Errors.needLogin(errorCode)){
-            Toast.makeText(context, R.string.relogin, Toast.LENGTH_LONG).show();
-            APPUtils.lanuchLogin(context);
+            APPUtils.exitAndLogin(context,R.string.relogin);
             return true;
         }
         return false;
