@@ -36,7 +36,7 @@ public class CourseWarePanel extends Panel {
     }
 
     @Override
-    public void show(ViewGroup.LayoutParams params, DrawerLayout drawerLayout, ViewGroup container) {
+    public void show(ViewGroup.LayoutParams params, DrawerLayout drawerLayout, ViewGroup container, boolean onlyInit) {
         if (mContentView == null) {
             mContentView = container.findViewById(R.id.course_ware);
         }

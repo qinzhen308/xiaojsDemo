@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
@@ -71,13 +72,17 @@ public class NotifyMsgAdapter extends AbsSwipeAdapter<TalkItem, NotifyMsgAdapter
         LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
             @Override
             public void onSuccess(CollectionPage<TalkItem> object) {
-                Toast.makeText(mContext, "获通知取消息成功", Toast.LENGTH_SHORT).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "获通知取消息成功", Toast.LENGTH_SHORT).show();
+                }
                 NotifyMsgAdapter.this.onSuccess(object.objectsOfPage);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                Toast.makeText(mContext, "获通知取消息失败", Toast.LENGTH_SHORT).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "获通知取消息失败", Toast.LENGTH_SHORT).show();
+                }
                 NotifyMsgAdapter.this.onFailure(errorCode, errorMessage);
             }
         });

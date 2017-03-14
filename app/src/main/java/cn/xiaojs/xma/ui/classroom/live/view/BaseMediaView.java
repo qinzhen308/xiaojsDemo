@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.widget.LoadingView;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -115,7 +116,9 @@ public abstract class BaseMediaView extends FrameLayout {
 
         @Override
         public void onLongPress(MotionEvent e) {
-            Toast.makeText(getContext(), "onLongPress", Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(getContext(), "onLongPress", Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override

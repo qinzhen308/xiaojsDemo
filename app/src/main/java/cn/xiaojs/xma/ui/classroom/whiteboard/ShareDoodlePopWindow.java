@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -98,13 +99,17 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
                 }
                 mListView.setAdapter(mContactAdapter);
                 mEmptyView.setVisibility(attendees == null || attendees.isEmpty() ? View.VISIBLE : View.GONE);
-                Toast.makeText(mContext, "获取好友列表成功", Toast.LENGTH_SHORT).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "获取好友列表成功", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 mEmptyView.setVisibility(View.VISIBLE);
-                Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

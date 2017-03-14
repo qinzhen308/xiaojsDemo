@@ -53,6 +53,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ContactBookAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.OnPortraitClickListener;
+import cn.xiaojs.xma.ui.classroom.talk.OnTalkMsgListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.TalkSimpleContactAdapter;
 
@@ -128,6 +129,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private LiveCollection<Attendee> mLiveCollection;
     private LiveCollection<Attendee> mSearchLiveCollection;
     private PanelCallback mCallback;
+    private OnTalkMsgListener mOnTalkMsgListener;
     private OnPanelItemClick mOnPanelItemClick;
     private final Object LOCK = new Object();
     private String mTicket;
@@ -155,6 +157,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
     public TalkPanel setPanelItemClick(OnPanelItemClick itemClick) {
         mOnPanelItemClick = itemClick;
+        return this;
+    }
+
+    public TalkPanel setTalkMsgListener(OnTalkMsgListener talkMsgListener) {
+        mOnTalkMsgListener = talkMsgListener;
         return this;
     }
 
@@ -405,13 +412,17 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                     mLiveCollection = liveCollection;
                     mContactBookAdapter.setData(mLiveCollection);
                     setEmptyContactView();
-                    Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
+                    if (XiaojsConfig.DEBUG) {
+                        Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
                     setEmptyContactView();
-                    Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                    if (XiaojsConfig.DEBUG) {
+                        Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -450,14 +461,18 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
                 @Override
                 public void onSuccess(LiveCollection<Attendee> liveCollection) {
-                    Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
+                    if (XiaojsConfig.DEBUG) {
+                        Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
+                    }
                     mLiveCollection = liveCollection;
                     mTalkContactAdapter.setData(liveCollection);
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
-                    Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                    if (XiaojsConfig.DEBUG) {
+                        Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -653,7 +668,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         @Override
         public void call(final Object... args) {
             if (mContext instanceof Activity && args != null && args.length > 0) {
-                Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
+                }
                 //TODO fix同一条消息多次回调?
                 handleReceivedMsg(args);
             }
@@ -679,6 +696,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
             talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
             talkItem.body.text = receiveBean.body.text;
+            talkItem.body.contentType = receiveBean.body.contentType;
             talkItem.from.accountId = receiveBean.from;
             talkItem.from.name = getNameByAccountId(receiveBean.from);
 
@@ -688,12 +706,22 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             } catch (NumberFormatException e) {
             }
             updateTalkMsgData(criteria, talkItem, mTalkCriteria == criteria);
+            if (mOnTalkMsgListener != null) {
+                mOnTalkMsgListener.onTalkMsgReceived(talkItem);
+            }
         } catch (Exception e) {
 
         }
     }
 
+    /**
+     * 默认是发送文本
+     */
     private void sendMsg() {
+        sendMsg(Communications.ContentType.TEXT);
+    }
+
+    private void sendMsg(int type) {
         if (mUser == Constants.User.STUDENT && !mDiscussionSwitcher.isChecked()) {
             //R.string.close_cr_discussion
             return;
@@ -721,6 +749,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         TalkBean talkBean = new TalkBean();
         talkBean.body = new TalkBean.TalkContent();
         talkBean.body.text = text;
+        talkBean.body.contentType = type;
         talkBean.time = sendTime;
         switch (mTalkCriteria) {
             case MULTI_TALK:
