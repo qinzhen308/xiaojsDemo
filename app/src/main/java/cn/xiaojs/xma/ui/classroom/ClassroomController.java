@@ -21,7 +21,6 @@ import android.view.View;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamUseListener;
 import cn.xiaojs.xma.ui.classroom.live.StudentVideoController;
 import cn.xiaojs.xma.ui.classroom.live.TeacherVideoController;
@@ -185,8 +184,31 @@ public class ClassroomController {
         mVideoController.playStream(url);
     }
 
+    public boolean needStreamRePublishing () {
+        return mVideoController.needStreamRePublishing();
+    }
+
+    public boolean needStreamRePlaying () {
+        return mVideoController.needStreamRePlaying();
+    }
 
     public boolean hasStreamUsing() {
         return mVideoController.hasStreamUsing();
+    }
+
+    public boolean hasStreamPlaying() {
+        return mVideoController.hasStreamPlaying();
+    }
+
+    public boolean hasStreamPublish() {
+        return mVideoController.hasStreamPublishing();
+    }
+
+    public void playStream() {
+        mVideoController.playStream();
+    }
+
+    public void publishStream() {
+        mVideoController.publishStream();
     }
 }
