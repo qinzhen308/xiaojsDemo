@@ -18,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.talk.InviteFriendAdapter;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 /*  =======================================================================================
@@ -190,7 +189,12 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
             Attendee bean = mAttendeeList.get(position);
             holder.checkbox.setSelected(mChoiceList.contains(String.valueOf(position)));
             holder.position = position;
-            Glide.with(mContext).load(bean.avatar).error(R.drawable.default_avatar).into(holder.portrait);
+            Glide.with(mContext)
+                    .load(bean.avatar)
+                    .transform(new CircleTransform(mContext))
+                    .placeholder(R.drawable.default_avatar)
+                    .error(R.drawable.default_avatar)
+                    .into(holder.portrait);
             holder.name.setText(bean.name);
         }
 

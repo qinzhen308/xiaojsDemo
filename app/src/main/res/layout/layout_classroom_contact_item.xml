@@ -41,13 +41,11 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_24px"
                 android:lines="1"
-                android:ellipsize="end"
-                android:text="李阳阳"/>
+                android:ellipsize="end"/>
 
         <TextView
                 android:id="@+id/label"
                 android:textColor="@color/font_orange"
-                android:text="老师"
                 android:lines="1"
                 android:ellipsize="end"
                 android:textSize="@dimen/font_20px"

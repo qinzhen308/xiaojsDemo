@@ -6,14 +6,11 @@
         android:layout_height="wrap_content">
 
     <cn.xiaojs.xma.ui.widget.MessageImageView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:roundimg="http://schemas.android.com/apk/res-auto"
             android:id="@+id/portrait"
             android:layout_gravity="center"
             android:layout_width="@dimen/px86"
             android:layout_height="@dimen/px86"
             roundimg:oval="true"
-            roundimg:isCircle="true"
             roundimg:border_color="@color/white"
             android:paddingLeft="@dimen/px15"
             android:paddingRight="@dimen/px15"

@@ -33,6 +33,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.util.DeviceUtil;
 
@@ -128,7 +129,9 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         String portraitUrl = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(attendee.accountId, size);
         Glide.with(mContext)
                 .load(portraitUrl)
+                .transform(new CircleTransform(mContext))
                 .signature(new StringSignature(DeviceUtil.getSignature()))
+                .placeholder(R.drawable.default_avatar)
                 .error(R.drawable.default_avatar)
                 .into(holder.portrait);
         holder.name.setText(attendee.name);
