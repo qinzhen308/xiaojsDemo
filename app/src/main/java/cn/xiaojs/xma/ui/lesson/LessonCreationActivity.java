@@ -399,7 +399,7 @@ public class LessonCreationActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
+                /*if (s.length() > 0) {
                     int count = Integer.parseInt(s.toString());
 
                     if (count > DEFAULT_SUT_COUNT && mStuCountTipsFlag) {
@@ -421,7 +421,7 @@ public class LessonCreationActivity extends BaseActivity {
                 } else {
                     mTeachFormTv.setText(R.string.please_select);
                     mTeachFormTv.setTextColor(mGrayFont);
-                }
+                }*/
             }
         });
 
@@ -604,10 +604,10 @@ public class LessonCreationActivity extends BaseActivity {
                 return false;
             }
 
-            if (selectTip.equals(mTeachFormTv.getText().toString())) {
+            /*if (selectTip.equals(mTeachFormTv.getText().toString())) {
                 Toast.makeText(mContext, R.string.teach_form_empty, Toast.LENGTH_SHORT).show();
                 return false;
-            }
+            }*/
 
             String limitPeople = mLessonStuCount.getText().toString().trim();
             if (mEnrollSwitcher.isChecked() && TextUtils.isEmpty(limitPeople)) {
