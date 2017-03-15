@@ -4,30 +4,21 @@ package cn.xiaojs.xma.data;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.widget.Toast;
 
-import cn.jpush.android.api.TagAliasCallback;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.db.ContactDao;
 import cn.xiaojs.xma.data.loader.DataLoder;
-import cn.xiaojs.xma.data.loader.SyncService;
 import cn.xiaojs.xma.data.preference.DataPref;
-import cn.xiaojs.xma.model.AliasTags;
-import cn.xiaojs.xma.model.Upgrade;
-import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.JpushUtil;
-import cn.xiaojs.xma.util.SecurityUtil;
-import okhttp3.ResponseBody;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
@@ -36,11 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -396,6 +384,7 @@ public class DataManager {
 
         private Context context;
         private Map<Long, ContactGroup> groupMap;
+        private Set<String> contactIds;
         //private ArrayList<ContactGroup> contactGroups;
 
         private MemCache(Context context) {

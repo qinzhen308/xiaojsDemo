@@ -55,6 +55,7 @@ import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.ExpandGlide;
 import cn.xiaojs.xma.util.FastBlur;
+import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -330,7 +331,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only, R.id.person_home_message,
+    @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only, R.id.person_home_message_btn,
             R.id.person_home_query, R.id.scroll_tab_right_view})
     public void onClick(View view) {
 
@@ -338,12 +339,13 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             case R.id.scroll_tab_left_image:
                 finish();
                 break;
+            case R.id.person_home_message_btn:
             case R.id.person_home_message_only://发消息
                 sendMessage();
                 break;
-            case R.id.person_home_message:
-                sendMessage();
-                break;
+//            case R.id.person_home_message:
+//                sendMessage();
+//                break;
             case R.id.person_home_query://提问
 
                 break;
@@ -355,37 +357,37 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
     private void sendMessage() {
         if (mBean != null) {
-            if (mBean.isFollowed) {//已关注跳转到聊天界面
-                final Intent intent = new Intent(this, ChatActivity.class);
-                intent.putExtra(ChatActivity.TARGET_ID, "1234567");
-                intent.putExtra(ChatActivity.TARGET_APP_KEY, "e87cffb332432eec3c0807ba");
-                intent.putExtra(ChatActivity.ACCOUNT_ID, mAccount);
-                startActivity(intent);
-            } else {//未关注先提示去关注
-                final CommonDialog dialog = new CommonDialog(this);
-                if (mBean.basic == null){
-                    mBean.basic = new cn.xiaojs.xma.model.account.Account.Basic();
-                    mBean.basic.setSex("true");
-                }
-                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.profile.sex),StringUtil.getTa(mBean.profile.sex)));
-                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.profile.sex)));
-                dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        dialog.dismiss();
-                        //follow();
-                        showFollowDialog();
-                    }
-                });
+            //if (mBean.isFollowed) {//已关注跳转到聊天界面
 
-                dialog.show();
-            }
+                if (mBean.profile != null) {
+                    JpushUtil.launchChat(this, mAccount, mBean.profile.name);
+                }
+//            } else {//未关注先提示去关注
+//                final CommonDialog dialog = new CommonDialog(this);
+//                if (mBean.basic == null){
+//                    mBean.basic = new cn.xiaojs.xma.model.account.Account.Basic();
+//                    mBean.basic.setSex("true");
+//                }
+//                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.profile.sex),StringUtil.getTa(mBean.profile.sex)));
+//                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.profile.sex)));
+//                dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+//                    @Override
+//                    public void onClick() {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+//                    @Override
+//                    public void onClick() {
+//                        dialog.dismiss();
+//                        //follow();
+//                        showFollowDialog();
+//                    }
+//                });
+//
+//                dialog.show();
+//            }
+            //}
         }
     }
 

@@ -44,6 +44,7 @@ import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
+import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -113,7 +114,7 @@ public class LessonHomeActivity extends BaseActivity {
         loadData();
     }
 
-    @OnClick({R.id.back_btn, R.id.favourite_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn})
+    @OnClick({R.id.back_btn, R.id.favourite_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.consulting})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
@@ -139,6 +140,15 @@ public class LessonHomeActivity extends BaseActivity {
                 break;
             case R.id.apply_btn:
                 enterConfirmPayPage();
+                break;
+            case R.id.consulting:
+
+                if (mLessonDetail == null) return;
+
+                Teacher tea = mLessonDetail.getTeacher();
+                if (tea == null || tea.getBasic() == null) return;
+
+                JpushUtil.launchChat(LessonHomeActivity.this, tea._id,tea.getBasic().getName());
                 break;
 
         }
