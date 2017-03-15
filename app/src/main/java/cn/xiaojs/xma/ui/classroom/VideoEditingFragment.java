@@ -2,17 +2,26 @@ package cn.xiaojs.xma.ui.classroom;
 
 import android.animation.Animator;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.CollaManager;
+import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.ShareDoodlePopWindow;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
+import cn.xiaojs.xma.util.CacheUtil;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -42,6 +51,7 @@ public class VideoEditingFragment extends BaseFragment {
     private Constants.User mUser = Constants.User.TEACHER;
     private boolean mAnimating;
     private PanelAnimListener mPanelAnimListener;
+    private String mTicket;
 
     @Override
     protected View getContentView() {
@@ -55,6 +65,9 @@ public class VideoEditingFragment extends BaseFragment {
         mBoardController.onGeometryChange(GeometryShape.RECTANGLE);
         mBoardController.onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
         mBoardController.showWhiteboardLayout(mBitmap);
+        if (mContext instanceof ClassroomActivity) {
+            mTicket = ((ClassroomActivity)mContext).getTicket();
+        }
     }
 
     @OnClick({R.id.wb_toolbar_btn, R.id.back_in_doodle, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,
@@ -80,6 +93,7 @@ public class VideoEditingFragment extends BaseFragment {
                 selectShareContact(v);
                 break;
             case R.id.save_doodle:
+                saveEditedBmpToLibrary(mBitmap);
                 break;
             case R.id.wb_toolbar_btn:
                 if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
@@ -103,11 +117,7 @@ public class VideoEditingFragment extends BaseFragment {
      */
     private void selectShareContact(View anchor) {
         if (mSharePopWindow == null) {
-            String ticket = null;
-            if (mContext instanceof ClassroomActivity) {
-                ticket = ((ClassroomActivity)mContext).getTicket();
-            }
-            mSharePopWindow = new ShareDoodlePopWindow(mContext, ticket);
+            mSharePopWindow = new ShareDoodlePopWindow(mContext, mTicket);
         }
 
         int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);
@@ -201,5 +211,53 @@ public class VideoEditingFragment extends BaseFragment {
         public void onAnimationRepeat(Animator animation) {
 
         }
+    }
+
+    private void saveEditedBmpToLibrary(final Bitmap bitmap) {
+        if (bitmap == null) {
+            return;
+        }
+
+        final String name = "edit_video";
+        showProgress(true);
+
+        //TODO 待上传资料库不需要从文件上传时，再做优化
+        new AsyncTask<Integer, Integer, String>() {
+
+            @Override
+            protected String doInBackground(Integer... params) {
+                return CacheUtil.saveWhiteboard(bitmap, name);
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                if (!TextUtils.isEmpty(result)) {
+                    File file = new File(result);
+                    CollaManager manager = new CollaManager();
+                    //FIXME 如果没有ticket或者ticket不合法，接口会返回参数错误
+                    manager.addToLibrary(mContext, file.getPath(), file.getName(), mTicket, new QiniuService() {
+                        @Override
+                        public void uploadSuccess(String key, UploadReponse reponse) {
+                            cancelProgress();
+                            Toast.makeText(mContext, R.string.save_edit_video_succ, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void uploadProgress(String key, double percent) {
+
+                        }
+
+                        @Override
+                        public void uploadFailure(boolean cancel) {
+                            cancelProgress();
+                            Toast.makeText(mContext, R.string.save_edit_video_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    cancelProgress();
+                    Toast.makeText(mContext, R.string.save_edit_video_fail, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute(0);
     }
 }

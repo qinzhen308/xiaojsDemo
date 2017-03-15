@@ -16,7 +16,7 @@
                 android:padding="@dimen/px16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_multi_no_checked"/>
+                android:src="@drawable/ic_single_checked"/>
 
         <TextView
                 android:layout_width="wrap_content"

@@ -50,19 +50,14 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     private Context mContext;
     private TextView mEmptyView;
     private ListView mListView;
-    private ImageView mCheckAllBtn;
+    private ImageView mCheckToDiscussionBtn;
     private int mCheckMode = MODE_UN_CHECK_ALL;
     private String mTicket;
     private ContactAdapter mContactAdapter;
 
-    public ShareDoodlePopWindow(Context context) {
-        this(context, null);
-    }
-
     public ShareDoodlePopWindow(Context context, String ticket) {
         mContext = context;
         mTicket = ticket;
-
         init();
     }
 
@@ -75,11 +70,14 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
         View v = LayoutInflater.from(mContext).inflate(R.layout.layout_share_contact_book, null);
         setContentView(v);
 
-        mCheckAllBtn = (ImageView) v.findViewById(R.id.check_to_discussion);
+        mCheckToDiscussionBtn = (ImageView) v.findViewById(R.id.check_to_discussion);
+        mCheckToDiscussionBtn.setSelected(true);
+        mCheckToDiscussionBtn.setImageResource(R.drawable.single_check_selector);
         mEmptyView = (TextView) v.findViewById(R.id.empty_view);
         mListView = (ListView) v.findViewById(R.id.contact_list);
 
-        mCheckAllBtn.setOnClickListener(this);
+        mCheckToDiscussionBtn.setOnClickListener(this);
+        v.findViewById(R.id.confirm_share).setOnClickListener(this);
     }
 
     @Override
@@ -126,16 +124,25 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
                 if (mContactAdapter != null) {
                     /*if (mCheckMode == MODE_UN_CHECK_ALL) {
                         mCheckMode = MODE_CHECK_ALL;
-                        mCheckAllBtn.setImageResource(R.drawable.ic_multi_checked);
+                        mCheckToDiscussionBtn.setImageResource(R.drawable.ic_multi_checked);
                         mContactAdapter.checkAll();
                     } else {
                         mCheckMode = MODE_UN_CHECK_ALL;
                         mContactAdapter.unCheckAll();
-                        mCheckAllBtn.setImageResource(R.drawable.ic_multi_no_checked);
-                        mCheckAllBtn.setSelected(false);
+                        mCheckToDiscussionBtn.setImageResource(R.drawable.ic_multi_no_checked);
+                        mCheckToDiscussionBtn.setSelected(false);
                     }*/
-
+                    mCheckToDiscussionBtn.setSelected(true);
                     mContactAdapter.unCheckAll();
+                }
+                break;
+            case R.id.confirm_share:
+                if (mCheckToDiscussionBtn.isSelected()) {
+                    Toast.makeText(mContext, "发送到交流群", Toast.LENGTH_SHORT).show();
+                } else if (mContactAdapter != null && mContactAdapter.getCheckedAttendee() != null){
+                    Toast.makeText(mContext, "具体的人", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "请选择需要发送的人", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -187,10 +194,10 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
             Holder holder = new Holder();
             holder.checkbox = (ImageView) v.findViewById(R.id.checkbox);
             holder.checkbox.setImageResource(R.drawable.single_check_selector);
-            holder.checkbox.setOnClickListener(mClickListener);
             holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
             holder.name = (TextView) v.findViewById(R.id.name);
             holder.name.setTextColor(mContext.getResources().getColor(R.color.font_white));
+            v.setOnClickListener(mClickListener);
             v.setTag(holder);
             return v;
         }
@@ -236,9 +243,28 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
             mClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mCheckToDiscussionBtn.setSelected(false);
                     unCheckAll();
+                    Holder holder = (Holder)v.getTag();
+                    mChoiceList.add(String.valueOf(holder.position));
+                    notifyDataSetChanged();
                 }
             };
         }
+
+        public Attendee getCheckedAttendee() {
+            if (mChoiceList == null || mChoiceList.isEmpty()) {
+                return null;
+            }
+
+            try {
+                return mAttendeeList.get(Integer.parseInt(mChoiceList.get(0)));
+            } catch (Exception e) {
+
+            }
+
+            return null;
+        }
     }
+
 }
