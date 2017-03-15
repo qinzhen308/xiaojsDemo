@@ -150,9 +150,9 @@ public interface XiaojsService {
     Call<CLResponse> createLiveLesson(@Body CreateLesson lesson);
 
     //Get Lessons
-    @GET("/v1/ctl/lessons/{criteria}/{pagination}")
-    Call<GetLessonsResponse> getLessons(@Path("criteria") String criteria,
-                                        @Path("pagination") String pagination);
+//    @GET("/v1/ctl/lessons/{criteria}/{pagination}")
+//    Call<GetLessonsResponse> getLessons(@Path("criteria") String criteria,
+//                                        @Path("pagination") String pagination);
 
     //Get lessons (Taught by user)
     @GET("/v1/ctl/taught/lessons/{userId}")
@@ -169,10 +169,10 @@ public interface XiaojsService {
     Call<ResponseBody> cancelLessonOnShelves(@Path("lesson") String lesson);
 
     //Get Enrolled Lessons
-    @GET("/v1/ctl/lessons/enrolled/{criteria}/{pagination}")
-    Call<GELessonsResponse> getEnrolledLessons(
-                                               @Path("criteria") String criteria,
-                                               @Path("pagination") String pagination);
+//    @GET("/v1/ctl/lessons/enrolled/{criteria}/{pagination}")
+//    Call<GELessonsResponse> getEnrolledLessons(
+//                                               @Path("criteria") String criteria,
+//                                               @Path("pagination") String pagination);
 
     //Get Lesson Data
     @GET("/v1/ctl/lessons/{lesson}")

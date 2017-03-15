@@ -16,9 +16,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-            <cn.xiaojs.xma.ui.widget.RoundedImageView
+            <ImageView
                     android:id="@+id/image1"
-                    app:oval="true"
                     android:scaleType="fitXY"
                     android:layout_centerInParent="true"
                     android:layout_alignParentLeft="true"
@@ -38,7 +37,6 @@
                         android:id="@+id/name1"
                         android:textColor="@color/font_black"
                         android:textSize="@dimen/font_30px"
-                        android:text="dafs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -46,7 +44,6 @@
                         android:id="@+id/desc1"
                         android:textColor="@color/common_text"
                         android:textSize="@dimen/font_26px"
-                        android:text="dafs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
             </LinearLayout>

@@ -3,6 +3,7 @@ package cn.xiaojs.xma.model.ctl;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import cn.xiaojs.xma.model.Action;
@@ -13,12 +14,12 @@ import cn.xiaojs.xma.model.Action;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AssignTask {
+public class AssignTask implements Serializable {
     public Assignment[] assignments;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Assignment{
+    public static class Assignment implements Serializable {
 
         public String hp;
         public Date assignedOn;

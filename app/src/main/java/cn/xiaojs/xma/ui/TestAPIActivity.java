@@ -735,18 +735,18 @@ public class TestAPIActivity extends Activity {
         pagination.setMaxNumOfObjectsPerPage(20);
 
 
-        LessonDataManager.requestGetLessons(context, criteria, pagination, new APIServiceCallback<GetLessonsResponse>() {
-            @Override
-            public void onSuccess(GetLessonsResponse object) {
-                Logger.d("onSuccess-----------");
-            }
-
-            @Override
-            public void onFailure(String errorCode,String errorMessage) {
-
-                Logger.d("onFailure-----------");
-            }
-        });
+//        LessonDataManager.requestGetLessons(context, criteria, pagination, new APIServiceCallback<GetLessonsResponse>() {
+//            @Override
+//            public void onSuccess(GetLessonsResponse object) {
+//                Logger.d("onSuccess-----------");
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode,String errorMessage) {
+//
+//                Logger.d("onFailure-----------");
+//            }
+//        });
     }
 
 

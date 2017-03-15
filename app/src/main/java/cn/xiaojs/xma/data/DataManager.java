@@ -55,6 +55,7 @@ public class DataManager {
     public static final int TYPE_CONTACT = 1;
 
     public static final String EXTRA_CONTACT = "econtact";
+    public static final String EXTRA_GROUP = "egroup";
 
     private static MemCache getCache(Context context) {
         return MemCache.getDataCache(context);

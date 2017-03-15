@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
 
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.Fee;
 import cn.xiaojs.xma.model.ctl.RoomData;
 import cn.xiaojs.xma.model.ctl.Statistic;
@@ -18,7 +19,7 @@ import cn.xiaojs.xma.model.ctl.Statistic;
 public class EnrolledLesson implements Serializable{
 
     private String id;
-    //private String createdBy;
+    private Account createdBy;
     private String title;
     private CSubject subject;
     private int mode;
@@ -35,6 +36,14 @@ public class EnrolledLesson implements Serializable{
     private String classType;
     private String classId;
     private String reason;
+
+    public Account getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Account createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public Teacher[] getAssistants() {
         return assistants;

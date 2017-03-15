@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -270,10 +271,11 @@ public class ContactActivity extends BaseActivity {
 
         final EditText editText = new EditText(this);
         editText.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                getResources().getDimensionPixelSize(R.dimen.px100)));
+                getResources().getDimensionPixelSize(R.dimen.px80)));
         editText.setHint(R.string.group_name);
         editText.setGravity(Gravity.CENTER_VERTICAL);
         editText.setPadding(10, 0, 10, 0);
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
         editText.setTextColor(getResources().getColor(R.color.common_text));
         editText.setBackgroundResource(R.drawable.common_edittext_bg);
         //editText.requestFocus();

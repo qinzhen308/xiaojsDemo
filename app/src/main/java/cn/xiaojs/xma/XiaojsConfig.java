@@ -20,6 +20,11 @@ public class XiaojsConfig {
     //客户端版本号位数
     public static final int VERSION_BITS = 4;
 
+    //外网域名
+    public static String XAS_BASE_URL = "http://xas.xiaojs.cn";
+    public static String XLS_BASE_URL = "http://xls.xiaojs.cn";
+
+
     //BASE_URL
     public static String BASE_URL = "http://192.168.100.3";
     //Xiaojs rest api 中接口公共URL

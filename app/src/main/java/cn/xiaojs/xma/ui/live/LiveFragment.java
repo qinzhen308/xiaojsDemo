@@ -194,7 +194,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void getTeachLessons() {
-        LessonDataManager.requestGetLessons(mContext, mCriteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
+        LessonDataManager.getClasses(mContext, mCriteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
             @Override
             public void onSuccess(GetLessonsResponse object) {
                 Logger.d("onSuccess-----------");
@@ -213,7 +213,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void getEnrollLessons() {
-        LessonDataManager.requestGetEnrolledLessons(mContext, mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
+        LessonDataManager.getEnrolledClasses(mContext, mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
             @Override
             public void onSuccess(GELessonsResponse object) {
                 Logger.d("onSuccess-----------");

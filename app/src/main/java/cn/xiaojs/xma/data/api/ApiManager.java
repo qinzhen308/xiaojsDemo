@@ -212,14 +212,24 @@ public class ApiManager {
 
     public static String getXASUrl(Context context) {
 
-        String port = XiaojsConfig.SHOW_DEMO ? DataPref.getXASPort(context) : XiaojsConfig.SERVICE_PORT;
-        return createUrl(context,port);
+        if (XiaojsConfig.SHOW_DEMO) {
+            String port = DataPref.getXASPort(context);
+            return createUrl(context,port);
+        }
+
+        return XiaojsConfig.XAS_BASE_URL;
+
     }
 
     public static String getXLSUrl(Context context) {
 
-        String port = XiaojsConfig.SHOW_DEMO ? DataPref.getXLSPort(context) : XiaojsConfig.LIVE_PORT;
-        return createUrl(context,port);
+        if (XiaojsConfig.SHOW_DEMO) {
+            String port = DataPref.getXLSPort(context);
+            return createUrl(context,port);
+        }
+
+        return XiaojsConfig.XLS_BASE_URL;
+
     }
 
     private static String createUrl(Context context,String port) {

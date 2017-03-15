@@ -292,10 +292,9 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     @Override
     protected void doRequest() {
-        LessonDataManager.requestGetEnrolledLessons(mContext, mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
+        LessonDataManager.getEnrolledClasses(mContext, mCriteria, mPagination, new APIServiceCallback<GELessonsResponse>() {
             @Override
             public void onSuccess(GELessonsResponse object) {
-                Logger.d("onSuccess-----------");
                 if (object.getObjectsOfPage() != null && object.getObjectsOfPage().size() > 0) {
                     if (mFragment != null) {
                         mFragment.hideTop();
@@ -307,7 +306,6 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 EnrollLessonAdapter.this.onFailure(errorCode, errorMessage);
-                Logger.d("onFailure-----------");
             }
         });
 

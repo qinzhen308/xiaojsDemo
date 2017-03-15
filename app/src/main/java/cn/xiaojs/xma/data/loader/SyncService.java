@@ -7,7 +7,9 @@ import android.content.Intent;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
@@ -64,10 +66,26 @@ public class SyncService extends IntentService {
                     ArrayList<ContactGroup> contactGroups = SocialManager.getContacts(context);
                     DataManager.syncContactData(context,contactGroups);
 
-                    Map<Long, ContactGroup> map = AccountDataManager.getHomeData(context);
-                    if (contactGroups!=null && map != null) {
+
+                    HashMap<Long, String> cgMap = (HashMap<Long, String>) intent.getSerializableExtra(DataManager.EXTRA_GROUP);
+
+                    Map<Long, ContactGroup> map = new HashMap<>();
+                    if (cgMap !=null) {
+                        Set<Long> keys = cgMap.keySet();
+                        for (Long key: keys) {
+                            ContactGroup contactGroup = new ContactGroup();
+                            contactGroup.name = cgMap.get(key);
+                            contactGroup.group = key;
+                            contactGroup.collection = new ArrayList<>(0);
+                            map.put(key,contactGroup);
+                        }
+
+                    }
+                    //Map<Long, ContactGroup> map = AccountDataManager.getHomeData(context);
+                    if (contactGroups!=null && cgMap != null) {
 
                         for (ContactGroup group : contactGroups){
+
                             ContactGroup cg = map.get(group.group);
                             if (cg !=null) {
                                 cg.collection = group.collection;

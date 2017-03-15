@@ -57,25 +57,26 @@ public class LessonDataManager {
 
     }
 
-    /**
-     * 获取开的课程
-     */
-    public static void requestGetLessons(Context context,
-                                         @NonNull Criteria criteria,
-                                         @NonNull Pagination pagination,
-                                         @NonNull APIServiceCallback<GetLessonsResponse> callback) {
-
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the GetLessons request");
-            }
-            return;
-        }
-
-        LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getLessons(criteria, pagination);
-
-    }
+//
+//    /**
+//     * 获取开的课程
+//     */
+//    public static void requestGetLessons(Context context,
+//                                         @NonNull Criteria criteria,
+//                                         @NonNull Pagination pagination,
+//                                         @NonNull APIServiceCallback<GetLessonsResponse> callback) {
+//
+//        if (callback == null) {
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the api service callback is null,so cancel the GetLessons request");
+//            }
+//            return;
+//        }
+//
+//        LessonRequest lessonRequest = new LessonRequest(context, callback);
+//        lessonRequest.getLessons(criteria, pagination);
+//
+//    }
 
     /**
      * 通过用户ID获取用户授的课
@@ -143,26 +144,26 @@ public class LessonDataManager {
         lessonRequest.cancelLessonOnShelves(lesson);
     }
 
-    /**
-     * 获取已报名的课程
-     */
-    public static void requestGetEnrolledLessons(Context context,
-                                                 @NonNull Criteria criteria,
-                                                 @NonNull Pagination pagination,
-                                                 @NonNull APIServiceCallback<GELessonsResponse> callback) {
-
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the GetEnrolledLessons request");
-            }
-            return;
-        }
-
-
-        LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getEnrolledLessons(criteria, pagination);
-
-    }
+//    /**
+//     * 获取已报名的课程
+//     */
+//    public static void requestGetEnrolledLessons(Context context,
+//                                                 @NonNull Criteria criteria,
+//                                                 @NonNull Pagination pagination,
+//                                                 @NonNull APIServiceCallback<GELessonsResponse> callback) {
+//
+//        if (callback == null) {
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("the api service callback is null,so cancel the GetEnrolledLessons request");
+//            }
+//            return;
+//        }
+//
+//
+//        LessonRequest lessonRequest = new LessonRequest(context, callback);
+//        lessonRequest.getEnrolledLessons(criteria, pagination);
+//
+//    }
 
     /**
      * 获取直播课详情

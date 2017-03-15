@@ -53,25 +53,25 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_LESSONS_BY_USER, call);
     }
 
-    public void getLessons(@NonNull Criteria criteria,
-                           @NonNull Pagination pagination) {
-
-
-        String criteriaJsonstr = objectToJsonString(criteria);
-        String paginationJsonstr = objectToJsonString(pagination);
-
-        if (XiaojsConfig.DEBUG) {
-            Logger.json(criteriaJsonstr);
-            Logger.json(paginationJsonstr);
-        }
-
-
-        Call<GetLessonsResponse> call = getService().getLessons(criteriaJsonstr,
-                paginationJsonstr);
-
-        enqueueRequest(APIType.GET_LESSONS, call);
-
-    }
+//    public void getLessons(@NonNull Criteria criteria,
+//                           @NonNull Pagination pagination) {
+//
+//
+//        String criteriaJsonstr = objectToJsonString(criteria);
+//        String paginationJsonstr = objectToJsonString(pagination);
+//
+//        if (XiaojsConfig.DEBUG) {
+//            Logger.json(criteriaJsonstr);
+//            Logger.json(paginationJsonstr);
+//        }
+//
+//
+//        Call<GetLessonsResponse> call = getService().getLessons(criteriaJsonstr,
+//                paginationJsonstr);
+//
+//        enqueueRequest(APIType.GET_LESSONS, call);
+//
+//    }
 
 
     public void putLessonOnShelves(@NonNull String lesson) {
@@ -87,23 +87,23 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.CANCEL_LESSON_ON_SHELVES, call);
     }
 
-    public void getEnrolledLessons(@NonNull Criteria criteria,
-                                   @NonNull Pagination pagination) {
-
-
-        String criteriaJsonstr = objectToJsonString(criteria);
-        String paginationJsonstr = objectToJsonString(pagination);
-
-        if (XiaojsConfig.DEBUG) {
-            Logger.json(criteriaJsonstr);
-            Logger.json(paginationJsonstr);
-        }
-
-        Call<GELessonsResponse> call = getService().getEnrolledLessons(criteriaJsonstr,
-                paginationJsonstr);
-        enqueueRequest(APIType.GET_ENROLLED_LESSONS, call);
-
-    }
+//    public void getEnrolledLessons(@NonNull Criteria criteria,
+//                                   @NonNull Pagination pagination) {
+//
+//
+//        String criteriaJsonstr = objectToJsonString(criteria);
+//        String paginationJsonstr = objectToJsonString(pagination);
+//
+//        if (XiaojsConfig.DEBUG) {
+//            Logger.json(criteriaJsonstr);
+//            Logger.json(paginationJsonstr);
+//        }
+//
+//        Call<GELessonsResponse> call = getService().getEnrolledLessons(criteriaJsonstr,
+//                paginationJsonstr);
+//        enqueueRequest(APIType.GET_ENROLLED_LESSONS, call);
+//
+//    }
 
     public void getLessonData(@NonNull String lesson) {
 

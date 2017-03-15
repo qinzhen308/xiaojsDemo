@@ -3,6 +3,9 @@ package cn.xiaojs.xma.data.api;
 import android.content.Context;
 import android.content.Intent;
 
+import java.io.Serializable;
+import java.util.HashMap;
+
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SecurityManager;
@@ -96,7 +99,13 @@ public class LoginRequest extends ServiceRequest {
             AccountDataManager.saveUserInfo(getApiManager().getAppContext(), info.getUser());
             UpgradeManager.setUpgrade(getContext(),info.getUpgrade());
 
+
+            HashMap<Long, String> cgMap = info.contactGroups;
+
             Intent i = new Intent(getContext(), SyncService.class);
+            if (cgMap !=null){
+                i.putExtra(DataManager.EXTRA_GROUP, cgMap);
+            }
             DataManager.syncData(getContext(),i);
 
             //jpush

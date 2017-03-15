@@ -472,8 +472,11 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
+
+                dialog.dismiss();
+
                 showProgress(true);
-                LessonDataManager.requestToggleAccessLesson(mContext, bean.getId(), true, new APIServiceCallback() {
+                LessonDataManager.requestToggleAccessLesson(mContext, bean.getId(), false, new APIServiceCallback() {
                     @Override
                     public void onSuccess(Object object) {
                         cancelProgress();
@@ -701,10 +704,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     @Override
     protected void doRequest() {
-        LessonDataManager.requestGetLessons(mContext, mCriteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
+        LessonDataManager.getClasses(mContext, mCriteria, mPagination, new APIServiceCallback<GetLessonsResponse>() {
             @Override
             public void onSuccess(GetLessonsResponse object) {
-                Logger.d("onSuccess-----------");
                 if (object.getObjectsOfPage() != null && object.getObjectsOfPage().size() > 0) {
                     if (mFragment != null) {
                         mFragment.hideTop();
@@ -716,7 +718,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 TeachLessonAdapter.this.onFailure(errorCode, errorMessage);
-                Logger.d("onFailure-----------");
             }
         });
 

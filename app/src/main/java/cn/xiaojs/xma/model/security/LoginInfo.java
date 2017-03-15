@@ -3,6 +3,9 @@ package cn.xiaojs.xma.model.security;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.User;
@@ -17,6 +20,7 @@ public class LoginInfo extends APIEntity {
 
     public User user;
     public Upgrade upgrade;
+    public HashMap<Long, String> contactGroups;
 
     public User getUser() {
         return user;
