@@ -111,7 +111,8 @@
         <!--报名方式-->
         <LinearLayout
                 android:layout_marginTop="@dimen/px32"
-                style="@style/LiveLessonItem">
+                style="@style/LiveLessonItem"
+                android:visibility="gone">
 
             <TextView
                     style="@style/LiveLessonCreateTitle"
@@ -166,12 +167,14 @@
         </LinearLayout>
 
         <include
+                android:visibility="gone"
                 layout="@layout/layout_horizontal_line"/>
 
         <!--教学形式-->
 
         <LinearLayout
-                style="@style/LiveLessonItem">
+                style="@style/LiveLessonItem"
+                android:visibility="gone">
 
             <TextView
                     style="@style/LiveLessonCreateTitle"
@@ -190,7 +193,8 @@
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
             <include layout="@layout/layout_horizontal_line"/>
 

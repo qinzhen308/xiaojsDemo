@@ -75,7 +75,7 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
         View v = LayoutInflater.from(mContext).inflate(R.layout.layout_share_contact_book, null);
         setContentView(v);
 
-        mCheckAllBtn = (ImageView) v.findViewById(R.id.check_all);
+        mCheckAllBtn = (ImageView) v.findViewById(R.id.check_to_discussion);
         mEmptyView = (TextView) v.findViewById(R.id.empty_view);
         mListView = (ListView) v.findViewById(R.id.contact_list);
 
@@ -122,9 +122,9 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.check_all:
+            case R.id.check_to_discussion:
                 if (mContactAdapter != null) {
-                    if (mCheckMode == MODE_UN_CHECK_ALL) {
+                    /*if (mCheckMode == MODE_UN_CHECK_ALL) {
                         mCheckMode = MODE_CHECK_ALL;
                         mCheckAllBtn.setImageResource(R.drawable.ic_multi_checked);
                         mContactAdapter.checkAll();
@@ -133,7 +133,9 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
                         mContactAdapter.unCheckAll();
                         mCheckAllBtn.setImageResource(R.drawable.ic_multi_no_checked);
                         mCheckAllBtn.setSelected(false);
-                    }
+                    }*/
+
+                    mContactAdapter.unCheckAll();
                 }
                 break;
         }
@@ -145,11 +147,12 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     private class ContactAdapter extends BaseAdapter {
         private ArrayList<Attendee> mAttendeeList;
         private List<String> mChoiceList;
-
+        private View.OnClickListener mClickListener;
 
         public ContactAdapter(ArrayList<Attendee> attendees) {
             mAttendeeList = attendees;
             mChoiceList = new ArrayList<String>();
+            setOnclickListener();
         }
 
         @Override
@@ -183,6 +186,8 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
             View v = LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_invite_friend_item, null);
             Holder holder = new Holder();
             holder.checkbox = (ImageView) v.findViewById(R.id.checkbox);
+            holder.checkbox.setImageResource(R.drawable.single_check_selector);
+            holder.checkbox.setOnClickListener(mClickListener);
             holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
             holder.name = (TextView) v.findViewById(R.id.name);
             holder.name.setTextColor(mContext.getResources().getColor(R.color.font_white));
@@ -225,6 +230,15 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
                 mChoiceList.clear();
                 notifyDataSetChanged();
             }
+        }
+
+        private void setOnclickListener() {
+            mClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    unCheckAll();
+                }
+            };
         }
     }
 }
