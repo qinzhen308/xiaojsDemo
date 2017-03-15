@@ -16,6 +16,7 @@
                 android:orientation="horizontal"
                 android:background="@drawable/white_grey_selector"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content">
 
             <TextView
@@ -29,7 +30,7 @@
                     android:layout_height="wrap_content"/>
 
             <TextView
-                    android:id="@+id/home_lesson_whole"
+                    android:id="@+id/teach_lesson_all"
                     android:textSize="@dimen/font_26px"
                     android:textColor="@color/font_blue"
                     android:layout_gravity="right|center_vertical"
@@ -37,6 +38,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="right"
+                    android:visibility="gone"
                     android:layout_marginRight="@dimen/px30"
                     android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -48,7 +50,7 @@
                 android:layout_height="wrap_content">
 
             <LinearLayout
-                    android:id="@+id/teach_empty"
+                    android:id="@+id/teach_lesson_empty"
                     android:orientation="vertical"
                     android:visibility="gone"
                     android:layout_width="match_parent"
@@ -96,6 +98,7 @@
             android:id="@+id/student_wrapper"
             android:orientation="vertical"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content">
 
         <LinearLayout
@@ -103,6 +106,7 @@
                 android:orientation="horizontal"
                 android:background="@drawable/white_grey_selector"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content">
 
             <TextView
@@ -116,6 +120,7 @@
                     android:layout_height="wrap_content"/>
 
             <TextView
+                    android:id="@+id/enroll_lesson_all"
                     android:textSize="@dimen/font_26px"
                     android:textColor="@color/font_blue"
                     android:layout_gravity="right|center_vertical"
@@ -123,6 +128,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="right"
+                    android:visibility="gone"
                     android:layout_marginRight="@dimen/px30"
                     android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -134,7 +140,7 @@
                 android:layout_height="wrap_content">
 
             <TextView
-                    android:id="@+id/student_empty"
+                    android:id="@+id/enroll_lesson_empty"
                     android:textColor="@color/common_text"
                     android:textSize="@dimen/font_28px"
                     android:layout_marginTop="@dimen/px50"
@@ -153,11 +159,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
         </FrameLayout>
-
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_height="@dimen/px30"
-                android:background="@color/main_bg"/>
     </LinearLayout>
 
     <TextView
@@ -168,24 +169,19 @@
             android:textColor="@color/font_black"
             android:textSize="@dimen/font_32px"
             android:layout_width="wrap_content"
+            android:visibility="gone"
             android:layout_height="wrap_content"/>
 
     <cn.xiaojs.xma.ui.live.LiveScrollView
             android:id="@+id/home_live_brilliant"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content"/>
 
     <View
             style="@style/DividerHorizontal"
             android:layout_height="@dimen/px30"
+            android:visibility="gone"
             android:background="@color/main_bg"/>
 
-    <TextView
-            android:text="@string/lesson_of_choiceness"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginTop="@dimen/px30"
-            android:textColor="@color/font_black"
-            android:textSize="@dimen/font_32px"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 </LinearLayout>

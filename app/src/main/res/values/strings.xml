@@ -434,7 +434,7 @@
     <string name="brilliant_clazz">精彩小教室</string>
     <string name="whole">全部</string>
     <string name="teacher_no_lesson_tip">你还没有授过课，你可以点击下面的按钮创建课</string>
-    <string name="student_no_lesson_tip">你还没有报过班，你可以通过搜课或者精选课报名~</string>
+    <string name="student_no_lesson_tip">你还没有报过班，你可以通过搜课报名~</string>
 
     <!-- home tab -->
     <string name="maybe_interest">你可能感兴趣的人</string>

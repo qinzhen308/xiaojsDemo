@@ -223,7 +223,7 @@ public interface XiaojsService {
 
     //Get Live Classes
     @GET("/v1/ctl/live")
-    Call<List<LiveClass>> getLiveClasses();
+    Call<LiveClass> getLiveClasses();
 
 
 

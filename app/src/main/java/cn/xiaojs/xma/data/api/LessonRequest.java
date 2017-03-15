@@ -205,7 +205,7 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void getLiveClasses() {
-        Call<List<LiveClass>> call = getService().getLiveClasses();
+        Call<LiveClass> call = getService().getLiveClasses();
         enqueueRequest(APIType.GET_LIVE_CLASSES, call);
     }
 
