@@ -20,17 +20,19 @@
                 android:layout_height="wrap_content">
 
             <FrameLayout
+                    android:id="@+id/person_home_message_btn"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/big_submit_btn_selector">
 
                 <TextView
                         android:id="@+id/person_home_message"
                         android:layout_gravity="center"
                         android:paddingTop="@dimen/px20"
                         android:paddingBottom="@dimen/px20"
-                        android:drawableLeft="@drawable/send_message_selector"
-                        android:textColor="@color/common_text"
+                        android:drawableLeft="@drawable/ic_cr_chat"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/font_28px"
                         android:text="消息"
                         android:gravity="center"
@@ -62,6 +64,7 @@
             <FrameLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:layout_height="wrap_content">
 
                 <TextView

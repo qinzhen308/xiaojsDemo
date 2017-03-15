@@ -38,6 +38,10 @@ public class JpushUtil {
      */
     public static void launchChat(Context context, String accountID, String name) {
 
+        if (TextUtils.isEmpty(accountID)){
+            return;
+        }
+
         if (needLogin()){
             APPUtils.exitAndLogin(context, R.string.relogin);
             return;
