@@ -107,6 +107,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
             holder.operation.setItems(items);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
@@ -135,6 +136,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setBackgroundResource(R.drawable.course_state_failure_bg);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -162,6 +164,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setBackgroundResource(R.drawable.course_state_cancel_bg);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -187,6 +190,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setBackgroundResource(R.drawable.course_state_stop_bg);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -215,6 +219,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setBackgroundResource(R.drawable.course_state_examine_bg);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -274,12 +279,17 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
                 holder.state.setText(R.string.pending_for_course);
                 holder.state.setBackgroundResource(R.drawable.course_state_wait_bg);
+                holder.operation.setEnterColor(R.color.common_text);
+
             } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
                 holder.state.setText(R.string.living);
                 holder.state.setBackgroundResource(R.drawable.course_state_on_bg);
+                holder.operation.setEnterColor(R.color.font_orange);
                 holder.progressWrapper.setVisibility(View.VISIBLE);
+                holder.progress.showTimeBar(bean.getSchedule().getDuration(),bean.getClassroom().finishOn);
             } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
                 holder.state.setVisibility(View.GONE);
+                holder.operation.setEnterColor(R.color.common_text);
                 holder.end.setVisibility(View.VISIBLE);
             }
         }
@@ -287,6 +297,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         if (LessonState.PENDING_FOR_LIVE.equalsIgnoreCase(bean.getState())
                 || LessonState.DRAFT.equalsIgnoreCase(bean.getState())) {
             holder.distance.setVisibility(View.VISIBLE);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.distance.setText(TimeUtil.distanceDay(bean.getSchedule().getStart(), true));
         }
     }

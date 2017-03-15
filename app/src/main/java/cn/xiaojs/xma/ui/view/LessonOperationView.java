@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.support.annotation.ColorRes;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -151,6 +152,10 @@ public class LessonOperationView extends RelativeLayout {
         if (more.getVisibility() == VISIBLE) {
             DeviceUtil.expandViewTouch(more, 50);
         }
+    }
+
+    public void setEnterColor(@ColorRes int color) {
+        enter.setTextColor(getResources().getColor(color));
     }
 
     class Click implements OnClickListener {

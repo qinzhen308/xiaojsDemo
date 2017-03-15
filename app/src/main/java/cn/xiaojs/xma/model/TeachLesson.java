@@ -24,7 +24,6 @@ public class TeachLesson extends EnrolledLesson implements Serializable{
     private String initiator;
     private Publish publish;
     private AssignTask[] tasksByAssignee;
-    private Enroll enroll;
 
 
 //    private String hp;
@@ -77,15 +76,6 @@ public class TeachLesson extends EnrolledLesson implements Serializable{
 //        this.promotion = promotion;
 //    }
 
-
-
-    public Enroll getEnroll() {
-        return enroll;
-    }
-
-    public void setEnroll(Enroll enroll) {
-        this.enroll = enroll;
-    }
 
 //    public String getHp() {
 //        return hp;
