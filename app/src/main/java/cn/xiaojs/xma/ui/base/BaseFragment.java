@@ -18,6 +18,7 @@ package cn.xiaojs.xma.ui.base;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +29,20 @@ import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.http.PUT;
 
 public abstract class BaseFragment extends Fragment {
     protected Activity mContext;
     protected ViewGroup mContent;
     private Unbinder mBinder;
     private ProgressHUD progress;
+    private View mFailView;
+    private View mFailReloadBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity();
-        mContent = (ViewGroup)inflater.inflate(R.layout.fragment_base, null);
+        mContent = (ViewGroup) inflater.inflate(R.layout.fragment_base, null);
         View content = getContentView();
         addContainerView(content);
         mBinder = ButterKnife.bind(this, content);
@@ -49,6 +53,9 @@ public abstract class BaseFragment extends Fragment {
     protected abstract View getContentView();
 
     protected abstract void init();
+
+    protected void reloadOnFailed() {
+    }
 
     public final void addContainerView(View view) {
         if (view != null) {
@@ -61,16 +68,45 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    public void showProgress(boolean cancelable){
-        if (progress == null){
+    public void showFailView() {
+        if (mFailView == null) {
+            mFailView = LayoutInflater.from(mContext).inflate(R.layout.layout_failed, null);
+            mFailReloadBtn = mFailView.findViewById(R.id.base_failed_click);
+            if (mContent != null) {
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER;
+                mContent.addView(mFailView, params);
+            }
+
+            mFailReloadBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    reloadOnFailed();
+                }
+            });
+        }
+
+        mFailView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideFailView() {
+        if (mFailView != null) {
+            mFailView.setVisibility(View.GONE);
+        }
+    }
+
+    public void showProgress(boolean cancelable) {
+        if (progress == null) {
             progress = ProgressHUD.create(mContext);
         }
         progress.setCancellable(cancelable);
         progress.show();
     }
 
-    public void cancelProgress(){
-        if (progress != null && progress.isShowing()){
+    public void cancelProgress() {
+        if (progress != null && progress.isShowing()) {
             progress.dismiss();
         }
     }
@@ -78,11 +114,11 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mBinder != null){
+        if (mBinder != null) {
             mBinder.unbind();
         }
 
-        if (progress != null && progress.isShowing()){
+        if (progress != null && progress.isShowing()) {
             progress.dismiss();
             progress = null;
         }

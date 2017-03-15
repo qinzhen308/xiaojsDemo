@@ -158,6 +158,7 @@ public class CanInScrollviewListView extends LinearLayout implements
 	}
 
 	private void initView() {
+		removeAllViews();
 		if (mAdapter != null) {
 			for (int i = 0; i < mAdapter.getCount(); i++) {
 				final View view = mAdapter.getView(i, null, this);

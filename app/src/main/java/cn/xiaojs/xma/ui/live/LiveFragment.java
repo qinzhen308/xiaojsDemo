@@ -67,6 +67,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     private int mUserType;
     private Criteria mCriteria;
     protected Pagination mPagination;
+    private boolean mDataLoading;
 
     @Override
     protected View getContentView() {
@@ -102,6 +103,12 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
+    @Override
     protected void init() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -131,20 +138,33 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         initData();
     }
 
+    @Override
+    protected void reloadOnFailed() {
+        initData();
+    }
+
     private void initData() {
+        if (mDataLoading) {
+            return;
+        }
+
+        mDataLoading = true;
         showProgress(true);
         LessonDataManager.getLiveClasses(mContext, new APIServiceCallback<LiveClass>() {
             @Override
             public void onSuccess(LiveClass object) {
                 cancelProgress();
+                hideFailView();
                 fillData(object);
+                mDataLoading = false;
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-
+                mDataLoading = false;
                 //Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+                showFailView();
             }
         });
     }
