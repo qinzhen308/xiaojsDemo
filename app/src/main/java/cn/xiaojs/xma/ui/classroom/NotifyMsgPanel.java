@@ -76,7 +76,7 @@ public class NotifyMsgPanel extends Panel {
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(mContext, "有人退出", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "有人退出", Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -94,7 +94,7 @@ public class NotifyMsgPanel extends Panel {
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(mContext, "有人加入", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "有人加入", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

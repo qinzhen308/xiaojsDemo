@@ -24,6 +24,7 @@ import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -156,7 +157,9 @@ public abstract class VideoController implements StreamConfirmCallback {
                                 public void call(Object... args) {
                                     if (args != null && args.length > 0) {
                                         mNeedStreamRePublishing = true;
-                                        Toast.makeText(mContext, "推流暂停", Toast.LENGTH_SHORT).show();
+                                        if (XiaojsConfig.DEBUG) {
+                                            Toast.makeText(mContext, "推流暂停", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }
                             });

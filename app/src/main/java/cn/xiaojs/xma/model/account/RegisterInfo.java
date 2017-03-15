@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model.account;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
+
 /**
  * Created by maxiaobao on 2016/10/25.
  */
@@ -14,6 +16,6 @@ public class RegisterInfo{
     public String password;
     public String username;
     public int code;
-    public int ct;
+    public int ct = Security.CredentialType.PERSION;
 
 }

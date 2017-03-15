@@ -24,6 +24,7 @@ import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
@@ -98,7 +99,9 @@ public class StudentVideoController extends VideoController {
                         if (args != null && args.length > 0) {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
-                                Toast.makeText(mContext, "学生推流成功", Toast.LENGTH_LONG).show();
+                                if (XiaojsConfig.DEBUG) {
+                                    Toast.makeText(mContext, "学生推流成功", Toast.LENGTH_LONG).show();
+                                }
                             } else {
                                 onPause();
                             }
@@ -118,7 +121,9 @@ public class StudentVideoController extends VideoController {
         public void call(Object... args) {
             if (args != null && args.length > 0) {
                 StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
-                Toast.makeText(mContext, "学生端流开始", Toast.LENGTH_LONG).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "学生端流开始", Toast.LENGTH_LONG).show();
+                }
                 if (startedNotify != null) {
                     mPlayStreamUrl = startedNotify.RTMPPlayUrl;
                     playStream(startedNotify.RTMPPlayUrl);
@@ -130,7 +135,9 @@ public class StudentVideoController extends VideoController {
     private SocketManager.EventListener mReceiveOpenMedia = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            Toast.makeText(mContext, "请求打开学生视频", Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(mContext, "请求打开学生视频", Toast.LENGTH_LONG).show();
+            }
             if (mAgreeOpenCamera == null) {
                 mAgreeOpenCamera = new CommonDialog(mContext);
                 int width = DeviceUtil.getScreenWidth(mContext) / 2;
@@ -160,7 +167,9 @@ public class StudentVideoController extends VideoController {
     private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            Toast.makeText(mContext, "老师端中断了视频", Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(mContext, "老师端中断了视频", Toast.LENGTH_LONG).show();
+            }
             pausePublishStream();
         }
     };
@@ -168,7 +177,9 @@ public class StudentVideoController extends VideoController {
     private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            Toast.makeText(mContext, "老师端关闭了视频", Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(mContext, "老师端关闭了视频", Toast.LENGTH_LONG).show();
+            }
             pausePublishStream();
         }
     };
@@ -186,7 +197,9 @@ public class StudentVideoController extends VideoController {
     @Override
     protected void onStringingStopped(Object... args) {
         if (args != null && args.length > 0) {
-            Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
+            }
             pausePlayStream();
         }
     }

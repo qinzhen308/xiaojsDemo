@@ -14,4 +14,12 @@ public class Communications {
         public static final int DISCUSSION = 4; // 课堂讨论组交流
         public static final int SYSTEM = 10; // 课堂消息
     }
+
+    public class ContentType {
+        public static final int TEXT = 1;
+        public static final int VOICE = 2;
+        public static final int STYLUS = 3;
+        public static final int FILE = 4;
+        public static final int DOCUMENT = 5;
+    }
 }

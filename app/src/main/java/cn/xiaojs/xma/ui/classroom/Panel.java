@@ -55,10 +55,14 @@ public abstract class Panel {
     public abstract View onCreateView();
 
     public void show(final DrawerLayout drawerLayout, final ViewGroup container) {
-        show(null, drawerLayout, container);
+        show(null, drawerLayout, container, false);
     }
 
-    public void show(ViewGroup.LayoutParams params, final DrawerLayout drawerLayout, final ViewGroup container) {
+    public void initWithoutShow(final DrawerLayout drawerLayout, final ViewGroup container) {
+        show(null, drawerLayout, container, true);
+    }
+
+    public void show(ViewGroup.LayoutParams params, final DrawerLayout drawerLayout, final ViewGroup container, boolean onlyInit) {
         if (mContentView == null) {
             mContentView = onCreateView();
             if (params != null) {
@@ -83,8 +87,12 @@ public abstract class Panel {
         }
 
         setChildViewStyle();
-        drawerLayout.openDrawer(container);
-        drawerLayout.addDrawerListener(mDrawerListener);
+        if (onlyInit) {
+            initData();
+        } else {
+            drawerLayout.openDrawer(container);
+            drawerLayout.addDrawerListener(mDrawerListener);
+        }
 
         mDrawerLayout = drawerLayout;
         mContainer = container;

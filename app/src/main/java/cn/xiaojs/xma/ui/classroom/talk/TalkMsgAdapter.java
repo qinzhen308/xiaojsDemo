@@ -27,6 +27,7 @@ import com.orhanobut.logger.Logger;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
@@ -131,13 +132,17 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>> () {
             @Override
             public void onSuccess(CollectionPage<TalkItem> object) {
-                Toast.makeText(mContext, "获取消息成功", Toast.LENGTH_SHORT).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "获取消息成功", Toast.LENGTH_SHORT).show();
+                }
                 TalkMsgAdapter.this.onSuccess(object.objectsOfPage);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                Toast.makeText(mContext, "获取消息失败", Toast.LENGTH_SHORT).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "获取消息失败", Toast.LENGTH_SHORT).show();
+                }
                 TalkMsgAdapter.this.onFailure(errorCode, errorMessage);
             }
         });

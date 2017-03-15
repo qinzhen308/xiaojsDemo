@@ -350,7 +350,7 @@ public class LessonDataManager {
      * @param context
      * @param callback
      */
-    public void getLiveClasses(Context context, @NonNull APIServiceCallback<List<LiveClass>> callback) {
+    public static void getLiveClasses(Context context, @NonNull APIServiceCallback<LiveClass> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLiveClasses();
     }

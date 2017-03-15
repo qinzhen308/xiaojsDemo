@@ -23,6 +23,7 @@ import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
@@ -81,7 +82,9 @@ public class TeacherVideoController extends VideoController {
                         if (args != null && args.length > 0) {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
-                                Toast.makeText(mContext, "老师推流开始", Toast.LENGTH_LONG).show();
+                                if (XiaojsConfig.DEBUG) {
+                                    Toast.makeText(mContext, "老师推流开始", Toast.LENGTH_LONG).show();
+                                }
                             } else {
                                 onPause();
                             }
@@ -97,7 +100,9 @@ public class TeacherVideoController extends VideoController {
     private SocketManager.EventListener mReceiveFeedback = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            Toast.makeText(mContext, "收到 feedback", Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(mContext, "收到 feedback", Toast.LENGTH_LONG).show();
+            }
             if (args != null && args.length > 0) {
                 MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
                 if (response != null && response.playUrl != null) {
@@ -110,7 +115,9 @@ public class TeacherVideoController extends VideoController {
     @Override
     protected void onStreamingStarted(Object... args) {
         if (args != null && args.length > 0) {
-            Toast.makeText(mContext, "流开始", Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(mContext, "流开始", Toast.LENGTH_LONG).show();
+            }
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
                 mPlayStreamUrl = startedNotify.RTMPPlayUrl;
@@ -122,7 +129,9 @@ public class TeacherVideoController extends VideoController {
     @Override
     protected void onStringingStopped(Object... args) {
         if (args != null && args.length > 0) {
-            Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
+            }
             pausePlayStream();
         }
     }

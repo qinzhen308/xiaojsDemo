@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,6 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
@@ -60,6 +62,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.socketio.StreamingMode;
+import cn.xiaojs.xma.ui.classroom.talk.OnTalkMsgListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
@@ -232,6 +235,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private NetworkChangedBReceiver mNetworkChangedBReceiver;
     private boolean mAllowMobileNetworkLive;
     private int mNetworkState = ClassroomBusiness.NETWORK_NONE;
+    private List<TalkItem> mReceivedTalkMsg;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -390,7 +394,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             @Override
             public void onSuccess(CtlSession ctlSession) {
                 cancelProgress();
-                Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
+                }
                 if (ctlSession != null) {
                     mUser = ClassroomBusiness.getUser(ctlSession.psType);
                     mLiveSessionState = ctlSession.state;
@@ -426,8 +432,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
                         setControllerBtnStyle(ctlSession.state);
                     }
+
+                    //init talk
+                    initTalk();
                 } else {
-                    Toast.makeText(ClassroomActivity.this, "BootSession 数据返回为null", Toast.LENGTH_SHORT).show();
+                    if (XiaojsConfig.DEBUG) {
+                        Toast.makeText(ClassroomActivity.this, "BootSession 数据返回为null", Toast.LENGTH_SHORT).show();
+                    }
                     cancelProgress();
                 }
 
@@ -438,7 +449,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                Toast.makeText(ClassroomActivity.this, "BootSession 失败：" + errorMessage, Toast.LENGTH_SHORT).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(ClassroomActivity.this, "BootSession 失败：" + errorMessage, Toast.LENGTH_SHORT).show();
+                }
                 cancelProgress();
                 if (dataLoadListener != null) {
                     dataLoadListener.onDataLoaded(false);
@@ -686,7 +699,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                                 @Override
                                 public void call(Object... args) {
                                     if (args != null && args.length > 0) {
-                                        Toast.makeText(ClassroomActivity.this, "推流暂停", Toast.LENGTH_SHORT).show();
+                                        if (XiaojsConfig.DEBUG) {
+                                            Toast.makeText(ClassroomActivity.this, "推流暂停", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }
                             });
@@ -750,12 +765,18 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                                 mClassroomController.publishStream(response.publishUrl, false);
                             }
                             //setControllerBtnStyle(mLiveSessionState);
-                            Toast.makeText(ClassroomActivity.this, "claim streaming succ", Toast.LENGTH_SHORT).show();
+                            if (XiaojsConfig.DEBUG) {
+                                Toast.makeText(ClassroomActivity.this, "claim streaming succ", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(ClassroomActivity.this, "claim streaming fail:" + response.details, Toast.LENGTH_SHORT).show();
+                            if (XiaojsConfig.DEBUG) {
+                                Toast.makeText(ClassroomActivity.this, "claim streaming fail:" + response.details, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } else {
-                        Toast.makeText(ClassroomActivity.this, "claim streaming fail", Toast.LENGTH_SHORT).show();
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(ClassroomActivity.this, "claim streaming fail", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
@@ -765,7 +786,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 @Override
                 public void call(Object... args) {
                     if (args != null && args.length > 0) {
-                        Toast.makeText(ClassroomActivity.this, "个人推流暂停", Toast.LENGTH_SHORT).show();
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(ClassroomActivity.this, "个人推流暂停", Toast.LENGTH_SHORT).show();
+                        }
                         StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                         if (response.result) {
                             mLiveSessionState = mBeforeClamSteamState;
@@ -819,8 +842,21 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * 打开聊天
      */
     private void openTalk(int mode) {
+        initPanel();
+
+        mTalkPanel.with(mode).show(mDrawerLayout, mRightDrawer);
+        mOpenedPanel = mTalkPanel;
+        mReceivedTalkMsg.clear();
+        mEnterTalkBtn.setCount(0);
+    }
+
+    /**
+     * 初始化talk，监听消息
+     */
+    private void initTalk() {
         if (mTalkPanel == null) {
             mTalkPanel = new TalkPanel(this, mTicket, mUser);
+            mReceivedTalkMsg = new ArrayList<TalkItem>();
             mTalkPanel.setPanelCallback(new PanelCallback() {
                 @Override
                 public void onPanelOpened(int panel) {
@@ -843,10 +879,26 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
                     applyOpenStuVideo(accountId);
                 }
+            }).setTalkMsgListener(new OnTalkMsgListener() {
+                @Override
+                public void onTalkMsgReceived(TalkItem talkItem) {
+                    if (mOpenedPanel == null) {
+                        if (!mReceivedTalkMsg.contains(talkItem)) {
+                            mReceivedTalkMsg.add(talkItem);
+
+                            //update talk msg
+                            mEnterTalkBtn.setType(MessageImageView.TYPE_NUM);
+                            int offsetY = getResources().getDimensionPixelOffset(R.dimen.px8);
+                            mEnterTalkBtn.setExtraOffsetY(offsetY);
+                            mEnterTalkBtn.setCount(mReceivedTalkMsg.size());
+                        }
+                    }
+                }
             });
+
+            //only init, without show
+            mTalkPanel.initWithoutShow(mDrawerLayout, mRightDrawer);
         }
-        mTalkPanel.with(mode).show(mDrawerLayout, mRightDrawer);
-        mOpenedPanel = mTalkPanel;
     }
 
     /**
@@ -916,7 +968,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * 申请打开学生视频
      */
     private void applyOpenStuVideo(String accountId) {
-        Toast.makeText(ClassroomActivity.this, "apply open student video: " + accountId, Toast.LENGTH_SHORT).show();
+        if (XiaojsConfig.DEBUG) {
+            Toast.makeText(ClassroomActivity.this, "apply open student video: " + accountId, Toast.LENGTH_SHORT).show();
+        }
         if (mUser == Constants.User.TEACHER) {
             OpenMedia openMedia = new OpenMedia();
             openMedia.to = accountId;
@@ -926,7 +980,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     if (args != null && args.length > 0) {
                         StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                         if (response != null && response.result) {
-                            Toast.makeText(ClassroomActivity.this, "申请打开学生视频开始", Toast.LENGTH_LONG).show();
+                            if (XiaojsConfig.DEBUG) {
+                                Toast.makeText(ClassroomActivity.this, "申请打开学生视频开始", Toast.LENGTH_LONG).show();
+                            }
                         } else {
 
                         }
@@ -1482,7 +1538,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         @Override
         public void call(Object... args) {
             if (!mSktConnected) {
-                Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
+                }
                 mSktConnected = true;
             }
         }
@@ -1492,7 +1550,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         @Override
         public void call(Object... args) {
             mSktConnected = false;
-            Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
+            }
         }
     };
 
@@ -1500,7 +1560,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         @Override
         public void call(Object... args) {
             mSktConnected = false;
-            Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
+            if (XiaojsConfig.DEBUG){
+                Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
+            }
         }
     };
 

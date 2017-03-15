@@ -31,6 +31,7 @@ public class TalkItem {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TalkContent{
         public String text;
+        public int contentType;
     }
 
     @Override

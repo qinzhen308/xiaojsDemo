@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Board;
@@ -108,7 +109,9 @@ public class WhiteboardManager {
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
-                        Toast.makeText(context, "白板注册失败：" + errorMessage, Toast.LENGTH_SHORT).show();
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(context, "白板注册失败：" + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
                         if (listener != null) {
                             listener.onWhiteboardAdded(null);
                         }
@@ -175,7 +178,9 @@ public class WhiteboardManager {
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
-                        Toast.makeText(context, "白板注册失败：" + errorMessage, Toast.LENGTH_SHORT).show();
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(context, "白板注册失败：" + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
