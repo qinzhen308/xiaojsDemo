@@ -357,36 +357,37 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
     private void sendMessage() {
         if (mBean != null) {
-            if (mBean.isFollowed) {//已关注跳转到聊天界面
+            //if (mBean.isFollowed) {//已关注跳转到聊天界面
 
-                if (mBean.profile != null){
-                    JpushUtil.launchChat(this,mAccount,mBean.profile.name);
+                if (mBean.profile != null) {
+                    JpushUtil.launchChat(this, mAccount, mBean.profile.name);
                 }
-            } else {//未关注先提示去关注
-                final CommonDialog dialog = new CommonDialog(this);
-                if (mBean.basic == null){
-                    mBean.basic = new cn.xiaojs.xma.model.account.Account.Basic();
-                    mBean.basic.setSex("true");
-                }
-                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.profile.sex),StringUtil.getTa(mBean.profile.sex)));
-                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.profile.sex)));
-                dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        dialog.dismiss();
-                        //follow();
-                        showFollowDialog();
-                    }
-                });
-
-                dialog.show();
-            }
+//            } else {//未关注先提示去关注
+//                final CommonDialog dialog = new CommonDialog(this);
+//                if (mBean.basic == null){
+//                    mBean.basic = new cn.xiaojs.xma.model.account.Account.Basic();
+//                    mBean.basic.setSex("true");
+//                }
+//                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.profile.sex),StringUtil.getTa(mBean.profile.sex)));
+//                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.profile.sex)));
+//                dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+//                    @Override
+//                    public void onClick() {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+//                    @Override
+//                    public void onClick() {
+//                        dialog.dismiss();
+//                        //follow();
+//                        showFollowDialog();
+//                    }
+//                });
+//
+//                dialog.show();
+//            }
+            //}
         }
     }
 
