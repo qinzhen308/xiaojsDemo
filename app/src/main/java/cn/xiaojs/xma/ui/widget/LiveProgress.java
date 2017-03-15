@@ -28,6 +28,7 @@ import cn.xiaojs.xma.R;
 
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.ui.view.AnimationView;
+import cn.xiaojs.xma.util.TimeUtil;
 
 public class LiveProgress extends LinearLayout {
 
@@ -42,6 +43,8 @@ public class LiveProgress extends LinearLayout {
     AnimationView animation;
     @BindView(R.id.live_progress_cur_state)
     TextView state;
+
+
 
     public LiveProgress(Context context) {
         super(context);
@@ -81,7 +84,13 @@ public class LiveProgress extends LinearLayout {
         }
     }
 
-    public void show(Date cur,Date total){
+    public void showTimeBar(long duration, long finishOn){
 
+        long cur = duration * 60 - finishOn;
+
+        curTime.setText(TimeUtil.formatSecondTime(cur));
+        totalTime.setText(TimeUtil.formatSecondTime(finishOn));
+        int pro = (int) (((float)cur/duration) * 100);
+        progress.setProgress(pro);
     }
 }

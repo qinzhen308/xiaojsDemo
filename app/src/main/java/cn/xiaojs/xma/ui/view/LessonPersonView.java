@@ -118,12 +118,20 @@ public class LessonPersonView extends LinearLayout {
             image1.setImageResource(R.drawable.default_avatar_grey);
         }
 
-        image2.setVisibility(GONE);
-        name2.setVisibility(GONE);
-        desc2.setVisibility(GONE);
+        if (bean.getEnroll() != null && bean.getEnroll().current > 0) {
+            image2.setImageResource(R.drawable.default_avatar_grey);
+            name2.setText("同学");
+            desc2.setText(bean.getEnroll().current + "人");
+        }else{
+            image2.setVisibility(GONE);
+            name2.setVisibility(GONE);
+            desc2.setVisibility(GONE);
+        }
+
         image3.setVisibility(GONE);
         name3.setVisibility(GONE);
         desc3.setVisibility(GONE);
+
     }
 
 }

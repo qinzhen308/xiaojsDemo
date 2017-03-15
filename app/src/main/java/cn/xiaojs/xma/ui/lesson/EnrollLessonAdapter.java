@@ -88,6 +88,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
             holder.operation.setVisibility(View.GONE);
+            holder.operation.setEnterColor(R.color.common_text);
 //            String[] items = new String[]{mContext.getString(R.string.data_bank)};
 //            holder.operation.setItems(items);
 //            holder.operation.enableMore(false);
@@ -109,6 +110,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
             holder.operation.setVisibility(View.GONE);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
             String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
@@ -133,6 +135,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
             holder.operation.setVisibility(View.VISIBLE);
+            holder.operation.setEnterColor(R.color.font_orange);
             holder.status.setVisibility(View.GONE);
             holder.progressWrapper.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.data_bank)};
@@ -153,6 +156,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
             holder.operation.setVisibility(View.VISIBLE);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
             String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
@@ -179,6 +183,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
             holder.operation.setVisibility(View.GONE);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
