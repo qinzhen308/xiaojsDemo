@@ -17,6 +17,8 @@ package cn.xiaojs.xma.ui.classroom.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cn.xiaojs.xma.model.live.TalkItem;
+
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TalkBean {
@@ -31,5 +33,12 @@ public class TalkBean {
     public static class TalkContent{
         public String text;
         public int contentType;
+        public TalkItem.QiNiuImg drawing;
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class QiNiuImg{
+        public String name;
     }
 }

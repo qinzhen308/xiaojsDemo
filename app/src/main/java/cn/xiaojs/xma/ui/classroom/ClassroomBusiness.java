@@ -93,6 +93,10 @@ public class ClassroomBusiness {
         return data;
     }
 
+    public static String getSnapshot(String name, int size) {
+         return cn.xiaojs.xma.common.xf_foundation.Constants.XCFSUrl + "/" + name + "?imageView2/0/w/" + size;
+    }
+
     public static int getCurrentNetwork(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo currentInfo = cm.getActiveNetworkInfo();

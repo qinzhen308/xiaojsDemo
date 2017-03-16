@@ -1620,7 +1620,18 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     public Bitmap getWhiteboardBitmap() {
-        return mDoodleBitmap;
+        //return mDoodleBitmap;
+        if (mCourseBmp != null) {
+            Bitmap bmp = Bitmap.createBitmap(mDoodleBitmap.getWidth(), mDoodleBitmap.getHeight(), Bitmap.Config.ARGB_4444);
+            Canvas c = new Canvas(bmp);
+            if (mCourseBmp != null) {
+                c.drawBitmap(mCourseBmp, mSrcCourseRect, mDesCourseRect, null);
+            }
+            c.drawBitmap(mDoodleBitmap, 0, 0, null);
+            return bmp;
+        } else {
+            return mDoodleBitmap;
+        }
     }
 
     public WhiteboardLayer getLayer() {

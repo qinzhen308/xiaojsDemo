@@ -729,6 +729,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
         talkItem.body = new TalkItem.TalkContent();
         talkItem.body.text = text;
+        talkItem.body.contentType = Communications.ContentType.STYLUS;
 
         long sendTime = System.currentTimeMillis();
         talkItem.time = new Date(sendTime);
@@ -739,6 +740,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
         //send socket info
         TalkBean talkBean = new TalkBean();
+        talkBean.from = mMyAccountId;
         talkBean.body = new TalkBean.TalkContent();
         talkBean.body.text = text;
         talkBean.body.contentType = Communications.ContentType.STYLUS;
@@ -779,6 +781,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
         talkItem.body = new TalkItem.TalkContent();
         talkItem.body.text = text;
+        talkItem.body.contentType = type;
 
         long sendTime = System.currentTimeMillis();
         talkItem.time = new Date(sendTime);
@@ -788,6 +791,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
         //send socket info
         TalkBean talkBean = new TalkBean();
+        talkBean.from = mMyAccountId;
         talkBean.body = new TalkBean.TalkContent();
         talkBean.body.text = text;
         talkBean.body.contentType = type;
@@ -849,8 +853,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         }
     }
 
-    private void fillMyselfInfo(cn.xiaojs.xma.model.live.TalkItem talkItem) {
-        talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
+    private void fillMyselfInfo(TalkItem talkItem) {
+        talkItem.from = new TalkItem.TalkPerson();
         talkItem.from.accountId = mMyAccountId;
         cn.xiaojs.xma.model.account.User mLoginUser = XiaojsConfig.mLoginUser;
         if (mLoginUser != null) {

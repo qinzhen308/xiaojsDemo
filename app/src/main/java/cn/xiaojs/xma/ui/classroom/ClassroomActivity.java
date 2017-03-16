@@ -1027,13 +1027,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         @Override
         public void onVideoShared(final Attendee attendee, final Bitmap bitmap) {
             //send msg
-            if (mTalkPanel != null) {
+            if (mTalkPanel != null && bitmap != null) {
                 new AsyncTask<Integer, Integer, String>() {
 
                     @Override
                     protected String doInBackground(Integer... params) {
                         byte[] data = BitmapUtils.bmpToByteArray(bitmap, Bitmap.CompressFormat.JPEG, 90, false);
-                        return Base64.encodeToString(data, 0);
+                        return Base64.encodeToString(data, Base64.DEFAULT);
                     }
 
                     @Override
