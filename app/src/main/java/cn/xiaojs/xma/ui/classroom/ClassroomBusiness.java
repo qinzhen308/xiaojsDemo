@@ -15,6 +15,8 @@ package cn.xiaojs.xma.ui.classroom;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
@@ -23,10 +25,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
 
+import cn.xiaojs.xma.util.Base64;
+import cn.xiaojs.xma.util.BitmapUtils;
+
 public class ClassroomBusiness {
     public static final int NETWORK_NONE = 1;
     public static final int NETWORK_WIFI = 2;
     public static final int NETWORK_OTHER = 3;
+    private static final String BASE64_JPEG_HEADER = "data:image/jpeg;base64,";
 
     public static Constants.User getUser(String session) {
         Constants.User user = Constants.User.TEACHER;
@@ -95,6 +101,29 @@ public class ClassroomBusiness {
 
     public static String getSnapshot(String name, int size) {
          return cn.xiaojs.xma.common.xf_foundation.Constants.XCFSUrl + "/" + name + "?imageView2/0/w/" + size;
+    }
+
+    public static String bitmapToBase64(Bitmap bitmap) {
+        byte[] data = BitmapUtils.bmpToByteArray(bitmap, Bitmap.CompressFormat.JPEG, 50, false);
+        try {
+            return BASE64_JPEG_HEADER + Base64.encode(data);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Bitmap base64ToBitmap(String content) {
+        if (TextUtils.isEmpty(content)) {
+            return null;
+        }
+
+        String imgData  = content.substring(BASE64_JPEG_HEADER.length());
+        try {
+            byte[] data = Base64.decode(imgData);
+            return BitmapFactory.decodeByteArray(data, 0, data.length);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static int getCurrentNetwork(Context context) {

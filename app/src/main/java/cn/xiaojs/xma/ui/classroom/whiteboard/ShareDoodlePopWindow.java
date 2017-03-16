@@ -90,6 +90,9 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
         super.showAsDropDown(anchor, xoff, yoff, gravity);
 
+        if (mContactAdapter != null) {
+            mContactAdapter.setData(null);
+        }
         initData();
     }
 
@@ -100,6 +103,8 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
                 ArrayList<Attendee> attendees = liveCollection != null ? liveCollection.attendees : null;
                 if (mContactAdapter == null) {
                     mContactAdapter = new ContactAdapter(attendees);
+                } else {
+                    mContactAdapter.setData(attendees);
                 }
                 mListView.setAdapter(mContactAdapter);
                 mEmptyView.setVisibility(attendees == null || attendees.isEmpty() ? View.VISIBLE : View.GONE);
@@ -170,6 +175,11 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
             mAttendeeList = attendees;
             mChoiceList = new ArrayList<String>();
             setOnclickListener();
+        }
+
+        public void setData(ArrayList<Attendee> attendees) {
+            mAttendeeList = attendees;
+            notifyDataSetChanged();
         }
 
         @Override

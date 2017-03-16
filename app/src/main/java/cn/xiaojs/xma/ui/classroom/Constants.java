@@ -37,6 +37,8 @@ public interface Constants {
     public final static int QUALITY_STANDARD = 1; // 标准
     public final static int QUALITY_FLUENT = 2; // 流畅
 
+    public final static int SHARE_IMG_SIZE = 800; //分享图片的大小不超过800
+
     /**
      * classroom url
      */

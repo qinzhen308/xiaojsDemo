@@ -120,8 +120,9 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
                 //decode base64 to bitmap
                 //TODO 待优化
                 FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)holder.msgImg.getLayoutParams();
-                byte[] imgData = Base64.decode(txt, Base64.DEFAULT);
-                Bitmap bmp = BitmapUtils.byteArrayToBitmap(imgData);
+                //byte[] imgData = Base64.decode(txt, Base64.DEFAULT);
+                //Bitmap bmp = BitmapUtils.byteArrayToBitmap(imgData);
+                Bitmap bmp = ClassroomBusiness.base64ToBitmap(txt);
                 if (bmp != null) {
                     int w = MAX_SIZE;
                     int h = MAX_SIZE;
@@ -260,8 +261,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
                 return null;
             }
 
-            byte[] imgData = Base64.decode(content, Base64.DEFAULT);
-            return BitmapUtils.byteArrayToBitmap(imgData);
+            return ClassroomBusiness.base64ToBitmap(content);
         }
 
         @Override

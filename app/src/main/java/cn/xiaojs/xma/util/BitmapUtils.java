@@ -870,8 +870,4 @@ public class BitmapUtils {
         return result;
     }
 
-    public static Bitmap byteArrayToBitmap(byte[] data) {
-        return BitmapFactory.decodeByteArray(data, 0, data.length);
-    }
-
 }

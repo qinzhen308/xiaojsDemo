@@ -18,7 +18,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -74,6 +73,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
+import cn.xiaojs.xma.util.Base64;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -1032,8 +1032,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                     @Override
                     protected String doInBackground(Integer... params) {
-                        byte[] data = BitmapUtils.bmpToByteArray(bitmap, Bitmap.CompressFormat.JPEG, 90, false);
-                        return Base64.encodeToString(data, Base64.DEFAULT);
+                        //resize max length to 800
+                        Bitmap resizeBmp = BitmapUtils.resizeDownBySideLength(bitmap, Constants.SHARE_IMG_SIZE, false);
+                        return ClassroomBusiness.bitmapToBase64(resizeBmp);
                     }
 
                     @Override
