@@ -1,6 +1,7 @@
-beta #测试渠道（测试团队、内测、公测）
-developer #开发人员渠道
+env-pre #预发布环境包,该名称对应XiaojsConfig.CHANNEL_ENV_PRE
+env-dev&test #测试环境包,该名称对应XiaojsConfig.CHANNEL_ENV_TEST
 
+#==============================渠道=================================================================
 #meituan # 美团
 #samsungapps #三星
 #hiapk

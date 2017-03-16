@@ -18,6 +18,7 @@ import cn.xiaojs.xma.data.api.service.XiaojsService;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.util.APPUtils;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -212,32 +213,41 @@ public class ApiManager {
 
     public static String getXASUrl(Context context) {
 
-        if (XiaojsConfig.SHOW_DEMO) {
+        String channel = APPUtils.getChannel(context);
+
+        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
             String port = DataPref.getXASPort(context);
             return createUrl(context,port);
+        }else if (channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)){
+            return XiaojsConfig.XAS_PRE_BASE_URL;
+        }else {
+            return XiaojsConfig.XAS_BASE_URL;
         }
-
-        return XiaojsConfig.XAS_BASE_URL;
 
     }
 
     public static String getXLSUrl(Context context) {
 
-        if (XiaojsConfig.SHOW_DEMO) {
+        String channel = APPUtils.getChannel(context);
+
+        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
             String port = DataPref.getXLSPort(context);
             return createUrl(context,port);
+        }else if (channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)){
+            return XiaojsConfig.XLS_PRE_BASE_URL;
+        }else {
+            return XiaojsConfig.XLS_BASE_URL;
         }
-
-        return XiaojsConfig.XLS_BASE_URL;
 
     }
 
     private static String createUrl(Context context,String port) {
-        String baseUrl = XiaojsConfig.SHOW_DEMO ? DataPref.getServerIP(context) : XiaojsConfig.BASE_URL;
-        return new StringBuilder(baseUrl)
-                .append(":")
-                .append(port)
-                .toString();
+        String baseUrl = XiaojsConfig.SHOW_DEMO ? DataPref.getServerIP(context) : XiaojsConfig.TEST_BASE_URL;
+        StringBuilder urlBulder = new StringBuilder(baseUrl);
+        if (!TextUtils.isEmpty(port)) {
+            urlBulder.append(":").append(port);
+        }
+        return urlBulder.toString();
     }
 
 }

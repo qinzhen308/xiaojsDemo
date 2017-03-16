@@ -13,20 +13,30 @@ public class XiaojsConfig {
 
     //是否是演示版本
     public static final boolean SHOW_DEMO = true;
+    //预发布环境渠道,此名称要对应channel文件
+    public static final String CHANNEL_ENV_PRE = "env-pre";
+    //开发测试环境渠道,此名称要对应channel文件
+    public static final String CHANNEL_ENV_DEVTEST = "env-dev&test";
 
+
+
+    ////////////////////////////////////////////////////////////////
     //日志tag
     public static final String LOG_TAG = "XiaoJS-Log";
 
     //客户端版本号位数
     public static final int VERSION_BITS = 4;
 
-    //外网域名
+    //外网生产环境域名
     public static String XAS_BASE_URL = "http://xas.xiaojs.cn";
     public static String XLS_BASE_URL = "http://xls.xiaojs.cn";
 
+    //外网预发布环境域名
+    public static String XAS_PRE_BASE_URL = "http://xas.xiaojs.edu";
+    public static String XLS_PRE_BASE_URL = "http://xls.xiaojs.edu";
 
     //BASE_URL
-    public static String BASE_URL = "http://192.168.100.3";
+    public static String TEST_BASE_URL = "http://192.168.100.3";
     //Xiaojs rest api 中接口公共URL
     public static String SERVICE_PORT = "3000";
     //Live port
@@ -68,11 +78,10 @@ public class XiaojsConfig {
 
     public static final String PING_WALLET = "con.xiaojs.xma.wallet";
 
-    //默认渠道
-    public static final String DEFAULT_CHANNEL = "N/A";
 
     //file provider
     public static final String FILE_PROVIDER= "cn.xiaojs.xma.fileprovider";
+
 
 
 
