@@ -11,12 +11,14 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -49,6 +51,7 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCriteria;
@@ -71,6 +74,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
+import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
@@ -1011,10 +1015,36 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         public void run() {
             if (mCaptureFrame != null) {
                 mPageState = PAGE_EDIT_VIDEO;
-                mClassroomController.enterVideoEditing(mCaptureFrame);
+                mClassroomController.enterVideoEditing(mCaptureFrame, mOnEditedVideoShareListener);
                 hideTopBottomPanel();
             } else {
                 mPageState = PAGE_TOP;
+            }
+        }
+    };
+
+    private OnEditedVideoShareListener mOnEditedVideoShareListener = new OnEditedVideoShareListener() {
+        @Override
+        public void onVideoShared(final Attendee attendee, final Bitmap bitmap) {
+            //send msg
+            if (mTalkPanel != null) {
+                new AsyncTask<Integer, Integer, String>() {
+
+                    @Override
+                    protected String doInBackground(Integer... params) {
+                        byte[] data = BitmapUtils.bmpToByteArray(bitmap, Bitmap.CompressFormat.JPEG, 90, false);
+                        return Base64.encodeToString(data, 0);
+                    }
+
+                    @Override
+                    protected void onPostExecute(String result) {
+                        if (!TextUtils.isEmpty(result)) {
+                            mTalkPanel.sendImg(attendee, result);
+                        } else {
+                            cancelProgress();
+                        }
+                    }
+                }.execute(0);
             }
         }
     };

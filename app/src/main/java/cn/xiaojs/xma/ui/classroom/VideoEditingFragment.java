@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class VideoEditingFragment extends BaseFragment {
     private boolean mAnimating;
     private PanelAnimListener mPanelAnimListener;
     private String mTicket;
+    private OnEditedVideoShareListener mEditedVideoShareListener;
 
     @Override
     protected View getContentView() {
@@ -112,12 +114,16 @@ public class VideoEditingFragment extends BaseFragment {
         mBitmap = bmp;
     }
 
+    public void setEditedVideoShareListener(OnEditedVideoShareListener listener) {
+        mEditedVideoShareListener = listener;
+    }
+
     /**
      * 选择分享联系人
      */
     private void selectShareContact(View anchor) {
         if (mSharePopWindow == null) {
-            mSharePopWindow = new ShareDoodlePopWindow(mContext, mTicket);
+            mSharePopWindow = new ShareDoodlePopWindow(mContext, mTicket, mBitmap, mEditedVideoShareListener);
         }
 
         int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);

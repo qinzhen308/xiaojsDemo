@@ -718,25 +718,66 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
      * 默认是发送文本
      */
     private void sendMsg() {
-        sendMsg(Communications.ContentType.TEXT);
+        sendMsg(Communications.ContentType.TEXT, null);
     }
 
-    private void sendMsg(int type) {
+    public void sendImg(Attendee attendee, String content) {
+        String text = content;
+        TalkItem talkItem = new TalkItem();
+        //file myself info
+        fillMyselfInfo(talkItem);
+
+        talkItem.body = new TalkItem.TalkContent();
+        talkItem.body.text = text;
+
+        long sendTime = System.currentTimeMillis();
+        talkItem.time = new Date(sendTime);
+
+        //update task message info
+        int criteria = attendee == null ? MULTI_TALK : PEER_TALK;
+        updateTalkMsgData(criteria, talkItem, true);
+
+        //send socket info
+        TalkBean talkBean = new TalkBean();
+        talkBean.body = new TalkBean.TalkContent();
+        talkBean.body.text = text;
+        talkBean.body.contentType = Communications.ContentType.STYLUS;
+        talkBean.time = sendTime;
+        if (attendee == null) {
+            talkBean.to = String.valueOf(Communications.TalkType.OPEN);
+        } else {
+            talkBean.to = attendee.accountId;
+        }
+        if (talkBean != null) {
+            String event = Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK);
+            SocketManager.emit(event, talkBean, new SocketManager.AckListener() {
+                @Override
+                public void call(final Object... args) {
+                    handSendResponse(args);
+                }
+            });
+        }
+    }
+
+    private void sendMsg(int type, String content) {
         if (mUser == Constants.User.STUDENT && !mDiscussionSwitcher.isChecked()) {
             //R.string.close_cr_discussion
             return;
         }
 
-        String text = mMsgInputEdt.getText().toString();
+        String text = content;
+        if (TextUtils.isEmpty(content)) {
+            text = mMsgInputEdt.getText().toString();
+        }
         if (TextUtils.isEmpty(text)) {
             return;
         }
 
-        cn.xiaojs.xma.model.live.TalkItem talkItem = new cn.xiaojs.xma.model.live.TalkItem();
+        TalkItem talkItem = new TalkItem();
         //file myself info
         fillMyselfInfo(talkItem);
 
-        talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
+        talkItem.body = new TalkItem.TalkContent();
         talkItem.body.text = text;
 
         long sendTime = System.currentTimeMillis();

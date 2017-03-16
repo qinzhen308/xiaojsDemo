@@ -79,10 +79,11 @@ public class ClassroomController {
     /**
      * 进入视频编辑页面
      */
-    public void enterVideoEditing(Bitmap bmp) {
+    public void enterVideoEditing(Bitmap bmp, OnEditedVideoShareListener listener) {
         if (mContext instanceof ClassroomActivity) {
             mVideoEditFragment = new VideoEditingFragment();
             mVideoEditFragment.setBitmap(bmp);
+            mVideoEditFragment.setEditedVideoShareListener(listener);
             ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
                     .add(R.id.video_edit_layout, mVideoEditFragment).commit();
         }

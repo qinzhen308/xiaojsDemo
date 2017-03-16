@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.ui.classroom.OnEditedVideoShareListener;
 import cn.xiaojs.xma.ui.classroom.talk.InviteFriendAdapter;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -54,10 +56,14 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     private int mCheckMode = MODE_UN_CHECK_ALL;
     private String mTicket;
     private ContactAdapter mContactAdapter;
+    private Bitmap mBitmap;
+    private OnEditedVideoShareListener mEditedVideoShareListener;
 
-    public ShareDoodlePopWindow(Context context, String ticket) {
+    public ShareDoodlePopWindow(Context context, String ticket, Bitmap bitmap, OnEditedVideoShareListener listener) {
         mContext = context;
         mTicket = ticket;
+        mEditedVideoShareListener = listener;
+
         init();
     }
 
@@ -139,8 +145,14 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
             case R.id.confirm_share:
                 if (mCheckToDiscussionBtn.isSelected()) {
                     Toast.makeText(mContext, "发送到交流群", Toast.LENGTH_SHORT).show();
+                    if (mEditedVideoShareListener != null) {
+                        mEditedVideoShareListener.onVideoShared(null, mBitmap);
+                    }
                 } else if (mContactAdapter != null && mContactAdapter.getCheckedAttendee() != null){
                     Toast.makeText(mContext, "具体的人", Toast.LENGTH_SHORT).show();
+                    if (mEditedVideoShareListener != null) {
+                        mEditedVideoShareListener.onVideoShared(mContactAdapter.getCheckedAttendee(), mBitmap);
+                    }
                 } else {
                     Toast.makeText(mContext, "请选择需要发送的人", Toast.LENGTH_SHORT).show();
                 }
