@@ -80,7 +80,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
                 .error(R.drawable.default_avatar)
                 .into(holder.portrait);
         holder.name.setText(bean.from.name);
-        holder.msg.setText(bean.body != null ? bean.body.text : null);
+        holder.msgTxt.setText(bean.body != null ? bean.body.text : null);
         holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_MM_SS));
     }
 
@@ -122,7 +122,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
         holder.name = (TextView) v.findViewById(R.id.name);
         holder.time = (TextView) v.findViewById(R.id.time);
-        holder.msg = (TextView) v.findViewById(R.id.msg);
+        holder.msgTxt = (TextView) v.findViewById(R.id.msg_txt);
         return holder;
     }
 
@@ -157,7 +157,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         RoundedImageView portrait;
         TextView name;
         TextView time;
-        TextView msg;
+        TextView msgTxt;
 
         public Holder(View view) {
             super(view);

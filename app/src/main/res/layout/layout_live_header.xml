@@ -16,13 +16,13 @@
                 android:orientation="horizontal"
                 android:background="@drawable/white_grey_selector"
                 android:layout_width="match_parent"
-                android:visibility="gone"
                 android:layout_height="wrap_content">
 
             <TextView
                     android:textSize="@dimen/font_30px"
                     android:textColor="@color/font_black"
                     android:text="@string/course_of_teach"
+                    android:textStyle="bold"
                     android:layout_marginLeft="@dimen/px30"
                     android:layout_marginTop="@dimen/px30"
                     android:layout_marginBottom="@dimen/px30"
@@ -60,8 +60,8 @@
                         android:textColor="@color/common_text"
                         android:textSize="@dimen/font_28px"
                         android:layout_marginTop="@dimen/px50"
-                        android:layout_marginLeft="@dimen/px80"
-                        android:layout_marginRight="@dimen/px80"
+                        android:layout_marginLeft="@dimen/px130"
+                        android:layout_marginRight="@dimen/px130"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center_horizontal"
                         android:text="@string/teacher_no_lesson_tip"
@@ -86,11 +86,6 @@
                     android:layout_height="wrap_content"/>
         </FrameLayout>
 
-
-        <View
-                style="@style/DividerHorizontal"
-                android:layout_height="@dimen/px30"
-                android:background="@color/main_bg"/>
     </LinearLayout>
 
 
@@ -111,6 +106,7 @@
 
             <TextView
                     android:textSize="@dimen/font_30px"
+                    android:textStyle="bold"
                     android:textColor="@color/font_black"
                     android:text="@string/course_of_learn"
                     android:layout_marginLeft="@dimen/px30"

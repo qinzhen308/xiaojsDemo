@@ -237,8 +237,10 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
             } else if ((liveClasses.taught == null || liveClasses.taught.isEmpty())
                     && (liveClasses.enrolled == null || liveClasses.enrolled.isEmpty())) {
                 //没有教的课也没有学的课
+                mEnrollLessonTitleView.setVisibility(View.VISIBLE);
                 if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)) {
                     //当前用户是老师
+                    mTeachLessonTitleView.setVisibility(View.VISIBLE);
                     mTeacherWrapper.setVisibility(View.VISIBLE);
                     mStudentWrapper.setVisibility(View.GONE);
                     mTeachLessonEmpty.setVisibility(View.VISIBLE);
@@ -252,8 +254,10 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
             }
         } else {
             //没有教的课也没有学的课
+            mEnrollLessonTitleView.setVisibility(View.VISIBLE);
             if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)) {
                 //当前用户是老师
+                mTeachLessonTitleView.setVisibility(View.VISIBLE);
                 mTeacherWrapper.setVisibility(View.VISIBLE);
                 mStudentWrapper.setVisibility(View.GONE);
                 mTeachLessonEmpty.setVisibility(View.VISIBLE);
