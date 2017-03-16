@@ -27,7 +27,9 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ELResponse;
 import cn.xiaojs.xma.model.LessonDetail;
@@ -37,19 +39,22 @@ import cn.xiaojs.xma.model.Teacher;
 import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.model.social.Dimension;
+import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.BlockTabView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
 import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.ShareUtil;
+import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
-public class LessonHomeActivity extends BaseActivity {
+public class LessonHomeActivity extends BaseActivity{
     public final static int ENTRANCE_FROM_TEACH_LESSON = 0;
     public final static int ENTRANCE_FROM_ENROLL_LESSON = 1;
 
@@ -145,10 +150,32 @@ public class LessonHomeActivity extends BaseActivity {
 
                 if (mLessonDetail == null) return;
 
-                Teacher tea = mLessonDetail.getTeacher();
+                final Teacher tea = mLessonDetail.getTeacher();
                 if (tea == null || tea.getBasic() == null) return;
 
-                JpushUtil.launchChat(LessonHomeActivity.this, tea._id,tea.getBasic().getName());
+                String sex = "true";
+
+                boolean isFollowed = DataManager.existInContacts(this, tea._id);
+
+                BaseBusiness.advisory(this, isFollowed, tea._id, tea.getBasic().getName(), sex, new BaseBusiness.OnFollowListener() {
+                    @Override
+                    public void onFollow(long group) {
+                        if (group > 0) {
+                            SocialManager.followContact(LessonHomeActivity.this, tea._id, group, new APIServiceCallback<Relation>() {
+                                @Override
+                                public void onSuccess(Relation object) {
+                                    ToastUtil.showToast(getApplicationContext(), R.string.followed);
+
+                                }
+
+                                @Override
+                                public void onFailure(String errorCode, String errorMessage) {
+                                    ToastUtil.showToast(getApplicationContext(), errorMessage);
+                                }
+                            });
+                        }
+                    }
+                });
                 break;
 
         }
@@ -463,7 +490,6 @@ public class LessonHomeActivity extends BaseActivity {
 //            return v;
 //        }
 //    }
-
 
 
 

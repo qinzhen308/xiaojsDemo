@@ -40,6 +40,8 @@ import retrofit2.Response;
 
 public class SocialRequest extends ServiceRequest {
 
+    private String currentAccountId;
+
     public SocialRequest(Context context, APIServiceCallback callback) {
         super(context, callback);
     }
@@ -148,6 +150,8 @@ public class SocialRequest extends ServiceRequest {
 
     public void followContact(String contact, long group) {
 
+        currentAccountId = contact;
+
         FollowParam param = new FollowParam();
         param.contact = contact;
         param.group = group;
@@ -157,6 +161,9 @@ public class SocialRequest extends ServiceRequest {
     }
 
     public void unfollowContact(String contact) {
+
+        currentAccountId = contact;
+
         Call<ResponseBody> call = getService().unfollowContact(contact);
         enqueueRequest(APIType.UNFOLLOW_CONTACT,call);
     }
@@ -205,11 +212,12 @@ public class SocialRequest extends ServiceRequest {
             ArrayList<ContactGroup> result = (ArrayList<ContactGroup>) responseBody;
 
             if (result != null) {
-                Intent i = new Intent(getContext(), SyncService.class);
-                i.putExtra(DataManager.SYNC_TYPE,DataManager.TYPE_CONTACT);
-                i.putExtra(DataManager.EXTRA_CONTACT,result);
-                DataManager.syncData(getContext(),i);
+                DataManager.lanuchContactService(getContext(), result);
             }
+        }else if (apiType == APIType.FOLLOW_CONTACT) {
+            DataManager.getCache(getContext()).addContactId(currentAccountId);
+        }else if (apiType == APIType.UNFOLLOW_CONTACT) {
+            DataManager.getCache(getContext()).removeContactId(currentAccountId);
         }
     }
 }

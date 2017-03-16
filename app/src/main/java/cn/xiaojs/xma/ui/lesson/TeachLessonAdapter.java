@@ -436,9 +436,17 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     //分享
     private void share(TeachLesson bean) {
 
+        if (bean == null) return;
+
         String startTime = TimeUtil.format(bean.getSchedule().getStart().getTime(),
                 TimeUtil.TIME_YYYY_MM_DD_HH_MM);
-        ShareUtil.show((Activity) mContext,bean.getTitle(),new StringBuilder(startTime).toString(),"https://www.baidu.com");
+
+        String name = "";
+        if (bean.getTeacher() !=null && bean.getTeacher().getBasic() != null) {
+           name = bean.getTeacher().getBasic().getName();
+        }
+
+        ShareUtil.show((Activity) mContext,bean.getTitle(),new StringBuilder(startTime).append("\r\n").append(name).toString(),"https://www.baidu.com");
     }
 
     //报名注册

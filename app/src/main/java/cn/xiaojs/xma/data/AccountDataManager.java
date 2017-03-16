@@ -148,9 +148,6 @@ public class AccountDataManager {
         saveAliaTags(context,user.getAliasAndTags());
 
         setUserInfo(context,user);
-
-        DataManager.init(context);
-
     }
 
     public static void setUserInfo(Context context, User user) {
