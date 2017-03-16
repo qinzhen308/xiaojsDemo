@@ -82,6 +82,26 @@ public class CollaManager {
         qiniuRequest.getToken(Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY,1);
     }
 
+    public void addToLibrary(Context context,
+                             @NonNull byte[] bytes,
+                             @NonNull final String fileName,
+                             String ticket,
+                             @NonNull QiniuService qiniuService) {
+        UploadParam param = new UploadParam();
+        param.fileName = fileName;
+        param.ticket = ticket;
+        addToLibrary(context,bytes,param,qiniuService);
+    }
+
+    private void addToLibrary(Context context,
+                              @NonNull byte[] data,
+                              @NonNull UploadParam param,
+                              @NonNull QiniuService qiniuService) {
+
+        qiniuRequest = new QiniuRequest(context,data,param,qiniuService);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY,1);
+    }
+
     /**
      * 取消上传
      */

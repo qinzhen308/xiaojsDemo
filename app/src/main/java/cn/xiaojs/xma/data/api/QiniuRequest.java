@@ -38,7 +38,11 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]> {
     private int type;
     private boolean isCanceled = false;
 
+    private byte[] dataBytes;
+
     private UploadParam uploadParam;
+
+
 
 
 
@@ -50,6 +54,13 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]> {
     public QiniuRequest(Context context, String filePath, UploadParam param, QiniuService service) {
         iniRequest(context, filePath, service);
         this.uploadParam = param;
+
+    }
+
+    public QiniuRequest(Context context, byte[] datas, UploadParam param, QiniuService service) {
+        iniRequest(context, filePath, service);
+        this.uploadParam = param;
+        this.dataBytes = datas;
 
     }
 
@@ -91,42 +102,40 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]> {
         uploadManager.put(filePath, uploadKey, uploadToken, new UpCompletionHandler() {
             @Override
             public void complete(String key, ResponseInfo info, JSONObject response) {
-
+                completed(key,info,response,callback);
+            }
+        },new UploadOptions(null, null, false, new UpProgressHandler() {
+            @Override
+            public void progress(String key, double percent) {
                 if (XiaojsConfig.DEBUG) {
-                    Logger.d("qiniu:%s", key + ",\r\n " + info + ",\r\n " + response);
+                    Logger.d("the progress====" + percent);
+                }
+                if (callback != null){
+                    callback.uploadProgress(key, percent);
                 }
 
-                if (collaRequest.getServiceCallback() == null) {
+            }
+        }, new UpCancellationSignal() {
+            @Override
+            public boolean isCancelled() {
+                return isCanceled;
+            }
+        }));
+    }
 
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("the API service callback is now null, so don't send callback and return");
-                    }
+    private void uploadFile(@NonNull byte[] bytes,
+                            @NonNull String uploadKey,
+                            @NonNull String uploadToken,
+                            @NonNull final QiniuService callback){
 
-                    return;
-                }
+        // Configuration configuration = createConfiguration();
+        // UploadManager uploadManager = new UploadManager(configuration);
+        UploadManager uploadManager = new UploadManager();
+        uploadManager.put(bytes, uploadKey, uploadToken, new UpCompletionHandler() {
+            @Override
+            public void complete(String key, ResponseInfo info, JSONObject response) {
 
-
-                if (info.isOK()){
-
-                    if (type == Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY) {
-                        if (XiaojsConfig.DEBUG) {
-                            Logger.d("now to add library");
-                        }
-                        docToLibrary(key);
-                    } else {
-                        if (callback != null) {
-                            callback.uploadSuccess(key,null);
-                        }
-                    }
-                }else if(info.isCancelled()) {
-                    if (callback != null) {
-                        callback.uploadFailure(true);
-                    }
-                }else {
-                    if (callback != null) {
-                        callback.uploadFailure(false);
-                    }
-                }
+                completed(key,info,response,callback);
 
             }
         },new UploadOptions(null, null, false, new UpProgressHandler() {
@@ -146,6 +155,48 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]> {
                 return isCanceled;
             }
         }));
+    }
+
+    private void completed(String key,
+                           ResponseInfo info,
+                           JSONObject response,
+                           @NonNull final QiniuService callback) {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("qiniu:%s", key + ",\r\n " + info + ",\r\n " + response);
+        }
+
+        if (collaRequest.getServiceCallback() == null) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the API service callback is now null, so don't send callback and return");
+            }
+
+            return;
+        }
+
+
+        if (info.isOK()){
+
+            if (type == Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY) {
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("now to add library");
+                }
+                docToLibrary(key);
+            } else {
+                if (callback != null) {
+                    callback.uploadSuccess(key,null);
+                }
+            }
+        }else if(info.isCancelled()) {
+            if (callback != null) {
+                callback.uploadFailure(true);
+            }
+        }else {
+            if (callback != null) {
+                callback.uploadFailure(false);
+            }
+        }
     }
 
 
@@ -215,7 +266,12 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]> {
         if (XiaojsConfig.DEBUG) {
             Logger.d("get upload for token onSuccess token=%s,key=%s",token,key);
         }
-        uploadFile(filePath,key,token,qiniuService);
+
+        if (dataBytes != null) {
+            uploadFile(dataBytes,key,token,qiniuService);
+        }else {
+            uploadFile(filePath,key,token,qiniuService);
+        }
 
     }
 
