@@ -154,6 +154,10 @@ public class LoginActivity extends BaseActivity {
                         DataPref.setXASPort(LoginActivity.this, aPort);
                         DataPref.setXLSPort(LoginActivity.this, lPort);
 
+                        //切换地址后，清空token 和 session
+                        SecurityManager.saveCSRFToken(LoginActivity.this, "");
+                        AccountDataManager.saveSessionID(LoginActivity.this,"");
+
                     }
                 });
                 commonDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {

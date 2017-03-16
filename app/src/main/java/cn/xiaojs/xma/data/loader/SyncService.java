@@ -20,13 +20,13 @@ import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.util.NetUtil;
 
 /**
  * Created by maxiaobao on 2017/1/12.
  */
 
 public class SyncService extends IntentService {
-
 
 
     public SyncService() {
@@ -43,63 +43,68 @@ public class SyncService extends IntentService {
         try {
             final Context context = getApplicationContext();
 
-            int syncType = intent.getIntExtra(DataManager.SYNC_TYPE,-1);
+            int syncType = intent.getIntExtra(DataManager.SYNC_TYPE, -1);
             switch (syncType) {
                 case DataManager.TYPE_CONTACT:
                     ArrayList<ContactGroup> entry = (ArrayList<ContactGroup>) intent.
                             getSerializableExtra(DataManager.EXTRA_CONTACT);
-                    if (entry != null){
-                        DataManager.syncContactData(context,entry);
+                    if (entry != null) {
+                        DataManager.syncContactData(context, entry);
                     }
                     break;
-                default:
 
-                    //FIXME
-                    //if(SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)) {
+                case DataManager.TYPE_INIT:
 
+                    DataManager.initMemCache(context);
+
+                    //是否是老师
+                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
                         Privilege[] privileges = SecurityManager.havePrivilegeSync(context,
                                 Su.Permission.COURSE_OPEN_CREATE);
                         SecurityManager.savePermission(context, privileges);
+                    }
 
-                    //}
+                    //同步联系人到DB
+                    ArrayList<ContactGroup> contactGroups = null;
+                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
+                        contactGroups = SocialManager.getContacts(context);
+                        DataManager.syncContactData(context, contactGroups);
+                    }
 
-                    ArrayList<ContactGroup> contactGroups = SocialManager.getContacts(context);
-                    DataManager.syncContactData(context,contactGroups);
-
-
+                    //同步分组到DB和Memory cache
                     HashMap<Long, String> cgMap = (HashMap<Long, String>) intent.getSerializableExtra(DataManager.EXTRA_GROUP);
-
                     Map<Long, ContactGroup> map = new HashMap<>();
-                    if (cgMap !=null) {
+                    if (cgMap != null) {
                         Set<Long> keys = cgMap.keySet();
-                        for (Long key: keys) {
+                        for (Long key : keys) {
                             ContactGroup contactGroup = new ContactGroup();
                             contactGroup.name = cgMap.get(key);
                             contactGroup.group = key;
                             contactGroup.collection = new ArrayList<>(0);
-                            map.put(key,contactGroup);
+                            map.put(key, contactGroup);
                         }
 
+                    }else if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE){
+                        map = AccountDataManager.getHomeData(context);
                     }
-                    //Map<Long, ContactGroup> map = AccountDataManager.getHomeData(context);
-                    if (contactGroups!=null && cgMap != null) {
 
-                        for (ContactGroup group : contactGroups){
+                    if (contactGroups != null && cgMap != null) {
+
+                        for (ContactGroup group : contactGroups) {
 
                             ContactGroup cg = map.get(group.group);
-                            if (cg !=null) {
+                            if (cg != null) {
                                 cg.collection = group.collection;
                             }
                         }
                     }
-                    DataManager.syncGroupData(context,map);
-
+                    DataManager.syncGroupData(context, map);
                     break;
 
 
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

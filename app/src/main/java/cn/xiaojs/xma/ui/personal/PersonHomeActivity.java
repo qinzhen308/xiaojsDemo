@@ -38,6 +38,7 @@ import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -59,7 +60,7 @@ import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
-public class PersonHomeActivity extends BaseScrollTabActivity {
+public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBusiness.OnFollowListener{
     private Unbinder mBinder;
 
     @BindView(R.id.person_home)
@@ -180,8 +181,11 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
         if (home == null) {
             return;
         }
-
         mBean = home;
+
+        //FIXME 接口isFollowed没有返回正确的值，所以先从内存中判断。
+        mBean.isFollowed = DataManager.existInContacts(this,mAccount);
+
         if (!mIsMyself) {
             headerNormal(home.isFollowed);
         }
@@ -203,7 +207,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
             fragments.add(f2);
             //fragments.add(f3);
             String[] tabs = new String[]{
-                    getString(R.string.person_lesson,StringUtil.getTa(home.profile.sex)),
+                    getString(R.string.person_lesson, StringUtil.getTa(home.profile.sex)),
                     //getString(R.string.person_comment),
                     getString(R.string.person_moment)};
             if (mIsMyself) {
@@ -220,7 +224,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
         //set avatar
         mBlurImgView.setImageResource(R.drawable.portrait_default_bg);
-        String u = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(AccountDataManager.getAccountID(this),300);
+        String u = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(AccountDataManager.getAccountID(this), 300);
         ExpandGlide expandGlide = new ExpandGlide();
         expandGlide.with(this)
                 .load(Uri.parse(u))
@@ -350,56 +354,26 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
 
                 break;
             case R.id.scroll_tab_right_view://加关注
-                showFollowDialog();
+                if (mBean !=null && !mBean.isFollowed){
+                    BaseBusiness.showFollowDialog(this, this);
+                }
                 break;
         }
     }
 
     private void sendMessage() {
         if (mBean != null) {
-            //if (mBean.isFollowed) {//已关注跳转到聊天界面
-
-                if (mBean.profile != null) {
-                    JpushUtil.launchChat(this, mAccount, mBean.profile.name);
-                }
-//            } else {//未关注先提示去关注
-//                final CommonDialog dialog = new CommonDialog(this);
-//                if (mBean.basic == null){
-//                    mBean.basic = new cn.xiaojs.xma.model.account.Account.Basic();
-//                    mBean.basic.setSex("true");
-//                }
-//                dialog.setDesc(getString(R.string.none_follow_tip,StringUtil.getTa(mBean.profile.sex),StringUtil.getTa(mBean.profile.sex)));
-//                dialog.setOkText(getString(R.string.follow_somebody, StringUtil.getTa(mBean.profile.sex)));
-//                dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-//                    @Override
-//                    public void onClick() {
-//                        dialog.dismiss();
-//                    }
-//                });
-//                dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-//                    @Override
-//                    public void onClick() {
-//                        dialog.dismiss();
-//                        //follow();
-//                        showFollowDialog();
-//                    }
-//                });
-//
-//                dialog.show();
-//            }
-            //}
+            String name = (mBean.profile== null || TextUtils.isEmpty(mBean.profile.name))? "未知" : mBean.profile.name;
+            String sex = (mBean.basic==null || TextUtils.isEmpty(mBean.basic.getSex())) ? "true" : mBean.basic.getSex();
+            BaseBusiness.advisory(this,mBean.isFollowed,mAccount,name,sex,this);
         }
     }
 
-    private void showFollowDialog(){
-        BaseBusiness.showFollowDialog(this, new BaseBusiness.OnFollowListener() {
-            @Override
-            public void onFollow(long group) {
-                if (group > 0){
-                    follow(group);
-                }
-            }
-        });
+    @Override
+    public void onFollow(long group) {
+        if (group > 0) {
+            follow(group);
+        }
     }
 
     private void follow(long group) {
@@ -410,12 +384,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity {
                     ToastUtil.showToast(getApplicationContext(), R.string.followed);
                     mBean.isFollowed = true;
                     headerNormal(mBean.isFollowed);
-//
-//                    Contact contact = new Contact();
-//                    contact.alias = alias;
-//                    contact.account = id;
-//
-//                    DataManager.addContact(getApplicationContext(),Social.ContactGroup.FRIENDS,contact);
+
                 }
 
                 @Override

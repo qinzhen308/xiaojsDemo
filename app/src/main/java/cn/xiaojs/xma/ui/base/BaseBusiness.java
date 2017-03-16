@@ -28,7 +28,10 @@ import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SingleSelectDialog;
+import cn.xiaojs.xma.util.JpushUtil;
+import cn.xiaojs.xma.util.StringUtil;
 
 public class BaseBusiness {
     public final static DecimalFormat mPriceDecimalFormat = new DecimalFormat("0.00");
@@ -175,6 +178,32 @@ public class BaseBusiness {
 
     public static String formatDiscount(float price) {
         return mDiscountDecimalFormat.format(price);
+    }
+
+    public static void advisory(final Context context, boolean followed, String accountId, String name, String sex, final OnFollowListener listener) {
+        if (followed) {
+                JpushUtil.launchChat(context, accountId, name);
+        }else {
+            final CommonDialog dialog = new CommonDialog(context);
+
+            dialog.setDesc(context.getString(R.string.none_follow_tip, StringUtil.getTa(sex),StringUtil.getTa(sex)));
+            dialog.setOkText(context.getString(R.string.follow_somebody, StringUtil.getTa(sex)));
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                }
+            });
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    showFollowDialog(context,listener);
+                }
+            });
+
+            dialog.show();
+        }
     }
 
     public static void showFollowDialog(Context context, final OnFollowListener listener) {

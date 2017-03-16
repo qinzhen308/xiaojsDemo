@@ -13,6 +13,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.db.ContactDao;
 import cn.xiaojs.xma.data.loader.DataLoder;
+import cn.xiaojs.xma.data.loader.SyncService;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -41,11 +43,12 @@ public class DataManager {
 
     public static final String SYNC_TYPE = "stype";
     public static final int TYPE_CONTACT = 1;
+    public static final int TYPE_INIT = 2;
 
     public static final String EXTRA_CONTACT = "econtact";
     public static final String EXTRA_GROUP = "egroup";
 
-    private static MemCache getCache(Context context) {
+    public static MemCache getCache(Context context) {
         return MemCache.getDataCache(context);
     }
 
@@ -58,8 +61,8 @@ public class DataManager {
         saveVersionCode(context, APPUtils.getAPPVersionCode(context));
 
         if (AccountDataManager.isLogin(context)) {
-            //init data cache
-            getCache(context).init();
+
+            lanuchInitDataService(context, null);
 
             String aid  = AccountDataManager.getAccountID(context);
             //jmessage login
@@ -73,7 +76,31 @@ public class DataManager {
         }
     }
 
+    public static void lanuchInitDataService(Context context, HashMap<Long, String> groupMap) {
+        Intent i = new Intent(context, SyncService.class);
+        i.putExtra(SYNC_TYPE, TYPE_INIT);
 
+        if (groupMap != null) {
+            i.putExtra(EXTRA_GROUP,groupMap);
+        }
+
+        context.startService(i);
+    }
+
+    public static void lanuchContactService(Context context, ArrayList<ContactGroup> contactGroups) {
+        Intent i = new Intent(context, SyncService.class);
+        i.putExtra(DataManager.SYNC_TYPE,DataManager.TYPE_CONTACT);
+        i.putExtra(DataManager.EXTRA_CONTACT,contactGroups);
+        context.startService(i);
+    }
+
+    /**
+     * 初始化APP内存缓存数据，比较耗时
+     * @param context
+     */
+    public static void initMemCache(Context context) {
+        getCache(context).init();
+    }
 
     /**
      * 持久化客户端version code
@@ -112,12 +139,6 @@ public class DataManager {
 //    public static ArrayList<ContactGroup> getContactGroupData(Context context) {
 //        return getCache(context).getContactGroupData();
 //    }
-
-    public static void syncData(Context context, Intent intent) {
-
-        //intent.setClass(context,SyncService.class);
-        context.startService(intent);
-    }
 
     /**
      * 清除内存、缓存文件、数据库数据
@@ -179,6 +200,8 @@ public class DataManager {
 
     }
 
+
+
     /**
      * Add new group to cache and DB
      */
@@ -199,6 +222,28 @@ public class DataManager {
 
     }
 
+    /**
+     * 通过用户ID，判断用户是否存在联系人中
+     * @param context
+     * @param accountId
+     * @return
+     */
+    public static boolean existInContacts(Context context, String accountId) {
+        if (!TextUtils.isEmpty(accountId)) {
+            Set<String> ids = getCache(context).getContactIds();
+            if (ids !=null && ids.contains(accountId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 同步分组数据到DB和Memory
+     * @param context
+     * @param map
+     */
     public static void syncGroupData(Context context, Map<Long, ContactGroup> map) {
 
         if (map == null) {
@@ -216,19 +261,26 @@ public class DataManager {
 
     }
 
+    /**
+     * 同步联系人数据到DB和Memory
+     * @param context
+     * @param contactGroups
+     */
     public static void syncContactData(Context context, ArrayList<ContactGroup> contactGroups) {
 
         if (contactGroups == null) {
             return;
         }
-
-//        DataManager.MemCache cache = getCache(context);
-//        cache.syncContactData(contactGroups);
-
         ContactDao contactDao = new ContactDao();
         contactDao.clearContacts(context);
-        contactDao.addContact(context, contactGroups);
+
+        DataManager.MemCache cache = getCache(context);
+        Set<String> ids = cache.getContactIds();
+        ids.clear();
+
+        contactDao.addContact(context, contactGroups,ids);
     }
+
 
 //    public static void removeContact(Context context, long gid, String cid) {
 //
@@ -389,6 +441,7 @@ public class DataManager {
 
         private MemCache(Context context) {
             this.context = context.getApplicationContext();
+            contactIds = new HashSet<>();
         }
 
         private static MemCache getDataCache(Context context) {
@@ -404,14 +457,12 @@ public class DataManager {
         }
 
         public void init() {
-            //FIXME if has a lot of groups, need to work background thread to avoid ANR
-            //init group cache data
-            initGroupData();
 
-            //initContact(groupMap);
+            //init cache data
+            initContactData();
 
             if (XiaojsConfig.DEBUG) {
-                Logger.d("MemCache has init...");
+                Logger.d("MemCache init completed...");
             }
         }
 
@@ -421,22 +472,28 @@ public class DataManager {
             if (groupMap != null) {
                 groupMap.clear();
             }
-        }
 
+            if (contactIds !=null) {
+                contactIds.clear();
+            }
+        }
 
         protected Map<Long, ContactGroup> getGroupData() {
             return groupMap;
         }
 
-//        protected ArrayList<ContactGroup> getContactGroupData() {
-//            return contactGroups;
-//        }
+        protected Set<String> getContactIds() {
+            if (contactIds ==null) {
+                contactIds = new HashSet<>();
+            }
+            return contactIds;
+        }
 
 
         ///////////////////////////////////////////////////////////////
         //Contact
 
-        private void initGroupData() {
+        private void initContactData() {
 
             addDefaultGroup();
 
@@ -447,33 +504,23 @@ public class DataManager {
                 groupMap.putAll(map);
             }
 
+            //contacts
+            contactIds = contactDao.getContactIds(context);
+
         }
 
-//        private void initContact(Map<Long, ContactGroup> map) {
-//
-//            if (map ==null)
-//                return;
-//
-//            ContactDao contactDao = new ContactDao();
-//            ArrayList<ContactGroup> contacts = contactDao.getContacts(context,map);
-//            if (contacts!=null) {
-//                if (contactGroups == null) {
-//                    contactGroups = new ArrayList<>(contacts.size());
-//                }
-//                contactGroups.addAll(contacts);
-//            }
-//        }
+        public void addContactId(String accountId) {
+            if (contactIds == null) {
+                contactIds = new HashSet<>();
+            }
+            contactIds.add(accountId);
+        }
 
-//        public void syncContactData(ArrayList<ContactGroup> contacts) {
-//
-//            if (contactGroups == null) {
-//                contactGroups = new ArrayList<>(contacts);
-//            }else{
-//                contacts.clear();
-//                contacts.addAll(contacts);
-//            }
-//
-//        }
+        public void removeContactId(String accountId) {
+            if (contactIds != null) {
+                contactIds.remove(accountId);
+            }
+        }
 
         public void syncGroupData(Map<Long, ContactGroup> map) {
 
@@ -488,43 +535,6 @@ public class DataManager {
             }
 
         }
-
-//        private void removeContact(long gid,String cid) {
-//            if (groupMap == null) {
-//                return;
-//            }
-//
-//            ContactGroup contactGroup = groupMap.get(gid);
-//
-//            if (contactGroup != null) {
-//                Contact rc = null;
-//                for (Contact c : contactGroup.collection) {
-//                    if (c.account.equals(cid)) {
-//                        rc = c;
-//                        break;
-//                    }
-//                }
-//
-//                if (rc != null) {
-//                    contactGroup.collection.remove(rc);
-//                }
-//            }
-//        }
-
-//        private void addContact(long gid,Contact contact) {
-//
-//            if (contact == null)
-//                return;
-//
-//            ContactGroup contactGroup = groupMap.get(gid);
-//            contactGroup.collection.add(contact);
-//
-//            if (contactGroups == null) {
-//                contactGroups = new ArrayList<>();
-//                contactGroups.add(contactGroup);
-//            }
-//
-//        }
 
         private void addDefaultGroup() {
 

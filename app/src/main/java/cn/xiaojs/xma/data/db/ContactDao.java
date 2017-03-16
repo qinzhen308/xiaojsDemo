@@ -9,8 +9,10 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.model.social.Contact;
@@ -59,8 +61,8 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
 
     @Override
     public void syncData(Context context, ArrayList<ContactGroup> entry) {
-        clearContacts(context);
-        addContact(context,entry);
+//        clearContacts(context);
+//        addContact(context,entry);
     }
 
     /**
@@ -185,6 +187,49 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
         }
 
         return contactGroups;
+    }
+
+    /**
+     * 获取联系人的ID集合
+     * @param context
+     * @return
+     */
+    public Set<String> getContactIds(Context context) {
+        SQLiteDatabase db = DBHelper.getReadDatabase(context);
+        Set<String> ids = null;
+        Cursor cursor = null;
+
+        try {
+            String sql = new StringBuilder("select ")
+                    .append(DBTables.TContact.CID)
+                    .append(" from ")
+                    .append(DBTables.TContact.TABLE_NAME)
+                    .append(" where ")
+                    .append(DBTables.TContact.FOLLOW_TYPE)
+                    .append(" = '")
+                    .append(CLASSES)
+                    .append("'")
+                    .toString();
+
+            cursor = db.rawQuery(sql, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                ids = new HashSet<>(cursor.getCount());
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    String id = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.CID));
+                    ids.add(id);
+                }
+            }
+
+        }catch (Exception e) {
+             e.printStackTrace();
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return ids;
     }
 
     /**
@@ -434,7 +479,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
      * @param context
      * @param contactGroups
      */
-    public void addContact(Context context, ArrayList<ContactGroup> contactGroups) {
+    public void addContact(Context context, ArrayList<ContactGroup> contactGroups, Set<String> ids) {
 
         SQLiteDatabase db = DBHelper.getWriteDb(context);
         try {
@@ -476,6 +521,10 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
 
                     String cid = isclass? contact.id: contact.account;
                     stmt.bindString(2, cid);
+
+                    if (ids != null && !isclass) {
+                        ids.add(cid);
+                    }
 
                     stmt.bindLong(3, contact.followType);
 

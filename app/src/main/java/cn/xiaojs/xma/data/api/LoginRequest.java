@@ -99,14 +99,7 @@ public class LoginRequest extends ServiceRequest {
             AccountDataManager.saveUserInfo(getApiManager().getAppContext(), info.getUser());
             UpgradeManager.setUpgrade(getContext(),info.getUpgrade());
 
-
-            HashMap<Long, String> cgMap = info.contactGroups;
-
-            Intent i = new Intent(getContext(), SyncService.class);
-            if (cgMap !=null){
-                i.putExtra(DataManager.EXTRA_GROUP, cgMap);
-            }
-            DataManager.syncData(getContext(),i);
+            DataManager.lanuchInitDataService(getContext(), info.contactGroups);
 
             //jpush
             if (info != null){
