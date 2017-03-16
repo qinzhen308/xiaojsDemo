@@ -18,6 +18,7 @@ package cn.xiaojs.xma.ui.live;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -248,6 +249,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 } else {
                     mTeachLessonEmpty.setVisibility(View.GONE);
                     mEnrollLessonEmpty.setVisibility(View.VISIBLE);
+                    mEnrollLessonEmpty.setText(Html.fromHtml(getString(R.string.student_no_lesson_tip)));
                     mTeacherWrapper.setVisibility(View.GONE);
                     mStudentWrapper.setVisibility(View.VISIBLE);
                 }
@@ -265,6 +267,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
             } else {
                 mTeachLessonEmpty.setVisibility(View.GONE);
                 mEnrollLessonEmpty.setVisibility(View.VISIBLE);
+                mEnrollLessonEmpty.setText(Html.fromHtml(getString(R.string.student_no_lesson_tip)));
                 mTeacherWrapper.setVisibility(View.GONE);
                 mStudentWrapper.setVisibility(View.VISIBLE);
             }
