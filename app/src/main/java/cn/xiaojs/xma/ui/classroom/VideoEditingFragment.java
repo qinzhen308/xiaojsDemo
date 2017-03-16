@@ -95,7 +95,7 @@ public class VideoEditingFragment extends BaseFragment {
                 selectShareContact(v);
                 break;
             case R.id.save_doodle:
-                saveEditedBmpToLibrary(mBitmap);
+                saveEditedBmpToLibrary(mBoardController.getWhiteboardBitmap());
                 break;
             case R.id.wb_toolbar_btn:
                 if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
@@ -123,7 +123,7 @@ public class VideoEditingFragment extends BaseFragment {
      */
     private void selectShareContact(View anchor) {
         if (mSharePopWindow == null) {
-            mSharePopWindow = new ShareDoodlePopWindow(mContext, mTicket, mBitmap, mEditedVideoShareListener);
+            mSharePopWindow = new ShareDoodlePopWindow(mContext, mTicket, mBoardController, mEditedVideoShareListener);
         }
 
         int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);

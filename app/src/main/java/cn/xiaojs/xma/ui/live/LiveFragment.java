@@ -18,6 +18,7 @@ package cn.xiaojs.xma.ui.live;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -237,8 +238,10 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
             } else if ((liveClasses.taught == null || liveClasses.taught.isEmpty())
                     && (liveClasses.enrolled == null || liveClasses.enrolled.isEmpty())) {
                 //没有教的课也没有学的课
+                mEnrollLessonTitleView.setVisibility(View.VISIBLE);
                 if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)) {
                     //当前用户是老师
+                    mTeachLessonTitleView.setVisibility(View.VISIBLE);
                     mTeacherWrapper.setVisibility(View.VISIBLE);
                     mStudentWrapper.setVisibility(View.GONE);
                     mTeachLessonEmpty.setVisibility(View.VISIBLE);
@@ -246,14 +249,17 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 } else {
                     mTeachLessonEmpty.setVisibility(View.GONE);
                     mEnrollLessonEmpty.setVisibility(View.VISIBLE);
+                    mEnrollLessonEmpty.setText(Html.fromHtml(getString(R.string.student_no_lesson_tip)));
                     mTeacherWrapper.setVisibility(View.GONE);
                     mStudentWrapper.setVisibility(View.VISIBLE);
                 }
             }
         } else {
             //没有教的课也没有学的课
+            mEnrollLessonTitleView.setVisibility(View.VISIBLE);
             if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)) {
                 //当前用户是老师
+                mTeachLessonTitleView.setVisibility(View.VISIBLE);
                 mTeacherWrapper.setVisibility(View.VISIBLE);
                 mStudentWrapper.setVisibility(View.GONE);
                 mTeachLessonEmpty.setVisibility(View.VISIBLE);
@@ -261,6 +267,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
             } else {
                 mTeachLessonEmpty.setVisibility(View.GONE);
                 mEnrollLessonEmpty.setVisibility(View.VISIBLE);
+                mEnrollLessonEmpty.setText(Html.fromHtml(getString(R.string.student_no_lesson_tip)));
                 mTeacherWrapper.setVisibility(View.GONE);
                 mStudentWrapper.setVisibility(View.VISIBLE);
             }

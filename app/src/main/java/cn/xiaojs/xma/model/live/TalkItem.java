@@ -32,6 +32,13 @@ public class TalkItem {
     public static class TalkContent{
         public String text;
         public int contentType;
+        public QiNiuImg drawing;
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class QiNiuImg{
+        public String name;
     }
 
     @Override

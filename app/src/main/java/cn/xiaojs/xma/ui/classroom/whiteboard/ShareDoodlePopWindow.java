@@ -56,14 +56,14 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     private int mCheckMode = MODE_UN_CHECK_ALL;
     private String mTicket;
     private ContactAdapter mContactAdapter;
-    private Bitmap mBitmap;
+    private WhiteboardController mBoardController;
     private OnEditedVideoShareListener mEditedVideoShareListener;
 
-    public ShareDoodlePopWindow(Context context, String ticket, Bitmap bitmap, OnEditedVideoShareListener listener) {
+    public ShareDoodlePopWindow(Context context, String ticket, WhiteboardController controller, OnEditedVideoShareListener listener) {
         mContext = context;
         mTicket = ticket;
         mEditedVideoShareListener = listener;
-
+        mBoardController = controller;
         init();
     }
 
@@ -144,17 +144,15 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
                 break;
             case R.id.confirm_share:
                 if (mCheckToDiscussionBtn.isSelected()) {
-                    Toast.makeText(mContext, "发送到交流群", Toast.LENGTH_SHORT).show();
                     if (mEditedVideoShareListener != null) {
-                        mEditedVideoShareListener.onVideoShared(null, mBitmap);
+                        mEditedVideoShareListener.onVideoShared(null, mBoardController.getWhiteboardBitmap());
                     }
+                    dismiss();
                 } else if (mContactAdapter != null && mContactAdapter.getCheckedAttendee() != null){
-                    Toast.makeText(mContext, "具体的人", Toast.LENGTH_SHORT).show();
                     if (mEditedVideoShareListener != null) {
-                        mEditedVideoShareListener.onVideoShared(mContactAdapter.getCheckedAttendee(), mBitmap);
+                        mEditedVideoShareListener.onVideoShared(mContactAdapter.getCheckedAttendee(), mBoardController.getWhiteboardBitmap());
                     }
-                } else {
-                    Toast.makeText(mContext, "请选择需要发送的人", Toast.LENGTH_SHORT).show();
+                    dismiss();
                 }
                 break;
         }

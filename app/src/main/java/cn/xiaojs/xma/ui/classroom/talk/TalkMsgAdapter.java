@@ -15,9 +15,15 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,19 +37,24 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.common.xf_foundation.Constants;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.TimeUtil;
 
 public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Holder> {
     public final static int TYPE_MY_SPEAKER = 0;
     public final static int TYPE_OTHER_SPEAKER = 1;
+    private static int MAX_SIZE = 280;
 
     private Context mContext;
     private String mTicket;
@@ -54,6 +65,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         mContext = context;
         mTicket = ticket;
         mLiveCriteria = liveCriteria;
+        MAX_SIZE = context.getResources().getDimensionPixelSize(R.dimen.px280);
     }
 
     public TalkMsgAdapter(Context context, String ticket, LiveCriteria liveCriteria, PullToRefreshListView listView, AbsListView.OnScrollListener listener) {
@@ -62,6 +74,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         scrollListener = listener;
         mTicket = ticket;
         mLiveCriteria = liveCriteria;
+        MAX_SIZE = context.getResources().getDimensionPixelSize(R.dimen.px280);
     }
 
     @Override
@@ -80,7 +93,60 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
                 .error(R.drawable.default_avatar)
                 .into(holder.portrait);
         holder.name.setText(bean.from.name);
-        holder.msg.setText(bean.body != null ? bean.body.text : null);
+        boolean isText = false;
+        String imgKey = null;
+        String txt = null;
+        if (bean.body != null) {
+            if (!TextUtils.isEmpty(bean.body.text)) {
+                txt = bean.body.text;
+                if (bean.body.contentType == Communications.ContentType.TEXT) {
+                    isText = true;
+                }
+            } else {
+                if (bean.body.drawing != null) {
+                    imgKey = bean.body.drawing.name;
+                }
+            }
+        }
+
+        if (isText) {
+            holder.msgImg.setVisibility(View.GONE);
+            holder.msgTxt.setVisibility(View.VISIBLE);
+            holder.msgTxt.setText(bean.body != null ? bean.body.text : null);
+        } else if (!TextUtils.isEmpty(txt) || !TextUtils.isEmpty(imgKey)){
+            holder.msgTxt.setVisibility(View.GONE);
+            holder.msgImg.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(txt)) {
+                //decode base64 to bitmap
+                //TODO 待优化
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)holder.msgImg.getLayoutParams();
+                byte[] imgData = Base64.decode(txt, Base64.DEFAULT);
+                Bitmap bmp = BitmapUtils.byteArrayToBitmap(imgData);
+                if (bmp != null) {
+                    int w = MAX_SIZE;
+                    int h = MAX_SIZE;
+                    if (bmp.getWidth() > bmp.getHeight()) {
+                        w = MAX_SIZE;
+                        h = (int)((bmp.getHeight() / (float)bmp.getWidth()) * MAX_SIZE);
+                    } else {
+                        h = MAX_SIZE;
+                        w = (int)((bmp.getWidth() / (float)bmp.getHeight()) * MAX_SIZE);
+                    }
+                    params.width = w;
+                    params.height = h;
+                }
+                holder.msgImg.setImageBitmap(bmp);
+                //new LoadBase64ImgTask(holder.msgImg).execute(txt);
+            } else {
+                //load img from qiniu url
+                String imgUrl = ClassroomBusiness.getSnapshot(imgKey, MAX_SIZE);
+                Glide.with(mContext)
+                        .load(imgUrl)
+                        .into(holder.msgImg);
+            }
+
+        }
+
         holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_MM_SS));
     }
 
@@ -122,7 +188,8 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         holder.portrait = (RoundedImageView) v.findViewById(R.id.portrait);
         holder.name = (TextView) v.findViewById(R.id.name);
         holder.time = (TextView) v.findViewById(R.id.time);
-        holder.msg = (TextView) v.findViewById(R.id.msg);
+        holder.msgTxt = (TextView) v.findViewById(R.id.msg_txt);
+        holder.msgImg = (ImageView) v.findViewById(R.id.msg_img);
         return holder;
     }
 
@@ -157,7 +224,8 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         RoundedImageView portrait;
         TextView name;
         TextView time;
-        TextView msg;
+        TextView msgTxt;
+        ImageView msgImg;
 
         public Holder(View view) {
             super(view);
@@ -167,5 +235,52 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     private boolean isMyself(String currAccountId) {
         String accountId = AccountDataManager.getAccountID(mContext);
         return accountId != null && accountId.equals(currAccountId);
+    }
+
+    private class LoadBase64ImgTask extends AsyncTask<String, Integer, Bitmap> {
+        private ImageView mImg;
+
+        public LoadBase64ImgTask(ImageView img) {
+            mImg = img;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            if (params == null || params.length == 0 || mImg == null) {
+                return null;
+            }
+
+            String content = params[0];
+            if (TextUtils.isEmpty(content)) {
+                return null;
+            }
+
+            byte[] imgData = Base64.decode(content, Base64.DEFAULT);
+            return BitmapUtils.byteArrayToBitmap(imgData);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bmp) {
+            if (bmp != null) {
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)mImg.getLayoutParams();
+                int w = MAX_SIZE;
+                int h = MAX_SIZE;
+                if (bmp.getWidth() > bmp.getHeight()) {
+                    w = MAX_SIZE;
+                    h = (int)((bmp.getHeight() / (float)bmp.getWidth()) * MAX_SIZE);
+                } else {
+                    h = MAX_SIZE;
+                    w = (int)((bmp.getWidth() / (float)bmp.getHeight()) * MAX_SIZE);
+                }
+                params.width = w;
+                params.height = h;
+                mImg.setImageBitmap(bmp);
+            }
+        }
     }
 }

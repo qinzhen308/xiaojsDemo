@@ -599,6 +599,10 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         }
     }
 
+    public Bitmap getWhiteboardBitmap() {
+        return mCurrWhiteboard != null ? mCurrWhiteboard.getWhiteboardBitmap() : null;
+    }
+
     /**
      * 是否是同步的白板
      */
