@@ -153,8 +153,7 @@
     <!--optional info-->
     <string name="add_cover">添加封面</string>
     <string name="upload_cover_fail">上传封面失败</string>
-    <string name="add_cover_tips">一张好的直播课封面可以提供报名封面哦~</string>
-    <string name="live_lesson_introduce">一张好的直播课封面可以提供报名封面哦~</string>
+    <string name="add_cover_tips">一张好的封面可以增加报名人数哦~</string>
     <string name="live_lesson_brief">直播课简介</string>
     <string name="live_lesson_brief_hint">请填写直播课简介</string>
     <string name="live_lesson_label">标签</string>
@@ -189,11 +188,12 @@
     <string name="invite">邀请</string>
 
     <!--lesson creation-->
+    <string name="lesson_creation_title">开课</string>
     <string name="lesson_creation">我要开课</string>
-    <string name="lesson_creation_tips">目前在APP端只能开设单节直播课，如果要开设课程请登录到PC端操作</string>
+    <string name="lesson_creation_tips">目前只支持创建免费公开课</string>
     <string name="live_lesson">直播课</string>
     <string name="private_lesson">私密课</string>
-    <string name="live_lesson_name">直播课名称</string>
+    <string name="live_lesson_name">课名称</string>
     <string name="subject_category">学科类目</string>
     <string name="teach_form">教学形式</string>
     <string name="teach_form_lecture">公开课</string>
@@ -215,7 +215,7 @@
     <string name="lesson_start_time_hint">请选择上课时间</string>
     <string name="lesson_duration_conflict">您已经在该时间有教授的课，确定需要在该时间继续开课</string>
     <string name="other_settings">其他设置</string>
-    <string name="on_shelves_tips">上架后，学生才可以报名直播课</string>
+    <string name="on_shelves_tips">上架后，学生才可以报名</string>
     <string name="publish_personal_page">发布到个人主页</string>
     <string name="publish_personal_page_tips">在个人主页中展示，才可以分享</string>
     <string name="publish_to_circle">发布到小圈</string>

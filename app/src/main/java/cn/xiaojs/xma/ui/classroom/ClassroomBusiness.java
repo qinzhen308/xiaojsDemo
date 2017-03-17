@@ -104,6 +104,10 @@ public class ClassroomBusiness {
          return ApiManager.getFileBucket() + "/" + name + "?imageView2/0/w/" + size;
     }
 
+    public static String getImageUrl(String name) {
+        return cn.xiaojs.xma.common.xf_foundation.Constants.XCFSUrl + "/" + name;
+    }
+
     public static String bitmapToBase64(Bitmap bitmap) {
         byte[] data = BitmapUtils.bmpToByteArray(bitmap, Bitmap.CompressFormat.JPEG, 50, false);
         try {

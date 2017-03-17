@@ -20,7 +20,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/px28"
-                android:background="@color/main_orange"
+                android:background="#ebf0f7"
                 android:visibility="gone">
             <TextView
                     android:layout_weight="1"
@@ -32,7 +32,7 @@
                     android:paddingBottom="@dimen/px16"
                     android:text="@string/lesson_creation_tips"
                     android:textSize="@dimen/font_26px"
-                    android:textColor="@color/font_white"/>
+                    android:textColor="@color/font_dark_gray"/>
             <ImageView
                     android:id="@+id/lesson_creation_tips_close"
                     android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
                     android:paddingRight="@dimen/px26"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
-                    android:src="@drawable/ic_light_del"/>
+                    android:src="@drawable/ic_edit_text_del"/>
         </LinearLayout>
 
         <LinearLayout
@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px32"/>
 
-        <!--直播课-->
+        <!--课名称-->
         <LinearLayout
                 style="@style/LiveLessonItem">
 
@@ -87,6 +87,7 @@
                     android:layout_marginLeft="@dimen/px40"
                     android:layout_weight="1"
                     android:layout_width="0dp"
+                    android:maxLines="2"
                     android:hint="@string/live_lesson_name_hint"/>
         </LinearLayout>
 
@@ -150,7 +151,8 @@
                     android:layout_width="0dp"
                     android:background="@null"
                     android:hint="@string/please_set"
-                    android:textColorHint="@color/font_gray"
+                    android:textColorHint="@color/font_light_gray"
+                    android:textColor="@color/font_create_lesson_content"
                     android:layout_marginRight="@dimen/px20"
                     style="@style/LessonText"
                     android:inputType="number"
@@ -348,7 +350,8 @@
                     android:background="@null"
                     android:layout_height="wrap_content"
                     android:hint="@string/please_set"
-                    android:textColorHint="@color/font_gray"
+                    android:textColor="@color/font_create_lesson_content"
+                    android:textColorHint="@color/font_light_gray"
                     style="@style/LessonText"
                     android:inputType="number"
                     android:maxLength="3"

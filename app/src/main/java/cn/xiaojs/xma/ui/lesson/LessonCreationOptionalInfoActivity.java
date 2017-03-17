@@ -82,7 +82,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     private int mLimit;
     private boolean mIsFree = true;
     private boolean mIsMandatory = true;
-    private int mBlackFont;
+    private int mDarkGrayFont;
     private int mLightGrayFont;
     private Drawable mErrorDrawable;
 
@@ -156,7 +156,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     private void initData() {
         mErrorDrawable = new ColorDrawable(Color.WHITE);
 
-        mBlackFont = getResources().getColor(R.color.font_black);
+        mDarkGrayFont = getResources().getColor(R.color.font_create_lesson_content);
         mLightGrayFont = getResources().getColor(R.color.font_light_gray);
 
         mLessonId = getIntent().getStringExtra(KEY_LESSON_ID);
@@ -313,7 +313,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
             String txt = formatResult(mLesson.getOverview().getText());
             if (!TextUtils.isEmpty(txt) && mLesson.getOverview() != null) {
                 mLessonBriefTv.setText(txt);
-                mLessonBriefTv.setTextColor(mBlackFont);
+                mLessonBriefTv.setTextColor(mDarkGrayFont);
             } else {
                 mLessonBriefTv.setTextColor(mLightGrayFont);
                 mLessonBriefTv.setText(R.string.please_input);
@@ -339,7 +339,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 }
                 if (!TextUtils.isEmpty(txt)) {
                     mLessonLabel.setText(formatResult(txt));
-                    mLessonLabel.setTextColor(mBlackFont);
+                    mLessonLabel.setTextColor(mDarkGrayFont);
                 }
             } else {
                 mLessonLabel.setText(R.string.live_lesson_label_hint);
@@ -353,7 +353,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
             String txt = formatResult(mLesson.getTeachersIntro().getText());
             if (!TextUtils.isEmpty(txt) && mLesson.getTeachersIntro() != null) {
                 mTeachIntroTv.setText(txt);
-                mTeachIntroTv.setTextColor(mBlackFont);
+                mTeachIntroTv.setTextColor(mDarkGrayFont);
             } else {
                 mTeachIntroTv.setTextColor(mLightGrayFont);
                 mTeachIntroTv.setText(R.string.please_input);
@@ -380,7 +380,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 }
                 if (!TextUtils.isEmpty(txt)) {
                     mSitInOnv.setText(formatResult(txt));
-                    mSitInOnv.setTextColor(mBlackFont);
+                    mSitInOnv.setTextColor(mDarkGrayFont);
                 } else {
                     mSitInOnv.setText(R.string.please_set);
                     mSitInOnv.setTextColor(mLightGrayFont);
@@ -395,7 +395,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     private void initPromotion() {
         if (mLesson != null && mLesson.getPromotion() != null) {
             mSalePromotionTv.setText(getString(R.string.edit));
-            mSalePromotionTv.setTextColor(mBlackFont);
+            mSalePromotionTv.setTextColor(mDarkGrayFont);
         } else {
             mSalePromotionTv.setTextColor(mLightGrayFont);
         }

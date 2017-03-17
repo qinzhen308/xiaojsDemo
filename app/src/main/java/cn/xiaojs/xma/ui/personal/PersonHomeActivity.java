@@ -72,6 +72,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
     PortraitView mPortraitView;
     @BindView(R.id.user_name)
     IconTextView mName;
+    @BindView(R.id.profile_cover)
+    View mProfileCover;
 
     //ugc
     @BindView(R.id.fans)
@@ -271,6 +273,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
+        mProfileCover.setVisibility(View.VISIBLE);
         Bitmap blurBitmap = FastBlur.smartBlur(portrait, 4, true);
         mBlurImgView.setImageBitmap(blurBitmap);
     }

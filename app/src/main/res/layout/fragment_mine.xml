@@ -25,7 +25,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:textStyle="bold"
                     android:drawableLeft="@drawable/ic_teaching"
                     android:drawablePadding="@dimen/px20"
                     android:text="@string/my_teaching"/>
@@ -64,7 +63,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:textStyle="bold"
                     android:drawableLeft="@drawable/ic_my_class"
                     android:drawablePadding="@dimen/px20"
                     android:text="@string/my_enrollment"/>
@@ -103,7 +101,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:textStyle="bold"
                     android:drawableLeft="@drawable/ic_my_doc"
                     android:drawablePadding="@dimen/px20"
                     android:text="@string/my_documents"/>
@@ -141,7 +138,6 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:textColor="@color/font_black"-->
         <!--android:textSize="@dimen/px26"-->
-        <!--android:textStyle="bold"-->
         <!--android:drawableLeft="@drawable/ic_my_favorites"-->
         <!--android:drawablePadding="@dimen/px20"-->
         <!--android:text="@string/my_collections"/>-->
@@ -179,7 +175,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:textStyle="bold"
                     android:drawableLeft="@drawable/ic_my_order"
                     android:drawablePadding="@dimen/px20"
                     android:text="@string/my_order"/>
@@ -216,7 +211,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:textStyle="bold"
                     android:drawableLeft="@drawable/ic_teaching_ability"
                     android:drawablePadding="@dimen/px20"
                     android:text="@string/teach_ability"/>
@@ -257,7 +251,6 @@
                     android:textSize="@dimen/font_26px"
                     android:drawableLeft="@drawable/ic_name_auth"
                     android:drawablePadding="@dimen/px20"
-                    android:textStyle="bold"
                     android:text="@string/name_verify"/>
 
             <TextView
@@ -295,7 +288,6 @@
                     android:textSize="@dimen/font_26px"
                     android:drawableLeft="@drawable/ic_setting"
                     android:drawablePadding="@dimen/px20"
-                    android:textStyle="bold"
                     android:text="@string/settings"/>
 
 
