@@ -254,29 +254,36 @@ public class LessonCreationActivity extends BaseActivity {
                     cancelProgress();
                 }
             });
-        } else {
-            AccountDataManager.getCompetencies(this, new APIServiceCallback<ClaimCompetency>() {
-                @Override
-                public void onSuccess(ClaimCompetency object) {
-                    if (object != null) {
-                        try {
-                            List<Competency> competencies = object.competencies;
-                            if (competencies != null && competencies.size() == 1) {
-                                CSubject subject = competencies.get(0).getSubject();
-                                mCompetencyId = subject.getId();
-                                mLessonSubjectTv.setTextColor(mContentFont);
-                                mLessonSubjectTv.setText(subject.getName());
-                            }
-                        } catch (Exception e) {
+        }
 
+        switch (mType) {
+            case CourseConstant.TYPE_LESSON_CREATE:
+            case CourseConstant.TYPE_LESSON_AGAIN:
+                AccountDataManager.getCompetencies(this, new APIServiceCallback<ClaimCompetency>() {
+                    @Override
+                    public void onSuccess(ClaimCompetency object) {
+                        if (object != null) {
+                            try {
+                                List<Competency> competencies = object.competencies;
+                                if (competencies != null && competencies.size() == 1) {
+                                    CSubject subject = competencies.get(0).getSubject();
+                                    mCompetencyId = subject.getId();
+                                    mLessonSubjectTv.setTextColor(mContentFont);
+                                    mLessonSubjectTv.setText(subject.getName());
+                                }
+                            } catch (Exception e) {
+
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                }
-            });
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                    }
+                });
+                break;
+            case CourseConstant.TYPE_LESSON_EDIT:
+                break;
         }
     }
 
