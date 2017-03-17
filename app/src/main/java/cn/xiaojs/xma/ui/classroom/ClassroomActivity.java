@@ -29,6 +29,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
+import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import java.util.ArrayList;
@@ -64,6 +67,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.socketio.StreamingMode;
+import cn.xiaojs.xma.ui.classroom.talk.OnImageClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnTalkMsgListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
@@ -73,7 +77,6 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
-import cn.xiaojs.xma.util.Base64;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -898,6 +901,54 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         }
                     }
                 }
+            }).setOnImageClickListener(new OnImageClickListener() {
+                @Override
+                public void onImageClick(final int type, final String key) {
+                    //聊天点击大图回调到视频图片编辑页面
+                    if (!TextUtils.isEmpty(key)) {
+                        mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+                        new AsyncTask<String, Integer, Bitmap>() {
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                            }
+
+                            @Override
+                            protected Bitmap doInBackground(String... params) {
+                                if (params == null || params.length == 0) {
+                                    return null;
+                                }
+
+                                String content = params[0];
+                                if (TextUtils.isEmpty(content)) {
+                                    return null;
+                                }
+
+                                if (type == OnImageClickListener.IMG_FROM_BASE64) {
+                                    return ClassroomBusiness.base64ToBitmap(content);
+                                } else if (type == OnImageClickListener.IMG_FROM_QINIU) {
+                                    try {
+                                        return Glide.with(ClassroomActivity.this)
+                                                .load(ClassroomBusiness.getImageUrl(key))
+                                                .asBitmap()
+                                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                                .get();
+                                    } catch (Exception e) {
+                                        Logger.i(e != null ? e.getLocalizedMessage() : "null");
+                                    }
+                                }
+
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Bitmap bmp) {
+                                //enter video edit fragment
+                                enterVideoOrImageEditing(bmp);
+                            }
+                        }.execute(key);
+                    }
+                }
             });
 
             //only init, without show
@@ -1013,15 +1064,19 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Runnable mCaptureFrameRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mCaptureFrame != null) {
-                mPageState = PAGE_EDIT_VIDEO;
-                mClassroomController.enterVideoEditing(mCaptureFrame, mOnEditedVideoShareListener);
-                hideTopBottomPanel();
-            } else {
-                mPageState = PAGE_TOP;
-            }
+            enterVideoOrImageEditing(mCaptureFrame);
         }
     };
+
+    private void enterVideoOrImageEditing(Bitmap bmp) {
+        if (bmp != null) {
+            mPageState = PAGE_EDIT_VIDEO;
+            mClassroomController.enterVideoEditing(bmp, mOnEditedVideoShareListener);
+            hideTopBottomPanel();
+        } else {
+            mPageState = PAGE_TOP;
+        }
+    }
 
     private OnEditedVideoShareListener mOnEditedVideoShareListener = new OnEditedVideoShareListener() {
         @Override

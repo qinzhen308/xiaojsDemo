@@ -18,10 +18,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,7 +35,6 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
-import cn.xiaojs.xma.common.xf_foundation.Constants;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -48,10 +45,9 @@ import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.TimeUtil;
 
-public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Holder> {
+public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Holder> implements View.OnClickListener{
     public final static int TYPE_MY_SPEAKER = 0;
     public final static int TYPE_OTHER_SPEAKER = 1;
     private static int MAX_SIZE = 280;
@@ -59,6 +55,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     private Context mContext;
     private String mTicket;
     private LiveCriteria mLiveCriteria;
+    private OnImageClickListener mOnImageClickListener;
 
     public TalkMsgAdapter(Context context, String ticket, LiveCriteria liveCriteria, PullToRefreshListView listView) {
         super(context, listView);
@@ -68,13 +65,8 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         MAX_SIZE = context.getResources().getDimensionPixelSize(R.dimen.px280);
     }
 
-    public TalkMsgAdapter(Context context, String ticket, LiveCriteria liveCriteria, PullToRefreshListView listView, AbsListView.OnScrollListener listener) {
-        super(context, listView);
-        mContext = context;
-        scrollListener = listener;
-        mTicket = ticket;
-        mLiveCriteria = liveCriteria;
-        MAX_SIZE = context.getResources().getDimensionPixelSize(R.dimen.px280);
+    public void setOnImageClickListener(OnImageClickListener listener) {
+        mOnImageClickListener = listener;
     }
 
     @Override
@@ -109,6 +101,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
             }
         }
 
+        holder.msgImg.setTag(position);
         if (isText) {
             holder.msgImg.setVisibility(View.GONE);
             holder.msgTxt.setVisibility(View.VISIBLE);
@@ -191,6 +184,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         holder.time = (TextView) v.findViewById(R.id.time);
         holder.msgTxt = (TextView) v.findViewById(R.id.msg_txt);
         holder.msgImg = (ImageView) v.findViewById(R.id.msg_img);
+        holder.msgImg.setOnClickListener(this);
         return holder;
     }
 
@@ -219,6 +213,46 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    @Override
+    public void onClick(View v) {
+       Object obj = v.getTag();
+        try {
+            Integer position = (Integer) obj;
+            TalkItem talkItem = getItem(position);
+
+            boolean isText = false;
+            String drawingKey = null;
+            String base64Txt = null;
+
+            if (talkItem.body != null) {
+                if (!TextUtils.isEmpty(talkItem.body.text)) {
+                    base64Txt = talkItem.body.text;
+                    if (talkItem.body.contentType == Communications.ContentType.TEXT) {
+                        isText = true;
+                    }
+                } else {
+                    if (talkItem.body.drawing != null) {
+                        drawingKey = talkItem.body.drawing.name;
+                    }
+                }
+            }
+
+            if (!isText && (!TextUtils.isEmpty(base64Txt) || !TextUtils.isEmpty(drawingKey))) {
+                if (!TextUtils.isEmpty(base64Txt)) {
+                    if (mOnImageClickListener != null) {
+                        mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_BASE64, base64Txt);
+                    }
+                } else {
+                    if (mOnImageClickListener != null) {
+                        mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_QINIU, drawingKey);
+                    }
+                }
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     class Holder extends BaseHolder {

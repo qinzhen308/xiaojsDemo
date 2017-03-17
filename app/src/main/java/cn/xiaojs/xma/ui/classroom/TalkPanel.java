@@ -52,6 +52,7 @@ import cn.xiaojs.xma.ui.classroom.bean.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ContactBookAdapter;
+import cn.xiaojs.xma.ui.classroom.talk.OnImageClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnPortraitClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnTalkMsgListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
@@ -130,6 +131,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private LiveCollection<Attendee> mSearchLiveCollection;
     private PanelCallback mCallback;
     private OnTalkMsgListener mOnTalkMsgListener;
+    private OnImageClickListener mOnImageClickListener;
     private OnPanelItemClick mOnPanelItemClick;
     private final Object LOCK = new Object();
     private String mTicket;
@@ -165,6 +167,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         return this;
     }
 
+    public TalkPanel setOnImageClickListener (OnImageClickListener listener) {
+        mOnImageClickListener = listener;
+        return this;
+    }
+
     private void initParams(Context context, String ticket, Constants.User user) {
         mTicket = ticket;
         mUser = user;
@@ -196,7 +203,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
 
         mMyAccountId = AccountDataManager.getAccountID(mContext);
-
         switch (mCurrentMode) {
             case MODE_CONTACT:
                 getContactBookData();
@@ -489,6 +495,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                     mMultiLiveCriteria = new LiveCriteria();
                     mMultiLiveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
                     mMultiTalkAdapter = new TalkMsgAdapter(mContext, mTicket, mMultiLiveCriteria, mTalkMsgLv);
+                    mMultiTalkAdapter.setOnImageClickListener(mOnImageClickListener);
                 }
 
                 mTalkMsgLv.setAdapter(mMultiTalkAdapter);
@@ -498,6 +505,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                     mTeachingCriteria = new LiveCriteria();
                     mTeachingCriteria.to = String.valueOf(Communications.TalkType.FACULTY);
                     mTeachingTalkAdapter = new TalkMsgAdapter(mContext, mTicket, mTeachingCriteria, mTalkMsgLv);
+                    mTeachingTalkAdapter.setOnImageClickListener(mOnImageClickListener);
                 }
 
                 mTalkMsgLv.setAdapter(mTeachingTalkAdapter);
@@ -510,6 +518,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                         mPeerCriteria.to = mPeerTalkAccountId;
                     }
                     mPeerTalkMsgAdapter = new TalkMsgAdapter(mContext, mTicket, mPeerCriteria, mTalkMsgLv);
+                    mPeerTalkMsgAdapter.setOnImageClickListener(mOnImageClickListener);
                 }
 
                 mTalkMsgLv.setAdapter(mPeerTalkMsgAdapter);

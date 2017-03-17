@@ -2,10 +2,8 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
     <ListView
-
             android:id="@+id/subject_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -15,7 +13,6 @@
             android:layout_above="@+id/add_subject"
             android:background="@color/white"/>
 
-
     <FrameLayout
             android:id="@+id/add_subject"
             android:layout_width="match_parent"
@@ -23,7 +20,6 @@
             android:paddingTop="@dimen/px30"
             android:paddingBottom="@dimen/px30"
             android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
             android:background="@color/main_orange">
 
         <TextView
