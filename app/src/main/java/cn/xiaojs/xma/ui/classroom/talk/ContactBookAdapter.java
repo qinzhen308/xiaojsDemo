@@ -176,27 +176,21 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                     mChoiceList.add(choice);
                 }
             } else {
-                String s = "";
                 switch (v.getId()) {
                     case R.id.portrait:
-                        s = "portrait";
                         //enter chat
                         if (mListener != null) {
                             mListener.onPortraitClick(mAttendeeList.get(pos));
                         }
                         break;
                     case R.id.video:
-                        s = "video";
                         if (mOnPanelItemClick != null) {
                             mOnPanelItemClick.onItemClick(OnPanelItemClick.ACTION_OPEN_CAMERA, mAttendeeList.get(pos).accountId);
                         }
                         break;
                     case R.id.microphone:
-                        s = "microphone";
                         break;
                 }
-
-                Toast.makeText(mContext, s + pos, Toast.LENGTH_SHORT).show();
             }
         }
     }

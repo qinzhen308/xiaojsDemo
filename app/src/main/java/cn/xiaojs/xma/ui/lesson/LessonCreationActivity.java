@@ -24,9 +24,11 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.LessonDetail;
@@ -126,9 +128,7 @@ public class LessonCreationActivity extends BaseActivity {
 
     private String mSubjectId;
 
-    private final String TEST_SUBJECT = "计算机"; //test subject
-    private final String TEST_SUBJECT_ID = "5820a10e101db0af4bcf2fd9";
-    private int mBlackFont;
+    private int mContentFont;
     private int mGrayFont;
     private boolean mStuCountTipsFlag = true;
     private int mType = CourseConstant.TYPE_LESSON_CREATE;
@@ -140,7 +140,7 @@ public class LessonCreationActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.fragment_live_lesson_creation);
-        setMiddleTitle(R.string.lesson_creation);
+        setMiddleTitle(R.string.lesson_creation_title);
 
         init();
     }
@@ -171,7 +171,7 @@ public class LessonCreationActivity extends BaseActivity {
                 mStuCountDivide.setVisibility(visibility);
                 if (!checked) {
                     mTeachFormTv.setEnabled(false);
-                    mTeachFormTv.setTextColor(mBlackFont);
+                    mTeachFormTv.setTextColor(mContentFont);
                     mTeachFormTv.setText(getString(R.string.teach_form_lecture));
                     mTeachFormTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 } else {
@@ -254,6 +254,29 @@ public class LessonCreationActivity extends BaseActivity {
                     cancelProgress();
                 }
             });
+        } else {
+            AccountDataManager.getCompetencies(this, new APIServiceCallback<ClaimCompetency>() {
+                @Override
+                public void onSuccess(ClaimCompetency object) {
+                    if (object != null) {
+                        try {
+                            List<Competency> competencies = object.competencies;
+                            if (competencies != null && competencies.size() == 1) {
+                                CSubject subject = competencies.get(0).getSubject();
+                                mCompetencyId = subject.getId();
+                                mLessonSubjectTv.setTextColor(mContentFont);
+                                mLessonSubjectTv.setText(subject.getName());
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                }
+            });
         }
     }
 
@@ -303,7 +326,7 @@ public class LessonCreationActivity extends BaseActivity {
             mLessonStartTime = sch.getStart().getTime();
             String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
             mLessonStartTimeTv.setText(dateStr);
-            mLessonStartTimeTv.setTextColor(mBlackFont);
+            mLessonStartTimeTv.setTextColor(mContentFont);
 
             mLessonDurationEdt.setText(String.valueOf(sch.getDuration()));
         }
@@ -346,7 +369,7 @@ public class LessonCreationActivity extends BaseActivity {
         mPublicTv.setSelected(true);
 
         //get color
-        mBlackFont = getResources().getColor(R.color.font_black);
+        mContentFont = getResources().getColor(R.color.font_create_lesson_content);
         mGrayFont = getResources().getColor(R.color.font_gray);
     }
 
@@ -409,13 +432,13 @@ public class LessonCreationActivity extends BaseActivity {
                     }
 
                     if (count == 1) {
-                        mTeachFormTv.setTextColor(mBlackFont);
+                        mTeachFormTv.setTextColor(mContentFont);
                         mTeachFormTv.setText(R.string.teach_form_one2one);
                     } else if (count > 1 && count <= DEFAULT_SUT_COUNT) {
-                        mTeachFormTv.setTextColor(mBlackFont);
+                        mTeachFormTv.setTextColor(mContentFont);
                         mTeachFormTv.setText(R.string.teach_form_one2many);
                     } else if (count > DEFAULT_SUT_COUNT) {
-                        mTeachFormTv.setTextColor(mBlackFont);
+                        mTeachFormTv.setTextColor(mContentFont);
                         mTeachFormTv.setText(R.string.teach_form_lecture);
                     }
                 } else {
@@ -458,7 +481,7 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void selectSubject() {
-        //mLessonSubjectTv.setTextColor(mBlackFont);
+        //mLessonSubjectTv.setTextColor(mContentFont);
         Intent intent = new Intent();
         intent.setClass(mContext, SubjectSelectorActivity.class);
         intent.putExtra(CourseConstant.KEY_SUBJECT, mCompetency);
@@ -475,7 +498,7 @@ public class LessonCreationActivity extends BaseActivity {
             public void onDataPicked(Object data) {
                 if (data instanceof String) {
                     mTeachFormTv.setText((String) data);
-                    mTeachFormTv.setTextColor(mBlackFont);
+                    mTeachFormTv.setTextColor(mContentFont);
                 }
             }
         });
@@ -506,7 +529,7 @@ public class LessonCreationActivity extends BaseActivity {
                 mLessonsDate.setTime(mLessonStartTime);
                 String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
                 mLessonStartTimeTv.setText(dateStr);
-                mLessonStartTimeTv.setTextColor(mBlackFont);
+                mLessonStartTimeTv.setTextColor(mContentFont);
 
                 if (!TextUtils.isEmpty(mLessonDurationEdt.getText().toString())) {
                     checkLessonConflict(mLessonStartTime, Integer.parseInt(mLessonDurationEdt.getText().toString()));
@@ -808,7 +831,7 @@ public class LessonCreationActivity extends BaseActivity {
                 mCompetency = (Competency)data.getSerializableExtra(KEY_COMPETENCY);
                 CSubject subject = null;
                 if (mCompetency != null && (subject = mCompetency.getSubject()) != null) {
-                    mLessonSubjectTv.setTextColor(mBlackFont);
+                    mLessonSubjectTv.setTextColor(mContentFont);
                     mCompetencyId = subject.getId();
                     mLessonSubjectTv.setText(subject.getName());
                 }
