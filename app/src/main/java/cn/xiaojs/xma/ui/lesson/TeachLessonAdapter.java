@@ -34,6 +34,7 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
@@ -446,7 +447,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
            name = bean.getTeacher().getBasic().getName();
         }
 
-        ShareUtil.show((Activity) mContext,bean.getTitle(),new StringBuilder(startTime).append("\r\n").append(name).toString(),"https://www.baidu.com");
+        String shareUrl = ApiManager.getShareLessonUrl(bean.getId());
+
+        ShareUtil.show((Activity) mContext,bean.getTitle(),new StringBuilder(startTime).append("\r\n").append(name).toString(),shareUrl);
     }
 
     //报名注册

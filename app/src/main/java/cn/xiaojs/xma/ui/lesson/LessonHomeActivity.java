@@ -30,6 +30,7 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ELResponse;
 import cn.xiaojs.xma.model.LessonDetail;
@@ -108,8 +109,8 @@ public class LessonHomeActivity extends BaseActivity{
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_lession_detail);
-        //setMiddleTitle(R.string.lession_detail);
-        //setLeftImage(R.drawable.back_arrow);
+        //setMiddleTitle("详情");
+        //setLeftImage(R.drawable.back_arrow)
 
         needHeader(false);
         initTabBar();
@@ -119,7 +120,7 @@ public class LessonHomeActivity extends BaseActivity{
         loadData();
     }
 
-    @OnClick({R.id.back_btn, R.id.favourite_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.consulting})
+    @OnClick({R.id.back_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.consulting})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
@@ -133,13 +134,15 @@ public class LessonHomeActivity extends BaseActivity{
                     return;
                 }
 
+                String shareUrl = ApiManager.getShareLessonUrl(mLessonDetail.getId());
+
                 String startTime = TimeUtil.format(mLessonDetail.getSchedule().getStart().getTime(),
                         TimeUtil.TIME_YYYY_MM_DD_HH_MM);
 
                 ShareUtil.show(LessonHomeActivity.this,
                         mLessonDetail.getTitle(),
                         new StringBuilder(startTime).append("\r\n").append(mLessonDetail.getTeacher().getBasic().getName()).toString(),
-                        "https://www.baidu.com");
+                        shareUrl);
                 break;
             case R.id.report:
                 break;
@@ -386,10 +389,10 @@ public class LessonHomeActivity extends BaseActivity{
     private void initShowTextView() {
         textViews = new ArrayList<TextView>(2);
         TextView textView1 = createTextView();
-        TextView textView2 = createTextView();
+        //TextView textView2 = createTextView();
 
         textViews.add(textView1);
-        textViews.add(textView2);
+        //textViews.add(textView2);
     }
 
     private TextView createTextView() {

@@ -55,6 +55,20 @@ import cn.xiaojs.xma.ui.account.LoginActivity;
 public class APPUtils {
 
     /**
+     * 是否是生产环境
+     * @return
+     */
+    public static boolean isProEvn() {
+
+        if (XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)
+                || XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_PRE)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * 获取渠道号
      * @param context
      * @return

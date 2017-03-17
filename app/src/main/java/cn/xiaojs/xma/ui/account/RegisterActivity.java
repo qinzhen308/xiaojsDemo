@@ -24,6 +24,7 @@ import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
+import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.VerifyUtils;
 import cn.xiaojs.xma.util.XjsUtils;
 import com.orhanobut.logger.Logger;
@@ -146,8 +147,12 @@ public class RegisterActivity extends BaseActivity {
                 public void onSuccess(VerifyCode object) {
                     cancelProgress();
                     mCurrVerifyTime = SMS_GETTING_TIME_OUT;
-                    mRegVerifyEdit.setText(String.valueOf(object.getCode()));
                     mHandler.sendEmptyMessage(0);
+
+                    if (!APPUtils.isProEvn()) {
+                        mRegVerifyEdit.setText(String.valueOf(object.getCode()));
+                    }
+
                 }
 
                 @Override
