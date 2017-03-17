@@ -25,29 +25,29 @@
             android:clickable="true"
             >
 
-        <TextView
-                android:id="@+id/tv_xfirends"
-                android:layout_width="0dp"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_xjsfriends"
-                android:textColor="@color/font_dark_gray"
-                android:textSize="@dimen/px26"
-                android:text="@string/xjs_friend"
-                android:clickable="true"/>
+        <!--<TextView-->
+                <!--android:id="@+id/tv_xfirends"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:drawableTop="@drawable/ic_xjsfriends"-->
+                <!--android:textColor="@color/font_dark_gray"-->
+                <!--android:textSize="@dimen/px26"-->
+                <!--android:text="@string/xjs_friend"-->
+                <!--android:clickable="true"/>-->
 
-        <TextView
-                android:id="@+id/tv_ccircle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/font_dark_gray"
-                android:drawableTop="@drawable/ic_classcircle"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/px26"
-                android:text="@string/classes_circle"
-                android:clickable="true"/>
+        <!--<TextView-->
+                <!--android:id="@+id/tv_ccircle"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:textColor="@color/font_dark_gray"-->
+                <!--android:drawableTop="@drawable/ic_classcircle"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="@dimen/px26"-->
+                <!--android:text="@string/classes_circle"-->
+                <!--android:clickable="true"/>-->
 
         <TextView
                 android:id="@+id/tv_qq"
@@ -73,17 +73,10 @@
                 android:text="@string/wechat"
                 android:clickable="true"/>
 
-
-
-    </LinearLayout>
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp">
         <TextView
                 android:id="@+id/tv_fcircle"
                 android:layout_width="0dp"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:textColor="@color/font_dark_gray"
                 android:drawableTop="@drawable/ic_circlefriends"
@@ -91,11 +84,30 @@
                 android:textSize="@dimen/px26"
                 android:text="@string/friend_circle"
                 android:clickable="true"/>
-        <View
-                android:layout_width="0dp"
-                android:layout_weight="0.75"
-                android:layout_height="1dp"/>
+
+
+
     </LinearLayout>
+    <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="15dp">-->
+        <!--<TextView-->
+                <!--android:id="@+id/tv_fcircle"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="0.25"-->
+                <!--android:gravity="center"-->
+                <!--android:textColor="@color/font_dark_gray"-->
+                <!--android:drawableTop="@drawable/ic_circlefriends"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="@dimen/px26"-->
+                <!--android:text="@string/friend_circle"-->
+                <!--android:clickable="true"/>-->
+        <!--<View-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="0.75"-->
+                <!--android:layout_height="1dp"/>-->
+    <!--</LinearLayout>-->
 
 
     <View

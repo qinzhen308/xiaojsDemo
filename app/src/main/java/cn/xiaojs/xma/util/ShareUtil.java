@@ -8,11 +8,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.stetho.common.LogRedirector;
+import com.orhanobut.logger.Logger;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.widget.BottomSheet;
 
 
@@ -29,6 +32,10 @@ public class ShareUtil {
      * @param
      */
     public static void show(final Activity activity, final String title, final String message, final String url){
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the share url" + url);
+        }
 
         View view = LayoutInflater.from(activity).inflate(R.layout.layout_share_window,null);
         Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);

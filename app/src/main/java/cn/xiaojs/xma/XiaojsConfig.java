@@ -9,7 +9,7 @@ import cn.xiaojs.xma.model.account.User;
 public class XiaojsConfig {
 
     //是否为debug版本
-    public static final boolean DEBUG = true;//BuildConfig.DEBUG;
+    public static final boolean DEBUG = BuildConfig.DEBUG;
 
     //是否是演示版本
     public static final boolean SHOW_DEMO = true;
@@ -39,7 +39,7 @@ public class XiaojsConfig {
     public static final String XLS_BASE_URL = "https://xls.xiaojs.cn";
     //七牛存储空间
     // 华东:存储空间列表(图片和文档存储)Bucket (files) CDN 加速域名
-    public static final String FILES_BUCKET_URL = "http ://xcfs.xiaojs.cn";
+    public static final String FILES_BUCKET_URL = "http://xcfs.xiaojs.cn";
     //华北:存储空间列表(视频存储)Bucket (live) CDN 加速域名
     public static final String LIVE_BUCKET_URL = "http://xcfs.xiaojs.cn";
 

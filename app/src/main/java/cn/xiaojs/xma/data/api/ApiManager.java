@@ -254,6 +254,29 @@ public class ApiManager {
 
     }
 
+    /**
+     * 获取分享课的链接地址，内网测试地址不包含端口号
+     * @param lessonId
+     * @return
+     */
+    public static String getShareLessonUrl(String lessonId) {
+
+        String baseUrl = XiaojsConfig.XAS_BASE_URL;
+
+        String channel = XiaojsConfig.CHANNEL;
+
+        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
+            baseUrl = XiaojsConfig.TEST_BASE_URL;
+        }else if (channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)){
+            baseUrl = XiaojsConfig.XAS_PRE_BASE_URL;
+        }
+
+        return new StringBuilder(baseUrl)
+                .append("/app/lesson/")
+                .append(lessonId)
+                .toString();
+    }
+
     private static String createUrl(Context context,String port) {
         String baseUrl = XiaojsConfig.SHOW_DEMO ? DataPref.getServerIP(context) : XiaojsConfig.TEST_BASE_URL;
         StringBuilder urlBulder = new StringBuilder(baseUrl);
@@ -292,5 +315,7 @@ public class ApiManager {
 
         return XiaojsConfig.LIVE_BUCKET_URL;
     }
+
+
 
 }

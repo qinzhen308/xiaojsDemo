@@ -34,7 +34,8 @@
                 android:paddingBottom="@dimen/px16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/favourite_selector"/>
+                android:src="@drawable/favourite_selector"
+                android:visibility="gone"/>
 
         <ImageView
                 android:id="@+id/share_wb_btn"
@@ -228,7 +229,8 @@
             <cn.xiaojs.xma.ui.widget.BlockTabView
                     android:id="@+id/block_detail_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    />
 
             <FrameLayout
                     android:id="@+id/report_layout"

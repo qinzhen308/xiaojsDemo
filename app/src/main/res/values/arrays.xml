@@ -89,7 +89,7 @@
     </string-array>
     <string-array name="lesson_home_tab_titles">
         <item>简介</item>
-        <item>评价</item>
+        <!--<item>评价</item>-->
     </string-array>
     <string-array name="platform_message_title">
         <item>邀请信息</item>
