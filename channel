@@ -1,7 +1,10 @@
 env-pre #预发布环境包,该名称对应XiaojsConfig.CHANNEL_ENV_PRE
 env-dev&test #测试环境包,该名称对应XiaojsConfig.CHANNEL_ENV_TEST
+pro #生产环境包 自有
 
 #==============================渠道=================================================================
+#以下渠道包，都是生产环境
+
 #meituan # 美团
 #samsungapps #三星
 #hiapk

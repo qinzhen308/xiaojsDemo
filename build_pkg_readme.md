@@ -25,6 +25,8 @@ Release
  ---------
  > $ ./gradlew clean assembleReleaseChannels -PchannelFile=channel
 
+    注意：生成release包后，要对混淆映射文件Mapping.txt等进行保存备份。
+
 
 
 
