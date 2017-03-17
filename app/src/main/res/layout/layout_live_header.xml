@@ -16,6 +16,7 @@
                 android:orientation="horizontal"
                 android:background="@drawable/white_grey_selector"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content">
 
             <TextView
@@ -95,6 +96,12 @@
             android:layout_width="match_parent"
             android:visibility="gone"
             android:layout_height="wrap_content">
+
+        <View
+                android:id="@+id/enroll_lesson_hold_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px30"
+                android:background="@color/ver_divide_line"/>
 
         <LinearLayout
                 android:id="@+id/lesson_all_2"

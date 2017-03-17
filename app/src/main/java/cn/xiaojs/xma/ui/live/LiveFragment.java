@@ -56,6 +56,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
 
     View mTeachLessonTitleView;
     View mEnrollLessonTitleView;
+    View mEnrollLessonHoldView;
 
     LinearLayout mTeachLessonEmpty;
     TextView mEnrollLessonEmpty;
@@ -88,6 +89,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         mEnrollLessonAllView = v.findViewById(R.id.enroll_lesson_all);
         mTeachLessonTitleView = v.findViewById(R.id.lesson_all_1);
         mEnrollLessonTitleView = v.findViewById(R.id.lesson_all_2);
+        mEnrollLessonHoldView = v.findViewById(R.id.enroll_lesson_hold_view);
         mOpenLesson = (ImageView) v.findViewById(R.id.open_lesson);
 
         mLessonList.setNeedDivider(true);
@@ -192,7 +194,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 mStudentWrapper.setVisibility(View.GONE);
             } else if ((liveClasses.taught == null || liveClasses.taught.isEmpty())
                     && (liveClasses.enrolled != null && !liveClasses.enrolled.isEmpty())) {
-                //只有学的课，没有教的课
+                //只有学的课，没有教的
                 mEnrollLessonAllView.setVisibility(View.VISIBLE);
                 LiveClassAdapter adapter = new LiveClassAdapter(mContext, liveClasses.enrolled);
                 mLessonList2.setAdapter(adapter);
@@ -206,13 +208,19 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                         mContext.startActivity(i);
                     }
                 });
+                mStudentWrapper.setVisibility(View.VISIBLE);
+                mEnrollLessonTitleView.setVisibility(View.VISIBLE);
                 mTeacherWrapper.setVisibility(View.GONE);
             } else if ((liveClasses.taught != null && !liveClasses.taught.isEmpty())
                     && (liveClasses.enrolled != null && !liveClasses.enrolled.isEmpty())) {
                 //有教的课也有学的课
+                mEnrollLessonHoldView.setVisibility(View.VISIBLE);
+                mStudentWrapper.setVisibility(View.VISIBLE);
+                mTeacherWrapper.setVisibility(View.VISIBLE);
                 mTeachLessonAllView.setVisibility(View.VISIBLE);
                 mEnrollLessonAllView.setVisibility(View.VISIBLE);
                 mTeachLessonTitleView.setVisibility(View.VISIBLE);
+                mEnrollLessonTitleView.setVisibility(View.VISIBLE);
                 LiveClassAdapter teach = new LiveClassAdapter(mContext, liveClasses.taught);
                 mLessonList.setAdapter(teach);
                 LiveClassAdapter enroll = new LiveClassAdapter(mContext, liveClasses.enrolled);

@@ -136,11 +136,15 @@
     <!--setting-->
     <string name="mobile_network_watch_live">允许2G/3G/4G观看直播</string>
     <string name="message_notify_set">消息提醒设置</string>
-    <string name="account_safe">账号安全</string>
+    <string name="account_safe">修改密码</string>
     <string name="clear_cache">清除缓存</string>
     <string name="feedback_help">意见反馈</string>
     <string name="about_us">关于我们</string>
     <string name="clear_cache_completed">清除完成</string>
+
+    <string name="current_pwd">当前密码</string>
+    <string name="current_pwd_hint">请输入您的登录密码</string>
+    <string name="new_pwd">新密码</string>
 
     <!--my sub page-->
     <string name="exit_login">退出登录</string>

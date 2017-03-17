@@ -21,6 +21,7 @@ import cn.xiaojs.xma.model.Promotion;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.LiveItem;
 import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -215,29 +216,30 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
     private void loadData() {
         Object obj = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
+        String lessonId = null;
         if (obj instanceof TeachLesson) {
-            String lessonId = ((TeachLesson) obj).getId();
-            if (TextUtils.isEmpty(lessonId)) {
-                finish();
-            }
+            lessonId = ((TeachLesson) obj).getId();
+        } else if (obj instanceof LiveItem){
+            lessonId = ((LiveItem) obj).id;
+        }
 
-            showProgress(true);
-            LessonDataManager.requestLessonData(this, lessonId, new APIServiceCallback<LessonDetail>() {
-                @Override
-                public void onSuccess(LessonDetail lessonDetail) {
-                    cancelProgress();
-                    setData(lessonDetail);
-                }
-
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    cancelProgress();
-                    Toast.makeText(LiveLessonDetailActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
+        if (TextUtils.isEmpty(lessonId)) {
             finish();
         }
+        showProgress(true);
+        LessonDataManager.requestLessonData(this, lessonId, new APIServiceCallback<LessonDetail>() {
+            @Override
+            public void onSuccess(LessonDetail lessonDetail) {
+                cancelProgress();
+                setData(lessonDetail);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(LiveLessonDetailActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

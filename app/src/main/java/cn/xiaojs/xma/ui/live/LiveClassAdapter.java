@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.live;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.ctl.LiveItem;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
@@ -33,6 +35,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
 import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
+import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -53,22 +56,22 @@ import cn.xiaojs.xma.util.ToastUtil;
 
 public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
     private Context mContext;
-    private List<LiveItem> lessons;
+    private List<LiveItem> mLessons;
     //public static int MAX_NUM = 3;
 
-    public LiveClassAdapter(Context context,List<LiveItem> lessons){
+    public LiveClassAdapter(Context context, List<LiveItem> lessons) {
         mContext = context;
-        this.lessons = lessons;
+        mLessons = lessons;
     }
 
     @Override
     public int getCount() {
-        if (lessons == null) {
+        if (mLessons == null) {
             return 0;
         }
 
-        //return Math.min(MAX_NUM, lessons.size());
-        return lessons.size();
+        //return Math.min(MAX_NUM, mLessons.size());
+        return mLessons.size();
     }
 
     @Override
@@ -92,7 +95,7 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
             holder = (Holder) convertView.getTag();
         }
         holder.reset();
-        final LiveItem bean = lessons.get(position);
+        final LiveItem bean = mLessons.get(position);
         holder.name.setText(bean.title);
         holder.price.setVisibility(View.VISIBLE);
         //TODO 目前是免费
@@ -237,7 +240,12 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
 //            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
 //                items[0] = mContext.getString(R.string.lesson_again);
 //            }
-            holder.operation.enableMore(true);
+            if (bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
+                holder.operation.enableMore(false);
+            } else {
+                holder.operation.enableMore(true);
+            }
+            //holder.operation.enableMore(true);
             holder.operation.enableEnter(true);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -271,7 +279,7 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
                 holder.state.setText(R.string.living);
                 holder.state.setBackgroundResource(R.drawable.course_state_on_bg);
                 holder.progressWrapper.setVisibility(View.VISIBLE);
-                holder.progress.showTimeBar(bean.schedule.getDuration(),bean.classroom.finishOn);
+                holder.progress.showTimeBar(bean.schedule.getDuration(), bean.classroom.finishOn);
             } else if (bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
                 holder.state.setVisibility(View.GONE);
                 holder.end.setVisibility(View.VISIBLE);
@@ -280,6 +288,7 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
 
         return convertView;
     }
+
     //上架
     private void shelves(final LiveItem bean) {
         showProgress(false);
@@ -369,14 +378,23 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
 
     private void modifyLesson(LiveItem bean) {
         Intent intent = new Intent(mContext, ModifyLessonActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
+        TeachLesson lessonBean = new TeachLesson();
+        lessonBean.setId(bean.id);
+        lessonBean.setTitle(bean.title);
+        lessonBean.setEnroll(bean.enroll);
+        lessonBean.setTeacher(bean.teacher);
+        lessonBean.setSchedule(bean.schedule);
+        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, lessonBean);
         ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
     }
 
     //取消上课
     private void cancelLesson(LiveItem bean) {
         Intent intent = new Intent(mContext, CancelLessonActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
+        TeachLesson teachLesson = new TeachLesson();
+        teachLesson.setTitle(bean.title);
+        teachLesson.setId(bean.id);
+        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, teachLesson);
         ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_CANCEL_LESSON);
     }
 
@@ -413,7 +431,17 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
 
     //分享
     private void share(LiveItem bean) {
+        if (bean == null) return;
 
+        String startTime = TimeUtil.format(bean.schedule.getStart().getTime(),
+                TimeUtil.TIME_YYYY_MM_DD_HH_MM);
+
+        String name = "";
+        if (bean.teacher != null && bean.teacher.getBasic() != null) {
+            name = bean.teacher.getBasic().getName();
+        }
+
+        ShareUtil.show((Activity) mContext, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), "https://www.baidu.com");
     }
 
     //报名注册
@@ -665,12 +693,12 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
 */
     }
 
-    private void showProgress(boolean b){
-        ((BaseActivity)mContext).showProgress(b);
+    private void showProgress(boolean b) {
+        ((BaseActivity) mContext).showProgress(b);
     }
 
-    private void cancelProgress(){
-        ((BaseActivity)mContext).cancelProgress();
+    private void cancelProgress() {
+        ((BaseActivity) mContext).cancelProgress();
     }
 
     static class Holder extends BaseHolder {
