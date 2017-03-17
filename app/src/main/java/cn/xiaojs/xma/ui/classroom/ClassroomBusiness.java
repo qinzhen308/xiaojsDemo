@@ -105,7 +105,7 @@ public class ClassroomBusiness {
     }
 
     public static String getImageUrl(String name) {
-        return cn.xiaojs.xma.common.xf_foundation.Constants.XCFSUrl + "/" + name;
+        return ApiManager.getFileBucket() + "/" + name;
     }
 
     public static String bitmapToBase64(Bitmap bitmap) {

@@ -90,7 +90,7 @@ public class LiveProgress extends LinearLayout {
 
         curTime.setText(TimeUtil.formatSecondTime(cur));
         totalTime.setText(TimeUtil.formatSecondTime(finishOn));
-        int pro = (int) (((float)cur/duration) * 100);
+        int pro = (int) (((float)cur/finishOn) * 100);
         progress.setProgress(pro);
     }
 }

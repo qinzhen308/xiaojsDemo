@@ -27,9 +27,10 @@ public class ErrorPrompts {
                 || errorCode.equals(Errors.BAD_SESSION)
                 || errorCode.equals(Errors.BAD_CSRF)) {
             return "登录过期，请重新登录";
-        } else if (errorCode.equals(Errors.BAD_PARAMETER)) {
-            return "参数错误";
         }
+//         else if (errorCode.equals(Errors.BAD_PARAMETER)) {
+//            return "参数错误";
+//        }
 
         String errorMessage = "请求失败";
 
