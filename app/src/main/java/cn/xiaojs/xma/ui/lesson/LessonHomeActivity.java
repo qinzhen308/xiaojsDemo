@@ -387,7 +387,7 @@ public class LessonHomeActivity extends BaseActivity{
     }
 
     private void initShowTextView() {
-        textViews = new ArrayList<TextView>(2);
+        textViews = new ArrayList<>(1);
         TextView textView1 = createTextView();
         //TextView textView2 = createTextView();
 
