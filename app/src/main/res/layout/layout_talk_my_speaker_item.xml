@@ -36,6 +36,7 @@
             android:textColor="@color/font_blue"/>
 
     <FrameLayout
+            android:id="@+id/msg_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/portrait"

@@ -101,7 +101,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
             }
         }
 
-        holder.msgImg.setTag(position);
+        holder.msgContent.setTag(position);
         if (isText) {
             holder.msgImg.setVisibility(View.GONE);
             holder.msgTxt.setVisibility(View.VISIBLE);
@@ -184,6 +184,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         holder.time = (TextView) v.findViewById(R.id.time);
         holder.msgTxt = (TextView) v.findViewById(R.id.msg_txt);
         holder.msgImg = (ImageView) v.findViewById(R.id.msg_img);
+        holder.msgContent = v.findViewById(R.id.msg_content);
         holder.msgImg.setOnClickListener(this);
         return holder;
     }
@@ -217,7 +218,8 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
     @Override
     public void onClick(View v) {
-       Object obj = v.getTag();
+       View parent = (View) v.getParent();
+       Object obj = parent.getTag();
         try {
             Integer position = (Integer) obj;
             TalkItem talkItem = getItem(position);
@@ -261,6 +263,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         TextView time;
         TextView msgTxt;
         ImageView msgImg;
+        View msgContent;
 
         public Holder(View view) {
             super(view);
