@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 
 import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.Promotion;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.Teacher;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
@@ -33,6 +34,8 @@ public class LiveItem implements Serializable{
     public Statistic stats;
     public Schedule schedule;
     public String cover;
+    public Fee fee;
+    //public Promotion promotion;
     public Enroll enroll;
     public String state;
     public String ticket;
