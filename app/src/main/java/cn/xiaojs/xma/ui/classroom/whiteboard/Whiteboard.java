@@ -49,8 +49,8 @@ import java.util.List;
 
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.InteractiveLevel;
-import cn.xiaojs.xma.ui.classroom.socketio.Commend;
-import cn.xiaojs.xma.ui.classroom.socketio.CommendLine;
+import cn.xiaojs.xma.ui.classroom.bean.Commend;
+import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Packer;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;

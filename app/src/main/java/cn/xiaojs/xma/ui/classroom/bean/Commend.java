@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.socketio;
+package cn.xiaojs.xma.ui.classroom.bean;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -14,16 +14,14 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *
  * ======================================================================================== */
 
-import java.util.List;
-
-public class CommendLine {
-    public List<Commend> whiteboardCommends;
+public class Commend {
     public String src;
-    public long time;
+    public String cm;
+    public String id;
+    public String params;
 
     @Override
     public String toString() {
-        int size = whiteboardCommends != null ? whiteboardCommends.size() : 0;
-        return "---------whiteboardCommends=" + size + " src=" + src + " time=" + time;
+        return "==========src=" + src + " cm=" + cm + " id=" + id + " params=" + params;
     }
 }

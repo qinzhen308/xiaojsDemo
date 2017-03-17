@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.socketio;
+package cn.xiaojs.xma.ui.classroom.bean;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,11 +9,21 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/2/27
+ * Date:2017/1/9
  * Desc:
  *
  * ======================================================================================== */
 
-public class OpenMedia {
-    public String to;
+import java.util.List;
+
+public class CommendLine {
+    public List<Commend> whiteboardCommends;
+    public String src;
+    public long time;
+
+    @Override
+    public String toString() {
+        int size = whiteboardCommends != null ? whiteboardCommends.size() : 0;
+        return "---------whiteboardCommends=" + size + " src=" + src + " time=" + time;
+    }
 }

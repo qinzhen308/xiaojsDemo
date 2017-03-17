@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.socketio;
+package cn.xiaojs.xma.ui.classroom.bean;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -14,6 +14,6 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *
  * ======================================================================================== */
 
-public class StreamingMode {
-    public int mode;
+public class OpenMedia {
+    public String to;
 }

@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.socketio;
+package cn.xiaojs.xma.ui.classroom.bean;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,19 +9,11 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/1/9
+ * Date:2017/3/1
  * Desc:
  *
  * ======================================================================================== */
 
-public class Commend {
-    public String src;
-    public String cm;
-    public String id;
-    public String params;
-
-    @Override
-    public String toString() {
-        return "==========src=" + src + " cm=" + cm + " id=" + id + " params=" + params;
-    }
+public class FeedbackStatus {
+    public int status;
 }

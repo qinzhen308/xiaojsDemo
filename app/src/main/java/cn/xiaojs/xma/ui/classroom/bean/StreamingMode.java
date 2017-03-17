@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.socketio;
+package cn.xiaojs.xma.ui.classroom.bean;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,11 +9,11 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/3/1
+ * Date:2017/2/27
  * Desc:
  *
  * ======================================================================================== */
 
-public class FeedbackStatus {
-    public int status;
+public class StreamingMode {
+    public int mode;
 }
