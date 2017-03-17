@@ -20,6 +20,7 @@
             android:paddingTop="@dimen/px30"
             android:paddingBottom="@dimen/px30"
             android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
             android:background="@color/main_orange">
 
         <TextView
