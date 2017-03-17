@@ -65,7 +65,7 @@ public class DataPref {
 
     public static String getServerIP(final Context context) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        return sp.getString(PREF_SERVER_IP, XiaojsConfig.BASE_URL);
+        return sp.getString(PREF_SERVER_IP, XiaojsConfig.TEST_BASE_URL);
     }
 
 

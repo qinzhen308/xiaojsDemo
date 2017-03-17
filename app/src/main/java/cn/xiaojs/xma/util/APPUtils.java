@@ -62,7 +62,7 @@ public class APPUtils {
     public static String getChannel(Context context) {
         String channel = WalleChannelReader.getChannel(context.getApplicationContext());
         if (TextUtils.isEmpty(channel)) {
-            channel = XiaojsConfig.DEFAULT_CHANNEL;
+            channel = XiaojsConfig.CHANNEL_ENV_DEVTEST;
         }
 
         return channel;
