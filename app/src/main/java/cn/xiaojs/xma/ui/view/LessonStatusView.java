@@ -98,10 +98,10 @@ public class LessonStatusView extends RelativeLayout {
             mark.setBackgroundResource(R.color.hor_divide_line);
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
             time.setText(TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
-            title.setText("累计学时2小时，获得了50积分");
+            title.setText("此课已结束");
             end.setVisibility(VISIBLE);
-            evaluate.setVisibility(VISIBLE);
-            review.setVisibility(VISIBLE);
+            //evaluate.setVisibility(VISIBLE);
+            //review.setVisibility(VISIBLE);
             mark.setBackgroundResource(R.color.hor_divide_line);
         } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
             this.status.setVisibility(VISIBLE);

@@ -277,6 +277,7 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
                 holder.state.setBackgroundResource(R.drawable.course_state_wait_bg);
             } else if (bean.state.equalsIgnoreCase(LessonState.LIVE)) {
                 holder.state.setText(R.string.living);
+                holder.operation.setEnterColor(R.color.font_orange);
                 holder.state.setBackgroundResource(R.drawable.course_state_on_bg);
                 holder.progressWrapper.setVisibility(View.VISIBLE);
                 holder.progress.showTimeBar(bean.schedule.getDuration(), bean.classroom.finishOn);
