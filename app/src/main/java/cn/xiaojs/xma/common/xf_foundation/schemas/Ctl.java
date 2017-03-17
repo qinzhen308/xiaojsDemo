@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.common.xf_foundation.schemas;
 
 import cn.xiaojs.xma.common.xf_foundation.Constants;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.social.Dimension;
 
 /**
@@ -163,7 +164,7 @@ public class Ctl {
      * @return
      */
     public static String getCover(String key, Dimension size) {
-        return new StringBuilder(Constants.XCFSUrl)
+        return new StringBuilder(ApiManager.getFileBucket())
                 .append("/")
                 .append(key)
                 .append("?imageView2/3/w/")

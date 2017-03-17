@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
 
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.util.Base64;
 import cn.xiaojs.xma.util.BitmapUtils;
 
@@ -100,7 +101,7 @@ public class ClassroomBusiness {
     }
 
     public static String getSnapshot(String name, int size) {
-         return cn.xiaojs.xma.common.xf_foundation.Constants.XCFSUrl + "/" + name + "?imageView2/0/w/" + size;
+         return ApiManager.getFileBucket() + "/" + name + "?imageView2/0/w/" + size;
     }
 
     public static String bitmapToBase64(Bitmap bitmap) {

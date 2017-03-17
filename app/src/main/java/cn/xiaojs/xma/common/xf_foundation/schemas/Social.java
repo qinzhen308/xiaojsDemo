@@ -2,6 +2,7 @@ package cn.xiaojs.xma.common.xf_foundation.schemas;
 
 
 import cn.xiaojs.xma.common.xf_foundation.Constants;
+import cn.xiaojs.xma.data.api.ApiManager;
 
 /**
  * Created by maxiaobao on 2016/12/26.
@@ -234,7 +235,7 @@ public class Social {
      */
     public static String getDrawing(String key, boolean thumbnailOnly) {
 
-        StringBuilder sb = new StringBuilder(Constants.XCFSUrl)
+        StringBuilder sb = new StringBuilder(ApiManager.getFileBucket())
                 .append("/")
                 .append(key);
 

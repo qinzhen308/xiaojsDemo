@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.common.xf_foundation.schemas;
 
 import cn.xiaojs.xma.common.xf_foundation.Constants;
+import cn.xiaojs.xma.data.api.ApiManager;
 
 /**
  * Created by maxiaobao on 2016/12/28.
@@ -30,7 +31,7 @@ public class Account {
      */
     public static String getAvatar(String accountId, int size) {
 
-        return new StringBuilder(Constants.XCFSUrl)
+        return new StringBuilder(ApiManager.getFileBucket())
                 .append("/")
                 .append(Collaboration.UploadTokenType.AVATAR)
                 .append("-")

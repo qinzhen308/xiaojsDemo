@@ -38,12 +38,12 @@ public class XiaojsApplication extends Application {
         }
 
         //发布Release版本时，需要引入crash report
-        String channel = APPUtils.getChannel(getApplicationContext());
+        XiaojsConfig.CHANNEL = APPUtils.getChannel(getApplicationContext());
         if (XiaojsConfig.DEBUG) {
-            Logger.d("the channel:%s",channel);
+            Logger.d("the channel:%s",XiaojsConfig.CHANNEL);
         }
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
-        strategy.setAppChannel(channel);
+        strategy.setAppChannel(XiaojsConfig.CHANNEL);
         CrashReport.initCrashReport(getApplicationContext(), XiaojsConfig.BUGLY_APP_ID, false, strategy);
 
         //init xiaojs utils

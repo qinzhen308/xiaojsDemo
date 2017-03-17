@@ -92,7 +92,7 @@ public class LoginActivity extends BaseActivity {
 
         checkSession();
 
-        if (XiaojsConfig.SHOW_DEMO){
+        if (XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST) && XiaojsConfig.SHOW_DEMO){
             changeBaseUrl();
         }
 

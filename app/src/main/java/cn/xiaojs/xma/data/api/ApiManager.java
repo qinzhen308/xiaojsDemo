@@ -211,9 +211,17 @@ public class ApiManager {
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //url
+
+    /**
+     * XAS URL
+     * @param context
+     * @return
+     */
     public static String getXASUrl(Context context) {
 
-        String channel = APPUtils.getChannel(context);
+        String channel = XiaojsConfig.CHANNEL;
 
         if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
             String port = DataPref.getXASPort(context);
@@ -226,9 +234,14 @@ public class ApiManager {
 
     }
 
+    /**
+     * XLS URL
+     * @param context
+     * @return
+     */
     public static String getXLSUrl(Context context) {
 
-        String channel = APPUtils.getChannel(context);
+        String channel = XiaojsConfig.CHANNEL;
 
         if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
             String port = DataPref.getXLSPort(context);
@@ -248,6 +261,36 @@ public class ApiManager {
             urlBulder.append(":").append(port);
         }
         return urlBulder.toString();
+    }
+
+    /**
+     * qiniu file bucket
+     * @return
+     */
+    public static String getFileBucket() {
+
+        String channel = XiaojsConfig.CHANNEL;
+        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)
+                || channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)) {
+            return XiaojsConfig.PRE_FILES_BUCKET_URL;
+        }
+
+        return XiaojsConfig.FILES_BUCKET_URL;
+    }
+
+
+    /**
+     * qiniu live bucket
+     * @return
+     */
+    public static String getLiveBucket() {
+        String channel = XiaojsConfig.CHANNEL;
+        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)
+                || channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)) {
+            return XiaojsConfig.PRE_LIVE_BUCKET_URL;
+        }
+
+        return XiaojsConfig.LIVE_BUCKET_URL;
     }
 
 }

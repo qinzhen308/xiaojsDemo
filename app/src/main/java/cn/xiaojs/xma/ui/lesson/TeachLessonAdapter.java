@@ -189,7 +189,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.state.setText(R.string.force_stop);
             holder.state.setBackgroundResource(R.drawable.course_state_stop_bg);
             holder.operation.enableMore(false);
-            holder.operation.enableEnter(false);
+            holder.operation.enableEnter(true);
             holder.operation.setEnterColor(R.color.common_text);
             holder.operation.setItems(items);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {

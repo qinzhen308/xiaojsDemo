@@ -109,7 +109,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-            holder.operation.setVisibility(View.GONE);
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.setEnterColor(R.color.common_text);
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
@@ -183,7 +183,7 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
         } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
-            holder.operation.setVisibility(View.GONE);
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.setEnterColor(R.color.common_text);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
