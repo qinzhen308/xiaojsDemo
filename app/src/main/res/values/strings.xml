@@ -55,7 +55,7 @@
     <string name="exit_tips">再按一次返回键退出小教室</string>
     <string name="no_network">无法连接到网络，请确保您的网络已经打开!</string>
     <string name="mobile_network_title">你没有在WIFI环境下</string>
-    <string name="mobile_network_desc">是否使用手机流量小教室直播</string>
+    <string name="mobile_network_desc">是否使用手机流量进行小教室直播</string>
     <string name="mobile_network_forbid">停止使用</string>
     <string name="mobile_network_allow">继续使用</string>
 
@@ -257,7 +257,7 @@
     <!--live lesson detail-->
     <string name="live_lesson_detail">直播课详情</string>
     <string name="not_enroll">报名</string>
-    <string name="not_enroll_tips">改直播不需要报名</string>
+    <string name="not_enroll_tips">该直播不需要报名</string>
     <string name="lesson_enrolled">已报名</string>
     <string name="lesson_viewed">已浏览</string>
     <string name="lesson_collected">已收藏</string>
