@@ -13,7 +13,7 @@
                 app:oval="true"
                 android:scaleType="fitXY"
                 android:layout_margin="@dimen/px15"
-                android:src="@drawable/default_portrait"
+                android:src="@drawable/default_avatar_grey"
                 android:layout_width="@dimen/px100"
                 android:layout_height="@dimen/px100"/>
 

@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,6 +37,7 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -44,18 +46,22 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAd
 
     private String mMomentId;
     private String mSubType;
+    private CircleTransform circleTransform;
 
     public MomentDetailAdapter(Context context, PullToRefreshSwipeListView list, boolean isNeedPreLoading, String momentId, String sutType) {
         super(context, list, isNeedPreLoading);
         mMomentId = momentId;
         mSubType = sutType;
+        circleTransform = new CircleTransform(context);
     }
 
     @Override
     protected void setViewContent(Holder holder, Comment bean, int position) {
         Glide.with(mContext)
                 .load(Account.getAvatar(bean.createdBy.getId(),300))
-                .error(R.drawable.default_avatar)
+                .bitmapTransform(circleTransform)
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
                 .into(holder.head);
         if (bean.target == null) {//普通评论
             holder.reply(false);
@@ -149,7 +155,7 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAd
         @BindView(R.id.moment_comment_reply)
         TextView reply;
         @BindView(R.id.moment_comment_image)
-        RoundedImageView head;
+        ImageView head;
 
         public void reply(boolean reply) {
             if (reply){

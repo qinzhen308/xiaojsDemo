@@ -69,7 +69,7 @@ public class QuestionAnswerAdapter extends BaseAdapter {
     }
 
     private void bindData(Holder holder) {
-        holder.portrait.setImageResource(R.drawable.default_portrait);
+        holder.portrait.setImageResource(R.drawable.default_avatar_grey);
     }
 
 

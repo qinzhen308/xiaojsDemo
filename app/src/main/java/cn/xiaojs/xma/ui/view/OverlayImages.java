@@ -62,7 +62,7 @@ public class OverlayImages extends FlowBaseLayout {
         RoundedImageView image = new RoundedImageView(getContext());
         ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(IMAGE_WIDTH, IMAGE_WIDTH);
         image.setLayoutParams(lp);
-        image.setImageResource(R.drawable.default_portrait);
+        image.setImageResource(R.drawable.default_avatar_grey);
         image.setScaleType(ImageView.ScaleType.FIT_XY);
         image.setOval(true);
         return image;

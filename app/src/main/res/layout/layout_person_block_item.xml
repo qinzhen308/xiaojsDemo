@@ -26,7 +26,7 @@
                     android:layout_height="@dimen/px120"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/default_portrait"
+                    android:src="@drawable/default_avatar_grey"
                     android:scaleType="fitXY"
                     app:oval="true"/>
 
@@ -71,7 +71,7 @@
                         android:id="@+id/person_item_desc"
                         android:textColor="@color/common_text"
                         android:textSize="@dimen/font_28px"
-                        android:text="1123次授课,123次回答"
+                        android:text="0次授课,0次回答"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
             </LinearLayout>

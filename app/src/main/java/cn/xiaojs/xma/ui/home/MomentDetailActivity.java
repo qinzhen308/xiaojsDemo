@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -46,6 +47,7 @@ import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -68,7 +70,7 @@ public class MomentDetailActivity extends BaseActivity {
     @BindView(R.id.moment_detail_prise)
     TextView mPraise;
     @BindView(R.id.moment_detail_footer_image)
-    RoundedImageView mFooterImage;
+    ImageView mFooterImage;
 
     private String mMomentId;
     private MomentDetailAdapter mAdapter;
@@ -91,7 +93,9 @@ public class MomentDetailActivity extends BaseActivity {
         request();
         Glide.with(this)
                 .load(Account.getAvatar(AccountDataManager.getAccountID(this),XiaojsConfig.PORTRAIT_SIZE))
-                .error(R.drawable.default_avatar)
+                .bitmapTransform(new CircleTransform(this))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
                 .into(mFooterImage);
     }
 

@@ -97,7 +97,7 @@
                             android:layout_height="@dimen/px40"
                             app:corner_radius="@dimen/px20"
                             android:visibility="gone"
-                            android:src="@drawable/default_portrait"
+                            android:src="@drawable/default_avatar_grey"
                             android:layout_marginRight="@dimen/px14"
                             android:layout_gravity="center_vertical"/>
 

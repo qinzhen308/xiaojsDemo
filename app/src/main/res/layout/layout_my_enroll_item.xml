@@ -81,7 +81,7 @@
                             app:corner_radius="@dimen/px20"
                             android:layout_gravity="center_vertical"
                             android:scaleType="fitXY"
-                            android:src="@drawable/default_portrait"/>
+                            android:src="@drawable/default_avatar_grey"/>
 
                     <TextView
                             android:id="@+id/my_enroll_teacher_name"

@@ -76,7 +76,7 @@
                             app:corner_radius="@dimen/px60"
                             app:oval="true"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/default_portrait"
+                            android:src="@drawable/default_avatar_grey"
                             android:layout_width="@dimen/px100"
                             android:layout_height="@dimen/px100"/>
 
@@ -118,7 +118,7 @@
                             app:corner_radius="@dimen/px60"
                             app:oval="true"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/default_portrait"
+                            android:src="@drawable/default_avatar_grey"
                             android:layout_width="@dimen/px100"
                             android:layout_height="@dimen/px100"/>
 
@@ -160,7 +160,7 @@
                             app:corner_radius="@dimen/px60"
                             app:oval="true"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/default_portrait"
+                            android:src="@drawable/default_avatar_grey"
                             android:layout_width="@dimen/px100"
                             android:layout_height="@dimen/px100"/>
 

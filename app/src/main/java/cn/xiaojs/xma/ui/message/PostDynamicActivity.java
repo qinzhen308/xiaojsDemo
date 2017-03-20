@@ -86,7 +86,7 @@ public class PostDynamicActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_image, R.id.post_dynamic_add_picture,
-            R.id.remind_somebody_wrapper, R.id.who_can_see_wrapper, R.id.right_image})
+            R.id.remind_somebody_wrapper, R.id.who_can_see_wrapper, R.id.right_image2})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -125,7 +125,7 @@ public class PostDynamicActivity extends BaseActivity {
 
                 startActivityForResult(iat, REQUEST_AT_CODE);
                 break;
-            case R.id.right_image:
+            case R.id.right_image2:
                 postDynamic();
                 break;
 

@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.util.DeviceUtil;
 
@@ -34,6 +35,7 @@ public class ImageLine extends LinearLayout {
     private int radius;
     private int dis;
     private ImageMatrixExpandableLayout.OnImageMatrixItemListener listener;
+
     public ImageLine(Context context) {
         super(context);
         init();
@@ -77,8 +79,8 @@ public class ImageLine extends LinearLayout {
         }
     }
 
-    private RoundedImageView getImageItem(LikedRecord record) {
-        RoundedImageView image = new RoundedImageView(getContext());
+    private ImageView getImageItem(LikedRecord record) {
+        ImageView image = new ImageView(getContext());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(radius * 2, radius * 2);
         int child = getChildCount();
         if (child == 0){
@@ -95,11 +97,12 @@ public class ImageLine extends LinearLayout {
         image.setLayoutParams(lp);
         //image.setImageResource(R.drawable.default_portrait);
         image.setScaleType(ImageView.ScaleType.FIT_XY);
-        image.setOval(true);
 
         Glide.with(getContext())
-                .load(record.createdBy.getBasic().getAvatar())
-                .error(R.drawable.default_avatar)
+                .load(Account.getAvatar(record.createdBy.getId(),radius * 2))
+                .bitmapTransform(new CircleTransform(getContext()))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
                 .into(image);
         return image;
     }

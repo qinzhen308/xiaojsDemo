@@ -18,35 +18,50 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.ui.view.MomentUpdateTargetView;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.util.TimeUtil;
 
 public class MomentUpdateAdapter extends AbsSwipeAdapter<DynUpdate, MomentUpdateAdapter.Holder> {
 
     private MomentUpdateActivity mActivity;
+    private CircleTransform circleTransform;
 
     public MomentUpdateAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
+        circleTransform = new CircleTransform(context);
     }
 
     public MomentUpdateAdapter(Context context, PullToRefreshSwipeListView listView, boolean autoLoad) {
         super(context, listView, autoLoad);
+        circleTransform = new CircleTransform(context);
     }
 
     @Override
     protected void setViewContent(Holder holder, DynUpdate bean, int position) {
+
+        Glide.with(mContext)
+                .load(Account.getAvatar(bean.behavedBy.id,holder.portrait.getMeasuredWidth()))
+                .transform(circleTransform)
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
+                .into(holder.portrait);
+
         holder.name.setText(bean.behavedBy.name);
         holder.behavior.setText(bean.tips);
         holder.time.setText(TimeUtil.getTimeFromNow(bean.createdOn));
@@ -117,7 +132,7 @@ public class MomentUpdateAdapter extends AbsSwipeAdapter<DynUpdate, MomentUpdate
         @BindView(R.id.moment_update_item_target)
         MomentUpdateTargetView target;
         @BindView(R.id.moment_update_item_portrait)
-        RoundedImageView portrait;
+        ImageView portrait;
         @BindView(R.id.moment_update_item_name)
         TextView name;
         @BindView(R.id.moment_update_item_behavior)

@@ -19,7 +19,7 @@
             <ImageView
                     android:id="@+id/live_brilliant_image"
                     android:scaleType="fitXY"
-                    android:src="@drawable/default_portrait"
+                    android:src="@drawable/default_avatar_grey"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/px220"/>
 

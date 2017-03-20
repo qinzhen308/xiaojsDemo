@@ -342,7 +342,7 @@
                                 android:id="@+id/certification_image_sample"
                                 android:scaleType="fitXY"
                                 android:layout_margin="@dimen/px10"
-                                android:src="@drawable/default_portrait"
+                                android:src="@drawable/default_avatar_grey"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"/>
 

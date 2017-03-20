@@ -69,7 +69,7 @@
 
                 <cn.xiaojs.xma.ui.widget.RoundedImageView
                         app:oval="true"
-                        android:src="@drawable/default_portrait"
+                        android:src="@drawable/default_avatar_grey"
                         android:scaleType="fitXY"
                         android:layout_width="@dimen/px40"
                         android:layout_height="@dimen/px40"/>

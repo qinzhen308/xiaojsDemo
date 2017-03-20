@@ -26,7 +26,7 @@
         <cn.xiaojs.xma.ui.widget.RoundedImageView
                 app:oval="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/default_portrait"
+                android:src="@drawable/default_avatar_grey"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_marginTop="@dimen/px15"
                 android:layout_marginBottom="@dimen/px15"

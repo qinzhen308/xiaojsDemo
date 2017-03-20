@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.model.social.DynUpdate;
 import cn.xiaojs.xma.util.StringUtil;
 
@@ -122,13 +123,15 @@ public class MomentUpdateTargetView extends FrameLayout {
                     if (TextUtils.isEmpty(bean.body.ref.text)){//只有图
                         show(TYPE_IMAGE);
                         Glide.with(getContext())
-                                .load(bean.body.ref.snap)
+                                .load(Social.getDrawing(bean.body.ref.snap,true))
+                                .placeholder(R.drawable.default_lesson_cover)
                                 .error(R.drawable.default_lesson_cover)
                                 .into(mImage);
                     }else {//有图有文字
                         show(TYPE_LESSON);
                         Glide.with(getContext())
-                                .load(bean.body.ref.snap)
+                                .load(Social.getDrawing(bean.body.ref.snap,true))
+                                .placeholder(R.drawable.default_lesson_cover)
                                 .error(R.drawable.default_lesson_cover)
                                 .into(mLessonImage);
                         mLessonWord.setText(bean.body.ref.text);

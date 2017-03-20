@@ -56,13 +56,13 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
     public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView, LessonFragment fragment) {
         super(context, listView);
         mFragment = fragment;
-        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_portrait);
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_avatar_grey);
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
     public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
-        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_portrait);
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_avatar_grey);
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
 
