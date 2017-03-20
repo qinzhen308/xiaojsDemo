@@ -46,6 +46,8 @@ import java.util.Set;
 
 public class AccountDataManager {
 
+
+
     public static void setPhone(final Context context, final String phone) {
         AccountPref.setPhone(context, phone);
     }
@@ -62,15 +64,18 @@ public class AccountDataManager {
         AccountPref.setLocation(context, location);
     }
 
-    //保存已声明的能力
-    public static void saveSubject(Context context,String subject) {
-        AccountPref.setSubject(context,subject);
+    public static String getAbilities(Context context) {
+        return AccountPref.getAbilities(context);
     }
 
-    //获取已声明的教学能力subject
-    public static String getSubject(Context context) {
-        return AccountPref.getSubject(context);
+    public static void addAbility(Context context, String ability) {
+        AccountPref.addAbility(context,ability,false);
     }
+
+    public static void clearAbilities(Context context) {
+        AccountPref.addAbility(context,null,true);
+    }
+
 
     /**
      * 获取session
@@ -442,6 +447,11 @@ public class AccountDataManager {
         accountRequest.getCompetencies();
     }
 
+    public static ClaimCompetency getCompetencies(Context context) throws Exception {
+        AccountRequest accountRequest = new AccountRequest(context,null);
+        return accountRequest.getCompetenciesSync();
+
+    }
 
 
 

@@ -37,10 +37,44 @@ public class AccountPref {
 
     private static final String PREF_LOCATION = "location";
 
+    private static final String PREF_ABILITY = "ability";
+
 
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
+
+
+    public static void addAbility(final Context context, String ability, boolean clear) {
+
+        if (clear) {
+            SharedPreferences sp = DataPref.getSharedPreferences(context);
+            sp.edit().putString(PREF_ABILITY, "").apply();
+            return;
+        }
+
+
+        if (TextUtils.isEmpty(ability)){
+            return;
+        }
+
+        String oldAbilities = getAbilities(context);
+        StringBuilder sb = new StringBuilder(oldAbilities);
+        if (!TextUtils.isEmpty(oldAbilities)) {
+            sb.append(",");
+        }
+        sb.append(ability);
+
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_ABILITY, sb.toString()).apply();
+
+    }
+
+    public static String getAbilities(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_ABILITY, "");
+    }
+
 
     public static void setLocation(final Context context, Location location) {
 

@@ -18,6 +18,7 @@ import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.NetUtil;
@@ -99,6 +100,15 @@ public class SyncService extends IntentService {
                         }
                     }
                     DataManager.syncGroupData(context, map);
+
+                    //同步教学能力
+                    ClaimCompetency claimCompetency = AccountDataManager.getCompetencies(context);
+                    if (claimCompetency != null && claimCompetency.competencies != null) {
+
+                        claimCompetency.competencies
+
+                    }
+
                     break;
 
 
