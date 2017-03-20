@@ -174,6 +174,7 @@ public class AccountDataManager {
         AccountPref.setLoginStatus(context,false);
         AccountPref.setUser(context,null);
         AccountPref.setLocation(context,null);
+        AccountDataManager.clearAbilities(context);
         saveAliaTags(context, null);
         AccountPref.setAtagsSuccess(context,false);
         SecurityManager.saveCSRFToken(context,"");

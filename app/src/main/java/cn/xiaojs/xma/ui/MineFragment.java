@@ -83,6 +83,10 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.name_auth_layout)
     RelativeLayout authLayout;
 
+    @BindView(R.id.teach_ability)
+    TextView abilityTips;
+
+
     private Drawable mBlurFloatUpBg;
 
     @Override
@@ -100,6 +104,15 @@ public class MineFragment extends BaseFragment {
         //set default ugc
         setUgc(null);
         loadData();
+        showAbilities();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        showAbilities();
     }
 
     @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,
@@ -226,6 +239,14 @@ public class MineFragment extends BaseFragment {
         } else {
             //set default
             setDefaultPortrait();
+        }
+    }
+
+    private void showAbilities(){
+
+        String abilities = AccountDataManager.getAbilities(getContext());
+        if (!TextUtils.isEmpty(abilities)) {
+            abilityTips.setText(abilities);
         }
     }
 

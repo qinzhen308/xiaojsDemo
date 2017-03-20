@@ -61,7 +61,7 @@ public class AccountPref {
         String oldAbilities = getAbilities(context);
         StringBuilder sb = new StringBuilder(oldAbilities);
         if (!TextUtils.isEmpty(oldAbilities)) {
-            sb.append(",");
+            sb.append("、");
         }
         sb.append(ability);
 
