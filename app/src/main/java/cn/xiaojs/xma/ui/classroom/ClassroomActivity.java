@@ -435,6 +435,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
                         setPendingLivePlayTime(ctlSession.startOn);
                         setControllerBtnStyle(ctlSession.state);
+                        mPlayUrl = ctlSession.playUrl;
+                        mClassroomController.playStream(mPlayUrl);
                     } else {
                         mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
                         setControllerBtnStyle(ctlSession.state);

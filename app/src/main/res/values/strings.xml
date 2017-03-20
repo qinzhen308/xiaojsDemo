@@ -232,6 +232,7 @@
     <string name="charge_must_be_checked">请选择收费模式</string>
     <string name="charge_empty">请填写收费价格</string>
     <string name="lesson_start_time_empty">请选择上课时间</string>
+    <string name="lesson_start_time_error">上课时间不能晚于当前时间</string>
     <string name="lesson_duration_empty">请填写上课时长</string>
     <string name="lesson_duration_must_be_less_than">上课时长不能多于%1$s分钟</string>
     <string name="sale_promotion_set">促销设置</string>

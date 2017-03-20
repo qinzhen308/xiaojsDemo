@@ -682,6 +682,11 @@ public class LessonCreationActivity extends BaseActivity {
                 return false;
             }
 
+            if (mLessonStartTime <= System.currentTimeMillis()) {
+                Toast.makeText(mContext, R.string.lesson_start_time_error, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
             String durationStr = mLessonDurationEdt.getText().toString().trim();
             if (TextUtils.isEmpty(durationStr)) {
                 Toast.makeText(mContext, R.string.lesson_duration_empty, Toast.LENGTH_SHORT).show();
