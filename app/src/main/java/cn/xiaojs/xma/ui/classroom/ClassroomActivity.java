@@ -802,6 +802,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         if (response.result) {
                             mLiveSessionState = mBeforeClamSteamState;
                             setControllerBtnStyle(mLiveSessionState);
+                            if (mClassroomController != null) {
+                                mClassroomController.publishStream();
+                            }
                         }
                     }
                 }

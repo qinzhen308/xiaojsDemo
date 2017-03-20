@@ -41,22 +41,23 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected PlayerTextureView mPlayView;
 
     protected boolean mInitPublishVideo = false;
+    protected boolean mInitIndividualPublishVideo = false;
     protected boolean mLive;
 
     protected String mPlayStreamUrl;
     protected String mPublishStreamUrl;
 
-    private boolean mStreamPlaying;
-    private boolean mStreamPublishing;
+    protected boolean mStreamPlaying;
+    protected boolean mStreamPublishing;
     /**
      * 是否需要重新推流
      */
-    private boolean mNeedStreamRePublishing = false;
+    protected boolean mNeedStreamRePublishing = false;
     /**
      * 是否需要重新播放流
      */
-    private boolean mNeedStreamRePlaying = false;
-    private OnStreamUseListener mOnStreamUseListener;
+    protected boolean mNeedStreamRePlaying = false;
+    protected OnStreamUseListener mOnStreamUseListener;
 
     public VideoController(Context context, View root, OnStreamUseListener listener) {
         mContext = context;
@@ -239,7 +240,11 @@ public abstract class VideoController implements StreamConfirmCallback {
         public void onStateChanged(StreamingState streamingState, Object o) {
             switch (streamingState) {
                 case STREAMING:
-                    mInitPublishVideo = true;
+                    if (mLive) {
+                        mInitPublishVideo = true;
+                    } else {
+                        mInitIndividualPublishVideo = true;
+                    }
                     break;
             }
             onSteamStateChanged(streamingState, o);
