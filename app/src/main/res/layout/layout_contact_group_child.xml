@@ -13,16 +13,16 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical">
-        <Button
-                android:id="@+id/move_contact"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/font_30px"
-                android:textColor="@color/font_white"
-                android:background="@drawable/big_submit_btn_selector"
-                android:padding="8dp"
-                android:text="@string/move_contact"
-                />
+        <!--<Button-->
+                <!--android:id="@+id/move_contact"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:textSize="@dimen/font_30px"-->
+                <!--android:textColor="@color/font_white"-->
+                <!--android:background="@drawable/big_submit_btn_selector"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="@string/move_contact"-->
+                <!--/>-->
         <Button
                 android:id="@+id/del_contact"
                 android:layout_width="wrap_content"

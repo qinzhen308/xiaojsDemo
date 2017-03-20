@@ -58,6 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/px90"
+                        android:visibility="gone"
                         android:textColor="@drawable/orange_common_selector"
                         android:textSize="@dimen/font_26px"/>
             </LinearLayout>

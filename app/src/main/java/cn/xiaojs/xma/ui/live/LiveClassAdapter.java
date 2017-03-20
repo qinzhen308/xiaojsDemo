@@ -17,6 +17,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.ctl.LiveItem;
@@ -277,6 +278,7 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
                 holder.state.setBackgroundResource(R.drawable.course_state_wait_bg);
             } else if (bean.state.equalsIgnoreCase(LessonState.LIVE)) {
                 holder.state.setText(R.string.living);
+                holder.operation.setEnterColor(R.color.font_orange);
                 holder.state.setBackgroundResource(R.drawable.course_state_on_bg);
                 holder.progressWrapper.setVisibility(View.VISIBLE);
                 holder.progress.showTimeBar(bean.schedule.getDuration(), bean.classroom.finishOn);
@@ -441,7 +443,9 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
             name = bean.teacher.getBasic().getName();
         }
 
-        ShareUtil.show((Activity) mContext, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), "https://www.baidu.com");
+        String shareUrl = ApiManager.getShareLessonUrl(bean.id);
+
+        ShareUtil.show((Activity) mContext, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     //报名注册

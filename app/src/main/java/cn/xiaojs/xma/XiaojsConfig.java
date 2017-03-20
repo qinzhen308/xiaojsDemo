@@ -34,9 +34,9 @@ public class XiaojsConfig {
     //url and port
     ///////////////外网生产环境域名/////////////
     //XAS
-    public static final String XAS_BASE_URL = "https://xas.xiaojs.cn";
+    public static final String XAS_BASE_URL = "http://xas.xiaojs.cn";
     //XLS
-    public static final String XLS_BASE_URL = "https://xls.xiaojs.cn";
+    public static final String XLS_BASE_URL = "http://xls.xiaojs.cn";
     //七牛存储空间
     // 华东:存储空间列表(图片和文档存储)Bucket (files) CDN 加速域名
     public static final String FILES_BUCKET_URL = "http://xcfs.xiaojs.cn";

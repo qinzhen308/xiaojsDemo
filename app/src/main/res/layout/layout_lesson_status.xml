@@ -75,6 +75,7 @@
                             android:textColor="@color/font_blue"
                             android:textSize="@dimen/font_26px"
                             android:text="评价"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
@@ -84,6 +85,7 @@
                             android:textColor="@color/font_blue"
                             android:textSize="@dimen/font_26px"
                             android:text="回放"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                 </LinearLayout>

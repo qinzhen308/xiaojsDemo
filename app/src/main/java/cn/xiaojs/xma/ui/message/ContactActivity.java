@@ -597,7 +597,7 @@ public class ContactActivity extends BaseActivity {
 
                 holder.avatarView = (ImageView) convertView.findViewById(R.id.contact_avatar);
                 holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
-                holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
+                //holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
                 holder.delBtn = (Button) convertView.findViewById(R.id.del_contact);
                 holder.size = holder.avatarView.getMeasuredWidth();
 
@@ -622,20 +622,20 @@ public class ContactActivity extends BaseActivity {
             String name = isclass? c.title : c.alias;
             holder.nameView.setText(name);
 
-            holder.moveBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    ContactGroup gc = getGroup(groupPosition);
-
-                    if (gc.group == CLASSES){
-                        Toast.makeText(ContactActivity.this, R.string.cannt_move_class,Toast.LENGTH_SHORT).show();
-                    }else{
-                        showMoveContactDlg(groupPosition,c);
-                    }
-
-                }
-            });
+//            holder.moveBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    ContactGroup gc = getGroup(groupPosition);
+//
+//                    if (gc.group == CLASSES){
+//                        Toast.makeText(ContactActivity.this, R.string.cannt_move_class,Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        showMoveContactDlg(groupPosition,c);
+//                    }
+//
+//                }
+//            });
 
             holder.delBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
