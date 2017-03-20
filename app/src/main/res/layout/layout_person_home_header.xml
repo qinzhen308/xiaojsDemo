@@ -26,7 +26,6 @@
                 android:id="@+id/person_home_summary"
                 android:textColor="@color/font_black"
                 android:textSize="@dimen/font_30px"
-                android:text="SWEET SALON品牌 创意总监"
                 android:layout_margin="@dimen/px30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
