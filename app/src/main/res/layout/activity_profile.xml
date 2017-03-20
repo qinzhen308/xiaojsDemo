@@ -37,7 +37,7 @@
                 android:layout_height="@dimen/px86"
                 android:layout_centerInParent="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/default_avatar"
+                android:src="@drawable/default_avatar_grey"
                 roundimg:oval="true"/>
 
         <ImageView
