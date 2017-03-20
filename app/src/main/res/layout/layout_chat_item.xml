@@ -36,7 +36,7 @@
 
             <cn.xiaojs.xma.ui.widget.RoundedImageView
                     android:id="@+id/chat_item_image_other"
-                    android:src="@drawable/default_portrait"
+                    android:src="@drawable/default_avatar_grey"
                     android:scaleType="fitXY"
                     app:oval="true"
                     android:layout_width="@dimen/px80"

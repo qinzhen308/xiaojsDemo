@@ -144,7 +144,7 @@
         <ImageView
                 android:id="@+id/person_home_free_video_cover"
                 android:scaleType="fitXY"
-                android:src="@drawable/default_portrait"
+                android:src="@drawable/default_avatar_grey"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px200"/>
 
@@ -187,14 +187,12 @@
             <TextView
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_30px"
-                    android:text="完美妆容，从底妆开始"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             <TextView
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_26px"
-                    android:text="完美妆容，从底妆开始"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
         </LinearLayout>

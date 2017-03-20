@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="horizontal"
               android:background="@color/moment_comment_bg"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <cn.xiaojs.xma.ui.widget.RoundedImageView
+    <ImageView
             android:id="@+id/moment_detail_footer_image"
-            app:oval="true"
-            app:border_width="@dimen/px1"
-            app:border_color="@color/white"
             android:layout_marginBottom="@dimen/px15"
             android:layout_marginTop="@dimen/px15"
             android:layout_marginLeft="@dimen/px30"
-            android:src="@drawable/default_avatar"
+            android:src="@drawable/default_avatar_grey"
             android:layout_width="@dimen/px62"
             android:layout_height="@dimen/px62"/>
 

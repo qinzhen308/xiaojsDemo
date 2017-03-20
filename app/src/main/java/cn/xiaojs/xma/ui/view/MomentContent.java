@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.model.social.Dynamic;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -166,7 +167,8 @@ public class MomentContent extends RelativeLayout {
                 }else {
                     mSpecialImage.setVisibility(VISIBLE);
                     Glide.with(getContext())
-                            .load(dynamic.body.ref.snap)
+                            .load(Social.getDrawing(dynamic.body.ref.snap,true))
+                            .placeholder(R.drawable.default_lesson_cover)
                             .error(R.drawable.default_lesson_cover)
                             .into(mSpecialImage);
                 }
@@ -187,7 +189,8 @@ public class MomentContent extends RelativeLayout {
                     getResources().getColor(R.color.font_blue));
             mSpecialContent.setText(span);
             Glide.with(getContext())
-                    .load(dynamic.body.ref.snap)
+                    .load(Social.getDrawing(dynamic.body.ref.snap, true))
+                    .placeholder(R.drawable.default_lesson_cover)
                     .error(R.drawable.default_lesson_cover)
                     .into(mLessonImage);
             mLessonDuration.setText(dynamic.body.ref.duration);
@@ -222,7 +225,8 @@ public class MomentContent extends RelativeLayout {
                 }else {
                     mSpecialImage.setVisibility(VISIBLE);
                     Glide.with(getContext())
-                            .load(dynamic.body.ref.snap)
+                            .load(Social.getDrawing(dynamic.body.ref.snap,true))
+                            .placeholder(R.drawable.default_lesson_cover)
                             .error(R.drawable.default_lesson_cover)
                             .into(mSpecialImage);
                 }
@@ -251,6 +255,7 @@ public class MomentContent extends RelativeLayout {
             }
             Glide.with(getContext()).
                     load(Social.getDrawing(photo.name,true))
+                    .placeholder(R.drawable.default_lesson_cover)
                     .error(R.drawable.default_lesson_cover).
                     into(mNormalImage);
             mNormalImage.setOnClickListener(new OnClickListener() {

@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="horizontal"
               android:background="@drawable/white_grey_selector"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <cn.xiaojs.xma.ui.widget.RoundedImageView
+    <ImageView
             android:id="@+id/moment_update_item_portrait"
-            app:oval="true"
-            android:src="@drawable/default_portrait"
             android:scaleType="fitXY"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginTop="@dimen/px30"

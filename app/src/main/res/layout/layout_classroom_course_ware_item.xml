@@ -47,7 +47,6 @@
             android:paddingTop="@dimen/px6"
             android:paddingBottom="@dimen/px6"
             android:lineSpacingExtra="@dimen/px4"
-            android:text="发送方的说法的房间爱思考了房间爱上经济负担是会计看电视就分开打手机肯定是减肥看电视剧肯定就是看几点上课"
             android:maxLines="4"/>
 
     <ImageView
@@ -56,7 +55,7 @@
             android:layout_height="@dimen/px135"
             android:layout_below="@+id/content"
             android:scaleType="centerCrop"
-            android:src="@drawable/default_portrait"
+            android:src="@drawable/default_avatar_grey"
             android:layout_marginTop="@dimen/px20"
             android:layout_marginLeft="@dimen/px30"/>
 
@@ -67,7 +66,7 @@
             android:layout_below="@+id/content"
             android:layout_toRightOf="@+id/img1"
             android:scaleType="centerCrop"
-            android:src="@drawable/default_portrait"
+            android:src="@drawable/default_avatar_grey"
             android:layout_marginTop="@dimen/px20"
             android:layout_marginLeft="@dimen/px10"/>
 

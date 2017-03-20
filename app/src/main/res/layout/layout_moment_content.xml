@@ -47,7 +47,6 @@
                 android:textSize="@dimen/font_26px"
                 android:layout_marginTop="@dimen/px30"
                 android:visibility="gone"
-                android:text="这里是一串问题的回答，这里是一串问题的回答，这里是一串问题的回答，这里是一串问题的回答，这里是一串问题的回答，这里是一串问题的回答，这里是一串问题的回答，这里是一串问题的回答"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -58,7 +57,6 @@
                 android:visibility="gone"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_marginRight="@dimen/px30"
-                android:src="@drawable/default_portrait"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -69,7 +67,6 @@
 
             <ImageView
                     android:id="@+id/moment_content_lesson_image"
-                    android:src="@drawable/default_portrait"
                     android:scaleType="fitXY"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
@@ -115,7 +112,6 @@
                             android:id="@+id/moment_content_lesson_name"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font_30px"
-                            android:text="photoshop初级入门教程之人像磨皮,这个标题有点长"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
@@ -123,7 +119,6 @@
                             android:id="@+id/moment_content_lesson_time"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font_24px"
-                            android:text="2016-11-11 19:00"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 

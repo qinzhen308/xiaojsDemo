@@ -17,7 +17,7 @@
         <ImageView
                 android:id="@+id/search_lesson_image"
                 android:scaleType="fitXY"
-                android:src="@drawable/default_portrait"
+                android:src="@drawable/default_avatar_grey"
                 android:layout_width="@dimen/px261"
                 android:layout_height="@dimen/px149"/>
 
@@ -69,7 +69,7 @@
                     app:oval="true"
                     android:scaleType="fitXY"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/default_portrait"
+                    android:src="@drawable/default_avatar_grey"
                     android:layout_width="@dimen/px40"
                     android:layout_height="@dimen/px40"/>
 

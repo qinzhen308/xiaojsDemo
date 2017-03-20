@@ -71,7 +71,7 @@
                     android:scaleType="fitXY"
                     app:border_color="@color/white"
                     app:border_width="@dimen/px1"
-                    android:src="@drawable/default_portrait"/>
+                    android:src="@drawable/default_avatar_grey"/>
 
             <TextView
                     android:id="@+id/home_moment_tip"
@@ -110,7 +110,7 @@
                 android:scaleType="fitXY"
                 app:border_color="@color/white"
                 app:border_width="@dimen/px1"
-                android:src="@drawable/default_portrait"/>
+                android:src="@drawable/default_avatar_grey"/>
 
         <TextView
                 android:id="@+id/home_right_moment_tip"
