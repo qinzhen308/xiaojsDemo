@@ -330,10 +330,11 @@ public class LessonCreationActivity extends BaseActivity {
 
         Schedule sch = lessonDetail.getSchedule();
         if (sch != null) {
-            mLessonStartTime = sch.getStart().getTime();
-            String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
-            mLessonStartTimeTv.setText(dateStr);
-            mLessonStartTimeTv.setTextColor(mContentFont);
+            //重新创建课程，上课时间无效
+            //mLessonStartTime = sch.getStart().getTime();
+            //String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
+            //mLessonStartTimeTv.setText(dateStr);
+            //mLessonStartTimeTv.setTextColor(mContentFont);
 
             mLessonDurationEdt.setText(String.valueOf(sch.getDuration()));
         }

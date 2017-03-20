@@ -41,6 +41,8 @@ import cn.xiaojs.xma.util.DeviceUtil;
 
 public class StudentVideoController extends VideoController {
     private CommonDialog mAgreeOpenCamera;
+    private LiveRecordView mIndividualPublishView;
+    private String mIndividualPublishUrl;
 
     public StudentVideoController(Context context, View root, OnStreamUseListener listener) {
         super(context, root, listener);
@@ -53,6 +55,8 @@ public class StudentVideoController extends VideoController {
         mPlayView.setVisibility(View.VISIBLE);
 
         mPublishView = (LiveRecordView) root.findViewById(R.id.stu_publish_video);
+        //全屏个人推流
+        mIndividualPublishView = (LiveRecordView) root.findViewById(R.id.publish_video);
     }
 
     @Override
@@ -68,9 +72,46 @@ public class StudentVideoController extends VideoController {
     }
 
     @Override
+    public void publishStream(String url, boolean live) {
+        if (live) {
+            //接收老师一对一推流(小窗口)
+            super.publishStream(url, live);
+        } else {
+            //个人推流(全屏)
+            mIndividualPublishUrl = url;
+            if (mOnStreamUseListener != null) {
+                mLive = live;
+                mOnStreamUseListener.onStreamPublish(this);
+            }
+        }
+    }
+
+    @Override
     public void confirmPublishStream(boolean confirm) {
-        super.confirmPublishStream(confirm);
-        mPublishView.setVisibility(View.VISIBLE);
+        if (mLive) {
+            super.confirmPublishStream(confirm);
+            mPublishView.setVisibility(View.VISIBLE);
+        } else {
+            mStreamPublishing = true;
+            mIndividualPublishView.setPath(mIndividualPublishUrl);
+            if (!mInitIndividualPublishVideo) {
+                mIndividualPublishView.start();
+            } else {
+                mIndividualPublishView.resume();
+            }
+            mIndividualPublishView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void pausePublishStream() {
+        if (mLive) {
+            super.pausePublishStream();
+        } else {
+            mStreamPublishing = false;
+            mIndividualPublishView.pause();
+            mIndividualPublishView.setVisibility(View.GONE);
+        }
     }
 
     @Override
