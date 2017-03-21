@@ -134,4 +134,6 @@ public class APIType {
     public static final int CHANGE_PASSWORD= 75;
     public static final int REQUEST_VERIFICATION= 76;
 
+    public static final int GET_ARTICLE= 77;
+
 }
