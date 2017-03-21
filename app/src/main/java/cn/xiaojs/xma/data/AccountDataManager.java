@@ -3,11 +3,9 @@ package cn.xiaojs.xma.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import cn.jpush.android.api.TagAliasCallback;
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.xf_foundation.Xu;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.AccountRequest;
 import cn.xiaojs.xma.data.api.service.ErrorPrompts;
@@ -17,24 +15,21 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.AliasTags;
-import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
-import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
-import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.account.User;
+import cn.xiaojs.xma.model.account.PwdParam;
+import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.JpushUtil;
 import okhttp3.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
 import java.util.Map;
@@ -454,7 +449,45 @@ public class AccountDataManager {
 
     }
 
+    /**
+     * Changes password for the session account.
+     * @param context
+     * @param password
+     * @param callback
+     */
+    public static void changePassword(Context context, String password, APIServiceCallback callback) {
 
+        PwdParam pwdParam = new PwdParam();
+        pwdParam.password = password;
+
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.changePassword(pwdParam);
+    }
+
+
+    /**
+     * Requests to verify identify for an unverified teacher or organization.
+     * @param context
+     * @param name
+     * @param no
+     * @param hold
+     * @param callback
+     */
+    public static void requestVerification(Context context,
+                                           String name,
+                                           String no,
+                                           String hold,
+                                           APIServiceCallback callback) {
+
+        VerifyParam param = new VerifyParam();
+        param.name = name;
+        param.handhold = hold;
+        param.no = no;
+
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.requestVerification(param);
+
+    }
 
 
 }

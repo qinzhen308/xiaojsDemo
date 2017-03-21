@@ -11,6 +11,7 @@ import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
+import cn.xiaojs.xma.model.security.ResetPwdParam;
 
 import com.orhanobut.logger.Logger;
 
@@ -167,6 +168,30 @@ public class SecurityManager {
 
         SecurityRequest securityRequest = new SecurityRequest(context,callback);
         securityRequest.checkSession();
+    }
+
+    /**
+     * Provides a means to reset password for the specific account.
+     * @param context
+     * @param mobile
+     * @param password
+     * @param code
+     * @param callback
+     */
+    public static void resetPassword(Context context,
+                                     long mobile,
+                                     String password,
+                                     int code,
+                                     APIServiceCallback callback) {
+
+        ResetPwdParam param = new ResetPwdParam();
+        param.mobile = mobile;
+        param.password = password;
+        param.code = code;
+
+        SecurityRequest securityRequest = new SecurityRequest(context,callback);
+        securityRequest.resetPassword(param);
+
     }
 
 }
