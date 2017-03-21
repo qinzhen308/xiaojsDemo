@@ -22,8 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.qiniu.pili.droid.streaming.widget.AspectFrameLayout;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -42,7 +40,6 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.VerifyUtils;
-import cn.xiaojs.xma.util.XjsUtils;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -171,7 +168,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.left_view, R.id.login_btn, R.id.hide_show_pwd})
+    @OnClick({R.id.left_view, R.id.login_btn, R.id.hide_show_pwd, R.id.forget_pwd})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_view:
@@ -182,6 +179,9 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.login_btn:
                 submitLogin();
+                break;
+            case R.id.forget_pwd:
+                startActivity(new Intent(this, ForgetPasswordStepOneActivity.class));
                 break;
             default:
                 break;

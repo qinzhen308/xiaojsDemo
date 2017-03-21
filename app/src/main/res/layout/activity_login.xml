@@ -71,9 +71,8 @@
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/px57"
             android:paddingRight="@dimen/px57"
-            android:layout_marginBottom="@dimen/px86"
             android:layout_marginTop="@dimen/px18"
-            android:layout_above="@+id/login_btn">
+            android:layout_above="@+id/forget_pwd">
 
         <ImageView
                 android:id="@+id/login_pwd_icon"
@@ -119,6 +118,21 @@
                 android:background="@color/white"
                 android:alpha="0.4"/>
     </RelativeLayout>
+
+
+    <TextView
+            android:id="@+id/forget_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forget_password"
+            android:textColor="@color/font_white"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/px57"
+            android:paddingTop="@dimen/px26"
+            android:paddingBottom="@dimen/px26"
+            android:layout_marginBottom="@dimen/px60"
+            android:layout_above="@+id/login_btn"
+            android:textSize="@dimen/font_26px"/>
 
     <Button
             android:id="@+id/login_btn"

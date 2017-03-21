@@ -69,8 +69,13 @@
         <activity
                 android:name=".ui.account.LoginActivity"
                 android:screenOrientation="portrait"
+                android:launchMode="singleTask"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         </activity>
+        <activity android:name=".ui.account.ForgetPasswordStepOneActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.account.ForgetPasswordStepTwoActivity"
+                  android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.MainActivity"
                 android:launchMode="singleTask"
