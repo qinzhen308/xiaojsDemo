@@ -1,4 +1,7 @@
-package cn.xiaojs.xma.ui.classroom.live;
+package cn.xiaojs.xma.ui.account;
+
+import cn.xiaojs.xma.ui.base.BaseActivity;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,12 +12,14 @@ package cn.xiaojs.xma.ui.classroom.live;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/3/8
+ * Date:2017/3/21
  * Desc:
  *
  * ======================================================================================== */
 
-public interface OnStreamUseListener {
-    public void onStreamPlay(StreamConfirmCallback callback);
-    public void onStreamPublish(StreamConfirmCallback callback);
+public class ForgetPasswordActivity extends BaseActivity {
+    @Override
+    protected void addViewContent() {
+
+    }
 }

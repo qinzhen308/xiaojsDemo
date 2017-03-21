@@ -31,7 +31,8 @@
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
 
     <!--用于申请调用A-GPS模块-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
+    <uses-permission
+            android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
     <!--用于申请获取蓝牙信息进行室内定位-->
     <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
@@ -87,6 +88,8 @@
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity android:name=".ui.mine.SettingsActivity"/>
+        <activity android:name=".ui.account.ModifyPasswordActivity"
+                  android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.lesson.MyLessonActivity"
                 android:screenOrientation="portrait"/>
@@ -99,8 +102,6 @@
                 android:name=".ui.lesson.SubjectSelectorActivity"
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.mine.ProfileActivity"/>
-
-
 
 
         <activity
@@ -233,7 +234,7 @@
         <activity
                 android:name=".ui.UpgradeActivity"
                 android:theme="@style/dlg_upgrade"
-                >
+        >
         </activity>
         <!-- QQ -->
         <activity
@@ -300,10 +301,10 @@
                 android:authorities="cn.xiaojs.xma.fileprovider"
                 android:grantUriPermissions="true"
                 android:exported="false"
-                >
+        >
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/file_paths" />
+                    android:resource="@xml/file_paths"/>
         </provider>
 
         <service
@@ -431,8 +432,6 @@
                 android:value="d19701b38830e88772d8325797c8073a"/>
 
         <service android:name="com.amap.api.location.APSService"></service>
-
-
 
 
     </application>
