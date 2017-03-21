@@ -489,5 +489,19 @@ public class AccountDataManager {
 
     }
 
+    /**
+     * 上传认证图片
+     * @param context
+     * @param filePath
+     * @param qiniuService
+     */
+    public static void uploadHandhold(Context context,
+                                      @NonNull final String filePath,
+                                      @NonNull QiniuService qiniuService){
+
+        QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.HAND_HOLD,1);
+    }
+
 
 }
