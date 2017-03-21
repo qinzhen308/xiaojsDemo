@@ -206,6 +206,17 @@ public class SocialRequest extends ServiceRequest {
 
     }
 
+    public void deleteActivity(String activity) {
+        Call<ResponseBody> call = getService().deleteActivity(activity);
+        enqueueRequest(APIType.DELETE_ACTIVITY,call);
+    }
+
+    public void deleteCommentOrReply(String commentOrReply) {
+        Call<ResponseBody> call = getService().deleteCommentOrReply(commentOrReply);
+        enqueueRequest(APIType.DELETE_COMMENT_REPLY,call);
+    }
+
+
     @Override
     public void doTask(int apiType, Object responseBody) {
         if (apiType == APIType.GET_CONTACTS) {

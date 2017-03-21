@@ -14,6 +14,7 @@ import cn.xiaojs.xma.model.NotificationCriteria;
 import cn.xiaojs.xma.model.Pagination;
 import com.orhanobut.logger.Logger;
 
+import cn.xiaojs.xma.model.Upgrade;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -74,5 +75,10 @@ public class PlatformRequest extends ServiceRequest {
 
         Call<IgnoreNResponse> call = getService().ignoreNotifications(criteriaJson);
         enqueueRequest(APIType.IGNORE_NOTIFICATIONS, call);
+    }
+
+    public void checkUpgrade() {
+        Call<Upgrade> call = getService().checkUpgrade();
+        enqueueRequest(APIType.CHECK_UPGRADE, call);
     }
 }

@@ -128,6 +128,8 @@ public final class DBHelper extends SQLiteOpenHelper {
                 .append(" TEXT,")
                 .append(TContact.LAST_MSG)
                 .append(" TEXT,")
+                .append(TContact.COVER)
+                .append(" TEXT,")
                 .append(TContact.GNAME)
                 .append(" TEXT")
                 .append("); ")

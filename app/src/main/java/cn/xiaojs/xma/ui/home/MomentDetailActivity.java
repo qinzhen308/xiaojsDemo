@@ -238,11 +238,30 @@ public class MomentDetailActivity extends BaseActivity {
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
                 @Override
                 public void onItemClick(int position) {
-                    //delete(bean);
+                    delete(mDetail.id);
                 }
             });
         }
         dialog.show();
+    }
+
+    private void delete(String aid){
+
+        showProgress(true);
+        SocialManager.deleteActivity(this, aid, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                setResult(HomeConstant.RESULT_MOMENT_DETAIL_OPERATED);
+                finish();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                ToastUtil.showToast(MomentDetailActivity.this,errorMessage);
+            }
+        });
     }
 
     //取消关注

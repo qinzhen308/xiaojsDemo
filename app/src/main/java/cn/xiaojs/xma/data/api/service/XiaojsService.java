@@ -6,6 +6,7 @@ import java.util.List;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
 
+import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
@@ -285,6 +286,10 @@ public interface XiaojsService {
     //Platform
     //
 
+    //Check Upgrade
+    @GET("/v1/platform/version")
+    Call<Upgrade> checkUpgrade();
+
     //Get Notifications Overview
     @GET("/v1/platform/notifications/overview/{pagination}")
     Call<GNOResponse> getNotificationsOverview(
@@ -449,6 +454,14 @@ public interface XiaojsService {
     Call<CollectionPage<LikedRecord>> getLikedRecords(@Path("criteria") String criteria,
                                                       @Path("pagination") String pagination);
 
+
+    //Delete Activity
+    @DELETE("/v1/social/activities/{activity}")
+    Call<ResponseBody> deleteActivity(@Path("activity") String activity);
+
+    //Delete Comment Or Reply
+    @DELETE("/v1/social/comments/{commentOrReply}")
+    Call<ResponseBody> deleteCommentOrReply(@Path("commentOrReply") String commentOrReply);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
