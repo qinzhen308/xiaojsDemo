@@ -43,6 +43,7 @@ import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.view.MomentUGC;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
 
@@ -74,6 +75,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             @Override
             public void onShare() {
 
+                //ShareUtil.show();
             }
 
             @Override
