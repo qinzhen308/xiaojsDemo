@@ -112,6 +112,7 @@ public class SyncService extends IntentService {
                                         names.append("、");
                                     }
                                 }
+                                AccountDataManager.clearAbilities(context);
                                 AccountDataManager.addAbility(context,names.toString());
                             }
                         }
