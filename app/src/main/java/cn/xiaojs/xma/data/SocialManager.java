@@ -381,6 +381,16 @@ public class SocialManager {
 
     }
 
+    public static void deleteActivity(Context context, String activity,APIServiceCallback callback) {
+        SocialRequest socialRequest = new SocialRequest(context,callback);
+        socialRequest.deleteActivity(activity);
+    }
+
+    public static void deleteCommentOrReply(Context context, String commentOrReply,APIServiceCallback callback) {
+        SocialRequest socialRequest = new SocialRequest(context,callback);
+        socialRequest.deleteCommentOrReply(commentOrReply);
+    }
+
 
 
 

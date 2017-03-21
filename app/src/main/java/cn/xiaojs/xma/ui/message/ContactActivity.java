@@ -33,6 +33,7 @@ import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.im.CircleImageView;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
@@ -40,6 +41,7 @@ import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -609,7 +611,20 @@ public class ContactActivity extends BaseActivity {
 
             final Contact c = getChild(groupPosition, childPosition);
 
-            String avatar = Account.getAvatar(c.account, holder.size);
+            String avatar = "";
+            String cover = c.cover;
+            if(TextUtils.isEmpty(cover)) {
+                avatar = Account.getAvatar(c.account, holder.size);
+            }else {
+
+                Dimension d = new Dimension();
+                d.height = holder.size;
+                d.width = holder.size;
+
+                avatar = Ctl.getCover(cover,d);
+            }
+
+
             Glide.with(ContactActivity.this)
                     .load(avatar)
                     .bitmapTransform(circleTransform)

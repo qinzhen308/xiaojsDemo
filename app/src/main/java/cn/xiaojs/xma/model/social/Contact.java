@@ -32,6 +32,8 @@ public class Contact implements Serializable{
     public String lastMessage;
     public long group;
 
+    public String cover;
+
 //
 //    @Override
 //    public int describeContents() {

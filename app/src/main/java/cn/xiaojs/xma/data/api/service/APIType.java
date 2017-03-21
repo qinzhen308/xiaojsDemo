@@ -136,4 +136,8 @@ public class APIType {
 
     public static final int GET_ARTICLE= 77;
 
+    public static final int DELETE_ACTIVITY= 78;
+    public static final int DELETE_COMMENT_REPLY= 79;
+    public static final int CHECK_UPGRADE = 80;
+
 }

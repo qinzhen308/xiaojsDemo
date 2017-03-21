@@ -135,6 +135,20 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
 
     private void delete(Dynamic bean){
 
+        showProgress(true);
+        SocialManager.deleteActivity(mContext, bean.id, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                mFragment.toRefresh();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                ToastUtil.showToast(mContext,errorMessage);
+            }
+        });
     }
 
     //取消关注

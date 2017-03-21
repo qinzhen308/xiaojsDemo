@@ -264,4 +264,10 @@ public class HomeFragment extends BaseFragment {
                 break;
         }
     }
+
+    public void toRefresh() {
+        if (mAdapter != null){
+            mAdapter.doRefresh();
+        }
+    }
 }

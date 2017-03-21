@@ -82,6 +82,7 @@ public class DBTables {
         public static final String LAST_MSG = "lastMessage";
 
         public static final String GNAME = "gname";
+        public static final String COVER = "cover";
 
     }
 

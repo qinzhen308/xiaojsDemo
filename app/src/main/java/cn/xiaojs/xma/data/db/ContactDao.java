@@ -422,6 +422,9 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     String avatar = cursor.getString(cursor
                             .getColumnIndexOrThrow(DBTables.TContact.AVATOR));
 
+                    String cover = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.COVER));
+
 
 
                     Contact contact = new Contact();
@@ -429,6 +432,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     contact.alias = name;
                     contact.followType = followType;
                     contact.avatar = avatar;
+                    contact.cover = cover;
 
                     boolean isclass = gid == CLASSES;
 
@@ -504,7 +508,9 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
             sb.append(DBTables.TContact.STATE);
             sb.append(",");
             sb.append(DBTables.TContact.STARTED);
-            sb.append(") VALUES(?,?,?,?,?,?,?,?,?)");
+            sb.append(",");
+            sb.append(DBTables.TContact.COVER);
+            sb.append(") VALUES(?,?,?,?,?,?,?,?,?,?)");
 
             SQLiteStatement stmt = db.compileStatement(sb.toString());
             for (ContactGroup group : contactGroups) {
@@ -546,6 +552,9 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
 
                     String start = TextUtils.isEmpty(contact.startedOn)? "" : contact.startedOn;
                     stmt.bindString(9,start);
+
+                    String cover = TextUtils.isEmpty(contact.cover)? "" : contact.cover;
+                    stmt.bindString(10,cover);
 
                     stmt.executeInsert();
                 }
