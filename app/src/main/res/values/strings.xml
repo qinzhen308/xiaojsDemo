@@ -170,7 +170,7 @@
     <string name="add_cover">添加封面</string>
     <string name="upload_cover_fail">上传封面失败</string>
     <string name="add_cover_tips">一张好的封面可以增加报名人数哦~</string>
-    <string name="live_lesson_brief">直播课简介</string>
+    <string name="live_lesson_brief">简介</string>
     <string name="live_lesson_brief_hint">请填写直播课简介</string>
     <string name="live_lesson_label">标签</string>
     <string name="live_lesson_label_hint">添加标签更容易被搜索</string>

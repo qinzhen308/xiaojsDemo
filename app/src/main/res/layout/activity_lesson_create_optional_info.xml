@@ -52,13 +52,9 @@
                 android:layout_height="wrap_content"/>
     </FrameLayout>
 
-
-    <View
-            style="@style/DividerHorizontal"
-            android:layout_marginTop="@dimen/px32"/>
-
     <!--直播课简介-->
     <LinearLayout
+            android:layout_marginTop="@dimen/px32"
             android:id="@+id/live_lesson_brief_layout"
             style="@style/LiveLessonItem">
 
@@ -136,6 +132,7 @@
 
     <!--促销-->
     <LinearLayout
+            android:visibility="gone"
             android:id="@+id/sale_promotion_layout"
             style="@style/LiveLessonItem">
 
@@ -150,15 +147,12 @@
 
     </LinearLayout>
 
-    <View
-            style="@style/DividerHorizontal"
-            android:layout_marginBottom="@dimen/px88"/>
-
     <Button
             android:id="@+id/sub_btn"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px86"
             style="@style/BigSubmitBtn"
             android:text="@string/finish"
             android:layout_marginBottom="@dimen/px30"
