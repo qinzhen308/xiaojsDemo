@@ -125,4 +125,50 @@ public class RegisterDataManager {
         registerRequest.sendVerifyCode(Security.VerifyMethod.SMS_4_REGISTRATION, mobile);
     }
 
+    /**
+     * 验证验证码
+     * @param
+     * @param mobile
+     * @param callback
+     */
+    public static void requestValidateCode(@NonNull Context context,
+                                           long mobile,
+                                           int verifycode,
+                                           int type,
+                                           @NonNull final APIServiceCallback callback) {
+
+        if (callback == null){
+            if(XiaojsConfig.DEBUG){
+                Logger.d("the api service callback is null,so cancel the validate Code request");
+            }
+            return;
+        }
+
+        RegisterRequest registerRequest = new RegisterRequest(context,callback);
+        registerRequest.validateCode(type, mobile, verifycode);
+    }
+
+    /**
+     * 发送验证码
+     * @param
+     * @param mobile
+     * @param callback
+     */
+    public static void requestSendVerifyCode(@NonNull Context context,
+                                             long mobile,
+                                             int type,
+                                             @NonNull final APIServiceCallback<VerifyCode> callback) {
+
+        if (callback == null){
+            if(XiaojsConfig.DEBUG){
+                Logger.d("the api service callback is null,so cancel the send verify code request");
+            }
+            return;
+        }
+
+
+        RegisterRequest registerRequest = new RegisterRequest(context,callback);
+        registerRequest.sendVerifyCode(type, mobile);
+    }
+
 }

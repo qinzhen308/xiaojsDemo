@@ -35,21 +35,24 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.REQUEST_VERIFICATION:
+                errorMessage = "提交认证失败";
+                break;
             case APIType.BEGIN_CLASS:
-                if (errorCode.equals(Errors.ACCESS_VIOLATION)){
+                if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
                     errorMessage = "你没有权限";
-                } else if (errorCode.equals(Errors.OPERATION_TIMEOUT)){
+                } else if (errorCode.equals(Errors.OPERATION_TIMEOUT)) {
                     errorMessage = "操作超时";
                 } else {
                     errorMessage = "开始课程失败";
                 }
                 break;
             case APIType.BOOT_SESSION:
-                if (errorCode.equals(Errors.CLASS_NOT_READY)){
+                if (errorCode.equals(Errors.CLASS_NOT_READY)) {
                     errorMessage = "教室没准备好或着无法访问";
-                } else if (errorCode.equals(Errors.CLASS_NOT_INVOLVED)){
+                } else if (errorCode.equals(Errors.CLASS_NOT_INVOLVED)) {
                     errorMessage = "Class not involved";
-                } else if (errorCode.equals(Errors.BAD_GATEWAY)){
+                } else if (errorCode.equals(Errors.BAD_GATEWAY)) {
                     errorMessage = "Bad gateway";
                 } else {
                     errorMessage = "进入教室失败";
@@ -213,7 +216,7 @@ public class ErrorPrompts {
 
                 if (errorCode.equals(Errors.NOT_IMPLEMENTED)) {
                     errorMessage = "目前不支持机构用户登陆";
-                } else if(errorCode.equals(Errors.DOC_NOT_FOUND)) {
+                } else if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
                     errorMessage = "账号不存在";
                 } else if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
                     errorMessage = "此账户禁止登陆";

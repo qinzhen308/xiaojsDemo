@@ -43,6 +43,7 @@ import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.view.MomentUGC;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
 
@@ -74,6 +75,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             @Override
             public void onShare() {
 
+                //ShareUtil.show();
             }
 
             @Override
@@ -106,14 +108,14 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
                 @Override
                 public void onItemClick(int position) {
                     switch (position) {
-                        case 0://忽略此条动态
-                            break;
-                        case 1://忽略他的动态
-                            break;
-                        case 2://取消关注
+//                        case 0://忽略此条动态
+//                            break;
+//                        case 1://忽略他的动态
+//                            break;
+                        case 0://取消关注
                             cancelFollow(bean);
                             break;
-                        case 3://举报
+                        case 1://举报
                             break;
                     }
                 }

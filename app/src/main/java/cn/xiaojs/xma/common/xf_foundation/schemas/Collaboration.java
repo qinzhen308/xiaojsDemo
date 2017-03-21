@@ -15,7 +15,7 @@ public class Collaboration {
         public static final int COVER_OF_CTL = 2;
         public static final int DRAWING_IN_ACTIVITY = 3;
         public static final int DOCUMENT_IN_LIBRARY = 4;
-
+        public static final int HAND_HOLD = 5;
     }
 
     public class OfficeMimeTypes {

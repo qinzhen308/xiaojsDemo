@@ -35,6 +35,7 @@ public class PlayerTextureView extends BaseMediaView {
     private PLVideoTextureView mPlayer;
     private static final String TAG = "PlayerTextureView";
     private boolean mIsPause;
+    private boolean mResume = false;
     private boolean mIsMute;
     private SurfaceCaptureView mCaptureView;
 
@@ -119,6 +120,7 @@ public class PlayerTextureView extends BaseMediaView {
         if (mCaptureView != null) {
             mCaptureView.start();
         }
+        mResume = true;
         mIsPause = false;
     }
 
@@ -130,6 +132,7 @@ public class PlayerTextureView extends BaseMediaView {
         if (mCaptureView != null) {
             mCaptureView.stop();
         }
+        mResume = false;
         mIsPause = true;
     }
 
@@ -303,4 +306,9 @@ public class PlayerTextureView extends BaseMediaView {
     public PLVideoTextureView getPlayer(){
         return mPlayer;
     }
+
+    public boolean isResume() {
+        return mResume;
+    }
+
 }

@@ -8,6 +8,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,6 +19,8 @@ import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ClaimCompetency;
+import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.NetUtil;
@@ -57,13 +60,6 @@ public class SyncService extends IntentService {
 
                     DataManager.initMemCache(context);
 
-                    //是否是老师
-                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
-                        Privilege[] privileges = SecurityManager.havePrivilegeSync(context,
-                                Su.Permission.COURSE_OPEN_CREATE);
-                        SecurityManager.savePermission(context, privileges);
-                    }
-
                     //同步联系人到DB
                     ArrayList<ContactGroup> contactGroups = null;
                     if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
@@ -99,6 +95,38 @@ public class SyncService extends IntentService {
                         }
                     }
                     DataManager.syncGroupData(context, map);
+
+                    //同步教学能力
+                    ClaimCompetency claimCompetency = AccountDataManager.getCompetencies(context);
+                    if (claimCompetency != null) {
+                        List<Competency> competencies = claimCompetency.competencies;
+                        if (competencies != null) {
+                            int count  = competencies.size();
+                            if (count > 0) {
+                                StringBuilder names = new StringBuilder();
+                                for (int i=0;i<count;i++) {
+                                    Competency competency = competencies.get(i);
+                                    String name = competency.getSubject().getName();
+                                    names.append(name);
+                                    if (i < count-1) {
+                                        names.append("、");
+                                    }
+                                }
+                                AccountDataManager.clearAbilities(context);
+                                AccountDataManager.addAbility(context,names.toString());
+                            }
+                        }
+
+
+                    }
+
+                    //是否是老师
+//                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
+//                        Privilege[] privileges = SecurityManager.havePrivilegeSync(context,
+//                                Su.Permission.COURSE_OPEN_CREATE);
+//                        SecurityManager.savePermission(context, privileges);
+//                    }
+
                     break;
 
 

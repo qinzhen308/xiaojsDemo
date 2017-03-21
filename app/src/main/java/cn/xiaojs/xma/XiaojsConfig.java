@@ -37,6 +37,9 @@ public class XiaojsConfig {
     public static final String XAS_BASE_URL = "http://xas.xiaojs.cn";
     //XLS
     public static final String XLS_BASE_URL = "http://xls.xiaojs.cn";
+    //分享URL
+    public static final String SHARE_BASE_URL = "http://www.xiaojs.cn";
+
     //七牛存储空间
     // 华东:存储空间列表(图片和文档存储)Bucket (files) CDN 加速域名
     public static final String FILES_BUCKET_URL = "http://xcfs.xiaojs.cn";
@@ -48,6 +51,7 @@ public class XiaojsConfig {
     public static String XAS_PRE_BASE_URL = "http://xas.xiaojs.edu";
     //XLS
     public static String XLS_PRE_BASE_URL = "http://xls.xiaojs.edu";
+
     //七牛存储空间
     //华东:存储空间列表(图片和文档存储)Bucket (xiaojs-test) 测试域名:
     public static final String PRE_FILES_BUCKET_URL = "http://omjsoavuo.bkt.clouddn.com";
@@ -62,8 +66,15 @@ public class XiaojsConfig {
     public static String SERVICE_PORT = "3000";
     //Live port
     public static String LIVE_PORT = "3004";
+
     //七牛存储空间
     //华东华北跟预发布的相同
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Article Content ID
+    public static final String ARTICLE_ID_ABOUT = "aboutus";
+    public static final String ARTICLE_ID_AGREEMENT = "userAgreement";
 
 
 

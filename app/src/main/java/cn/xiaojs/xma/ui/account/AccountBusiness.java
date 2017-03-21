@@ -26,6 +26,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.MainActivity;
@@ -70,6 +71,8 @@ public class AccountBusiness {
                         if (listener != null) {
                             listener.onLogin(true);
                         }
+
+                        AccountPref.setLoginMd5Pwd(activity, loginParams.getPassword());
                     } else {
                         if (listener != null) {
                             listener.onLogin(false);

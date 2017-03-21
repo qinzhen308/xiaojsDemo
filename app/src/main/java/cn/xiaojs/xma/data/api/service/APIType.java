@@ -130,4 +130,10 @@ public class APIType {
     public static final int GET_ENROLLED_CLASSESS= 72;
     public static final int GET_LIVE_CLASSES= 73;
 
+    public static final int RESET_PASSWORD= 74;
+    public static final int CHANGE_PASSWORD= 75;
+    public static final int REQUEST_VERIFICATION= 76;
+
+    public static final int GET_ARTICLE= 77;
+
 }

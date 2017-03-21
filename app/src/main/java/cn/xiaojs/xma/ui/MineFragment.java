@@ -25,6 +25,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -46,6 +49,7 @@ import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.PortraitView;
@@ -83,6 +87,10 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.name_auth_layout)
     RelativeLayout authLayout;
 
+    @BindView(R.id.teach_ability)
+    TextView abilityTips;
+
+
     private Drawable mBlurFloatUpBg;
 
     @Override
@@ -93,13 +101,21 @@ public class MineFragment extends BaseFragment {
     @Override
     protected void init() {
         //initProfileBg();
-        orderLayout.setEnabled(false);
-        authLayout.setEnabled(false);
+        orderLayout.setEnabled(false);;
         mBlurFloatUpBg = new ColorDrawable(getResources().getColor(R.color.blur_float_up_bg));
         mEvaluation.setGrading(EvaluationStar.Grading.THREE_HALF);
         //set default ugc
         setUgc(null);
         loadData();
+        showAbilities();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        showAbilities();
     }
 
     @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,
@@ -124,7 +140,31 @@ public class MineFragment extends BaseFragment {
                 startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
                 break;
             case R.id.name_auth_layout:
-                startActivity(new Intent(mContext, CertificationActivity.class));
+                if (AccountDataManager.isTeacher(mContext)) {
+                    startActivity(new Intent(mContext, CertificationActivity.class));
+                }else{
+                    Toast.makeText(mContext,"你不是老师，不能进行实名认证",Toast.LENGTH_SHORT).show();
+                    //提示申明教学能力
+//                    final CommonDialog dialog = new CommonDialog(mContext);
+//                    dialog.setTitle(R.string.declare_teaching_ability);
+//                    dialog.setDesc(R.string.declare_teaching_ability_tip);
+//                    dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+//                        @Override
+//                        public void onClick() {
+//                            dialog.dismiss();
+//                            Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    });
+//                    dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+//                        @Override
+//                        public void onClick() {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog.show();
+                }
+
                 break;
             case R.id.settings_layout:
                 startActivity(new Intent(mContext, SettingsActivity.class));
@@ -171,9 +211,8 @@ public class MineFragment extends BaseFragment {
 
         //set default
         //TODO
-        boolean isTeacher = SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE);
         String duration;
-        if (isTeacher) {
+        if (AccountDataManager.isTeacher(mContext)) {
             duration = getString(R.string.tea_lesson_duration, 0);
         } else {
             duration = getString(R.string.stu_lesson_duration, 0);
@@ -226,6 +265,14 @@ public class MineFragment extends BaseFragment {
         } else {
             //set default
             setDefaultPortrait();
+        }
+    }
+
+    private void showAbilities(){
+
+        String abilities = AccountDataManager.getAbilities(getContext());
+        if (!TextUtils.isEmpty(abilities)) {
+            abilityTips.setText(abilities);
         }
     }
 

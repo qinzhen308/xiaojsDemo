@@ -8,7 +8,6 @@ import java.io.IOException;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
-import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
@@ -18,13 +17,11 @@ import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
-import cn.xiaojs.xma.model.account.UpToken;
-import cn.xiaojs.xma.model.account.UpTokenParam;
+import cn.xiaojs.xma.model.account.PwdParam;
+import cn.xiaojs.xma.model.account.VerifyParam;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
-
-import static cn.xiaojs.xma.data.api.service.APIType.GET_UPTOKEN;
 
 /**
  * Created by maxiaobao on 2016/11/3.
@@ -67,6 +64,15 @@ public class AccountRequest extends ServiceRequest {
         Call<ClaimCompetency> call = getService().getCompetencies();
         enqueueRequest(APIType.GET_COMPETENCIES,call);
 
+    }
+
+    public ClaimCompetency getCompetenciesSync() throws Exception{
+
+        Response<ClaimCompetency> response = getService().getCompetencies().execute();
+        if (response != null) {
+            return response.body();
+        }
+        return null;
     }
 
     public void editProfile(@NonNull Account.Basic basic) {
@@ -122,6 +128,17 @@ public class AccountRequest extends ServiceRequest {
     public void getPublicHome(String account) {
         Call<PublicHome> call = getService().getPublicHome(account);
         enqueueRequest(APIType.GET_PUBLIC_HOME,call);
+    }
+
+    public void changePassword(PwdParam pwdParam) {
+        Call<ResponseBody> call = getService().changePassword(pwdParam);
+        enqueueRequest(APIType.CHANGE_PASSWORD, call);
+    }
+
+    public void requestVerification(VerifyParam param) {
+        Call<ResponseBody> call = getService().requestVerification(param);
+        enqueueRequest(APIType.REQUEST_VERIFICATION, call);
+
     }
 
 }

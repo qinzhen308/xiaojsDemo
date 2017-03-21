@@ -17,17 +17,24 @@
         <LinearLayout
                 android:id="@+id/lesson_creation_tips"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/px28"
                 android:background="#ebf0f7"
                 android:visibility="gone">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px16"
+                    android:src="@drawable/ic_tips"/>
+
             <TextView
                     android:layout_weight="1"
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:drawablePadding="@dimen/px40"
+                    android:paddingLeft="@dimen/px20"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
                     android:text="@string/lesson_creation_tips"

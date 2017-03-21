@@ -17,12 +17,29 @@ package cn.xiaojs.xma.ui.classroom.live;
 import cn.xiaojs.xma.ui.classroom.Constants;
 
 public interface OnStreamStateChangeListener {
-    public final static int TYPE_STREAM_PLAYING = 1; //播放流
-    public final static int TYPE_STREAM_PUBLISH = 2; //直播推流
-    public final static int TYPE_STREAM_INDIVIDUAL = 3; //个人推流
+    public final static int TYPE_STREAM_PLAY = 1; //播放流
+    public final static int TYPE_STREAM_PLAY_MEDIA_FEEDBACK = 2; //播放一对一推流
+    public final static int TYPE_STREAM_PUBLISH = 3; //直播推流
+    public final static int TYPE_STREAM_PUBLISH_MEDIA_FEEDBACK = 4;//一对一推流
+    public final static int TYPE_STREAM_PUBLISH_INDIVIDUAL = 5; //个人推流
 
+    /**
+     * 当流已经开始
+     */
     public void onStreamStarted(Constants.User user, int type);
 
+    /**
+     * 当前流已经暂停
+     */
     public void onStreamStopped(Constants.User user, int type);
 
+    /**
+     * 当使用播放流
+     */
+    public void onStreamPlay(StreamConfirmCallback callback);
+
+    /**
+     * 当使用播放流
+     */
+    public void onStreamPublish(StreamConfirmCallback callback);
 }

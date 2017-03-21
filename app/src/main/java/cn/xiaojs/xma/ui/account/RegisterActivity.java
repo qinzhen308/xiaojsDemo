@@ -282,6 +282,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void showRegisterProtocol() {
+        startActivity(new Intent(this, AgreementActivity.class));
 
     }
 

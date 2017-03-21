@@ -28,7 +28,7 @@
 
     <ImageView
             android:id="@+id/moment_update_target_image"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:layout_width="@dimen/px147"
             android:layout_height="@dimen/px107"/>
 
@@ -41,7 +41,7 @@
 
         <ImageView
                 android:id="@+id/moment_update_target_lesson_image"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:layout_marginLeft="@dimen/px5"
                 android:layout_marginTop="@dimen/px5"
                 android:layout_marginBottom="@dimen/px5"

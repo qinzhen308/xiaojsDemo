@@ -8,6 +8,8 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.model.AliasTags;
 import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.account.User;
+import cn.xiaojs.xma.util.Md5Util;
+import retrofit2.http.PUT;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +31,7 @@ public class AccountPref {
 
     private static final String PREF_SUBJECT = "acc_subject";
     private static final String PREF_USER = "active_u";
+    private static final String PREF_PWD = "login_pwd";
     //private static final String PREF_NAME = "active_name";
 
     //
@@ -37,10 +40,44 @@ public class AccountPref {
 
     private static final String PREF_LOCATION = "location";
 
+    private static final String PREF_ABILITY = "ability";
+
 
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
+
+
+    public static void addAbility(final Context context, String ability, boolean clear) {
+
+        if (clear) {
+            SharedPreferences sp = DataPref.getSharedPreferences(context);
+            sp.edit().putString(PREF_ABILITY, "").apply();
+            return;
+        }
+
+
+        if (TextUtils.isEmpty(ability)) {
+            return;
+        }
+
+        String oldAbilities = getAbilities(context);
+        StringBuilder sb = new StringBuilder(oldAbilities);
+        if (!TextUtils.isEmpty(oldAbilities)) {
+            sb.append("、");
+        }
+        sb.append(ability);
+
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_ABILITY, sb.toString()).apply();
+
+    }
+
+    public static String getAbilities(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_ABILITY, "");
+    }
+
 
     public static void setLocation(final Context context, Location location) {
 
@@ -216,5 +253,19 @@ public class AccountPref {
         return sp.getString(PREF_AUTH_TOKEN, "");
     }
 
+    public static void setLoginMd5Pwd(Context context, String pwd) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_PWD, Md5Util.getMD5(pwd)).apply();
+    }
+
+    public static boolean validateLoginMd5Pwd(Context context, String pwd) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        String oldPwd = sp.getString(PREF_PWD, "");
+        try {
+            return oldPwd.equals(Md5Util.getMD5(pwd));
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }

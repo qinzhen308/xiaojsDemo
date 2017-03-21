@@ -3,11 +3,9 @@ package cn.xiaojs.xma.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import cn.jpush.android.api.TagAliasCallback;
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.xf_foundation.Xu;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.AccountRequest;
 import cn.xiaojs.xma.data.api.service.ErrorPrompts;
@@ -17,24 +15,21 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.AliasTags;
-import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
-import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
-import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.account.User;
+import cn.xiaojs.xma.model.account.PwdParam;
+import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.JpushUtil;
 import okhttp3.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
 import java.util.Map;
@@ -45,6 +40,45 @@ import java.util.Set;
  */
 
 public class AccountDataManager {
+
+
+
+    private static Account getAccont(Context context) {
+        if (XiaojsConfig.mLoginUser == null) {
+            XiaojsConfig.mLoginUser = getUserInfo(context);
+        }
+
+        return XiaojsConfig.mLoginUser.getAccount();
+    }
+
+    /**
+     * 是否已实名认证
+     * @param context
+     * @return
+     */
+    public static boolean isVerified(Context context) {
+        return getAccont(context).isVerified;
+    }
+
+    /**
+     * 用户是不是老师
+     * @param context
+     * @return
+     */
+    public static boolean isTeacher(Context context) {
+        return getAccont(context).isTeacher;
+    }
+
+    public static void setTeacher(Context context, boolean teacher) {
+
+        Account account = getAccont(context);
+
+        if (account.isTeacher != teacher) {
+            account.isTeacher = teacher;
+            setUserInfo(context, XiaojsConfig.mLoginUser);
+        }
+
+    }
 
     public static void setPhone(final Context context, final String phone) {
         AccountPref.setPhone(context, phone);
@@ -62,15 +96,18 @@ public class AccountDataManager {
         AccountPref.setLocation(context, location);
     }
 
-    //保存已声明的能力
-    public static void saveSubject(Context context,String subject) {
-        AccountPref.setSubject(context,subject);
+    public static String getAbilities(Context context) {
+        return AccountPref.getAbilities(context);
     }
 
-    //获取已声明的教学能力subject
-    public static String getSubject(Context context) {
-        return AccountPref.getSubject(context);
+    public static void addAbility(Context context, String ability) {
+        AccountPref.addAbility(context,ability,false);
     }
+
+    public static void clearAbilities(Context context) {
+        AccountPref.addAbility(context,null,true);
+    }
+
 
     /**
      * 获取session
@@ -169,6 +206,7 @@ public class AccountDataManager {
         AccountPref.setLoginStatus(context,false);
         AccountPref.setUser(context,null);
         AccountPref.setLocation(context,null);
+        AccountDataManager.clearAbilities(context);
         saveAliaTags(context, null);
         AccountPref.setAtagsSuccess(context,false);
         SecurityManager.saveCSRFToken(context,"");
@@ -442,8 +480,65 @@ public class AccountDataManager {
         accountRequest.getCompetencies();
     }
 
+    public static ClaimCompetency getCompetencies(Context context) throws Exception {
+        AccountRequest accountRequest = new AccountRequest(context,null);
+        return accountRequest.getCompetenciesSync();
+
+    }
+
+    /**
+     * Changes password for the session account.
+     * @param context
+     * @param password
+     * @param callback
+     */
+    public static void changePassword(Context context, String password, APIServiceCallback callback) {
+
+        PwdParam pwdParam = new PwdParam();
+        pwdParam.password = password;
+
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.changePassword(pwdParam);
+    }
 
 
+    /**
+     * Requests to verify identify for an unverified teacher or organization.
+     * @param context
+     * @param name
+     * @param no
+     * @param hold
+     * @param callback
+     */
+    public static void requestVerification(Context context,
+                                           String name,
+                                           String no,
+                                           String hold,
+                                           APIServiceCallback callback) {
+
+        VerifyParam param = new VerifyParam();
+        param.name = name;
+        param.handhold = hold;
+        param.no = no;
+
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.requestVerification(param);
+
+    }
+
+    /**
+     * 上传认证图片
+     * @param context
+     * @param filePath
+     * @param qiniuService
+     */
+    public static void uploadHandhold(Context context,
+                                      @NonNull final String filePath,
+                                      @NonNull QiniuService qiniuService){
+
+        QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.HAND_HOLD,1);
+    }
 
 
 }

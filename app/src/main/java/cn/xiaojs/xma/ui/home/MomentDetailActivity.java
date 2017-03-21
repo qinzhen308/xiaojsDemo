@@ -170,9 +170,10 @@ public class MomentDetailActivity extends BaseActivity {
             mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_off, 0, 0, 0);
         }
 
-        if (detail.scope == Social.ShareScope.PUBLIC){//公开动态可分享
-            setRightImage2(R.drawable.share_selector);
-        }
+        //FIXME H5页面出来后，可打开注释代码
+//        if (detail.scope == Social.ShareScope.PUBLIC){//公开动态可分享
+//            setRightImage2(R.drawable.share_selector);
+//        }
     }
 
     @Override
@@ -219,14 +220,14 @@ public class MomentDetailActivity extends BaseActivity {
                 @Override
                 public void onItemClick(int position) {
                     switch (position) {
-                        case 0://忽略此条动态
-                            break;
-                        case 1://忽略他的动态
-                            break;
-                        case 2://取消关注
+//                        case 0://忽略此条动态
+//                            break;
+//                        case 1://忽略他的动态
+//                            break;
+                        case 0://取消关注
                             cancelFollow();
                             break;
-                        case 3://举报
+                        case 1://举报
                             break;
                     }
                 }

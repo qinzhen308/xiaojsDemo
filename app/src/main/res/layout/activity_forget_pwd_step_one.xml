@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/main_bg">
+    <LinearLayout
+            android:id="@+id/lesson_creation_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/px28"
+            android:background="#ebf0f7">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px16"
+                android:src="@drawable/ic_tips"/>
+
+        <TextView
+                android:layout_weight="1"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/px20"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:text="@string/forget_pwd_tips"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_dark_gray"/>
+    </LinearLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/white">
+        <TextView
+                android:id="@+id/phone_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/px170"
+                android:text="@string/phone_num_"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:layout_marginLeft="@dimen/px34"/>
+
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/phone_num"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:hint="@string/login_reg_phone_hint"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:textColorHint="@color/font_light_gray"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                android:layout_marginRight="@dimen/px34"
+                android:layout_toRightOf="@+id/phone_title"
+                android:maxLength="11"/>
+
+        <View style="@style/DividerHorizontal"
+              android:layout_marginLeft="@dimen/px34"
+              android:layout_below="@+id/phone_title"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/verify_code_layout"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/verify_code_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/px170"
+                android:text="@string/verify_code_title"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:layout_marginLeft="@dimen/px34"/>
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/verify_code"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/reg_verify_code_hint"
+                android:imeOptions="actionNext"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:textColorHint="@color/font_light_gray"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                android:inputType="number"
+                android:layout_toRightOf="@+id/verify_code_title"
+                android:layout_toLeftOf="@+id/get_verify_code"
+                android:layout_marginRight="@dimen/px22"
+                android:layout_centerInParent="true"/>
+
+        <TextView
+                android:id="@+id/get_verify_code"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/px160"
+                android:padding="@dimen/px10"
+                android:textSize="@dimen/font_24px"
+                android:layout_marginRight="@dimen/px34"
+                android:textColor="@color/font_dark_gray"
+                android:gravity="center"
+                android:background="@drawable/forget_pwd_verify_code_bg"
+                android:text="@string/verify_code_send_hint"
+                android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <Button
+            android:id="@+id/enter_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px57"
+            android:layout_marginRight="@dimen/px57"
+            android:layout_marginTop="@dimen/px86"
+            android:text="@string/next"
+            style="@style/BigSubmitBtn"
+            android:textStyle="bold"
+            android:layout_above="@+id/reg_guide"/>
+
+</LinearLayout>

@@ -20,7 +20,6 @@ public class User implements Serializable{
     private String name;
     private AliasTags aliasAndTags;
 
-
     public String getId() {
         return id;
     }
