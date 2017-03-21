@@ -171,6 +171,7 @@
 
         <!--教学形式-->
         <LinearLayout
+                android:visibility="gone"
                 style="@style/LiveLessonDetailItem">
 
             <TextView
@@ -184,6 +185,7 @@
 
         <!--收费-->
         <LinearLayout
+                android:visibility="gone"
                 style="@style/LiveLessonDetailItem">
 
             <TextView
@@ -247,6 +249,7 @@
 
         <!--选填信息-->
         <TextView
+                android:id="@+id/optional_info"
                 android:layout_marginTop="@dimen/px26"
                 android:text="@string/optional_info"
                 android:paddingLeft="@dimen/px28"
@@ -260,6 +263,7 @@
                 android:background="@color/white"/>
 
         <FrameLayout
+                android:id="@+id/optional_info_divide"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
@@ -501,6 +505,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/px28"
+                android:visibility="gone"
                 android:paddingRight="@dimen/px28"
                 android:background="@color/white"
                 android:orientation="vertical">
@@ -537,6 +542,7 @@
             </LinearLayout>
 
             <View
+                    android:visibility="gone"
                     style="@style/DividerHorizontal"/>
 
             <!--旁听对学生可见-->
@@ -546,6 +552,7 @@
                     android:background="@color/white"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
+                    android:visibility="gone"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -569,6 +576,7 @@
         </LinearLayout>
 
         <View
+                android:visibility="gone"
                 style="@style/DividerHorizontal"
                 android:layout_marginBottom="@dimen/px32"/>
 

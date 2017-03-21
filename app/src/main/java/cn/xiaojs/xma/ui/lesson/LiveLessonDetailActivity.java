@@ -83,6 +83,10 @@ public class LiveLessonDetailActivity extends BaseActivity {
     LinearLayout mLessonFailReasonLayout;
 
     //==============optional info==============
+    @BindView(R.id.optional_info)
+    View mOptionalInfo;
+    @BindView(R.id.optional_info_divide)
+    View mOptionalInfoDivide;
     //lesson cover
     @BindView(R.id.lesson_cover_layout)
     View mLessonCoverLayout;
@@ -338,6 +342,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
      * set optional info
      */
     private void setOptionalData(LessonDetail lesson) {
+        boolean hasOptionData = false;
         if (lesson != null) {
             //set cover
             if (!TextUtils.isEmpty(lesson.getCover())) {
@@ -357,6 +362,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                         .placeholder(R.drawable.default_lesson_cover)
                         .error(R.drawable.default_lesson_cover)
                         .into(mLessonCover);
+                hasOptionData = true;
             } else {
                 //set gone
                 mLessonCoverLayout.setVisibility(View.GONE);
@@ -368,6 +374,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 for (String tag : tags) {
                     mLabelContainer.addText(tag);
                 }
+                hasOptionData = true;
             } else {
                 mLessonLabelLayout.setVisibility(View.GONE);
             }
@@ -378,6 +385,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
             if (overview != null && !TextUtils.isEmpty((brief = overview.getText()))) {
                 mLessonBriefLayout.setVisibility(View.VISIBLE);
                 mLessonBriefTv.setText(brief);
+                hasOptionData = true;
             } else {
                 mLessonBriefLayout.setVisibility(View.GONE);
             }
@@ -388,6 +396,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
             if (teaIntro != null && !TextUtils.isEmpty((intro = teaIntro.getText()))) {
                 mTeacherIntroLayout.setVisibility(View.VISIBLE);
                 mTeacherIntroTv.setText(intro);
+                hasOptionData = true;
             } else {
                 mTeacherIntroLayout.setVisibility(View.GONE);
             }
@@ -396,61 +405,64 @@ public class LiveLessonDetailActivity extends BaseActivity {
             Price fee = lesson.getFee();
             if (fee == null || fee.free) {
                 mSalePromotionLayout.setVisibility(View.GONE);
-                return;
-            }
-            Promotion[] promotions = lesson.getPromotion();
-            if (promotions != null && promotions.length > 0) {
-                //set sale promotion title
-                int type = Finance.PricingType.TOTAL;
-                if (lesson.getFee() != null) {
-                    type = lesson.getFee().type;
-                    String suffix = "";
-                    if (type == Finance.PricingType.PAY_PER_HOUR) {
-                        suffix = "(" + getString(R.string.by_live_duration) + ")";
-                    } else if (type == Finance.PricingType.TOTAL) {
-                        suffix = "(" + getString(R.string.by_live_total_price) + ")";
-                    }
+            } else {
+                Promotion[] promotions = lesson.getPromotion();
+                if (promotions != null && promotions.length > 0) {
+                    //set sale promotion title
+                    int type = Finance.PricingType.TOTAL;
+                    if (lesson.getFee() != null) {
+                        type = lesson.getFee().type;
+                        String suffix = "";
+                        if (type == Finance.PricingType.PAY_PER_HOUR) {
+                            suffix = "(" + getString(R.string.by_live_duration) + ")";
+                        } else if (type == Finance.PricingType.TOTAL) {
+                            suffix = "(" + getString(R.string.by_live_total_price) + ")";
+                        }
 
-                    if (!TextUtils.isEmpty(suffix)) {
-                        mSalePromotionTitleTv.setText(mSalePromotionTitleTv.getText().toString() + suffix);
-                    }
-                }
-
-                mSalePromotionLayout.setVisibility(View.VISIBLE);
-                if (promotions.length == 1) {
-                    setOnlyOnePromotion(lesson.getFee(), promotions[0], type);
-                } else if (promotions.length == 2) {
-                    int i = 0;
-                    Promotion temp = null;
-                    for (Promotion p : promotions) {
-                        if (p != null) {
-                            temp = p;
-                            i++;
+                        if (!TextUtils.isEmpty(suffix)) {
+                            mSalePromotionTitleTv.setText(mSalePromotionTitleTv.getText().toString() + suffix);
                         }
                     }
 
-                    if (i == 1) {
-                        //only one valid promotion
-                        setOnlyOnePromotion(lesson.getFee(), temp, type);
-                    } else if (i == 2) {
-                        mEnrollBeforePromotionLayout.setVisibility(View.VISIBLE);
-                        mLessonBeforePromotionLayout.setVisibility(View.VISIBLE);
+                    mSalePromotionLayout.setVisibility(View.VISIBLE);
+                    if (promotions.length == 1) {
+                        setOnlyOnePromotion(lesson.getFee(), promotions[0], type);
+                    } else if (promotions.length == 2) {
+                        int i = 0;
+                        Promotion temp = null;
+                        for (Promotion p : promotions) {
+                            if (p != null) {
+                                temp = p;
+                                i++;
+                            }
+                        }
 
-                        setSalePromotion(lesson.getFee(), promotions[0], type);
-                        setSalePromotion(lesson.getFee(), promotions[1], type);
-                        //enroll before promotion
-                        mEnrollBeforeTitle.setText(getString(R.string.promotion_one));
-                        //lesson before promotion
-                        mLessonBeforeTitle.setText(getString(R.string.promotion_two));
-                    } else {
-                        mSalePromotionLayout.setVisibility(View.GONE);
+                        if (i == 1) {
+                            //only one valid promotion
+                            setOnlyOnePromotion(lesson.getFee(), temp, type);
+                        } else if (i == 2) {
+                            mEnrollBeforePromotionLayout.setVisibility(View.VISIBLE);
+                            mLessonBeforePromotionLayout.setVisibility(View.VISIBLE);
+
+                            setSalePromotion(lesson.getFee(), promotions[0], type);
+                            setSalePromotion(lesson.getFee(), promotions[1], type);
+                            //enroll before promotion
+                            mEnrollBeforeTitle.setText(getString(R.string.promotion_one));
+                            //lesson before promotion
+                            mLessonBeforeTitle.setText(getString(R.string.promotion_two));
+                        } else {
+                            mSalePromotionLayout.setVisibility(View.GONE);
+                        }
                     }
+                } else {
+                    mSalePromotionLayout.setVisibility(View.GONE);
                 }
-            } else {
-                mSalePromotionLayout.setVisibility(View.GONE);
             }
 
-
+            if (!hasOptionData) {
+                mOptionalInfo.setVisibility(View.GONE);
+                mOptionalInfoDivide.setVisibility(View.GONE);
+            }
         }
     }
 
