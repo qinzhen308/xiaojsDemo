@@ -33,6 +33,7 @@ import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
 
 import cn.xiaojs.xma.model.account.VerifyParam;
+import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.TokenPair;
@@ -474,6 +475,16 @@ public interface XiaojsService {
                                @Query("subtype") String subtype,
                                @Query("page") int page,
                                @Query("limit") int limit);
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Contents
+    //
+
+    //Get Article
+    @GET("/v1/contents/articles/{article}")
+    Call<Article> getArticle(@Path("article") String article);
 
 
 }

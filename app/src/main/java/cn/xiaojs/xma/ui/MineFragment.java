@@ -186,9 +186,8 @@ public class MineFragment extends BaseFragment {
 
         //set default
         //TODO
-        boolean isTeacher = SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE);
         String duration;
-        if (isTeacher) {
+        if (AccountDataManager.isTeacher(mContext)) {
             duration = getString(R.string.tea_lesson_duration, 0);
         } else {
             duration = getString(R.string.stu_lesson_duration, 0);

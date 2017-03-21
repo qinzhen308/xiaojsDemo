@@ -20,6 +20,7 @@ import cn.xiaojs.xma.common.im.utils.FileHelper;
 import cn.xiaojs.xma.common.im.utils.IdHelper;
 import cn.xiaojs.xma.common.im.utils.SharePreferenceManager;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
@@ -99,7 +100,7 @@ public class MainActivity extends BaseTabActivity {
     protected void onGooeyMenuClick(int position) {
         switch (position) {
             case 1://开课
-                if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)) {
+                if (AccountDataManager.isTeacher(this)) {
                     //老师可以开课
                     Intent intent = new Intent(this, LessonCreationActivity.class);
                     startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);

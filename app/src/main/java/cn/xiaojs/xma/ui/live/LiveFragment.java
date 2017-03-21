@@ -28,6 +28,7 @@ import android.widget.TextView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -247,7 +248,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                     && (liveClasses.enrolled == null || liveClasses.enrolled.isEmpty())) {
                 //没有教的课也没有学的课
                 mEnrollLessonTitleView.setVisibility(View.VISIBLE);
-                if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)) {
+                if (AccountDataManager.isTeacher(mContext)) {
                     //当前用户是老师
                     mTeachLessonTitleView.setVisibility(View.VISIBLE);
                     mTeacherWrapper.setVisibility(View.VISIBLE);
@@ -265,7 +266,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         } else {
             //没有教的课也没有学的课
             mEnrollLessonTitleView.setVisibility(View.VISIBLE);
-            if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)) {
+            if (AccountDataManager.isTeacher(mContext)) {
                 //当前用户是老师
                 mTeachLessonTitleView.setVisibility(View.VISIBLE);
                 mTeacherWrapper.setVisibility(View.VISIBLE);
