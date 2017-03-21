@@ -108,10 +108,12 @@
     </LinearLayout>
 
     <include
+            android:visibility="gone"
             layout="@layout/layout_horizontal_line"/>
 
     <!--旁听-->
     <LinearLayout
+            android:visibility="gone"
             android:id="@+id/sit_in_on_layout"
             style="@style/LiveLessonItem">
 
@@ -127,6 +129,7 @@
     </LinearLayout>
 
     <include
+            android:visibility="gone"
             android:id="@+id/sale_promotion_divide_line"
             layout="@layout/layout_horizontal_line"/>
 
