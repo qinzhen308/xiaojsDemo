@@ -38,6 +38,8 @@ public class FastBlur {
             } else {
                 scaledBmp = Bitmap.createScaledBitmap(oriBmp, oriBmp.getWidth(), oriBmp.getHeight(), false);
             }
+        } else {
+            scaledBmp = Bitmap.createScaledBitmap(oriBmp, oriBmp.getWidth(), oriBmp.getHeight(), false);
         }
 
        return doBlur(scaledBmp, radius, canReuseInBitmap);

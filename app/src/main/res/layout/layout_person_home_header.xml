@@ -130,8 +130,10 @@
     </RelativeLayout>
 
     <View
+            android:id="@+id/hold_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/px30"
+            android:visibility="gone"
             android:background="@color/main_bg"/>
 
     <FrameLayout

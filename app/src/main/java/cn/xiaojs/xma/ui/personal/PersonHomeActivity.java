@@ -257,6 +257,11 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                 }
             }
         }
+
+        //set title
+        if (home.profile != null && !TextUtils.isEmpty(home.profile.title)) {
+            mProfileTv.setText(home.profile.title);
+        }
     }
 
     private void setDefaultUgc() {
