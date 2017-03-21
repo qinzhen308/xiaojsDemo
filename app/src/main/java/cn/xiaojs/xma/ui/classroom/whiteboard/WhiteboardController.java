@@ -202,6 +202,9 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             mWhiteboardLayer = new WhiteboardLayer();
             mCurrWhiteboard.setLayer(mWhiteboardLayer);
             mCurrWhiteboard.setSrcBitmap(bmp);
+            mCurrWhiteboard.setUndoRedoListener(this);
+            mUndo.setEnabled(false);
+            mRedo.setEnabled(false);
         }
     }
 

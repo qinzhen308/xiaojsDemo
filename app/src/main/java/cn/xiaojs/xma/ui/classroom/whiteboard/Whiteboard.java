@@ -1153,7 +1153,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public void setPaintStrokeWidth(final float strokeWidth) {
         mPaintStrokeWidth = strokeWidth;
-        onSend(Packer.getChangePaintCmd(strokeWidth, mPaintColor, true));
+        //onSend(Packer.getChangePaintCmd(strokeWidth, mPaintColor, true));
     }
 
     public void setPaintColor(int color) {
@@ -1488,7 +1488,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mUndoRedoListener.onUndoRedoStackChanged();
         }
 
-        onSend(getSendCommend(doodle, action, true));
+        //onSend(getSendCommend(doodle, action, true));
     }
 
     private void addRecords(int action) {
@@ -1505,8 +1505,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     hasRecords = true;
                     doodle.addRecords(action, mLayer.getRecordGroupId());
 
-                    String cmd = getSendCommend(doodle, action, false);
-                    sb.append(cmd);
+                    //String cmd = getSendCommend(doodle, action, false);
+                    //sb.append(cmd);
                     sb.append(" ");
                 }
             }
