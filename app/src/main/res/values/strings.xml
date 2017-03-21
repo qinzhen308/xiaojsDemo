@@ -53,6 +53,7 @@
     <string name="rename">重命名</string>
     <string name="all">全部</string>
     <string name="add">添加</string>
+    <string name="next">下一步</string>
     <string name="exit_tips">再按一次返回键退出小教室</string>
     <string name="no_network">无法连接到网络，请确保您的网络已经打开!</string>
     <string name="mobile_network_title">你没有在WIFI环境下</string>
@@ -101,7 +102,13 @@
     <!--login-->
     <string name="login">登录</string>
     <string name="register_guide">还没有账号，立即注册</string>
+    <string name="forget_password">忘记密码</string>
     <string name="logout_tips">退出成功</string>
+    <string name="forget_pwd_tips">这里仅支持找回学生或老师的个人密码</string>
+    <string name="set_new_pwd">设置新密码</string>
+    <string name="verify_error">请输入正确的验证码</string>
+    <string name="set_new_pwd_succ">密码设置成功，请重新登录</string>
+    <string name="set_new_pwd_error">密码设置失败，请重新设置</string>
     <!--home-->
     <string name="block_cls_time_mark">距上课还有%1$d分钟</string>
     <string name="block_cls_course_num">第&#160;%1$d&#160;课</string>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/main_bg">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/px42"
+            android:background="@color/white">
+        <TextView
+                android:id="@+id/new_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/px170"
+                android:text="@string/new_pwd"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:layout_marginLeft="@dimen/px34"/>
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/new_pwd"
+                android:background="@null"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:hint="@string/reg_pwd_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:textColorHint="@color/font_light_gray"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:layout_toLeftOf="@+id/hide_show_pwd"
+                android:layout_toRightOf="@+id/new_title"
+                android:maxLength="16"/>
+
+        <ImageView
+                android:id="@+id/hide_show_pwd"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/px22"
+                android:layout_marginRight="@dimen/px12"
+                android:src="@drawable/hide_pwd_gray"/>
+
+    </RelativeLayout>
+
+    <Button
+            android:id="@+id/set_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px57"
+            android:layout_marginRight="@dimen/px57"
+            android:layout_marginTop="@dimen/px86"
+            android:text="@string/ok"
+            style="@style/BigSubmitBtn"
+            android:textStyle="bold"
+            android:layout_above="@+id/reg_guide"/>
+
+</LinearLayout>
