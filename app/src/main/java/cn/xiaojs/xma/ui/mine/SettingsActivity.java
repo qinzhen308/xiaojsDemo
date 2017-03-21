@@ -72,6 +72,7 @@ public class SettingsActivity extends BaseActivity {
             case R.id.feedback_help:
                 break;
             case R.id.about_us:
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
             default:
                 break;

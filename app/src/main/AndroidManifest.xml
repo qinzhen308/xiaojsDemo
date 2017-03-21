@@ -30,12 +30,11 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
 
-    <!--用于申请调用A-GPS模块-->
-    <uses-permission
-            android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
-    <!--用于申请获取蓝牙信息进行室内定位-->
-    <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
+    <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     <!-- live -->
     <uses-feature android:name="android.hardware.camera.autofocus"/>
@@ -88,8 +87,9 @@
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity android:name=".ui.mine.SettingsActivity"/>
-        <activity android:name=".ui.account.ModifyPasswordActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.account.ModifyPasswordActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.lesson.MyLessonActivity"
                 android:screenOrientation="portrait"/>
@@ -102,8 +102,6 @@
                 android:name=".ui.lesson.SubjectSelectorActivity"
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.mine.ProfileActivity"/>
-
-
         <activity
                 android:name=".ui.lesson.LessonSearchActivity"
                 android:screenOrientation="portrait"/>
@@ -118,7 +116,6 @@
                 android:name=".ui.lesson.ConfirmEnrollmentActivity"
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.TestAPIActivity">
-
         </activity>
         <activity android:name=".ui.lesson.LiveLessonBriefActivity"/>
         <activity android:name=".ui.lesson.SalePromotionActivity"/>
@@ -126,8 +123,6 @@
         <activity android:name=".ui.lesson.AuditActivity"/>
         <activity android:name=".ui.lesson.TeacherIntroductionActivity"/>
         <activity android:name=".ui.lesson.LiveLessonDetailActivity"/>
-        <activity android:name=".ui.mine.TeachAbilityDemoActivity">
-        </activity>
         <activity
                 android:name=".ui.lesson.ModifyLessonActivity"
                 android:screenOrientation="portrait"/>
@@ -233,9 +228,10 @@
                 android:windowSoftInputMode="adjustResize"/>
         <activity
                 android:name=".ui.UpgradeActivity"
-                android:theme="@style/dlg_upgrade"
-        >
+                android:theme="@style/dlg_upgrade">
         </activity>
+        <activity android:name=".ui.account.AgreementActivity"/>
+        <activity android:name=".ui.mine.AboutActivity"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"
@@ -295,13 +291,11 @@
                 android:enabled="true"
                 android:exported="false">
         </provider>
-
         <provider
                 android:name="android.support.v4.content.FileProvider"
                 android:authorities="cn.xiaojs.xma.fileprovider"
-                android:grantUriPermissions="true"
                 android:exported="false"
-        >
+                android:grantUriPermissions="true">
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/file_paths"/>
@@ -426,13 +420,12 @@
         <activity android:name=".ui.message.ChooseClassActivity">
         </activity>
 
-        <!-- 高德-->
+        <!-- 高德 -->
         <meta-data
                 android:name="com.amap.api.v2.apikey"
                 android:value="d19701b38830e88772d8325797c8073a"/>
 
-        <service android:name="com.amap.api.location.APSService"></service>
-
+        <service android:name="com.amap.api.location.APSService"/>
 
     </application>
 

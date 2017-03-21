@@ -65,7 +65,8 @@
                 <cn.xiaojs.xma.ui.widget.EvaluationStar
                         android:id="@+id/person_item_star"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
 
                 <TextView
                         android:id="@+id/person_item_desc"

@@ -176,14 +176,13 @@
                     android:layout_marginTop="@dimen/px24"
                     style="@style/lesson_home_layout">
 
-                <cn.xiaojs.xma.ui.widget.RoundedImageView
+                <ImageView
                         android:id="@+id/tea_avatar"
-                        app:oval="true"
                         android:layout_width="@dimen/px120"
                         android:layout_height="@dimen/px120"
                         android:layout_marginRight="@dimen/px24"
                         android:scaleType="fitXY"
-                        android:src="@drawable/default_avatar"/>
+                        />
 
                 <ImageView
                         android:id="@+id/nav_right"
@@ -208,6 +207,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/tea_name"
                         android:paddingTop="7dp"
+                        android:visibility="gone"
                         android:layout_marginLeft="8dp"/>
 
                 <TextView
