@@ -79,6 +79,7 @@ public class LiveRecordView extends BaseMediaView implements
 
     private boolean mMute;
     private int mQuality = Constants.QUALITY_STANDARD;
+    private boolean mResume = false;
 
     private int mCurrentCamFacingIndex;
     private boolean mIsReady;
@@ -430,15 +431,18 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void info(String info){
-        Message msg = Message.obtain();
-        msg.obj = info;
-        mHandler.sendMessage(msg);
+        if (XiaojsConfig.DEBUG) {
+            Message msg = Message.obtain();
+            msg.obj = info;
+            mHandler.sendMessage(msg);
+        }
     }
 
     @Override
     public void resume() {
         if (mMediaStreamingManager != null){
             mMediaStreamingManager.resume();
+            mResume = true;
         }
     }
 
@@ -451,6 +455,8 @@ public class LiveRecordView extends BaseMediaView implements
         if (mMediaStreamingManager != null){
             mMediaStreamingManager.pause();
         }
+
+        mResume = false;
     }
 
     @Override
@@ -561,5 +567,9 @@ public class LiveRecordView extends BaseMediaView implements
 
     public void captureOriginalFrame(FrameCapturedCallback callback) {
         mMediaStreamingManager.captureFrame(0, 0, callback);
+    }
+
+    public boolean isResume() {
+        return mResume;
     }
 }

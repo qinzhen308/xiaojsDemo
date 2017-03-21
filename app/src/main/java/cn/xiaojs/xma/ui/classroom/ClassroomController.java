@@ -21,7 +21,7 @@ import android.view.View;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.classroom.live.OnStreamUseListener;
+import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StudentVideoController;
 import cn.xiaojs.xma.ui.classroom.live.TeacherVideoController;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
@@ -37,11 +37,11 @@ public class ClassroomController {
     protected Constants.User mUser;
     private VideoEditingFragment mVideoEditFragment;
 
-    public ClassroomController(Context context, View root, Constants.User client, int appType, OnStreamUseListener listener) {
+    public ClassroomController(Context context, View root, Constants.User client, int appType, OnStreamStateChangeListener listener) {
         init(context, root, client, appType, listener);
     }
 
-    private void init(Context context, View root, Constants.User client, int appType, OnStreamUseListener listener) {
+    private void init(Context context, View root, Constants.User client, int appType, OnStreamStateChangeListener listener) {
         mContext = context;
         mUser = client;
 
@@ -159,7 +159,7 @@ public class ClassroomController {
     /**
      * 暂停推流
      */
-    public void pauseStream() {
+    public void pausePublishStream() {
         mVideoController.pausePublishStream();
     }
 

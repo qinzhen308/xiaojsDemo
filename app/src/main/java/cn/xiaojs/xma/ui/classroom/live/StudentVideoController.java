@@ -18,23 +18,22 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
-import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -44,24 +43,27 @@ public class StudentVideoController extends VideoController {
     private LiveRecordView mIndividualPublishView;
     private String mIndividualPublishUrl;
 
-    public StudentVideoController(Context context, View root, OnStreamUseListener listener) {
+    public StudentVideoController(Context context, View root, OnStreamStateChangeListener listener) {
         super(context, root, listener);
+        mUser = Constants.User.STUDENT;
         listenerSocket();
     }
 
     @Override
     protected void init(View root) {
         mPlayView = (PlayerTextureView) root.findViewById(R.id.live_video);
-        mPlayView.setVisibility(View.VISIBLE);
+        mPlayView.setVisibility(View.GONE);
 
         mPublishView = (LiveRecordView) root.findViewById(R.id.stu_publish_video);
-        //全屏个人推流
         mIndividualPublishView = (LiveRecordView) root.findViewById(R.id.publish_video);
+
+        if (mIndividualPublishView != null) {
+            mIndividualPublishView.setOnStreamingStateListener(mStreamingStateChangedListener);
+        }
     }
 
     @Override
     protected void listenerSocket() {
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mReceiveStreamStarted);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
@@ -74,14 +76,14 @@ public class StudentVideoController extends VideoController {
     @Override
     public void publishStream(String url, boolean live) {
         if (live) {
-            //接收老师一对一推流(小窗口)
+            //接收老师一对一推流（默认小窗口）
             super.publishStream(url, live);
         } else {
-            //个人推流(全屏)
+            //个人推流（全屏）
             mIndividualPublishUrl = url;
-            if (mOnStreamUseListener != null) {
+            if (mStreamListener != null) {
                 mLive = live;
-                mOnStreamUseListener.onStreamPublish(this);
+                mStreamListener.onStreamPublish(this);
             }
         }
     }
@@ -94,29 +96,89 @@ public class StudentVideoController extends VideoController {
         } else {
             mStreamPublishing = true;
             mIndividualPublishView.setPath(mIndividualPublishUrl);
+            mIndividualPublishView.setVisibility(View.VISIBLE);
             if (!mInitIndividualPublishVideo) {
                 mIndividualPublishView.start();
             } else {
                 mIndividualPublishView.resume();
             }
-            mIndividualPublishView.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * 暂停推流
+     */
     @Override
     public void pausePublishStream() {
         if (mLive) {
-            super.pausePublishStream();
+            if (mPublishView != null) {
+                if (mStreamPublishing) {
+                    if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
+                        mNeedStreamRePublishing = true;
+                        if (mStreamListener != null) {
+                            mStreamListener.onStreamStopped(mUser, OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_MEDIA_FEEDBACK);
+                        }
+                    } else {
+                        //send stopped stream
+                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                                new SocketManager.AckListener() {
+                                    @Override
+                                    public void call(Object... args) {
+                                        if (args != null && args.length > 0) {
+                                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                            if (response.result) {
+                                                mNeedStreamRePublishing = true;
+                                                if (mStreamListener != null) {
+                                                    mStreamListener.onStreamStopped(mUser, OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_MEDIA_FEEDBACK);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                    }
+                }
+                mStreamPublishing = false;
+                mPublishView.pause();
+            }
         } else {
-            mStreamPublishing = false;
-            mIndividualPublishView.pause();
-            mIndividualPublishView.setVisibility(View.GONE);
+            if (mIndividualPublishView != null) {
+                if (mStreamPublishing) {
+                    if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
+                        mStreamPublishing = false;
+                        if (mStreamListener != null) {
+                            mStreamListener.onStreamStopped(mUser, OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_INDIVIDUAL);
+                        }
+                    } else {
+                        //send stopped stream
+                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED), new SocketManager.AckListener() {
+                            @Override
+                            public void call(Object... args) {
+                                if (args != null && args.length > 0) {
+                                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                    if (response.result) {
+                                        if (mStreamListener != null) {
+                                            mStreamListener.onStreamStopped(mUser, OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_INDIVIDUAL);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    mIndividualPublishView.pause();
+                    mIndividualPublishView.setVisibility(View.GONE);
+                }
+                mStreamPublishing = false;
+            }
+
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (mIndividualPublishView != null && !mIndividualPublishView.isResume()) {
+            mIndividualPublishView.resume();
+        }
     }
 
     @Override
@@ -140,14 +202,17 @@ public class StudentVideoController extends VideoController {
                         if (args != null && args.length > 0) {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
-                                if (XiaojsConfig.DEBUG) {
-                                    Toast.makeText(mContext, "学生推流成功", Toast.LENGTH_LONG).show();
+                                if (mStreamListener != null) {
+                                    mStreamListener.onStreamStarted(mUser, mLive ? OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_MEDIA_FEEDBACK
+                                            : OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_INDIVIDUAL);
                                 }
                             } else {
-                                onPause();
+                                //暂停推流
+                                pausePublishStream();
                             }
                         } else {
-                            onPause();
+                            //暂停推流
+                            pausePublishStream();
                         }
                     }
                 });
@@ -156,29 +221,9 @@ public class StudentVideoController extends VideoController {
         }
     }
 
-
-    private SocketManager.EventListener mReceiveStreamStarted = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (args != null && args.length > 0) {
-                StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(mContext, "学生端流开始", Toast.LENGTH_LONG).show();
-                }
-                if (startedNotify != null) {
-                    mPlayStreamUrl = startedNotify.RTMPPlayUrl;
-                    playStream(startedNotify.RTMPPlayUrl);
-                }
-            }
-        }
-    };
-
     private SocketManager.EventListener mReceiveOpenMedia = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(mContext, "请求打开学生视频", Toast.LENGTH_LONG).show();
-            }
             if (mAgreeOpenCamera == null) {
                 mAgreeOpenCamera = new CommonDialog(mContext);
                 int width = DeviceUtil.getScreenWidth(mContext) / 2;
@@ -208,9 +253,6 @@ public class StudentVideoController extends VideoController {
     private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(mContext, "老师端中断了视频", Toast.LENGTH_LONG).show();
-            }
             pausePublishStream();
         }
     };
@@ -218,9 +260,6 @@ public class StudentVideoController extends VideoController {
     private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(mContext, "老师端关闭了视频", Toast.LENGTH_LONG).show();
-            }
             pausePublishStream();
         }
     };
@@ -231,6 +270,9 @@ public class StudentVideoController extends VideoController {
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
                 playStream(startedNotify.RTMPPlayUrl);
+                if (mStreamListener != null) {
+                    mStreamListener.onStreamStarted(mUser, OnStreamStateChangeListener.TYPE_STREAM_PLAY);
+                }
             }
         }
     }
@@ -238,9 +280,6 @@ public class StudentVideoController extends VideoController {
     @Override
     protected void onStringingStopped(Object... args) {
         if (args != null && args.length > 0) {
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(mContext, "流停止", Toast.LENGTH_LONG).show();
-            }
             pausePlayStream();
         }
     }

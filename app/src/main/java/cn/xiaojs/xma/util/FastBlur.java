@@ -31,13 +31,9 @@ public class FastBlur {
         }
         Bitmap scaledBmp = oriBmp;
         int currSize = oriBmp.getWidth() * oriBmp.getHeight();
-        if (!oriBmp.isMutable() || currSize > MAX_SIZE) {
-            if (currSize > MAX_SIZE) {
-                float scale =  (float)MAX_SIZE / currSize;
-                scaledBmp = BitmapUtils.resizeBitmapByScale(oriBmp, scale, false);
-            } else {
-                scaledBmp = Bitmap.createScaledBitmap(oriBmp, oriBmp.getWidth(), oriBmp.getHeight(), false);
-            }
+        if (currSize > MAX_SIZE) {
+            float scale =  (float)MAX_SIZE / currSize;
+            scaledBmp = BitmapUtils.resizeBitmapByScale(oriBmp, scale, false);
         } else {
             scaledBmp = Bitmap.createScaledBitmap(oriBmp, oriBmp.getWidth(), oriBmp.getHeight(), false);
         }

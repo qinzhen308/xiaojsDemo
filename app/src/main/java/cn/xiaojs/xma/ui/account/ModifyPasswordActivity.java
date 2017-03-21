@@ -1,5 +1,6 @@
-package cn.xiaojs.xma.ui.mine;
+package cn.xiaojs.xma.ui.account;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 /*  =======================================================================================
@@ -20,6 +21,6 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 public class ModifyPasswordActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
-
+        addView(R.layout.activity_modify_pwd);
     }
 }

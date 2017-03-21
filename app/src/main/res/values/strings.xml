@@ -11,6 +11,7 @@
     <string name="rotate">旋转</string>
     <string name="submit">提交</string>
     <string name="phone_num">手机号</string>
+    <string name="phone_num_">手机号码</string>
     <string name="pwd">密码</string>
     <string name="reason">推迟原因</string>
     <string name="person">人</string>

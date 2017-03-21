@@ -614,7 +614,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private SocketManager.EventListener mOnJoin = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            Toast.makeText(mContext, "有人加入", Toast.LENGTH_SHORT).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(mContext, "someone enter", Toast.LENGTH_SHORT).show();
+            }
             updateContactList(true, args);
         }
     };
@@ -625,7 +627,9 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private SocketManager.EventListener mOnLeave = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            Toast.makeText(mContext, "有人退出", Toast.LENGTH_SHORT).show();
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(mContext, "someone exit", Toast.LENGTH_SHORT).show();
+            }
             updateContactList(false, args);
         }
     };
