@@ -41,7 +41,6 @@
                             android:textSize="@dimen/font_30px"
                             android:layout_alignParentTop="true"
                             android:layout_toRightOf="@id/certification_icon"
-                            android:text="您已提交审核"
                             android:layout_marginLeft="@dimen/px30"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -53,7 +52,6 @@
                             android:layout_below="@id/certification_status"
                             android:layout_toRightOf="@id/certification_icon"
                             android:layout_marginTop="@dimen/px10"
-                            android:text="预计24小时内完成审核，请耐心等待"
                             android:layout_marginLeft="@dimen/px30"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -87,7 +85,6 @@
                             android:textColor="@color/font_black"
                             android:textSize="@dimen/font_28px"
                             android:layout_marginLeft="@dimen/px60"
-                            android:text="五小溪"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                 </LinearLayout>
@@ -112,7 +109,6 @@
                             android:textColor="@color/font_black"
                             android:textSize="@dimen/font_28px"
                             android:layout_marginLeft="@dimen/px60"
-                            android:text="511255445668998985"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                 </LinearLayout>
@@ -137,7 +133,6 @@
                             android:textColor="@color/font_black"
                             android:textSize="@dimen/font_28px"
                             android:layout_marginLeft="@dimen/px60"
-                            android:text="2018-12-11 12:55:21"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                 </LinearLayout>
@@ -163,7 +158,6 @@
                             android:textColor="@color/font_black"
                             android:textSize="@dimen/font_28px"
                             android:layout_marginLeft="@dimen/px60"
-                            android:text="2018-12-11 12:55:21"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                 </LinearLayout>
@@ -342,7 +336,7 @@
                                 android:id="@+id/certification_image_sample"
                                 android:scaleType="fitXY"
                                 android:layout_margin="@dimen/px10"
-                                android:src="@drawable/default_avatar_grey"
+                                android:src="@drawable/auth_example"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"/>
 
@@ -391,7 +385,7 @@
 
                 <View
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/px100"/>
+                        android:layout_height="@dimen/px10"/>
             </LinearLayout>
 
             <Button
@@ -399,7 +393,7 @@
                     style="@style/BigSubmitBtn"
                     android:text="@string/submit"
                     android:layout_marginLeft="@dimen/px30"
-                    android:layout_marginTop="@dimen/px60"
+                    android:layout_marginTop="@dimen/px50"
                     android:layout_marginRight="@dimen/px30"/>
         </LinearLayout>
     </FrameLayout>

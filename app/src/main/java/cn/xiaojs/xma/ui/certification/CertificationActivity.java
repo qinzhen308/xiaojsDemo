@@ -15,23 +15,33 @@ package cn.xiaojs.xma.ui.certification;
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
+
+import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.CollaManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.TimeUtil;
 
 public class CertificationActivity extends BaseActivity {
 
@@ -74,11 +84,19 @@ public class CertificationActivity extends BaseActivity {
 
     private int mApplyImageWidth;
     private int mApplyImageHeight;
+
+    private String photoKey;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_certification);
         setMiddleTitle(R.string.certification);
-        apply();
+
+        if (AccountDataManager.isVerified(this)){
+            success();
+        }else{
+            apply();
+        }
     }
 
     private void apply() {
@@ -90,24 +108,42 @@ public class CertificationActivity extends BaseActivity {
 
     }
 
-    private void examine() {
+    private void examine(String name,String no) {
+
+        mStatus.setText("您已提交审核");
+        mStatusDesc.setText("预计24小时内完成审核，请耐心等待");
+        mSubmitTime.setText(TimeUtil.formatDate(System.currentTimeMillis(), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+
+        mName.setText(name);
+        mIdCard.setText(no);
+
         mApplyWrapper.setVisibility(View.GONE);
         mStatusWrapper.setVisibility(View.VISIBLE);
         mModify.setVisibility(View.GONE);
         mVerifyTimeWrapper.setVisibility(View.GONE);
     }
 
+    //审核失败
     private void failed() {
+
+        mStatus.setText("审核失败");
+        mStatusDesc.setText("您上传的身份信息不清晰，请重新上传");
+
         mApplyWrapper.setVisibility(View.GONE);
         mStatusWrapper.setVisibility(View.VISIBLE);
         mModify.setVisibility(View.VISIBLE);
         mVerifyTimeWrapper.setVisibility(View.VISIBLE);
     }
 
+    //认证成功
     private void success() {
         mApplyWrapper.setVisibility(View.GONE);
-        mStatusWrapper.setVisibility(View.VISIBLE);
         mModify.setVisibility(View.GONE);
+
+        mStatus.setText("您已认证成功");
+        mStatusDesc.setText("很高兴认识您，您可以享受更多小教室服务与权益");
+
+        mStatusWrapper.setVisibility(View.VISIBLE);
         mVerifyTimeWrapper.setVisibility(View.VISIBLE);
     }
 
@@ -124,6 +160,7 @@ public class CertificationActivity extends BaseActivity {
                 selectImage();
                 break;
             case R.id.submit://提交认证资料
+                toSubmit();
                 break;
         }
     }
@@ -147,15 +184,79 @@ public class CertificationActivity extends BaseActivity {
                 } else {
                     if (data != null) {
                         String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
-                        Glide.with(this)
-                                .load(cropImgPath)
-                                .error(R.drawable.default_lesson_cover)
-                                .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                                .into(mCerImage);
-                        mHasImage = true;
+                        uploadHand(cropImgPath);
                     }
                 }
                 break;
         }
+    }
+
+    private void uploadHand(final String filePath) {
+
+        showProgress(true);
+        AccountDataManager.uploadHandhold(this, filePath, new QiniuService() {
+            @Override
+            public void uploadSuccess(String key, UploadReponse reponse) {
+                cancelProgress();
+
+                Glide.with(CertificationActivity.this)
+                        .load(filePath)
+                        .error(R.drawable.default_lesson_cover)
+                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                        .into(mCerImage);
+
+                photoKey = key;
+                mHasImage = true;
+                Toast.makeText(CertificationActivity.this,"上传成功",Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void uploadProgress(String key, double percent) {
+
+            }
+
+            @Override
+            public void uploadFailure(boolean cancel) {
+                cancelProgress();
+                mHasImage = false;
+            }
+        });
+    }
+
+    private void toSubmit() {
+
+        final String name = mNameInput.getText().toString().trim();
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(this,"请输入姓名",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String cardNo = mNumberInput.getText().toString().trim();
+        if (TextUtils.isEmpty(cardNo)) {
+            Toast.makeText(this,"请输入身份证号码",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!mHasImage) {
+            Toast.makeText(this,"请上传手持身份证照片",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        showProgress(true);
+        AccountDataManager.requestVerification(this, name, cardNo, photoKey, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                examine(name, cardNo);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                cancelProgress();
+                Toast.makeText(CertificationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

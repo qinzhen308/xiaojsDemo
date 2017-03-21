@@ -8,6 +8,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.ContentManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.contents.Article;
@@ -32,6 +33,8 @@ public class AgreementActivity extends BaseActivity {
         addView(R.layout.activity_agreement);
         setMiddleTitle("注册协议");
 
+        //contentView.getSettings().setDefaultTextEncodingName("UTF-8");
+
         loadContent();
 
     }
@@ -49,7 +52,7 @@ public class AgreementActivity extends BaseActivity {
     private void loadContent() {
 
         showProgress(true);
-        ContentManager.getArticle(this, "userAgreement", new APIServiceCallback<Article>() {
+        ContentManager.getArticle(this, XiaojsConfig.ARTICLE_ID_AGREEMENT, new APIServiceCallback<Article>() {
             @Override
             public void onSuccess(Article article) {
 
@@ -59,7 +62,7 @@ public class AgreementActivity extends BaseActivity {
                     showError();
                     return;
                 }
-                contentView.loadData(article.body.text,"text/html","UTF-8");
+                contentView.loadData(article.body.text,"text/html; charset=UTF-8",null);
             }
 
             @Override

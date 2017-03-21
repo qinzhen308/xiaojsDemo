@@ -8,6 +8,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.ContentManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.contents.Article;
@@ -47,7 +48,7 @@ public class AboutActivity extends BaseActivity {
     private void loadContent() {
 
         showProgress(true);
-        ContentManager.getArticle(this, "", new APIServiceCallback<Article>() {
+        ContentManager.getArticle(this, XiaojsConfig.ARTICLE_ID_ABOUT, new APIServiceCallback<Article>() {
             @Override
             public void onSuccess(Article article) {
 
@@ -57,7 +58,7 @@ public class AboutActivity extends BaseActivity {
                     showError();
                     return;
                 }
-                contentView.loadData(article.body.text,"text/html","UTF-8");
+                contentView.loadData(article.body.text,"text/html; charset=UTF-8", null);
             }
 
             @Override

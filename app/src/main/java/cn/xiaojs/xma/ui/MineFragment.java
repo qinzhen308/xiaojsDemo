@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -48,6 +49,7 @@ import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.PortraitView;
@@ -99,8 +101,7 @@ public class MineFragment extends BaseFragment {
     @Override
     protected void init() {
         //initProfileBg();
-        orderLayout.setEnabled(false);
-        authLayout.setEnabled(false);
+        orderLayout.setEnabled(false);;
         mBlurFloatUpBg = new ColorDrawable(getResources().getColor(R.color.blur_float_up_bg));
         mEvaluation.setGrading(EvaluationStar.Grading.THREE_HALF);
         //set default ugc
@@ -139,7 +140,31 @@ public class MineFragment extends BaseFragment {
                 startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
                 break;
             case R.id.name_auth_layout:
-                startActivity(new Intent(mContext, CertificationActivity.class));
+                if (AccountDataManager.isTeacher(mContext)) {
+                    startActivity(new Intent(mContext, CertificationActivity.class));
+                }else{
+                    Toast.makeText(mContext,"你不是老师，不能进行实名认证",Toast.LENGTH_SHORT).show();
+                    //提示申明教学能力
+//                    final CommonDialog dialog = new CommonDialog(mContext);
+//                    dialog.setTitle(R.string.declare_teaching_ability);
+//                    dialog.setDesc(R.string.declare_teaching_ability_tip);
+//                    dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+//                        @Override
+//                        public void onClick() {
+//                            dialog.dismiss();
+//                            Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    });
+//                    dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+//                        @Override
+//                        public void onClick() {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog.show();
+                }
+
                 break;
             case R.id.settings_layout:
                 startActivity(new Intent(mContext, SettingsActivity.class));
