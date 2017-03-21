@@ -32,6 +32,7 @@ import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
 
+import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.TokenPair;
@@ -45,6 +46,8 @@ import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
+import cn.xiaojs.xma.model.account.PwdParam;
+import cn.xiaojs.xma.model.security.ResetPwdParam;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
@@ -137,6 +140,15 @@ public interface XiaojsService {
     //Get Public Home
     @GET("/v1/accounts/public/{account}")
     Call<PublicHome> getPublicHome(@Path("account") String account);
+
+    //Change Password
+    @PATCH("/v1/accounts/password")
+    Call<ResponseBody> changePassword(@Body PwdParam pwdParam);
+
+    //Request Verification
+    @POST("/v1/accounts/verification")
+    Call<ResponseBody> requestVerification(@Body VerifyParam verifyParam);
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -342,6 +354,12 @@ public interface XiaojsService {
     //Does User Have Privileges
     @GET("/v1/security/privileges/{privileges}")
     Call<Privilege[]>havePrivileges(@Path("privileges") String privileges);
+
+
+    //Reset Password
+    @PATCH("/v1/security/forgot")
+    Call<ResponseBody> resetPassword(@Body ResetPwdParam resetPwdParam);
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

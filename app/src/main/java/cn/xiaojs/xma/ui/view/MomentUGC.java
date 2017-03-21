@@ -177,11 +177,12 @@ public class MomentUGC extends RelativeLayout {
         mComment.setText(String.valueOf(mDynamic.stats.comments));
         mShare.setText(String.valueOf(mDynamic.stats.shared));
         praise(mDynamic.liked,mDynamic.stats.liked);
-        if (mDynamic.scope == Social.ShareScope.PUBLIC){//公开动态可分享
-            mShare.setVisibility(VISIBLE);
-        }else {
-            mShare.setVisibility(GONE);
-        }
+        //FIXME 等动态分享H5页面出来后，需要打开以下注释代码
+//        if (mDynamic.scope == Social.ShareScope.PUBLIC){//公开动态可分享
+//            mShare.setVisibility(VISIBLE);
+//        }else {
+//            mShare.setVisibility(GONE);
+//        }
     }
 
 

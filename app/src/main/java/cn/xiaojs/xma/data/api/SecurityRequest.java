@@ -10,6 +10,8 @@ import cn.xiaojs.xma.model.Privilege;
 import com.orhanobut.logger.Logger;
 
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
+import cn.xiaojs.xma.model.security.ResetPwdParam;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -57,6 +59,11 @@ public class SecurityRequest extends ServiceRequest {
         enqueueRequest(APIType.CHECK_SESSION,call);
     }
 
+
+    public void resetPassword(ResetPwdParam pwdParam) {
+        Call<ResponseBody> call = getService().resetPassword(pwdParam);
+        enqueueRequest(APIType.RESET_PASSWORD,call);
+    }
 
 
 }
