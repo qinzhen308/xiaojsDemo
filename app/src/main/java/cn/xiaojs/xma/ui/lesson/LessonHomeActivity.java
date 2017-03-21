@@ -55,7 +55,7 @@ import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
-public class LessonHomeActivity extends BaseActivity{
+public class  LessonHomeActivity extends BaseActivity{
     public final static int ENTRANCE_FROM_TEACH_LESSON = 0;
     public final static int ENTRANCE_FROM_ENROLL_LESSON = 1;
 
@@ -78,7 +78,7 @@ public class LessonHomeActivity extends BaseActivity{
     @BindView(R.id.promotion_info)
     TextView mPromotionInfoTv;
     @BindView(R.id.tea_avatar)
-    RoundedImageView mTeaAvatarImg;
+    ImageView mTeaAvatarImg;
     @BindView(R.id.tea_name)
     TextView mTeaNameTv;
     @BindView(R.id.tea_title)
