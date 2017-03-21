@@ -171,7 +171,7 @@
     <string name="upload_cover_fail">上传封面失败</string>
     <string name="add_cover_tips">一张好的封面可以增加报名人数哦~</string>
     <string name="live_lesson_brief">简介</string>
-    <string name="live_lesson_brief_hint">请填写直播课简介</string>
+    <string name="live_lesson_brief_hint">请填写公开课简介</string>
     <string name="live_lesson_label">标签</string>
     <string name="live_lesson_label_hint">添加标签更容易被搜索</string>
     <string name="add_label">添加标签</string>
@@ -235,7 +235,7 @@
     <string name="publish_personal_page">发布到个人主页</string>
     <string name="publish_personal_page_tips">在个人主页中展示，才可以分享</string>
     <string name="publish_to_circle">发布到小圈</string>
-    <string name="live_lesson_name_error">请输入%1$d&#8211;%2$d个字的直播课名称</string>
+    <string name="live_lesson_name_error">请输入%1$d&#8211;%2$d个字的课名称</string>
     <string name="subject_empty">请选择学科类目</string>
     <string name="teach_form_empty">请选择教学形式</string>
     <string name="lesson_people_empty">请填写报名人数</string>
@@ -262,18 +262,18 @@
     <string name="promotion_info_error">请完整填写促销%1$d信息</string>
     <string name="promotion_discount_format_error">请填写正确的折扣值，如：9.7</string>
     <string name="promotion_info_empty">请填写促销信息</string>
-    <string name="lesson_creation_success">创建直播课成功</string>
+    <string name="lesson_creation_success">创建公开课成功</string>
     <string name="lesson_edit_success">修改成功</string>
     <string name="lesson_stu_exceed">该课的学生人数超过%1$d人，建议您选择公开课的形式</string>
 
     <!--live lesson detail-->
-    <string name="live_lesson_detail">直播课详情</string>
+    <string name="live_lesson_detail">详情</string>
     <string name="not_enroll">报名</string>
-    <string name="not_enroll_tips">该直播不需要报名</string>
+    <string name="not_enroll_tips">该课不需要报名</string>
     <string name="lesson_enrolled">已报名</string>
     <string name="lesson_viewed">已浏览</string>
     <string name="lesson_collected">已收藏</string>
-    <string name="live_lesson_cover">直播课封面</string>
+    <string name="live_lesson_cover">封面</string>
     <string name="promotion_one">促销1</string>
     <string name="promotion_two">促销2</string>
     <string name="enroll_before_promotion">报名前%1$d人，享受%2$s折，折后价<![CDATA[<font color="#cc0000">%3$s</font>]]></string>
@@ -315,7 +315,7 @@
     <string name="cancel_examine">撤销审核</string>
     <string name="look_detail">查看详情</string>
     <string name="course_examine_error_tip">标题涉及违法内容,请重新编辑</string>
-    <string name="course_stop_error_tip">传播淫秽内容,本直播课被平台强制停止</string>
+    <string name="course_stop_error_tip">传播淫秽内容,本公开课被平台强制停止</string>
     <string name="pending_shelves">草稿</string>
     <string name="examine_failure">审核失败</string>
     <string name="force_stop">强制停止</string>
@@ -331,11 +331,11 @@
     <string name="class_home">班级主页</string>
     <string name="publish_to_home_page">设为公开</string>
     <string name="off_shelves_success">撤销成功</string>
-    <string name="cancel_publish_tip">直播课取消发布后，该直播课将不再在您的主页中展示且不能对外分享</string>
-    <string name="delete_lesson_tip">确定需要删除该直播课吗？删除后不可恢复</string>
+    <string name="cancel_publish_tip">取消发布后，该课将不再在您的主页中展示且不能对外分享</string>
+    <string name="delete_lesson_tip">确定需要删除该课吗？删除后不可恢复</string>
     <string name="declare_teaching_ability">声明教学能力</string>
     <string name="declare_teaching_ability_tip">开课需要先声明教学能力，确定去声明吗？</string>
-    <string name="lesson_publish_tip">发布到主页后，该直播课将在您的主页中展示、报名并可对外分享</string>
+    <string name="lesson_publish_tip">发布到主页后，该课将在您的主页中展示、报名并可对外分享</string>
     <string name="enroll_lesson_success">报名成功</string>
     <string name="enroll_lesson_failed">报名失败</string>
     <string name="has_youhui">已优惠%1$s元</string>
@@ -343,7 +343,7 @@
 
     <!-- 修改上课时间 -->
     <string name="modify_lesson_time_mark">修改上课时间会影响您的信用等级，请谨慎操作</string>
-    <string name="lesson_name">直播课名称</string>
+    <string name="lesson_name">课名称</string>
     <string name="origin_lesson_time">原上课时间</string>
     <string name="new_lesson_time">新上课时间</string>
     <string name="modify_lesson_time_tip">请点击选择</string>
