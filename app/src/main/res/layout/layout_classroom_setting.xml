@@ -161,6 +161,7 @@
                 android:paddingRight="@dimen/px30"
                 android:paddingTop="@dimen/px30"
                 android:paddingBottom="@dimen/px30"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
             <TextView
