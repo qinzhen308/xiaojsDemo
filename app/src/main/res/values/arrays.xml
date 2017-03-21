@@ -108,8 +108,8 @@
     </string-array>
 
     <string-array name="ugc_more">
-        <item>忽略此条动态</item>
-        <item>忽略Ta的动态</item>
+        <!--<item>忽略此条动态</item>-->
+        <!--<item>忽略Ta的动态</item>-->
         <item>取消关注</item>
         <item>举报</item>
     </string-array>
