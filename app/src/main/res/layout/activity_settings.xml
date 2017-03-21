@@ -15,6 +15,7 @@
             style="@style/MinePageItem"/>
 
     <View
+            android:visibility="gone"
             style="@style/DividerHorizontal"/>
 
     <!--账号安全-->

@@ -13,6 +13,7 @@ import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.ui.account.LoginActivity;
+import cn.xiaojs.xma.ui.account.ModifyPasswordActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.CacheUtil;
@@ -62,6 +63,7 @@ public class SettingsActivity extends BaseActivity {
             case R.id.message_notify_set:
                 break;
             case R.id.account_safe:
+                startActivity(new Intent(this, ModifyPasswordActivity.class));
                 break;
             case R.id.clear_cache_layout:
                 DataManager.clearbyUser(mContext);

@@ -145,7 +145,11 @@
 
     <string name="current_pwd">当前密码</string>
     <string name="current_pwd_hint">请输入您的登录密码</string>
+    <string name="current_pwd_input_error">您输入的登录密码有误</string>
     <string name="new_pwd">新密码</string>
+    <string name="new_pwd_empty">请输入新密码</string>
+    <string name="modify_pwd_succ">密码修改成功!</string>
+    <string name="modify_pwd_fail">密码修改失败!</string>
 
     <!--my sub page-->
     <string name="exit_login">退出登录</string>
