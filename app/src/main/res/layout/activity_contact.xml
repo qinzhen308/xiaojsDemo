@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:groupIndicator="@drawable/ic_expand_selector"
+            android:scrollbars="none"
             style="@style/ex_listview_group"
             />
 

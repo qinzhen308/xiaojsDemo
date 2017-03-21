@@ -158,6 +158,9 @@ public class TeachingSubjectActivity extends BaseActivity {
                 //更新alias and tags
                 AccountDataManager.saveAliaTags(getApplicationContext(), object.aliasAndTags);
                 AccountDataManager.submitAliaTags(getApplicationContext());
+                //更新教学能力
+                AccountDataManager.addAbility(getApplicationContext(),subject.getName());
+
 
                 Intent intent = new Intent();
                 intent.putExtra(CourseConstant.KEY_SUBJECT, subject);

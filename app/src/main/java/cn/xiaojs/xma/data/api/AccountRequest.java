@@ -69,6 +69,15 @@ public class AccountRequest extends ServiceRequest {
 
     }
 
+    public ClaimCompetency getCompetenciesSync() throws Exception{
+
+        Response<ClaimCompetency> response = getService().getCompetencies().execute();
+        if (response != null) {
+            return response.body();
+        }
+        return null;
+    }
+
     public void editProfile(@NonNull Account.Basic basic) {
 
         Account account = new Account();
