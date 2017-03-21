@@ -60,13 +60,6 @@ public class SyncService extends IntentService {
 
                     DataManager.initMemCache(context);
 
-                    //是否是老师
-                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
-                        Privilege[] privileges = SecurityManager.havePrivilegeSync(context,
-                                Su.Permission.COURSE_OPEN_CREATE);
-                        SecurityManager.savePermission(context, privileges);
-                    }
-
                     //同步联系人到DB
                     ArrayList<ContactGroup> contactGroups = null;
                     if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
@@ -119,12 +112,20 @@ public class SyncService extends IntentService {
                                         names.append("、");
                                     }
                                 }
+                                AccountDataManager.clearAbilities(context);
                                 AccountDataManager.addAbility(context,names.toString());
                             }
                         }
 
 
                     }
+
+                    //是否是老师
+//                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
+//                        Privilege[] privileges = SecurityManager.havePrivilegeSync(context,
+//                                Su.Permission.COURSE_OPEN_CREATE);
+//                        SecurityManager.savePermission(context, privileges);
+//                    }
 
                     break;
 

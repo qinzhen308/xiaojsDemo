@@ -15,6 +15,7 @@ import cn.xiaojs.xma.data.db.ContactDao;
 import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.data.loader.SyncService;
 import cn.xiaojs.xma.data.preference.DataPref;
+import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.APPUtils;
@@ -61,6 +62,8 @@ public class DataManager {
         saveVersionCode(context, APPUtils.getAPPVersionCode(context));
 
         if (AccountDataManager.isLogin(context)) {
+
+            XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(context);
 
             lanuchInitDataService(context, null);
 
@@ -457,7 +460,6 @@ public class DataManager {
         }
 
         public void init() {
-
             //init cache data
             initContactData();
 
@@ -488,7 +490,6 @@ public class DataManager {
             }
             return contactIds;
         }
-
 
         ///////////////////////////////////////////////////////////////
         //Contact

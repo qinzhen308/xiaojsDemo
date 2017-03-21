@@ -153,7 +153,8 @@ public class TeachingSubjectActivity extends BaseActivity {
 
                 cancelProgress();
                 Toast.makeText(TeachingSubjectActivity.this, R.string.claim_succ, Toast.LENGTH_SHORT).show();
-                SecurityManager.updatePermission(TeachingSubjectActivity.this, Su.Permission.COURSE_OPEN_CREATE, true);
+                //SecurityManager.updatePermission(TeachingSubjectActivity.this, Su.Permission.COURSE_OPEN_CREATE, true);
+                AccountDataManager.setTeacher(TeachingSubjectActivity.this, true);
 
                 //更新alias and tags
                 AccountDataManager.saveAliaTags(getApplicationContext(), object.aliasAndTags);

@@ -25,8 +25,11 @@ import java.util.List;
 
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
+import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.ui.base.BaseTopTabActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -49,7 +52,7 @@ public class MyLessonActivity extends BaseTopTabActivity {
         List<String> ss = new ArrayList<>();
         ss.add(getString(R.string.course_of_learn));
 
-        if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)){
+        if (AccountDataManager.isTeacher(this)){
             Bundle b2 = new Bundle();
             b2.putBoolean(CourseConstant.KEY_IS_TEACHER,true);
             Fragment f2 = new LessonFragment();
@@ -88,7 +91,7 @@ public class MyLessonActivity extends BaseTopTabActivity {
     private void handleRightClick(int position){
         switch (position){
             case 0://我要开课
-                if (SecurityManager.checkPermission(this, Su.Permission.COURSE_OPEN_CREATE)){
+                if (AccountDataManager.isTeacher(this)){
                     //老师可以开课
                     Intent intent = new Intent(this,LessonCreationActivity.class);
                     startActivityForResult(intent,CourseConstant.CODE_CREATE_LESSON);

@@ -16,6 +16,8 @@ public class Account implements Serializable{
     private String id;
     private Basic basic;
     private Phone phone;
+    public boolean isTeacher = false;
+    public boolean isVerified = false;
 
     //public boolean isPerson;
 

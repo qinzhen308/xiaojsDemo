@@ -43,6 +43,43 @@ public class AccountDataManager {
 
 
 
+    private static Account getAccont(Context context) {
+        if (XiaojsConfig.mLoginUser == null) {
+            XiaojsConfig.mLoginUser = getUserInfo(context);
+        }
+
+        return XiaojsConfig.mLoginUser.getAccount();
+    }
+
+    /**
+     * 是否已实名认证
+     * @param context
+     * @return
+     */
+    public static boolean isVerified(Context context) {
+        return getAccont(context).isVerified;
+    }
+
+    /**
+     * 用户是不是老师
+     * @param context
+     * @return
+     */
+    public static boolean isTeacher(Context context) {
+        return getAccont(context).isTeacher;
+    }
+
+    public static void setTeacher(Context context, boolean teacher) {
+
+        Account account = getAccont(context);
+
+        if (account.isTeacher != teacher) {
+            account.isTeacher = teacher;
+            setUserInfo(context, XiaojsConfig.mLoginUser);
+        }
+
+    }
+
     public static void setPhone(final Context context, final String phone) {
         AccountPref.setPhone(context, phone);
     }

@@ -26,12 +26,14 @@ import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -40,6 +42,7 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.TeachLesson;
+import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
@@ -761,7 +764,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     @Override
     protected void onEmptyButtonClick() {
-        if (SecurityManager.checkPermission(mContext, Su.Permission.COURSE_OPEN_CREATE)){
+
+        if (AccountDataManager.isTeacher(mContext)){
             //老师可以开课
             Intent intent = new Intent(mContext,LessonCreationActivity.class);
             ((BaseActivity)mContext).startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);

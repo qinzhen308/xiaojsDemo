@@ -43,6 +43,7 @@ import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
+import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
@@ -267,9 +268,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
     private void setDefaultUgc() {
         mFans.setText(getString(R.string.fans_num, 0));
         mFollows.setText(getString(R.string.follow_num, 0));
-        boolean isTeacher = SecurityManager.checkPermission(PersonHomeActivity.this, Su.Permission.COURSE_OPEN_CREATE);
         String duration;
-        if (isTeacher) {
+        if (AccountDataManager.isTeacher(this)) {
             duration = getString(R.string.tea_lesson_duration, 0);
         } else {
             duration = getString(R.string.stu_lesson_duration, 0);
@@ -301,9 +301,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
             mFirstDivider.setVisibility(View.GONE);
         }
 
-        boolean isTeacher = SecurityManager.checkPermission(PersonHomeActivity.this, Su.Permission.COURSE_OPEN_CREATE);
         String duration;
-        if (isTeacher) {
+        if (AccountDataManager.isTeacher(this)) {
             duration = getString(R.string.tea_lesson_duration, 0);
         } else {
             duration = getString(R.string.stu_lesson_duration, 0);
