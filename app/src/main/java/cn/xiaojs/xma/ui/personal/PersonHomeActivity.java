@@ -275,6 +275,9 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
             duration = getString(R.string.stu_lesson_duration, 0);
         }
         mTeachingLength.setText(duration);
+
+        mSecondDivider.setVisibility(View.GONE);
+        mTeachingLength.setVisibility(View.GONE);
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
