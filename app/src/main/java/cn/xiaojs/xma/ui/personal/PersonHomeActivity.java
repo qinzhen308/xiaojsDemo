@@ -192,7 +192,9 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         if (!mIsMyself) {
             headerNormal(home.isFollowed);
         }
-        if (home.isTeacher) {//用户是老师
+
+        boolean isOrganization = home.profile != null ? Account.TypeName.ORGANIZATION.equals(home.profile.typeName) : false;
+        if (home.isTeacher || isOrganization) {//用户是老师
             //一期暂时没有评价系统，暂时隐藏
             PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
             PersonHomeMomentFragment f2 = new PersonHomeMomentFragment();
