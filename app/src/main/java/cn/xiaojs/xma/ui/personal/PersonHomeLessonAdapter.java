@@ -45,17 +45,17 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeLesson, P
 
     @Override
     protected void setViewContent(Holder holder, PersonHomeLesson bean, int position) {
-        holder.title.setText(bean.getTitle());
+        holder.title.setText(bean.title);
 //        Glide.with(mContext)
 //                .load(Ctl.getCover(bean.))
         holder.image.setImageResource(R.drawable.default_lesson_cover);
-        String time = TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + "  " + bean.getSchedule().getDuration() + "分钟";
+        String time = TimeUtil.format(bean.schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + "  " + bean.schedule.getDuration() + "分钟";
         holder.time.setText(time);
-        holder.enroll.setText(bean.getEnroll().current + "人报名");
-        if (bean.getFee().free) {
+        holder.enroll.setText(bean.enroll.current + "人报名");
+        if (bean.fee.free) {
             holder.price.setText(R.string.free);
         } else {
-            holder.price.setText(NumberUtil.getPrice(bean.getFee().charge));
+            holder.price.setText(NumberUtil.getPrice(bean.fee.charge));
         }
     }
 
@@ -69,7 +69,7 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeLesson, P
     protected void onDataItemClick(int position, PersonHomeLesson bean) {
         Intent i = new Intent(mContext, LessonHomeActivity.class);
         i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
-        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);
         mContext.startActivity(i);
     }
 

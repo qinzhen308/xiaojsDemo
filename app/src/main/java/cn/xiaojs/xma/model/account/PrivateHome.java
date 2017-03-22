@@ -28,6 +28,7 @@ public class PrivateHome {
         public boolean isPerson;
         public String id;
         public String name;
+        public String state;
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
