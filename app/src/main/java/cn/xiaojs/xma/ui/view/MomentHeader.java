@@ -16,13 +16,13 @@ package cn.xiaojs.xma.ui.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.signature.StringSignature;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +41,6 @@ import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
@@ -94,37 +93,35 @@ public class MomentHeader extends RelativeLayout {
 
     public void setData(Dynamic dynamic) {
 
-        //  mHead.setImageResource(DeviceUtil.getPor());
+        //mHead.setImageResource(DeviceUtil.getPor());
         if (dynamic == null)
             return;
-
-        Glide.with(getContext())
-                .load(Account.getAvatar(AccountDataManager.getAccountID(getContext()), 300))
-                .signature(new StringSignature(DeviceUtil.getSignature()))
-                .error(R.drawable.default_avatar)
-                .into(mHead);
-
         mOwner = dynamic.owner;
 
-        String url = Account.getAvatar(dynamic.owner.account, XiaojsConfig.PORTRAIT_SIZE);
-        if (mOwner.myself || VerifyUtils.isMyself(mOwner.account)) {
+        String url = mOwner != null ? Account.getAvatar(mOwner.account, XiaojsConfig.PORTRAIT_SIZE) : null;
+        if (TextUtils.isEmpty(url)) {
+            url = Account.getAvatar(dynamic.createdBy, XiaojsConfig.PORTRAIT_SIZE);
+        }
+        if (mOwner != null) {
+            if (mOwner.myself || VerifyUtils.isMyself(mOwner.account)) {
 
-            if (XiaojsConfig.mLoginUser == null) {
-                XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(getContext());
+                if (XiaojsConfig.mLoginUser == null) {
+                    XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(getContext());
+                }
+
+                mName.setText(XiaojsConfig.mLoginUser.getName());
+                mDescWrapper.setVisibility(GONE);
+                mDesc.setText("");
+            } else {
+                //mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
+                mDesc.setText("");
+                mDescWrapper.setVisibility(VISIBLE);
+                mName.setText(dynamic.owner.alias);
+                mTag.setText(dynamic.owner.tag);
             }
-
-            mName.setText(XiaojsConfig.mLoginUser.getName());
-            mDescWrapper.setVisibility(GONE);
-            mDesc.setText("");
-        } else {
-            //mDesc.setIcon(BitmapUtils.getDrawableWithText(getContext(), BitmapUtils.getBitmap(getContext(), R.drawable.ic_clz_remain), "22", R.color.white, R.dimen.font_20px));
-            mDesc.setText("");
-            mDescWrapper.setVisibility(VISIBLE);
-            mName.setText(dynamic.owner.alias);
-            mTag.setText(dynamic.owner.tag);
         }
         mTime.setText(TimeUtil.getTimeFromNow(dynamic.createdOn));
-        if (dynamic.owner.followed || mOwner.myself || VerifyUtils.isMyself(mOwner.account)) {
+        if (mOwner == null || mOwner.followed || mOwner.myself || VerifyUtils.isMyself(mOwner.account)) {
             mFollow.setVisibility(GONE);
         } else {
             mFollow.setVisibility(VISIBLE);
@@ -161,6 +158,10 @@ public class MomentHeader extends RelativeLayout {
     }
 
     private void follow(final long group) {
+        if (mOwner == null) {
+            return;
+        }
+
         SocialManager.followContact(getContext(), mOwner.id, group, new APIServiceCallback<Relation>() {
             @Override
             public void onSuccess(Relation object) {

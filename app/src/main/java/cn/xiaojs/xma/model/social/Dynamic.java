@@ -16,6 +16,7 @@ import cn.xiaojs.xma.model.Doc;
 public class Dynamic implements Serializable{
 
     public String id;
+    public String createdBy;
     public Date createdOn;
     public String typeName;
     public boolean liked;

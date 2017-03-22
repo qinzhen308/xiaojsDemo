@@ -195,14 +195,17 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         if (home.isTeacher) {//用户是老师
             //一期暂时没有评价系统，暂时隐藏
             PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
-            PersonHomeLessonFragment f2 = new PersonHomeLessonFragment();
+            PersonHomeMomentFragment f2 = new PersonHomeMomentFragment();
             //PersonHomeMomentFragment f3 = new PersonHomeMomentFragment();
 
             Bundle b1 = new Bundle();
+            Bundle b2 = new Bundle();
             b1.putSerializable(PersonalBusiness.KEY_PERSONAL_LESSON_LIST, mBean.lessons);
+            b2.putSerializable(PersonalBusiness.KEY_PERSONAL_ACTIVITY_LIST, mBean.activities);
             f1.setArguments(b1);
             f1.setPagePosition(0);
             f2.setPagePosition(1);
+            f2.setArguments(b2);
             //f3.setPagePosition(2);
 
             List<BaseScrollTabFragment> fragments = new ArrayList<>();

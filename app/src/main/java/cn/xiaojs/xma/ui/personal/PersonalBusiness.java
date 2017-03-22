@@ -18,6 +18,7 @@ public class PersonalBusiness {
     public static final String KEY_IS_MYSELF = "key_is_myself";
     public static final String KEY_PERSONAL_ACCOUNT = "key_personal_account";
     public static final String KEY_PERSONAL_LESSON_LIST = "key_personal_lesson_list";
+    public static final String KEY_PERSONAL_ACTIVITY_LIST = "key_personal_activiyt_list";
     public static final String KEY_PERSONAL_NAME = "key_personal_name";
     public static final String KEY_PERSONAL_SIGN = "key_personal_sign";
     public static final String KEY_PERSONAL_SEX = "key_personal_sex";

@@ -30,8 +30,6 @@ import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.CollectionPage;
-import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.DynamicStatus;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -52,6 +50,10 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
 
     public PersonHomeMomentAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
+    }
+
+    public PersonHomeMomentAdapter(Context context, PullToRefreshSwipeListView listView, List<Dynamic> data) {
+        super(context, listView, data);
     }
 
     @Override
@@ -186,24 +188,7 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
 
     @Override
     protected void doRequest() {
-        Criteria criteria = new Criteria();
-        SocialManager.getActivities(mContext, criteria, mPagination, new APIServiceCallback<CollectionPage<Dynamic>>() {
-            @Override
-            public void onSuccess(CollectionPage<Dynamic> object) {
-                if (object != null) {
-//                    notifyUpdates(object.totalUpdates);
-                    PersonHomeMomentAdapter.this.onSuccess(object.objectsOfPage);
-                } else {
-                    PersonHomeMomentAdapter.this.onSuccess(null);
-//                    notifyUpdates(0);
-                }
-            }
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                PersonHomeMomentAdapter.this.onFailure(errorCode, errorMessage);
-            }
-        });
     }
 
     @Override
