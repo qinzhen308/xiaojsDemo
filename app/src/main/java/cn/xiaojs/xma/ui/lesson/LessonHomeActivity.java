@@ -18,11 +18,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -35,6 +38,7 @@ import cn.xiaojs.xma.model.ELResponse;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Schedule;
+import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.Teacher;
 import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.Price;
@@ -42,6 +46,8 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.widget.BlockTabView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
@@ -82,21 +88,26 @@ public class  LessonHomeActivity extends BaseActivity{
     EvaluationStar mTeaEvalStar;
     @BindView(R.id.report)
     TextView mReportTv;
-    @BindView(R.id.consulting)
-    Button mConsultingBtn;
+
 
     @BindView(R.id.report_layout)
     View mReportLayout;
     @BindView(R.id.report_divide_live)
     View mReportDivideLine;
+
+
     @BindView(R.id.lesson_opera_bar_lay)
     View mLessonEnrollLayout;
+    @BindView(R.id.apply_btn)
+    Button applyBtn;
+    @BindView(R.id.consulting)
+    Button mConsultingBtn;
+
 
     @BindView(R.id.block_detail_bar)
     BlockTabView mBlockTabView;
 
-    @BindView(R.id.apply_btn)
-    Button applyBtn;
+
 
     private ArrayList<TextView> textViews;
     private LessonDetail mLessonDetail;
@@ -142,7 +153,7 @@ public class  LessonHomeActivity extends BaseActivity{
             case R.id.report:
                 break;
             case R.id.apply_btn:
-                enterConfirmPayPage();
+                appDeal();
                 break;
             case R.id.consulting:
 
@@ -304,10 +315,43 @@ public class  LessonHomeActivity extends BaseActivity{
             mLessonEnrollLayout.setVisibility(View.GONE);
         }
 
+        setLayBottom();
+    }
+
+    private void setLayBottom() {
+
+        mLessonEnrollLayout.setVisibility(View.VISIBLE);
+
+        String lessonState = mLessonDetail.getState();
+        if (lessonState.equals(Ctl.LiveLessonState.CANCELLED)) {
+            applyBtn.setText("课已取消");
+        }else if (lessonState.equals(Ctl.LiveLessonState.FINISHED)) {
+            applyBtn.setText("已完课");
+        }else {
+
+            if (mLessonDetail.isEnrolled) {
+
+                String state = mLessonDetail.enrollState;
+                if (TextUtils.isEmpty(state) || state.equals(Ctl.EnrollmentState.ENROLLED)) {
+                    applyBtn.setText("进入教室");
+                } else if (state.equals(Ctl.EnrollmentState.PENDING_FOR_PAYMENT)) {
+                    applyBtn.setText("立即支付");
+                } else if (state.equals(Ctl.EnrollmentState.CANCELLED)) {
+                    applyBtn.setText("立即报名");
+                } else if (state.equals(Ctl.EnrollmentState.PENDING_FOR_ACK)) {
+                    //nothing to do
+                }
+
+            }else {
+                applyBtn.setText("立即报名");
+            }
+        }
+
         String accId = AccountDataManager.getAccountID(this);
         if (mLessonDetail.getCreatedBy().equals(accId)){
             mLessonEnrollLayout.setVisibility(View.GONE);
         }
+
     }
 
     private void setSalePromotion(Price fee) {
@@ -415,6 +459,35 @@ public class  LessonHomeActivity extends BaseActivity{
     }
 
 
+    private void appDeal() {
+
+        if (mLessonDetail == null) return;
+
+        String lessonState = mLessonDetail.getState();
+        if (!lessonState.equals(Ctl.LiveLessonState.CANCELLED) && !lessonState.equals(Ctl.LiveLessonState.FINISHED)) {
+
+            if(mLessonDetail.isEnrolled) {
+                dealEnrolled();
+            }else{
+                enterConfirmPayPage();
+            }
+        }
+    }
+
+    private void dealEnrolled() {
+        String state = mLessonDetail.enrollState;
+        if (TextUtils.isEmpty(state) || state.equals(Ctl.EnrollmentState.ENROLLED)) {
+            enterClass(mLessonDetail.ticket);
+        } else if (state.equals(Ctl.EnrollmentState.PENDING_FOR_PAYMENT)) {
+            enterPay();
+        } else if (state.equals(Ctl.EnrollmentState.CANCELLED)) {
+            //nothing to do
+        } else if (state.equals(Ctl.EnrollmentState.PENDING_FOR_ACK)) {
+            //nothing to do
+        }
+
+    }
+
     private void enterConfirmPayPage() {
         if (mLessonDetail.getFee().free){
             //免费课不用付款
@@ -423,6 +496,9 @@ public class  LessonHomeActivity extends BaseActivity{
                 @Override
                 public void onSuccess(ELResponse object) {
                     cancelProgress();
+                    mLessonDetail.isEnrolled = true;
+                    mLessonDetail.enrollState = Ctl.EnrollmentState.ENROLLED;
+                    setLayBottom();
                     ToastUtil.showToast(getApplicationContext(),"报名成功!");
                 }
 
@@ -433,13 +509,30 @@ public class  LessonHomeActivity extends BaseActivity{
                 }
             });
         }else {
-            Intent i = new Intent();
-            i.setClass(this, ConfirmEnrollmentActivity.class);
-            i.putExtra(CourseConstant.KEY_LESSON_BEAN, mLessonDetail);
-            startActivity(i);
+            enterPay();
         }
         //ConfirmEnrollmentActivity
 
+    }
+
+    //进入教室
+    private void enterClass(String ticket) {
+
+        if (TextUtils.isEmpty(ticket)) {
+            Toast.makeText(this,"进入教室失败",Toast.LENGTH_SHORT).show();
+        }
+
+        Intent i = new Intent();
+        i.putExtra(Constants.KEY_TICKET, ticket);
+        i.setClass(this, ClassroomActivity.class);
+        this.startActivity(i);
+    }
+
+    private void enterPay() {
+        Intent i = new Intent();
+        i.setClass(this, ConfirmEnrollmentActivity.class);
+        i.putExtra(CourseConstant.KEY_LESSON_BEAN, mLessonDetail);
+        startActivity(i);
     }
 
     private void enjoyFreeLesson(String lesson) {

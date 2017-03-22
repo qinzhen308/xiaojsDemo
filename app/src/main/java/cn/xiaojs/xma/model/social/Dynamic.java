@@ -13,7 +13,7 @@ import cn.xiaojs.xma.model.Doc;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Dynamic {
+public class Dynamic implements Serializable{
 
     public String id;
     public Date createdOn;
@@ -27,7 +27,7 @@ public class Dynamic {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class DynOwner{
+    public static class DynOwner implements Serializable{
         public String account;
         public String alias;
         public String tag;
@@ -42,7 +42,7 @@ public class Dynamic {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class DynBody{
+    public static class DynBody implements Serializable{
         public DynPhoto[] drawings;
         public String text;
         public DynRef ref;
@@ -51,13 +51,13 @@ public class Dynamic {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class DynPhoto extends Dimension{
+    public static class DynPhoto extends Dimension implements Serializable{
         public String name;
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class DynRef {
+    public static class DynRef implements Serializable{
         public String snap;
         public String title;
         public boolean overview;

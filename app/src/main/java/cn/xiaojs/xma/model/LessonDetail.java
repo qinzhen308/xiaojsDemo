@@ -40,6 +40,11 @@ public class LessonDetail implements Serializable {
     private String state;
     private Publish publish;
 
+    public String ticket;
+    public boolean isEnrolled;
+    public String enrollState;
+
+
 
     public Statistic getStats() {
         return stats;
