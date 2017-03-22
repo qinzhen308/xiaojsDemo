@@ -195,6 +195,18 @@ public class LessonCreationActivity extends BaseActivity {
                 enterOptionalInfoPage();
                 break;
             case R.id.on_shelves:
+                if (mOnShelvesTv.isSelected()) {
+                    mOnShelvesTv.setSelected(false);
+                }else {
+
+                    if (AccountDataManager.isVerified(this)) {
+                        mOnShelvesTv.setSelected(true);
+                    }else{
+                        Toast.makeText(this,"您需要实名认证后，才能自动上架",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                break;
             case R.id.publish_personal_page:
             case R.id.publish_to_circle:
                 v.setSelected(!v.isSelected() ? true : false);
@@ -373,7 +385,12 @@ public class LessonCreationActivity extends BaseActivity {
         mLessonNameEdt.setHint(getString(R.string.live_lesson_name_hint, MIN_LESSON_CHAR, MAX_LESSON_CHAR));
         mLessonNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
 
-        mOnShelvesTv.setSelected(true);
+        if (AccountDataManager.isVerified(this)) {
+            mOnShelvesTv.setSelected(true);
+        }else {
+            mOnShelvesTv.setSelected(false);
+        }
+
         mPublicTv.setSelected(true);
 
         //get color
