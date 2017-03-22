@@ -374,7 +374,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
     private void sendMessage() {
         if (mBean != null) {
             String name = (mBean.profile== null || TextUtils.isEmpty(mBean.profile.name))? "未知" : mBean.profile.name;
-            String sex = (mBean.basic==null || TextUtils.isEmpty(mBean.basic.getSex())) ? "true" : mBean.basic.getSex();
+            String sex = (mBean.profile ==null || TextUtils.isEmpty(mBean.profile.sex)) ? "true" : mBean.profile.sex;
             BaseBusiness.advisory(this,mBean.isFollowed,mAccount,name,sex,this);
         }
     }

@@ -21,6 +21,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,7 +30,9 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.model.PersonHomeLesson;
+import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.util.NumberUtil;
@@ -46,9 +50,14 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeLesson, P
     @Override
     protected void setViewContent(Holder holder, PersonHomeLesson bean, int position) {
         holder.title.setText(bean.title);
-//        Glide.with(mContext)
-//                .load(Ctl.getCover(bean.))
-        holder.image.setImageResource(R.drawable.default_lesson_cover);
+        Dimension dimension = new Dimension();
+        dimension.width = CourseConstant.COURSE_COVER_WIDTH;
+        dimension.height = CourseConstant.COURSE_COVER_HEIGHT;
+        Glide.with(mContext)
+                .load(Ctl.getCover(bean.cover, dimension))
+                .placeholder(R.drawable.default_lesson_cover)
+                .error(R.drawable.default_lesson_cover)
+                .into(holder.image);
         String time = TimeUtil.format(bean.schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + "  " + bean.schedule.getDuration() + "分钟";
         holder.time.setText(time);
         holder.enroll.setText(bean.enroll.current + "人报名");
