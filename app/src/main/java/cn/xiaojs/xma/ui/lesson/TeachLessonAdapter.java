@@ -41,6 +41,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.GetLessonsResponse;
+import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -457,7 +458,14 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     //报名注册
     private void registration(TeachLesson bean) {
-
+        Schedule schedule = bean.getSchedule();
+        long start = (schedule != null && schedule.getStart() != null) ? schedule.getStart().getTime() : 0;
+        LessonBusiness.enterEnrollRegisterPage(mContext,
+                bean.getId(),
+                bean.getCover(),
+                bean.getTitle(),
+                start,
+                schedule != null ? schedule.getDuration() : 0);
     }
 
     //发布到主页
@@ -577,7 +585,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         } else*/
         if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
             String[] items = new String[]{
-                    //mContext.getString(R.string.registration),
+                    mContext.getString(R.string.registration),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
                     mContext.getString(publishId),
@@ -589,22 +597,22 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 @Override
                 public void onItemClick(int position) {
                     switch (position) {
-                        //case 0://报名注册
-                        //    registration(bean);
-                        //    break;
-                        case 0://分享
+                        case 0://报名注册
+                            registration(bean);
+                            break;
+                        case 1://分享
                             share(bean);
                             break;
-                        case 1://查看详情
+                        case 2://查看详情
                             detail(bean);
                             break;
-                        case 2://发布到主页
+                        case 3://发布到主页
                             publish(bean);
                             break;
-                        case 3://修改上课时间
+                        case 4://修改上课时间
                             modifyLesson(bean);
                             break;
-                        case 4://取消上课
+                        case 5://取消上课
                             cancelLesson(bean);
                             break;
                     }

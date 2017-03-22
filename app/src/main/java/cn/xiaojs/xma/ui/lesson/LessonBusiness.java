@@ -14,6 +14,9 @@ package cn.xiaojs.xma.ui.lesson;
  *
  * ======================================================================================== */
 
+import android.content.Context;
+import android.content.Intent;
+
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.model.Criteria;
@@ -143,5 +146,15 @@ public class LessonBusiness {
         criteria.setTitle(key);
         criteria.setDuration(duration);
         return criteria;
+    }
+
+    public static void enterEnrollRegisterPage(Context context, String lessonId, String cover, String title, long startTime, int duration) {
+        Intent intent = new Intent(context, EnrollRegisterActivity.class);
+        intent.putExtra(EnrollRegisterActivity.KEY_LESSON, lessonId);
+        intent.putExtra(EnrollRegisterActivity.KEY_COVER, cover);
+        intent.putExtra(EnrollRegisterActivity.KEY_TITLE, title);
+        intent.putExtra(EnrollRegisterActivity.KEY_START_TIME, startTime);
+        intent.putExtra(EnrollRegisterActivity.KEY_DURATION, duration);
+        context.startActivity(intent);
     }
 }
