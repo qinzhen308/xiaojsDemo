@@ -34,6 +34,7 @@ import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
 
 import cn.xiaojs.xma.model.account.VerifyParam;
+import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.material.LibOverview;
@@ -151,6 +152,9 @@ public interface XiaojsService {
     @POST("/v1/accounts/verification")
     Call<ResponseBody> requestVerification(@Body VerifyParam verifyParam);
 
+    //Get Verification Status
+    @GET("/v1/accounts/verification")
+    Call<VerifyStatus> getVerificationStatus();
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
