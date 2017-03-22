@@ -208,7 +208,7 @@ public class EnrollRegisterActivity extends BaseActivity {
 
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
