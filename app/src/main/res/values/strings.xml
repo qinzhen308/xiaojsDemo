@@ -54,6 +54,7 @@
     <string name="all">全部</string>
     <string name="add">添加</string>
     <string name="next">下一步</string>
+    <string name="remark">备注</string>
     <string name="exit_tips">再按一次返回键退出小教室</string>
     <string name="no_network">无法连接到网络，请确保您的网络已经打开!</string>
     <string name="mobile_network_title">你没有在WIFI环境下</string>
@@ -339,7 +340,12 @@
     <string name="enroll_lesson_success">报名成功</string>
     <string name="enroll_lesson_failed">报名失败</string>
     <string name="has_youhui">已优惠%1$s元</string>
-
+    <string name="enroll_register_stu">报名学生</string>
+    <string name="enroll_register_phone_hint">该手机号用于学生登录小教室</string>
+    <string name="enroll_register_name_hint">请输入学生真实姓名</string>
+    <string name="enroll_register_remark_hint">请输入备注说明</string>
+    <string name="enroll_register_succ">注册报名成功</string>
+    <string name="enroll_register_fail">注册报名失败</string>
 
     <!-- 修改上课时间 -->
     <string name="modify_lesson_time_mark">修改上课时间会影响您的信用等级，请谨慎操作</string>

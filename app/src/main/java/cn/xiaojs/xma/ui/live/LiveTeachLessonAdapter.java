@@ -31,6 +31,7 @@ import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
@@ -38,6 +39,7 @@ import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonDetailActivity;
 import cn.xiaojs.xma.ui.lesson.ModifyLessonActivity;
@@ -417,7 +419,14 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
 
     //报名注册
     private void registration(TeachLesson bean) {
-
+        Schedule schedule = bean.getSchedule();
+        long start = (schedule != null && schedule.getStart() != null) ? schedule.getStart().getTime() : 0;
+        LessonBusiness.enterEnrollRegisterPage(mContext,
+                bean.getId(),
+                bean.getCover(),
+                bean.getTitle(),
+                start,
+                schedule != null ? schedule.getDuration() : 0);
     }
 
     //发布到主页

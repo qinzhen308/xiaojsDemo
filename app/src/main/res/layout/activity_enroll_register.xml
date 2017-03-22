@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/main_bg">
+    <RelativeLayout
+            android:id="@+id/lesson_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/px35"
+            android:paddingLeft="@dimen/px26"
+            android:paddingRight="@dimen/px26"
+            android:background="@color/white">
+        <ImageView
+                android:id="@+id/lesson_cover"
+                android:layout_width="@dimen/px260"
+                android:layout_height="@dimen/px148"
+                android:src="@drawable/default_lesson_cover"/>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/px26"
+                android:layout_toRightOf="@+id/lesson_cover">
+            <TextView
+                    android:id="@+id/title"
+                    android:maxLines="2"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_36px"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+            <TextView
+                    android:id="@+id/lesson_time_duration"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@color/common_text"
+                    android:layout_marginTop="@dimen/px5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+            android:id="@+id/divide1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingLeft="@dimen/px26"
+            android:paddingTop="@dimen/px34"
+            android:layout_below="@+id/lesson_info"
+            android:paddingRight="@dimen/px26">
+        <View style="@style/DividerHorizontal"/>
+    </FrameLayout>
+
+    <!--收费-->
+    <TextView
+            android:id="@+id/fee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_red"
+            android:paddingTop="@dimen/px30"
+            android:background="@color/white"
+            android:paddingBottom="@dimen/px40"
+            android:paddingLeft="@dimen/px26"
+            android:paddingRight="@dimen/px26"
+            android:text="@string/free"
+            android:textSize="@dimen/font_32px"
+            android:layout_below="@+id/divide1"/>
+
+    <TextView
+            android:id="@+id/enroll_register_stu_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px30"
+            android:textColor="@color/font_dark_gray"
+            android:paddingTop="@dimen/px30"
+            android:background="@color/white"
+            android:paddingBottom="@dimen/px20"
+            android:paddingLeft="@dimen/px26"
+            android:paddingRight="@dimen/px26"
+            android:text="@string/enroll_register_stu"
+            android:textSize="@dimen/font_28px"
+            android:layout_below="@+id/fee"/>
+
+    <FrameLayout
+            android:id="@+id/divide2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingLeft="@dimen/px26"
+            android:layout_below="@+id/enroll_register_stu_title">
+        <View style="@style/DividerHorizontal"/>
+    </FrameLayout>
+
+    <!--手机号-->
+    <LinearLayout
+            android:id="@+id/phone_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/px26"
+            android:paddingRight="@dimen/px26"
+            android:layout_below="@+id/divide2"
+            android:background="@color/white">
+        <TextView
+                android:layout_width="wrap_content"
+                android:minWidth="@dimen/px170"
+                android:text="@string/phone_num"
+                android:layout_height="wrap_content"/>
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/phone_num"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:hint="@string/enroll_register_phone_hint"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:textColorHint="@color/font_light_gray"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                android:maxLength="11"/>
+    </LinearLayout>
+
+    <FrameLayout
+            android:id="@+id/divide3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingLeft="@dimen/px26"
+            android:layout_below="@+id/phone_layout">
+        <View style="@style/DividerHorizontal"/>
+    </FrameLayout>
+
+    <!--姓名栏-->
+    <LinearLayout
+            android:id="@+id/name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/px26"
+            android:paddingRight="@dimen/px26"
+            android:background="@color/white"
+            android:layout_below="@id/divide3">
+        <TextView
+                android:layout_width="wrap_content"
+                android:minWidth="@dimen/px170"
+                android:text="@string/name"
+                android:layout_height="wrap_content"/>
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/name"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:hint="@string/enroll_register_name_hint"
+                android:maxLines="1"
+                android:imeOptions="actionNext"
+                android:textColorHint="@color/font_light_gray"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"/>
+    </LinearLayout>
+
+
+    <FrameLayout
+            android:id="@+id/divide4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingLeft="@dimen/px26"
+            android:visibility="gone"
+            android:layout_below="@+id/name_layout">
+        <View style="@style/DividerHorizontal"/>
+    </FrameLayout>
+
+    <!--备注-->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/px26"
+            android:paddingRight="@dimen/px26"
+            android:visibility="gone"
+            android:background="@color/white"
+            android:layout_below="@+id/divide4">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:minWidth="@dimen/px170"
+                android:text="@string/remark"
+                android:layout_height="wrap_content"/>
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/remark"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px30"
+                android:paddingBottom="@dimen/px30"
+                android:hint="@string/enroll_register_remark_hint"
+                android:imeOptions="actionNext"
+                android:textColorHint="@color/font_light_gray"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"/>
+
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/submit_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/ok"
+            style="@style/BigSubmitBtn"
+            android:textStyle="bold"
+            android:layout_above="@+id/reg_guide"/>
+</RelativeLayout>

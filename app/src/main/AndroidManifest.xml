@@ -221,6 +221,8 @@
         <activity
                 android:name=".ui.lesson.EnrollLessonActivity"
                 android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.EnrollRegisterActivity"
+                  android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.grade.MaterialDownloadActivity"
                 android:screenOrientation="portrait"/>

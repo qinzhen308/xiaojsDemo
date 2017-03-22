@@ -19,6 +19,7 @@ import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.ctl.LiveItem;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -27,6 +28,7 @@ import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonDetailActivity;
 import cn.xiaojs.xma.ui.lesson.ModifyLessonActivity;
@@ -450,7 +452,14 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
 
     //报名注册
     private void registration(LiveItem bean) {
-
+        Schedule schedule = bean.schedule;
+        long start = (schedule != null && schedule.getStart() != null) ? schedule.getStart().getTime() : 0;
+        LessonBusiness.enterEnrollRegisterPage(mContext,
+                bean.id,
+                bean.cover,
+                bean.title,
+                start,
+                schedule != null ? schedule.getDuration() : 0);
     }
 
     //发布到主页
@@ -567,7 +576,7 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
         } else*/
         if (bean.state.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
             String[] items = new String[]{
-                    //mContext.getString(R.string.registration),
+                    mContext.getString(R.string.registration),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
                     mContext.getString(publishId),
@@ -579,22 +588,22 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
                 @Override
                 public void onItemClick(int position) {
                     switch (position) {
-                        //case 0://报名注册
-                        //    registration(bean);
-                        //    break;
-                        case 0://分享
+                        case 0://报名注册
+                            registration(bean);
+                            break;
+                        case 1://分享
                             share(bean);
                             break;
-                        case 1://查看详情
+                        case 2://查看详情
                             detail(bean);
                             break;
-                        case 2://发布到主页
+                        case 3://发布到主页
                             publish(bean);
                             break;
-                        case 3://修改上课时间
+                        case 4://修改上课时间
                             modifyLesson(bean);
                             break;
-                        case 4://取消上课
+                        case 5://取消上课
                             cancelLesson(bean);
                             break;
                     }
