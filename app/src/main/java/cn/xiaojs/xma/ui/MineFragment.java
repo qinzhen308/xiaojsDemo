@@ -27,16 +27,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.certification.CertificationActivity;
@@ -49,7 +44,6 @@ import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
-import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.PortraitView;
@@ -70,6 +64,8 @@ public class MineFragment extends BaseFragment {
     IconTextView mUserName;
     @BindView(R.id.evaluation_star)
     EvaluationStar mEvaluation;
+    @BindView(R.id.second_divider)
+    View mUcgSecondDivider;
     @BindView(R.id.lesson_teaching_duration)
     TextView mLessonTeachingDurationTv;
     @BindView(R.id.my_profile_txt)
@@ -185,11 +181,11 @@ public class MineFragment extends BaseFragment {
     }
 
     private void loadData() {
-        AccountDataManager.requestCenterData(mContext, new APIServiceCallback<CenterData>() {
+        AccountDataManager.requestProfile(mContext, new APIServiceCallback<Account>() {
             @Override
-            public void onSuccess(CenterData centerData) {
-                setPersonBaseInfo(centerData != null ? centerData.getBasic() : null);
-                setUgc(centerData);
+            public void onSuccess(Account account) {
+                setPersonBaseInfo(account != null ? account.getBasic() : null);
+                setUgc(account);
             }
 
             @Override
@@ -199,11 +195,10 @@ public class MineFragment extends BaseFragment {
         });
     }
 
-    private void setUgc(CenterData centerData) {
-        if (centerData != null && centerData.getUgc() != null) {
-            CenterData.PersonUgc personUgc = centerData.getUgc();
-            mFansTv.setText(getString(R.string.fans_num, personUgc.getLikedCount()));
-            mFollowingTv.setText(getString(R.string.follow_num, personUgc.getFollowedCount()));
+    private void setUgc(Account account) {
+        if (account != null && account.stats != null) {
+            mFansTv.setText(getString(R.string.fans_num, account.stats.fans));
+            mFollowingTv.setText(getString(R.string.follow_num, account.stats.followships));
         } else {
             mFansTv.setText(getString(R.string.fans_num, 0));
             mFollowingTv.setText(getString(R.string.follow_num, 0));
@@ -212,6 +207,8 @@ public class MineFragment extends BaseFragment {
         //set default
         //TODO
         String duration;
+        mUcgSecondDivider.setVisibility(View.GONE);
+        mLessonTeachingDurationTv.setVisibility(View.GONE);
         if (AccountDataManager.isTeacher(mContext)) {
             duration = getString(R.string.tea_lesson_duration, 0);
         } else {
