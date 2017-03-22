@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
+
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.Fee;
@@ -25,7 +27,7 @@ import cn.xiaojs.xma.model.ctl.Statistic;
  * ======================================================================================== */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PersonHomeLesson {
+public class PersonHomeLesson implements Serializable{
 
     public int mode;
     public String id;

@@ -3,6 +3,7 @@ package cn.xiaojs.xma.model.account;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import cn.xiaojs.xma.model.social.Dynamic;
@@ -12,7 +13,7 @@ import cn.xiaojs.xma.model.social.Dynamic;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class HomeDynamic {
+public class HomeDynamic implements Serializable{
 
     public String createdBy;
     public Date createdOn;

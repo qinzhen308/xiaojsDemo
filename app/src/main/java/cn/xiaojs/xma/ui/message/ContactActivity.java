@@ -90,6 +90,7 @@ public class ContactActivity extends BaseActivity {
 
                 ContactGroup contactGroup = contactAdapter.getGroup(groupPosition);
                 if (contactGroup.group == CLASSES) {
+                    Toast.makeText(ContactActivity.this,"正在开发中",Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
