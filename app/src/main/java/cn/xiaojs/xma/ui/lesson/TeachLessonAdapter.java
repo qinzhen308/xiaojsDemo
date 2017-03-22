@@ -637,7 +637,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             dialog.show();
         } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
             String[] items = new String[]{
-                    mContext.getString(R.string.prepare_lesson),
+                    //mContext.getString(R.string.prepare_lesson),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
                     mContext.getString(publishId)};
@@ -647,16 +647,16 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 @Override
                 public void onItemClick(int position) {
                     switch (position) {
-                        case 0://备课
-                            prepare(bean);
-                            break;
-                        case 1://分享
+                        //case 0://备课
+                        //    prepare(bean);
+                        //    break;
+                        case 0://分享
                             share(bean);
                             break;
-                        case 2://查看详情
+                        case 1://查看详情
                             detail(bean);
                             break;
-                        case 3://发布到主页
+                        case 2://发布到主页
                             publish(bean);
                             break;
                     }
