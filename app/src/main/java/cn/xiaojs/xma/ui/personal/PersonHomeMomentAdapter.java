@@ -84,7 +84,7 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
             }
         });
         holder.header.setData(bean);
-        DeviceUtil.expandViewTouch(holder.ugc.getMore(),150);
+        DeviceUtil.expandViewTouch(holder.ugc.getMore(), 150);
         holder.header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,15 +93,15 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
         });
     }
 
-    private void personalHome(Dynamic bean){
+    private void personalHome(Dynamic bean) {
         Intent intent = new Intent(mContext, PersonHomeActivity.class);
-        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT,bean.owner.account);
+        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, bean.createdBy);
         mContext.startActivity(intent);
     }
 
     private void more(final Dynamic bean) {
         ListBottomDialog dialog = new ListBottomDialog(mContext);
-        if (!VerifyUtils.isMyself(bean.owner.account)){
+        if (!VerifyUtils.isMyself(bean.createdBy)) {
             String[] items = mContext.getResources().getStringArray(R.array.ugc_more);
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -120,7 +120,7 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
                     }
                 }
             });
-        }else {
+        } else {
             String[] items = new String[]{mContext.getString(R.string.delete)};
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -133,37 +133,39 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
         dialog.show();
     }
 
-    private void delete(Dynamic bean){
+    private void delete(Dynamic bean) {
 
     }
 
     //取消关注
-    private void cancelFollow(final Dynamic bean){
+    private void cancelFollow(final Dynamic bean) {
         //未关注时不能取消关注
-        if (!bean.owner.followed)
+        if (bean.owner == null || !bean.owner.followed) {
             return;
+        }
+
         SocialManager.unfollowContact(mContext, bean.owner.account, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
-                ToastUtil.showToast(mContext,R.string.cancel_followed);
+                ToastUtil.showToast(mContext, R.string.cancel_followed);
                 deleteByOwner(bean.owner);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                ToastUtil.showToast(mContext,errorMessage);
+                ToastUtil.showToast(mContext, errorMessage);
             }
         });
     }
 
-    private void deleteByOwner(Dynamic.DynOwner owner){
+    private void deleteByOwner(Dynamic.DynOwner owner) {
         List<Dynamic> removes = new ArrayList<>();
-        for (Dynamic dynamic : getList()){
-            if (dynamic.owner.account.equalsIgnoreCase(owner.account)){
+        for (Dynamic dynamic : getList()) {
+            if (dynamic.owner.account.equalsIgnoreCase(owner.account)) {
                 removes.add(dynamic);
             }
         }
-        if (removes != null && removes.size() > 0){
+        if (removes != null && removes.size() > 0) {
             getList().removeAll(removes);
             notifyDataSetChanged();
         }
@@ -195,7 +197,7 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
     protected void onDataItemClick(int position, Dynamic bean) {
         Intent intent = new Intent(mContext, MomentDetailActivity.class);
         intent.putExtra(HomeConstant.KEY_MOMENT_ID, bean.id);
-        ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_MOMENT_DETAIL);
+        ((BaseActivity) mContext).startActivityForResult(intent, HomeConstant.REQUEST_CODE_MOMENT_DETAIL);
     }
 
 //    private void notifyUpdates(int updates){
@@ -208,10 +210,10 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
 //        mFragment = fragment;
 //    }
 
-    public void update(DynamicStatus status){
-        if (status != null){
-            for (Dynamic dynamic : getList()){
-                if (dynamic.id.equalsIgnoreCase(status.id)){
+    public void update(DynamicStatus status) {
+        if (status != null) {
+            for (Dynamic dynamic : getList()) {
+                if (dynamic.id.equalsIgnoreCase(status.id)) {
                     dynamic.liked = status.liked;
                     dynamic.stats = status.status;
                     notifyDataSetChanged();

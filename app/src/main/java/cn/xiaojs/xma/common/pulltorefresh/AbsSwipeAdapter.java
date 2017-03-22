@@ -159,6 +159,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     }
 
+    public PullToRefreshBase.Mode getRefreshMode() {
+        return PullToRefreshBase.Mode.BOTH;
+    }
+
     private void initListView(PullToRefreshSwipeListView listView) {
         if (mListView != null) {
             return;
@@ -173,7 +177,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mPagination.setPage(PAGE_FIRST);
         mPagination.setMaxNumOfObjectsPerPage(getPageSize());
         mListView = listView;
-        mListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mListView.setMode(getRefreshMode());
         if (leftSwipe()) {
             mListView.enableLeftSwipe();
         }
