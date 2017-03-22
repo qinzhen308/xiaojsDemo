@@ -1,4 +1,14 @@
 package cn.xiaojs.xma.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.Fee;
+import cn.xiaojs.xma.model.ctl.RoomData;
+import cn.xiaojs.xma.model.ctl.Statistic;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -13,9 +23,24 @@ package cn.xiaojs.xma.model;
  * Desc:
  *
  * ======================================================================================== */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class PersonHomeLesson {
 
-public class PersonHomeLesson extends TeachLesson {
-    public Object assistants;
-    public Object students;
+    public int mode;
+    public String id;
+    public String title;
+    public String type;
+    public String state;
     public String teacher;
+    public String[] assistants;
+    public String[] students;
+    public String ticket;
+    public Promotion[] promotion;
+    public Schedule schedule;
+    public Fee fee;
+    public String cover;
+    public Enroll enroll;
+
+
 }

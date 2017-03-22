@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.ArrayList;
 
+import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.HomeData;
 import cn.xiaojs.xma.model.PersonHomeLesson;
 
@@ -14,16 +16,20 @@ import cn.xiaojs.xma.model.PersonHomeLesson;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PublicHome {
+
+    public CSubject[] competencies;
+    public int countOfUnreadN;
+    public PubProfile profile;
+    public ArrayList<PersonHomeLesson> lessons;
+    public ArrayList<HomeDynamic> activities;
+    public String relationship;
+    public boolean isTeacher;
+    public boolean isFollowed;
+
     public Account.Basic basic;
     public PubCG contactGroups;
     public HomeData.Reputation reputation;
     public Follow followed;
-    public int countOfUnreadN;
-    public PubProfile profile;
-    public ArrayList<PersonHomeLesson> lessons;
-    public String relationship;
-    public boolean isTeacher;
-    public boolean isFollowed;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
