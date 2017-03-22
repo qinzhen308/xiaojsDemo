@@ -16,12 +16,15 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.data.PlatformManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.Privilege;
+import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.NetUtil;
 
@@ -126,6 +129,13 @@ public class SyncService extends IntentService {
 //                                Su.Permission.COURSE_OPEN_CREATE);
 //                        SecurityManager.savePermission(context, privileges);
 //                    }
+
+                    //check update
+
+                    Upgrade upgrade = PlatformManager.checkUpgrade(context);
+                    if (upgrade != null) {
+                        UpgradeManager.setUpgrade(context,upgrade);
+                    }
 
                     break;
 

@@ -16,4 +16,10 @@ public class PlatformManager {
         PlatformRequest request = new PlatformRequest(context,callback);
         request.checkUpgrade();
     }
+
+
+    public static Upgrade checkUpgrade(Context context) throws Exception{
+        PlatformRequest request = new PlatformRequest(context, null);
+        return request.checkUpgradeSync();
+    }
 }

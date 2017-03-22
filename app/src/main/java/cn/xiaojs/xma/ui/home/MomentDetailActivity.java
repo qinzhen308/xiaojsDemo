@@ -79,6 +79,8 @@ public class MomentDetailActivity extends BaseActivity {
 
     private DynamicDetail mDetail;
 
+    private int itemPosition;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_moment_detail);
@@ -87,6 +89,7 @@ public class MomentDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mMomentId = intent.getStringExtra(HomeConstant.KEY_MOMENT_ID);
+            itemPosition = intent.getIntExtra(HomeConstant.KEY_ITEM_POSITION,-1);
         }
         initList();
         mBinder = ButterKnife.bind(this);
@@ -252,7 +255,9 @@ public class MomentDetailActivity extends BaseActivity {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress();
-                setResult(HomeConstant.RESULT_MOMENT_DETAIL_OPERATED);
+                Intent i = new Intent(HomeConstant.ACTION_RESULT_DEL);
+                i.putExtra(HomeConstant.KEY_ITEM_POSITION,itemPosition);
+                setResult(HomeConstant.RESULT_MOMENT_DETAIL_OPERATED,i);
                 finish();
             }
 

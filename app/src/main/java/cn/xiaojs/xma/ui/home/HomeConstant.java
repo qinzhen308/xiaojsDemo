@@ -23,6 +23,7 @@ public interface HomeConstant {
     public static final String KEY_COMMENT_REPLY_NAME = "key_comment_reply_name";//回复对象的名称
 
     public static final String KEY_MOMENT_ID = "key_moment_id";
+    public static final String KEY_ITEM_POSITION = "key_moment_position";
     public static final String KEY_MOMENT_REPLY_ID = "key_moment_reply_id";//评论回复的id
 
     public static final int REQUEST_CODE_COMMENT = 1;
@@ -33,4 +34,6 @@ public interface HomeConstant {
     public static final int REQUEST_CODE_MOMENT_DETAIL = 3;//进入动态详情
 
     public static final int RESULT_MOMENT_DETAIL_OPERATED = 1;
+
+    public static final String ACTION_RESULT_DEL = "atcion_del";
 }

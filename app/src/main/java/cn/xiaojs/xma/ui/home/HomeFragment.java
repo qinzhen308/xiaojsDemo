@@ -250,9 +250,25 @@ public class HomeFragment extends BaseFragment {
                         mAdapter.update(status);
                     }
                 }else if (resultCode == HomeConstant.RESULT_MOMENT_DETAIL_OPERATED){
-                    if (mAdapter != null){
-                        mAdapter.doRefresh();
+
+                    String action = data.getAction();
+
+                    if (!TextUtils.isEmpty(action) && action.equals(HomeConstant.ACTION_RESULT_DEL)) {
+
+                        int removeId = data.getIntExtra(HomeConstant.KEY_ITEM_POSITION,-1);
+                        if (removeId >=0){
+                            if (mAdapter != null){
+                                mAdapter.getList().remove(removeId);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                    }else{
+                        if (mAdapter != null){
+                            mAdapter.doRefresh();
+                        }
                     }
+
                 }
                 break;
             case BaseConstant.REQUEST_CODE_SEND_MOMENT:

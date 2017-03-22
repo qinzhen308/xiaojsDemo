@@ -56,7 +56,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
     }
 
     @Override
-    protected void setViewContent(Holder holder, final Dynamic bean, int position) {
+    protected void setViewContent(Holder holder, final Dynamic bean, final int position) {
 
         holder.showMoment();
         holder.content.show(bean);
@@ -80,7 +80,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
 
             @Override
             public void onMore() {
-                more(bean);
+                more(bean, position);
             }
         });
         holder.header.setData(bean);
@@ -99,7 +99,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         mContext.startActivity(intent);
     }
 
-    private void more(final Dynamic bean) {
+    private void more(final Dynamic bean, final int itemPosition) {
         ListBottomDialog dialog = new ListBottomDialog(mContext);
         if (!VerifyUtils.isMyself(bean.owner.account)){
             String[] items = mContext.getResources().getStringArray(R.array.ugc_more);
@@ -126,21 +126,22 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
                 @Override
                 public void onItemClick(int position) {
-                    delete(bean);
+                    delete(bean,itemPosition);
                 }
             });
         }
         dialog.show();
     }
 
-    private void delete(Dynamic bean){
+    private void delete(Dynamic bean, final int itemPosition){
 
         showProgress(true);
         SocialManager.deleteActivity(mContext, bean.id, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress();
-                mFragment.toRefresh();
+                getList().remove(itemPosition);
+                notifyDataSetChanged();
             }
 
             @Override
@@ -244,6 +245,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
     protected void onDataItemClick(int position, Dynamic bean) {
         Intent intent = new Intent(mContext, MomentDetailActivity.class);
         intent.putExtra(HomeConstant.KEY_MOMENT_ID, bean.id);
+        intent.putExtra(HomeConstant.KEY_ITEM_POSITION, position);
         ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_MOMENT_DETAIL);
     }
 

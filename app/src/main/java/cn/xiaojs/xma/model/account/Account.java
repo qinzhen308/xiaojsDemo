@@ -19,6 +19,8 @@ public class Account implements Serializable{
     public boolean isTeacher = false;
     public boolean isVerified = false;
 
+    public Stats stats;
+
     //public boolean isPerson;
 
     public Basic getBasic() {

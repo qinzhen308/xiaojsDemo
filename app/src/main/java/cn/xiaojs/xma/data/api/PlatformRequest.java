@@ -17,6 +17,7 @@ import com.orhanobut.logger.Logger;
 import cn.xiaojs.xma.model.Upgrade;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by maxiaobao on 2016/11/13.
@@ -80,5 +81,13 @@ public class PlatformRequest extends ServiceRequest {
     public void checkUpgrade() {
         Call<Upgrade> call = getService().checkUpgrade();
         enqueueRequest(APIType.CHECK_UPGRADE, call);
+    }
+
+    public Upgrade checkUpgradeSync() throws Exception {
+        Response<Upgrade> response = getService().checkUpgrade().execute();
+        if (response != null) {
+            return response.body();
+        }
+        return null;
     }
 }
