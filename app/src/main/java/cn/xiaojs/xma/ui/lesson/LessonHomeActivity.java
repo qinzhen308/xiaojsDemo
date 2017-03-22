@@ -3,7 +3,6 @@ package cn.xiaojs.xma.ui.lesson;
 
 import com.google.android.flexbox.FlexboxLayout;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Html;
@@ -45,13 +44,9 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.BlockTabView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
-import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
-import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.ShareUtil;
-import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -108,7 +103,7 @@ public class  LessonHomeActivity extends BaseActivity{
 
     @Override
     protected void addViewContent() {
-        addView(R.layout.activity_lession_detail);
+        addView(R.layout.activity_lession_home);
         //setMiddleTitle("详情");
         //setLeftImage(R.drawable.back_arrow)
 
@@ -299,6 +294,8 @@ public class  LessonHomeActivity extends BaseActivity{
             if (lesson.getOverview() != null && textViews != null) {
                 textViews.get(0).setText(lesson.getOverview().getText());
                 //evaluate: not implemented
+            } else {
+                textViews.get(0).setText(R.string.lesson_no_introduction);
             }
 
         } else {
