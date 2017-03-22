@@ -166,6 +166,7 @@ public class EnrollRegisterActivity extends BaseActivity {
         try {
             final long phoneNum = Long.parseLong(phone);
             showProgress(false);
+            //因为已经注册的用户，需要上传用户的ID，所以在这里要检测是否注册，如果注册了就获取ID.
             SearchManager.searchAccounts(this, phone, new APIServiceCallback<ArrayList<AccountSearch>>() {
                 @Override
                 public void onSuccess(ArrayList<AccountSearch> object) {
