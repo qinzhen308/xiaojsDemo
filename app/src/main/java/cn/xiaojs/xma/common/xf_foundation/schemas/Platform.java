@@ -7,6 +7,19 @@ package cn.xiaojs.xma.common.xf_foundation.schemas;
 public class Platform {
 
 
+    //
+    // Defines the general verification lifecycle states, which inherits those common MSP states.
+    //
+    public static class VerificationState {
+        public static final String DRAFT = "Draft";
+        public static final String PENDING_FOR_REVIEW = "PendingForReview";
+        public static final String VERIFIED = "Verified";
+        public static final String DENIED = "Denied";
+        public static final String NONE = "none";
+        public static final String FAILED = "Failed";
+        public static final String DELETED = "Deleted";
+    }
+
 
     /**
      * Defines the period types.

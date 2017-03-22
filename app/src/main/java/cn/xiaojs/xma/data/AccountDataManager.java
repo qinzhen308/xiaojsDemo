@@ -26,6 +26,7 @@ import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.account.PwdParam;
 import cn.xiaojs.xma.model.account.VerifyParam;
+import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.JpushUtil;
 import okhttp3.ResponseBody;
@@ -58,6 +59,11 @@ public class AccountDataManager {
      */
     public static boolean isVerified(Context context) {
         return getAccont(context).isVerified;
+    }
+
+    public static void setVerified(Context context,boolean ver) {
+        getAccont(context).isVerified = ver;
+        setUserInfo(context, XiaojsConfig.mLoginUser);
     }
 
     /**
@@ -538,6 +544,17 @@ public class AccountDataManager {
 
         QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
         qiniuRequest.getToken(Collaboration.UploadTokenType.HAND_HOLD,1);
+    }
+
+
+    /**
+     * Returns verification status for the session user.
+     * @param context
+     * @param callback
+     */
+    public static void getVerificationStatus(Context context, APIServiceCallback<VerifyStatus> callback) {
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.getVerificationStatus();
     }
 
 

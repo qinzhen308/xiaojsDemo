@@ -19,6 +19,7 @@ import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.PwdParam;
 import cn.xiaojs.xma.model.account.VerifyParam;
+import cn.xiaojs.xma.model.account.VerifyStatus;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -139,6 +140,11 @@ public class AccountRequest extends ServiceRequest {
         Call<ResponseBody> call = getService().requestVerification(param);
         enqueueRequest(APIType.REQUEST_VERIFICATION, call);
 
+    }
+
+    public void getVerificationStatus() {
+        Call<VerifyStatus> call = getService().getVerificationStatus();
+        enqueueRequest(APIType.GET_VERIFICATION_STATUS, call);
     }
 
 }

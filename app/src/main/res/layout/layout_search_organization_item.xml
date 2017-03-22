@@ -11,6 +11,7 @@
             android:id="@+id/search_organization_head"
             android:scaleType="fitXY"
             android:layout_gravity="center_vertical"
+            android:src="@drawable/default_avatar_grey"
             android:layout_marginTop="@dimen/px30"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginBottom="@dimen/px30"

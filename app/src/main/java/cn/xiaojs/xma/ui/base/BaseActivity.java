@@ -212,6 +212,14 @@ public abstract class BaseActivity extends FragmentActivity {
         setOnFailedClick(listener);
     }
 
+    public void showFailedView(View.OnClickListener listener, boolean hiddenTrybtn){
+        showFailedView(listener);
+        if (hiddenTrybtn) {
+            mReload.setVisibility(View.GONE);
+        }
+    }
+
+
     public void setOnFailedClick(View.OnClickListener listener){
         mReload.setOnClickListener(listener);
     }

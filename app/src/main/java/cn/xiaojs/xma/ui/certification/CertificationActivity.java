@@ -29,15 +29,19 @@ import com.bumptech.glide.signature.StringSignature;
 
 import org.w3c.dom.Text;
 
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -49,6 +53,9 @@ public class CertificationActivity extends BaseActivity {
     LinearLayout mStatusWrapper;
     @BindView(R.id.certification_input_wrapper)
     LinearLayout mApplyWrapper;
+
+    @BindView(R.id.lay_info)
+    LinearLayout mInfoLay;
 
     @BindView(R.id.certification_status)
     TextView mStatus;
@@ -92,11 +99,40 @@ public class CertificationActivity extends BaseActivity {
         addView(R.layout.activity_certification);
         setMiddleTitle(R.string.certification);
 
-        if (AccountDataManager.isVerified(this)){
-            success();
-        }else{
-            apply();
+        loadStatus();
+    }
+
+    private void showByStatus(VerifyStatus status) {
+
+        if (status == null
+                || TextUtils.isEmpty(status.state)
+                || status.state.equals(Platform.VerificationState.NONE)
+                || status.state.equals(Platform.VerificationState.FAILED)
+                || status.state.equals(Platform.VerificationState.DELETED)
+                || status.state.equals(Platform.VerificationState.DRAFT)) {
+
+            if (AccountDataManager.isVerified(this)) {
+                success(null,true);
+            }else {
+                apply();
+            }
+
+            return;
         }
+
+        if (status.state.equals(Platform.VerificationState.VERIFIED)) {
+
+            if (AccountDataManager.isVerified(this) == false) {
+                AccountDataManager.setVerified(this, true);
+            }
+
+            success(status,false);
+        }else if(status.state.equals(Platform.VerificationState.PENDING_FOR_REVIEW)) {
+            examine(status);
+        }else if (status.state.equals(Platform.VerificationState.DENIED)) {
+            failed(status);
+        }
+
     }
 
     private void apply() {
@@ -108,11 +144,27 @@ public class CertificationActivity extends BaseActivity {
 
     }
 
+    private void examine(VerifyStatus status) {
+
+        mStatus.setText("您已提交审核");
+        mStatusDesc.setText("预计24小时内完成审核，请耐心等待");
+
+        mIdCard.setText(status.identity.no);
+        mName.setText(status.basic.name);
+
+        mSubmitTime.setText(getTime(status.requestedOn));
+
+        mApplyWrapper.setVisibility(View.GONE);
+        mStatusWrapper.setVisibility(View.VISIBLE);
+        mModify.setVisibility(View.GONE);
+        mVerifyTimeWrapper.setVisibility(View.GONE);
+    }
+
     private void examine(String name,String no) {
 
         mStatus.setText("您已提交审核");
         mStatusDesc.setText("预计24小时内完成审核，请耐心等待");
-        mSubmitTime.setText(TimeUtil.formatDate(System.currentTimeMillis(), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+        mSubmitTime.setText(getTime(new Date()));
 
         mName.setText(name);
         mIdCard.setText(no);
@@ -124,10 +176,23 @@ public class CertificationActivity extends BaseActivity {
     }
 
     //审核失败
-    private void failed() {
+    private void failed(VerifyStatus status) {
 
         mStatus.setText("审核失败");
-        mStatusDesc.setText("您上传的身份信息不清晰，请重新上传");
+
+        if (TextUtils.isEmpty(status.reason)) {
+            mStatusDesc.setText("您上传的身份信息不清晰，请重新上传");
+        }else{
+            mStatusDesc.setText(status.reason);
+        }
+
+
+        mIdCard.setText(status.identity.no);
+        mName.setText(status.basic.name);
+
+        mSubmitTime.setText(getTime(status.requestedOn));
+        mVerifyTime.setText(getTime(status.enteredOn));
+
 
         mApplyWrapper.setVisibility(View.GONE);
         mStatusWrapper.setVisibility(View.VISIBLE);
@@ -136,15 +201,32 @@ public class CertificationActivity extends BaseActivity {
     }
 
     //认证成功
-    private void success() {
+    private void success(VerifyStatus status, boolean failed) {
         mApplyWrapper.setVisibility(View.GONE);
         mModify.setVisibility(View.GONE);
 
         mStatus.setText("您已认证成功");
         mStatusDesc.setText("很高兴认识您，您可以享受更多小教室服务与权益");
 
+        if (!failed) {
+            mIdCard.setText(status.identity.no);
+            mName.setText(status.basic.name);
+
+            mSubmitTime.setText(getTime(status.requestedOn));
+            mVerifyTime.setText(getTime(status.enteredOn));
+
+            mVerifyTimeWrapper.setVisibility(View.VISIBLE);
+        }else{
+            //mVerifyTimeWrapper.setVisibility(View.GONE);
+            mInfoLay.setVisibility(View.GONE);
+        }
+
         mStatusWrapper.setVisibility(View.VISIBLE);
-        mVerifyTimeWrapper.setVisibility(View.VISIBLE);
+
+    }
+
+    private String getTime(Date date) {
+       return TimeUtil.formatDate(date.getTime(), TimeUtil.TIME_YYYY_MM_DD_HH_MM_SS);
     }
 
     @OnClick({R.id.left_image, R.id.certification_modify, R.id.certification_image_wrapper, R.id.submit})
@@ -189,6 +271,34 @@ public class CertificationActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    private void loadStatus() {
+
+        showProgress(false);
+        AccountDataManager.getVerificationStatus(this, new APIServiceCallback<VerifyStatus>() {
+            @Override
+            public void onSuccess(VerifyStatus object) {
+                cancelProgress();
+
+                if (object == null) return;
+                showByStatus(object);
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+
+                if (AccountDataManager.isVerified(CertificationActivity.this)) {
+                    success(null,true);
+
+                }else{
+                    showFailedView(null,true);
+                }
+
+            }
+        });
     }
 
     private void uploadHand(final String filePath) {

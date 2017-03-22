@@ -59,6 +59,7 @@
             </FrameLayout>
 
             <LinearLayout
+                    android:id="@+id/lay_info"
                     android:background="@color/white"
                     android:orientation="vertical"
                     android:layout_marginTop="@dimen/px30"

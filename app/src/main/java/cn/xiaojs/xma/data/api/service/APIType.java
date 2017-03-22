@@ -140,4 +140,6 @@ public class APIType {
     public static final int DELETE_COMMENT_REPLY= 79;
     public static final int CHECK_UPGRADE = 80;
 
+    public static final int GET_VERIFICATION_STATUS = 81;
+
 }
