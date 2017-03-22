@@ -364,10 +364,10 @@ public class CertificationActivity extends BaseActivity {
             return;
         }
 
-//        if (name.length() < 2) {
-//            Toast.makeText(this,"姓名至少2个长度",Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        if (name.length() < 2) {
+            Toast.makeText(this,R.string.name_length_less_than_2,Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         final String cardNo = mNumberInput.getText().toString().trim();
         if (TextUtils.isEmpty(cardNo)) {
