@@ -18,6 +18,7 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.model.PersonHomeLesson;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 
@@ -38,6 +39,7 @@ public class PersonHomeLessonFragment extends BaseScrollTabFragment {
             mAdapter = new PersonHomeLessonAdapter(getContext(), mList, new ArrayList<PersonHomeLesson>());
         }
 
+        mList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mList.setAdapter(mAdapter);
     }
 }
