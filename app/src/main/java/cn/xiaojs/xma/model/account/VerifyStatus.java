@@ -31,5 +31,6 @@ public class VerifyStatus {
     public static class VerifyIdentity{
         public String no;
         public int type;
+        public String handhold;
     }
 }
