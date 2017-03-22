@@ -14,8 +14,8 @@ package cn.xiaojs.xma.ui.lesson;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -32,7 +32,7 @@ public class EnrollLessonActivity extends BaseActivity {
     PullToRefreshSwipeListView mList;
 
     @BindView(R.id.my_course_search)
-    EditText mSearch;
+    TextView mSearch;
 
     @BindView(R.id.filter_line)
     View mFilterLine;
@@ -58,7 +58,7 @@ public class EnrollLessonActivity extends BaseActivity {
         mSearch.setHint("课程名称");
     }
 
-    @OnClick({R.id.left_image, R.id.course_filter})
+    @OnClick({R.id.left_image, R.id.course_filter, R.id.my_course_search})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_image:
@@ -67,6 +67,11 @@ public class EnrollLessonActivity extends BaseActivity {
             case R.id.course_filter:
                 //TODO FILTER
                 filter();
+                break;
+            case R.id.my_course_search:
+                Intent intent = new Intent(EnrollLessonActivity.this, LessonSearchActivity.class);
+                intent.putExtra(CourseConstant.KEY_IS_TEACHER, false);
+                startActivity(intent);
                 break;
         }
     }

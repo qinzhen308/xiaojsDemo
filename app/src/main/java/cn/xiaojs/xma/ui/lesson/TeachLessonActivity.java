@@ -18,20 +18,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
-import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.model.Criteria;
-import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 
@@ -41,7 +36,7 @@ public class TeachLessonActivity extends BaseActivity {
     PullToRefreshSwipeListView mList;
 
     @BindView(R.id.my_course_search)
-    EditText mSearch;
+    TextView mSearch;
 
     @BindView(R.id.filter_line)
     View mFilterLine;
@@ -68,7 +63,7 @@ public class TeachLessonActivity extends BaseActivity {
         mSearch.setHint("课程名称");
     }
 
-    @OnClick({R.id.left_image, R.id.course_filter,R.id.right_image})
+    @OnClick({R.id.left_image, R.id.course_filter,R.id.right_image, R.id.my_course_search})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_image:
@@ -92,6 +87,11 @@ public class TeachLessonActivity extends BaseActivity {
                 //});
                 //int offset = getResources().getDimensionPixelSize(R.dimen.px68);
                 //menu.show(mBaseHeader,offset);
+                break;
+            case R.id.my_course_search:
+                Intent intent = new Intent(TeachLessonActivity.this, LessonSearchActivity.class);
+                intent.putExtra(CourseConstant.KEY_IS_TEACHER, true);
+                startActivity(intent);
                 break;
         }
     }

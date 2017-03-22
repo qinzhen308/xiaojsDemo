@@ -38,26 +38,27 @@ public class LessonSearchActivity extends BaseActivity {
     PullToRefreshSwipeListView mList;
 
     private AbsSwipeAdapter adapter;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_my_course_search);
         needHeader(false);
         Intent intent = getIntent();
         boolean isTeacher = false;
-        if (intent != null){
-            isTeacher = intent.getBooleanExtra(CourseConstant.KEY_IS_TEACHER,false);
+        if (intent != null) {
+            isTeacher = intent.getBooleanExtra(CourseConstant.KEY_IS_TEACHER, false);
         }
-        if (isTeacher){
-            adapter = new TeachLessonAdapter(this,mList,false);
-        }else {
-            adapter = new EnrollLessonAdapter(this,mList);
+        if (isTeacher) {
+            adapter = new TeachLessonAdapter(this, mList, false);
+        } else {
+            adapter = new EnrollLessonAdapter(this, mList, false);
         }
         mList.setAdapter(adapter);
     }
 
-    @OnClick({R.id.back,R.id.my_course_search_ok})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.back, R.id.my_course_search_ok})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
@@ -69,14 +70,14 @@ public class LessonSearchActivity extends BaseActivity {
         }
     }
 
-    private void search(){
+    private void search() {
         String key = mInput.getText().toString();
-        if (!TextUtils.isEmpty(key) && adapter != null){
+        if (!TextUtils.isEmpty(key) && adapter != null) {
             Criteria criteria = LessonBusiness.getSearch(key);
-            if (adapter instanceof TeachLessonAdapter){
-                ((TeachLessonAdapter)adapter).request(criteria);
-            }else if (adapter instanceof EnrollLessonAdapter){
-                ((EnrollLessonAdapter)adapter).request(criteria);
+            if (adapter instanceof TeachLessonAdapter) {
+                ((TeachLessonAdapter) adapter).request(criteria);
+            } else if (adapter instanceof EnrollLessonAdapter) {
+                ((EnrollLessonAdapter) adapter).request(criteria);
             }
         }
     }

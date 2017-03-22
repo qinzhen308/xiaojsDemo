@@ -47,7 +47,8 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
 import cn.xiaojs.xma.util.TimeUtil;
 
-public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.Holder> {
+public class
+EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.Holder> {
     private Criteria mCriteria;
     private LessonFragment mFragment;
     private Bitmap bitmap;
@@ -62,6 +63,12 @@ public class EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollL
 
     public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_avatar_grey);
+        radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
+    }
+
+    public EnrollLessonAdapter(Context context, PullToRefreshSwipeListView listView, boolean autoLoad) {
+        super(context, listView, autoLoad);
         bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_avatar_grey);
         radius = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
     }
