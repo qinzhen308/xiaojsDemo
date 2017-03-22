@@ -150,9 +150,22 @@ public class EnrollRegisterActivity extends BaseActivity {
         //TODO 当学生账号已经在注册时，需优化
         final String name = mNameEdt.getEditableText().toString();
         final String phone = mPhoneNumEdt.getEditableText().toString();
+
+
+//        OfflineRegistrant offlineRegistrant = new OfflineRegistrant();
+//        Registrant registrant = new Registrant();
+//        offlineRegistrant.setRegistrant(registrant);
+//
+//        registrant.setName(name);
+//        registrant.setMobile(Long.valueOf(phone));
+//
+//
+//        offlineRegister(offlineRegistrant);
+
         //String remark = mRemarkEdt.getEditableText().toString();
         try {
             final long phoneNum = Long.parseLong(phone);
+            showProgress(false);
             SearchManager.searchAccounts(this, phone, new APIServiceCallback<ArrayList<AccountSearch>>() {
                 @Override
                 public void onSuccess(ArrayList<AccountSearch> object) {
@@ -160,7 +173,8 @@ public class EnrollRegisterActivity extends BaseActivity {
                     AccountSearch currSearch = null;
                     if (object != null && !object.isEmpty()) {
                         for (AccountSearch search : object) {
-                            if (Account.TypeName.PERSION.equals(search._type)) {
+                            //FIXME 此处的目的是判断个人账号，排除掉机构账号。但是目前个人账号的type返回的是account
+                            if (Account.TypeName.PERSION.equals(search._type) || "account".equals(search._type)) {
                                 hasExist = true;
                                 currSearch = search;
                                 break;
@@ -168,7 +182,7 @@ public class EnrollRegisterActivity extends BaseActivity {
                         }
                     }
 
-                    if (currSearch != null && TextUtils.isEmpty(currSearch._id)) {
+                    if (currSearch == null || TextUtils.isEmpty(currSearch._id)) {
                         hasExist = false;
                     }
 
@@ -187,6 +201,7 @@ public class EnrollRegisterActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
                     Toast.makeText(EnrollRegisterActivity.this, R.string.enroll_register_fail, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -198,9 +213,11 @@ public class EnrollRegisterActivity extends BaseActivity {
     }
 
     private void offlineRegister(OfflineRegistrant offlineRegistrant) {
+
         LessonDataManager.requestEnrollLesson(this, mLessonId, offlineRegistrant, new APIServiceCallback<ELResponse>() {
             @Override
             public void onSuccess(ELResponse object) {
+                cancelProgress();
                 Toast.makeText(EnrollRegisterActivity.this, R.string.enroll_register_succ, Toast.LENGTH_SHORT).show();
                 mNameEdt.setText("");
                 mPhoneNumEdt.setText("");
@@ -209,6 +226,7 @@ public class EnrollRegisterActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
                 Toast.makeText(EnrollRegisterActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
