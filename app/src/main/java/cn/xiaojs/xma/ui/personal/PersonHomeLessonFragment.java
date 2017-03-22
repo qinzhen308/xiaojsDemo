@@ -24,17 +24,18 @@ import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
 public class PersonHomeLessonFragment extends BaseScrollTabFragment {
 
     private PersonHomeLessonAdapter mAdapter;
+
     @Override
     protected void initData() {
         Bundle bundle = getArguments();
-        if (bundle != null){
+        if (bundle != null) {
             ArrayList<PersonHomeLesson> lessons = (ArrayList<PersonHomeLesson>) bundle.getSerializable(PersonalBusiness.KEY_PERSONAL_LESSON_LIST);
-            if (lessons != null){
-                mAdapter = new PersonHomeLessonAdapter(getContext(),mList,lessons);
+            if (lessons != null) {
+                mAdapter = new PersonHomeLessonAdapter(getContext(), mList, lessons);
             }
         }
-        if (mAdapter == null){
-            mAdapter = new PersonHomeLessonAdapter(getContext(),mList);
+        if (mAdapter == null) {
+            mAdapter = new PersonHomeLessonAdapter(getContext(), mList, new ArrayList<PersonHomeLesson>());
         }
 
         mList.setAdapter(mAdapter);

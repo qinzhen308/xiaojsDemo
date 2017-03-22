@@ -188,7 +188,7 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
 
     @Override
     protected void doRequest() {
-
+        onSuccess(null);
     }
 
     @Override

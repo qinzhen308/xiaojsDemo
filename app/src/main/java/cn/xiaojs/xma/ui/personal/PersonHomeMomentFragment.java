@@ -35,7 +35,7 @@ public class PersonHomeMomentFragment extends BaseScrollTabFragment {
             }
         }
         if (mAdapter == null) {
-            mAdapter = new PersonHomeMomentAdapter(getContext(), mList);
+            mAdapter = new PersonHomeMomentAdapter(getContext(), mList, new ArrayList<Dynamic>());
         }
 
         mList.setAdapter(mAdapter);

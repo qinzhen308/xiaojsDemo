@@ -90,19 +90,7 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeLesson, P
 
     @Override
     protected void doRequest() {
-//        List<PersonHomeLesson> list = new ArrayList<>();
-//        list.add(new PersonHomeLesson());
-//        list.add(new PersonHomeLesson());
-//        list.add(new PersonHomeLesson());
-//        list.add(new PersonHomeLesson());
-//        list.add(new PersonHomeLesson());
-//        list.add(new PersonHomeLesson());
-//        list.add(new PersonHomeLesson());
-//        list.add(new PersonHomeLesson());
-//        list.add(new PersonHomeLesson());
-//        list.add(new PersonHomeLesson());
-//
-//        onSuccess(list);
+        onSuccess(null);
     }
 
     class Holder extends BaseHolder {
