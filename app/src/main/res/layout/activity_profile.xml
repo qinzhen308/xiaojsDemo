@@ -167,34 +167,55 @@
                 android:layout_marginLeft="@dimen/px38"/>
     </FrameLayout>
 
+
     <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:paddingRight="@dimen/px26"
             android:paddingTop="@dimen/px28"
-            android:paddingBottom="@dimen/px28">
+            android:paddingBottom="@dimen/px10">
 
-        <TextView
-                android:layout_width="@dimen/px190"
-                android:layout_height="wrap_content"
-                android:textColor="@color/font_dark_gray"
-                android:textSize="@dimen/font_26px"
-                android:paddingLeft="@dimen/px28"
-                android:text="@string/personalized_sign"/>
-
-        <cn.xiaojs.xma.ui.widget.EditTextDel
-                android:id="@+id/user_title"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/font_black"
-                android:textSize="@dimen/font_28px"
+                android:orientation="horizontal">
+            <TextView
+                    android:layout_width="@dimen/px190"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_dark_gray"
+                    android:textSize="@dimen/font_26px"
+                    android:paddingLeft="@dimen/px28"
+                    android:text="@string/personalized_sign"/>
+
+            <cn.xiaojs.xma.ui.widget.EditTextDel
+                    android:id="@+id/user_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_28px"
+                    android:paddingRight="@dimen/px26"
+                    android:maxLines="2"
+                    android:maxLength="20"
+                    android:gravity="top"
+                    android:hint="@string/default_profile_txt"
+                    android:textColorHint="@color/font_light_gray"
+                    android:background="@null"/>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/input_tips"
+                android:layout_width="match_parent"
                 android:paddingRight="@dimen/px26"
-                android:maxLines="2"
-                android:maxLength="20"
-                android:hint="@string/default_profile_txt"
-                android:textColorHint="@color/font_light_gray"
-                android:background="@null"/>
+                android:paddingTop="@dimen/px10"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_22px"
+                android:gravity="right"
+                android:textColor="@color/font_gray"
+                android:background="@color/white"/>
+
     </LinearLayout>
+
 
 </LinearLayout>

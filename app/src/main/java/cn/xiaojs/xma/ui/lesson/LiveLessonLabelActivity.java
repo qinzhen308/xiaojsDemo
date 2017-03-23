@@ -1,8 +1,10 @@
 package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Intent;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +20,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -119,11 +124,34 @@ public class LiveLessonLabelActivity extends BaseActivity implements View.OnClic
 
     private View buildLabelItem(TagItem tagItem) {
         View view = LayoutInflater.from(this).inflate(R.layout.layout_lesson_label_add, null);
-        EditText et = (EditText)view.findViewById(R.id.label_name);
+        final EditText et = (EditText)view.findViewById(R.id.label_name);
         et.setText(tagItem.label);
         et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LABEL_CHAR)});
         et.setHint(getString(R.string.add_label_hint, MAX_LABEL_CHAR));
         tagItem.labelEdt = et;
+
+        et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                if (!TextUtils.isEmpty(text)) {
+                    String content = text.trim();
+                    if (TextUtils.isEmpty(content)) {
+                        et.setText("");
+                    }
+                }
+            }
+        });
 
         View del = view.findViewById(R.id.del_label);
         del.setTag(tagItem);

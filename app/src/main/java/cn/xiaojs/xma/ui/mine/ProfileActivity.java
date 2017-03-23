@@ -1,7 +1,11 @@
 package cn.xiaojs.xma.ui.mine;
 
 import android.content.Intent;
+import android.text.Editable;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +55,7 @@ import cn.xiaojs.xma.util.TimeUtil;
 public class ProfileActivity extends BaseActivity {
     public final static String KEY_BASE_BEAN = "key_base_bean";
     private final static int CROP_PORTRAIT = 100;
+    private final static int MAX_CHAR = 20;
 
     @BindView(R.id.portrait)
     RoundedImageView mPortraitImg;
@@ -62,6 +67,8 @@ public class ProfileActivity extends BaseActivity {
     EditTextDel mNameEdt;
     @BindView(R.id.user_title)
     EditTextDel mUserTitleEdt;
+    @BindView(R.id.input_tips)
+    TextView mInputTipsTv;
 
     private Date mBirthDayDate;
 //    private String mAvatarFileName;
@@ -114,6 +121,25 @@ public class ProfileActivity extends BaseActivity {
         mRightText.setTextColor(getResources().getColor(R.color.main_orange));
         mBirthDayDate = new Date(System.currentTimeMillis());
         mOldTime = mBirthDayDate.getTime();
+
+        mInputTipsTv.setText(Html.fromHtml(String.format(getString(R.string.input_tips), 0, MAX_CHAR)));
+        mUserTitleEdt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Spanned tips = Html.fromHtml(String.format(getString(R.string.input_tips), s.length(), MAX_CHAR));
+                mInputTipsTv.setText(tips);
+            }
+        });
     }
 
     private void loadData() {
