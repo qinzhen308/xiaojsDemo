@@ -178,6 +178,10 @@ public class ClassroomController {
         mVideoController.publishStream(url, live);
     }
 
+    public void receivePausePlayStream(Constants.User user, int type) {
+        mVideoController.receivePausePlayStream(user, type);
+    }
+
     /**
      * 播放流
      */

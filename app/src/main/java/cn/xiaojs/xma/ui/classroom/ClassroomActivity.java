@@ -244,6 +244,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private boolean mAllowMobileNetworkLive;
     private int mNetworkState = ClassroomBusiness.NETWORK_NONE;
     private List<TalkItem> mReceivedTalkMsg;
+    private boolean mTeaPeerPlayStream;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -1033,23 +1034,44 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             Toast.makeText(ClassroomActivity.this, "apply open student video: " + accountId, Toast.LENGTH_SHORT).show();
         }
         if (mUser == Constants.User.TEACHER) {
-            OpenMedia openMedia = new OpenMedia();
-            openMedia.to = accountId;
-            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), openMedia, new SocketManager.AckListener() {
-                @Override
-                public void call(final Object... args) {
-                    if (args != null && args.length > 0) {
-                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                        if (response != null && response.result) {
-                            if (XiaojsConfig.DEBUG) {
-                                Toast.makeText(ClassroomActivity.this, "申请打开学生视频开始", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
+            if (mTeaPeerPlayStream) {
+                OpenMedia openMedia = new OpenMedia();
+                openMedia.to = accountId;
+                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA), openMedia, new SocketManager.AckListener() {
+                    @Override
+                    public void call(final Object... args) {
+                        if (args != null && args.length > 0) {
+                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                            if (response != null && response.result) {
+                                if (XiaojsConfig.DEBUG) {
+                                    Toast.makeText(ClassroomActivity.this, "关闭申请打开学生视频开始", Toast.LENGTH_LONG).show();
+                                }
+                                mTeaPeerPlayStream = false;
+                            } else {
 
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                OpenMedia openMedia = new OpenMedia();
+                openMedia.to = accountId;
+                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), openMedia, new SocketManager.AckListener() {
+                    @Override
+                    public void call(final Object... args) {
+                        if (args != null && args.length > 0) {
+                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                            if (response != null && response.result) {
+                                if (XiaojsConfig.DEBUG) {
+                                    Toast.makeText(ClassroomActivity.this, "申请打开学生视频开始", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -1893,13 +1915,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         } else {
         }
 
-        if (type == OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_INDIVIDUAL) {
-            mLiveSessionState = mBeforeClamSteamState;
-            setControllerBtnStyle(mLiveSessionState);
+        switch (type) {
+            case TYPE_STREAM_PUBLISH_INDIVIDUAL:
+                mLiveSessionState = mBeforeClamSteamState;
+                setControllerBtnStyle(mLiveSessionState);
 
-            if (mClassroomController != null) {
-                mClassroomController.pausePublishStream();
-            }
+                if (mClassroomController != null) {
+                    mClassroomController.pausePublishStream();
+                }
+                break;
+            case TYPE_STREAM_PLAY_MEDIA_FEEDBACK:
+                if (mClassroomController != null) {
+                    mClassroomController.receivePausePlayStream(user, type);
+                }
+                break;
         }
 
         if (XiaojsConfig.DEBUG) {
@@ -1911,6 +1940,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @Override
     public void onStreamStarted(Constants.User user, int type) {
         if (user == Constants.User.TEACHER) {
+            if (type == OnStreamStateChangeListener.TYPE_STREAM_PLAY_MEDIA_FEEDBACK) {
+                mTeaPeerPlayStream = true;
+            }
         } else {
         }
 
