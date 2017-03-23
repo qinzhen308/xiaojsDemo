@@ -207,7 +207,11 @@ public class PostDynamicActivity extends BaseActivity {
                 Toast.makeText(PostDynamicActivity.this, R.string.post_dyn_ok, Toast.LENGTH_SHORT)
                         .show();
 
-                setResult(RESULT_OK);
+                //发广播代替了
+               // setResult(RESULT_OK);
+
+                PostDynamicActivity.this.sendBroadcast(new Intent("refresh"));
+
                 finish();
             }
 

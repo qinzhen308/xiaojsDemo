@@ -17,8 +17,13 @@ package cn.xiaojs.xma.ui.home;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -73,6 +78,27 @@ public class HomeFragment extends BaseFragment {
     private boolean mScrolled;
 
     private HomeMomentAdapter mAdapter;
+
+    private RefreshReceiver refreshReceiver;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        refreshReceiver = new RefreshReceiver();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("refresh");
+
+        getActivity().registerReceiver(refreshReceiver,intentFilter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        getActivity().unregisterReceiver(refreshReceiver);
+    }
 
     @Override
     protected View getContentView() {
@@ -284,6 +310,13 @@ public class HomeFragment extends BaseFragment {
     public void toRefresh() {
         if (mAdapter != null){
             mAdapter.doRefresh();
+        }
+    }
+
+    private class RefreshReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            toRefresh();
         }
     }
 }
