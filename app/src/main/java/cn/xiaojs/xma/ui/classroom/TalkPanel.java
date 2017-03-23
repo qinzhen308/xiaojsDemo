@@ -855,11 +855,14 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 return;
             }
 
-            if (talkResponse.result) {
-                Toast.makeText(mContext, "消息发送成功", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mContext, "消息发送失败", Toast.LENGTH_SHORT).show();
-                //TODO resend
+
+            if (XiaojsConfig.DEBUG) {
+                if (talkResponse.result) {
+                    Toast.makeText(mContext, "消息发送成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "消息发送失败", Toast.LENGTH_SHORT).show();
+                    //TODO resend
+                }
             }
         } catch (Exception e) {
 
