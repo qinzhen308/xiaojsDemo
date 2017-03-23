@@ -12,6 +12,9 @@ public class LessonState {
 
     public static final String PENDING_FOR_LIVE = "PendingForLive";
 
+    public static final String PENDING_FOR_ACK = "PendingForACK";
+    public static final String ACKNOWLEDGED = "Acknowledged";
+
     public static final String LIVE = "Live";
 
     public static final String FINISHED = "Finished";

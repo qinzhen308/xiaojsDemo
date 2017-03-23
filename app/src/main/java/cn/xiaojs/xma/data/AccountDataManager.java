@@ -20,6 +20,7 @@ import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.account.CompetencySubject;
+import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
@@ -555,6 +556,12 @@ public class AccountDataManager {
     public static void getVerificationStatus(Context context, APIServiceCallback<VerifyStatus> callback) {
         AccountRequest accountRequest = new AccountRequest(context,callback);
         accountRequest.getVerificationStatus();
+    }
+
+
+    public static void acknowledgeInvitation(Context context, String orgId, DealAck ack, APIServiceCallback callback) {
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.acknowledgeInvitation(orgId, ack);
     }
 
 

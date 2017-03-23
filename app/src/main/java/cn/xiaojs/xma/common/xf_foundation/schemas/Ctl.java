@@ -9,6 +9,13 @@ import cn.xiaojs.xma.model.social.Dimension;
  */
 
 public class Ctl {
+    //
+    // Defines acknowledgement decisions from the invited lead teacher.
+    //
+    public static class ACKDecision{
+        public static final int ACKNOWLEDGE = 0;
+        public static final int REFUSED = 1;
+    }
 
     public static class EnrollmentState{
         public static final String DRAFT = "Draft";
@@ -28,7 +35,7 @@ public class Ctl {
     public static class LiveLessonState{
         public static final String DRAFT = "Draft";
         public static final String PENDING_FOR_ACK = "PendingForACK";
-        public static final String ACK_NOW_LEDGED = "Acknowledged";
+        public static final String ACKNOWLEDGED = "Acknowledged";
         public static final String PENDING_FOR_APPROVAL = "PendingForApproval";
         public static final String PENDING_FOR_LIVE = "PendingForLive";
         public static final String LIVE = "Live";

@@ -262,7 +262,6 @@
                             android:layout_gravity="center_vertical"
                             android:textSize="@dimen/font_30px"
                             android:maxLength="18"
-                            android:inputType="number"
                             android:hint="@string/certification_number_tips"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>

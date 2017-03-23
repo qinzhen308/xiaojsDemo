@@ -142,4 +142,7 @@ public class APIType {
 
     public static final int GET_VERIFICATION_STATUS = 81;
 
+    public static final int ACKNOWLEDGE_INVITATION = 82;
+    public static final int ACKNOWLEDGE_LESSON = 83;
+
 }

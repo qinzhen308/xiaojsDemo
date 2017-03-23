@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.CompetencyParams;
 
 
 import cn.xiaojs.xma.model.account.CompetencySubject;
+import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.PwdParam;
@@ -145,6 +146,11 @@ public class AccountRequest extends ServiceRequest {
     public void getVerificationStatus() {
         Call<VerifyStatus> call = getService().getVerificationStatus();
         enqueueRequest(APIType.GET_VERIFICATION_STATUS, call);
+    }
+
+    public void acknowledgeInvitation(String orgId, DealAck ack) {
+        Call<ResponseBody> call = getService().acknowledgeInvitation(orgId, ack);
+        enqueueRequest(APIType.ACKNOWLEDGE_INVITATION,call);
     }
 
 }
