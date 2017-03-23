@@ -8,6 +8,7 @@ import cn.xiaojs.xma.model.AccessLesson;
 
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.CompetencySubject;
+import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.Account;
@@ -156,11 +157,19 @@ public interface XiaojsService {
     @GET("/v1/accounts/verification")
     Call<VerifyStatus> getVerificationStatus();
 
+    //Acknowledge Invitation
+    @PATCH("/v1/accounts/invitations/{invitation}/acknowledge")
+    Call<ResponseBody> acknowledgeInvitation(@Path("invitation") String invitation, @Body DealAck dealAck);
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //CTL
     //
+
+    //Acknowledge Lesson
+    @POST("/v1/ctl/lessons/{lesson}/acknowledge")
+    Call<ResponseBody> acknowledgeLesson(@Path("lesson") String lesson, @Body DealAck dealAck);
 
     //Create Lesson
     @Headers("Content-Type: application/json")

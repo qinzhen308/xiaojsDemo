@@ -63,65 +63,88 @@ public class SyncService extends IntentService {
 
                     DataManager.initMemCache(context);
 
-                    //同步联系人到DB
                     ArrayList<ContactGroup> contactGroups = null;
-                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
-                        contactGroups = SocialManager.getContacts(context);
-                        DataManager.syncContactData(context, contactGroups);
+                    //同步联系人到DB
+                    try {
+                        if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
+                            contactGroups = SocialManager.getContacts(context);
+                            DataManager.syncContactData(context, contactGroups);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     //同步分组到DB和Memory cache
-                    HashMap<Long, String> cgMap = (HashMap<Long, String>) intent.getSerializableExtra(DataManager.EXTRA_GROUP);
-                    Map<Long, ContactGroup> map = new HashMap<>();
-                    if (cgMap != null) {
-                        Set<Long> keys = cgMap.keySet();
-                        for (Long key : keys) {
-                            ContactGroup contactGroup = new ContactGroup();
-                            contactGroup.name = cgMap.get(key);
-                            contactGroup.group = key;
-                            contactGroup.collection = new ArrayList<>(0);
-                            map.put(key, contactGroup);
+                    try {
+                        HashMap<Long, String> cgMap = (HashMap<Long, String>) intent.getSerializableExtra(DataManager.EXTRA_GROUP);
+                        Map<Long, ContactGroup> map = new HashMap<>();
+                        if (cgMap != null) {
+                            Set<Long> keys = cgMap.keySet();
+                            for (Long key : keys) {
+                                ContactGroup contactGroup = new ContactGroup();
+                                contactGroup.name = cgMap.get(key);
+                                contactGroup.group = key;
+                                contactGroup.collection = new ArrayList<>(0);
+                                map.put(key, contactGroup);
+                            }
+
+                        } else if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
+                            map = AccountDataManager.getHomeData(context);
                         }
 
-                    }else if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE){
-                        map = AccountDataManager.getHomeData(context);
-                    }
+                        if (contactGroups != null && cgMap != null) {
 
-                    if (contactGroups != null && cgMap != null) {
+                            for (ContactGroup group : contactGroups) {
 
-                        for (ContactGroup group : contactGroups) {
-
-                            ContactGroup cg = map.get(group.group);
-                            if (cg != null) {
-                                cg.collection = group.collection;
+                                ContactGroup cg = map.get(group.group);
+                                if (cg != null) {
+                                    cg.collection = group.collection;
+                                }
                             }
                         }
+                        DataManager.syncGroupData(context, map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    DataManager.syncGroupData(context, map);
 
                     //同步教学能力
-                    ClaimCompetency claimCompetency = AccountDataManager.getCompetencies(context);
-                    if (claimCompetency != null) {
-                        List<Competency> competencies = claimCompetency.competencies;
-                        if (competencies != null) {
-                            int count  = competencies.size();
-                            if (count > 0) {
-                                StringBuilder names = new StringBuilder();
-                                for (int i=0;i<count;i++) {
-                                    Competency competency = competencies.get(i);
-                                    String name = competency.getSubject().getName();
-                                    names.append(name);
-                                    if (i < count-1) {
-                                        names.append("、");
+                    try {
+                        ClaimCompetency claimCompetency = AccountDataManager.getCompetencies(context);
+                        if (claimCompetency != null) {
+                            List<Competency> competencies = claimCompetency.competencies;
+                            if (competencies != null) {
+                                int count = competencies.size();
+                                if (count > 0) {
+                                    StringBuilder names = new StringBuilder();
+                                    for (int i = 0; i < count; i++) {
+                                        Competency competency = competencies.get(i);
+                                        String name = competency.getSubject().getName();
+                                        names.append(name);
+                                        if (i < count - 1) {
+                                            names.append("、");
+                                        }
                                     }
+                                    AccountDataManager.clearAbilities(context);
+                                    AccountDataManager.addAbility(context, names.toString());
                                 }
-                                AccountDataManager.clearAbilities(context);
-                                AccountDataManager.addAbility(context,names.toString());
                             }
+
+
                         }
-
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
+                    //检测升级
+                    try {
+                        Upgrade upgrade = PlatformManager.checkUpgrade(context);
+                        if (upgrade != null) {
+                            UpgradeManager.setUpgrade(context, upgrade);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
 
                     //是否是老师
 //                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
@@ -132,10 +155,7 @@ public class SyncService extends IntentService {
 
                     //check update
 
-                    Upgrade upgrade = PlatformManager.checkUpgrade(context);
-                    if (upgrade != null) {
-                        UpgradeManager.setUpgrade(context,upgrade);
-                    }
+
 
                     break;
 

@@ -25,6 +25,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
+import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -207,6 +208,13 @@ public class LessonRequest extends ServiceRequest {
     public void getLiveClasses() {
         Call<LiveClass> call = getService().getLiveClasses();
         enqueueRequest(APIType.GET_LIVE_CLASSES, call);
+    }
+
+
+    public void acknowledgeLesson(String lesson, DealAck ack) {
+        Call<ResponseBody> call = getService().acknowledgeLesson(lesson, ack);
+        enqueueRequest(APIType.ACKNOWLEDGE_LESSON, call);
+
     }
 
 }

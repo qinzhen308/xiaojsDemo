@@ -148,8 +148,8 @@ public class CertificationActivity extends BaseActivity {
         if (status !=null) {
             mNameInput.setText(status.basic.name);
             mNumberInput.setText(status.identity.no);
-            String key = status.identity.handhold;
-            String url = ClassroomBusiness.getSnapshot(key,mCerImage.getMeasuredWidth());
+            photoKey = status.identity.handhold;
+            String url = ClassroomBusiness.getSnapshot(photoKey,mCerImage.getMeasuredWidth());
             Glide.with(CertificationActivity.this)
                     .load(url)
                     .error(R.drawable.default_lesson_cover)
@@ -351,6 +351,7 @@ public class CertificationActivity extends BaseActivity {
             @Override
             public void uploadFailure(boolean cancel) {
                 cancelProgress();
+                Toast.makeText(CertificationActivity.this,"上传失败",Toast.LENGTH_SHORT).show();
                 mHasImage = false;
             }
         });
@@ -381,7 +382,7 @@ public class CertificationActivity extends BaseActivity {
             return;
         }
 
-        if(!mHasImage) {
+        if(TextUtils.isEmpty(photoKey)) {
             Toast.makeText(this,"请上传手持身份证照片",Toast.LENGTH_SHORT).show();
             return;
         }

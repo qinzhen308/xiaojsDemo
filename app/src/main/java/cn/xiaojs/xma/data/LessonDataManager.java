@@ -24,6 +24,7 @@ import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 
@@ -353,6 +354,11 @@ public class LessonDataManager {
     public static void getLiveClasses(Context context, @NonNull APIServiceCallback<LiveClass> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLiveClasses();
+    }
+
+    public static void acknowledgeLesson(Context context, String lesson, DealAck ack,APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.acknowledgeLesson(lesson, ack);
     }
 
 }

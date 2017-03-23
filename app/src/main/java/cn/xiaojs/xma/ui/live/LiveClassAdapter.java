@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -16,11 +17,13 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
+import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.ctl.LiveItem;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
@@ -209,6 +212,36 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
                     }
                 }
             });
+        } else if (bean.state.equalsIgnoreCase(LessonState.PENDING_FOR_ACK)) {
+            holder.assistants.setVisibility(View.VISIBLE);
+            String[] items = new String[]{"同意", "拒绝"};
+            holder.state.setText("待确认");
+            holder.state.setBackgroundResource(R.drawable.course_state_examine_bg);
+            holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
+            holder.operation.setEnterColor(R.color.common_text);
+            holder.operation.setItems(items);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1://同意
+                            dealAck(position, bean, Ctl.ACKDecision.ACKNOWLEDGE);
+                            break;
+                        case 2://拒绝
+                            dealAck(position,bean, Ctl.ACKDecision.REFUSED);
+                            break;
+                    }
+                }
+            });
+
+        } else if(bean.state.equalsIgnoreCase(LessonState.ACKNOWLEDGED)) {
+            holder.state.setText("已确认");
+            holder.state.setBackgroundResource(R.drawable.course_state_ackledged_bg);
+            holder.operation.setVisibility(View.GONE);
+            holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
+
         } else if (bean.state.equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
             holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.cancel_examine),
@@ -319,6 +352,40 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
         intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);
         intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_EDIT);
         ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
+    }
+
+    //同意或者拒绝
+    private void dealAck(final int position, final LiveItem bean, final int descion) {
+
+        DealAck ack = new DealAck();
+        ack.decision = descion;
+
+        showProgress(true);
+        LessonDataManager.acknowledgeLesson(mContext, bean.id, ack, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                if (descion == Ctl.ACKDecision.ACKNOWLEDGE) {
+                    bean.state = LessonState.ACKNOWLEDGED;
+                    Toast.makeText(mContext,"您已同意",Toast.LENGTH_SHORT).show();
+
+                    notifyDataSetChanged();
+                }else{
+                    Toast.makeText(mContext,"您已拒绝",Toast.LENGTH_SHORT).show();
+                    mLessons.remove(position);
+                    notifyDataSetChanged();
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(mContext,errorMessage,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //撤销审核，取消上架

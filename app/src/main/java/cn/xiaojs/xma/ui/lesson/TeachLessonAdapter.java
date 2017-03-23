@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
@@ -43,6 +44,7 @@ import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
+import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
@@ -216,6 +218,36 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     }
                 }
             });
+        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)) {
+            holder.assistants.setVisibility(View.VISIBLE);
+            String[] items = new String[]{"同意", "拒绝"};
+            holder.state.setText("待确认");
+            holder.state.setBackgroundResource(R.drawable.course_state_examine_bg);
+            holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
+            holder.operation.setEnterColor(R.color.common_text);
+            holder.operation.setItems(items);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1://同意
+                            dealAck(position, bean, Ctl.ACKDecision.ACKNOWLEDGE);
+                            break;
+                        case 2://拒绝
+                            dealAck(position,bean, Ctl.ACKDecision.REFUSED);
+                            break;
+                    }
+                }
+            });
+
+        } else if(bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)) {
+            holder.state.setText("已确认");
+            holder.state.setBackgroundResource(R.drawable.course_state_ackledged_bg);
+            holder.operation.setVisibility(View.GONE);
+            holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
+
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
             holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.cancel_examine),
@@ -372,6 +404,37 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
         dialog.show();
 
+    }
+
+    //同意或者拒绝
+    private void dealAck(final int position, final TeachLesson bean, final int descion) {
+
+        DealAck ack = new DealAck();
+        ack.decision = descion;
+
+        showProgress(true);
+        LessonDataManager.acknowledgeLesson(mContext, bean.getId(), ack, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                if (descion == Ctl.ACKDecision.ACKNOWLEDGE) {
+                    bean.setState(LessonState.ACKNOWLEDGED);
+                    Toast.makeText(mContext,"您已同意",Toast.LENGTH_SHORT).show();
+                    notifyData(bean);
+                }else{
+                    Toast.makeText(mContext,"您已拒绝",Toast.LENGTH_SHORT).show();
+                    getList().remove(position);
+                    notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(mContext,errorMessage,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //查看详情
@@ -671,6 +734,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 }
             });
             dialog.show();
+
         } /*else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
             String[] items = new String[]{
                     mContext.getString(R.string.look_detail),
@@ -713,6 +777,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             dialog.show();
         }
 */
+
     }
 
     @Override
@@ -881,4 +946,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             super(view);
         }
     }
+
+
+
 }
