@@ -137,28 +137,35 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             if (mConv != null) {
                 UserInfo userInfo = (UserInfo) mConv.getTargetInfo();
 
-                if (!TextUtils.isEmpty(mNickName)) {
-                    userInfo.setNickname(mNickName);
+                if(userInfo != null) {
+                    if (!TextUtils.isEmpty(mNickName)) {
+                        userInfo.setNickname(mNickName);
+                    }
+
+                    if (TextUtils.isEmpty(userInfo.getNickname())) {
+                        mChatView.setChatTitle(userInfo.getUserName());
+                    } else {
+                        mChatView.setChatTitle(userInfo.getNickname());
+                    }
                 }
 
-                if (TextUtils.isEmpty(userInfo.getNickname())) {
-                    mChatView.setChatTitle(userInfo.getUserName());
-                } else {
-                    mChatView.setChatTitle(userInfo.getNickname());
-                }
+
             } else {
                 mConv = Conversation.createSingleConversation(mTargetId, mTargetAppKey);
                 UserInfo userInfo = (UserInfo) mConv.getTargetInfo();
 
-                if (!TextUtils.isEmpty(mNickName)) {
-                    userInfo.setNickname(mNickName);
+                if(userInfo != null) {
+                    if (!TextUtils.isEmpty(mNickName)) {
+                        userInfo.setNickname(mNickName);
+                    }
+
+                    if (TextUtils.isEmpty(userInfo.getNickname())) {
+                        mChatView.setChatTitle(userInfo.getUserName());
+                    } else {
+                        mChatView.setChatTitle(userInfo.getNickname());
+                    }
                 }
 
-                if (TextUtils.isEmpty(userInfo.getNickname())) {
-                    mChatView.setChatTitle(userInfo.getUserName());
-                } else {
-                    mChatView.setChatTitle(userInfo.getNickname());
-                }
             }
             mChatAdapter = new MsgListAdapter(mContext, mTargetId, mTargetAppKey, longClickListener);
         } else {
