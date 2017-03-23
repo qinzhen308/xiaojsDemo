@@ -56,8 +56,8 @@ public class MainActivity extends BaseTabActivity {
         List<Fragment> fs = new ArrayList<>();
         fs.add(new HomeFragment());
         fs.add(new LiveFragment());
-        fs.add(new NotificationFragment());
-        //fs.add(new MessageFragment());
+        //fs.add(new NotificationFragment());
+        fs.add(new MessageFragment());
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);
         addViews(new int[]{R.string.home_tab_index, R.string.home_tab_live, R.string.home_tab_message, R.string.home_tab_mine},
