@@ -58,7 +58,7 @@ public class PlatformNotificationAdapter extends BaseAdapter {
             R.drawable.ic_message_qanswerme,
             R.drawable.ic_message_transactionmessage,
             R.drawable.ic_message_recommendedselection,
-            R.drawable.ic_message_xiaojs};
+            R.drawable.ic_xjs_msg};
 
     private String titles[];
     private Context mContext;
@@ -107,7 +107,7 @@ public class PlatformNotificationAdapter extends BaseAdapter {
             holder.image.setImageResource(mIcons[position]);
             holder.title.setText(titles[position]);
             if (position == mIcons.length - 1) {
-                holder.special();
+                holder.normal();
                 holder.image.setType(MessageImageView.TYPE_NUM);
             } else {
                 holder.image.setType(MessageImageView.TYPE_MARK);

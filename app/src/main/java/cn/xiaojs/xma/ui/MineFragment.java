@@ -85,6 +85,8 @@ public class MineFragment extends BaseFragment {
 
     @BindView(R.id.teach_ability)
     TextView abilityTips;
+    @BindView(R.id.name_auth)
+    TextView cerTips;
 
 
     private Drawable mBlurFloatUpBg;
@@ -104,6 +106,7 @@ public class MineFragment extends BaseFragment {
         setUgc(null);
         loadData();
         showAbilities();
+        showCer();
 
     }
 
@@ -112,6 +115,7 @@ public class MineFragment extends BaseFragment {
         super.onResume();
 
         showAbilities();
+        showCer();
     }
 
     @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,
@@ -262,6 +266,15 @@ public class MineFragment extends BaseFragment {
         } else {
             //set default
             setDefaultPortrait();
+        }
+    }
+
+    private void showCer() {
+
+        if (AccountDataManager.isVerified(getContext())) {
+            cerTips.setText("已认证");
+        }else {
+            cerTips.setText("未认证");
         }
     }
 
