@@ -300,11 +300,12 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
 
     @Override
     protected void onDataItemClick(int position, EnrolledLesson bean) {
-        Intent i = new Intent(mContext, LessonHomeActivity.class);
-        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_ENROLL_LESSON);
-        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
-        mContext.startActivity(i);
-
+        if (!LessonState.DRAFT.equals(bean.getState())) {
+            Intent i = new Intent(mContext, LessonHomeActivity.class);
+            i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_ENROLL_LESSON);
+            i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+            mContext.startActivity(i);
+        }
     }
 
     @Override

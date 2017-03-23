@@ -802,10 +802,12 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             return;
         }
 
-        Intent i = new Intent(mContext, LessonHomeActivity.class);
-        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
-        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
-        mContext.startActivity(i);
+        if (!LessonState.DRAFT.equals(bean.getState())) {
+            Intent i = new Intent(mContext, LessonHomeActivity.class);
+            i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+            i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+            mContext.startActivity(i);
+        }
 
     }
 
