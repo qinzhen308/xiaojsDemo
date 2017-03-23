@@ -272,7 +272,8 @@ public abstract class VideoController implements StreamConfirmCallback {
         mStreamPublishing = true;
         mPublishView.setPath(mPublishStreamUrl);
         mPublishView.setVisibility(View.VISIBLE);
-        if (!mInitPublishVideo) {
+        boolean init = mLive ? mInitPublishVideo : mInitIndividualPublishVideo;
+        if (!init) {
             mPublishView.start();
         } else {
             mPublishView.resume();

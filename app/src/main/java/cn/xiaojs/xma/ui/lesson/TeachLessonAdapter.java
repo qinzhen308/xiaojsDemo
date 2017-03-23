@@ -498,7 +498,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     //班级主页
     private void home(TeachLesson bean) {
         Intent intent = new Intent(mContext, GradeHomeActivity.class);
-        mContext.startActivity(intent);
+        //mContext.startActivity(intent);
     }
 
     //分享

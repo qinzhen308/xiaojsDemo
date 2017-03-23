@@ -34,8 +34,8 @@ public class LiveMenu extends PopupWindow {
     private View mRootView;
 
     private ImageView mSwitchCamera;
-    private ImageView mClose;
-    private ImageView mMute;
+    private ImageView mVideo;
+    private ImageView mAudio;
     private ImageView mScale;
 
     private OnItemClickListener mListener;
@@ -43,7 +43,7 @@ public class LiveMenu extends PopupWindow {
     private ClassroomPopupWindowLayout mLayout;
     private boolean mIsMute;
 
-    public LiveMenu(Context context,boolean isTeacher,boolean isMute){
+    public LiveMenu(Context context, boolean isTeacher, boolean isMute) {
         super(context);
         mIsTeacher = isTeacher;
         mIsMute = isMute;
@@ -52,22 +52,30 @@ public class LiveMenu extends PopupWindow {
 
     private void init(Context context) {
         mContext = context;
-        mRootView = LayoutInflater.from(mContext).inflate(R.layout.layout_live_menu,null);
+        mRootView = LayoutInflater.from(mContext).inflate(R.layout.layout_live_menu, null);
         mSwitchCamera = (ImageView) mRootView.findViewById(R.id.live_menu_switch);
         mScale = (ImageView) mRootView.findViewById(R.id.live_menu_scale);
-        mMute = (ImageView) mRootView.findViewById(R.id.live_menu_audio);
-        mClose = (ImageView) mRootView.findViewById(R.id.live_menu_video);
+        mAudio = (ImageView) mRootView.findViewById(R.id.live_menu_audio);
+        mVideo = (ImageView) mRootView.findViewById(R.id.live_menu_video);
         mLayout = new ClassroomPopupWindowLayout(mContext);
-        if (mIsMute){
-            mMute.setImageResource(R.drawable.mic_on_selector);
+        if (mIsMute) {
+            mAudio.setImageResource(R.drawable.mic_on_selector);
         }
         int gravity = Gravity.TOP;
-        if (!mIsTeacher){
+        if (!mIsTeacher) {
             gravity = Gravity.LEFT;
-            mClose.setImageResource(R.drawable.ic_video_pressed);
+            mVideo.setImageResource(R.drawable.ic_video_pressed);
         }
 
-        mLayout.addContent(mRootView, gravity,ClassroomPopupWindowLayout.DARK_GRAY);
+        if (mIsTeacher) {
+            mSwitchCamera.setVisibility(View.GONE);
+            mVideo.setVisibility(View.GONE);
+        } else {
+            mSwitchCamera.setVisibility(View.VISIBLE);
+            mVideo.setVisibility(View.VISIBLE);
+        }
+
+        mLayout.addContent(mRootView, gravity, ClassroomPopupWindowLayout.DARK_GRAY);
         mPopupWindow = new PopupWindow(mLayout, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
@@ -75,7 +83,7 @@ public class LiveMenu extends PopupWindow {
         mSwitchCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null){
+                if (mListener != null) {
                     mListener.onSwitchCamera();
                 }
                 dismiss();
@@ -85,27 +93,27 @@ public class LiveMenu extends PopupWindow {
         mScale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null){
+                if (mListener != null) {
                     mListener.onScale();
                 }
                 dismiss();
             }
         });
 
-        mClose.setOnClickListener(new View.OnClickListener() {
+        mVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null){
+                if (mListener != null) {
                     mListener.onClose();
                 }
                 dismiss();
             }
         });
 
-        mMute.setOnClickListener(new View.OnClickListener() {
+        mAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null){
+                if (mListener != null) {
                     mListener.onMute();
                 }
                 dismiss();
@@ -113,23 +121,23 @@ public class LiveMenu extends PopupWindow {
         });
     }
 
-    public void show(View anchor){
+    public void show(View anchor) {
         mRootView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        if (mIsTeacher){
+        if (mIsTeacher) {
             int margin = mContext.getResources().getDimensionPixelSize(R.dimen.px30) - mRootView.getMeasuredWidth() / 2;
             mLayout.setIndicatorOffsetX(margin);
             showAsDropDown(anchor, 0, -mContext.getResources().getDimensionPixelSize(R.dimen.px180));
-        }else {
-            int leftOffset = mRootView.getMeasuredWidth() + mContext.getResources().getDimensionPixelSize(R.dimen.px13);
-            int topOffset = anchor.getMeasuredHeight() - (anchor.getMeasuredHeight() - mRootView.getMeasuredHeight()) / 2;
-            int margin= (mRootView.getMeasuredHeight() - mContext.getResources().getDimensionPixelSize(R.dimen.px22)) / 2;
+        } else {
+            int leftOffset = mRootView.getMeasuredWidth() + mContext.getResources().getDimensionPixelSize(R.dimen.px20);
+            int topOffset = mContext.getResources().getDimensionPixelSize(R.dimen.px10);
+            int margin = (mRootView.getMeasuredHeight() - mContext.getResources().getDimensionPixelSize(R.dimen.px22)) / 2;
             mLayout.setIndicatorOffsetX(margin);
-            showAsDropDown(anchor,-leftOffset,0);
+            showAsDropDown(anchor, -leftOffset, topOffset);
         }
 
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
     }
 
@@ -151,16 +159,19 @@ public class LiveMenu extends PopupWindow {
 
     @Override
     public void dismiss() {
-        if (mPopupWindow !=  null){
+        if (mPopupWindow != null) {
             mPopupWindow.dismiss();
         }
         super.dismiss();
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onScale();
+
         void onMute();
+
         void onClose();
+
         void onSwitchCamera();
     }
 }

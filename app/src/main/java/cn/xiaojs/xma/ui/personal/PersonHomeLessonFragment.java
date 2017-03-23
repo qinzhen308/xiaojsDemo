@@ -28,7 +28,7 @@ public class PersonHomeLessonFragment extends BaseScrollTabFragment {
 
     @Override
     protected void initData() {
-        Bundle bundle = getArguments();
+        /*Bundle bundle = getArguments();
         if (bundle != null) {
             ArrayList<PersonHomeLesson> lessons = (ArrayList<PersonHomeLesson>) bundle.getSerializable(PersonalBusiness.KEY_PERSONAL_LESSON_LIST);
             if (lessons != null) {
@@ -37,9 +37,11 @@ public class PersonHomeLessonFragment extends BaseScrollTabFragment {
         }
         if (mAdapter == null) {
             mAdapter = new PersonHomeLessonAdapter(getContext(), mList, new ArrayList<PersonHomeLesson>());
-        }
+        }*/
 
-        mList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        Bundle bundle = getArguments();
+        String account = bundle.getString(PersonalBusiness.KEY_PERSONAL_ACCOUNT_ID, "");
+        mAdapter = new PersonHomeLessonAdapter(getContext(), mList, account);
         mList.setAdapter(mAdapter);
     }
 }
