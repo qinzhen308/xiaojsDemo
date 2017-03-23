@@ -436,13 +436,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
                             Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
                         setPendingLivePlayTime(ctlSession.startOn);
-                        setControllerBtnStyle(ctlSession.state);
                         mPlayUrl = ctlSession.playUrl;
                         mClassroomController.playStream(mPlayUrl);
                     } else {
                         mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
-                        setControllerBtnStyle(ctlSession.state);
                     }
+                    setControllerBtnStyle(ctlSession.state);
 
                     //init talk
                     initTalk();
