@@ -202,7 +202,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
             Bundle b1 = new Bundle();
             Bundle b2 = new Bundle();
-            b1.putSerializable(PersonalBusiness.KEY_PERSONAL_LESSON_LIST, mBean.lessons);
+            b1.putSerializable(PersonalBusiness.KEY_PERSONAL_ACCOUNT_ID, mAccount);
             b2.putSerializable(PersonalBusiness.KEY_PERSONAL_ACTIVITY_LIST, mBean.activities);
             f1.setArguments(b1);
             f1.setPagePosition(0);

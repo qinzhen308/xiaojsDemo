@@ -25,6 +25,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
+import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -49,7 +50,7 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void getLessons(String account,int page, int limit){
-        Call<GetLessonsResponse> call = getService().getLessons(account,page,limit);
+        Call<List<PersonHomeUserLesson>> call = getService().getLessons(account,page,limit);
         enqueueRequest(APIType.GET_LESSONS_BY_USER, call);
     }
 

@@ -6,6 +6,7 @@ import java.util.List;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
 
+import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.PrivateHome;
@@ -174,9 +175,9 @@ public interface XiaojsService {
 
     //Get lessons (Taught by user)
     @GET("/v1/ctl/taught/lessons/{userId}")
-    Call<GetLessonsResponse> getLessons(@Path("userId") String userId,
-                                        @Query("page") int page,
-                                        @Query("limit") int limit);
+    Call<List<PersonHomeUserLesson>> getLessons(@Path("userId") String userId,
+                                                @Query("page") int page,
+                                                @Query("limit") int limit);
 
     //Put Lesson On Shelves
     @POST("/v1/ctl/lessons/{lesson}/onshelves")

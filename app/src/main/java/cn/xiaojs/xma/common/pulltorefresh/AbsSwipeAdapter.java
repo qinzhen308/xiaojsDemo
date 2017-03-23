@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nineoldandroids.animation.Animator;
@@ -111,6 +112,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     protected List<B> mBeanList = new ArrayList<>();
     protected Pagination mPagination;
     private View mEmptyView;
+    private View mEmptyLayout;
     private View mFailedView;
     private boolean mRefreshOnLoad = true;
     private int mRefreshMode = MODE_DOWN_REFRESH_MORE;
@@ -168,6 +170,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             return;
         }
         mEmptyView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty, null);
+        mEmptyLayout = mEmptyView.findViewById(R.id.empty_layout);
         mEmptyDesc = (TextView) mEmptyView.findViewById(R.id.empty_desc);
         mEmptyDesc1 = (TextView) mEmptyView.findViewById(R.id.empty_desc1);
         mEmptyButton = (Button) mEmptyView.findViewById(R.id.empty_click);
@@ -592,6 +595,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     private void addEmptyView() {
         if (showEmptyView()) {
+            setEmptyLayoutParams(mEmptyLayout, getEmptyLayoutParams());
             if (!TextUtils.isEmpty(mDesc)) {
                 mEmptyDesc.setVisibility(View.VISIBLE);
                 mEmptyDesc.setText(mDesc);
@@ -626,6 +630,23 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             mListView.setEmptyView(mEmptyView);
             onDataEmpty();
         }
+    }
+
+    private RelativeLayout.LayoutParams getEmptyLayoutParams() {
+        RelativeLayout.LayoutParams relParams = null;
+        if (mEmptyLayout != null) {
+            ViewGroup.LayoutParams params = mEmptyLayout.getLayoutParams();
+            if (params instanceof RelativeLayout.LayoutParams) {
+                relParams = (RelativeLayout.LayoutParams)params;
+            }
+        }
+
+        return relParams;
+    }
+
+
+    protected void setEmptyLayoutParams(View view, RelativeLayout.LayoutParams params) {
+
     }
 
     protected void onEmptyButtonClick() {

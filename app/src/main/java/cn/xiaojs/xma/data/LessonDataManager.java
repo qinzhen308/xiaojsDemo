@@ -24,6 +24,7 @@ import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 
@@ -88,7 +89,7 @@ public class LessonDataManager {
     public static void getLessonsByUser(Context context,
                                       String account,
                                       Pagination pagination,
-                                      APIServiceCallback<GetLessonsResponse> callback){
+                                      APIServiceCallback<List<PersonHomeUserLesson>> callback){
 
         int page = 1;
         int limit = 10;

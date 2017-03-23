@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,24 +32,32 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.PersonHomeLesson;
+import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.util.NumberUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
-public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeLesson, PersonHomeLessonAdapter.Holder> {
-    public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list) {
+public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesson, PersonHomeLessonAdapter.Holder> {
+    private String mAccount;
+
+    public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, String account) {
         super(context, list);
+        mAccount = account;
     }
 
-    public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, List<PersonHomeLesson> data) {
+    public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, List<PersonHomeUserLesson> data) {
         super(context, list, data);
     }
 
     @Override
-    protected void setViewContent(Holder holder, PersonHomeLesson bean, int position) {
+    protected void setViewContent(Holder holder, PersonHomeUserLesson bean, int position) {
         holder.title.setText(bean.title);
         Dimension dimension = new Dimension();
         dimension.width = CourseConstant.COURSE_COVER_WIDTH;
@@ -58,13 +67,18 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeLesson, P
                 .placeholder(R.drawable.default_lesson_cover)
                 .error(R.drawable.default_lesson_cover)
                 .into(holder.image);
-        String time = TimeUtil.format(bean.schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + "  " + bean.schedule.getDuration() + "分钟";
-        holder.time.setText(time);
-        holder.enroll.setText(bean.enroll.current + "人报名");
-        if (bean.fee.free) {
+        if (bean.schedule != null) {
+            String time = TimeUtil.format(bean.schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + "  " +
+                    bean.schedule.getDuration() + "分钟";
+            holder.time.setText(time);
+        }
+        holder.enroll.setText((bean.enroll != null ? bean.enroll.current : 0) + "人报名");
+        if (bean.fee != null && bean.fee.free) {
             holder.price.setText(R.string.free);
-        } else {
+        } else if (bean.fee != null) {
             holder.price.setText(NumberUtil.getPrice(bean.fee.charge));
+        } else {
+            holder.price.setText(R.string.free);
         }
     }
 
@@ -75,7 +89,7 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeLesson, P
     }
 
     @Override
-    protected void onDataItemClick(int position, PersonHomeLesson bean) {
+    protected void onDataItemClick(int position, PersonHomeUserLesson bean) {
         Intent i = new Intent(mContext, LessonHomeActivity.class);
         i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
         i.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);
@@ -90,7 +104,30 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeLesson, P
 
     @Override
     protected void doRequest() {
-        onSuccess(null);
+        LessonDataManager.getLessonsByUser(mContext, mAccount, mPagination, new APIServiceCallback<List<PersonHomeUserLesson>>() {
+            @Override
+            public void onSuccess(List<PersonHomeUserLesson> object) {
+                if (object != null) {
+                    PersonHomeLessonAdapter.this.onSuccess(object);
+                } else {
+                    PersonHomeLessonAdapter.this.onSuccess(null);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                PersonHomeLessonAdapter.this.onFailure(errorCode, errorMessage);
+            }
+        });
+    }
+
+    @Override
+    protected void setEmptyLayoutParams(View view, RelativeLayout.LayoutParams params) {
+        if (params != null) {
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px300);
+            view.setLayoutParams(params);
+        }
     }
 
     class Holder extends BaseHolder {
