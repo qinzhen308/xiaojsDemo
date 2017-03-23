@@ -97,12 +97,12 @@ public abstract class BaseMediaView extends FrameLayout {
                 }
 
                 @Override
-                public void onMute() {
+                public void onAudio() {
                     mute();
                 }
 
                 @Override
-                public void onClose() {
+                public void onVideoClose() {
                     close();
                 }
 
@@ -155,7 +155,6 @@ public abstract class BaseMediaView extends FrameLayout {
         } else {
             setVisibility(INVISIBLE);
         }
-
     }
 
     protected void share() {

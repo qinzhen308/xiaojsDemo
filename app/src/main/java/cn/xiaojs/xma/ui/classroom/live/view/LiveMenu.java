@@ -104,7 +104,7 @@ public class LiveMenu extends PopupWindow {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onClose();
+                    mListener.onVideoClose();
                 }
                 dismiss();
             }
@@ -114,7 +114,7 @@ public class LiveMenu extends PopupWindow {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onMute();
+                    mListener.onAudio();
                 }
                 dismiss();
             }
@@ -168,9 +168,9 @@ public class LiveMenu extends PopupWindow {
     public interface OnItemClickListener {
         void onScale();
 
-        void onMute();
+        void onAudio();
 
-        void onClose();
+        void onVideoClose();
 
         void onSwitchCamera();
     }

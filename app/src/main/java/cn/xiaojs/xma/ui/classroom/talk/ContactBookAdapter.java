@@ -110,6 +110,8 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
         holder.video.setOnClickListener(this);
         holder.microphone.setOnClickListener(this);
+        //TODO
+        holder.microphone.setVisibility(View.GONE);
         holder.portrait.setOnClickListener(this);
         v.setOnClickListener(this);
 
