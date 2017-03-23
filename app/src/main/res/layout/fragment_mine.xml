@@ -124,6 +124,7 @@
         </RelativeLayout>
 
         <View
+                android:visibility="gone"
                 style="@style/DividerHorizontal"/>
 
         <!--我的收藏-->
