@@ -63,11 +63,13 @@ import cn.xiaojs.xma.util.ToastUtil;
 public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
     private Context mContext;
     private List<LiveItem> mLessons;
+    boolean mIsEnrollLesson;
     //public static int MAX_NUM = 3;
 
-    public LiveClassAdapter(Context context, List<LiveItem> lessons) {
+    public LiveClassAdapter(Context context, List<LiveItem> lessons, boolean enrollLesson) {
         mContext = context;
         mLessons = lessons;
+        mIsEnrollLesson = enrollLesson;
     }
 
     @Override
@@ -280,7 +282,7 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
             if (bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
                 holder.operation.enableMore(false);
             } else {
-                holder.operation.enableMore(true);
+                holder.operation.enableMore(!mIsEnrollLesson);
             }
             //holder.operation.enableMore(true);
             holder.operation.enableEnter(true);

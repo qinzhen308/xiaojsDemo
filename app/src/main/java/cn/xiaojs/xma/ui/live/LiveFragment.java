@@ -180,7 +180,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 //只有教的课，没有学的课
                 mTeachLessonAllView.setVisibility(View.VISIBLE);
                 mTeachLessonTitleView.setVisibility(View.VISIBLE);
-                LiveClassAdapter adapter = new LiveClassAdapter(mContext, liveClasses.taught);
+                LiveClassAdapter adapter = new LiveClassAdapter(mContext, liveClasses.taught, false);
                 mLessonList.setAdapter(adapter);
                 mLessonList2.setVisibility(View.GONE);
                 mLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
@@ -197,7 +197,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                     && (liveClasses.enrolled != null && !liveClasses.enrolled.isEmpty())) {
                 //只有学的课，没有教的
                 mEnrollLessonAllView.setVisibility(View.VISIBLE);
-                LiveClassAdapter adapter = new LiveClassAdapter(mContext, liveClasses.enrolled);
+                LiveClassAdapter adapter = new LiveClassAdapter(mContext, liveClasses.enrolled, true);
                 mLessonList2.setAdapter(adapter);
                 mLessonList.setVisibility(View.GONE);
                 mLessonList2.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
@@ -222,9 +222,9 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 mEnrollLessonAllView.setVisibility(View.VISIBLE);
                 mTeachLessonTitleView.setVisibility(View.VISIBLE);
                 mEnrollLessonTitleView.setVisibility(View.VISIBLE);
-                LiveClassAdapter teach = new LiveClassAdapter(mContext, liveClasses.taught);
+                LiveClassAdapter teach = new LiveClassAdapter(mContext, liveClasses.taught, false);
                 mLessonList.setAdapter(teach);
-                LiveClassAdapter enroll = new LiveClassAdapter(mContext, liveClasses.enrolled);
+                LiveClassAdapter enroll = new LiveClassAdapter(mContext, liveClasses.enrolled, true);
                 mLessonList2.setAdapter(enroll);
                 mLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
                     @Override
