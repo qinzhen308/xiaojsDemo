@@ -395,6 +395,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     public void setSrcBitmap(Bitmap bmp) {
+        if (bmp == null) {
+            return;
+        }
+
         mSrcCourseRect = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
         mDesCourseRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
         mCourseBmp = bmp;
