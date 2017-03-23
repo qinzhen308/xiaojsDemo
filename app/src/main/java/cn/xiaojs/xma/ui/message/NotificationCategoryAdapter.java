@@ -74,7 +74,7 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
                 public void onClick(View v) {
                     //同意
 
-                    dealNotify(bean.initiator.id, Ctl.ACKDecision.ACKNOWLEDGE);
+                    dealNotify(bean.doc.id, Ctl.ACKDecision.ACKNOWLEDGE);
                 }
             });
 
@@ -82,7 +82,7 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
                 @Override
                 public void onClick(View v) {
                     //拒绝
-                    dealNotify(bean.initiator.id, Ctl.ACKDecision.REFUSED);
+                    dealNotify(bean.doc.id, Ctl.ACKDecision.REFUSED);
                 }
             });
 

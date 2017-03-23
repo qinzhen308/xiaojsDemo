@@ -298,6 +298,17 @@ public class ContactActivity extends BaseActivity {
 
 
                 String inputText = editText.getText().toString().trim();
+
+                if (TextUtils.isEmpty(inputText)) {
+                    Toast.makeText(ContactActivity.this,"组名不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (inputText.length() > 16) {
+                    Toast.makeText(ContactActivity.this,"组名不能超过16个字符",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (!TextUtils.isEmpty(inputText)) {
 
                     if (isExistGroup(inputText)) {
