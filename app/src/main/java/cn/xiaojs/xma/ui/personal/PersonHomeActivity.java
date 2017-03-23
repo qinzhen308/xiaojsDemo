@@ -232,7 +232,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
         //set avatar
         mBlurImgView.setImageResource(R.drawable.portrait_default_bg);
-        String u = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(AccountDataManager.getAccountID(this), 300);
+        String u = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(mAccount, 300);
         ExpandGlide expandGlide = new ExpandGlide();
         expandGlide.with(this)
                 .load(Uri.parse(u))
