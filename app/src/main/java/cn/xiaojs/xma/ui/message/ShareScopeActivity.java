@@ -52,13 +52,13 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
         initView();
     }
 
-    @OnClick({R.id.left_image, R.id.right_image})
+    @OnClick({R.id.left_image, R.id.right_image2})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 finish();
                 break;
-            case R.id.right_image:
+            case R.id.right_image2:
                 chooseOver();
                 break;
         }
@@ -93,9 +93,10 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
         DynPost.Audience audience = new DynPost.Audience();
         audience.type = getScopeId(checkedPos);
 
-        if (checkedPos == 2 || checkedPos == 3) {
-            audience.chosen = docs;
-        }
+        //FIXME 启用班级圈 和 部分人要启用以下注释代码
+//        if (checkedPos == 2 || checkedPos == 3) {
+//            audience.chosen = docs;
+//        }
 
         Intent data = new Intent();
         data.putExtra(CHOOSE_DATA, audience);
@@ -111,19 +112,19 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        if (position == 2) {
-            // 班级圈
-            Intent intent = new Intent(this, ChooseClassActivity.class);
-            intent.putExtra(EXTRA_CLASS_POS,class_pos);
-            startActivityForResult(intent, REQUEST_CHOOSE_CLASS_CODE);
-        } else if (position == 3) {
-
-            //FIXME 如果用户再次进入选择联系人，需要将之前以选择的联系人删除清零。
-
-            startActivityForResult(new Intent(this, ChoiceContactActivity.class),
-                    REQUEST_CHOOSE_CONTACT_CODE);
-        }
+          //FIXME 启用班级圈 和 部分人要启用以下注释代码
+//        if (position == 2) {
+//            // 班级圈
+//            Intent intent = new Intent(this, ChooseClassActivity.class);
+//            intent.putExtra(EXTRA_CLASS_POS,class_pos);
+//            startActivityForResult(intent, REQUEST_CHOOSE_CLASS_CODE);
+//        } else if (position == 3) {
+//
+//            //FIXME 如果用户再次进入选择联系人，需要将之前以选择的联系人删除清零。
+//
+//            startActivityForResult(new Intent(this, ChoiceContactActivity.class),
+//                    REQUEST_CHOOSE_CONTACT_CODE);
+//        }
     }
 
     @Override
@@ -181,13 +182,19 @@ public class ShareScopeActivity extends BaseActivity implements AdapterView.OnIt
             case 1:
                 return Social.ShareScope.FRIENDS;
             case 2:
-                return Social.ShareScope.CLASSES;
-            case 3:
-                return Social.ShareScope.SPECIFIC;
-            case 4:
                 return Social.ShareScope.PRIVATE;
             default:
                 return Social.ShareScope.PUBLIC;
+//            case 1:
+//                return Social.ShareScope.FRIENDS;
+//            case 2:
+//                return Social.ShareScope.CLASSES;
+//            case 3:
+//                return Social.ShareScope.SPECIFIC;
+//            case 4:
+//                return Social.ShareScope.PRIVATE;
+//            default:
+//                return Social.ShareScope.PUBLIC;
         }
     }
 
