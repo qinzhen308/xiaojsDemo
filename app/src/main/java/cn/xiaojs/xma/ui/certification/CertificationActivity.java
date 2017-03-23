@@ -44,6 +44,8 @@ import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.util.CardIdCheckUtil;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
@@ -114,7 +116,7 @@ public class CertificationActivity extends BaseActivity {
             if (AccountDataManager.isVerified(this)) {
                 success(null,true);
             }else {
-                apply();
+                apply(null);
             }
 
             return;
@@ -135,12 +137,25 @@ public class CertificationActivity extends BaseActivity {
 
     }
 
-    private void apply() {
+    private void apply(VerifyStatus status) {
         mApplyWrapper.setVisibility(View.VISIBLE);
         mStatusWrapper.setVisibility(View.GONE);
         mApplyImageWidth = (DeviceUtil.getScreenWidth(this) - getResources().getDimensionPixelSize(R.dimen.px90)) / 2;
         mApplyImageHeight = (int) (mApplyImageWidth * PERCENT);
         mCerImageWrapper.getLayoutParams().height = mApplyImageHeight;
+
+
+        if (status !=null) {
+            mNameInput.setText(status.basic.name);
+            mNumberInput.setText(status.identity.no);
+            String key = status.identity.handhold;
+            String url = ClassroomBusiness.getSnapshot(key,mCerImage.getMeasuredWidth());
+            Glide.with(CertificationActivity.this)
+                    .load(url)
+                    .error(R.drawable.default_lesson_cover)
+                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                    .into(mCerImage);
+        }
 
     }
 
@@ -176,7 +191,7 @@ public class CertificationActivity extends BaseActivity {
     }
 
     //审核失败
-    private void failed(VerifyStatus status) {
+    private void failed(final VerifyStatus status) {
 
         mStatus.setText("审核失败");
 
@@ -198,6 +213,13 @@ public class CertificationActivity extends BaseActivity {
         mStatusWrapper.setVisibility(View.VISIBLE);
         mModify.setVisibility(View.VISIBLE);
         mVerifyTimeWrapper.setVisibility(View.VISIBLE);
+
+        mModify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                apply(status);
+            }
+        });
     }
 
     //认证成功
@@ -229,15 +251,15 @@ public class CertificationActivity extends BaseActivity {
        return TimeUtil.formatDate(date.getTime(), TimeUtil.TIME_YYYY_MM_DD_HH_MM_SS);
     }
 
-    @OnClick({R.id.left_image, R.id.certification_modify, R.id.certification_image_wrapper, R.id.submit})
+    @OnClick({R.id.left_image, R.id.certification_image_wrapper, R.id.submit})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_image:
                 finish();
                 break;
-            case R.id.certification_modify://修改认证资料
-                apply();
-                break;
+//            case R.id.certification_modify://修改认证资料
+//                apply();
+//                break;
             case R.id.certification_image_wrapper://点击弹出加载图片对话框
                 selectImage();
                 break;
@@ -342,9 +364,20 @@ public class CertificationActivity extends BaseActivity {
             return;
         }
 
+        if (name.length() < 2) {
+            Toast.makeText(this,R.string.name_length_less_than_2,Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         final String cardNo = mNumberInput.getText().toString().trim();
         if (TextUtils.isEmpty(cardNo)) {
             Toast.makeText(this,"请输入身份证号码",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        CardIdCheckUtil checkUtil = new CardIdCheckUtil();
+        if (!checkUtil.verify(cardNo)) {
+            Toast.makeText(this,"请输入正确的身份证号码",Toast.LENGTH_SHORT).show();
             return;
         }
 
