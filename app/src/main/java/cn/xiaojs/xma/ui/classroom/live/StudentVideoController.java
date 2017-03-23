@@ -40,7 +40,6 @@ import cn.xiaojs.xma.util.DeviceUtil;
 
 public class StudentVideoController extends VideoController {
     private CommonDialog mAgreeOpenCamera;
-    private LiveRecordView mIndividualPublishView;
     private String mIndividualPublishUrl;
 
     public StudentVideoController(Context context, View root, OnStreamStateChangeListener listener) {
@@ -55,10 +54,10 @@ public class StudentVideoController extends VideoController {
         mPlayView.setVisibility(View.GONE);
 
         mPublishView = (LiveRecordView) root.findViewById(R.id.stu_publish_video);
-        mIndividualPublishView = (LiveRecordView) root.findViewById(R.id.publish_video);
+        mIndividualView = (LiveRecordView) root.findViewById(R.id.publish_video);
 
-        if (mIndividualPublishView != null) {
-            mIndividualPublishView.setOnStreamingStateListener(mStreamingStateChangedListener);
+        if (mIndividualView != null) {
+            ((LiveRecordView) mIndividualView).setOnStreamingStateListener(mStreamingStateChangedListener);
         }
     }
 
@@ -95,12 +94,12 @@ public class StudentVideoController extends VideoController {
             mPublishView.setVisibility(View.VISIBLE);
         } else {
             mStreamPublishing = true;
-            mIndividualPublishView.setPath(mIndividualPublishUrl);
-            mIndividualPublishView.setVisibility(View.VISIBLE);
+            mIndividualView.setPath(mIndividualPublishUrl);
+            mIndividualView.setVisibility(View.VISIBLE);
             if (!mInitIndividualPublishVideo) {
-                mIndividualPublishView.start();
+                mIndividualView.start();
             } else {
-                mIndividualPublishView.resume();
+                mIndividualView.resume();
             }
         }
     }
@@ -141,7 +140,7 @@ public class StudentVideoController extends VideoController {
                 mPublishView.pause();
             }
         } else {
-            if (mIndividualPublishView != null) {
+            if (mIndividualView != null) {
                 if (mStreamPublishing) {
                     if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                         mStreamPublishing = false;
@@ -164,8 +163,8 @@ public class StudentVideoController extends VideoController {
                             }
                         });
                     }
-                    mIndividualPublishView.pause();
-                    mIndividualPublishView.setVisibility(View.GONE);
+                    mIndividualView.pause();
+                    mIndividualView.setVisibility(View.GONE);
                 }
                 mStreamPublishing = false;
             }
@@ -176,8 +175,8 @@ public class StudentVideoController extends VideoController {
     @Override
     public void onResume() {
         super.onResume();
-        if (mIndividualPublishView != null && !mIndividualPublishView.isResume()) {
-            mIndividualPublishView.resume();
+        if (mIndividualView != null && !((LiveRecordView) mIndividualView).isResume()) {
+            mIndividualView.resume();
         }
     }
 

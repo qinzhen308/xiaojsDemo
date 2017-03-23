@@ -26,6 +26,7 @@ import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -38,6 +39,7 @@ public abstract class VideoController implements StreamConfirmCallback {
     private Handler mHandler;
     protected LiveRecordView mPublishView;
     protected PlayerTextureView mPlayView;
+    protected BaseMediaView mIndividualView;
 
     protected boolean mInitPublishVideo = false;
     protected boolean mInitIndividualPublishVideo = false;
@@ -163,7 +165,9 @@ public abstract class VideoController implements StreamConfirmCallback {
                                     if (args != null && args.length > 0) {
                                         mNeedStreamRePublishing = true;
                                         if (mStreamListener != null) {
-                                            mStreamListener.onStreamStopped(mUser, OnStreamStateChangeListener.TYPE_STREAM_PUBLISH);
+                                            int type = mLive ? OnStreamStateChangeListener.TYPE_STREAM_PUBLISH :
+                                                    OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_INDIVIDUAL;
+                                            mStreamListener.onStreamStopped(mUser, type);
                                         }
                                     }
                                 }
@@ -235,6 +239,21 @@ public abstract class VideoController implements StreamConfirmCallback {
             if (mStreamListener != null) {
                 mStreamListener.onStreamStopped(mUser, mUser == Constants.User.TEACHER ?
                         OnStreamStateChangeListener.TYPE_STREAM_PLAY_MEDIA_FEEDBACK : OnStreamStateChangeListener.TYPE_STREAM_PLAY);
+            }
+        }
+    }
+
+    public void receivePausePlayStream(Constants.User user, int type) {
+        if (type == OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_INDIVIDUAL) {
+            if (mIndividualView != null) {
+                mIndividualView.pause();
+                mIndividualView.showLoading(false);
+            }
+        } else {
+            if (mPlayView != null) {
+                mPlayView.pause();
+                mPlayView.showLoading(false);
+                mPlayView.setVisibility(View.GONE);
             }
         }
     }

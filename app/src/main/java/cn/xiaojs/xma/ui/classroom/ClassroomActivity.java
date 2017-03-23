@@ -1896,6 +1896,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (type == OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_INDIVIDUAL) {
             mLiveSessionState = mBeforeClamSteamState;
             setControllerBtnStyle(mLiveSessionState);
+
+            if (mClassroomController != null) {
+                mClassroomController.pausePublishStream();
+            }
         }
 
         if (XiaojsConfig.DEBUG) {

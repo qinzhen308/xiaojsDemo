@@ -38,6 +38,9 @@ public class PlayerTextureView extends BaseMediaView {
     private boolean mResume = false;
     private boolean mIsMute;
     private SurfaceCaptureView mCaptureView;
+    private int TIME_OUT = 60 * 1000; //60s
+    private boolean mRetry = true;
+    private long mRetryTime = 0;
 
     public PlayerTextureView(Context context) {
         super(context);
@@ -120,6 +123,7 @@ public class PlayerTextureView extends BaseMediaView {
         if (mCaptureView != null) {
             mCaptureView.start();
         }
+        mRetry = true;
         mResume = true;
         mIsPause = false;
     }
@@ -245,8 +249,19 @@ public class PlayerTextureView extends BaseMediaView {
     private static final int MESSAGE_ID_RECONNECTING = 0x01;
 
     private void sendReconnectMessage() {
-        if (mHandler == null)
+        if (mHandler == null) {
             return;
+        }
+
+        if (mRetry) {
+            mRetry = false;
+            mRetryTime = System.currentTimeMillis();
+        }
+
+        if (System.currentTimeMillis() - mRetryTime > TIME_OUT) {
+            //重试超时
+        }
+
         Logger.i(TAG, "正在重连...");
         showLoading(true);
         mHandler.removeCallbacksAndMessages(null);
