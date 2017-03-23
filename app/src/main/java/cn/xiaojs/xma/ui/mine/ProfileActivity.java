@@ -128,7 +128,7 @@ public class ProfileActivity extends BaseActivity {
                     mBasic = basic;
                     Glide.with(ProfileActivity.this)
                             .load(cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(AccountDataManager.getAccountID(ProfileActivity.this),300))
-                            .error(R.drawable.default_avatar)
+                            .error(R.drawable.default_avatar_grey)
                             .into(mPortraitImg);
 
                     mNameEdt.setText(basic.getName());
