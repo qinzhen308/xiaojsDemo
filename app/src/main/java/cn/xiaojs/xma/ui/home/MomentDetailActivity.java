@@ -100,6 +100,8 @@ public class MomentDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
                 .into(mFooterImage);
+
+
     }
 
     private void request() {
