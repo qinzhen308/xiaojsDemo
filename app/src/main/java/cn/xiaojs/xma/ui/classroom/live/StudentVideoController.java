@@ -91,7 +91,6 @@ public class StudentVideoController extends VideoController {
     public void confirmPublishStream(boolean confirm) {
         if (mLive) {
             super.confirmPublishStream(confirm);
-            mPublishView.setVisibility(View.VISIBLE);
         } else {
             mStreamPublishing = true;
             mIndividualView.setPath(mIndividualPublishUrl);
