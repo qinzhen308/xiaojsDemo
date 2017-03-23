@@ -98,7 +98,7 @@
         <item>问答信息</item>
         <item>交易信息</item>
         <item>精选推荐</item>
-        <item>小教室</item>
+        <item>平台消息</item>
     </string-array>
     <string-array name="post_security_level">
         <item>所有人</item>

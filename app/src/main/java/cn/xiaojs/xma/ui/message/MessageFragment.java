@@ -120,11 +120,11 @@ public class MessageFragment extends BaseFragment {
             recommImg.setImageResource(R.drawable.ic_message_recommendedselection);
             headerLayout.addView(recommView);
 
-            View xjsView = createHeaderItem("小教室秘书");
+            View xjsView = createHeaderItem("平台提醒");
             xjsTimeTv = (TextView) xjsView.findViewById(R.id.message_time);
             xjsContentTv = (TextView) xjsView.findViewById(R.id.message_content);
             xjsImg = (MessageImageView) xjsView.findViewById(R.id.message_image);
-            xjsImg.setImageResource(R.drawable.ic_message_xiaojs);
+            xjsImg.setImageResource(R.drawable.ic_xjs_msg);
             headerLayout.addView(xjsView);
 
             return headerLayout;

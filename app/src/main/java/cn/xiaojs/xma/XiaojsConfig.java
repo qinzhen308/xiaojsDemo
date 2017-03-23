@@ -73,7 +73,7 @@ public class XiaojsConfig {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Article Content ID
-    public static final String ARTICLE_ID_ABOUT = "aboutus";
+    public static final String ARTICLE_ID_ABOUT = "aboutus_android";
     public static final String ARTICLE_ID_AGREEMENT = "userAgreement";
 
 
