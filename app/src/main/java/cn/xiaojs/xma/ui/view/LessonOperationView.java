@@ -154,6 +154,11 @@ public class LessonOperationView extends RelativeLayout {
         }
     }
 
+    public void hiddenDiver() {
+        divider1.setVisibility(GONE);
+        divider2.setVisibility(GONE);
+    }
+
     public void setEnterColor(@ColorRes int color) {
         enter.setTextColor(getResources().getColor(color));
     }

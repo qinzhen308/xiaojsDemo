@@ -46,13 +46,13 @@ public class ChooseClassActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_image, R.id.right_image})
+    @OnClick({R.id.left_image, R.id.right_image2})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 finish();
                 break;
-            case R.id.right_image:
+            case R.id.right_image2:
                 //TODO finifsh
                 choiceComplete();
                 break;

@@ -120,7 +120,8 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.operation.setEnterColor(R.color.common_text);
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
-            String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            String[] items = new String[]{" "};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -128,11 +129,11 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
-                            //schedule(bean);
-                            databank(bean);
+                            ////schedule(bean);
+                            //databank(bean);
                             break;
                         case 2:
-                            databank(bean);
+                            //databank(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -146,7 +147,8 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.status.setVisibility(View.GONE);
             holder.progressWrapper.setVisibility(View.VISIBLE);
             holder.progress.showTimeBar(bean.getSchedule().getDuration(),bean.getClassroom().finishOn);
-            String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            //String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            String[] items = new String[]{" "};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -154,7 +156,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
-                            databank(bean);
+                            //databank(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -167,7 +169,8 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.operation.setEnterColor(R.color.common_text);
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
-            String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            String[] items = new String[]{" "};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -175,11 +178,12 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
-                            //schedule(bean);
-                            databank(bean);
+                            ////schedule(bean);
+
+                            //databank(bean);
                             break;
                         case 2:
-                            databank(bean);
+                            //databank(bean);
                             break;
                         case ENTER:
                             enterClass(bean);

@@ -273,7 +273,7 @@ public class ApiManager {
 //        }
 
         return new StringBuilder(baseUrl)
-                .append("/app/lesson/")
+                .append("/home/lesson?id=")
                 .append(lessonId)
                 .toString();
     }

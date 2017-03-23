@@ -131,7 +131,8 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.operation.setVisibility(View.GONE);
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
-            String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+//            String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            String[] items = new String[]{" "};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(true);
@@ -141,10 +142,10 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
                     switch (position) {
                         case 1:
                             //schedule(bean);
-                            databank(bean);
+                            //databank(bean);
                             break;
                         case 2:
-                            databank(bean);
+                            //databank(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -156,7 +157,8 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.operation.setVisibility(View.VISIBLE);
             holder.status.setVisibility(View.GONE);
             holder.progressWrapper.setVisibility(View.VISIBLE);
-            String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            //String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            String[] items = new String[]{" "};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(true);
@@ -174,7 +176,8 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.operation.setVisibility(View.VISIBLE);
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
-            String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            String[] items = new String[]{" "};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(true);
@@ -184,10 +187,10 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
                     switch (position) {
                         case 1:
                             //schedule(bean);
-                            databank(bean);
+                            //databank(bean);
                             break;
                         case 2:
-                            databank(bean);
+                            //databank(bean);
                             break;
                         case ENTER:
                             enterClass(bean);

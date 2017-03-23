@@ -281,14 +281,17 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 //            List<Bitmap> l = new ArrayList<>();
 //            l.add(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_ad));
 //            holder.assistants.show(l);
-            String[] items = new String[]{/*mContext.getString(R.string.prepare_lesson),*/
-                    mContext.getString(R.string.class_home)};
+//            String[] items = new String[]{/*mContext.getString(R.string.prepare_lesson),*/
+//                    mContext.getString(R.string.class_home)};
+            String[] items = new String[]{" "};
+
 //            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
 //                items[0] = mContext.getString(R.string.lesson_again);
 //            }
             holder.operation.enableMore(true);
             holder.operation.enableEnter(true);
             holder.operation.setItems(items);
+            holder.operation.hiddenDiver();
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
