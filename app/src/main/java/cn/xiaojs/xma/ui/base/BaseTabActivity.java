@@ -155,6 +155,7 @@ public abstract class BaseTabActivity extends BaseActivity {
         mCover.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                mGooeyMenu.close();
                 return true;
             }
         });
