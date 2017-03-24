@@ -146,7 +146,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.operation.setEnterColor(R.color.font_orange);
             holder.status.setVisibility(View.GONE);
             holder.progressWrapper.setVisibility(View.VISIBLE);
-            holder.progress.showTimeBar(bean.getSchedule().getDuration(),bean.getClassroom().finishOn);
+            holder.progress.showTimeBar(bean.getSchedule().getDuration(), bean.getClassroom().finishOn);
             //String[] items = new String[]{mContext.getString(R.string.data_bank)};
             String[] items = new String[]{" "};
             holder.operation.setItems(items);
@@ -300,12 +300,19 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
 
     @Override
     protected void onDataItemClick(int position, EnrolledLesson bean) {
-        if (!LessonState.DRAFT.equals(bean.getState())) {
-            Intent i = new Intent(mContext, LessonHomeActivity.class);
-            i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_ENROLL_LESSON);
-            i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
-            mContext.startActivity(i);
+
+        if (bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
+                || bean.getState().equalsIgnoreCase(LessonState.DRAFT)
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
+            return;
         }
+
+        Intent i = new Intent(mContext, LessonHomeActivity.class);
+        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_ENROLL_LESSON);
+        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        mContext.startActivity(i);
+
     }
 
     @Override
@@ -346,7 +353,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
     @Override
     protected void onEmptyButtonClick() {
         Intent intent = new Intent(mContext, MainActivity.class);
-        intent.putExtra(MainActivity.KEY_POSITION,1);
+        intent.putExtra(MainActivity.KEY_POSITION, 1);
         mContext.startActivity(intent);
     }
 

@@ -235,13 +235,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             dealAck(position, bean, Ctl.ACKDecision.ACKNOWLEDGE);
                             break;
                         case 2://拒绝
-                            dealAck(position,bean, Ctl.ACKDecision.REFUSED);
+                            dealAck(position, bean, Ctl.ACKDecision.REFUSED);
                             break;
                     }
                 }
             });
 
-        } else if(bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)) {
+        } else if (bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)) {
             holder.state.setText("已确认");
             holder.state.setBackgroundResource(R.drawable.course_state_ackledged_bg);
             holder.operation.setVisibility(View.GONE);
@@ -326,7 +326,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 holder.state.setBackgroundResource(R.drawable.course_state_on_bg);
                 holder.operation.setEnterColor(R.color.font_orange);
                 holder.progressWrapper.setVisibility(View.VISIBLE);
-                holder.progress.showTimeBar(bean.getSchedule().getDuration(),bean.getClassroom().finishOn);
+                holder.progress.showTimeBar(bean.getSchedule().getDuration(), bean.getClassroom().finishOn);
             } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
                 holder.state.setVisibility(View.GONE);
                 holder.operation.setEnterColor(R.color.common_text);
@@ -422,10 +422,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 cancelProgress();
                 if (descion == Ctl.ACKDecision.ACKNOWLEDGE) {
                     bean.setState(LessonState.ACKNOWLEDGED);
-                    Toast.makeText(mContext,"您已同意",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "您已同意", Toast.LENGTH_SHORT).show();
                     notifyData(bean);
-                }else{
-                    Toast.makeText(mContext,"您已拒绝",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "您已拒绝", Toast.LENGTH_SHORT).show();
                     getList().remove(position);
                     notifyDataSetChanged();
                 }
@@ -435,7 +435,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(mContext,errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -513,13 +513,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 TimeUtil.TIME_YYYY_MM_DD_HH_MM);
 
         String name = "";
-        if (bean.getTeacher() !=null && bean.getTeacher().getBasic() != null) {
-           name = bean.getTeacher().getBasic().getName();
+        if (bean.getTeacher() != null && bean.getTeacher().getBasic() != null) {
+            name = bean.getTeacher().getBasic().getName();
         }
 
         String shareUrl = ApiManager.getShareLessonUrl(bean.getId());
 
-        ShareUtil.show((Activity) mContext,bean.getTitle(),new StringBuilder(startTime).append("\r\n").append(name).toString(),shareUrl);
+        ShareUtil.show((Activity) mContext, bean.getTitle(), new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     //报名注册
@@ -798,16 +798,17 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     protected void onDataItemClick(int position, TeachLesson bean) {
 
         if (bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)) {
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
+                || bean.getState().equalsIgnoreCase(LessonState.DRAFT)
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
             return;
         }
 
-        if (!LessonState.DRAFT.equals(bean.getState())) {
-            Intent i = new Intent(mContext, LessonHomeActivity.class);
-            i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
-            i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
-            mContext.startActivity(i);
-        }
+        Intent i = new Intent(mContext, LessonHomeActivity.class);
+        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        mContext.startActivity(i);
+
 
     }
 
@@ -849,11 +850,11 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     @Override
     protected void onEmptyButtonClick() {
 
-        if (AccountDataManager.isTeacher(mContext)){
+        if (AccountDataManager.isTeacher(mContext)) {
             //老师可以开课
-            Intent intent = new Intent(mContext,LessonCreationActivity.class);
-            ((BaseActivity)mContext).startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
-        }else {
+            Intent intent = new Intent(mContext, LessonCreationActivity.class);
+            ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
+        } else {
             //提示申明教学能力
             final CommonDialog dialog = new CommonDialog(mContext);
             dialog.setTitle(R.string.declare_teaching_ability);
@@ -957,7 +958,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             super(view);
         }
     }
-
 
 
 }
