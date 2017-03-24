@@ -26,16 +26,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
-import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.LiveClass;
+import cn.xiaojs.xma.model.ctl.LiveItem;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
@@ -186,10 +186,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 mLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent i = new Intent(mContext, LessonHomeActivity.class);
-                        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
-                        i.putExtra(CourseConstant.KEY_LESSON_ID, liveClasses.taught.get(position).id);
-                        mContext.startActivity(i);
+                        enterLessonHome(liveClasses.taught.get(position), true);
                     }
                 });
                 mStudentWrapper.setVisibility(View.GONE);
@@ -203,10 +200,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 mLessonList2.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent i = new Intent(mContext, LessonHomeActivity.class);
-                        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
-                        i.putExtra(CourseConstant.KEY_LESSON_ID, liveClasses.enrolled.get(position).id);
-                        mContext.startActivity(i);
+                        enterLessonHome(liveClasses.enrolled.get(position), false);
                     }
                 });
                 mStudentWrapper.setVisibility(View.VISIBLE);
@@ -229,19 +223,13 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 mLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent i = new Intent(mContext, LessonHomeActivity.class);
-                        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
-                        i.putExtra(CourseConstant.KEY_LESSON_ID, liveClasses.taught.get(position).id);
-                        mContext.startActivity(i);
+                        enterLessonHome(liveClasses.taught.get(position), true);
                     }
                 });
                 mLessonList2.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent i = new Intent(mContext, LessonHomeActivity.class);
-                        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
-                        i.putExtra(CourseConstant.KEY_LESSON_ID, liveClasses.enrolled.get(position).id);
-                        mContext.startActivity(i);
+                        enterLessonHome(liveClasses.enrolled.get(position), false);
                     }
                 });
             } else if ((liveClasses.taught == null || liveClasses.taught.isEmpty())
@@ -281,6 +269,22 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 mStudentWrapper.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    private void enterLessonHome(LiveItem liveItem, boolean fromTeach) {
+        if (LessonState.ACKNOWLEDGED.equalsIgnoreCase(liveItem.state)
+                || LessonState.PENDING_FOR_ACK.equalsIgnoreCase(liveItem.state)
+                || LessonState.DRAFT.equalsIgnoreCase(liveItem.state)
+                || LessonState.PENDING_FOR_APPROVAL.equalsIgnoreCase(liveItem.state)) {
+            return;
+        }
+
+        Intent i = new Intent(mContext, LessonHomeActivity.class);
+        if (fromTeach) {
+            i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+        }
+        i.putExtra(CourseConstant.KEY_LESSON_ID, liveItem.id);
+        mContext.startActivity(i);
     }
 
     @Override
