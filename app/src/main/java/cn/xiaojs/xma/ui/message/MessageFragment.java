@@ -1,21 +1,22 @@
 package cn.xiaojs.xma.ui.message;
 
-
-import android.graphics.Color;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.Conversation;
+import cn.jpush.im.android.api.model.Message;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.platform.NotificationTemplate;
 import cn.xiaojs.xma.data.NotificationDataManager;
@@ -24,28 +25,49 @@ import cn.xiaojs.xma.model.GNOResponse;
 import cn.xiaojs.xma.model.Notification;
 import cn.xiaojs.xma.model.NotificationCategory;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
-import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.util.TimeUtil;
 
 
 public class MessageFragment extends BaseFragment {
 
+    @BindView(R.id.home_message_list)
     ListView listView;
 
     private MessageAdapter messageAdapter;
 
     @Override
     protected View getContentView() {
-        listView = (ListView) mContext.getLayoutInflater().inflate(R.layout.fragment_message_list, null);
-        return listView;
+        View view = mContext.getLayoutInflater().inflate(R.layout.fragment_message, null);
+        return view;
     }
 
     @Override
     protected void init() {
         messageAdapter = new MessageAdapter();
         listView.setAdapter(messageAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if(messageAdapter == null) {
+                    return;
+                }
+
+                NotificationCategory category = messageAdapter.getItem(position);
+                enterCategoryList(category);
+
+                //消除红点
+                if (category.count > 0) {
+                    category.count = 0;
+                    messageAdapter.notifyDataSetChanged();
+                }
+
+            }
+        });
 
         getMessageOverview();
     }
@@ -63,18 +85,47 @@ public class MessageFragment extends BaseFragment {
             public void onSuccess(GNOResponse object) {
                 cancelProgress();
                 if (object != null && object.categories != null) {
-                    messageAdapter.setData(object.categories);
+                    List<NotificationCategory> categoryList = object.categories;
+
+                    getConversation(categoryList);
+
+                    messageAdapter.setData(categoryList);
                 }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                showFailView();
+                //getConversation(null);
             }
         });
     }
 
+    private void getConversation(List<NotificationCategory> categoryList) {
+
+        List<Conversation> conversations = JMessageClient.getConversationList();
+        if (conversations != null) {
+
+            if (categoryList == null) {
+                categoryList = new ArrayList<>();
+            }
+
+            for (Conversation conversation : conversations) {
+                NotificationCategory category = new NotificationCategory();
+                category.from = NotificationCategory.MsgFrom.FROM_JMESSAGE;
+                category.conversation = conversation;
+                categoryList.add(category);
+            }
+        }
+    }
+
+    private void enterCategoryList(NotificationCategory category) {
+
+        Intent intent = new Intent(mContext, NotificationCategoryListActivity.class);
+        intent.putExtra(NotificationConstant.KEY_NOTIFICATION_CATEGORY_ID, category.id);
+        intent.putExtra(NotificationConstant.KEY_NOTIFICATION_TITLE, category.remarks);
+        ((BaseActivity) mContext).startActivityForResult(intent, NotificationConstant.REQUEST_NOTIFICATION_CATEGORY_LIST);
+    }
 
     private class MessageAdapter extends BaseAdapter {
 
@@ -95,7 +146,7 @@ public class MessageFragment extends BaseFragment {
         }
 
         @Override
-        public Object getItem(int position) {
+        public NotificationCategory getItem(int position) {
 
             if (categories == null){
                 return null;
@@ -119,6 +170,9 @@ public class MessageFragment extends BaseFragment {
                 holder.titleView = (TextView) convertView.findViewById(R.id.message_title);
                 holder.timeView = (TextView) convertView.findViewById(R.id.message_time);
                 holder.contentView = (TextView) convertView.findViewById(R.id.message_content);
+
+                convertView.setTag(holder);
+
             }else{
                 holder = (ViewHolder) convertView.getTag();
             }
@@ -126,36 +180,64 @@ public class MessageFragment extends BaseFragment {
             NotificationCategory category = categories.get(position);
 
 
-            if(category.name.equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
-                holder.iconView.setImageResource(R.drawable.ic_message_invite);
-            }else if(category.name.equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
-                holder.iconView.setImageResource(R.drawable.ic_message_socialnews);
-            }else if(category.name.equalsIgnoreCase(NotificationTemplate.ANSWERS_NOTIFICATION)) {
-                holder.iconView.setImageResource(R.drawable.ic_message_qanswerme);
-            }else if(category.name.equalsIgnoreCase(NotificationTemplate.ARTICLE_NOTIFICATION)) {
-                holder.iconView.setImageResource(R.drawable.ic_message_transactionmessage);
-            }else if(category.name.equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
-                holder.iconView.setImageResource(R.drawable.ic_message_course_information);
-            }else if(category.name.equalsIgnoreCase(NotificationTemplate.FINANCE_NOTIFICATION)) {
-                holder.iconView.setImageResource(R.drawable.ic_message_recommendedselection);
-            }else if(category.name.equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
-                holder.iconView.setImageResource(R.drawable.ic_xjs_msg);
+            if (category.from == NotificationCategory.MsgFrom.FROM_JMESSAGE) {
+
+                holder.iconView.setType(MessageImageView.TYPE_NUM);
+                holder.iconView.setCount(category.conversation.getUnReadMsgCnt());
+
+                Message lastMsg = category.conversation.getLatestMessage();
+                if (lastMsg != null) {
+                    //
+                    holder.timeView.setText(TimeUtil.format(new Date(lastMsg.getCreateTime()), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                }else {
+                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
+                    holder.timeView.setText("");
+                    holder.titleView.setText("");
+                    holder.contentView.setText("");
+                }
+
             }else {
-                holder.iconView.setImageResource(R.drawable.default_avatar_grey);
+
+                if(category.name.equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_invite);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_socialnews);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ANSWERS_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_qanswerme);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ARTICLE_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_transactionmessage);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_course_information);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FINANCE_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_recommendedselection);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_xjs_msg);
+                }else {
+                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
+                }
+
+                holder.titleView.setText(category.remarks);
+
+                holder.iconView.setType(MessageImageView.TYPE_MARK);
+
+                ArrayList<Notification> notifications = category.notifications;
+                if (category.count <= 0) {
+                    holder.iconView.setCount(0);
+                    if (notifications!=null && notifications.size()>0) {
+                        Notification notify = notifications.get(0);
+                        holder.timeView.setText(TimeUtil.format(notify.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                        holder.contentView.setText(notify.body);
+                    }else{
+                        holder.timeView.setText("");
+                        holder.contentView.setText("");
+                    }
+                }else {
+                    Notification notify = notifications.get(0);
+                    holder.timeView.setText(TimeUtil.format(notify.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+                    holder.contentView.setText(notify.body);
+                    holder.iconView.setCount(category.count);
+                }
             }
-
-            holder.titleView.setText(category.remarks);
-
-            ArrayList<Notification> notifications = category.notifications;
-            if (notifications == null || notifications.size() <= 0) {
-                holder.timeView.setText("");
-                holder.contentView.setText("");
-            }else {
-                Notification notify = notifications.get(0);
-                holder.timeView.setText(TimeUtil.format(notify.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
-                holder.contentView.setText(notify.body);
-            }
-
 
             return convertView;
         }

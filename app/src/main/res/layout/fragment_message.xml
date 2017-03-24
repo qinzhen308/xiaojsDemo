@@ -76,5 +76,6 @@
             android:divider="@color/hor_divide_line"
             android:scrollbars="none"
             android:layout_marginBottom="@dimen/px110"
-            ></ListView>
+            >
+    </ListView>
 </LinearLayout>

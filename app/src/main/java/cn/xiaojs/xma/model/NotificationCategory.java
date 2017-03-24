@@ -30,6 +30,14 @@ public class NotificationCategory{
 
     public Conversation conversation;
 
+    public int from = MsgFrom.FROM_PLATFORM; //0代表消息，1代表jmessage的
 
+
+    public static class MsgFrom {
+        //0代表平台消息
+        public static final int FROM_PLATFORM = 0;
+        //jmessage的消息
+        public static final int FROM_JMESSAGE = 1;
+    }
 
 }
