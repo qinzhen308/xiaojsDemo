@@ -224,6 +224,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private CommonDialog mExitDialog;
     private CommonDialog mFinishDialog;
     private CommonDialog mMobileNetworkDialog;
+    private CommonDialog mKickoutDialog;
 
     private Socket mSocket;
     private Boolean mSktConnected = false;
@@ -407,53 +408,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
                 }
                 if (ctlSession != null) {
-                    mUser = ClassroomBusiness.getUser(ctlSession.psType);
-                    mLiveSessionState = ctlSession.state;
-                    mLessonTitle.setText(!TextUtils.isEmpty(ctlSession.titleOfPrimary) ? ctlSession.titleOfPrimary : ctlSession.ctl.title);
-                    mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
-
-                    //init socket
-                    initSocketIO(mTicket, ctlSession.secret);
-                    listenSocket();
-
-                    //init ui
-                    initPanel();
-                    //setControllerBtnStyle(ctlSession.state);
-                    mLessonDuration = ctlSession.ctl != null ? ctlSession.ctl.duration : 0;
-                    mTotalTimeTv.setText(TimeUtil.formatMinuteTime(mLessonDuration));
-
-                    //init whiteboard
-                    initWhiteboardController();
-
-                    if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
-                        setPlayTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
-                        if (mUser == Constants.User.TEACHER) {
-                            mClassroomController.publishStream(ctlSession.publishUrl);
-                        } else if (mUser == Constants.User.STUDENT) {
-                            mPlayUrl = ctlSession.playUrl;
-                            mClassroomController.playStream(mPlayUrl);
-                        }
-                    } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
-                            Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
-                        setPendingLivePlayTime(ctlSession.startOn);
-                        mPlayUrl = ctlSession.playUrl;
-                        mClassroomController.playStream(mPlayUrl);
+                    if (ctlSession.accessible) {
+                        onBootSessionSucc(false, ctlSession, dataLoadListener);
                     } else {
-                        mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
+                        showHasConnected(ctlSession, dataLoadListener);
                     }
-                    setControllerBtnStyle(ctlSession.state);
-
-                    //init talk
-                    initTalk();
                 } else {
-                    if (XiaojsConfig.DEBUG) {
-                        Toast.makeText(ClassroomActivity.this, "BootSession 数据返回为null", Toast.LENGTH_SHORT).show();
-                    }
                     cancelProgress();
-                }
-
-                if (dataLoadListener != null) {
-                    dataLoadListener.onDataLoaded(true);
                 }
             }
 
@@ -468,6 +429,83 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 }
             }
         });
+    }
+
+    private void showHasConnected(final CtlSession ctlSession, final OnDataLoadListener dataLoadListener) {
+        if (mKickoutDialog == null) {
+            mKickoutDialog = new CommonDialog(this);
+            int width = DeviceUtil.getScreenWidth(this) / 2;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mKickoutDialog.setDesc(R.string.mobile_kick_out_desc);
+            mKickoutDialog.setLefBtnText(R.string.cancel);
+            mKickoutDialog.setRightBtnText(R.string.ok);
+            mKickoutDialog.setDialogLayout(width, height);
+            mKickoutDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    //强制登录
+                    mKickoutDialog.dismiss();
+                    onBootSessionSucc(true, ctlSession, dataLoadListener);
+                }
+            });
+
+            mKickoutDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mKickoutDialog.dismiss();
+                    Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_cancel, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+
+            mKickoutDialog.show();
+        }
+    }
+
+
+    private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession, final OnDataLoadListener dataLoadListener) {
+        mUser = ClassroomBusiness.getUser(ctlSession.psType);
+        mLiveSessionState = ctlSession.state;
+        mLessonTitle.setText(!TextUtils.isEmpty(ctlSession.titleOfPrimary) ? ctlSession.titleOfPrimary : ctlSession.ctl.title);
+        mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
+
+        //init socket
+        initSocketIO(mTicket, ctlSession.secret, forceConnect);
+        listenSocket();
+
+        //init ui
+        initPanel();
+        //setControllerBtnStyle(ctlSession.state);
+        mLessonDuration = ctlSession.ctl != null ? ctlSession.ctl.duration : 0;
+        mTotalTimeTv.setText(TimeUtil.formatMinuteTime(mLessonDuration));
+
+        //init whiteboard
+        initWhiteboardController();
+
+        if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
+            setPlayTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
+            if (mUser == Constants.User.TEACHER) {
+                mClassroomController.publishStream(ctlSession.publishUrl);
+            } else if (mUser == Constants.User.STUDENT) {
+                mPlayUrl = ctlSession.playUrl;
+                mClassroomController.playStream(mPlayUrl);
+            }
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
+                Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
+            setPendingLivePlayTime(ctlSession.startOn);
+            mPlayUrl = ctlSession.playUrl;
+            mClassroomController.playStream(mPlayUrl);
+        } else {
+            mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
+        }
+        setControllerBtnStyle(ctlSession.state);
+
+        //init talk
+        initTalk();
+
+        if (dataLoadListener != null) {
+            dataLoadListener.onDataLoaded(true);
+        }
     }
 
     private void setControllerBtnStyle(String liveSessionState) {
@@ -1623,8 +1661,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
 
-    private void initSocketIO(String ticket, String secret) {
-        SocketManager.init(ClassroomActivity.this, ticket, secret, true, true);
+    private void initSocketIO(String ticket, String secret, boolean force) {
+        SocketManager.init(ClassroomActivity.this, ticket, secret, true, true, force);
         mSocket = SocketManager.getSocket();
     }
 
@@ -1637,6 +1675,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         SocketManager.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         SocketManager.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION), mKickoutByUserListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
         SocketManager.connect();
     }
@@ -1666,6 +1705,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (XiaojsConfig.DEBUG) {
                 Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
             }
+        }
+    };
+
+    private SocketManager.EventListener mKickoutByUserListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_tips, Toast.LENGTH_LONG).show();
+            finish();
         }
     };
 

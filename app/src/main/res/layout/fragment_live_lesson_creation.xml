@@ -112,7 +112,7 @@
             <TextView
                     android:id="@+id/lesson_subject"
                     style="@style/LiveLessonRightEntrance"
-                    android:text="@string/please_select"/>
+                    android:hint="@string/please_select"/>
         </LinearLayout>
 
 
@@ -192,7 +192,7 @@
             <TextView
                     android:id="@+id/teach_form"
                     style="@style/LiveLessonRightEntrance"
-                    android:text="@string/please_select"/>
+                    android:hint="@string/please_select"/>
         </LinearLayout>
 
 
@@ -334,7 +334,7 @@
             <TextView
                     android:id="@+id/lesson_start_time"
                     style="@style/LiveLessonRightEntrance"
-                    android:text="@string/please_select"/>
+                    android:hint="@string/please_select"/>
 
         </LinearLayout>
 
@@ -386,7 +386,7 @@
             <TextView
                     android:id="@+id/optional_info"
                     style="@style/LiveLessonRightEntrance"
-                    android:text="@string/optional_info_tips"/>
+                    android:hint="@string/optional_info_tips"/>
 
         </LinearLayout>
 

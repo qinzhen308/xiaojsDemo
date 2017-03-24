@@ -41,12 +41,14 @@ public class SocketManager {
     private static Socket mSocket;
     private static Handler mHandler;
 
-    public synchronized static void init(Context context, String ticket, String secret, boolean videoSupported, boolean audioSupported) {
+    public synchronized static void init(Context context, String ticket, String secret, boolean videoSupported, boolean audioSupported, boolean force) {
         initHandler();
         if (mSocket == null) {
             try {
+                String forceStr = force ? "true" : "false";
                 IO.Options opts = new IO.Options();
-                opts.query = "secret=" + secret + "&" + "avc={\"video\":" + videoSupported + ",\"audio\":" + audioSupported + "}";
+                opts.query = "secret=" + secret + "&" + "avc={\"video\":" + videoSupported + ",\"audio\":" + audioSupported + "}"
+                + "&" + "forcibly="+forceStr;
                 opts.timeout = 10000; //ms
                 opts.transports = new String[]{"websocket"};
                 mSocket = IO.socket(getClassroomSocketUrl(context, ticket), opts);

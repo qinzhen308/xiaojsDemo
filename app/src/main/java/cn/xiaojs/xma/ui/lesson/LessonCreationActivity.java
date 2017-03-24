@@ -637,7 +637,7 @@ public class LessonCreationActivity extends BaseActivity {
      */
     private boolean checkSubmitInfo() {
         try {
-            String selectTip = mContext.getString(R.string.please_select);
+            //String selectTip = mContext.getString(R.string.please_select);
 
             String name = mLessonNameEdt.getText().toString();
             if (TextUtils.isEmpty(name) || name.length() < MIN_LESSON_CHAR || name.length() > MAX_LESSON_CHAR) {
@@ -646,8 +646,7 @@ public class LessonCreationActivity extends BaseActivity {
                 return false;
             }
 
-            if (selectTip.equals(mLessonSubjectTv.getText().toString()) ||
-                    TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
+            if (TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
                 Toast.makeText(mContext, R.string.subject_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -658,7 +657,7 @@ public class LessonCreationActivity extends BaseActivity {
             }*/
 
             String limitPeople = mLessonStuCount.getText().toString().trim();
-            if (mEnrollSwitcher.isChecked() && TextUtils.isEmpty(limitPeople)) {
+            if (TextUtils.isEmpty(limitPeople)) {
                 Toast.makeText(mContext, R.string.lesson_people_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -668,7 +667,7 @@ public class LessonCreationActivity extends BaseActivity {
                 Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return false;
             }*/
-            if (mEnrollSwitcher.isChecked() && limit <= 0) {
+            if (limit <= 0) {
                 Toast.makeText(mContext, R.string.lesson_people_must_be_positive, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -695,7 +694,7 @@ public class LessonCreationActivity extends BaseActivity {
             }
 
             String startTime = mLessonStartTimeTv.getText().toString().trim();
-            if (TextUtils.isEmpty(startTime) || selectTip.equals(startTime)) {
+            if (TextUtils.isEmpty(startTime)) {
                 Toast.makeText(mContext, R.string.lesson_start_time_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
