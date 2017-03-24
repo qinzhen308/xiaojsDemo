@@ -464,7 +464,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
 
     private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession, final OnDataLoadListener dataLoadListener) {
-        mUser = ClassroomBusiness.getUser(ctlSession.psType);
+        if (Constants.TEACHING_MODE == ctlSession.mode) {
+            mUser = Constants.User.TEACHER;
+        } else {
+            mUser = ClassroomBusiness.getUser(ctlSession.psType);
+        }
         mLiveSessionState = ctlSession.state;
         mLessonTitle.setText(!TextUtils.isEmpty(ctlSession.titleOfPrimary) ? ctlSession.titleOfPrimary : ctlSession.ctl.title);
         mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
