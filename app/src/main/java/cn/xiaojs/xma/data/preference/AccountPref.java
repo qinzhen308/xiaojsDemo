@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by maxiaobao on 2016/11/21.
@@ -42,10 +44,23 @@ public class AccountPref {
 
     private static final String PREF_ABILITY = "ability";
 
+    private static final String PREF_UNFOLLOWABLES = "un_followable";
+
 
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
+
+    public static Set<String> getUnfollowables(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getStringSet(PREF_UNFOLLOWABLES, null);
+    }
+
+    public static void setUnfollowables(final Context context, Set<String> accountIds) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putStringSet(PREF_UNFOLLOWABLES,accountIds);
+    }
+
 
 
     public static void addAbility(final Context context, String ability, boolean clear) {

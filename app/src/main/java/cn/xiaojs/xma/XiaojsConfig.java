@@ -19,6 +19,13 @@ public class XiaojsConfig {
     public static final int VERSION_BITS = 4;
 
 
+    //生产环境小教室账号ID
+    public static final String XAIOJS_ACCOUNT_ID = "58d255856734e6fe413589e0";
+    //测试环境小教室账号ID
+    public static final String TEST_XAIOJS_ACCOUNT_ID = "58d0aaac8b8d4bf95c396c1d";
+
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //channel
     //渠道好号，被Application初始化
@@ -128,7 +135,6 @@ public class XiaojsConfig {
     public static final int PORTRAIT_SIZE = 300;
 
     public static final int EXIT_DELAY = 1000;
-
 
 
 }

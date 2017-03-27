@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.DynamicStatus;
@@ -141,6 +143,11 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
     private void cancelFollow(final Dynamic bean) {
         //未关注时不能取消关注
         if (bean.owner == null || !bean.owner.followed) {
+            return;
+        }
+
+        if (AccountDataManager.unFollowable(mContext,bean.owner.account)) {
+            Toast.makeText(mContext, R.string.unfollow_forbidden,Toast.LENGTH_SHORT).show();
             return;
         }
 

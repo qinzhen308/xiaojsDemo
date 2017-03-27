@@ -89,7 +89,7 @@ public class MomentDetailActivity extends BaseActivity {
     protected void addViewContent() {
         addView(R.layout.activity_moment_detail);
         setMiddleTitle(R.string.detail);
-        setRightImage(R.drawable.ic_lesson_more);
+
         Intent intent = getIntent();
         if (intent != null) {
             mMomentId = intent.getStringExtra(HomeConstant.KEY_MOMENT_ID);
@@ -195,6 +195,14 @@ public class MomentDetailActivity extends BaseActivity {
     private void initView(DynamicDetail detail) {
         if (detail == null)
             return;
+
+        if (AccountDataManager.unFollowable(this,detail.owner.account)) {
+            setRightImage(-1);
+        }else{
+            setRightImage(R.drawable.ic_lesson_more);
+        }
+
+
         mHeader.setData(detail);
         mContent.show(detail);
         mAdapter = new MomentDetailAdapter(this, mList, true, mMomentId, detail.typeName);
@@ -310,6 +318,13 @@ public class MomentDetailActivity extends BaseActivity {
         //未关注时不能取消关注
         if (!mDetail.owner.followed)
             return;
+
+        if (AccountDataManager.unFollowable(this,mDetail.owner.account)) {
+            Toast.makeText(this, R.string.unfollow_forbidden,Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         SocialManager.unfollowContact(this, mDetail.owner.account, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {

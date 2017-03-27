@@ -17,6 +17,8 @@
             android:background="@drawable/common_edittext_bg"
             android:drawableLeft="@drawable/ic_search"
             android:layout_margin="@dimen/px15"
+            android:maxLines="1"
+            android:singleLine="true"
             android:padding="5dp"/>
 
     <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView
