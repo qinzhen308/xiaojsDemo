@@ -556,6 +556,9 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     String cover = TextUtils.isEmpty(contact.cover)? "" : contact.cover;
                     stmt.bindString(10,cover);
 
+
+
+
                     stmt.executeInsert();
                 }
 

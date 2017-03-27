@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
@@ -60,6 +62,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
 
         holder.showMoment();
         holder.content.show(bean);
+        holder.showOrHiddenMore(bean);
         holder.ugc.setStatus(bean);
         holder.ugc.setOnItemClickListener(new MomentUGC.OnItemClickListener() {
             @Override
@@ -84,7 +87,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             }
         });
         holder.header.setData(bean);
-        DeviceUtil.expandViewTouch(holder.ugc.getMore(),150);
+        DeviceUtil.expandViewTouch(holder.ugc.getMore(), 150);
         holder.header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,15 +96,15 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         });
     }
 
-    private void personalHome(Dynamic bean){
+    private void personalHome(Dynamic bean) {
         Intent intent = new Intent(mContext, PersonHomeActivity.class);
-        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT,bean.owner.account);
+        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, bean.owner.account);
         mContext.startActivity(intent);
     }
 
     private void more(final Dynamic bean, final int itemPosition) {
         ListBottomDialog dialog = new ListBottomDialog(mContext);
-        if (!VerifyUtils.isMyself(bean.owner.account)){
+        if (!VerifyUtils.isMyself(bean.owner.account)) {
             String[] items = mContext.getResources().getStringArray(R.array.ugc_more);
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -120,20 +123,20 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
                     }
                 }
             });
-        }else {
+        } else {
             String[] items = new String[]{mContext.getString(R.string.delete)};
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
                 @Override
                 public void onItemClick(int position) {
-                    delete(bean,itemPosition);
+                    delete(bean, itemPosition);
                 }
             });
         }
         dialog.show();
     }
 
-    private void delete(Dynamic bean, final int itemPosition){
+    private void delete(Dynamic bean, final int itemPosition) {
 
         showProgress(true);
         SocialManager.deleteActivity(mContext, bean.id, new APIServiceCallback() {
@@ -147,38 +150,44 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                ToastUtil.showToast(mContext,errorMessage);
+                ToastUtil.showToast(mContext, errorMessage);
             }
         });
     }
 
     //取消关注
-    private void cancelFollow(final Dynamic bean){
+    private void cancelFollow(final Dynamic bean) {
         //未关注时不能取消关注
         if (!bean.owner.followed)
             return;
+
+        if (AccountDataManager.unFollowable(mContext,bean.owner.account)) {
+            Toast.makeText(mContext, R.string.unfollow_forbidden,Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         SocialManager.unfollowContact(mContext, bean.owner.account, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
-                ToastUtil.showToast(mContext,R.string.cancel_followed);
+                ToastUtil.showToast(mContext, R.string.cancel_followed);
                 deleteByOwner(bean.owner);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                ToastUtil.showToast(mContext,errorMessage);
+                ToastUtil.showToast(mContext, errorMessage);
             }
         });
     }
 
-    private void deleteByOwner(Dynamic.DynOwner owner){
+    private void deleteByOwner(Dynamic.DynOwner owner) {
         List<Dynamic> removes = new ArrayList<>();
-        for (Dynamic dynamic : getList()){
-            if (dynamic.owner.account.equalsIgnoreCase(owner.account)){
+        for (Dynamic dynamic : getList()) {
+            if (dynamic.owner.account.equalsIgnoreCase(owner.account)) {
                 removes.add(dynamic);
             }
         }
-        if (removes != null && removes.size() > 0){
+        if (removes != null && removes.size() > 0) {
             getList().removeAll(removes);
             notifyDataSetChanged();
         }
@@ -232,8 +241,8 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             @Override
             public void onFailure(String errorCode, String errorMessage) {
 
-                if (getCount()<=0 && mPagination.getPage() == 1 && mFragment !=null){
-                    mFragment.showOrHiddenEmptyViiew(false,mContext.getResources().getString(R.string.load_failed_tip));
+                if (getCount() <= 0 && mPagination.getPage() == 1 && mFragment != null) {
+                    mFragment.showOrHiddenEmptyViiew(false, mContext.getResources().getString(R.string.load_failed_tip));
                 }
 
                 HomeMomentAdapter.this.onFailure(errorCode, errorMessage);
@@ -246,23 +255,23 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         Intent intent = new Intent(mContext, MomentDetailActivity.class);
         intent.putExtra(HomeConstant.KEY_MOMENT_ID, bean.id);
         intent.putExtra(HomeConstant.KEY_ITEM_POSITION, position);
-        ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_MOMENT_DETAIL);
+        ((BaseActivity) mContext).startActivityForResult(intent, HomeConstant.REQUEST_CODE_MOMENT_DETAIL);
     }
 
-    private void notifyUpdates(CollectionPage<Dynamic> dynamic){
-        if (mFragment != null){
+    private void notifyUpdates(CollectionPage<Dynamic> dynamic) {
+        if (mFragment != null) {
             mFragment.notifyUpdates(dynamic);
         }
     }
 
-    public void setFragment(HomeFragment fragment){
+    public void setFragment(HomeFragment fragment) {
         mFragment = fragment;
     }
 
-    public void update(DynamicStatus status){
-        if (status != null){
-            for (Dynamic dynamic : getList()){
-                if (dynamic.id.equalsIgnoreCase(status.id)){
+    public void update(DynamicStatus status) {
+        if (status != null) {
+            for (Dynamic dynamic : getList()) {
+                if (dynamic.id.equalsIgnoreCase(status.id)) {
                     dynamic.liked = status.liked;
                     dynamic.stats = status.status;
                     notifyDataSetChanged();
@@ -297,6 +306,14 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         public void showRecommend() {
             mMomentWrapper.setVisibility(View.GONE);
             mRecommendWrapper.setVisibility(View.VISIBLE);
+        }
+
+        public void showOrHiddenMore(Dynamic bean) {
+            if (AccountDataManager.unFollowable(mContext,bean.owner.account)) {
+                ugc.setMoreVisibility(View.GONE);
+            }else {
+                ugc.setMoreVisibility(View.VISIBLE);
+            }
         }
 
         public Holder(View view) {

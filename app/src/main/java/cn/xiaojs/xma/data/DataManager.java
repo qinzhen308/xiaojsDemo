@@ -14,6 +14,7 @@ import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.db.ContactDao;
 import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.data.loader.SyncService;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;

@@ -126,6 +126,11 @@ public class MomentUGC extends RelativeLayout {
 
     }
 
+    public void setMoreVisibility(int visibility) {
+        mMore.setVisibility(visibility);
+
+    }
+
     public View getMore(){
         return mMore;
     }
