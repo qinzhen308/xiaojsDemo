@@ -25,7 +25,9 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.ClaimCompetency;
@@ -730,6 +732,9 @@ public class LessonCreationActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * 创建或新建课程
+     */
     private void createOrEditLiveLesson() {
         if (!checkSubmitInfo()) {
             return;
@@ -816,6 +821,7 @@ public class LessonCreationActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED);
                 setResultOnFinish();
             }
 
@@ -834,6 +840,7 @@ public class LessonCreationActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_edit_success, Toast.LENGTH_SHORT).show();
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED);
                 setResultOnFinish();
             }
 
