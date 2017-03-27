@@ -30,6 +30,7 @@ import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
@@ -107,8 +108,12 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    protected SimpleDataChangeListener.ListenerType registerDataChangeListenerType() {
+        return SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED;
+    }
+
+    @Override
+    protected void onDataChanged() {
         initData();
     }
 

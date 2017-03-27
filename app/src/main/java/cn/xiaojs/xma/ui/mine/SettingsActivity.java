@@ -4,23 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.DataManager;
-import cn.xiaojs.xma.data.LoginDataManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.ui.account.LoginActivity;
-import cn.xiaojs.xma.ui.account.ModifyPasswordActivity;
-import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.util.APPUtils;
-import cn.xiaojs.xma.util.CacheUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.xiaojs.xma.util.JpushUtil;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.ui.account.ModifyPasswordActivity;
+import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.util.APPUtils;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -40,6 +33,8 @@ import cn.xiaojs.xma.util.JpushUtil;
 public class SettingsActivity extends BaseActivity {
     @BindView(R.id.exit_login)
     Button mExitLoginBtn;
+    @BindView(R.id.data_cache)
+    TextView mDataCacheTv;
 
     private Context mContext;
 
@@ -48,6 +43,8 @@ public class SettingsActivity extends BaseActivity {
         mContext = this;
         addView(R.layout.activity_settings);
         setMiddleTitle(R.string.settings);
+
+        mDataCacheTv.setText(DataManager.getLocalDataCache(this));
     }
 
     @OnClick({R.id.left_view, R.id.exit_login, R.id.message_notify_set,
@@ -68,6 +65,7 @@ public class SettingsActivity extends BaseActivity {
             case R.id.clear_cache_layout:
                 DataManager.clearbyUser(mContext);
                 Toast.makeText(mContext, R.string.clear_cache_completed, Toast.LENGTH_SHORT).show();
+                mDataCacheTv.setText("0KB");
                 break;
             case R.id.feedback_help:
                 break;

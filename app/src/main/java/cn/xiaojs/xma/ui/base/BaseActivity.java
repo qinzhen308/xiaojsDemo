@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.DataChangeHelper;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 
 import butterknife.ButterKnife;
@@ -49,6 +51,9 @@ public abstract class BaseActivity extends FragmentActivity {
     private Unbinder mBinder;
     private ProgressHUD progress;
 
+    private SimpleDataChangeListener mDataChangeListener;
+    private boolean mDataChanged = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +70,24 @@ public abstract class BaseActivity extends FragmentActivity {
         mFailedView = findViewById(R.id.base_failed);
         mReload = (Button) findViewById(R.id.base_failed_click);
         addViewContent();
+
+        registerDataChangeListener();
+    }
+
+    private void registerDataChangeListener() {
+        SimpleDataChangeListener.ListenerType type = registerDataChangeListenerType();
+        if (type == null) {
+            return;
+        }
+        if (mDataChangeListener == null) {
+            mDataChangeListener = new SimpleDataChangeListener(type) {
+                @Override
+                public void onDataChange() {
+                    mDataChanged = true;
+                }
+            };
+        }
+        DataChangeHelper.getInstance().registerDataChangeListener(mDataChangeListener);
     }
 
     protected void needHeader(boolean need){
@@ -233,6 +256,16 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mDataChanged) {
+            mDataChanged = false;
+            onDataChanged();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         if (mBinder != null){
             mBinder.unbind();
@@ -241,6 +274,22 @@ public abstract class BaseActivity extends FragmentActivity {
             progress.dismiss();
             progress = null;
         }
+
+        if (mDataChangeListener != null) {
+            DataChangeHelper.getInstance().unregisterDataChangeListener(mDataChangeListener);
+        }
         super.onDestroy();
+    }
+
+
+    protected SimpleDataChangeListener.ListenerType registerDataChangeListenerType() {
+        return null;
+    }
+
+    /**
+     * @see #registerDataChangeListenerType()
+     */
+    protected void onDataChanged() {
+
     }
 }

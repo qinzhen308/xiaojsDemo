@@ -13,10 +13,14 @@ package cn.xiaojs.xma.ui.base;
  * Date:2016/10/11
  * Desc:
  *
+ * Modify:huangyong
+ *        add data change listener
+ *
  * ======================================================================================== */
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +29,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.DataChangeHelper;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 
 import butterknife.ButterKnife;
@@ -38,6 +44,8 @@ public abstract class BaseFragment extends Fragment {
     private ProgressHUD progress;
     private View mFailView;
     private View mFailReloadBtn;
+    private SimpleDataChangeListener mDataChangeListener;
+    private boolean mDataChanged = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -122,5 +130,54 @@ public abstract class BaseFragment extends Fragment {
             progress.dismiss();
             progress = null;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mDataChanged) {
+            mDataChanged = false;
+            onDataChanged();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mDataChangeListener != null) {
+            DataChangeHelper.getInstance().unregisterDataChangeListener(mDataChangeListener);
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        SimpleDataChangeListener.ListenerType type = registerDataChangeListenerType();
+        if (type == null) {
+            return;
+        }
+
+        if (mDataChangeListener == null) {
+            mDataChangeListener = new SimpleDataChangeListener(type) {
+                @Override
+                public void onDataChange() {
+                    mDataChanged = true;
+                }
+            };
+        }
+        DataChangeHelper.getInstance().registerDataChangeListener(mDataChangeListener);
+    }
+
+    protected SimpleDataChangeListener.ListenerType registerDataChangeListenerType() {
+        return null;
+    }
+
+    /**
+     * @see #registerDataChangeListenerType()
+     */
+    protected void onDataChanged() {
+
     }
 }
