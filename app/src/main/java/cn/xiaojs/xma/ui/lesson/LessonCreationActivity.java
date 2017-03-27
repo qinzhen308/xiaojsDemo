@@ -351,6 +351,13 @@ public class LessonCreationActivity extends BaseActivity {
             mLessonDurationEdt.setText(String.valueOf(sch.getDuration()));
         }
 
+        CSubject subject = lessonDetail.getSubject();
+        if (subject != null) {
+            mLessonSubjectTv.setTextColor(mContentFont);
+            mCompetencyId = subject.getId();
+            mLessonSubjectTv.setText(subject.getName());
+        }
+
         //TODO publish person page, not implemented
         Publish publish = lessonDetail.getPublish();
         if (publish != null) {

@@ -714,7 +714,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     //mContext.getString(R.string.prepare_lesson),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
-                    mContext.getString(publishId)};
+                    mContext.getString(publishId),
+                    mContext.getString(R.string.lesson_again)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -732,6 +733,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             break;
                         case 2://发布到主页
                             publish(bean);
+                            break;
+                        case 3://再次开课
+                            lessonAgain(bean);
                             break;
                     }
                 }

@@ -710,7 +710,8 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
                     //mContext.getString(R.string.prepare_lesson),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
-                    mContext.getString(publishId)};
+                    mContext.getString(publishId),
+                    mContext.getString(R.string.lesson_again)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -728,6 +729,9 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
                             break;
                         case 2://发布到主页
                             publish(bean);
+                            break;
+                        case 3://再次开课
+                            lessonAgain(bean);
                             break;
                     }
                 }
@@ -775,6 +779,15 @@ public class LiveClassAdapter extends CanInScrollviewListView.Adapter {
             dialog.show();
         }
 */
+    }
+
+
+    //再次开课
+    private void lessonAgain(TeachLesson bean) {
+        Intent intent = new Intent(mContext, LessonCreationActivity.class);
+        intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_AGAIN);
+        ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_LESSON_AGAIN);
     }
 
     private void showProgress(boolean b) {
