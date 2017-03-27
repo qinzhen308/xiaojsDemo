@@ -33,6 +33,7 @@ import android.widget.FrameLayout;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.stickylistheaders.StickyListHeadersAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.stickylistheaders.StickyListHeadersListView;
+import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 
 public abstract class PullToRefreshStickyAdapterViewBase<T extends StickyListHeadersListView>
 		extends PullToRefreshBase<T> implements OnScrollListener {
@@ -251,6 +252,10 @@ public abstract class PullToRefreshStickyAdapterViewBase<T extends StickyListHea
 	 */
 	public void setOnItemClickListener(OnItemClickListener listener) {
 		mRefreshableView.setOnItemClickListener(listener);
+	}
+
+	public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener listener) {
+		mRefreshableView.setOnItemLongClickListener(listener);
 	}
 
 	public final void setOnLastItemVisibleListener(OnLastItemVisibleListener listener) {
