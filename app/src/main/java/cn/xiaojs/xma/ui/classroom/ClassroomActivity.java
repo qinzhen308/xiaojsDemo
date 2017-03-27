@@ -1994,6 +1994,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 mTeaPeerPlayStream = true;
             }
         } else {
+            if (type == OnStreamStateChangeListener.TYPE_STREAM_PLAY) {
+                if (mClassroomController != null) {
+                    mClassroomController.pausePublishStream();
+                }
+            }
         }
 
         if (XiaojsConfig.DEBUG) {
