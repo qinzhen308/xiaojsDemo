@@ -17,10 +17,13 @@ package cn.xiaojs.xma.ui.home;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -41,6 +44,7 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.DynamicStatus;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.LikedRecord;
@@ -91,6 +95,9 @@ public class MomentDetailActivity extends BaseActivity {
             mMomentId = intent.getStringExtra(HomeConstant.KEY_MOMENT_ID);
             itemPosition = intent.getIntExtra(HomeConstant.KEY_ITEM_POSITION,-1);
         }
+
+
+
         initList();
         mBinder = ButterKnife.bind(this);
         request();
@@ -158,6 +165,31 @@ public class MomentDetailActivity extends BaseActivity {
         mList = (PullToRefreshSwipeListView) findViewById(R.id.moment_detail_list);
         View header = LayoutInflater.from(this).inflate(R.layout.layout_moment_detail_header, null);
         mList.getRefreshableView().addHeaderView(header);
+
+        mList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                int index = position -1;//因为listview 添加了header，所以第一条item的position=1
+                Comment comment = mAdapter.getItem(index);
+                if (comment !=null && comment.createdBy!= null) {
+                    String cid = comment.createdBy.getId();
+                    if (!TextUtils.isEmpty(cid) && cid.equalsIgnoreCase(AccountDataManager.getAccountID(MomentDetailActivity.this))) {
+                        showDelDlg(comment.id, index);
+                    }
+                }
+
+                return true;
+            }
+        });
+
+
+//        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+//        });
     }
 
     private void initView(DynamicDetail detail) {
@@ -365,5 +397,41 @@ public class MomentDetailActivity extends BaseActivity {
             setResult(RESULT_OK,intent);
         }
         finish();
+    }
+
+
+    private void showDelDlg(final String cid, final int pos) {
+        ListBottomDialog dialog = new ListBottomDialog(MomentDetailActivity.this);
+        String[] items = new String[]{ getString(R.string.delete)};
+        dialog.setItems(items);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                delComment(cid,pos);
+            }
+        });
+        dialog.show();
+    }
+
+    private void delComment(String cid, final int position){
+        showProgress(true);
+        SocialManager.deleteCommentOrReply(this, cid, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+                cancelProgress();
+
+                mAdapter.getList().remove(position);
+                mAdapter.notifyDataSetChanged();
+
+                Toast.makeText(MomentDetailActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(MomentDetailActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
