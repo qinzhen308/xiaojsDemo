@@ -131,6 +131,20 @@ public class ClassroomBusiness {
         }
     }
 
+    public static byte[] base64ToByteData(String content) {
+        if (TextUtils.isEmpty(content)) {
+            return null;
+        }
+
+        String imgData  = content.substring(BASE64_JPEG_HEADER.length());
+        try {
+            byte[] data = Base64.decode(imgData);
+            return data;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static int getCurrentNetwork(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo currentInfo = cm.getActiveNetworkInfo();
