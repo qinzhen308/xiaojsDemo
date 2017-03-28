@@ -50,7 +50,6 @@ import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.util.ExpandGlide;
 import cn.xiaojs.xma.util.TimeUtil;
 
 public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Holder> implements View.OnClickListener {
