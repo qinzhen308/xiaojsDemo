@@ -41,6 +41,7 @@ import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
+import cn.xiaojs.xma.ui.widget.LiveingImageView;
 import cn.xiaojs.xma.util.NumberUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
@@ -79,6 +80,20 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
             holder.price.setText(NumberUtil.getPrice(bean.fee.charge));
         } else {
             holder.price.setText(R.string.free);
+        }
+
+        if (bean.state.equalsIgnoreCase(Ctl.LiveLessonState.FINISHED)) {
+            holder.stateImage.setShowText(false);
+            holder.stateImage.setImageResource(R.drawable.ic_homepage_class_finished);
+            holder.stateImage.setVisibility(View.VISIBLE);
+
+        }else if (bean.state.equalsIgnoreCase(Ctl.LiveLessonState.LIVE)) {
+            holder.stateImage.setShowText(true);
+            holder.stateImage.setImageResource(R.drawable.ic_direct);
+            holder.stateImage.setVisibility(View.VISIBLE);
+        }else{
+            holder.stateImage.setVisibility(View.GONE);
+            holder.stateImage.setShowText(false);
         }
     }
 
@@ -136,6 +151,8 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
         TextView title;
         @BindView(R.id.lesson_adapter_image)
         ImageView image;
+        @BindView(R.id.lesson_state_imgview)
+        LiveingImageView stateImage;
         @BindView(R.id.lesson_adapter_time)
         TextView time;
         @BindView(R.id.lesson_adapter_enroll)

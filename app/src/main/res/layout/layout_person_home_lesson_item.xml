@@ -10,17 +10,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <ImageView
-                android:id="@+id/lesson_adapter_image"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:src="@drawable/default_avatar_grey"
-                android:scaleType="fitXY"
+        <FrameLayout
+                android:id="@+id/lesson_cover_la"
                 android:layout_width="@dimen/px260"
-                android:layout_height="@dimen/px147"/>
+                android:layout_height="@dimen/px147"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true">
+
+            <ImageView
+                    android:id="@+id/lesson_adapter_image"
+                    android:src="@drawable/default_lesson_cover"
+                    android:scaleType="fitXY"
+                    android:layout_width="@dimen/px260"
+                    android:layout_height="@dimen/px147"/>
+            <cn.xiaojs.xma.ui.widget.LiveingImageView
+                    android:id="@+id/lesson_state_imgview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:background="@color/translucent_50"
+                    android:visibility="gone"/>
+
+        </FrameLayout>
 
         <LinearLayout
-                android:layout_toRightOf="@id/lesson_adapter_image"
+                android:layout_toRightOf="@id/lesson_cover_la"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_centerInParent="true"
                 android:orientation="vertical"

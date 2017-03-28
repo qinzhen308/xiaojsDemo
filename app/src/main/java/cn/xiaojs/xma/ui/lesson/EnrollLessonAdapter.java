@@ -304,7 +304,8 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
         if (bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)
                 || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
                 || bean.getState().equalsIgnoreCase(LessonState.DRAFT)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
+                || bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
             return;
         }
 

@@ -23,6 +23,10 @@ public class ErrorPrompts {
 
     public static String getErrorMessage(int apiType, String errorCode) {
 
+        if (TextUtils.isEmpty(errorCode)){
+            return "请求失败";
+        }
+
         if (errorCode.equals(Errors.UNAUTHORIZED)
                 || errorCode.equals(Errors.BAD_SESSION)
                 || errorCode.equals(Errors.BAD_CSRF)) {
