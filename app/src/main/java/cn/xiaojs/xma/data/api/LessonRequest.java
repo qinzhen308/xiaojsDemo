@@ -29,6 +29,7 @@ import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
+import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
 import okhttp3.ResponseBody;
@@ -132,6 +133,15 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.EDIT_LESSON, call);
 
     }
+
+    public void editLessonSchedule(@NonNull String lesson,
+                           @NonNull LessonSchedule lessonSchedule) {
+
+        Call<ResponseBody> call = getService().editLessonSchedule(lesson, lessonSchedule);
+        enqueueRequest(APIType.EDIT_LESSON_SCHEDULE, call);
+
+    }
+
 
 
     public void enrollLesson(@NonNull String lesson,

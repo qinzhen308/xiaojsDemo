@@ -148,4 +148,6 @@ public class APIType {
 
     public static final int GET_ENROLLED_STUDENTS = 84;
 
+    public static final int EDIT_LESSON_SCHEDULE = 85;
+
 }

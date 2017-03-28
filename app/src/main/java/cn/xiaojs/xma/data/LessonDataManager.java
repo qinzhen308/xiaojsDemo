@@ -27,6 +27,7 @@ import cn.xiaojs.xma.model.Pagination;
 
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
 
@@ -255,6 +256,22 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.editLesson(lesson, liveLesson);
+    }
+
+    /**
+     * 修改上课时间
+     * @param context
+     * @param lesson
+     * @param lessonSchedule
+     * @param callback
+     */
+     public static void editLessonSchedule(Context context,
+                                         @NonNull String lesson,
+                                         @NonNull LessonSchedule lessonSchedule,
+                                         @NonNull APIServiceCallback callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.editLessonSchedule(lesson, lessonSchedule);
     }
 
 
