@@ -912,97 +912,120 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (mTalkPanel == null) {
             mTalkPanel = new TalkPanel(this, mTicket, mUser);
             mReceivedTalkMsg = new ArrayList<TalkItem>();
-            mTalkPanel.setPanelCallback(new PanelCallback() {
-                @Override
-                public void onPanelOpened(int panel) {
-
-                }
-
-                @Override
-                public void onPanelClosed(int panel) {
-
-                }
-
-                @Override
-                public void switchPanel(int panel) {
-                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
-                    openInviteFriend();
-                }
-            }).setPanelItemClick(new OnPanelItemClick() {
-                @Override
-                public void onItemClick(int action, String accountId) {
-                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
-                    applyOpenStuVideo(accountId);
-                }
-            }).setTalkMsgListener(new OnTalkMsgListener() {
-                @Override
-                public void onTalkMsgReceived(TalkItem talkItem) {
-                    if (mOpenedPanel == null) {
-                        if (!mReceivedTalkMsg.contains(talkItem)) {
-                            mReceivedTalkMsg.add(talkItem);
-
-                            //update talk msg
-                            mEnterTalkBtn.setType(MessageImageView.TYPE_NUM);
-                            int offsetY = getResources().getDimensionPixelOffset(R.dimen.px8);
-                            mEnterTalkBtn.setExtraOffsetY(offsetY);
-                            mEnterTalkBtn.setCount(mReceivedTalkMsg.size());
-                        }
-                    }
-                }
-            }).setOnImageClickListener(new OnImageClickListener() {
-                @Override
-                public void onImageClick(final int type, final String key) {
-                    //聊天点击大图回调到视频图片编辑页面
-                    if (!TextUtils.isEmpty(key)) {
-                        mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
-                        new AsyncTask<String, Integer, Bitmap>() {
-                            @Override
-                            protected void onPreExecute() {
-                                super.onPreExecute();
-                            }
-
-                            @Override
-                            protected Bitmap doInBackground(String... params) {
-                                if (params == null || params.length == 0) {
-                                    return null;
-                                }
-
-                                String content = params[0];
-                                if (TextUtils.isEmpty(content)) {
-                                    return null;
-                                }
-
-                                if (type == OnImageClickListener.IMG_FROM_BASE64) {
-                                    return ClassroomBusiness.base64ToBitmap(content);
-                                } else if (type == OnImageClickListener.IMG_FROM_QINIU) {
-                                    try {
-                                        return Glide.with(ClassroomActivity.this)
-                                                .load(ClassroomBusiness.getImageUrl(key))
-                                                .asBitmap()
-                                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                                                .get();
-                                    } catch (Exception e) {
-                                        Logger.i(e != null ? e.getLocalizedMessage() : "null");
-                                    }
-                                }
-
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Bitmap bmp) {
-                                //enter video edit fragment
-                                enterVideoOrImageEditing(bmp);
-                            }
-                        }.execute(key);
-                    }
-                }
-            });
+            mTalkPanel.setPanelCallback(mPanelCallback)
+                    .setPanelItemClick(mOnPanelItemClick)
+                    .setTalkMsgListener(mOnTalkMsgListener)
+                    .setOnImageClickListener(mOnImageClickListener);
 
             //only init, without show
             mTalkPanel.initWithoutShow(mDrawerLayout, mRightDrawer);
         }
     }
+
+    /**
+     * panel 回调
+     */
+    private PanelCallback mPanelCallback = new PanelCallback() {
+        @Override
+        public void onPanelOpened(int panel) {
+
+        }
+
+        @Override
+        public void onPanelClosed(int panel) {
+
+        }
+
+        @Override
+        public void switchPanel(int panel) {
+            mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+            openInviteFriend();
+        }
+    };
+
+    /**
+     * panel item回调
+     */
+    private OnPanelItemClick mOnPanelItemClick = new OnPanelItemClick() {
+        @Override
+        public void onItemClick(int action, String accountId) {
+            mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+            applyOpenStuVideo(accountId);
+        }
+    };
+
+    /**
+     * 收到消息通知, 更新页面
+     */
+    private OnTalkMsgListener mOnTalkMsgListener = new OnTalkMsgListener() {
+        @Override
+        public void onTalkMsgReceived(TalkItem talkItem) {
+            if (mOpenedPanel == null) {
+                if (!mReceivedTalkMsg.contains(talkItem)) {
+                    mReceivedTalkMsg.add(talkItem);
+
+                    //update talk msg
+                    mEnterTalkBtn.setType(MessageImageView.TYPE_NUM);
+                    int offsetY = getResources().getDimensionPixelOffset(R.dimen.px8);
+                    mEnterTalkBtn.setExtraOffsetY(offsetY);
+                    mEnterTalkBtn.setCount(mReceivedTalkMsg.size());
+                }
+            }
+        }
+    };
+
+    /**
+     * 消息点击图片回调
+     */
+    private OnImageClickListener mOnImageClickListener = new OnImageClickListener() {
+        @Override
+        public void onImageClick(final int type, final String key) {
+            //聊天点击大图回调到视频图片编辑页面
+            if (!TextUtils.isEmpty(key)) {
+                mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+                new AsyncTask<String, Integer, Bitmap>() {
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                    }
+
+                    @Override
+                    protected Bitmap doInBackground(String... params) {
+                        if (params == null || params.length == 0) {
+                            return null;
+                        }
+
+                        String content = params[0];
+                        if (TextUtils.isEmpty(content)) {
+                            return null;
+                        }
+
+                        if (type == OnImageClickListener.IMG_FROM_BASE64) {
+                            return ClassroomBusiness.base64ToBitmap(content);
+                        } else if (type == OnImageClickListener.IMG_FROM_QINIU) {
+                            try {
+                                return Glide.with(ClassroomActivity.this)
+                                        .load(ClassroomBusiness.getImageUrl(key))
+                                        .asBitmap()
+                                        .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                        .get();
+                            } catch (Exception e) {
+                                Logger.i(e != null ? e.getLocalizedMessage() : "null");
+                            }
+                        }
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Bitmap bmp) {
+                        //enter video edit fragment
+                        enterVideoOrImageEditing(bmp);
+                    }
+                }.execute(key);
+            }
+        }
+    };
 
     /**
      * 打开通知消息

@@ -208,7 +208,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 getContactBookData();
                 break;
             case MODE_TALK:
-                getTalkMsgData(MULTI_TALK);
+                getTalkMsgData(mTalkCriteria);
+                switchTalkTab(mTalkCriteria);
                 getTalkSimpleContactData();
                 break;
         }
