@@ -161,7 +161,7 @@
         <item name="android:textSize">@dimen/font_26px</item>
         <item name="android:paddingTop">@dimen/px16</item>
         <item name="android:paddingBottom">@dimen/px16</item>
-        <item name="android:textColor">@color/font_light_gray</item>
+        <item name="android:textColor">@color/font_dark_gray</item>
     </style>
 
     <style name="LiveLessonDetailText">

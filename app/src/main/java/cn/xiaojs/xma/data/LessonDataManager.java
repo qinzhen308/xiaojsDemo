@@ -28,6 +28,7 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.ctl.LiveClass;
+import cn.xiaojs.xma.model.ctl.StudentInfo;
 
 import com.orhanobut.logger.Logger;
 
@@ -360,6 +361,25 @@ public class LessonDataManager {
     public static void acknowledgeLesson(Context context, String lesson, DealAck ack,APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.acknowledgeLesson(lesson, ack);
+    }
+
+    /**
+     * 查询指定课程的报名的学生
+     * @param context
+     * @param lesson
+     * @param page
+     * @param limit
+     * @param callback
+     */
+    public static void getEnrolledStudents(Context context,
+                                           String lesson,
+                                           int page,
+                                           int limit,
+                                           APIServiceCallback<List<StudentInfo>> callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getEnrolledStudents(lesson,page,limit,"Enrolled");
+
     }
 
 }

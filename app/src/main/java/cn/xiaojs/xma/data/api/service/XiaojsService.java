@@ -39,6 +39,7 @@ import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.model.ctl.LiveClass;
+import cn.xiaojs.xma.model.ctl.StudentInfo;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.TokenPair;
 import cn.xiaojs.xma.model.material.UploadParam;
@@ -252,6 +253,13 @@ public interface XiaojsService {
     //Get Live Classes
     @GET("/v1/ctl/live")
     Call<LiveClass> getLiveClasses();
+
+    //Get Enrolled Students
+    @GET("/v1/ctl/lesson/{lessonId}/enrolled")
+    Call<List<StudentInfo>> getEnrolledStudents(@Path("lessonId") String lessonId,
+                                                @Query("page") int page,
+                                                @Query("limit") int limit,
+                                                @Query("state") String state);
 
 
 

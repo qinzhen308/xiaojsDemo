@@ -700,6 +700,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="unfollow_forbidden">您不能取消关注此账号</string>
+    <string name="student">同学</string>
 
 
 </resources>

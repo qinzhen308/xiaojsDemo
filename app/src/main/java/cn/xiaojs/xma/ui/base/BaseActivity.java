@@ -47,12 +47,17 @@ public abstract class BaseActivity extends FragmentActivity {
     private View mHeaderDivider;
     private View mFailedView;
     private Button mReload;
+    private ImageView mFailedImgView;
+    private TextView mFailedDescView;
+    private TextView mFailedDescView1;
 
     private Unbinder mBinder;
     private ProgressHUD progress;
 
     private SimpleDataChangeListener mDataChangeListener;
     private boolean mDataChanged = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,9 @@ public abstract class BaseActivity extends FragmentActivity {
         mHeaderDivider = findViewById(R.id.base_header_divider);
         mFailedView = findViewById(R.id.base_failed);
         mReload = (Button) findViewById(R.id.base_failed_click);
+        mFailedImgView = (ImageView) findViewById(R.id.base_failed_image);
+        mFailedDescView = (TextView) findViewById(R.id.base_failed_desc);
+        mFailedDescView1 = (TextView) findViewById(R.id.base_failed_desc1);
         addViewContent();
 
         registerDataChangeListener();
@@ -240,6 +248,15 @@ public abstract class BaseActivity extends FragmentActivity {
         if (hiddenTrybtn) {
             mReload.setVisibility(View.GONE);
         }
+    }
+
+    public void showEmptyView(String emptyTip) {
+        mFailedView.setVisibility(View.VISIBLE);
+        mContent.setVisibility(View.GONE);
+        mReload.setVisibility(View.GONE);
+        mFailedDescView1.setVisibility(View.GONE);
+        mFailedDescView.setText(emptyTip);
+        mFailedImgView.setImageResource(R.drawable.ic_data_empty);
     }
 
 
