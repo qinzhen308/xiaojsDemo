@@ -49,6 +49,7 @@ import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.TimeUtil;
 
@@ -87,7 +88,9 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         String portraitUrl = Account.getAvatar(bean.from != null ? bean.from.accountId : null, size);
         Glide.with(mContext)
                 .load(portraitUrl)
-                .error(R.drawable.default_avatar)
+                .transform(new CircleTransform(mContext))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
                 .into(holder.portrait);
         holder.name.setText(bean.from.name);
         boolean isText = false;
@@ -149,7 +152,6 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
                             }
                         });
-                new LoadBase64ImgTask(holder.msgImg).execute(txt);
             } else {
                 //load img from qiniu url
                 String imgUrl = ClassroomBusiness.getSnapshot(imgKey, MAX_SIZE);
@@ -292,51 +294,5 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     private boolean isMyself(String currAccountId) {
         String accountId = AccountDataManager.getAccountID(mContext);
         return accountId != null && accountId.equals(currAccountId);
-    }
-
-    private class LoadBase64ImgTask extends AsyncTask<String, Integer, Bitmap> {
-        private ImageView mImg;
-
-        public LoadBase64ImgTask(ImageView img) {
-            mImg = img;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            if (params == null || params.length == 0 || mImg == null) {
-                return null;
-            }
-
-            String content = params[0];
-            if (TextUtils.isEmpty(content)) {
-                return null;
-            }
-
-            return ClassroomBusiness.base64ToBitmap(content);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bmp) {
-            if (bmp != null) {
-                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mImg.getLayoutParams();
-                int w = MAX_SIZE;
-                int h = MAX_SIZE;
-                if (bmp.getWidth() > bmp.getHeight()) {
-                    w = MAX_SIZE;
-                    h = (int) ((bmp.getHeight() / (float) bmp.getWidth()) * MAX_SIZE);
-                } else {
-                    h = MAX_SIZE;
-                    w = (int) ((bmp.getWidth() / (float) bmp.getHeight()) * MAX_SIZE);
-                }
-                params.width = w;
-                params.height = h;
-                mImg.setImageBitmap(bmp);
-            }
-        }
     }
 }
