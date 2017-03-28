@@ -1729,6 +1729,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         @Override
         public void call(Object... args) {
             mSktConnected = false;
+            if (mTalkPanel != null) {
+                mTalkPanel.needSocketReListener();
+            }
             if (XiaojsConfig.DEBUG) {
                 Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
             }
@@ -1747,6 +1750,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         @Override
         public void call(Object... args) {
             mSktConnected = false;
+            if (mTalkPanel != null) {
+                mTalkPanel.needSocketReListener();
+            }
             if (XiaojsConfig.DEBUG) {
                 Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
             }
@@ -1898,6 +1904,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (activeInfo == null) {
                 // have no active network
                 mSktConnected = false;
+                if (mTalkPanel != null) {
+                    mTalkPanel.needSocketReListener();
+                }
                 mEmptyView.setVisibility(View.VISIBLE);
                 if (mClassroomController != null) {
                     mClassroomController.onPauseVideo();

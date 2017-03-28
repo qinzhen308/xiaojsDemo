@@ -141,6 +141,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private String mMyAccountId = "";
     private Constants.User mUser;
     private boolean mPeerTabShow = false;
+    private boolean mSocketListenered = false;
 
     public TalkPanel(Context context, String ticket, Constants.User user) {
         super(context);
@@ -198,9 +199,12 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
     @Override
     public void initData() {
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
+        if (!mSocketListenered) {
+            mSocketListenered = false;
+            SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
+            SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
+            SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
+        }
 
         mMyAccountId = AccountDataManager.getAccountID(mContext);
         switch (mCurrentMode) {
@@ -347,6 +351,13 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 searchContactFromLocal(mSearchEdt.getText().toString());
                 break;
         }
+    }
+
+    /**
+     * 需要重新监听socket
+     */
+    public void needSocketReListener() {
+        mSocketListenered = false;
     }
 
     /**
