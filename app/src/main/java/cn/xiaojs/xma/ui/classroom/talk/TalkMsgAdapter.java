@@ -141,7 +141,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
         }
 
-        holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_MM_SS));
+        holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_HH_MM_SS));
     }
 
     @Override
