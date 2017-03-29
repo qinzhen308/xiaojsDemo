@@ -27,6 +27,7 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 
 import butterknife.ButterKnife;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.ui.view.AnimationView;
 import cn.xiaojs.xma.util.TimeUtil;
 
@@ -84,9 +85,32 @@ public class LiveProgress extends LinearLayout {
         }
     }
 
-    public void showTimeBar(long duration, long finishOn){
+    private void showLiveStateAndTime(String liveState, long duration, long finishOn) {
+
+
+
+    }
+
+    public void showTimeBar(String liveState, long duration, long finishOn){
 
         long cur = duration * 60 - finishOn;
+
+        if (liveState.equals(Live.LiveSessionState.DELAY)) {
+
+            long delat = cur - (duration *60);
+            state.setText("已超时" + (delat/60) + "分钟");
+
+            String timestr = TimeUtil.formatSecondTime(cur);
+            curTime.setText(timestr);
+            totalTime.setText(timestr);
+            progress.setProgress(100);
+            return;
+
+        }else if(liveState.equals(Live.LiveSessionState.RESET)) {
+            state.setText("课间休息");
+        }else{
+            state.setText("上课中");
+        }
 
         curTime.setText(TimeUtil.formatSecondTime(cur));
         totalTime.setText(TimeUtil.formatSecondTime(finishOn));

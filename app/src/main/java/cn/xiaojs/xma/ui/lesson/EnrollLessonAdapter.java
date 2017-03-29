@@ -146,7 +146,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.operation.setEnterColor(R.color.font_orange);
             holder.status.setVisibility(View.GONE);
             holder.progressWrapper.setVisibility(View.VISIBLE);
-            holder.progress.showTimeBar(bean.getSchedule().getDuration(), bean.getClassroom().finishOn);
+            holder.progress.showTimeBar(bean.getClassroom().liveState,bean.getSchedule().getDuration(), bean.getClassroom().finishOn);
             //String[] items = new String[]{mContext.getString(R.string.data_bank)};
             String[] items = new String[]{" "};
             holder.operation.setItems(items);
