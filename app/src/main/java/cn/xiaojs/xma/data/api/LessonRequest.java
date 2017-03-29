@@ -12,6 +12,7 @@ import cn.xiaojs.xma.model.AccessLesson;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CancelReason;
+import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.ELResponse;
@@ -55,7 +56,7 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void getLessons(String account,int page, int limit){
-        Call<List<PersonHomeUserLesson>> call = getService().getLessons(account,page,limit);
+        Call<CollectionPageData<PersonHomeUserLesson>> call = getService().getLessons(account,page,limit);
         enqueueRequest(APIType.GET_LESSONS_BY_USER, call);
     }
 
