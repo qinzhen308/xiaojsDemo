@@ -497,6 +497,7 @@
     <string name="none_follow_tip">您只有关注了%1$s，才能给%2$s发消息哦~</string>
     <string name="follow_and_send_message">关注%1$s，发消息</string>
     <string name="lesson_no_introduction">暂无简介</string>
+    <string name="teacher_resetting">老师休息中...</string>
 
     <!-- empty tips -->
     <string name="moment_data_empty">此人还没有动态</string>

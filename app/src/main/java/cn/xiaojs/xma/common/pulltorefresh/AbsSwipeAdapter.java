@@ -596,7 +596,6 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     private void addEmptyView() {
         if (showEmptyView()) {
-            setEmptyLayoutParams(mEmptyLayout, getEmptyLayoutParams());
             if (!TextUtils.isEmpty(mDesc)) {
                 mEmptyDesc.setVisibility(View.VISIBLE);
                 mEmptyDesc.setText(mDesc);
@@ -629,6 +628,8 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             }
             mListView.removeEmptyView(mFailedView);
             mListView.setEmptyView(mEmptyView);
+
+            setEmptyLayoutParams(mEmptyLayout, getEmptyLayoutParams());
             onDataEmpty();
         }
     }
