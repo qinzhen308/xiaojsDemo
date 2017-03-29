@@ -133,8 +133,8 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 .load(portraitUrl)
                 .transform(new CircleTransform(mContext))
                 .signature(new StringSignature(DeviceUtil.getSignature()))
-                .placeholder(R.drawable.default_avatar)
-                .error(R.drawable.default_avatar)
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
                 .into(holder.portrait);
         holder.name.setText(attendee.name);
 

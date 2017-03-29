@@ -65,7 +65,7 @@
         <TextView
                 android:id="@+id/live_lesson_brief"
                 style="@style/LiveLessonRightEntrance"
-                android:text="@string/please_input"/>
+                android:hint="@string/please_input"/>
 
     </LinearLayout>
 
@@ -84,7 +84,7 @@
         <TextView
                 android:id="@+id/live_lesson_label"
                 style="@style/LiveLessonRightEntrance"
-                android:text="@string/live_lesson_label_hint"/>
+                android:hint="@string/live_lesson_label_hint"/>
 
     </LinearLayout>
 
@@ -103,7 +103,7 @@
         <TextView
                 android:id="@+id/teacher_introduction"
                 style="@style/LiveLessonRightEntrance"
-                android:text="@string/please_input"/>
+                android:hint="@string/please_input"/>
 
     </LinearLayout>
 
@@ -124,7 +124,7 @@
         <TextView
                 android:id="@+id/sit_in_on"
                 style="@style/LiveLessonRightEntrance"
-                android:text="@string/please_set"/>
+                android:hint="@string/please_set"/>
 
     </LinearLayout>
 

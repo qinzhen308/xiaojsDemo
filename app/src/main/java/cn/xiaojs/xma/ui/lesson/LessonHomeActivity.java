@@ -325,8 +325,10 @@ public class  LessonHomeActivity extends BaseActivity{
         String lessonState = mLessonDetail.getState();
         if (lessonState.equals(Ctl.LiveLessonState.CANCELLED)) {
             applyBtn.setText("课已取消");
+            applyBtn.setEnabled(false);
         }else if (lessonState.equals(Ctl.LiveLessonState.FINISHED)) {
             applyBtn.setText("已完课");
+            applyBtn.setEnabled(false);
         }else {
 
             if (mLessonDetail.isEnrolled) {
@@ -334,16 +336,27 @@ public class  LessonHomeActivity extends BaseActivity{
                 String state = mLessonDetail.enrollState;
                 if (TextUtils.isEmpty(state) || state.equals(Ctl.EnrollmentState.ENROLLED)) {
                     applyBtn.setText("进入教室");
+                    applyBtn.setEnabled(true);
                 } else if (state.equals(Ctl.EnrollmentState.PENDING_FOR_PAYMENT)) {
                     applyBtn.setText("立即支付");
+                    applyBtn.setEnabled(true);
                 } else if (state.equals(Ctl.EnrollmentState.CANCELLED)) {
                     applyBtn.setText("立即报名");
+                    applyBtn.setEnabled(true);
                 } else if (state.equals(Ctl.EnrollmentState.PENDING_FOR_ACK)) {
                     //nothing to do
                 }
 
             }else {
-                applyBtn.setText("立即报名");
+
+                Enroll enroll = mLessonDetail.getEnroll();
+                if (enroll != null && enroll.max == enroll.current) {
+                    applyBtn.setText("名额已满");
+                    applyBtn.setEnabled(false);
+                }else {
+                    applyBtn.setText("立即报名");
+                    applyBtn.setEnabled(true);
+                }
             }
         }
 

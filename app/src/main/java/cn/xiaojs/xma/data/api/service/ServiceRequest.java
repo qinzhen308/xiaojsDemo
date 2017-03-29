@@ -286,7 +286,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
     }
 
     private boolean needToLogin(String errorCode) {
-        if (Errors.needLogin(errorCode)){
+
+        if (!TextUtils.isEmpty(errorCode) && Errors.needLogin(errorCode)){
             APPUtils.exitAndLogin(context,R.string.relogin);
             return true;
         }

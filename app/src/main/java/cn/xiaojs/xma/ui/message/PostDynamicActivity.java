@@ -22,6 +22,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.DataChangeHelper;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
@@ -207,11 +209,10 @@ public class PostDynamicActivity extends BaseActivity {
                 Toast.makeText(PostDynamicActivity.this, R.string.post_dyn_ok, Toast.LENGTH_SHORT)
                         .show();
 
-                //发广播代替了
-               // setResult(RESULT_OK);
+                //setResult(RESULT_OK);
 
-                PostDynamicActivity.this.sendBroadcast(new Intent("refresh"));
-
+                //通知动态发生变化
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.DYNAMIC_CHANGED);
                 finish();
             }
 

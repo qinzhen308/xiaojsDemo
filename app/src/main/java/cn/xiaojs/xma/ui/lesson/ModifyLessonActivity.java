@@ -25,6 +25,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
+import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.LimitInputBox;
 import cn.xiaojs.xma.util.DataPicker;
@@ -112,11 +113,16 @@ public class ModifyLessonActivity extends BaseActivity {
                 ToastUtil.showToast(this,R.string.delay_reason_hint);
                 return;
             }
-            LiveLesson liveLesson = new LiveLesson();
+//            LiveLesson liveLesson = new LiveLesson();
             Schedule schedule = new Schedule();
             schedule.setStart(new Date(newDate));
-            liveLesson.setSchedule(schedule);
-            LessonDataManager.requestEditLesson(this, bean.getId(), liveLesson, new APIServiceCallback() {
+            schedule.setDuration(bean.getSchedule().getDuration());
+//            liveLesson.setSchedule(schedule);
+
+            LessonSchedule lessonSchedule = new LessonSchedule();
+            lessonSchedule.schedule = schedule;
+
+            LessonDataManager.editLessonSchedule(this, bean.getId(), lessonSchedule, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
                     cancelProgress();

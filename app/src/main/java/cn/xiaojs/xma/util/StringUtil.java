@@ -51,4 +51,13 @@ public class StringUtil {
             return "Ta";
         }
     }
+
+    public static String protectCardNo(String phone) {
+        if (TextUtils.isEmpty(phone) || phone.length() != 11) {
+            return phone;
+        }
+
+        return phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+
+    }
 }

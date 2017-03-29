@@ -13,6 +13,7 @@
             android:layout_alignParentLeft="true"
             android:layout_width="@dimen/px56"
             android:layout_height="@dimen/px56"
+            android:scaleType="centerCrop"
             roundimg:oval="true"
             roundimg:border_color="@color/white"
             roundimg:border_width="@dimen/px2"/>

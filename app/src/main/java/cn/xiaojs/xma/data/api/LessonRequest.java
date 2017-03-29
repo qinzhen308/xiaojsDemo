@@ -29,7 +29,9 @@ import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
+import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
+import cn.xiaojs.xma.model.ctl.StudentInfo;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -132,6 +134,15 @@ public class LessonRequest extends ServiceRequest {
 
     }
 
+    public void editLessonSchedule(@NonNull String lesson,
+                           @NonNull LessonSchedule lessonSchedule) {
+
+        Call<ResponseBody> call = getService().editLessonSchedule(lesson, lessonSchedule);
+        enqueueRequest(APIType.EDIT_LESSON_SCHEDULE, call);
+
+    }
+
+
 
     public void enrollLesson(@NonNull String lesson,
                              @Nullable OfflineRegistrant offlineRegistrant) {
@@ -217,6 +228,12 @@ public class LessonRequest extends ServiceRequest {
     public void acknowledgeLesson(String lesson, DealAck ack) {
         Call<ResponseBody> call = getService().acknowledgeLesson(lesson, ack);
         enqueueRequest(APIType.ACKNOWLEDGE_LESSON, call);
+
+    }
+
+    public void getEnrolledStudents(String lesson,int page, int limit, String state){
+        Call<List<StudentInfo>> call = getService().getEnrolledStudents(lesson, page, limit, state);
+        enqueueRequest(APIType.GET_ENROLLED_STUDENTS,call);
 
     }
 

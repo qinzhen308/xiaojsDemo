@@ -40,4 +40,5 @@ public class PersonHomeUserLesson {
     public String title;
     public String id;
     public String teacher;
+    public String state;
 }

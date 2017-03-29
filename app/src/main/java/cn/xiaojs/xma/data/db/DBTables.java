@@ -84,6 +84,8 @@ public class DBTables {
         public static final String GNAME = "gname";
         public static final String COVER = "cover";
 
+        //public static final String UN_FOLLOWABLE = "unfollowable";
+
     }
 
     /**

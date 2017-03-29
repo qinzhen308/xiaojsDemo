@@ -111,6 +111,11 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.pending_shelves);
             holder.state.setBackgroundResource(R.drawable.course_state_draft_bg);
+
+            holder.distance.setVisibility(View.VISIBLE);
+            holder.distance.setText(TimeUtil.distanceDay(bean.getSchedule().getStart(), true));
+
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
             holder.operation.setItems(items);
@@ -128,19 +133,17 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 3://查看详情
                             detail(bean);
                             break;
-                        case ENTER:
-                            enterClass(bean);
-                            break;
+                        //删除目前接口还不支持
                     }
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
             holder.assistants.setVisibility(View.VISIBLE);
-            String[] items = new String[]{mContext.getString(R.string.edit),
-                    mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+            String[] items = new String[]{mContext.getString(R.string.lesson_recreate),
+                    mContext.getString(R.string.look_detail)};//mContext.getString(R.string.delete) 删除接口目前还不支持
             holder.state.setText(R.string.examine_failure);
             holder.state.setBackgroundResource(R.drawable.course_state_failure_bg);
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
             holder.operation.setEnterColor(R.color.common_text);
@@ -149,26 +152,23 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 @Override
                 public void onClick(int position) {
                     switch (position) {
-                        case 1://编辑
-                            edit(bean);
+                        case 1://重新开课
+                            lessonAgain(bean);
                             break;
                         case 2://查看详情
                             detail(bean);
                             break;
-                        case 3://删除
-                            delete(bean);
-                            break;
-                        case ENTER:
-                            enterClass(bean);
-                            break;
+//                        case 3://删除
+//                            delete(bean);
+//                            break;
                     }
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
-            String[] items = new String[]{mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+            String[] items = new String[]{mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.course_state_cancel);
             holder.state.setBackgroundResource(R.drawable.course_state_cancel_bg);
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
             holder.operation.setEnterColor(R.color.common_text);
@@ -180,21 +180,20 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 1://查看详情
                             detail(bean);
                             break;
-                        case 2://删除
-                            delete(bean);
-                            break;
-                        case ENTER:
-                            enterClass(bean);
-                            break;
+//                        case 2://删除
+//                            delete(bean);
+//                            break;
+//                        case ENTER:
+//                            enterClass(bean);
+//                            break;
                     }
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
-            String[] items = new String[]{mContext.getString(R.string.edit),
-                    mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+            String[] items = new String[]{mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.force_stop);
             holder.state.setBackgroundResource(R.drawable.course_state_stop_bg);
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(true);
             holder.operation.setEnterColor(R.color.common_text);
@@ -203,17 +202,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 @Override
                 public void onClick(int position) {
                     switch (position) {
-                        case 1://编辑
-                            edit(bean);
-                            break;
-                        case 2://查看详情
+                        case 1://查看详情
                             detail(bean);
-                            break;
-                        case 3://删除
-                            delete(bean);
-                            break;
-                        case ENTER:
-                            enterClass(bean);
                             break;
                     }
                 }
@@ -223,6 +213,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             String[] items = new String[]{"同意", "拒绝"};
             holder.state.setText("待确认");
             holder.state.setBackgroundResource(R.drawable.course_state_examine_bg);
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
             holder.operation.setEnterColor(R.color.common_text);
@@ -235,13 +226,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             dealAck(position, bean, Ctl.ACKDecision.ACKNOWLEDGE);
                             break;
                         case 2://拒绝
-                            dealAck(position,bean, Ctl.ACKDecision.REFUSED);
+                            dealAck(position, bean, Ctl.ACKDecision.REFUSED);
                             break;
                     }
                 }
             });
 
-        } else if(bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)) {
+        } else if (bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)) {
             holder.state.setText("已确认");
             holder.state.setBackgroundResource(R.drawable.course_state_ackledged_bg);
             holder.operation.setVisibility(View.GONE);
@@ -254,6 +245,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.examining);
             holder.state.setBackgroundResource(R.drawable.course_state_examine_bg);
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.enableMore(false);
             holder.operation.enableEnter(false);
             holder.operation.setEnterColor(R.color.common_text);
@@ -268,9 +260,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 2://查看详情
                             detail(bean);
                             break;
-                        case ENTER:
-                            enterClass(bean);
-                            break;
                     }
                 }
             });
@@ -283,30 +272,32 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 //            holder.assistants.show(l);
 //            String[] items = new String[]{/*mContext.getString(R.string.prepare_lesson),*/
 //                    mContext.getString(R.string.class_home)};
-            String[] items = new String[]{" "};
+            String[] items = new String[]{mContext.getString(R.string.look_detail)};
 
 //            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
 //                items[0] = mContext.getString(R.string.lesson_again);
 //            }
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.enableMore(true);
             holder.operation.enableEnter(true);
             holder.operation.setItems(items);
-            holder.operation.hiddenDiver();
+            //holder.operation.hiddenDiver();
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
                     switch (position) {
-                        case 1://备课
+                        case 1:
+                            detail(bean);
 //                            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
 //                                lessonAgain(bean);
 //                            } else {
 //                                prepare(bean);
 //                            }
-                            home(bean);
+                            //home(bean);
                             break;
-                        case 2://班级主页
-                            home(bean);
-                            break;
+//                        case 2://班级主页
+//                            home(bean);
+//                            break;
                         case MORE:
                             more(bean);
                             break;
@@ -320,13 +311,15 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 holder.state.setText(R.string.pending_for_course);
                 holder.state.setBackgroundResource(R.drawable.course_state_wait_bg);
                 holder.operation.setEnterColor(R.color.common_text);
+                holder.distance.setVisibility(View.VISIBLE);
+                holder.distance.setText(TimeUtil.distanceDay(bean.getSchedule().getStart(), true));
 
             } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
                 holder.state.setText(R.string.living);
                 holder.state.setBackgroundResource(R.drawable.course_state_on_bg);
                 holder.operation.setEnterColor(R.color.font_orange);
                 holder.progressWrapper.setVisibility(View.VISIBLE);
-                holder.progress.showTimeBar(bean.getSchedule().getDuration(),bean.getClassroom().finishOn);
+                holder.progress.showTimeBar(bean.getClassroom().liveState,bean.getSchedule().getDuration(), bean.getClassroom().finishOn);
             } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
                 holder.state.setVisibility(View.GONE);
                 holder.operation.setEnterColor(R.color.common_text);
@@ -336,9 +329,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
         if (LessonState.PENDING_FOR_LIVE.equalsIgnoreCase(bean.getState())
                 || LessonState.DRAFT.equalsIgnoreCase(bean.getState())) {
-            holder.distance.setVisibility(View.VISIBLE);
-            holder.operation.setEnterColor(R.color.common_text);
-            holder.distance.setText(TimeUtil.distanceDay(bean.getSchedule().getStart(), true));
+
         }
     }
 
@@ -422,10 +413,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 cancelProgress();
                 if (descion == Ctl.ACKDecision.ACKNOWLEDGE) {
                     bean.setState(LessonState.ACKNOWLEDGED);
-                    Toast.makeText(mContext,"您已同意",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "您已同意", Toast.LENGTH_SHORT).show();
                     notifyData(bean);
-                }else{
-                    Toast.makeText(mContext,"您已拒绝",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "您已拒绝", Toast.LENGTH_SHORT).show();
                     getList().remove(position);
                     notifyDataSetChanged();
                 }
@@ -435,7 +426,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(mContext,errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -513,13 +504,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 TimeUtil.TIME_YYYY_MM_DD_HH_MM);
 
         String name = "";
-        if (bean.getTeacher() !=null && bean.getTeacher().getBasic() != null) {
-           name = bean.getTeacher().getBasic().getName();
+        if (bean.getTeacher() != null && bean.getTeacher().getBasic() != null) {
+            name = bean.getTeacher().getBasic().getName();
         }
 
         String shareUrl = ApiManager.getShareLessonUrl(bean.getId());
 
-        ShareUtil.show((Activity) mContext,bean.getTitle(),new StringBuilder(startTime).append("\r\n").append(name).toString(),shareUrl);
+        ShareUtil.show((Activity) mContext, bean.getTitle(), new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     //报名注册
@@ -714,7 +705,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     //mContext.getString(R.string.prepare_lesson),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
-                    mContext.getString(publishId)};
+                    mContext.getString(publishId),
+                    mContext.getString(R.string.lesson_again)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -732,6 +724,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             break;
                         case 2://发布到主页
                             publish(bean);
+                            break;
+                        case 3://再次开课
+                            lessonAgain(bean);
                             break;
                     }
                 }
@@ -798,16 +793,18 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     protected void onDataItemClick(int position, TeachLesson bean) {
 
         if (bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)) {
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
+                || bean.getState().equalsIgnoreCase(LessonState.DRAFT)
+                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
+                || bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
             return;
         }
 
-        if (!LessonState.DRAFT.equals(bean.getState())) {
-            Intent i = new Intent(mContext, LessonHomeActivity.class);
-            i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
-            i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
-            mContext.startActivity(i);
-        }
+        Intent i = new Intent(mContext, LessonHomeActivity.class);
+        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
+        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        mContext.startActivity(i);
+
 
     }
 
@@ -849,11 +846,11 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     @Override
     protected void onEmptyButtonClick() {
 
-        if (AccountDataManager.isTeacher(mContext)){
+        if (AccountDataManager.isTeacher(mContext)) {
             //老师可以开课
-            Intent intent = new Intent(mContext,LessonCreationActivity.class);
-            ((BaseActivity)mContext).startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
-        }else {
+            Intent intent = new Intent(mContext, LessonCreationActivity.class);
+            ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
+        } else {
             //提示申明教学能力
             final CommonDialog dialog = new CommonDialog(mContext);
             dialog.setTitle(R.string.declare_teaching_ability);
@@ -957,7 +954,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             super(view);
         }
     }
-
 
 
 }

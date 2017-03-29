@@ -34,6 +34,8 @@ import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
 
+import org.w3c.dom.Text;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -51,6 +53,32 @@ public class AccountDataManager {
         }
 
         return XiaojsConfig.mLoginUser.getAccount();
+    }
+
+    /**
+     *
+     * @param context
+     * @param accountId
+     * @return
+     */
+    public static boolean unFollowable(Context context, String accountId) {
+
+        //FIXME 临时做法
+        if (TextUtils.isEmpty(accountId) ||
+                accountId.equals(XiaojsConfig.XAIOJS_ACCOUNT_ID) //线上环境
+                || accountId.equals(XiaojsConfig.TEST_XAIOJS_ACCOUNT_ID)) {//测试环境
+            return true;
+        }
+
+        return false;
+
+
+//        Set<String> ids = AccountPref.getUnfollowables(context);
+//        if (ids != null && ids.contains(accountId)) {
+//            return true;
+//        }
+//
+//        return false;
     }
 
     /**

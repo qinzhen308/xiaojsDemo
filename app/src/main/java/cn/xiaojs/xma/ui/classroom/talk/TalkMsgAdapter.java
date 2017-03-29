@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.classroom.talk;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,6 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.orhanobut.logger.Logger;
 
 import java.util.List;
@@ -44,10 +49,11 @@ import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.TimeUtil;
 
-public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Holder> implements View.OnClickListener{
+public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Holder> implements View.OnClickListener {
     public final static int TYPE_MY_SPEAKER = 0;
     public final static int TYPE_OTHER_SPEAKER = 1;
     private static int MAX_SIZE = 280;
@@ -77,12 +83,14 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     }
 
     @Override
-    protected void setViewContent(Holder holder, TalkItem bean, int position) {
+    protected void setViewContent(final Holder holder, TalkItem bean, int position) {
         int size = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
         String portraitUrl = Account.getAvatar(bean.from != null ? bean.from.accountId : null, size);
         Glide.with(mContext)
                 .load(portraitUrl)
-                .error(R.drawable.default_avatar)
+                .transform(new CircleTransform(mContext))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
                 .into(holder.portrait);
         holder.name.setText(bean.from.name);
         boolean isText = false;
@@ -106,31 +114,44 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
             holder.msgImg.setVisibility(View.GONE);
             holder.msgTxt.setVisibility(View.VISIBLE);
             holder.msgTxt.setText(bean.body != null ? bean.body.text : null);
-        } else if (!TextUtils.isEmpty(txt) || !TextUtils.isEmpty(imgKey)){
+        } else if (!TextUtils.isEmpty(txt) || !TextUtils.isEmpty(imgKey)) {
             holder.msgTxt.setVisibility(View.GONE);
             holder.msgImg.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(txt)) {
                 //decode base64 to bitmap
-                //TODO 待优化
-                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)holder.msgImg.getLayoutParams();
-                //byte[] imgData = Base64.decode(txt, Base64.DEFAULT);
-                //Bitmap bmp = BitmapUtils.byteArrayToBitmap(imgData);
-                Bitmap bmp = ClassroomBusiness.base64ToBitmap(txt);
-                if (bmp != null) {
-                    int w = MAX_SIZE;
-                    int h = MAX_SIZE;
-                    if (bmp.getWidth() > bmp.getHeight()) {
-                        w = MAX_SIZE;
-                        h = (int)((bmp.getHeight() / (float)bmp.getWidth()) * MAX_SIZE);
-                    } else {
-                        h = MAX_SIZE;
-                        w = (int)((bmp.getWidth() / (float)bmp.getHeight()) * MAX_SIZE);
-                    }
-                    params.width = w;
-                    params.height = h;
-                }
-                holder.msgImg.setImageBitmap(bmp);
-                //new LoadBase64ImgTask(holder.msgImg).execute(txt);
+                byte[] imgData = ClassroomBusiness.base64ToByteData(txt);
+                Glide.with(mContext)
+                        .load(imgData)
+                        .into(new GlideDrawableImageViewTarget(holder.msgImg) {
+                            @Override
+                            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                                super.onResourceReady(resource, animation);
+                                if (resource instanceof GlideBitmapDrawable) {
+                                    Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
+                                    if (bmp != null) {
+                                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.msgImg.getLayoutParams();
+                                        int w = MAX_SIZE;
+                                        int h = MAX_SIZE;
+                                        if (bmp.getWidth() > bmp.getHeight()) {
+                                            w = MAX_SIZE;
+                                            h = (int) ((bmp.getHeight() / (float) bmp.getWidth()) * MAX_SIZE);
+                                        } else {
+                                            h = MAX_SIZE;
+                                            w = (int) ((bmp.getWidth() / (float) bmp.getHeight()) * MAX_SIZE);
+                                        }
+                                        params.width = w;
+                                        params.height = h;
+                                    }
+                                    holder.msgImg.setImageBitmap(bmp);
+                                }
+                            }
+
+                            @Override
+                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                super.onLoadFailed(e, errorDrawable);
+
+                            }
+                        });
             } else {
                 //load img from qiniu url
                 String imgUrl = ClassroomBusiness.getSnapshot(imgKey, MAX_SIZE);
@@ -141,7 +162,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
         }
 
-        holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_MM_SS));
+        holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_HH_MM_SS));
     }
 
     @Override
@@ -192,7 +213,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     @Override
     protected void doRequest() {
         //onSuccess(getTalkList());
-        LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>> () {
+        LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
             @Override
             public void onSuccess(CollectionPage<TalkItem> object) {
                 if (XiaojsConfig.DEBUG) {
@@ -218,8 +239,8 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
     @Override
     public void onClick(View v) {
-       View parent = (View) v.getParent();
-       Object obj = parent.getTag();
+        View parent = (View) v.getParent();
+        Object obj = parent.getTag();
         try {
             Integer position = (Integer) obj;
             TalkItem talkItem = getItem(position);
@@ -273,51 +294,5 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     private boolean isMyself(String currAccountId) {
         String accountId = AccountDataManager.getAccountID(mContext);
         return accountId != null && accountId.equals(currAccountId);
-    }
-
-    private class LoadBase64ImgTask extends AsyncTask<String, Integer, Bitmap> {
-        private ImageView mImg;
-
-        public LoadBase64ImgTask(ImageView img) {
-            mImg = img;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            if (params == null || params.length == 0 || mImg == null) {
-                return null;
-            }
-
-            String content = params[0];
-            if (TextUtils.isEmpty(content)) {
-                return null;
-            }
-
-            return ClassroomBusiness.base64ToBitmap(content);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bmp) {
-            if (bmp != null) {
-                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)mImg.getLayoutParams();
-                int w = MAX_SIZE;
-                int h = MAX_SIZE;
-                if (bmp.getWidth() > bmp.getHeight()) {
-                    w = MAX_SIZE;
-                    h = (int)((bmp.getHeight() / (float)bmp.getWidth()) * MAX_SIZE);
-                } else {
-                    h = MAX_SIZE;
-                    w = (int)((bmp.getWidth() / (float)bmp.getHeight()) * MAX_SIZE);
-                }
-                params.width = w;
-                params.height = h;
-                mImg.setImageBitmap(bmp);
-            }
-        }
     }
 }

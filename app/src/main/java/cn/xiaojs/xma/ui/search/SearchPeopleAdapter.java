@@ -34,6 +34,7 @@ import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
+import cn.xiaojs.xma.util.StringUtil;
 
 public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
 
@@ -94,7 +95,10 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
             holder = (Holder) convertView.getTag();
         }
 
-        holder.name.setText(mBeans.get(position)._source.basic.getName());
+        AccountSearch accountSearch = mBeans.get(position);
+
+        holder.name.setText(accountSearch._source.basic.getName());
+        holder.tag.setText(StringUtil.protectCardNo(accountSearch._source.phone.subsNum));
         Glide.with(mContext)
                 .load(Account.getAvatar(mBeans.get(position)._id,300))
                 .bitmapTransform(circleTransform)

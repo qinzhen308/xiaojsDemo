@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.DataChangeHelper;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 
 import butterknife.ButterKnife;
@@ -45,9 +47,17 @@ public abstract class BaseActivity extends FragmentActivity {
     private View mHeaderDivider;
     private View mFailedView;
     private Button mReload;
+    private ImageView mFailedImgView;
+    private TextView mFailedDescView;
+    private TextView mFailedDescView1;
 
     private Unbinder mBinder;
     private ProgressHUD progress;
+
+    private SimpleDataChangeListener mDataChangeListener;
+    private boolean mDataChanged = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +74,28 @@ public abstract class BaseActivity extends FragmentActivity {
         mHeaderDivider = findViewById(R.id.base_header_divider);
         mFailedView = findViewById(R.id.base_failed);
         mReload = (Button) findViewById(R.id.base_failed_click);
+        mFailedImgView = (ImageView) findViewById(R.id.base_failed_image);
+        mFailedDescView = (TextView) findViewById(R.id.base_failed_desc);
+        mFailedDescView1 = (TextView) findViewById(R.id.base_failed_desc1);
         addViewContent();
+
+        registerDataChangeListener();
+    }
+
+    private void registerDataChangeListener() {
+        SimpleDataChangeListener.ListenerType type = registerDataChangeListenerType();
+        if (type == null) {
+            return;
+        }
+        if (mDataChangeListener == null) {
+            mDataChangeListener = new SimpleDataChangeListener(type) {
+                @Override
+                public void onDataChange() {
+                    mDataChanged = true;
+                }
+            };
+        }
+        DataChangeHelper.getInstance().registerDataChangeListener(mDataChangeListener);
     }
 
     protected void needHeader(boolean need){
@@ -219,6 +250,15 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
+    public void showEmptyView(String emptyTip) {
+        mFailedView.setVisibility(View.VISIBLE);
+        mContent.setVisibility(View.GONE);
+        mReload.setVisibility(View.GONE);
+        mFailedDescView1.setVisibility(View.GONE);
+        mFailedDescView.setText(emptyTip);
+        mFailedImgView.setImageResource(R.drawable.ic_data_empty);
+    }
+
 
     public void setOnFailedClick(View.OnClickListener listener){
         mReload.setOnClickListener(listener);
@@ -233,6 +273,16 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mDataChanged) {
+            mDataChanged = false;
+            onDataChanged();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         if (mBinder != null){
             mBinder.unbind();
@@ -241,6 +291,22 @@ public abstract class BaseActivity extends FragmentActivity {
             progress.dismiss();
             progress = null;
         }
+
+        if (mDataChangeListener != null) {
+            DataChangeHelper.getInstance().unregisterDataChangeListener(mDataChangeListener);
+        }
         super.onDestroy();
+    }
+
+
+    protected SimpleDataChangeListener.ListenerType registerDataChangeListenerType() {
+        return null;
+    }
+
+    /**
+     * @see #registerDataChangeListenerType()
+     */
+    protected void onDataChanged() {
+
     }
 }

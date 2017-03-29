@@ -17,8 +17,6 @@ package cn.xiaojs.xma.ui.home;
 
 import android.animation.Animator;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -38,6 +36,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.DynamicStatus;
 import cn.xiaojs.xma.model.social.Dynamic;
@@ -79,25 +78,13 @@ public class HomeFragment extends BaseFragment {
 
     private HomeMomentAdapter mAdapter;
 
-    private RefreshReceiver refreshReceiver;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        refreshReceiver = new RefreshReceiver();
-
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("refresh");
 
-        getActivity().registerReceiver(refreshReceiver,intentFilter);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        getActivity().unregisterReceiver(refreshReceiver);
     }
 
     @Override
@@ -141,6 +128,18 @@ public class HomeFragment extends BaseFragment {
             }
         });
     }
+
+    @Override
+    protected SimpleDataChangeListener.ListenerType registerDataChangeListenerType() {
+        return SimpleDataChangeListener.ListenerType.DYNAMIC_CHANGED;
+    }
+
+    @Override
+    protected void onDataChanged() {
+        //do something
+        toRefresh();
+    }
+
 
     private void handleScrollChanged(int offsetY) {
         if (offsetY >= 0) {
@@ -310,13 +309,6 @@ public class HomeFragment extends BaseFragment {
     public void toRefresh() {
         if (mAdapter != null){
             mAdapter.doRefresh();
-        }
-    }
-
-    private class RefreshReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            toRefresh();
         }
     }
 }

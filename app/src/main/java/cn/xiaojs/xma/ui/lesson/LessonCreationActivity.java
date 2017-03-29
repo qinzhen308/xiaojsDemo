@@ -25,7 +25,9 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.ClaimCompetency;
@@ -351,6 +353,13 @@ public class LessonCreationActivity extends BaseActivity {
             mLessonDurationEdt.setText(String.valueOf(sch.getDuration()));
         }
 
+        CSubject subject = lessonDetail.getSubject();
+        if (subject != null) {
+            mLessonSubjectTv.setTextColor(mContentFont);
+            mCompetencyId = subject.getId();
+            mLessonSubjectTv.setText(subject.getName());
+        }
+
         //TODO publish person page, not implemented
         Publish publish = lessonDetail.getPublish();
         if (publish != null) {
@@ -637,7 +646,7 @@ public class LessonCreationActivity extends BaseActivity {
      */
     private boolean checkSubmitInfo() {
         try {
-            String selectTip = mContext.getString(R.string.please_select);
+            //String selectTip = mContext.getString(R.string.please_select);
 
             String name = mLessonNameEdt.getText().toString();
             if (TextUtils.isEmpty(name) || name.length() < MIN_LESSON_CHAR || name.length() > MAX_LESSON_CHAR) {
@@ -646,8 +655,7 @@ public class LessonCreationActivity extends BaseActivity {
                 return false;
             }
 
-            if (selectTip.equals(mLessonSubjectTv.getText().toString()) ||
-                    TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
+            if (TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
                 Toast.makeText(mContext, R.string.subject_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -658,7 +666,7 @@ public class LessonCreationActivity extends BaseActivity {
             }*/
 
             String limitPeople = mLessonStuCount.getText().toString().trim();
-            if (mEnrollSwitcher.isChecked() && TextUtils.isEmpty(limitPeople)) {
+            if (TextUtils.isEmpty(limitPeople)) {
                 Toast.makeText(mContext, R.string.lesson_people_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -668,7 +676,7 @@ public class LessonCreationActivity extends BaseActivity {
                 Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return false;
             }*/
-            if (mEnrollSwitcher.isChecked() && limit <= 0) {
+            if (limit <= 0) {
                 Toast.makeText(mContext, R.string.lesson_people_must_be_positive, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -695,7 +703,7 @@ public class LessonCreationActivity extends BaseActivity {
             }
 
             String startTime = mLessonStartTimeTv.getText().toString().trim();
-            if (TextUtils.isEmpty(startTime) || selectTip.equals(startTime)) {
+            if (TextUtils.isEmpty(startTime)) {
                 Toast.makeText(mContext, R.string.lesson_start_time_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -724,6 +732,9 @@ public class LessonCreationActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * 创建或新建课程
+     */
     private void createOrEditLiveLesson() {
         if (!checkSubmitInfo()) {
             return;
@@ -810,6 +821,7 @@ public class LessonCreationActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED);
                 setResultOnFinish();
             }
 
@@ -828,6 +840,7 @@ public class LessonCreationActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_edit_success, Toast.LENGTH_SHORT).show();
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED);
                 setResultOnFinish();
             }
 

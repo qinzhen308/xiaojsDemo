@@ -53,6 +53,7 @@ import cn.xiaojs.xma.common.im.utils.FileHelper;
 import cn.xiaojs.xma.common.im.utils.HandleResponseCode;
 import cn.xiaojs.xma.common.im.utils.IdHelper;
 import cn.xiaojs.xma.common.im.utils.SharePreferenceManager;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.personal.PersonalInfoActivity;
 import cn.xiaojs.xma.ui.widget.SingleSelectDialog;
@@ -278,12 +279,16 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             final UserInfo userInfo = (UserInfo) mConv.getTargetInfo();
             if (userInfo == null) return;
 
-            Intent intent = new Intent(this, PersonalInfoActivity.class);
-            intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, mTargetId);
+            //Intent intent = new Intent(this, PersonalInfoActivity.class);
+            //intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, mTargetId);
             //intent.putExtra(PersonalBusiness.KEY_PERSONAL_NAME, userInfo.getNickname());
             //intent.putExtra(PersonalBusiness.KEY_PERSONAL_SIGN, userInfo.getSignature());
             //intent.putExtra(PersonalBusiness.KEY_PERSONAL_SEX, userInfo.getGender());
-            startActivity(intent);
+            //startActivity(intent);
+
+            Intent intent = new Intent(mContext, PersonHomeActivity.class);
+            intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, mTargetId);
+            mContext.startActivity(intent);
 
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_switch_voice_ib")) {
             mChatView.dismissMoreMenu();

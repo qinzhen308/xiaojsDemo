@@ -14,11 +14,12 @@ import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.db.ContactDao;
 import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.data.loader.SyncService;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.data.preference.DataPref;
-import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.APPUtils;
+import cn.xiaojs.xma.util.DataCacheManager;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.JpushUtil;
 
@@ -200,9 +201,20 @@ public class DataManager {
     private static void clearAPICache(Context context) {
         File cacheDir = new File(context.getCacheDir(), XiaojsConfig.HTTP_CACHE_DIR);
         FileUtil.clearDirFiles(cacheDir);
-
     }
 
+    public static String getLocalDataCache(Context context) {
+        long size = 0 ;
+        File cacheDir = new File(context.getCacheDir(), XiaojsConfig.HTTP_CACHE_DIR);
+        try {
+            size  = DataCacheManager.getFolderSize(cacheDir);
+            size = size + DataCacheManager.getFolderSize(Glide.getPhotoCacheDir(context));
+        } catch (Exception e) {
+
+        }
+
+        return DataCacheManager.getFormatSize(size);
+    }
 
 
     /**

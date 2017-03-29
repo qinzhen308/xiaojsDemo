@@ -224,6 +224,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private CommonDialog mExitDialog;
     private CommonDialog mFinishDialog;
     private CommonDialog mMobileNetworkDialog;
+    private CommonDialog mKickoutDialog;
 
     private Socket mSocket;
     private Boolean mSktConnected = false;
@@ -407,53 +408,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
                 }
                 if (ctlSession != null) {
-                    mUser = ClassroomBusiness.getUser(ctlSession.psType);
-                    mLiveSessionState = ctlSession.state;
-                    mLessonTitle.setText(!TextUtils.isEmpty(ctlSession.titleOfPrimary) ? ctlSession.titleOfPrimary : ctlSession.ctl.title);
-                    mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
-
-                    //init socket
-                    initSocketIO(mTicket, ctlSession.secret);
-                    listenSocket();
-
-                    //init ui
-                    initPanel();
-                    //setControllerBtnStyle(ctlSession.state);
-                    mLessonDuration = ctlSession.ctl != null ? ctlSession.ctl.duration : 0;
-                    mTotalTimeTv.setText(TimeUtil.formatMinuteTime(mLessonDuration));
-
-                    //init whiteboard
-                    initWhiteboardController();
-
-                    if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
-                        setPlayTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
-                        if (mUser == Constants.User.TEACHER) {
-                            mClassroomController.publishStream(ctlSession.publishUrl);
-                        } else if (mUser == Constants.User.STUDENT) {
-                            mPlayUrl = ctlSession.playUrl;
-                            mClassroomController.playStream(mPlayUrl);
-                        }
-                    } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
-                            Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
-                        setPendingLivePlayTime(ctlSession.startOn);
-                        mPlayUrl = ctlSession.playUrl;
-                        mClassroomController.playStream(mPlayUrl);
+                    if (ctlSession.accessible) {
+                        onBootSessionSucc(false, ctlSession, dataLoadListener);
                     } else {
-                        mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
+                        showHasConnected(ctlSession, dataLoadListener);
                     }
-                    setControllerBtnStyle(ctlSession.state);
-
-                    //init talk
-                    initTalk();
                 } else {
-                    if (XiaojsConfig.DEBUG) {
-                        Toast.makeText(ClassroomActivity.this, "BootSession 数据返回为null", Toast.LENGTH_SHORT).show();
-                    }
                     cancelProgress();
-                }
-
-                if (dataLoadListener != null) {
-                    dataLoadListener.onDataLoaded(true);
                 }
             }
 
@@ -468,6 +429,87 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 }
             }
         });
+    }
+
+    private void showHasConnected(final CtlSession ctlSession, final OnDataLoadListener dataLoadListener) {
+        if (mKickoutDialog == null) {
+            mKickoutDialog = new CommonDialog(this);
+            int width = DeviceUtil.getScreenWidth(this) / 2;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mKickoutDialog.setDesc(R.string.mobile_kick_out_desc);
+            mKickoutDialog.setLefBtnText(R.string.cancel);
+            mKickoutDialog.setRightBtnText(R.string.ok);
+            mKickoutDialog.setDialogLayout(width, height);
+            mKickoutDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    //强制登录
+                    mKickoutDialog.dismiss();
+                    onBootSessionSucc(true, ctlSession, dataLoadListener);
+                }
+            });
+
+            mKickoutDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mKickoutDialog.dismiss();
+                    Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_cancel, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+
+            mKickoutDialog.show();
+        }
+    }
+
+
+    private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession, final OnDataLoadListener dataLoadListener) {
+        if (Constants.TEACHING_MODE == ctlSession.mode) {
+            mUser = Constants.User.TEACHER;
+        } else {
+            mUser = ClassroomBusiness.getUser(ctlSession.psType);
+        }
+        mLiveSessionState = ctlSession.state;
+        mLessonTitle.setText(!TextUtils.isEmpty(ctlSession.titleOfPrimary) ? ctlSession.titleOfPrimary : ctlSession.ctl.title);
+        mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
+
+        //init socket
+        initSocketIO(mTicket, ctlSession.secret, forceConnect);
+        listenSocket();
+
+        //init ui
+        initPanel();
+        //setControllerBtnStyle(ctlSession.state);
+        mLessonDuration = ctlSession.ctl != null ? ctlSession.ctl.duration : 0;
+        mTotalTimeTv.setText(TimeUtil.formatMinuteTime(mLessonDuration));
+
+        //init whiteboard
+        initWhiteboardController();
+
+        if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
+            setPlayTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
+            if (mUser == Constants.User.TEACHER) {
+                mClassroomController.publishStream(ctlSession.publishUrl);
+            } else if (mUser == Constants.User.STUDENT) {
+                mPlayUrl = ctlSession.playUrl;
+                mClassroomController.playStream(mPlayUrl);
+            }
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
+                Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
+            setPendingLivePlayTime(ctlSession.startOn);
+            mPlayUrl = ctlSession.playUrl;
+            mClassroomController.playStream(mPlayUrl);
+        } else {
+            mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
+        }
+        setControllerBtnStyle(ctlSession.state);
+
+        //init talk
+        initTalk();
+
+        if (dataLoadListener != null) {
+            dataLoadListener.onDataLoaded(true);
+        }
     }
 
     private void setControllerBtnStyle(String liveSessionState) {
@@ -870,97 +912,120 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         if (mTalkPanel == null) {
             mTalkPanel = new TalkPanel(this, mTicket, mUser);
             mReceivedTalkMsg = new ArrayList<TalkItem>();
-            mTalkPanel.setPanelCallback(new PanelCallback() {
-                @Override
-                public void onPanelOpened(int panel) {
-
-                }
-
-                @Override
-                public void onPanelClosed(int panel) {
-
-                }
-
-                @Override
-                public void switchPanel(int panel) {
-                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
-                    openInviteFriend();
-                }
-            }).setPanelItemClick(new OnPanelItemClick() {
-                @Override
-                public void onItemClick(int action, String accountId) {
-                    mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
-                    applyOpenStuVideo(accountId);
-                }
-            }).setTalkMsgListener(new OnTalkMsgListener() {
-                @Override
-                public void onTalkMsgReceived(TalkItem talkItem) {
-                    if (mOpenedPanel == null) {
-                        if (!mReceivedTalkMsg.contains(talkItem)) {
-                            mReceivedTalkMsg.add(talkItem);
-
-                            //update talk msg
-                            mEnterTalkBtn.setType(MessageImageView.TYPE_NUM);
-                            int offsetY = getResources().getDimensionPixelOffset(R.dimen.px8);
-                            mEnterTalkBtn.setExtraOffsetY(offsetY);
-                            mEnterTalkBtn.setCount(mReceivedTalkMsg.size());
-                        }
-                    }
-                }
-            }).setOnImageClickListener(new OnImageClickListener() {
-                @Override
-                public void onImageClick(final int type, final String key) {
-                    //聊天点击大图回调到视频图片编辑页面
-                    if (!TextUtils.isEmpty(key)) {
-                        mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
-                        new AsyncTask<String, Integer, Bitmap>() {
-                            @Override
-                            protected void onPreExecute() {
-                                super.onPreExecute();
-                            }
-
-                            @Override
-                            protected Bitmap doInBackground(String... params) {
-                                if (params == null || params.length == 0) {
-                                    return null;
-                                }
-
-                                String content = params[0];
-                                if (TextUtils.isEmpty(content)) {
-                                    return null;
-                                }
-
-                                if (type == OnImageClickListener.IMG_FROM_BASE64) {
-                                    return ClassroomBusiness.base64ToBitmap(content);
-                                } else if (type == OnImageClickListener.IMG_FROM_QINIU) {
-                                    try {
-                                        return Glide.with(ClassroomActivity.this)
-                                                .load(ClassroomBusiness.getImageUrl(key))
-                                                .asBitmap()
-                                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                                                .get();
-                                    } catch (Exception e) {
-                                        Logger.i(e != null ? e.getLocalizedMessage() : "null");
-                                    }
-                                }
-
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Bitmap bmp) {
-                                //enter video edit fragment
-                                enterVideoOrImageEditing(bmp);
-                            }
-                        }.execute(key);
-                    }
-                }
-            });
+            mTalkPanel.setPanelCallback(mPanelCallback)
+                    .setPanelItemClick(mOnPanelItemClick)
+                    .setTalkMsgListener(mOnTalkMsgListener)
+                    .setOnImageClickListener(mOnImageClickListener);
 
             //only init, without show
             mTalkPanel.initWithoutShow(mDrawerLayout, mRightDrawer);
         }
     }
+
+    /**
+     * panel 回调
+     */
+    private PanelCallback mPanelCallback = new PanelCallback() {
+        @Override
+        public void onPanelOpened(int panel) {
+
+        }
+
+        @Override
+        public void onPanelClosed(int panel) {
+
+        }
+
+        @Override
+        public void switchPanel(int panel) {
+            mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+            openInviteFriend();
+        }
+    };
+
+    /**
+     * panel item回调
+     */
+    private OnPanelItemClick mOnPanelItemClick = new OnPanelItemClick() {
+        @Override
+        public void onItemClick(int action, String accountId) {
+            mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+            applyOpenStuVideo(accountId);
+        }
+    };
+
+    /**
+     * 收到消息通知, 更新页面
+     */
+    private OnTalkMsgListener mOnTalkMsgListener = new OnTalkMsgListener() {
+        @Override
+        public void onTalkMsgReceived(TalkItem talkItem) {
+            if (mOpenedPanel == null) {
+                if (!mReceivedTalkMsg.contains(talkItem)) {
+                    mReceivedTalkMsg.add(talkItem);
+
+                    //update talk msg
+                    mEnterTalkBtn.setType(MessageImageView.TYPE_NUM);
+                    int offsetY = getResources().getDimensionPixelOffset(R.dimen.px8);
+                    mEnterTalkBtn.setExtraOffsetY(offsetY);
+                    mEnterTalkBtn.setCount(mReceivedTalkMsg.size());
+                }
+            }
+        }
+    };
+
+    /**
+     * 消息点击图片回调
+     */
+    private OnImageClickListener mOnImageClickListener = new OnImageClickListener() {
+        @Override
+        public void onImageClick(final int type, final String key) {
+            //聊天点击大图回调到视频图片编辑页面
+            if (!TextUtils.isEmpty(key)) {
+                mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
+                new AsyncTask<String, Integer, Bitmap>() {
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                    }
+
+                    @Override
+                    protected Bitmap doInBackground(String... params) {
+                        if (params == null || params.length == 0) {
+                            return null;
+                        }
+
+                        String content = params[0];
+                        if (TextUtils.isEmpty(content)) {
+                            return null;
+                        }
+
+                        if (type == OnImageClickListener.IMG_FROM_BASE64) {
+                            return ClassroomBusiness.base64ToBitmap(content);
+                        } else if (type == OnImageClickListener.IMG_FROM_QINIU) {
+                            try {
+                                return Glide.with(ClassroomActivity.this)
+                                        .load(ClassroomBusiness.getImageUrl(key))
+                                        .asBitmap()
+                                        .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                        .get();
+                            } catch (Exception e) {
+                                Logger.i(e != null ? e.getLocalizedMessage() : "null");
+                            }
+                        }
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Bitmap bmp) {
+                        //enter video edit fragment
+                        enterVideoOrImageEditing(bmp);
+                    }
+                }.execute(key);
+            }
+        }
+    };
 
     /**
      * 打开通知消息
@@ -1623,8 +1688,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
 
-    private void initSocketIO(String ticket, String secret) {
-        SocketManager.init(ClassroomActivity.this, ticket, secret, true, true);
+    private void initSocketIO(String ticket, String secret, boolean force) {
+        SocketManager.init(ClassroomActivity.this, ticket, secret, true, true, force);
         mSocket = SocketManager.getSocket();
     }
 
@@ -1637,6 +1702,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         SocketManager.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         SocketManager.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION), mKickoutByUserListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
         SocketManager.connect();
     }
@@ -1663,9 +1729,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         @Override
         public void call(Object... args) {
             mSktConnected = false;
+            if (mTalkPanel != null) {
+                mTalkPanel.needSocketReListener();
+            }
             if (XiaojsConfig.DEBUG) {
                 Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
             }
+        }
+    };
+
+    private SocketManager.EventListener mKickoutByUserListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_tips, Toast.LENGTH_LONG).show();
+            finish();
         }
     };
 
@@ -1673,6 +1750,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         @Override
         public void call(Object... args) {
             mSktConnected = false;
+            if (mTalkPanel != null) {
+                mTalkPanel.needSocketReListener();
+            }
             if (XiaojsConfig.DEBUG) {
                 Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
             }
@@ -1824,6 +1904,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (activeInfo == null) {
                 // have no active network
                 mSktConnected = false;
+                if (mTalkPanel != null) {
+                    mTalkPanel.needSocketReListener();
+                }
                 mEmptyView.setVisibility(View.VISIBLE);
                 if (mClassroomController != null) {
                     mClassroomController.onPauseVideo();
@@ -1943,6 +2026,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 mTeaPeerPlayStream = true;
             }
         } else {
+            if (type == OnStreamStateChangeListener.TYPE_STREAM_PLAY) {
+                if (mClassroomController != null) {
+                    mClassroomController.pausePublishStream();
+                }
+            }
         }
 
         if (XiaojsConfig.DEBUG) {

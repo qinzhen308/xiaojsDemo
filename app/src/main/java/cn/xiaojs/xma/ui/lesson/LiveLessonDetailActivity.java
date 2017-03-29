@@ -1,11 +1,13 @@
 package cn.xiaojs.xma.ui.lesson;
 
+import android.content.Intent;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -34,6 +36,8 @@ import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static cn.xiaojs.xma.ui.lesson.CourseConstant.KEY_LESSON_ID;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -61,8 +65,8 @@ public class LiveLessonDetailActivity extends BaseActivity {
     View mEnrolledView;
     @BindView(R.id.enrolled_divide_line)
     View mEnrolledDivideLine;
-    @BindView(R.id.enrolled)
-    TextView mEnrolledCountTv;
+    //@BindView(R.id.enrolled)
+    //TextView mEnrolledCountTv;
     @BindView(R.id.lesson_viewed)
     TextView mLessonViewedTv;
     @BindView(R.id.lesson_collected)
@@ -139,10 +143,21 @@ public class LiveLessonDetailActivity extends BaseActivity {
     @BindView(R.id.visible_to_stu)
     ToggleButton mAuditVisibleBtn;
 
+
+    //students
+    @BindView(R.id.enrolled_student_layout)
+    RelativeLayout studentLayout;
+    @BindView(R.id.enroll_count)
+    TextView mEnrolledCountTv;
+    @BindView(R.id.cache_arrow)
+    ImageView enrooledArrow;
+
     private final static int INTRO_DEFAULT_LINES = 3;
     private final static int INTRO_MAX_LINES = 100;
     private boolean mLessonBriefSwitcher = false;
     private boolean mTeacherIntroSwitcher = false;
+
+    private String lessonId = null;
 
     @Override
     protected void addViewContent() {
@@ -154,7 +169,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_image, R.id.audit_person_select_enter, R.id.audit_portrait, R.id.visible_to_stu,
-            R.id.unfold_lesson_brief, R.id.unfold_teacher_intro})
+            R.id.unfold_lesson_brief, R.id.unfold_teacher_intro, R.id.enrolled_student_layout})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -170,6 +185,13 @@ public class LiveLessonDetailActivity extends BaseActivity {
             case R.id.unfold_lesson_brief:
             case R.id.unfold_teacher_intro:
                 foldOrUnfold(v);
+                break;
+            case R.id.enrolled_student_layout:
+                if (TextUtils.isEmpty(lessonId)) return;
+                Intent i = new Intent(this,EnrolledStudentActivity.class);
+                i.putExtra(KEY_LESSON_ID,lessonId);
+                startActivity(i);
+                break;
             default:
                 break;
         }
@@ -220,7 +242,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
     private void loadData() {
         Object obj = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
-        String lessonId = null;
+
         if (obj instanceof TeachLesson) {
             lessonId = ((TeachLesson) obj).getId();
         } else if (obj instanceof LiveItem){
@@ -293,7 +315,15 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 mEnrolledView.setVisibility(View.VISIBLE);
                 mEnrolledDivideLine.setVisibility(View.VISIBLE);
                 mEnrolledCountTv.setText(enroll.current + "/" + enroll.max);
+
+                boolean enrollClicked = enroll.current > 0? true : false;
+
+                studentLayout.setEnabled(enrollClicked);
+                enrooledArrow.setVisibility(enrollClicked? View.VISIBLE : View.INVISIBLE);
+
             } else {
+                studentLayout.setEnabled(false);
+                enrooledArrow.setVisibility(View.INVISIBLE);
                 mEnrolledView.setVisibility(View.GONE);
                 mEnrolledDivideLine.setVisibility(View.GONE);
             }

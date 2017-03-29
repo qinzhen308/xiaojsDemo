@@ -668,6 +668,11 @@ public class ContactActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
 
+                    if(AccountDataManager.unFollowable(ContactActivity.this,c.account)) {
+                        Toast.makeText(ContactActivity.this, "您不能取消关注此联系人",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     ContactGroup cg = getGroup(groupPosition);
                     requestUnfollow(cg, c, groupPosition, childPosition);
                 }

@@ -12,12 +12,49 @@
             android:focusableInTouchMode="true"
             android:background="@color/main_bg"
             android:layout_above="@+id/sub_btn">
+        <!--学生报名-->
+        <RelativeLayout
+                android:id="@+id/enrolled_student_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                style="@style/MinePageItem">
+
+            <TextView
+                    android:id="@+id/s_title"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_dark_gray"
+                    android:textSize="@dimen/px26"
+                    android:text="报名人数"/>
+
+            <TextView
+                    android:id="@+id/enroll_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/cache_arrow"
+                    android:textColor="@color/font_orange"
+                    android:textSize="@dimen/px26"
+                    android:text="0/0"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/px20"/>
+
+            <ImageView
+                    android:id="@+id/cache_arrow"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
+        </RelativeLayout>
 
         <!--已报名，已浏览，已收藏-->
         <LinearLayout
                 android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
             <LinearLayout
                     android:id="@+id/enrolled_layout"
