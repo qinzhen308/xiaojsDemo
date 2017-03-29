@@ -140,8 +140,25 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
     protected void setEmptyLayoutParams(View view, RelativeLayout.LayoutParams params) {
         if (params != null) {
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px300);
+            params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px60);
             view.setLayoutParams(params);
+
+            View click = view.findViewById(R.id.empty_click);
+            if (click != null) {
+                click.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    protected void setFailedLayoutParams(View view, RelativeLayout.LayoutParams params) {
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px60);
+        view.setLayoutParams(params);
+
+        View click = view.findViewById(R.id.empty_click);
+        if (click != null) {
+            click.setVisibility(View.GONE);
         }
     }
 
