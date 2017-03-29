@@ -35,10 +35,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPageData;
-import cn.xiaojs.xma.model.GetLessonsResponse;
-import cn.xiaojs.xma.model.PersonHomeLesson;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
-import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
@@ -83,6 +80,8 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
         } else {
             holder.price.setText(R.string.free);
         }
+
+
 
         if (bean.state.equalsIgnoreCase(Ctl.LiveLessonState.FINISHED)) {
             holder.stateImage.setShowText(false);
