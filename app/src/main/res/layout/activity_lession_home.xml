@@ -217,6 +217,8 @@
                         android:layout_below="@id/tea_name"
                         style="@style/lesson_home_textview"
                         android:textColor="@color/common_text"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         android:layout_alignLeft="@id/tea_name"/>
 
             </RelativeLayout>

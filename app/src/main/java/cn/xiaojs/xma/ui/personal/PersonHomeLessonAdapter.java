@@ -34,6 +34,7 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.PersonHomeLesson;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
@@ -119,11 +120,11 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
 
     @Override
     protected void doRequest() {
-        LessonDataManager.getLessonsByUser(mContext, mAccount, mPagination, new APIServiceCallback<List<PersonHomeUserLesson>>() {
+        LessonDataManager.getLessonsByUser(mContext, mAccount, mPagination, new APIServiceCallback<CollectionPageData<PersonHomeUserLesson>>() {
             @Override
-            public void onSuccess(List<PersonHomeUserLesson> object) {
-                if (object != null) {
-                    PersonHomeLessonAdapter.this.onSuccess(object);
+            public void onSuccess(CollectionPageData<PersonHomeUserLesson> object) {
+                if (object != null && object.lessons != null) {
+                    PersonHomeLessonAdapter.this.onSuccess(object.lessons);
                 } else {
                     PersonHomeLessonAdapter.this.onSuccess(null);
                 }

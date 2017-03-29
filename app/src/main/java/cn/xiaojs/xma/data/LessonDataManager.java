@@ -15,6 +15,7 @@ import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CancelReason;
+import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.ELResponse;
@@ -92,7 +93,7 @@ public class LessonDataManager {
     public static void getLessonsByUser(Context context,
                                       String account,
                                       Pagination pagination,
-                                      APIServiceCallback<List<PersonHomeUserLesson>> callback){
+                                      APIServiceCallback<CollectionPageData<PersonHomeUserLesson>> callback){
 
         int page = 1;
         int limit = 10;

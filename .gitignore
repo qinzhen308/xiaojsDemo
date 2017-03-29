@@ -40,5 +40,6 @@ _sandbox
 #infer check
 /infer-out
 
-
+#bugly
+/app/bugly
 

@@ -36,6 +36,7 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ELResponse;
 import cn.xiaojs.xma.model.LessonDetail;
+import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
@@ -417,6 +418,12 @@ public class  LessonHomeActivity extends BaseActivity{
                 mTeaNameTv.setText(tea.getBasic().getName());
 
                 String title = tea.getBasic().getTitle();
+
+                LiveLesson.TeachersIntro intro = lesson.getTeachersIntro();
+                if (intro != null && !TextUtils.isEmpty(intro.getText())) {
+                    title = intro.getText();
+                }
+
                 if (!TextUtils.isEmpty(title)) {
                     mTeaTitleTv.setText(title);
                 } else {

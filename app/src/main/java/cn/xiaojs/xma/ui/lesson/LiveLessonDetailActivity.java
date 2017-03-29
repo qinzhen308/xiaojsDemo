@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -144,8 +145,12 @@ public class LiveLessonDetailActivity extends BaseActivity {
 
 
     //students
+    @BindView(R.id.enrolled_student_layout)
+    RelativeLayout studentLayout;
     @BindView(R.id.enroll_count)
     TextView mEnrolledCountTv;
+    @BindView(R.id.cache_arrow)
+    ImageView enrooledArrow;
 
     private final static int INTRO_DEFAULT_LINES = 3;
     private final static int INTRO_MAX_LINES = 100;
@@ -310,7 +315,15 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 mEnrolledView.setVisibility(View.VISIBLE);
                 mEnrolledDivideLine.setVisibility(View.VISIBLE);
                 mEnrolledCountTv.setText(enroll.current + "/" + enroll.max);
+
+                boolean enrollClicked = enroll.current > 0? true : false;
+
+                studentLayout.setEnabled(enrollClicked);
+                enrooledArrow.setVisibility(enrollClicked? View.VISIBLE : View.INVISIBLE);
+
             } else {
+                studentLayout.setEnabled(false);
+                enrooledArrow.setVisibility(View.INVISIBLE);
                 mEnrolledView.setVisibility(View.GONE);
                 mEnrolledDivideLine.setVisibility(View.GONE);
             }

@@ -206,6 +206,7 @@
     <string name="prepare_lesson">备课</string>
     <string name="evaluate">评价</string>
     <string name="lesson_again">再次开课</string>
+    <string name="lesson_recreate">重新开课</string>
     <string name="invite">邀请</string>
 
     <!--lesson creation-->
