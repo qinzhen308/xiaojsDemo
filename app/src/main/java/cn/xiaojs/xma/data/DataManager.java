@@ -46,9 +46,13 @@ public class DataManager {
     public static final String SYNC_TYPE = "stype";
     public static final int TYPE_CONTACT = 1;
     public static final int TYPE_INIT = 2;
+    public static final int TYPE_FETCH_CONTACT_FROM_NET = 3;
 
     public static final String EXTRA_CONTACT = "econtact";
     public static final String EXTRA_GROUP = "egroup";
+
+    public static final String ACTION_UPDATE_CONTACT_FROM_DB = "cn.xiaojs.xma.update_contact_from_db";
+
 
     public static MemCache getCache(Context context) {
         return MemCache.getDataCache(context);
@@ -88,6 +92,12 @@ public class DataManager {
             i.putExtra(EXTRA_GROUP,groupMap);
         }
 
+        context.startService(i);
+    }
+
+    public static void lanuchLoadContactService(Context context) {
+        Intent i = new Intent(context, SyncService.class);
+        i.putExtra(DataManager.SYNC_TYPE,DataManager.TYPE_FETCH_CONTACT_FROM_NET);
         context.startService(i);
     }
 

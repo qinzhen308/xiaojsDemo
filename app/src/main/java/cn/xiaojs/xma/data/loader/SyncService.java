@@ -21,6 +21,7 @@ import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.db.ContactDao;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.Privilege;
@@ -51,6 +52,24 @@ public class SyncService extends IntentService {
 
             int syncType = intent.getIntExtra(DataManager.SYNC_TYPE, -1);
             switch (syncType) {
+                case DataManager.TYPE_FETCH_CONTACT_FROM_NET:
+
+                    if (NetUtil.getCurrentNetwork(context) == NetUtil.NETWORK_NONE) {
+                        return;
+                    }
+                    ArrayList<ContactGroup> cGroups = SocialManager.getContacts(context);
+                    if (cGroups != null) {
+                        DataManager.syncContactData(context, cGroups);
+
+                        ContactDao contactDao = new ContactDao();
+                        ArrayList<ContactGroup> newCGroups = contactDao.getContacts(context, DataManager.getGroupData(context));
+
+                        Intent i = new Intent(DataManager.ACTION_UPDATE_CONTACT_FROM_DB);
+                        i.putExtra(DataManager.EXTRA_CONTACT, newCGroups);
+                        sendBroadcast(i);
+                    }
+
+                    break;
                 case DataManager.TYPE_CONTACT:
                     ArrayList<ContactGroup> entry = (ArrayList<ContactGroup>) intent.
                             getSerializableExtra(DataManager.EXTRA_CONTACT);
