@@ -216,9 +216,6 @@ public class APPUtils {
         XiaojsConfig.mLoginUser = null;
         AccountDataManager.clearUserInfo(context);
 
-        //jpush logout
-        JpushUtil.logoutJpush();
-
         //jump login page
         Intent i = new Intent(context, LoginActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

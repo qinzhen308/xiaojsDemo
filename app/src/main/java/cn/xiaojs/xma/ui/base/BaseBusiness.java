@@ -182,7 +182,8 @@ public class BaseBusiness {
 
     public static void advisory(final Context context, boolean followed, String accountId, String name, String sex, final OnFollowListener listener) {
         if (followed) {
-                JpushUtil.launchChat(context, accountId, name);
+                // FIXME 进入聊天界面
+                //JpushUtil.launchChat(context, accountId, name);
         }else {
             final CommonDialog dialog = new CommonDialog(context);
 

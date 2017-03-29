@@ -25,12 +25,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.im.ChatActivity;
-import cn.xiaojs.xma.common.im.CircleImageView;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
@@ -53,7 +49,6 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.JpushUtil;
 import okhttp3.ResponseBody;
 
@@ -98,7 +93,8 @@ public class ContactActivity extends BaseActivity {
 
                 String name = TextUtils.isEmpty(contact.title)? contact.alias : contact.title;
                 String tid = contact.account;
-                JpushUtil.launchChat(ContactActivity.this, tid,name);
+                //FIXME 进入聊天界面
+                //JpushUtil.launchChat(ContactActivity.this, tid,name);
 
                 return false;
             }

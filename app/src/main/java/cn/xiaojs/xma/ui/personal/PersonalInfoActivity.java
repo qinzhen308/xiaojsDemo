@@ -28,29 +28,17 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.jpush.im.android.api.JMessageClient;
-import cn.jpush.im.android.api.callback.DownloadAvatarCallback;
-import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
+
 import cn.jpush.im.android.api.callback.GetUserInfoCallback;
 import cn.jpush.im.android.api.model.UserInfo;
-import cn.jpush.im.api.BasicCallback;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.im.ChatActivity;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.SocialManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.account.PublicHome;
-import cn.xiaojs.xma.model.account.User;
-import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.base.BaseBusiness;
+
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.IconTextView;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
+
 import cn.xiaojs.xma.util.JpushUtil;
-import cn.xiaojs.xma.util.StringUtil;
-import cn.xiaojs.xma.util.ToastUtil;
 
 public class PersonalInfoActivity extends BaseActivity {
 
@@ -139,7 +127,8 @@ public class PersonalInfoActivity extends BaseActivity {
             }
         }
 
-        mFollow.setText(getString(R.string.follow_and_send_message, JpushUtil.getGenderTitle(gender)));
+        //FIXME 得到IM的性别
+        //mFollow.setText(getString(R.string.follow_and_send_message, JpushUtil.getGenderTitle(gender)));
 
         String sign = info.getSignature();
         if (!TextUtils.isEmpty(sign)) {

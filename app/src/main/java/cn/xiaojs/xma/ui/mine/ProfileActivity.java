@@ -327,7 +327,8 @@ public class ProfileActivity extends BaseActivity {
 
         }
 
-        JpushUtil.updateUserInfo(basic);
+        //FIXME 更新IM 用户信息
+
 
     }
 

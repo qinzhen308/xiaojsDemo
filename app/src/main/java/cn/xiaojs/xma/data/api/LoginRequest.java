@@ -91,21 +91,6 @@ public class LoginRequest extends ServiceRequest {
             UpgradeManager.setUpgrade(getContext(),info.getUpgrade());
 
             DataManager.lanuchInitDataService(getContext(), info.contactGroups);
-
-            //jpush
-            if (info != null){
-
-                if (register) {
-                    //注册成功后，会自动登录
-                    JpushUtil.register(info.getUser());
-                }else {
-                    String aid = info.getUser().getId();
-                    JpushUtil.loginJpush(aid, aid);
-                }
-
-            }
-
-
         }
     }
 }

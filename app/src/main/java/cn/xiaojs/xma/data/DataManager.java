@@ -68,11 +68,6 @@ public class DataManager {
 
             lanuchInitDataService(context, null);
 
-            String aid  = AccountDataManager.getAccountID(context);
-            //jmessage login
-            if(JpushUtil.needLogin()) {
-                JpushUtil.loginJpush(aid,aid);
-            }
 
             //jpush alias/tags
             AccountDataManager.setAliaTagsWithCheck(context);
