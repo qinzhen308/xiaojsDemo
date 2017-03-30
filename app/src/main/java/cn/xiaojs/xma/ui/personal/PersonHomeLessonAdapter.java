@@ -35,10 +35,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPageData;
-import cn.xiaojs.xma.model.GetLessonsResponse;
-import cn.xiaojs.xma.model.PersonHomeLesson;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
-import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
@@ -52,6 +49,7 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
     public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, String account) {
         super(context, list);
         mAccount = account;
+        setDesc(context.getString(R.string.teacher_resetting));
     }
 
     public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, List<PersonHomeUserLesson> data) {
@@ -82,6 +80,8 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
         } else {
             holder.price.setText(R.string.free);
         }
+
+
 
         if (bean.state.equalsIgnoreCase(Ctl.LiveLessonState.FINISHED)) {
             holder.stateImage.setShowText(false);
@@ -141,8 +141,25 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
     protected void setEmptyLayoutParams(View view, RelativeLayout.LayoutParams params) {
         if (params != null) {
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px300);
+            params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px100);
             view.setLayoutParams(params);
+
+            View click = view.findViewById(R.id.empty_click);
+            if (click != null) {
+                click.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    protected void setFailedLayoutParams(View view, RelativeLayout.LayoutParams params) {
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px60);
+        view.setLayoutParams(params);
+
+        View click = view.findViewById(R.id.empty_click);
+        if (click != null) {
+            click.setVisibility(View.GONE);
         }
     }
 

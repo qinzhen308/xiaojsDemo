@@ -114,6 +114,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private View mEmptyView;
     private View mEmptyLayout;
     private View mFailedView;
+    private View mFailedLayout;
     private boolean mRefreshOnLoad = true;
     private int mRefreshMode = MODE_DOWN_REFRESH_MORE;
 
@@ -595,7 +596,6 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     private void addEmptyView() {
         if (showEmptyView()) {
-            setEmptyLayoutParams(mEmptyLayout, getEmptyLayoutParams());
             if (!TextUtils.isEmpty(mDesc)) {
                 mEmptyDesc.setVisibility(View.VISIBLE);
                 mEmptyDesc.setText(mDesc);
@@ -628,6 +628,8 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             }
             mListView.removeEmptyView(mFailedView);
             mListView.setEmptyView(mEmptyView);
+
+            setEmptyLayoutParams(mEmptyLayout, getEmptyLayoutParams());
             onDataEmpty();
         }
     }
@@ -658,6 +660,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
             return;
         if (mFailedView == null) {
             mFailedView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty, null);
+            mFailedLayout = mFailedView.findViewById(R.id.empty_layout);
             TextView desc = (TextView) mFailedView.findViewById(R.id.empty_desc);
             TextView desc1 = (TextView) mFailedView.findViewById(R.id.empty_desc1);
             Button click = (Button) mFailedView.findViewById(R.id.empty_click);
@@ -673,9 +676,27 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 }
             });
         }
+
+        setFailedLayoutParams(mFailedLayout, getFailedLayoutParams());
         mListView.removeEmptyView(mEmptyView);
         mListView.setEmptyView(mFailedView);
         onDataFailed();
+    }
+
+    private RelativeLayout.LayoutParams getFailedLayoutParams() {
+        RelativeLayout.LayoutParams relParams = null;
+        if (mFailedLayout != null) {
+            ViewGroup.LayoutParams params = mFailedLayout.getLayoutParams();
+            if (params instanceof RelativeLayout.LayoutParams) {
+                relParams = (RelativeLayout.LayoutParams)params;
+            }
+        }
+
+        return relParams;
+    }
+
+    protected void setFailedLayoutParams(View view, RelativeLayout.LayoutParams params) {
+
     }
 
     protected void onDataEmpty() {
