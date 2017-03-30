@@ -69,6 +69,7 @@ public class DataManager {
         if (AccountDataManager.isLogin(context)) {
 
             XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(context);
+            XiaojsConfig.AVATOR_TIME = AccountPref.getAvatorTime(context);
 
             lanuchInitDataService(context, null);
 

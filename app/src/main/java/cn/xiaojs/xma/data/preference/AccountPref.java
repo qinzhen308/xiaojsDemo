@@ -46,10 +46,24 @@ public class AccountPref {
 
     private static final String PREF_UNFOLLOWABLES = "un_followable";
 
+    private static final String PRFE_AVATOR_TIMESP = "avator_time";
+
 
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
 //    }
+
+
+    public static String getAvatorTime(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PRFE_AVATOR_TIMESP, String.valueOf(System.currentTimeMillis()));
+    }
+
+    public static void setAvatorTime(final Context context, String time) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PRFE_AVATOR_TIMESP,time);
+    }
+
 
     public static Set<String> getUnfollowables(final Context context) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);

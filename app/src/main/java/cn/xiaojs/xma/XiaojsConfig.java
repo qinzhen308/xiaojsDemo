@@ -136,5 +136,7 @@ public class XiaojsConfig {
 
     public static final int EXIT_DELAY = 1000;
 
+    public static String AVATOR_TIME;
+
 
 }
