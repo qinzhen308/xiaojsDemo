@@ -49,6 +49,8 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.BlockTabView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
@@ -127,9 +129,18 @@ public class  LessonHomeActivity extends BaseActivity{
         loadData();
     }
 
-    @OnClick({R.id.back_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.consulting})
+    @OnClick({R.id.back_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.consulting, R.id.lay_teacher})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.lay_teacher:
+
+                if (mLessonDetail == null)
+                    return;
+
+                Intent intent = new Intent(this, PersonHomeActivity.class);
+                intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, mLessonDetail.getTeacher()._id);
+                startActivity(intent);
+                break;
             case R.id.back_btn:
                 finish();
                 break;

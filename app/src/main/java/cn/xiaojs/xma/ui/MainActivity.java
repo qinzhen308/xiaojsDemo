@@ -1,10 +1,16 @@
 package cn.xiaojs.xma.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,6 +48,9 @@ public class MainActivity extends BaseTabActivity {
 
     private long time;
 
+    private UpgradeReceiver upgradeReceiver;
+    private boolean hasShow = false;
+
     @Override
     protected void initView() {
         //setMiddleTitle(R.string.app_name);
@@ -65,7 +74,7 @@ public class MainActivity extends BaseTabActivity {
             }
         }
 
-        UpgradeManager.checkUpgrade(MainActivity.this);
+        hasShow = UpgradeManager.checkUpgrade(MainActivity.this);
 
         JMessageClient.registerEventReceiver(this);
     }
@@ -194,8 +203,42 @@ public class MainActivity extends BaseTabActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(UpgradeManager.ACTION_SHOW_UPGRADE);
+
+        upgradeReceiver = new UpgradeReceiver();
+
+        registerReceiver(upgradeReceiver,filter);
+
+    }
+
+    @Override
     protected void onDestroy() {
         JMessageClient.unRegisterEventReceiver(this);
+
+        unregisterReceiver(upgradeReceiver);
         super.onDestroy();
+    }
+
+
+    private class UpgradeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(UpgradeManager.ACTION_SHOW_UPGRADE)) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("receiver new upgrade...");
+                }
+
+                if (!hasShow) {
+                    UpgradeManager.showUpgrade(MainActivity.this);
+                    hasShow = true;
+                }
+            }
+        }
     }
 }

@@ -170,10 +170,14 @@
             </RelativeLayout>
 
             <RelativeLayout
+                    android:id="@+id/lay_teacher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px24"
-                    style="@style/lesson_home_layout">
+                    style="@style/lesson_home_layout"
+                    android:background="@drawable/item_pressed"
+                    android:clickable="true"
+                    >
 
                 <ImageView
                         android:id="@+id/tea_avatar"
