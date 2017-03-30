@@ -34,6 +34,9 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
@@ -133,7 +136,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private OnTalkMsgListener mOnTalkMsgListener;
     private OnImageClickListener mOnImageClickListener;
     private OnPanelItemClick mOnPanelItemClick;
-    private final Object LOCK = new Object();
+    private final Object MSG_LIST_LOCK = new Object();
+    private final Object MSG_COUNT_LOCK = new Object();
     private String mTicket;
     private int mTalkCriteria = MULTI_TALK;
     private Attendee mTalkAttendee;
@@ -142,6 +146,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private Constants.User mUser;
     private boolean mPeerTabShow = false;
     private boolean mSocketListenered = false;
+    private Map<String, Integer> mUnreadMsgCountMap;
+    private List<TalkItem> mReceivedTalkMsg;
 
     public TalkPanel(Context context, String ticket, Constants.User user) {
         super(context);
@@ -178,6 +184,8 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         mUser = user;
         mWhiteColor = context.getResources().getColor(R.color.white);
         mBlackFont = context.getResources().getColor(R.color.font_black);
+        mUnreadMsgCountMap = new HashMap<String, Integer>();
+        mReceivedTalkMsg = new ArrayList<TalkItem>();
     }
 
     @Override
@@ -354,10 +362,65 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     }
 
     /**
-     * 需要重新监听socket
+     * socket断开后，需要重新监听socket
      */
     public void needSocketReListener() {
         mSocketListenered = false;
+    }
+
+    private void updateUnreadMsgCount(int criteria, TalkItem talkItem) {
+        synchronized (MSG_COUNT_LOCK) {
+            if (!mReceivedTalkMsg.contains(talkItem)) {
+                mReceivedTalkMsg.add(talkItem);
+
+                if (criteria == PEER_TALK) {
+                    //个人聊天的时候
+                    String accountId = talkItem.from.accountId;
+                    if (mUnreadMsgCountMap.containsKey(accountId)) {
+                        int msgCount = mUnreadMsgCountMap.get(accountId);
+                        mUnreadMsgCountMap.put(accountId, msgCount + 1);
+                    } else {
+                        mUnreadMsgCountMap.put(accountId, 1);
+                    }
+                }
+
+                setUnreadMsgCount2Adapter(false);
+            }
+        }
+    }
+
+    /**
+     * 设置未读消息到适配器)
+     * @param hasLock 是否需要加锁
+     */
+    private void setUnreadMsgCount2Adapter(boolean hasLock) {
+        if (hasLock) {
+            setUnreadMsgCount2Adapter();
+        } else {
+            synchronized (MSG_COUNT_LOCK) {
+               setUnreadMsgCount2Adapter();
+            }
+        }
+    }
+
+    /**
+     * 设置未读消息到适配器
+     */
+    private void setUnreadMsgCount2Adapter() {
+        if (mTalkContactAdapter != null) {
+            ArrayList<Attendee> attendees = mTalkContactAdapter.getAttendeeList();
+            if (attendees != null && !attendees.isEmpty()) {
+                for (Attendee attendee : attendees) {
+                    if (mUnreadMsgCountMap.containsKey(attendee.accountId)) {
+                        int count = mUnreadMsgCountMap.get(attendee.accountId);
+                        attendee.unReadMsgCount = attendee.unReadMsgCount + count;
+                    }
+                }
+
+                mTalkContactAdapter.notifyDataSetChanged();
+                mUnreadMsgCountMap.clear();
+            }
+        }
     }
 
     /**
@@ -396,16 +459,24 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
      * 切换到talk页面
      */
     private void switchToTalk() {
-        mContactView.setVisibility(View.GONE);
-        mTalkView.setVisibility(View.VISIBLE);
+        if (mContactView.getVisibility() != View.GONE) {
+            mContactView.setVisibility(View.GONE);
+        }
+        if (mTalkView.getVisibility() != View.VISIBLE) {
+            mTalkView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
      * 切换到联系人页面
      */
     private void switchToContact() {
-        mContactView.setVisibility(View.VISIBLE);
-        mTalkView.setVisibility(View.GONE);
+        if (mContactView.getVisibility() != View.VISIBLE) {
+            mContactView.setVisibility(View.VISIBLE);
+        }
+        if (mTalkView.getVisibility() != View.GONE) {
+            mTalkView.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -475,6 +546,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
         if (mLiveCollection != null) {
             mTalkContactAdapter.setData(mLiveCollection);
+            setUnreadMsgCount2Adapter(true);
         } else {
             LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
                 @Override
@@ -484,6 +556,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                     }
                     mLiveCollection = liveCollection;
                     mTalkContactAdapter.setData(liveCollection);
+                    setUnreadMsgCount2Adapter(true);
                 }
 
                 @Override
@@ -613,7 +686,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
         mPeerTabShow = true;
         switchToTalk();
-        getTalkSimpleContactData();
+        //getTalkSimpleContactData();
         mTalkAttendee = attendee;
         mPeerTalkAccountId = attendee.accountId;
         mDelPeerTalkBtn.setVisibility(View.VISIBLE);
@@ -661,7 +734,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             }
 
             //refresh list
-            synchronized (LOCK) {
+            synchronized (MSG_LIST_LOCK) {
                 if (add) {
                     //add
                     if (mLiveCollection.attendees.contains(attendee)) {
@@ -733,6 +806,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             updateTalkMsgData(criteria, talkItem, mTalkCriteria == criteria);
             if (mOnTalkMsgListener != null) {
                 mOnTalkMsgListener.onTalkMsgReceived(talkItem);
+                updateUnreadMsgCount(criteria, talkItem);
             }
         } catch (Exception e) {
 
