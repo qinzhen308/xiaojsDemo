@@ -61,7 +61,28 @@ public class UpgradeManager {
      * 检测是否有升级
      * @param context
      */
-    public static void checkUpgrade(Context context) {
+    public static boolean checkUpgrade(Context context) {
+        Upgrade upgrade = getUpgrade(context);
+
+        boolean show = false;
+        if (upgrade != null
+                && !TextUtils.isEmpty(upgrade.uri)
+                && !TextUtils.isEmpty(upgrade.verStr)
+                && APPUtils.comparisonCode(context,upgrade.verStr)
+                && upgrade.app == Platform.AppType.MOBILE_ANDROID
+                && upgrade.action != Platform.AvailableAction.IGNORE) {
+
+            showDlg(context,upgrade);
+            show =  true;
+        }
+
+        //进行升级检测
+        context.startService(new Intent(context, UpgradeService.class));
+        return show;
+    }
+
+    public static void showUpgrade(Context context) {
+
         Upgrade upgrade = getUpgrade(context);
         if (upgrade != null
                 && !TextUtils.isEmpty(upgrade.uri)
@@ -72,9 +93,6 @@ public class UpgradeManager {
 
             showDlg(context,upgrade);
         }
-
-        //进行升级检测
-        context.startService(new Intent(context, UpgradeService.class));
     }
 
    private static void showDlg(final Context context, final Upgrade upgrade){

@@ -65,7 +65,7 @@ public class UpgradeService extends IntentService {
 
                 UpgradeManager.setUpgrade(context, upgrade);
                 //通知弹出更新提示
-                //sendBroadcast(new Intent(UpgradeManager.ACTION_SHOW_UPGRADE));
+                sendBroadcast(new Intent(UpgradeManager.ACTION_SHOW_UPGRADE));
             }
 
         } catch (Exception e) {
