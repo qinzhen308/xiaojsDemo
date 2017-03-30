@@ -15,33 +15,26 @@ import cn.jpush.im.android.api.event.LoginStateChangeEvent;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.im.utils.DialogCreator;
 import cn.xiaojs.xma.common.im.utils.FileHelper;
-import cn.xiaojs.xma.common.im.utils.IdHelper;
 import cn.xiaojs.xma.common.im.utils.SharePreferenceManager;
-import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
-import cn.xiaojs.xma.ui.classroom.Constants;
-import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
+
 import cn.xiaojs.xma.ui.home.HomeFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.ContactActivity;
-import cn.xiaojs.xma.ui.message.MessageFragment;
+
 import cn.xiaojs.xma.ui.message.NotificationFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
-import cn.xiaojs.xma.ui.mine.MyOrderActivity;
-import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ToastUtil;
-import okhttp3.OkHttpClient;
 
 public class MainActivity extends BaseTabActivity {
 

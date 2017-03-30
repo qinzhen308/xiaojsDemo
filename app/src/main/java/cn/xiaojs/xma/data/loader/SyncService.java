@@ -154,17 +154,6 @@ public class SyncService extends IntentService {
                         e.printStackTrace();
                     }
 
-                    //检测升级
-                    try {
-                        Upgrade upgrade = PlatformManager.checkUpgrade(context);
-                        if (upgrade != null) {
-                            UpgradeManager.setUpgrade(context, upgrade);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
                     //是否是老师
 //                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
 //                        Privilege[] privileges = SecurityManager.havePrivilegeSync(context,
