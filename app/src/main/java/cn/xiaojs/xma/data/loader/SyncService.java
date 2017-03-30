@@ -183,11 +183,13 @@ public class SyncService extends IntentService {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("sync data end ...");
+            }
         }
 
-        if (XiaojsConfig.DEBUG) {
-            Logger.d("sync data end ...");
-        }
+
 
     }
 }

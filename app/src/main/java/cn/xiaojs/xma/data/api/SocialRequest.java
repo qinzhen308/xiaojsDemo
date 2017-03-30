@@ -197,7 +197,7 @@ public class SocialRequest extends ServiceRequest {
 
     public ArrayList<ContactGroup> getContactsSync() throws IOException{
         Response<ArrayList<ContactGroup>> response = getService().getContacts().execute();
-        if (response != null && response.code() != NOT_MODIFIED) {
+        if (response != null && response.raw().networkResponse().code() != NOT_MODIFIED) {
             return response.body();
         }
 
