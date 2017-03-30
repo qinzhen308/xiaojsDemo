@@ -87,12 +87,15 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
         });
         holder.header.setData(bean);
         DeviceUtil.expandViewTouch(holder.ugc.getMore(), 150);
-        holder.header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                personalHome(bean);
-            }
-        });
+        View portraitView = holder.header.getPortraitView();
+        if (portraitView != null) {
+            portraitView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    personalHome(bean);
+                }
+            });
+        }
     }
 
     private void personalHome(Dynamic bean) {

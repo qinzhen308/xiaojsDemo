@@ -28,6 +28,7 @@ public abstract class Panel {
 
     private DrawerLayout.DrawerListener mDrawerListener;
     private boolean mDataInited = false;
+    protected boolean mDrawerOpened = false;
 
     public Panel(Context context) {
         mContext = context;
@@ -38,6 +39,7 @@ public abstract class Panel {
 
             @Override
             public void onDrawerOpened(View drawerView) {
+                mDrawerOpened = true;
                 if (!mDataInited) {
                     mDataInited = true;
                     initData();
@@ -47,6 +49,7 @@ public abstract class Panel {
 
 
             public void onDrawerClosed(View drawerView) {
+                mDrawerOpened = false;
                 mDataInited = false;
                 onPanelClosed();
             }

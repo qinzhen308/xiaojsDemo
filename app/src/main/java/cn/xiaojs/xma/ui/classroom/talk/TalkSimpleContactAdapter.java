@@ -10,6 +10,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -35,20 +37,26 @@ import cn.xiaojs.xma.util.DeviceUtil;
 
 public class TalkSimpleContactAdapter extends BaseAdapter implements View.OnClickListener {
     private Context mContext;
-    private int mOffset;
+    private int mOffsetX;
+    private int mOffsetY;
     private LiveCollection<Attendee> mLiveCollection;
     private ArrayList<Attendee> mAttendeeList;
     private OnPortraitClickListener mListener;
 
     public TalkSimpleContactAdapter(Context context) {
         mContext = context;
-        mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px4);
+        mOffsetX = context.getResources().getDimensionPixelOffset(R.dimen.px8);
+        mOffsetY = context.getResources().getDimensionPixelOffset(R.dimen.px18);
     }
 
     public void setData(LiveCollection<Attendee> liveCollection) {
         mLiveCollection = liveCollection;
         mAttendeeList = liveCollection != null ? liveCollection.attendees : null;
         notifyDataSetChanged();
+    }
+
+    public ArrayList<Attendee> getAttendeeList() {
+        return mAttendeeList;
     }
 
     public void setOnPortraitClickListener(OnPortraitClickListener listener) {
@@ -92,8 +100,8 @@ public class TalkSimpleContactAdapter extends BaseAdapter implements View.OnClic
         holder.portrait = (MessageImageView) v.findViewById(R.id.portrait);
         //set type
         holder.portrait.setType(MessageImageView.TYPE_NUM);
-        holder.portrait.setExtraOffsetX(mOffset);
-        holder.portrait.setExtraOffsetY(mOffset);
+        holder.portrait.setExtraOffsetX(-mOffsetX);
+        holder.portrait.setExtraOffsetY(mOffsetY);
 
         v.setTag(holder);
         v.setOnClickListener(this);
@@ -112,7 +120,7 @@ public class TalkSimpleContactAdapter extends BaseAdapter implements View.OnClic
                 .placeholder(R.drawable.default_avatar)
                 .error(R.drawable.default_avatar)
                 .into(holder.portrait);
-        //holder.portrait.setCount(5);
+        holder.portrait.setCount(attendee.unReadMsgCount);
     }
 
     @Override
@@ -122,7 +130,10 @@ public class TalkSimpleContactAdapter extends BaseAdapter implements View.OnClic
             if (obj instanceof Holder) {
                 Holder holder = (Holder) obj;
                 if (mListener != null) {
-                    mListener.onPortraitClick(mAttendeeList.get(holder.position));
+                    Attendee attendee = mAttendeeList.get(holder.position);
+                    attendee.unReadMsgCount = 0;
+                    mListener.onPortraitClick(attendee);
+                    notifyDataSetChanged();
                 }
             }
         } catch (Exception e) {

@@ -187,8 +187,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mWhiteboardSv;
 
-    @BindView(R.id.empty_view)
-    View mEmptyView;
+    @BindView(R.id.tip_view)
+    protected View mTipView;
 
     private Unbinder mBinder;
 
@@ -391,10 +391,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private void initData(boolean showProgress, final OnDataLoadListener dataLoadListener) {
         if (ClassroomBusiness.getCurrentNetwork(this) == ClassroomBusiness.NETWORK_NONE) {
-            mEmptyView.setVisibility(View.VISIBLE);
+            mTipView.setVisibility(View.VISIBLE);
             return;
         } else {
-            mEmptyView.setVisibility(View.GONE);
+            mTipView.setVisibility(View.GONE);
         }
 
         if (showProgress) {
@@ -1907,14 +1907,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (mTalkPanel != null) {
                     mTalkPanel.needSocketReListener();
                 }
-                mEmptyView.setVisibility(View.VISIBLE);
+                mTipView.setVisibility(View.VISIBLE);
                 if (mClassroomController != null) {
                     mClassroomController.onPauseVideo();
                 }
                 mNetworkState = ClassroomBusiness.NETWORK_NONE;
             } else if (wifiNet) {
                 // wifi network
-                mEmptyView.setVisibility(View.GONE);
+                mTipView.setVisibility(View.GONE);
                 mNetworkState = ClassroomBusiness.NETWORK_WIFI;
                 if (mClassroomController != null &&
                         (mClassroomController.needStreamRePublishing() || mClassroomController.needStreamRePlaying())) {
@@ -1938,7 +1938,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 }
             } else if (mobileNet) {
                 // mobile network
-                mEmptyView.setVisibility(View.GONE);
+                mTipView.setVisibility(View.GONE);
                 if (mClassroomController != null &&
                         (mClassroomController.needStreamRePublishing() || mClassroomController.needStreamRePlaying())) {
                     if (!mSktConnected) {

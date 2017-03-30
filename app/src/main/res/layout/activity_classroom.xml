@@ -10,7 +10,7 @@
             android:layout_height="wrap_content"
             android:background="@color/classroom_white_bg">
 
-        <!--直播视频view-->
+        <!--直播视频view(全屏)-->
         <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
                 android:id="@+id/live_video"
                 android:layout_width="match_parent"
@@ -19,7 +19,7 @@
                 android:visibility="gone"
                 android:background="#000000"/>
 
-        <!--推流视频view-->
+        <!--推流视频view(全屏)-->
         <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
                 android:id="@+id/publish_video"
                 android:layout_width="match_parent"
@@ -33,7 +33,8 @@
                 android:id="@+id/white_board_scrollview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:visibility="gone">
         </cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView>
 
         <!--白板,本地手绘-->
@@ -44,13 +45,15 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
 
+        <!--提示view-->
         <FrameLayout
-                android:id="@+id/empty_view"
+                android:id="@+id/tip_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:visibility="gone">
             <TextView
+                    android:id="@+id/tip_txt_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -59,7 +62,7 @@
                     android:text="@string/no_network"/>
         </FrameLayout>
 
-        <!--控制面板, 直播-->
+        <!--控制面板, (包含)直播-->
         <include
                 android:id="@+id/main_panel"
                 layout="@layout/layout_classroom_panel"/>
