@@ -501,6 +501,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 @Override
                 public void onSuccess(LiveCollection<Attendee> liveCollection) {
                     mLiveCollection = liveCollection;
+                    addMyself2Attendees(mLiveCollection);
                     mContactBookAdapter.setData(mLiveCollection);
                     setEmptyContactView();
                     if (XiaojsConfig.DEBUG) {
@@ -557,6 +558,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                         Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
                     }
                     mLiveCollection = liveCollection;
+                    addMyself2Attendees(mLiveCollection);
                     mTalkContactAdapter.setData(liveCollection);
                     setUnreadMsgCount2Adapter(true);
                 }
@@ -1049,6 +1051,26 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         }
 
         return adapter;
+    }
+
+    private void addMyself2Attendees(LiveCollection<Attendee> liveCollection) {
+        if (mLiveCollection == null) {
+            return;
+        }
+
+        if (liveCollection.attendees == null) {
+            liveCollection.attendees = new ArrayList<Attendee>();
+        }
+
+        Attendee mySelf = new Attendee();
+        mySelf.accountId = AccountDataManager.getAccountID(mContext);
+        mySelf.name = XiaojsConfig.mLoginUser != null ? XiaojsConfig.mLoginUser.getName() : null;
+        //TODO 怎么判断是自己是否老师
+        if (!liveCollection.attendees.contains(mySelf)) {
+            liveCollection.attendees.add(0, mySelf);
+        }
+
+        mSearchEdt.setText(liveCollection.current + "/" + (liveCollection.total + 1));
     }
 
 }

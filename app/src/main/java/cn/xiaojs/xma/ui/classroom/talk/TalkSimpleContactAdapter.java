@@ -10,12 +10,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -131,9 +130,11 @@ public class TalkSimpleContactAdapter extends BaseAdapter implements View.OnClic
                 Holder holder = (Holder) obj;
                 if (mListener != null) {
                     Attendee attendee = mAttendeeList.get(holder.position);
-                    attendee.unReadMsgCount = 0;
-                    mListener.onPortraitClick(attendee);
-                    notifyDataSetChanged();
+                    if (!ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+                        mListener.onPortraitClick(attendee);
+                        attendee.unReadMsgCount = 0;
+                        notifyDataSetChanged();
+                    }
                 }
             }
         } catch (Exception e) {

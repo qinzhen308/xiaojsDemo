@@ -65,6 +65,8 @@
     <string name="mobile_kick_out_tips">您账号已经在其它客户端登录了教室</string>
     <string name="mobile_network_forbid">停止使用</string>
     <string name="mobile_network_allow">继续使用</string>
+    <string name="lead_teacher">主讲</string>
+    <string name="assistant_teacher">助教</string>
 
     <string name="select_for_you">您已选:</string>
     <string name="search_subject_tips">请输入您要找的学科类目</string>
