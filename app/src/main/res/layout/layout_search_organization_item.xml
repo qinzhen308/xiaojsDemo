@@ -1,50 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/search_organization_result"
-        android:orientation="horizontal"
-        android:background="@drawable/white_grey_selector"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@drawable/white_grey_selector"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px125"
+                android:descendantFocusability="blocksDescendants">
 
     <ImageView
-            android:id="@+id/search_organization_head"
+            android:id="@+id/search_people_head"
             android:scaleType="fitXY"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/default_avatar_grey"
-            android:layout_marginTop="@dimen/px30"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginBottom="@dimen/px30"
-            android:layout_width="@dimen/px100"
-            android:layout_height="@dimen/px100"/>
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="@dimen/px26"
+            android:layout_marginLeft="@dimen/px29"
+            android:layout_marginBottom="@dimen/px26"
+            android:layout_width="@dimen/px77"
+            android:layout_height="@dimen/px77"/>
+
+    <Button
+            android:id="@+id/search_people_relationship"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/px29"
+            android:padding="5dp"
+            android:textSize="@dimen/font_26px"
+            android:background="@android:color/transparent"
+            android:visibility="gone"
+            />
 
     <LinearLayout
-            android:layout_margin="@dimen/px30"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_marginTop="@dimen/px10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/px20"
+            android:layout_toLeftOf="@id/search_people_relationship"
+            android:layout_toRightOf="@id/search_people_head"
+            android:orientation="vertical">
 
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-            <TextView
-                    android:id="@+id/search_organization_name"
-                    android:textSize="@dimen/font_30px"
-                    android:textColor="@color/font_black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/search_people_item_name"
+                android:text="王小波"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/font_black"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-            <TextView
-                    android:id="@+id/search_organization_level"
-                    android:textSize="@dimen/font_26px"
-                    android:textColor="@color/font_orange"
-                    android:layout_marginLeft="@dimen/px10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
+        <TextView
+                android:id="@+id/search_people_tag"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
 
     </LinearLayout>
-</LinearLayout>
+
+</RelativeLayout>
+<!--<LinearLayout-->
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:id="@+id/search_organization_result"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:background="@drawable/white_grey_selector"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+    <!--<ImageView-->
+            <!--android:id="@+id/search_organization_head"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:src="@drawable/default_avatar_grey"-->
+            <!--android:layout_marginTop="@dimen/px26"-->
+            <!--android:layout_marginLeft="@dimen/px29"-->
+            <!--android:layout_marginBottom="@dimen/px26"-->
+            <!--android:layout_width="@dimen/px77"-->
+            <!--android:layout_height="@dimen/px77"/>-->
+
+    <!--<LinearLayout-->
+            <!--android:layout_margin="@dimen/px20"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+        <!--<LinearLayout-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+            <!--<TextView-->
+                    <!--android:id="@+id/search_organization_name"-->
+                    <!--android:textSize="@dimen/font_30px"-->
+                    <!--android:textColor="@color/font_black"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"/>-->
+
+            <!--<TextView-->
+                    <!--android:id="@+id/search_organization_level"-->
+                    <!--android:textSize="@dimen/font_26px"-->
+                    <!--android:textColor="@color/font_orange"-->
+                    <!--android:layout_marginLeft="@dimen/px10"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"/>-->
+        <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
+<!--</LinearLayout>-->

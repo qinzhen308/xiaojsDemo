@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="cn.xiaojs.xma"
-          android:versionCode="20"
-          android:versionName="1.0.0">
+          android:versionCode="22"
+          android:versionName="1.0.1">
 
     <!-- Required -->
     <permission
@@ -65,6 +65,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.TestAPIActivity">
+
+        </activity>
         <activity
                 android:name=".ui.account.LoginActivity"
                 android:launchMode="singleTask"
@@ -122,8 +125,6 @@
         <activity
                 android:name=".ui.lesson.ConfirmEnrollmentActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.TestAPIActivity">
-        </activity>
         <activity android:name=".ui.lesson.LiveLessonBriefActivity"/>
         <activity android:name=".ui.lesson.SalePromotionActivity"/>
         <activity android:name=".ui.lesson.LiveLessonLabelActivity"/>
@@ -152,7 +153,8 @@
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
                 android:name=".ui.search.SearchActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateAlwaysVisible|adjustPan"/>
         <activity
                 android:name=".ui.home.MomentDetailActivity"
                 android:screenOrientation="portrait"/>
@@ -185,7 +187,8 @@
         </activity>
         <activity
                 android:name=".ui.search.SearchListActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                />
         <activity
                 android:name=".ui.common.ImageViewActivity"
                 android:screenOrientation="portrait"

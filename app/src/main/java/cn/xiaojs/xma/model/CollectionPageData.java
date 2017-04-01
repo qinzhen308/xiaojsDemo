@@ -17,4 +17,5 @@ public class CollectionPageData<T> {
     public int page;
     public int numOfPages;
     public ArrayList<T> lessons;
+    public ArrayList<T> accounts;
 }

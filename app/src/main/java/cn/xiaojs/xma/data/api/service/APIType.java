@@ -150,4 +150,9 @@ public class APIType {
 
     public static final int EDIT_LESSON_SCHEDULE = 85;
 
+    public static final int SEARCH_ACCOUNT_OR_LESSON = 86;
+    public static final int SEARCH_ACCOUNT_V2 = 87;
+
+    public static final int SEARCH_LESSONS = 88;
+
 }
