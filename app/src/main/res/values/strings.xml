@@ -65,6 +65,8 @@
     <string name="mobile_kick_out_tips">您账号已经在其它客户端登录了教室</string>
     <string name="mobile_network_forbid">停止使用</string>
     <string name="mobile_network_allow">继续使用</string>
+    <string name="lead_teacher">主讲</string>
+    <string name="assistant_teacher">助教</string>
 
     <string name="select_for_you">您已选:</string>
     <string name="search_subject_tips">请输入您要找的学科类目</string>
@@ -130,7 +132,7 @@
     <string name="personal_home">个人主页</string>
     <string name="my_page">我的主页</string>
     <string name="my_course_mine_page">我的课</string>
-    <string name="my_teaching">我的课程</string>
+    <string name="my_teaching">我授的课</string>
     <string name="my_enrollment">我报的班</string>
     <string name="my_ask_questions">我的提问</string>
     <string name="my_documents">资料库</string>
@@ -229,8 +231,8 @@
     <string name="lesson_duration">上课时长</string>
     <string name="lesson_fail_reason">失败原因</string>
     <string name="optional_info">选填信息</string>
-    <string name="optional_info_tips">封面、课程简介、老师结束等</string>
-    <string name="on_shelves">自动上架</string>
+    <string name="optional_info_tips">封面、课程简介、老师介绍等</string>
+    <string name="on_shelves">立即上架</string>
     <string name="live_lesson_name_hint">请输入%1$d&#8211;%2$d字</string>
     <string name="subject_category_hint">请选择学科类目</string>
     <string name="teach_form_hint">请选择教学模式</string>
@@ -497,6 +499,8 @@
     <string name="none_follow_tip">您只有关注了%1$s，才能给%2$s发消息哦~</string>
     <string name="follow_and_send_message">关注%1$s，发消息</string>
     <string name="lesson_no_introduction">暂无简介</string>
+    <string name="teacher_resetting">老师还没开课~</string>
+    <string name="dynamic_empty">什么都没有，下次再来看看~</string>
 
     <!-- empty tips -->
     <string name="moment_data_empty">此人还没有动态</string>
@@ -702,6 +706,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="unfollow_forbidden">您不能取消关注此账号</string>
     <string name="student">同学</string>
+    <string name="search_empty_tips">暂无搜索结果~</string>
 
 
 </resources>

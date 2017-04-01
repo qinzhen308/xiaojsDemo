@@ -47,7 +47,7 @@ public class AccountDataManager {
 
 
 
-    private static Account getAccont(Context context) {
+    public static Account getAccont(Context context) {
         if (XiaojsConfig.mLoginUser == null) {
             XiaojsConfig.mLoginUser = getUserInfo(context);
         }
@@ -218,6 +218,12 @@ public class AccountDataManager {
         AccountPref.setAccountID(context,id);
         AccountPref.setLoginStatus(context,true);
         saveAliaTags(context,user.getAliasAndTags());
+
+        Account account = user.getAccount();
+        if (!TextUtils.isEmpty(user.getName()) && account !=null && account.getBasic() !=null) {
+            account.getBasic().setName(user.getName());
+            account.name = user.getName();
+        }
 
         setUserInfo(context,user);
     }

@@ -9,6 +9,7 @@ import com.orhanobut.logger.Logger;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.download.DConstants;
 import cn.xiaojs.xma.data.download.UpdateService;
+import cn.xiaojs.xma.data.loader.UpgradeService;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.ui.UpgradeActivity;
@@ -24,6 +25,8 @@ public class UpgradeManager {
     public static final String EXTRA_OPEN_PATH = "open_path";
     public static final String ACTION_UPGRADE_DOWNLOAD_COMPLETED = "cn.xiaojs.xma.udcompleted";
     public static final String ACTION_UPGRADE_DOWNLOAD_ERROR = "cn.xiaojs.xma.uderror";
+
+    public static final String ACTION_SHOW_UPGRADE = "cn.xiaojs.xma.show_upgrade";
 
     /**
      * 启动更新客户端下载服务
@@ -58,7 +61,28 @@ public class UpgradeManager {
      * 检测是否有升级
      * @param context
      */
-    public static void checkUpgrade(Context context) {
+    public static boolean checkUpgrade(Context context) {
+        Upgrade upgrade = getUpgrade(context);
+
+        boolean show = false;
+        if (upgrade != null
+                && !TextUtils.isEmpty(upgrade.uri)
+                && !TextUtils.isEmpty(upgrade.verStr)
+                && APPUtils.comparisonCode(context,upgrade.verStr)
+                && upgrade.app == Platform.AppType.MOBILE_ANDROID
+                && upgrade.action != Platform.AvailableAction.IGNORE) {
+
+            showDlg(context,upgrade);
+            show =  true;
+        }
+
+        //进行升级检测
+        context.startService(new Intent(context, UpgradeService.class));
+        return show;
+    }
+
+    public static void showUpgrade(Context context) {
+
         Upgrade upgrade = getUpgrade(context);
         if (upgrade != null
                 && !TextUtils.isEmpty(upgrade.uri)

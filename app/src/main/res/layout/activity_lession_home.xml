@@ -54,245 +54,284 @@
             android:id="@+id/base_header_divider"
             style="@style/DividerHorizontal"/>
 
-    <ScrollView
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         <LinearLayout
+                android:id="@+id/lesson_opera_bar_lay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:background="@drawable/lesson_home_lay_bg"
+                android:layout_alignParentBottom="true"
+                android:paddingTop="1dp"
+                android:visibility="gone">
 
-            <ImageView
-                    android:id="@+id/lesson_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/default_lesson_cover"/>
-
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/lesson_home_layout">
-
-                <TextView
-                        android:id="@+id/lesson_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/font_36px"
-                        android:layout_alignParentTop="true"/>
-
-                <LinearLayout
-                        android:id="@+id/lesson_time_layout"
-                        android:layout_below="@+id/lesson_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/px22"
-                        android:orientation="horizontal">
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/lesson_begin_time"
-                            android:textSize="@dimen/font_26px"
-                            android:layout_below="@id/lesson_title"
-                            android:textColor="@color/common_text"/>
-
-                    <TextView
-                            android:id="@+id/lesson_begin_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/font_26px"
-                            android:layout_below="@id/lesson_title"
-                            android:textColor="@color/common_text"/>
-
-                    <TextView
-                            android:id="@+id/lesson_duration"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/font_26px"
-                            android:layout_marginLeft="@dimen/px12"
-                            android:layout_below="@id/lesson_title"
-                            android:textColor="@color/common_text"/>
-
-                </LinearLayout>
-
-                <cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout
-                        android:id="@+id/label_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_marginTop="@dimen/px10"
-                        android:layout_below="@id/lesson_time_layout"/>
-
-                <View
-                        android:id="@+id/lesson_line"
-                        style="@style/DividerHorizontal"
-                        android:layout_marginTop="@dimen/px32"
-                        android:layout_marginBottom="@dimen/px32"
-                        android:layout_below="@id/label_container"/>
-
-                <TextView
-                        android:id="@+id/lesson_money"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="8dp"
-                        android:textSize="18sp"
-                        android:textColor="@color/font_red"
-                        android:layout_below="@id/lesson_line"/>
-
-                <TextView
-                        android:id="@+id/lesson_origin_money"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:textColor="@color/common_text"
-                        android:textSize="@dimen/font_26px"
-                        android:layout_toRightOf="@id/lesson_money"
-                        android:layout_alignBaseline="@id/lesson_money"/>
-
-                <TextView
-                        android:id="@+id/enrollment_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignBaseline="@id/lesson_money"
-                        android:textColor="@color/common_text"
-                        android:textSize="@dimen/font_26px"/>
-
-                <TextView
-                        android:id="@+id/promotion_info"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/lesson_home_textview"
-                        android:layout_below="@id/lesson_money"
-                        android:textColor="@color/font_orange"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/px24"
-                    style="@style/lesson_home_layout">
-
-                <ImageView
-                        android:id="@+id/tea_avatar"
-                        android:layout_width="@dimen/px120"
-                        android:layout_height="@dimen/px120"
-                        android:layout_marginRight="@dimen/px24"
-                        android:scaleType="fitXY"
-                        />
-
-                <ImageView
-                        android:id="@+id/nav_right"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_entrance"/>
-
-                <TextView
-                        android:id="@+id/tea_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/tea_avatar"
-                        android:layout_marginTop="8dp"
-                        android:textSize="16sp"/>
-
-                <cn.xiaojs.xma.ui.widget.EvaluationStar
-                        android:id="@+id/eval_star"
-                        android:layout_toRightOf="@id/tea_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/tea_name"
-                        android:paddingTop="7dp"
-                        android:visibility="gone"
-                        android:layout_marginLeft="8dp"/>
-
-                <TextView
-                        android:id="@+id/tea_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/nav_right"
-                        android:layout_below="@id/tea_name"
-                        style="@style/lesson_home_textview"
-                        android:textColor="@color/common_text"
-                        android:layout_alignLeft="@id/tea_name"/>
-
-            </RelativeLayout>
-
-            <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginTop="@dimen/px24"/>
-
-            <cn.xiaojs.xma.ui.widget.BlockTabView
-                    android:id="@+id/block_detail_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
-
-            <FrameLayout
-                    android:id="@+id/report_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+            <Button
+                    android:id="@+id/consulting"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/consulting"
+                    android:drawableLeft="@drawable/ic_consultation"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_32px"
                     android:background="@color/white"
-                    android:visibility="gone">
+                    android:gravity="center"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"/>
 
-                <TextView
-                        android:id="@+id/report"
-                        android:layout_marginBottom="@dimen/px20"
-                        android:layout_marginRight="@dimen/px32"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:text="@string/lesson_report"
-                        android:textColor="@color/common_text"
-                        android:textSize="@dimen/font_26px"
-                        android:drawableLeft="@drawable/ic_report"
-                        android:drawablePadding="@dimen/px12"/>
-            </FrameLayout>
-
-
-            <View
-                    android:id="@+id/report_divide_live"
-                    style="@style/DividerHorizontal"/>
-
-            <LinearLayout
-                    android:id="@+id/lesson_opera_bar_lay"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/lesson_home_lay_bg">
-
-                <Button
-                        android:id="@+id/consulting"
-                        android:layout_width="120dp"
-                        android:layout_height="match_parent"
-                        android:text="@string/consulting"
-                        android:drawableLeft="@drawable/ic_consultation"
-                        android:textColor="@color/common_text"
-                        android:textSize="@dimen/font_32px"
-                        android:background="@color/white"
-                        android:gravity="center"
-                        android:paddingLeft="25dp"
-                        android:paddingRight="25dp"/>
-
-                <Button
-                        android:id="@+id/apply_btn"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.0"
-                        android:text="@string/lesson_apply"
-                        android:textColor="@drawable/common_btn_white_text_selector"
-                        android:background="@drawable/big_submit_btn_selector"
-                        android:textSize="@dimen/font_32px"
-                        />
-
-            </LinearLayout>
+            <Button
+                    android:id="@+id/apply_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.0"
+                    android:text="@string/lesson_apply"
+                    android:textColor="@drawable/common_btn_white_text_selector"
+                    android:background="@drawable/big_submit_btn_selector"
+                    android:textSize="@dimen/font_32px"
+                    />
 
         </LinearLayout>
 
-    </ScrollView>
+        <ScrollView
+                android:id="@+id/layout_scro"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/lesson_opera_bar_lay"
+                android:scrollbars="none"
+                android:visibility="gone">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <ImageView
+                        android:id="@+id/lesson_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_lesson_cover"
+                        android:visibility="gone"/>
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/lesson_home_layout">
+
+                    <TextView
+                            android:id="@+id/lesson_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/font_36px"
+                            android:layout_alignParentTop="true"/>
+
+                    <LinearLayout
+                            android:id="@+id/lesson_time_layout"
+                            android:layout_below="@+id/lesson_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/px22"
+                            android:orientation="horizontal">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lesson_begin_time"
+                                android:textSize="@dimen/font_26px"
+                                android:layout_below="@id/lesson_title"
+                                android:textColor="@color/common_text"/>
+
+                        <TextView
+                                android:id="@+id/lesson_begin_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/font_26px"
+                                android:layout_below="@id/lesson_title"
+                                android:textColor="@color/common_text"/>
+
+                        <TextView
+                                android:id="@+id/lesson_duration"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/font_26px"
+                                android:layout_marginLeft="@dimen/px12"
+                                android:layout_below="@id/lesson_title"
+                                android:textColor="@color/common_text"/>
+
+                    </LinearLayout>
+
+                    <cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout
+                            android:id="@+id/label_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_marginTop="@dimen/px10"
+                            android:layout_below="@id/lesson_time_layout"/>
+
+                    <View
+                            android:id="@+id/lesson_line"
+                            style="@style/DividerHorizontal"
+                            android:layout_marginTop="@dimen/px32"
+                            android:layout_marginBottom="@dimen/px32"
+                            android:layout_below="@id/label_container"/>
+
+                    <TextView
+                            android:id="@+id/lesson_money"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="8dp"
+                            android:textSize="18sp"
+                            android:textColor="@color/font_red"
+                            android:layout_below="@id/lesson_line"/>
+
+                    <TextView
+                            android:id="@+id/lesson_origin_money"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/common_text"
+                            android:textSize="@dimen/font_26px"
+                            android:layout_toRightOf="@id/lesson_money"
+                            android:layout_alignBaseline="@id/lesson_money"/>
+
+                    <TextView
+                            android:id="@+id/enrollment_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignBaseline="@id/lesson_money"
+                            android:textColor="@color/common_text"
+                            android:textSize="@dimen/font_26px"/>
+
+                    <TextView
+                            android:id="@+id/promotion_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/lesson_home_textview"
+                            android:layout_below="@id/lesson_money"
+                            android:textColor="@color/font_orange"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:id="@+id/lay_teacher"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/px24"
+                        style="@style/lesson_home_layout"
+                        android:background="@drawable/item_pressed"
+                        android:clickable="true"
+                        >
+
+                    <ImageView
+                            android:id="@+id/tea_avatar"
+                            android:layout_width="@dimen/px120"
+                            android:layout_height="@dimen/px120"
+                            android:layout_marginRight="@dimen/px24"
+                            android:scaleType="fitXY"
+                            />
+
+                    <ImageView
+                            android:id="@+id/nav_right"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_entrance"/>
+
+                    <TextView
+                            android:id="@+id/tea_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@id/tea_avatar"
+                            android:layout_marginTop="8dp"
+                            android:textSize="16sp"/>
+
+                    <cn.xiaojs.xma.ui.widget.EvaluationStar
+                            android:id="@+id/eval_star"
+                            android:layout_toRightOf="@id/tea_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@id/tea_name"
+                            android:paddingTop="7dp"
+                            android:visibility="gone"
+                            android:layout_marginLeft="8dp"/>
+
+                    <TextView
+                            android:id="@+id/tea_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@id/nav_right"
+                            android:layout_below="@id/tea_name"
+                            style="@style/lesson_home_textview"
+                            android:textColor="@color/common_text"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:layout_alignLeft="@id/tea_name"/>
+
+                </RelativeLayout>
+
+
+                <cn.xiaojs.xma.ui.widget.BlockTabView
+                        android:id="@+id/block_detail_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        />
+
+                <TextView
+                        android:layout_marginTop="@dimen/px24"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="课简介"
+                        android:textSize="@dimen/font_28px"
+                        android:textColor="@color/font_dark_gray"
+                        android:padding="@dimen/px24"
+                        android:background="@color/white"
+                        />
+                <View
+                        style="@style/DividerHorizontal"/>
+                <TextView
+                        android:id="@+id/intro_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lesson_no_introduction"
+                        android:minHeight="@dimen/px400"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_30px"
+                        android:padding="@dimen/px24"
+                        android:background="@color/white"
+                        android:lineSpacingExtra="1.5dp"
+                        />
+
+
+                <FrameLayout
+                        android:id="@+id/report_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:visibility="gone">
+
+                    <TextView
+                            android:id="@+id/report"
+                            android:layout_marginBottom="@dimen/px20"
+                            android:layout_marginRight="@dimen/px32"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:text="@string/lesson_report"
+                            android:textColor="@color/common_text"
+                            android:textSize="@dimen/font_26px"
+                            android:drawableLeft="@drawable/ic_report"
+                            android:drawablePadding="@dimen/px12"/>
+                </FrameLayout>
+            </LinearLayout>
+
+        </ScrollView>
+    </RelativeLayout>
+
+
 </LinearLayout>
 
 

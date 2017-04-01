@@ -1,7 +1,9 @@
 package cn.xiaojs.xma.common.xf_foundation.schemas;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Constants;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.data.api.service.XiaojsService;
 import cn.xiaojs.xma.model.social.Dimension;
 
 /**
@@ -39,6 +41,8 @@ public class Account {
                 .append(accountId)
                 .append("?imageView2/3/w/")
                 .append(size)
+                .append("&timestamp=")
+                .append(XiaojsConfig.AVATOR_TIME)
                 .toString();
     }
 

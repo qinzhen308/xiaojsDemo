@@ -91,6 +91,9 @@ public class ServiceRequest<T> implements ContextLifecycle {
     public void doTask(int apiType, T responseBody) {
     }
 
+    public void loadDbCompleted(int apiType, T responseBody) {
+    }
+
     //Convert object to JSON string
     public static String objectToJsonString(Object object) {
 
@@ -307,7 +310,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
     //Resolve the Xiaojs service callback
     //
 
-    public final void enqueueRequest(final int apiType, final Call<T> call, BaseDao dao, Object... params) {
+    public final void enqueueRequestFromDb(final int apiType, final Call<T> call, BaseDao dao, Object... params) {
 
         DataLoder dataLoder = new DataLoder(getContext(), dao);
         dataLoder.load(new DataLoder.DataLoaderCallback() {
@@ -323,7 +326,8 @@ public class ServiceRequest<T> implements ContextLifecycle {
                         Logger.d("load from db completed and begin request api");
                     }
 
-                    enqueueRequest(apiType, call, true);
+                    loadDbCompleted(apiType,(T) object);
+                    //enqueueRequest(apiType, call, true);
                 }
             }
         }, -1,params);

@@ -18,7 +18,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -87,12 +90,15 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
         });
         holder.header.setData(bean);
         DeviceUtil.expandViewTouch(holder.ugc.getMore(), 150);
-        holder.header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                personalHome(bean);
-            }
-        });
+        View portraitView = holder.header.getPortraitView();
+        if (portraitView != null) {
+            portraitView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    personalHome(bean);
+                }
+            });
+        }
     }
 
     private void personalHome(Dynamic bean) {
@@ -146,8 +152,8 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
             return;
         }
 
-        if (AccountDataManager.unFollowable(mContext,bean.owner.account)) {
-            Toast.makeText(mContext, R.string.unfollow_forbidden,Toast.LENGTH_SHORT).show();
+        if (AccountDataManager.unFollowable(mContext, bean.owner.account)) {
+            Toast.makeText(mContext, R.string.unfollow_forbidden, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -264,6 +270,31 @@ public class PersonHomeMomentAdapter extends AbsSwipeAdapter<Dynamic, PersonHome
 
     @Override
     protected boolean showEmptyView() {
-        return false;
+        return true;
+    }
+
+    @Override
+    protected void setEmptyLayoutParams(View view, RelativeLayout.LayoutParams params) {
+        if (params != null) {
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px300);
+            view.setLayoutParams(params);
+
+            View click = view.findViewById(R.id.empty_click);
+            if (click != null) {
+                click.setVisibility(View.GONE);
+            }
+
+            View descView = view.findViewById(R.id.empty_desc);
+            if (descView instanceof TextView) {
+                descView.setVisibility(View.VISIBLE);
+                ((TextView) descView).setText(R.string.dynamic_empty);
+            }
+
+            View descImg = view.findViewById(R.id.empty_image);
+            if (descImg != null) {
+                descImg.setVisibility(View.GONE);
+            }
+        }
     }
 }

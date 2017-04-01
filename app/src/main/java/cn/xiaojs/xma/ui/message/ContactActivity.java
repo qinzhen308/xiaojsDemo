@@ -1,8 +1,13 @@
 package cn.xiaojs.xma.ui.message;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,9 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshExpandableListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
@@ -35,6 +42,8 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.db.ContactDao;
+import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.Dimension;
@@ -66,6 +75,29 @@ public class ContactActivity extends BaseActivity {
 
 
     private static int class_pos = -1;
+
+    private UpdateReceiver updateReceiver;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        updateReceiver = new UpdateReceiver();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DataManager.ACTION_UPDATE_CONTACT_FROM_DB);
+
+        registerReceiver(updateReceiver,filter);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(updateReceiver);
+
+    }
 
     @Override
     protected void addViewContent() {
@@ -389,6 +421,23 @@ public class ContactActivity extends BaseActivity {
     private void requestContactData() {
 
         //listView.setRefreshing();
+
+//        DataLoder dataLoder = new DataLoder(this,new ContactDao());
+//        dataLoder.load(new DataLoder.DataLoaderCallback() {
+//            @Override
+//            public void loadCompleted(Object object) {
+//
+//                ArrayList<ContactGroup> contactGroupArrayList = null;
+//
+//                if (object != null) {
+//                    contactGroupArrayList = (ArrayList<ContactGroup>) object;
+//                }
+//
+//                bindDataView(contactGroupArrayList);
+//
+//            }
+//        }, -1, DataManager.getGroupData(this));
+
 
         SocialManager.getContacts(this, new APIServiceCallback<ArrayList<ContactGroup>>() {
             @Override
@@ -758,6 +807,33 @@ public class ContactActivity extends BaseActivity {
             return v;
         }
     }
+
+
+
+    private class UpdateReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+           String action = intent.getAction();
+            if (action.equals(DataManager.ACTION_UPDATE_CONTACT_FROM_DB)) {
+
+                if(XiaojsConfig.DEBUG) {
+                    Logger.d("UpdateReceiver: to update contact");
+                }
+
+
+                ArrayList<ContactGroup> newCGroups = (ArrayList<ContactGroup>) intent.
+                        getSerializableExtra(DataManager.EXTRA_CONTACT);
+
+                if(newCGroups != null) {
+                    bindDataView(newCGroups);
+                }
+
+            }
+        }
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //test data
 

@@ -6,6 +6,7 @@ import java.util.List;
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
 
+import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.CompetencySubject;
@@ -49,7 +50,10 @@ import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.model.order.Orderp;
 import cn.xiaojs.xma.model.order.PaymentOrder;
+import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
+import cn.xiaojs.xma.model.search.LessonInfo;
+import cn.xiaojs.xma.model.search.SearchResponse;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
@@ -186,9 +190,9 @@ public interface XiaojsService {
 
     //Get lessons (Taught by user)
     @GET("/v1/ctl/taught/lessons/{userId}")
-    Call<List<PersonHomeUserLesson>> getLessons(@Path("userId") String userId,
-                                                @Query("page") int page,
-                                                @Query("limit") int limit);
+    Call<CollectionPageData<PersonHomeUserLesson>> getLessons(@Path("userId") String userId,
+                                                              @Query("page") int page,
+                                                              @Query("limit") int limit);
 
     //Put Lesson On Shelves
     @POST("/v1/ctl/lessons/{lesson}/onshelves")
@@ -353,6 +357,24 @@ public interface XiaojsService {
     @GET("/v1/search/accounts/{query}")
     Call<ArrayList<AccountSearch>> searchAccounts(@Path("query") String query);
 
+    //Search Accounts 2.0
+    @GET("/v1/search/accounts_v2.0")
+    Call<CollectionPageData<AccountInfo>> searchAccounts(@Query("key") String key,
+                                                         @Query("page") int page,
+                                                         @Query("limit") int limit,
+                                                         @Query("type") String type);
+
+    //Search Lessons
+    @GET("/v1/search/lessons")
+    Call<CollectionPageData<LessonInfo>> searchLessons(@Query("key") String key,
+                                                       @Query("page") int page,
+                                                       @Query("limit") int limit,
+                                                       @Query("type") String type);
+
+
+    //Search Accounts & Lessons
+    @GET("/v1/search/integrate")
+    Call<SearchResponse> searchAccountsOrLessons(@Query("key") String key, @Query("size") String size);
 
 
 

@@ -103,6 +103,7 @@ public class MineFragment extends BaseFragment {
         mBlurFloatUpBg = new ColorDrawable(getResources().getColor(R.color.blur_float_up_bg));
         mEvaluation.setGrading(EvaluationStar.Grading.THREE_HALF);
         //set default ugc
+        initBaseInfo();
         setUgc(null);
         loadData();
         showAbilities();
@@ -197,6 +198,14 @@ public class MineFragment extends BaseFragment {
                 setDefaultPortrait();
             }
         });
+    }
+
+    private void initBaseInfo() {
+        Account account = AccountDataManager.getAccont(mContext);
+        if (account != null && account.getBasic() != null) {
+            setPersonBaseInfo(account.getBasic());
+        }
+
     }
 
     private void setUgc(Account account) {

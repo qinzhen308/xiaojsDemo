@@ -34,10 +34,8 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.GetLessonsResponse;
-import cn.xiaojs.xma.model.PersonHomeLesson;
+import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
-import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
@@ -51,6 +49,7 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
     public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, String account) {
         super(context, list);
         mAccount = account;
+        setDesc(context.getString(R.string.teacher_resetting));
     }
 
     public PersonHomeLessonAdapter(Context context, PullToRefreshSwipeListView list, List<PersonHomeUserLesson> data) {
@@ -81,6 +80,8 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
         } else {
             holder.price.setText(R.string.free);
         }
+
+
 
         if (bean.state.equalsIgnoreCase(Ctl.LiveLessonState.FINISHED)) {
             holder.stateImage.setShowText(false);
@@ -119,11 +120,11 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
 
     @Override
     protected void doRequest() {
-        LessonDataManager.getLessonsByUser(mContext, mAccount, mPagination, new APIServiceCallback<List<PersonHomeUserLesson>>() {
+        LessonDataManager.getLessonsByUser(mContext, mAccount, mPagination, new APIServiceCallback<CollectionPageData<PersonHomeUserLesson>>() {
             @Override
-            public void onSuccess(List<PersonHomeUserLesson> object) {
-                if (object != null) {
-                    PersonHomeLessonAdapter.this.onSuccess(object);
+            public void onSuccess(CollectionPageData<PersonHomeUserLesson> object) {
+                if (object != null && object.lessons != null) {
+                    PersonHomeLessonAdapter.this.onSuccess(object.lessons);
                 } else {
                     PersonHomeLessonAdapter.this.onSuccess(null);
                 }
@@ -142,6 +143,28 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px300);
             view.setLayoutParams(params);
+
+            View click = view.findViewById(R.id.empty_click);
+            if (click != null) {
+                click.setVisibility(View.GONE);
+            }
+
+            View descImg = view.findViewById(R.id.empty_image);
+            if (descImg != null) {
+                descImg.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    protected void setFailedLayoutParams(View view, RelativeLayout.LayoutParams params) {
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px60);
+        view.setLayoutParams(params);
+
+        View click = view.findViewById(R.id.empty_click);
+        if (click != null) {
+            click.setVisibility(View.GONE);
         }
     }
 

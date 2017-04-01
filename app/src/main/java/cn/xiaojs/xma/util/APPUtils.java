@@ -172,19 +172,31 @@ public class APPUtils {
         int currentCode = getAPPVersionCode(context);
 
         if (TextUtils.isEmpty(updateVersion)) return false;
-        String[] codes = updateVersion.split("\\.");
 
-        //版本号是四位
-        if (codes==null || codes.length < XiaojsConfig.VERSION_BITS) return false;
+        int updateCode = parseBulidCode(context, updateVersion);
 
-        String updateCode = codes[XiaojsConfig.VERSION_BITS - 1];
 
-        if (!TextUtils.isEmpty(updateCode)) {
-            int uCode = Integer.valueOf(updateCode);
-             return uCode > currentCode;
+        if (updateCode > 0) {
+             return updateCode > currentCode;
         }
 
         return false;
+    }
+
+    public static int parseBulidCode(Context context, String updateVersion) {
+        if (TextUtils.isEmpty(updateVersion)) return -1;
+        String[] codes = updateVersion.split("\\.");
+
+        //版本号是四位
+        if (codes==null || codes.length < XiaojsConfig.VERSION_BITS) return -1;
+
+        String updateCode = codes[XiaojsConfig.VERSION_BITS - 1];
+        if (TextUtils.isEmpty(updateCode)) {
+            return -1;
+        }
+
+        return Integer.valueOf(updateCode);
+
     }
 
     /**

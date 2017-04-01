@@ -189,7 +189,7 @@ public class SocialRequest extends ServiceRequest {
     public void getContacts(){
         Call<ArrayList<ContactGroup>> call = getService().getContacts();
 
-        enqueueRequest(APIType.GET_CONTACTS,
+        enqueueRequestFromDb(APIType.GET_CONTACTS,
                 call,
                 new ContactDao(),
                 DataManager.getGroupData(getContext()));
@@ -197,7 +197,7 @@ public class SocialRequest extends ServiceRequest {
 
     public ArrayList<ContactGroup> getContactsSync() throws IOException{
         Response<ArrayList<ContactGroup>> response = getService().getContacts().execute();
-        if (response != null) {
+        if (response != null && response.raw().networkResponse().code() != NOT_MODIFIED) {
             return response.body();
         }
 
@@ -215,15 +215,21 @@ public class SocialRequest extends ServiceRequest {
         enqueueRequest(APIType.DELETE_COMMENT_REPLY,call);
     }
 
+    @Override
+    public void loadDbCompleted(int apiType, Object responseBody) {
+        if (apiType == APIType.GET_CONTACTS) {
+            DataManager.lanuchLoadContactService(getContext());
+        }
+    }
 
     @Override
     public void doTask(int apiType, Object responseBody) {
         if (apiType == APIType.GET_CONTACTS) {
-            ArrayList<ContactGroup> result = (ArrayList<ContactGroup>) responseBody;
-
-            if (result != null) {
-                DataManager.lanuchContactService(getContext(), result);
-            }
+//            ArrayList<ContactGroup> result = (ArrayList<ContactGroup>) responseBody;
+//
+//            if (result != null) {
+//                DataManager.lanuchContactService(getContext(), result);
+//            }
         }else if (apiType == APIType.FOLLOW_CONTACT) {
             DataManager.getCache(getContext()).addContactId(currentAccountId);
         }else if (apiType == APIType.UNFOLLOW_CONTACT) {

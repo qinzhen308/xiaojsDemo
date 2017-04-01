@@ -27,6 +27,7 @@ import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.material.UploadReponse;
@@ -300,7 +301,12 @@ public class ProfileActivity extends BaseActivity {
 
                 Intent i = new Intent();
                 //update display url
-                mBasic.setAvatar(mAvatarUrl);
+                if (!TextUtils.isEmpty(mAvatarUrl)){
+                    mBasic.setAvatar(mAvatarUrl);
+                    XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
+                    AccountPref.setAvatorTime(ProfileActivity.this, XiaojsConfig.AVATOR_TIME);
+                }
+
 
                 updateUser(basic);
 

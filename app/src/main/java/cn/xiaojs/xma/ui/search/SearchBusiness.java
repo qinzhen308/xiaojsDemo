@@ -20,7 +20,11 @@ import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
+import cn.xiaojs.xma.model.search.LessonInfo;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 
@@ -36,9 +40,16 @@ public class SearchBusiness {
         return result;
     }
 
-    public static void goPersonal(Context context, AccountSearch search) {
+    public static void goPersonal(Context context, AccountInfo info) {
         Intent intent = new Intent(context, PersonHomeActivity.class);
-        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, search._id);
+        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, info.id);
         context.startActivity(intent);
+    }
+
+
+    public static void goLessonHome(Context context, LessonInfo info) {
+        Intent i = new Intent(context, LessonHomeActivity.class);
+        i.putExtra(CourseConstant.KEY_LESSON_ID, info.id);
+        context.startActivity(i);
     }
 }

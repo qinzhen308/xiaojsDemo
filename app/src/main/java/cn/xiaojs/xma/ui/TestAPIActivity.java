@@ -21,6 +21,7 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
+import cn.xiaojs.xma.data.SearchManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.download.DConstants;
@@ -46,6 +47,7 @@ import cn.xiaojs.xma.util.WechatUtil;
 import okhttp3.Cache;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import com.bumptech.glide.Glide;
 import com.facebook.stetho.inspector.elements.ShadowDocument;
@@ -160,7 +162,7 @@ public class TestAPIActivity extends Activity {
 //        startService(i);
 
         //WechatUtil.shareWebpage(this,iwxapi,"小教室","小教室，大世界","http://sports.qq.com/nba/?ptag=baidu.ald.sc.nba",false);
-        WechatUtil.shareText(iwxapi,"小教室，大世界", false);
+        //WechatUtil.shareText(iwxapi,"小教室，大世界", false);
 
 //        DownloadManager.enqueueDownload(this,
 //                "Vipkid.apk",
@@ -172,8 +174,20 @@ public class TestAPIActivity extends Activity {
 
     private void testT(Context context){
 
-        String chaanel = APPUtils.getChannel(context);
-        Logger.d("---chaanel:"+ chaanel);
+//        SearchManager.searchAccountsOrLessons(context, "185", "3", new APIServiceCallback<ResponseBody>() {
+//            @Override
+//            public void onSuccess(ResponseBody object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
+
+//        String chaanel = APPUtils.getChannel(context);
+//        Logger.d("---chaanel:"+ chaanel);
 
         //QQUtil.share(this,tencent,null);
         //WechatUtil.shareWebpage(this,iwxapi,"小教室","小教室，大世界","http://sports.qq.com/nba/?ptag=baidu.ald.sc.nba",true);

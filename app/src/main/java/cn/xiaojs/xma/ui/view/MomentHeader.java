@@ -91,6 +91,10 @@ public class MomentHeader extends RelativeLayout {
         ButterKnife.bind(this);
     }
 
+    public RoundedImageView getPortraitView() {
+        return mHead;
+    }
+
     public void setData(Dynamic dynamic) {
 
         //mHead.setImageResource(DeviceUtil.getPor());

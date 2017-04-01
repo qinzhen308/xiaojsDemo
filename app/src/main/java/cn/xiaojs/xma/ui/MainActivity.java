@@ -1,7 +1,13 @@
 package cn.xiaojs.xma.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +19,17 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
+
 import cn.xiaojs.xma.ui.home.HomeFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.ContactActivity;
+
 import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
+
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -29,6 +38,9 @@ public class MainActivity extends BaseTabActivity {
     public static final String KEY_POSITION = "key_position";
 
     private long time;
+
+    private UpgradeReceiver upgradeReceiver;
+    private boolean hasShow = false;
 
     @Override
     protected void initView() {
@@ -53,7 +65,8 @@ public class MainActivity extends BaseTabActivity {
             }
         }
 
-        UpgradeManager.checkUpgrade(MainActivity.this);
+        hasShow = UpgradeManager.checkUpgrade(MainActivity.this);
+
     }
 
     @Override
@@ -148,7 +161,40 @@ public class MainActivity extends BaseTabActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(UpgradeManager.ACTION_SHOW_UPGRADE);
+
+        upgradeReceiver = new UpgradeReceiver();
+
+        registerReceiver(upgradeReceiver,filter);
+
+    }
+
+    @Override
     protected void onDestroy() {
+        unregisterReceiver(upgradeReceiver);
         super.onDestroy();
+    }
+
+
+    private class UpgradeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(UpgradeManager.ACTION_SHOW_UPGRADE)) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("receiver new upgrade...");
+                }
+
+                if (!hasShow) {
+                    UpgradeManager.showUpgrade(MainActivity.this);
+                    hasShow = true;
+                }
+            }
+        }
     }
 }

@@ -59,15 +59,6 @@
 
     </RelativeLayout>
 
-    <ImageView
-            android:id="@+id/publish_take_pic"
-            android:layout_alignParentRight="true"
-            android:padding="@dimen/px20"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/cr_publish_take_pic"/>
-
     <RelativeLayout
             android:id="@+id/top_panel"
             android:layout_alignParentTop="true"
@@ -78,9 +69,9 @@
         <RelativeLayout
                 android:id="@+id/title_bar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/px100"
-                android:paddingTop="@dimen/px16"
-                android:paddingBottom="@dimen/px16"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px5"
+                android:paddingBottom="@dimen/px5"
                 android:background="@color/classroom_main_gray">
 
             <ImageView
@@ -89,9 +80,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentLeft="true"
-                    android:paddingLeft="@dimen/px20"
-                    android:paddingRight="@dimen/px20"
-                    android:layout_marginLeft="@dimen/px30"
+                    android:paddingLeft="@dimen/px50"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
                     android:src="@drawable/ic_back_pressed"/>
 
             <ImageView
@@ -99,9 +91,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px20"
-                    android:paddingRight="@dimen/px20"
-                    android:layout_marginLeft="@dimen/px20"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
                     android:layout_toRightOf="@+id/back_btn"
                     android:src="@drawable/ic_cr_start"/>
 
@@ -110,9 +103,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px20"
-                    android:paddingRight="@dimen/px20"
-                    android:layout_marginLeft="@dimen/px20"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
                     android:layout_toRightOf="@+id/play_pause_btn"
                     android:src="@drawable/ic_cr_exit"/>
 
@@ -148,9 +142,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px20"
-                    android:paddingRight="@dimen/px20"
-                    android:layout_marginRight="@dimen/px20"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
                     android:layout_toLeftOf="@+id/notify_msg_btn"
                     android:src="@drawable/ic_cr_contact_book"/>
 
@@ -159,9 +154,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px20"
-                    android:paddingRight="@dimen/px20"
-                    android:layout_marginRight="@dimen/px20"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
                     android:layout_toLeftOf="@+id/setting_btn"
                     android:src="@drawable/ic_cr_notice"/>
 
@@ -171,9 +167,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingLeft="@dimen/px20"
-                    android:paddingRight="@dimen/px20"
-                    android:layout_marginRight="@dimen/px30"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/ic_cr_setting"/>
 
@@ -428,6 +425,17 @@
             android:layout_marginBottom="@dimen/px20"
             android:layout_marginLeft="@dimen/px20"
             android:visibility="gone"/>
+
+
+    <!--视频采集view-->
+    <ImageView
+            android:id="@+id/publish_take_pic"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/px20"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cr_publish_take_pic"/>
 
 </cn.xiaojs.xma.ui.classroom.MainPanel>
 
