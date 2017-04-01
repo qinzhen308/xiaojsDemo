@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.account;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.MainActivity;
@@ -60,7 +62,18 @@ public class AccountBusiness {
                     }
 
                     if (loginInfo != null) {
-                        XiaojsConfig.mLoginUser = loginInfo.getUser();
+
+                        User user = loginInfo.getUser();
+                        if (user != null
+                                && user.getName() != null
+                                && user.getAccount() != null
+                                && user.getAccount().getBasic() != null) {
+
+                            user.getAccount().name = user.getName();
+                            user.getAccount().getBasic().setName(user.getName());
+                        }
+
+                        XiaojsConfig.mLoginUser = user;
                         XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
                         AccountPref.setAvatorTime(activity, XiaojsConfig.AVATOR_TIME);
 

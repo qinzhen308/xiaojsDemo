@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,8 +96,12 @@ public class  LessonHomeActivity extends BaseActivity{
 
     @BindView(R.id.report_layout)
     View mReportLayout;
-    @BindView(R.id.report_divide_live)
-    View mReportDivideLine;
+
+    @BindView(R.id.layout_scro)
+    ScrollView layScrollView;
+
+    //@BindView(R.id.report_divide_live)
+    //View mReportDivideLine;
 
 
     @BindView(R.id.lesson_opera_bar_lay)
@@ -109,6 +114,9 @@ public class  LessonHomeActivity extends BaseActivity{
 
     @BindView(R.id.block_detail_bar)
     BlockTabView mBlockTabView;
+
+    @BindView(R.id.intro_view)
+    TextView introView;
 
 
 
@@ -221,12 +229,15 @@ public class  LessonHomeActivity extends BaseActivity{
             @Override
             public void onSuccess(LessonDetail lessonDetail) {
                 cancelProgress();
+                layScrollView.setVisibility(View.VISIBLE);
                 setData(lessonDetail);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
+                layScrollView.setVisibility(View.GONE);
+                mLessonEnrollLayout.setVisibility(View.GONE);
                 Toast.makeText(LessonHomeActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
@@ -237,7 +248,7 @@ public class  LessonHomeActivity extends BaseActivity{
             mLessonDetail = lesson;
             //set cover
             if (!TextUtils.isEmpty(lesson.getCover())) {
-                //mLessonCoverImg.setVisibility(View.VISIBLE);
+                mLessonCoverImg.setVisibility(View.VISIBLE);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLessonCoverImg.getLayoutParams();
                 int w = getResources().getDisplayMetrics().widthPixels;
                 int h = (int) ((CourseConstant.COURSE_COVER_HEIGHT / (float) CourseConstant.COURSE_COVER_WIDTH) * w);
@@ -254,7 +265,7 @@ public class  LessonHomeActivity extends BaseActivity{
                         .into(mLessonCoverImg);
             } else {
                 //set gone
-                //mLessonCoverImg.setVisibility(View.GONE);
+                mLessonCoverImg.setVisibility(View.GONE);
             }
 
             //set title
@@ -314,16 +325,18 @@ public class  LessonHomeActivity extends BaseActivity{
 
             setTeacherInfo(lesson);
 
-            if (lesson.getOverview() != null && textViews != null) {
-                textViews.get(0).setText(lesson.getOverview().getText());
+            if (lesson.getOverview() != null && !TextUtils.isEmpty(lesson.getOverview().getText())) {
+                introView.setText(lesson.getOverview().getText());
+//                textViews.get(0).setText(lesson.getOverview().getText());
                 //evaluate: not implemented
             } else {
-                textViews.get(0).setText(R.string.lesson_no_introduction);
+                introView.setText(R.string.lesson_no_introduction);
+//                textViews.get(0).setText(R.string.lesson_no_introduction);
             }
 
         } else {
             mReportLayout.setVisibility(View.GONE);
-            mReportDivideLine.setVisibility(View.GONE);
+            //mReportDivideLine.setVisibility(View.GONE);
             mLessonEnrollLayout.setVisibility(View.GONE);
         }
 
@@ -337,9 +350,6 @@ public class  LessonHomeActivity extends BaseActivity{
         String lessonState = mLessonDetail.getState();
         if (lessonState.equals(Ctl.LiveLessonState.CANCELLED)) {
             applyBtn.setText("课已取消");
-            applyBtn.setEnabled(false);
-        }else if (lessonState.equals(Ctl.LiveLessonState.FINISHED)) {
-            applyBtn.setText("已完课");
             applyBtn.setEnabled(false);
         }else {
 
@@ -359,6 +369,9 @@ public class  LessonHomeActivity extends BaseActivity{
                     //nothing to do
                 }
 
+            }else if (lessonState.equals(Ctl.LiveLessonState.FINISHED)) {
+                applyBtn.setText("已完课");
+                applyBtn.setEnabled(false);
             }else {
 
                 Enroll enroll = mLessonDetail.getEnroll();
@@ -375,6 +388,8 @@ public class  LessonHomeActivity extends BaseActivity{
         String accId = AccountDataManager.getAccountID(this);
         if (mLessonDetail.getCreatedBy().equals(accId)){
             mLessonEnrollLayout.setVisibility(View.GONE);
+        }else{
+            mLessonEnrollLayout.setVisibility(View.VISIBLE);
         }
 
     }
@@ -495,7 +510,7 @@ public class  LessonHomeActivity extends BaseActivity{
         if (mLessonDetail == null) return;
 
         String lessonState = mLessonDetail.getState();
-        if (!lessonState.equals(Ctl.LiveLessonState.CANCELLED) && !lessonState.equals(Ctl.LiveLessonState.FINISHED)) {
+        if (!lessonState.equals(Ctl.LiveLessonState.CANCELLED)) {
 
             if(mLessonDetail.isEnrolled) {
                 dealEnrolled();
