@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
 
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.util.Base64;
 import cn.xiaojs.xma.util.BitmapUtils;
@@ -36,7 +37,7 @@ public class ClassroomBusiness {
     private static final String BASE64_JPEG_HEADER = "data:image/jpeg;base64,";
 
     public static Constants.User getUser(String session) {
-        Constants.User user = Constants.User.TEACHER;
+        Constants.User user = Constants.User.STUDENT;
         if ("LeadSession".equals(session)) {
             user = Constants.User.TEACHER;
         } else if ("AssistantSession".equals(session)) {
@@ -155,5 +156,10 @@ public class ClassroomBusiness {
         } else {
             return NETWORK_OTHER;
         }
+    }
+
+    public static boolean isMyself(Context context, String accountId) {
+        String mySelfAccountId = AccountDataManager.getAccountID(context);
+        return mySelfAccountId != null && mySelfAccountId.equals(accountId);
     }
 }

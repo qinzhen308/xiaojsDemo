@@ -33,6 +33,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.orhanobut.logger.Logger;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
@@ -62,6 +64,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     private String mTicket;
     private LiveCriteria mLiveCriteria;
     private OnImageClickListener mOnImageClickListener;
+    private TalkComparator mTalkComparator;
 
     public TalkMsgAdapter(Context context, String ticket, LiveCriteria liveCriteria, PullToRefreshListView listView) {
         super(context, listView);
@@ -69,6 +72,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         mTicket = ticket;
         mLiveCriteria = liveCriteria;
         MAX_SIZE = context.getResources().getDimensionPixelSize(R.dimen.px280);
+        mTalkComparator = new TalkComparator();
     }
 
     public void setOnImageClickListener(OnImageClickListener listener) {
@@ -219,6 +223,9 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
                 if (XiaojsConfig.DEBUG) {
                     Toast.makeText(mContext, "获取消息成功", Toast.LENGTH_SHORT).show();
                 }
+                if (object.objectsOfPage != null) {
+                    Collections.sort(object.objectsOfPage, mTalkComparator);
+                }
                 TalkMsgAdapter.this.onSuccess(object.objectsOfPage);
             }
 
@@ -294,5 +301,20 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     private boolean isMyself(String currAccountId) {
         String accountId = AccountDataManager.getAccountID(mContext);
         return accountId != null && accountId.equals(currAccountId);
+    }
+
+    private class TalkComparator implements Comparator<TalkItem> {
+        @Override
+        public int compare(TalkItem o1, TalkItem o2) {
+            if (o1 == null || o2 == null) {
+                return 0;
+            }
+
+            if (o1.time == null || o2.time == null) {
+                return 0;
+            }
+
+            return o1.time.getTime() > o2.time.getTime() ? 1 : o1.time.getTime() == o2.time.getTime() ? 0 : -1;
+        }
     }
 }

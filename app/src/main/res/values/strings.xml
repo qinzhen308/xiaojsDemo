@@ -65,6 +65,8 @@
     <string name="mobile_kick_out_tips">您账号已经在其它客户端登录了教室</string>
     <string name="mobile_network_forbid">停止使用</string>
     <string name="mobile_network_allow">继续使用</string>
+    <string name="lead_teacher">主讲</string>
+    <string name="assistant_teacher">助教</string>
 
     <string name="select_for_you">您已选:</string>
     <string name="search_subject_tips">请输入您要找的学科类目</string>
@@ -229,8 +231,8 @@
     <string name="lesson_duration">上课时长</string>
     <string name="lesson_fail_reason">失败原因</string>
     <string name="optional_info">选填信息</string>
-    <string name="optional_info_tips">封面、课程简介、老师结束等</string>
-    <string name="on_shelves">自动上架</string>
+    <string name="optional_info_tips">封面、课程简介、老师介绍等</string>
+    <string name="on_shelves">立即上架</string>
     <string name="live_lesson_name_hint">请输入%1$d&#8211;%2$d字</string>
     <string name="subject_category_hint">请选择学科类目</string>
     <string name="teach_form_hint">请选择教学模式</string>

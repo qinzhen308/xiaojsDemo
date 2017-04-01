@@ -32,12 +32,14 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.util.DeviceUtil;
 
-public class ContactBookAdapter extends BaseAdapter implements View.OnClickListener{
+public class ContactBookAdapter extends BaseAdapter implements View.OnClickListener {
     private Context mContext;
     private boolean mContactManagementMode = false;
     private List<String> mChoiceList;
@@ -57,7 +59,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         mListener = listener;
     }
 
-    public void setOnPanelItemClick (OnPanelItemClick panelItemClick) {
+    public void setOnPanelItemClick(OnPanelItemClick panelItemClick) {
         mOnPanelItemClick = panelItemClick;
     }
 
@@ -92,7 +94,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         if (convertView == null) {
             convertView = createContentView();
         }
-        holder = (Holder)convertView.getTag();
+        holder = (Holder) convertView.getTag();
 
         bindData(holder, position);
         return convertView;
@@ -136,6 +138,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
                 .into(holder.portrait);
+
         holder.name.setText(attendee.name);
 
         if (mContactManagementMode) {
@@ -150,17 +153,38 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.microphone.setVisibility(View.VISIBLE);
             //holder.portrait.setCount(9);
         }
+
+        Constants.User user = ClassroomBusiness.getUser(attendee.psType);
+        switch (user) {
+            case TEACHER:
+                holder.label.setText(R.string.lead_teacher);
+                break;
+            case ASSISTANT:
+                holder.label.setText(R.string.assistant_teacher);
+                break;
+            default:
+                holder.label.setText("");
+                break;
+        }
+
+        if (ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+            holder.video.setVisibility(View.GONE);
+            holder.microphone.setVisibility(View.GONE);
+        } else {
+            holder.video.setVisibility(View.VISIBLE);
+            holder.microphone.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onClick(View v) {
         Object obj = null;
         if (v.getId() == R.id.portrait) {
-            obj = ((View)v.getParent()).getTag();
+            obj = ((View) v.getParent()).getTag();
         } else {
             obj = v.getTag();
             if (obj == null && v.getParent() instanceof View) {
-                obj = ((View)v.getParent()).getTag();
+                obj = ((View) v.getParent()).getTag();
             }
         }
 
@@ -181,8 +205,9 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 switch (v.getId()) {
                     case R.id.portrait:
                         //enter chat
-                        if (mListener != null) {
-                            mListener.onPortraitClick(mAttendeeList.get(pos));
+                        Attendee attendee = mAttendeeList.get(pos);
+                        if (mListener != null && !ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+                            mListener.onPortraitClick(attendee);
                         }
                         break;
                     case R.id.video:
