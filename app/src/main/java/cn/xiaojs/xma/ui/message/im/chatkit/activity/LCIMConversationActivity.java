@@ -26,6 +26,8 @@ import cn.xiaojs.xma.ui.message.im.chatkit.cache.LCIMConversationItemCache;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConversationUtils;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 
 /**
  * Created by wli on 16/2/29.
@@ -38,6 +40,8 @@ public class LCIMConversationActivity extends FragmentActivity {
   TextView titleView;
 
   protected LCIMConversationFragment conversationFragment;
+
+  private String accountId;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +57,22 @@ public class LCIMConversationActivity extends FragmentActivity {
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.back_btn:
-        finishActivity(RESULT_OK);
+        finish();
         break;
       case R.id.chat_right_btn:
 
         break;
       case R.id.chat_right_btn2:
+        if (TextUtils.isEmpty(accountId)) {
+          return;
+        }
+
+        Intent intent = new Intent(this, PersonHomeActivity.class);
+        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, accountId);
+        startActivity(intent);
         break;
     }
   }
-
-
-
-
 
   @Override
   protected void onNewIntent(Intent intent) {
@@ -84,9 +91,14 @@ public class LCIMConversationActivity extends FragmentActivity {
     Bundle extras = intent.getExtras();
     if (null != extras) {
       if (extras.containsKey(LCIMConstants.PEER_ID)) {
-        getConversation(extras.getString(LCIMConstants.PEER_ID));
+
+        accountId = extras.getString(LCIMConstants.PEER_ID);
+        getConversation(accountId);
       } else if (extras.containsKey(LCIMConstants.CONVERSATION_ID)) {
         String conversationId = extras.getString(LCIMConstants.CONVERSATION_ID);
+
+        accountId = conversationId;
+
         updateConversation(LCChatKit.getInstance().getClient().getConversation(conversationId));
       } else {
         showToast("memberId or conversationId is needed");
