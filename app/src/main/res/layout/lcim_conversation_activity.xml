@@ -5,6 +5,67 @@
               android:orientation="vertical">
 
 
+    <RelativeLayout
+            android:id="@+id/jmui_menu_title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px90"
+            android:background="@color/white">
+
+        <ImageButton
+                android:id="@+id/back_btn"
+                android:layout_width="@dimen/title_bar_height"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/back_arrow"
+                android:background="@android:color/transparent"/>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+            <TextView
+                    android:id="@+id/chat_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="@dimen/px300"
+                    android:ellipsize="end"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_34px"/>
+
+            <TextView
+                    android:id="@+id/chat_group_num_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_34px"/>
+
+        </LinearLayout>
+
+        <ImageButton
+                android:id="@+id/chat_right_btn"
+                android:layout_width="@dimen/title_bar_height"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/opera_selector"
+                android:background="@android:color/transparent"
+                />
+
+        <ImageButton
+                android:id="@+id/chat_right_btn2"
+                android:layout_width="@dimen/title_bar_height"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/chat_right_btn"
+                android:src="@drawable/clazz_info_selector"
+                android:background="@android:color/transparent"
+                />
+
+    </RelativeLayout>
+
+    <View
+            android:id="@+id/divider"
+            style="@style/DividerHorizontal"
+            android:layout_below="@+id/jmui_menu_title_bar"/>
 
     <fragment
         android:id="@+id/fragment_chat"

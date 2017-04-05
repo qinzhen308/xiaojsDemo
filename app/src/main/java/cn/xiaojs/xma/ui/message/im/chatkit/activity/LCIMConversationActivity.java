@@ -3,7 +3,10 @@ package cn.xiaojs.xma.ui.message.im.chatkit.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVCallback;
@@ -14,6 +17,9 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 
 import java.util.Arrays;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.message.im.chatkit.LCChatKit;
 import cn.xiaojs.xma.ui.message.im.chatkit.cache.LCIMConversationItemCache;
@@ -28,15 +34,38 @@ import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
  */
 public class LCIMConversationActivity extends FragmentActivity {
 
+  @BindView(R.id.chat_title)
+  TextView titleView;
+
   protected LCIMConversationFragment conversationFragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.lcim_conversation_activity);
+    ButterKnife.bind(this);
     conversationFragment = (LCIMConversationFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
     initByIntent(getIntent());
   }
+
+
+  @OnClick({R.id.back_btn, R.id.chat_right_btn, R.id.chat_right_btn2})
+  public void onClick(View v) {
+    switch (v.getId()) {
+      case R.id.back_btn:
+        finishActivity(RESULT_OK);
+        break;
+      case R.id.chat_right_btn:
+
+        break;
+      case R.id.chat_right_btn2:
+        break;
+    }
+  }
+
+
+
+
 
   @Override
   protected void onNewIntent(Intent intent) {
@@ -46,6 +75,7 @@ public class LCIMConversationActivity extends FragmentActivity {
 
   private void initByIntent(Intent intent) {
     if (null == LCChatKit.getInstance().getClient()) {
+      //FIXME
       showToast("please login first!");
       finish();
       return;
@@ -71,6 +101,12 @@ public class LCIMConversationActivity extends FragmentActivity {
    * @param title
    */
   protected void initActionBar(String title) {
+
+    if (!TextUtils.isEmpty(title)) {
+      titleView.setText(title);
+    }
+
+
 //    ActionBar actionBar = getSupportActionBar();
 //    if (null != actionBar) {
 //      if (null != title) {
