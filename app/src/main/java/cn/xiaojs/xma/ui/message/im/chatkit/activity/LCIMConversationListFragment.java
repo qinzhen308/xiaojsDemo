@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.message.im.chatkit.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.avos.avoscloud.im.v2.AVIMConversation;
 
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.im.chatkit.LCChatKit;
 import cn.xiaojs.xma.ui.message.im.chatkit.LCIMCommonListAdapter;
 import cn.xiaojs.xma.ui.message.im.chatkit.cache.LCIMConversationItemCache;
@@ -33,9 +36,11 @@ import cn.xiaojs.xma.ui.message.im.chatkit.viewholder.LCIMConversationItemHolder
 public class LCIMConversationListFragment extends Fragment {
   protected SwipeRefreshLayout refreshLayout;
   protected RecyclerView recyclerView;
+  protected ImageView people_imageView;
 
   protected LCIMCommonListAdapter<AVIMConversation> itemAdapter;
   protected LinearLayoutManager layoutManager;
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +49,8 @@ public class LCIMConversationListFragment extends Fragment {
     refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_conversation_srl_pullrefresh);
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_conversation_srl_view);
 
+    people_imageView = (ImageView) view.findViewById(R.id.people_image);
+
     refreshLayout.setEnabled(false);
     layoutManager = new LinearLayoutManager(getActivity());
     recyclerView.setLayoutManager(layoutManager);
@@ -51,6 +58,15 @@ public class LCIMConversationListFragment extends Fragment {
     itemAdapter = new LCIMCommonListAdapter<AVIMConversation>(LCIMConversationItemHolder.class);
     recyclerView.setAdapter(itemAdapter);
     EventBus.getDefault().register(this);
+
+
+    people_imageView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        startActivity(new Intent(getContext(), ContactActivity.class));
+      }
+    });
+
     return view;
   }
 

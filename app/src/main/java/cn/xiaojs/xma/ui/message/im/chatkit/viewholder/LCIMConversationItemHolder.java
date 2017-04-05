@@ -101,14 +101,15 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
       itemView.setOnLongClickListener(new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-          AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-          builder.setItems(new String[]{"删除该聊天"}, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              EventBus.getDefault().post(new LCIMConversationItemLongClickEvent(conversation));
-            }
-          });
-          AlertDialog dialog = builder.create();
-          dialog.show();
+          //FIXME
+//          AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//          builder.setItems(new String[]{"删除该聊天"}, new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int which) {
+//              EventBus.getDefault().post(new LCIMConversationItemLongClickEvent(conversation));
+//            }
+//          });
+//          AlertDialog dialog = builder.create();
+//          dialog.show();
           return false;
         }
       });

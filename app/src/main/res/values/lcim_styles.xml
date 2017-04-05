@@ -73,7 +73,7 @@
     </style>
 
     <style name="LCIMTextAppearance.Normal.Gray">
-        <item name="android:textColor">@color/lcim_common_gray</item>
+        <item name="android:textColor">@color/font_dark_gray</item>
     </style>
 
     <style name="LCIMTextAppearance.Small"/>
@@ -87,8 +87,8 @@
     </style>
 
     <style name="LCIMAvatar.Large">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">@dimen/px86</item>
+        <item name="android:layout_height">@dimen/px86</item>
     </style>
 
     <style name="LCIMAvatar.Small">
