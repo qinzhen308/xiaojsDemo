@@ -20,7 +20,8 @@
 
         <EditText
             android:id="@+id/input_bar_et_content"
-            style="@style/lcim_input_bar_edittext_style"/>
+            style="@style/lcim_input_bar_edittext_style"
+            />
     </FrameLayout>
 
     <FrameLayout

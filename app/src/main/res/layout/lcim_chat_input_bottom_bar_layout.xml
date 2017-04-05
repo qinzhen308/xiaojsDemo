@@ -3,8 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:layout_height="@dimen/px96"
+        android:background="@color/moment_comment_bg"
         android:orientation="vertical">
 
     <View style="@style/LCIMDividerLine.Horizontal"/>
@@ -13,18 +13,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/lcim_bottom_bar_height"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/px6"
+            android:paddingBottom="@dimen/px6">
 
         <EditText
                 android:id="@+id/input_bar_et_content"
                 style="@style/lcim_input_bar_edittext_style"
                 android:layout_weight="1.0"
-                android:layout_width="0dp"/>
+                android:layout_width="0dp"
+                android:imeOptions="actionSend"
+                android:background="@color/white"/>
         <ImageButton
-                android:id="@+id/input_bar_btn_voice"
+                android:id="@+id/input_bar_btn_action"
                 style="@style/lcim_input_bar_button_style"
-                android:src="@drawable/lcim_bottom_bar_voice_button_bg"
-                android:layout_width="wrap_content"/>
+                android:src="@drawable/ic_home_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingRight="10dp"/>
     </LinearLayout>
 
     <include layout="@layout/lcim_bottom_bar_more_layout"/>

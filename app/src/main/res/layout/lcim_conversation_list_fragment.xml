@@ -4,6 +4,8 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/fragment_conversation_srl_pullrefresh"
         android:layout_width="match_parent"
