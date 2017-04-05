@@ -4,6 +4,8 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+
+
     <fragment
         android:id="@+id/fragment_chat"
         android:name="cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationFragment"
