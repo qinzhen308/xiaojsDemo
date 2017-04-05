@@ -95,6 +95,7 @@
                     android:paddingRight="@dimen/px30"
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
+                    android:visibility="gone"
                     android:layout_toRightOf="@+id/back_btn"
                     android:src="@drawable/ic_cr_start"/>
 
@@ -107,6 +108,7 @@
                     android:paddingRight="@dimen/px30"
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
+                    android:visibility="gone"
                     android:layout_toRightOf="@+id/play_pause_btn"
                     android:src="@drawable/ic_cr_exit"/>
 

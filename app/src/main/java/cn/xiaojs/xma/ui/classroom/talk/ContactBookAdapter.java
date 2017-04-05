@@ -48,11 +48,13 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private LiveCollection<Attendee> mLiveCollection;
     private ArrayList<Attendee> mAttendeeList;
     private int mOffset;
+    private Constants.User mUser;
 
-    public ContactBookAdapter(Context context) {
+    public ContactBookAdapter(Context context, Constants.User user) {
         mContext = context;
         mChoiceList = new ArrayList<String>();
         mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px5);
+        mUser = user;
     }
 
     public void setOnPortraitClickListener(OnPortraitClickListener listener) {
@@ -110,10 +112,16 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.video = (ImageView) v.findViewById(R.id.video);
         holder.microphone = (ImageView) v.findViewById(R.id.microphone);
 
-        holder.video.setOnClickListener(this);
-        holder.microphone.setOnClickListener(this);
-        //TODO
-        holder.microphone.setVisibility(View.GONE);
+        if (mUser == Constants.User.STUDENT) {
+            holder.video.setVisibility(View.GONE);
+            holder.microphone.setVisibility(View.GONE);
+        } else {
+            holder.video.setOnClickListener(this);
+            holder.microphone.setOnClickListener(this);
+            //TODO
+            holder.microphone.setVisibility(View.GONE);
+        }
+
         holder.portrait.setOnClickListener(this);
         v.setOnClickListener(this);
 
@@ -142,16 +150,16 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.name.setText(attendee.name);
 
         if (mContactManagementMode) {
-            //holder.portrait.setCount(0);
             holder.video.setVisibility(View.GONE);
             holder.microphone.setVisibility(View.GONE);
             holder.checkbox.setVisibility(View.VISIBLE);
             holder.checkbox.setSelected(mChoiceList.contains(String.valueOf(position)));
         } else {
             holder.checkbox.setVisibility(View.GONE);
-            holder.video.setVisibility(View.VISIBLE);
-            holder.microphone.setVisibility(View.VISIBLE);
-            //holder.portrait.setCount(9);
+            if (mUser == Constants.User.TEACHER) {
+                holder.video.setVisibility(View.VISIBLE);
+                holder.microphone.setVisibility(View.VISIBLE);
+            }
         }
 
         Constants.User user = ClassroomBusiness.getUser(attendee.psType);
@@ -170,7 +178,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         if (ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
             holder.video.setVisibility(View.GONE);
             holder.microphone.setVisibility(View.GONE);
-        } else {
+        } else if (mUser == Constants.User.TEACHER){
             holder.video.setVisibility(View.VISIBLE);
             holder.microphone.setVisibility(View.VISIBLE);
         }

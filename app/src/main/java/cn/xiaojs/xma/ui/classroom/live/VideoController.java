@@ -24,7 +24,6 @@ import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
 import cn.xiaojs.xma.common.xf_foundation.Su;
-import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -36,14 +35,15 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected Context mContext;
     protected View mRoot;
 
-    private Handler mHandler;
+    /**
+     * 播放,推送view
+     */
     protected LiveRecordView mPublishView;
     protected PlayerTextureView mPlayView;
     protected BaseMediaView mIndividualView;
 
     protected boolean mInitPublishVideo = false;
     protected boolean mInitIndividualPublishVideo = false;
-    protected boolean mLive;
 
     protected String mPlayStreamUrl;
     protected String mPublishStreamUrl;
@@ -61,6 +61,10 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected OnStreamStateChangeListener mStreamListener;
 
     protected Constants.User mUser = Constants.User.TEACHER;
+    protected int mPlayType;
+    protected int mPublishType;
+
+    private Handler mHandler;
 
     public VideoController(Context context, View root, OnStreamStateChangeListener listener) {
         mContext = context;
@@ -72,6 +76,11 @@ public abstract class VideoController implements StreamConfirmCallback {
         if (mPublishView != null) {
             mPublishView.setOnStreamingStateListener(mStreamingStateChangedListener);
         }
+        //个人推流的时候
+        if (mIndividualView instanceof LiveRecordView) {
+            ((LiveRecordView) mIndividualView).setOnStreamingStateListener(mStreamingStateChangedListener);
+        }
+
         onResume();
 
         //监听流开始或暂停
@@ -99,15 +108,18 @@ public abstract class VideoController implements StreamConfirmCallback {
         if (mPublishView != null && !mPublishView.isResume()) {
             mPublishView.resume();
         }
+        if (mIndividualView != null && !mIndividualView.isResume()) {
+            mIndividualView.resume();
+        }
 
         if (mNeedStreamRePublishing) {
             mNeedStreamRePublishing = false;
-            publishStream(mPublishStreamUrl, mLive);
+            publishStream(mPublishType, mPublishStreamUrl);
         }
 
         if (mNeedStreamRePlaying) {
             mNeedStreamRePlaying = false;
-            playStream(mPlayStreamUrl);
+            playStream(mPlayType, mPlayStreamUrl);
         }
     }
 
@@ -115,8 +127,8 @@ public abstract class VideoController implements StreamConfirmCallback {
      * pause视频
      */
     public void onPause() {
-        pausePlayStream();
-        pausePublishStream();
+        pausePlayStream(mPlayType);
+        pausePublishStream(mPublishType);
     }
 
     /**
@@ -128,6 +140,9 @@ public abstract class VideoController implements StreamConfirmCallback {
         }
         if (mPublishView != null) {
             mPublishView.destroy();
+        }
+        if (mIndividualView != null) {
+            mIndividualView.destroy();
         }
     }
 
@@ -148,61 +163,72 @@ public abstract class VideoController implements StreamConfirmCallback {
     /**
      * 暂停推流
      */
-    public void pausePublishStream() {
-        if (mPublishView != null) {
-            if (mStreamPublishing) {
-                if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
-                    mNeedStreamRePublishing = true;
-                    if (mStreamListener != null) {
-                        mStreamListener.onStreamStopped(mUser, OnStreamStateChangeListener.TYPE_STREAM_PUBLISH);
-                    }
-                } else {
-                    //send stopped stream
-                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
-                            new SocketManager.AckListener() {
-                                @Override
-                                public void call(Object... args) {
-                                    if (args != null && args.length > 0) {
-                                        mNeedStreamRePublishing = true;
-                                        if (mStreamListener != null) {
-                                            int type = mLive ? OnStreamStateChangeListener.TYPE_STREAM_PUBLISH :
-                                                    OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_INDIVIDUAL;
-                                            mStreamListener.onStreamStopped(mUser, type);
-                                        }
-                                    }
-                                }
-                            });
-                }
-            }
-            mStreamPublishing = false;
-            mPublishView.pause();
-        }
+    public abstract void pausePublishStream(int type);
+
+    /**
+     * 开始推流
+     *
+     * @see #publishStream(int, String)
+     */
+    public void publishStream() {
+        publishStream(mPublishType, mPublishStreamUrl);
     }
 
     /**
      * 开始推流
+     *
+     * @see #publishStream(int, String)
+     */
+    public void publishStream(int type) {
+        publishStream(type, mPublishStreamUrl);
+    }
+
+    /**
+     * 开始推流
+     *
      * @see #confirmPublishStream(boolean)
      */
-    public void publishStream(String url, boolean live) {
-        if (TextUtils.isEmpty(url) || mPublishView == null) {
+    public void publishStream(int type, String url) {
+        if (TextUtils.isEmpty(url)) {
             return;
         }
 
+        mPublishType = type;
         mPublishStreamUrl = url;
         if (mStreamListener != null) {
-            mLive = live;
             mStreamListener.onStreamPublish(this);
         }
     }
 
     /**
      * 播放流
+     *
+     * @see #playStream(int, String)
+     */
+    public void playStream() {
+        playStream(mPlayType, mPlayStreamUrl);
+    }
+
+    /**
+     * 播放流
+     *
+     * @see #playStream(int, String)
+     */
+    public void playStream(int type) {
+        playStream(type, mPlayStreamUrl);
+    }
+
+    /**
+     * 播放流
+     *
      * @see #confirmPlayStream(boolean)
      */
-    public void playStream(String url) {
+    public void playStream(int type, String url) {
         if (!TextUtils.isEmpty(url)) {
             mPlayStreamUrl = url;
         }
+
+        mPlayType = type;
         if (mPlayView != null && !TextUtils.isEmpty(mPlayStreamUrl)) {
             if (mStreamListener != null) {
                 mStreamListener.onStreamPlay(this);
@@ -211,74 +237,9 @@ public abstract class VideoController implements StreamConfirmCallback {
     }
 
     /**
-     * 播放流
-     * @see #playStream(String)
-     */
-    public void playStream() {
-        playStream(mPlayStreamUrl);
-    }
-
-    /**
-     * 推流
-     * @see #publishStream(String, boolean)
-     */
-    public void publishStream() {
-        publishStream(mPublishStreamUrl, mLive);
-    }
-
-    /**
      * 暂停播放流
      */
-    public void pausePlayStream() {
-        if (mPlayView != null) {
-            mStreamPlaying = false;
-            mNeedStreamRePlaying = true;
-            mPlayView.pause();
-            mPlayView.showLoading(false);
-
-            if (mStreamListener != null) {
-                mStreamListener.onStreamStopped(mUser, mUser == Constants.User.TEACHER ?
-                        OnStreamStateChangeListener.TYPE_STREAM_PLAY_MEDIA_FEEDBACK : OnStreamStateChangeListener.TYPE_STREAM_PLAY);
-            }
-        }
-    }
-
-    public void receivePausePlayStream(Constants.User user, int type) {
-        if (type == OnStreamStateChangeListener.TYPE_STREAM_PUBLISH_INDIVIDUAL) {
-            if (mIndividualView != null) {
-                mIndividualView.pause();
-                mIndividualView.showLoading(false);
-            }
-        } else {
-            if (mPlayView != null) {
-                mPlayView.pause();
-                mPlayView.showLoading(false);
-                mPlayView.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    @Override
-    public void confirmPlayStream(boolean confirm) {
-        mStreamPlaying = true;
-        mPlayView.setPath(mPlayStreamUrl);
-        mPlayView.setVisibility(View.VISIBLE);
-        mPlayView.resume();
-        mPlayView.showLoading(true);
-    }
-
-    @Override
-    public void confirmPublishStream(boolean confirm) {
-        mStreamPublishing = true;
-        mPublishView.setPath(mPublishStreamUrl);
-        mPublishView.setVisibility(View.VISIBLE);
-        boolean init = mLive ? mInitPublishVideo : mInitIndividualPublishVideo;
-        if (!init) {
-            mPublishView.start();
-        } else {
-            mPublishView.resume();
-        }
-    }
+    public abstract void pausePlayStream(int type);
 
     /**
      * 推流的流状态发生变化回调
@@ -287,16 +248,20 @@ public abstract class VideoController implements StreamConfirmCallback {
      * @param data           额外数据
      */
     public void onSteamStateChanged(StreamingState streamingState, Object data) {
+
     }
 
+    /**
+     * 推流的监听器（个人推流或直播推流）
+     */
     protected StreamingStateChangedListener mStreamingStateChangedListener = new StreamingStateChangedListener() {
         @Override
         public void onStateChanged(StreamingState streamingState, Object o) {
             switch (streamingState) {
                 case STREAMING:
-                    if (mLive) {
+                    if (mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
                         mInitPublishVideo = true;
-                    } else {
+                    } else if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL){
                         mInitIndividualPublishVideo = true;
                     }
                     break;
@@ -350,11 +315,11 @@ public abstract class VideoController implements StreamConfirmCallback {
         return mStreamPlaying;
     }
 
-    public boolean needStreamRePublishing () {
+    public boolean needStreamRePublishing() {
         return mNeedStreamRePublishing;
     }
 
-    public boolean needStreamRePlaying () {
+    public boolean needStreamRePlaying() {
         return mNeedStreamRePlaying;
     }
 

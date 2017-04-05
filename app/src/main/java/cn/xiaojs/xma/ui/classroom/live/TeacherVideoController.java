@@ -37,8 +37,6 @@ public class TeacherVideoController extends VideoController {
     private int loadingSize = 36;
     private int loadingDesc = 20;
 
-    private PlayerTextureView mIndividualPlayView;
-
     public TeacherVideoController(Context context, View root, OnStreamStateChangeListener listener) {
         super(context, root, listener);
         mUser = Constants.User.TEACHER;
@@ -49,13 +47,18 @@ public class TeacherVideoController extends VideoController {
 
     @Override
     protected void init(View root) {
+        /**
+         * 用于播放和学生的一对一视频（默认小窗口）
+         */
         mPlayView = (PlayerTextureView) root.findViewById(R.id.tea_player_video);
-
+        /**
+         * 用于推流视频（直播推流或个人推流）
+         */
         mPublishView = (LiveRecordView) root.findViewById(R.id.publish_video);
-        mPublishView.setVisibility(View.VISIBLE);
-
-        mIndividualPlayView = (PlayerTextureView) root.findViewById(R.id.live_video);
-        mIndividualPlayView.setVisibility(View.GONE);
+        /**
+         * 用于个人推流的播放
+         */
+        mIndividualView = (PlayerTextureView) root.findViewById(R.id.live_video);
     }
 
     @Override
@@ -64,15 +67,112 @@ public class TeacherVideoController extends VideoController {
     }
 
     @Override
-    public void confirmPlayStream(boolean confirm) {
-        super.confirmPlayStream(confirm);
-        mPlayView.setVisibility(View.VISIBLE);
-        if (!TextUtils.isEmpty(mPlayStreamUrl)) {
-            mPlayView.showLoading(true, loadingSize, loadingDesc);
+    public void confirmPublishStream(boolean confirm) {
+        mStreamPublishing = true;
+        mPublishView.setPath(mPublishStreamUrl);
+        mPublishView.setVisibility(View.VISIBLE);
+        boolean init = mPublishType == StreamType.TYPE_STREAM_PUBLISH ? mInitPublishVideo : mInitIndividualPublishVideo;
+        if (!init) {
+            mPublishView.start();
+        } else {
+            mPublishView.resume();
         }
+    }
 
-        if (mStreamListener != null) {
-            mStreamListener.onStreamStarted(mUser, OnStreamStateChangeListener.TYPE_STREAM_PLAY_MEDIA_FEEDBACK);
+    @Override
+    public void confirmPlayStream(boolean confirm) {
+        mStreamPlaying = true;
+        if (mPlayType == StreamType.TYPE_STREAM_PEER_TO_PEER) {
+            mPlayView.setPath(mPlayStreamUrl);
+            mPlayView.setVisibility(View.VISIBLE);
+            mPlayView.resume();
+            mPlayView.showLoading(true);
+
+            if (!TextUtils.isEmpty(mPlayStreamUrl)) {
+                mPlayView.setVisibility(View.VISIBLE);
+                mPlayView.showLoading(true, loadingSize, loadingDesc);
+            }
+
+            if (mStreamListener != null) {
+                mStreamListener.onStreamStarted(mUser, StreamType.TYPE_STREAM_PEER_TO_PEER);
+            }
+        } else if (mPlayType == StreamType.TYPE_STREAM_INDIVIDUAL) {
+            mIndividualView.setPath(mPlayStreamUrl);
+            mIndividualView.setVisibility(View.VISIBLE);
+            mIndividualView.resume();
+            mIndividualView.showLoading(true);
+
+            if (!TextUtils.isEmpty(mPlayStreamUrl)) {
+                mIndividualView.setVisibility(View.VISIBLE);
+                mIndividualView.showLoading(true, loadingSize, loadingDesc);
+            }
+
+            if (mStreamListener != null) {
+                mStreamListener.onStreamStarted(mUser, StreamType.TYPE_STREAM_INDIVIDUAL);
+            }
+        }
+    }
+
+    /**
+     * 暂停推流
+     */
+    @Override
+    public void pausePublishStream(final int type) {
+        if (mPublishView != null) {
+            if (mStreamPublishing) {
+                if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
+                    mNeedStreamRePublishing = true;
+                    if (mStreamListener != null) {
+                        mStreamListener.onStreamStopped(mUser, type);
+                    }
+                } else {
+                    //send stopped stream
+                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                            new SocketManager.AckListener() {
+                                @Override
+                                public void call(Object... args) {
+                                    if (args != null && args.length > 0) {
+                                        mNeedStreamRePublishing = true;
+                                        if (mStreamListener != null) {
+                                            mStreamListener.onStreamStopped(mUser, type);
+                                        }
+                                    }
+                                }
+                            });
+                }
+            }
+            mStreamPublishing = false;
+            mPublishView.pause();
+            mPublishView.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 暂停播放流
+     */
+    @Override
+    public void pausePlayStream(int type) {
+        if (type == StreamType.TYPE_STREAM_PEER_TO_PEER) {
+            mStreamPlaying = false;
+            mNeedStreamRePlaying = true;
+            mPlayView.pause();
+            mPlayView.showLoading(false);
+            mPlayView.setVisibility(View.GONE);
+
+            if (mStreamListener != null) {
+                mStreamListener.onStreamStopped(Constants.User.STUDENT, type);
+            }
+        } else if (type == StreamType.TYPE_STREAM_INDIVIDUAL) {
+            mStreamPlaying = false;
+            mNeedStreamRePlaying = true;
+            mIndividualView.pause();
+            mIndividualView.showLoading(false);
+            mIndividualView.setVisibility(View.GONE);
+
+
+            if (mStreamListener != null) {
+                mStreamListener.onStreamStopped(Constants.User.STUDENT, type);
+            }
         }
     }
 
@@ -92,13 +192,13 @@ public class TeacherVideoController extends VideoController {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
                                 if (mStreamListener != null) {
-                                    mStreamListener.onStreamStarted(mUser, OnStreamStateChangeListener.TYPE_STREAM_PUBLISH);
+                                    mStreamListener.onStreamStarted(mUser, mPublishType);
                                 }
                             } else {
-                                pausePublishStream();
+                                pausePublishStream(mPublishType);
                             }
                         } else {
-                            pausePublishStream();
+                            pausePublishStream(mPublishType);
                         }
                     }
                 });
@@ -113,7 +213,7 @@ public class TeacherVideoController extends VideoController {
                 MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
                 if (response != null && response.playUrl != null) {
                     mPlayStreamUrl = response.playUrl;
-                    playStream(response.playUrl);
+                    playStream(StreamType.TYPE_STREAM_PEER_TO_PEER, response.playUrl);
                 }
             }
         }
@@ -125,7 +225,7 @@ public class TeacherVideoController extends VideoController {
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
                 mPlayStreamUrl = startedNotify.RTMPPlayUrl;
-                playStream(startedNotify.RTMPPlayUrl);
+                playStream(StreamType.TYPE_STREAM_INDIVIDUAL, startedNotify.RTMPPlayUrl);
             }
         }
     }
@@ -133,7 +233,7 @@ public class TeacherVideoController extends VideoController {
     @Override
     protected void onStringingStopped(Object... args) {
         if (args != null && args.length > 0) {
-            pausePlayStream();
+            pausePlayStream(mPlayType);
         }
     }
 }

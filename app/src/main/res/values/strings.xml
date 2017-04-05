@@ -67,6 +67,12 @@
     <string name="mobile_network_allow">继续使用</string>
     <string name="lead_teacher">主讲</string>
     <string name="assistant_teacher">助教</string>
+    <string name="cls_not_on_class_title">还未开始上课，请耐心等待!</string>
+    <string name="cls_not_on_class_desc">你现在可以和成员聊天，或者进行直播秀</string>
+    <string name="cls_not_break_title">开启了课间休息，等会接着上</string>
+    <string name="cls_not_break_desc">稍作休息，等待老师继续上课</string>
+    <string name="cls_finish_title">本课已结束</string>
+    <string name="cls_not_connected">教室未连接上，请退出后重新进入</string>
 
     <string name="select_for_you">您已选:</string>
     <string name="search_subject_tips">请输入您要找的学科类目</string>
