@@ -22,12 +22,14 @@ import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.DataCacheManager;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.JpushUtil;
+import cn.xiaojs.xma.util.LeanCloudUtil;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,6 +71,13 @@ public class DataManager {
         if (AccountDataManager.isLogin(context)) {
 
             XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(context);
+
+            if (XiaojsConfig.mLoginUser !=null && !TextUtils.isEmpty(XiaojsConfig.mLoginUser.getId())) {
+                //open lean cloud
+                LeanCloudUtil.open(XiaojsConfig.mLoginUser.getId());
+            }
+
+
             XiaojsConfig.AVATOR_TIME = AccountPref.getAvatorTime(context);
 
             lanuchInitDataService(context, null);

@@ -1,1 +1,1 @@
-include ':app', ':3d_wheelpicker'
+include ':app', ':3d_wheelpicker', ':leancloudchatkit'

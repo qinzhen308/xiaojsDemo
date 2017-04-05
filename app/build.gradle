@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'walle'
+apply plugin: 'bugly'
+
 
 def ksPro = new Properties()
 ksPro.load(new FileInputStream(rootProject.file("ks.properties")))
@@ -14,8 +16,8 @@ android {
         applicationId "cn.xiaojs.xma"
         minSdkVersion 15
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "0.1.5"
+        versionCode 22
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -44,12 +46,14 @@ android {
 
     packagingOptions {
         exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 
     lintOptions {
         abortOnError false
     }
 
+    buildToolsVersion '25.0.0'
 }
 
 dependencies {
@@ -93,7 +97,6 @@ dependencies {
     //    compile files('libs/jcore-android_v1.1.0.jar')
     //    compile files('libs/jmessage-android-2.0.0.jar')
     //    compile files('libs/jpush-android_v3.0.1.jar')
-
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
@@ -114,10 +117,17 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     debugCompile 'com.facebook.stetho:stetho:1.4.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    compile project(':leancloudchatkit')
+}
+
+bugly {
+    appId = '900060174' // 注册时分配的App ID
+    appKey = 'Se1ulsmMdxsedS21' // 注册时分配的App Key
 }
 
 walle {

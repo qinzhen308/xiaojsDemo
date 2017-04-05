@@ -12,6 +12,7 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.leancloud.chatkit.activity.LCIMConversationListFragment;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
@@ -50,7 +51,7 @@ public class MainActivity extends BaseTabActivity {
         fs.add(new HomeFragment());
         fs.add(new LiveFragment());
         //fs.add(new NotificationFragment());
-        fs.add(new MessageFragment());
+        fs.add(new LCIMConversationListFragment());
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);
         addViews(new int[]{R.string.home_tab_index, R.string.home_tab_live, R.string.home_tab_message, R.string.home_tab_mine},

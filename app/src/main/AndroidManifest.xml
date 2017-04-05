@@ -187,8 +187,7 @@
         </activity>
         <activity
                 android:name=".ui.search.SearchListActivity"
-                android:screenOrientation="portrait"
-                />
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.common.ImageViewActivity"
                 android:screenOrientation="portrait"
@@ -235,10 +234,6 @@
         <activity
                 android:name=".ui.mine.MyOrderActivity"
                 android:screenOrientation="portrait"/>
-        <activity
-                android:name=".common.im.ChatActivity"
-                android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize"/>
         <activity
                 android:name=".ui.UpgradeActivity"
                 android:theme="@style/dlg_upgrade">
@@ -414,19 +409,6 @@
             </intent-filter>
         </receiver>
 
-        <!-- IM Required IM SDK核心功能 -->
-        <receiver
-                android:name="cn.jpush.im.android.helpers.IMReceiver"
-                android:enabled="true"
-                android:exported="false">
-            <intent-filter android:priority="1000">
-                <action android:name="cn.jpush.im.android.action.IM_RESPONSE"/>
-                <action android:name="cn.jpush.im.android.action.NOTIFICATION_CLICK_PROXY"/>
-
-                <category android:name="${applicationId}"/>
-            </intent-filter>
-        </receiver>
-
         <!-- Required. Enable it you can get statistics data with channel -->
         <meta-data
                 android:name="JPUSH_CHANNEL"
@@ -441,11 +423,15 @@
 
         <!-- 高德 -->
         <meta-data
-                android:name="com.amap.api.v2.apikey"
+                android:name="com.amap.api.v2.0"
                 android:value="d19701b38830e88772d8325797c8073a"/>
 
         <service android:name="com.amap.api.location.APSService"/>
 
+
+
+        <activity android:name=".ui.message.im.ConversationActivity">
+        </activity>
     </application>
 
 </manifest>

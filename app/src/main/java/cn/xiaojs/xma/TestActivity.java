@@ -14,6 +14,9 @@ package cn.xiaojs.xma;
  *
  * ======================================================================================== */
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import butterknife.BindView;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.PortraitView;
@@ -43,6 +46,7 @@ public class TestActivity extends BaseActivity {
         super.onResume();
 //        board.resume();
 //        player.resume();
+
     }
 
     @Override

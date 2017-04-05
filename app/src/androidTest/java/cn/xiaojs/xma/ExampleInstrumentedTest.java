@@ -5,6 +5,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.TextUtils;
 
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -23,6 +24,7 @@ import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.util.APPUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
 import org.junit.Test;
@@ -32,6 +34,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -83,14 +86,22 @@ public class ExampleInstrumentedTest {
 //        String cc = jobject.keys().next();
 //        System.out.println("===========:"+cc);
 
-        String dd = "2017-03-03T08:30:00.000Z";
-        String datew = distanceDay(dd);
+//        String dd = "2017-03-03T08:30:00.000Z";
+//        String datew = distanceDay(dd);
+//
+//        Logger.d("d:"+datew);
+//
+//        System.out.println(datew);
 
-        Logger.d("d:"+datew);
+        String j = "{\"contactGroups\":{\"1489549386880\":\"ML噢\"}}";
+        ObjectMapper o = new ObjectMapper();
+        Model m = o.readValue(j, Model.class);
 
-        System.out.println(datew);
 
+    }
 
+    public static class Model{
+        public Map<Long, String> contactGroups;
     }
 
     public static String distanceDay(String date) {
