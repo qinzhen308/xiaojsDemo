@@ -52,21 +52,32 @@
     <TextView
             android:id="@+id/search_type"
             android:layout_marginLeft="@dimen/px30"
-            android:layout_marginTop="@dimen/px30"
-            android:layout_marginBottom="@dimen/px30"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_marginBottom="@dimen/px20"
             android:textColor="@color/common_text"
             android:textSize="@dimen/font_28px"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-    <ScrollView
-            android:scrollbars="none"
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/search_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:divider="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:dividerHeight="@dimen/px1"
+            android:orientation="vertical"/>
 
-        <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
-                android:id="@+id/search_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-    </ScrollView>
+    <!--<ScrollView-->
+            <!--android:scrollbars="none"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
+
+        <!--<cn.xiaojs.xma.ui.widget.CanInScrollviewListView-->
+                <!--android:id="@+id/search_list"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"/>-->
+    <!--</ScrollView>-->
 </LinearLayout>

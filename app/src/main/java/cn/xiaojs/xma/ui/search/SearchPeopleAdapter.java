@@ -15,11 +15,14 @@ package cn.xiaojs.xma.ui.search;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -29,28 +32,35 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
+import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
 
     private int MAX_COUNT = 0;
 
-    private List<AccountSearch> mBeans;
+    private List<AccountInfo> mBeans;
     private Context mContext;
     private CircleTransform circleTransform;
 
-    public SearchPeopleAdapter(Context context, List<AccountSearch> beans) {
+    public SearchPeopleAdapter(Context context, List<AccountInfo> beans) {
         mContext = context;
         mBeans = beans;
         circleTransform = new CircleTransform(context);
     }
 
-    public SearchPeopleAdapter(Context context, List<AccountSearch> beans,int max) {
+    public SearchPeopleAdapter(Context context, List<AccountInfo> beans,int max) {
         mContext = context;
         mBeans = beans;
         circleTransform = new CircleTransform(context);
@@ -95,12 +105,39 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
             holder = (Holder) convertView.getTag();
         }
 
-        AccountSearch accountSearch = mBeans.get(position);
+        AccountInfo accountInfo = mBeans.get(position);
 
-        holder.name.setText(accountSearch._source.basic.getName());
-        holder.tag.setText(StringUtil.protectCardNo(accountSearch._source.phone.subsNum));
+        holder.name.setText(accountInfo.basic.getName());
+        holder.tag.setText(StringUtil.protectCardNo(accountInfo.phone.subsNum));
+
+        final String aid = accountInfo.id;
+        if (!TextUtils.isEmpty(aid) && DataManager.existInContacts(mContext,aid)) {
+            holder.relationship.setText("已关注");
+            holder.relationship.setTextColor(mContext.getResources().getColor(R.color.font_light_gray));
+            holder.relationship.setCompoundDrawablePadding(8);
+            holder.relationship.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+            holder.relationship.setBackgroundResource(R.drawable.bg_follow_rect);
+            holder.relationship.setEnabled(false);
+        }else {
+            holder.relationship.setText("关注");
+            holder.relationship.setTextColor(mContext.getResources().getColor(R.color.font_orange));
+            holder.relationship.setCompoundDrawablePadding(8);
+            holder.relationship.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus,0,0,0);
+            holder.relationship.setBackgroundResource(R.drawable.bg_unfollow_rect);
+            holder.relationship.setEnabled(true);
+        }
+
+        holder.relationship.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                chooseGroup(aid);
+            }
+        });
+
+
         Glide.with(mContext)
-                .load(Account.getAvatar(mBeans.get(position)._id,300))
+                .load(Account.getAvatar(accountInfo.id,300))
                 .bitmapTransform(circleTransform)
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
@@ -108,22 +145,52 @@ public class SearchPeopleAdapter extends CanInScrollviewListView.Adapter {
         return convertView;
     }
 
-    public void setData(List<AccountSearch> accounts){
+    public void setData(List<AccountInfo> accounts){
         mBeans = accounts;
     }
+    private void chooseGroup(final String aid) {
+
+        BaseBusiness.showFollowDialog(mContext, new BaseBusiness.OnFollowListener() {
+            @Override
+            public void onFollow(long group) {
+                if (group > 0) {
+                    toFollow(aid, group);
+                }
+            }
+        });
+
+    }
+
+    private void toFollow(String aid, long group) {
+
+        SocialManager.followContact(mContext, aid, group, new APIServiceCallback<Relation>() {
+            @Override
+            public void onSuccess(Relation object) {
+                Toast.makeText(mContext, R.string.followed, Toast.LENGTH_SHORT).show();
+                //FIXME 没更新
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     class Holder extends BaseHolder {
         @BindView(R.id.search_people_head)
         ImageView head;
         @BindView(R.id.search_people_item_name)
         TextView name;
-        @BindView(R.id.search_people_star)
-        EvaluationStar star;
+//        @BindView(R.id.search_people_star)
+//        EvaluationStar star;
         @BindView(R.id.search_people_tag)
         TextView tag;
-        @BindView(R.id.search_people_desc)
-        TextView desc;
+//        @BindView(R.id.search_people_desc)
+//        TextView desc;
         @BindView(R.id.search_people_relationship)
-        ImageView relationship;
+        Button relationship;
 
         public Holder(View view) {
             super(view);

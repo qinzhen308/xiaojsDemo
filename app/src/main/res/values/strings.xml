@@ -138,7 +138,7 @@
     <string name="personal_home">个人主页</string>
     <string name="my_page">我的主页</string>
     <string name="my_course_mine_page">我的课</string>
-    <string name="my_teaching">我的课程</string>
+    <string name="my_teaching">我授的课</string>
     <string name="my_enrollment">我报的班</string>
     <string name="my_ask_questions">我的提问</string>
     <string name="my_documents">资料库</string>
@@ -712,6 +712,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="unfollow_forbidden">您不能取消关注此账号</string>
     <string name="student">同学</string>
+    <string name="search_empty_tips">暂无搜索结果~</string>
 
 
 </resources>

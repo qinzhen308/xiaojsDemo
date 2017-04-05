@@ -536,7 +536,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         doRequest();
     }
 
-    protected final void onSuccess(List<B> data) {
+    public final void onSuccess(List<B> data) {
         if (STATE_UP_REFRESH == mCurrentState || mPagination.getPage() == PAGE_FIRST) {
             mBeanList.clear();
             notifyDataSetChanged();

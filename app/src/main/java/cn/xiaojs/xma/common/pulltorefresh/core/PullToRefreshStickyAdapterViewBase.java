@@ -173,6 +173,7 @@ public abstract class PullToRefreshStickyAdapterViewBase<T extends StickyListHea
 		((StickyListHeadersListView) mRefreshableView).setAdapter(adapter);
 	}
 
+
 	/**
 	 * Sets the Empty View to be used by the Adapter View.
 	 * <p/>

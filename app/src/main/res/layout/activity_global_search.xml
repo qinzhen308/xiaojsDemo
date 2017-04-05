@@ -78,10 +78,10 @@
 
                     <TextView
                             android:layout_marginLeft="@dimen/px30"
-                            android:layout_marginTop="@dimen/px30"
-                            android:layout_marginBottom="@dimen/px30"
+                            android:layout_marginTop="@dimen/px15"
+                            android:layout_marginBottom="@dimen/px15"
                             android:text="课"
-                            android:textSize="@dimen/font_28px"
+                            android:textSize="@dimen/font_25px"
                             android:textColor="@color/common_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -123,10 +123,10 @@
 
                     <TextView
                             android:layout_marginLeft="@dimen/px30"
-                            android:layout_marginTop="@dimen/px30"
-                            android:layout_marginBottom="@dimen/px30"
+                            android:layout_marginTop="@dimen/px15"
+                            android:layout_marginBottom="@dimen/px15"
                             android:text="个人"
-                            android:textSize="@dimen/font_28px"
+                            android:textSize="@dimen/font_25px"
                             android:textColor="@color/common_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -167,17 +167,20 @@
 
                     <TextView
                             android:layout_marginLeft="@dimen/px30"
-                            android:layout_marginTop="@dimen/px30"
-                            android:layout_marginBottom="@dimen/px30"
+                            android:layout_marginTop="@dimen/px15"
+                            android:layout_marginBottom="@dimen/px15"
                             android:text="机构"
-                            android:textSize="@dimen/font_28px"
+                            android:textSize="@dimen/font_25px"
                             android:textColor="@color/common_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
-
-                    <include layout="@layout/layout_search_organization_item"/>
+                    <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
+                            android:id="@+id/search_ori_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
 
                     <View style="@style/DividerHorizontal"/>
+
 
                     <FrameLayout
                             android:id="@+id/search_organization_more"
