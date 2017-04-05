@@ -59,6 +59,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.util.JpushUtil;
+import cn.xiaojs.xma.util.LeanCloudUtil;
 import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.common.xf_foundation.schemas.Social.ContactGroup.CLASSES;
@@ -126,6 +127,7 @@ public class ContactActivity extends BaseActivity {
                 String name = TextUtils.isEmpty(contact.title)? contact.alias : contact.title;
                 String tid = contact.account;
                 //FIXME 进入聊天界面
+                LeanCloudUtil.lanchChatPage(ContactActivity.this,tid);
                 //JpushUtil.launchChat(ContactActivity.this, tid,name);
 
                 return false;

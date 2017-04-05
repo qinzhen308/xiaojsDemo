@@ -58,6 +58,14 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    //avoscloud-sdk 为 LeanCloud基础包
+    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
+
+    //avoscloud-push 为推送与实时聊天需要的包
+    compile ('cn.leancloud.android:avoscloud-push:v3.+@aar'){transitive = true}
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     //network & Rest api
     //image
     //butterknife
@@ -122,7 +130,6 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     debugCompile 'com.facebook.stetho:stetho:1.4.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    compile project(':leancloudchatkit')
 }
 
 bugly {

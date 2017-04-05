@@ -12,7 +12,6 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.leancloud.chatkit.activity.LCIMConversationListFragment;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
@@ -28,9 +27,9 @@ import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 
-import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
+import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
 

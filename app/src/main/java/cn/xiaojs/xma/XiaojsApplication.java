@@ -10,9 +10,9 @@ import com.qiniu.pili.droid.streaming.StreamingEnv;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import cn.jpush.android.api.JPushInterface;
-import cn.leancloud.chatkit.LCChatKit;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.ui.message.im.UserProvider;
+import cn.xiaojs.xma.ui.message.im.chatkit.LCChatKit;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.XjsUtils;
 
