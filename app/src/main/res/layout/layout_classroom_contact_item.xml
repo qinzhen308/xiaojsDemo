@@ -59,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/px15"
+            android:visibility="gone"
             android:src="@drawable/cr_video"/>
 
     <ImageView
@@ -66,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/px15"
+            android:visibility="gone"
             android:src="@drawable/cr_microphone"/>
 
 </LinearLayout>

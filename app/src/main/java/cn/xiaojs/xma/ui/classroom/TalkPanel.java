@@ -486,7 +486,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
      */
     private void getContactBookData() {
         if (mContactBookAdapter == null) {
-            mContactBookAdapter = new ContactBookAdapter(mContext);
+            mContactBookAdapter = new ContactBookAdapter(mContext, mUser);
             mContactBookAdapter.setOnPortraitClickListener(this);
             mContactBookAdapter.setOnPanelItemClick(mOnPanelItemClick);
             mContactBook.setAdapter(mContactBookAdapter);

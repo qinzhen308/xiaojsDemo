@@ -35,7 +35,6 @@ public class PlayerTextureView extends BaseMediaView {
     private PLVideoTextureView mPlayer;
     private static final String TAG = "PlayerTextureView";
     private boolean mIsPause;
-    private boolean mResume = false;
     private boolean mIsMute;
     private SurfaceCaptureView mCaptureView;
     private int TIME_OUT = 60 * 1000; //60s

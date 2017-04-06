@@ -17,11 +17,13 @@ package cn.xiaojs.xma.ui.classroom;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
+import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
+import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.StudentVideoController;
 import cn.xiaojs.xma.ui.classroom.live.TeacherVideoController;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
@@ -159,34 +161,32 @@ public class ClassroomController {
     /**
      * 暂停推流
      */
-    public void pausePublishStream() {
-        mVideoController.pausePublishStream();
-    }
-
-    /**
-     * 开始推流, 直播推流
-     */
-    public void publishStream(String url) {
-        mVideoController.publishStream(url, true);
+    public void pausePublishStream(int type) {
+        mVideoController.pausePublishStream(type);
     }
 
     /**
      * 开始推流
-     * @param live 是否是直播(true:直播推流 false:个人推流)
+     * @param type
      */
-    public void publishStream(String url, boolean live) {
-        mVideoController.publishStream(url, live);
+    public void publishStream(int type, String url) {
+        mVideoController.publishStream(type, url);
     }
 
-    public void receivePausePlayStream(Constants.User user, int type) {
-        mVideoController.receivePausePlayStream(user, type);
+
+    public void publishStream() {
+        mVideoController.publishStream();
     }
 
     /**
      * 播放流
      */
-    public void playStream(String url) {
-        mVideoController.playStream(url);
+    public void playStream(int type, String url) {
+        mVideoController.playStream(type, url);
+    }
+
+    public void playStream() {
+        mVideoController.playStream();
     }
 
     public boolean needStreamRePublishing () {
@@ -209,11 +209,4 @@ public class ClassroomController {
         return mVideoController.hasStreamPublishing();
     }
 
-    public void playStream() {
-        mVideoController.playStream();
-    }
-
-    public void publishStream() {
-        mVideoController.publishStream();
-    }
 }
