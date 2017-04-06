@@ -23,20 +23,29 @@ import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
-import de.greenrobot.event.EventBus;
-
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.platform.NotificationTemplate;
+import cn.xiaojs.xma.model.Notification;
+import cn.xiaojs.xma.model.NotificationCategory;
+import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.message.NotificationCategoryListActivity;
+import cn.xiaojs.xma.ui.message.NotificationConstant;
 import cn.xiaojs.xma.ui.message.im.chatkit.LCChatMessageInterface;
 import cn.xiaojs.xma.ui.message.im.chatkit.cache.LCIMConversationItemCache;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMConversationItemLongClickEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConversationUtils;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.MessageImageView;
+import cn.xiaojs.xma.util.TimeUtil;
 
 /**
  * Created by wli on 15/10/8.
@@ -44,8 +53,11 @@ import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
  */
 public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
 
+  public static final String ACTION_UPDATE = "lc_notify_update";
+
   ImageView avatarView;
   TextView unreadView;
+  TextView noUnReadView;
   TextView messageView;
   TextView timeView;
   TextView nameView;
@@ -60,8 +72,10 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
   public void initView() {
     avatarView = (ImageView) itemView.findViewById(R.id.conversation_item_iv_avatar);
     nameView = (TextView) itemView.findViewById(R.id.conversation_item_tv_name);
+
     timeView = (TextView) itemView.findViewById(R.id.conversation_item_tv_time);
     unreadView = (TextView) itemView.findViewById(R.id.conversation_item_tv_unread);
+    noUnReadView = (TextView) itemView.findViewById(R.id.notify_item_tv_unread);
     messageView = (TextView) itemView.findViewById(R.id.conversation_item_tv_message);
     avatarLayout = (RelativeLayout) itemView.findViewById(R.id.conversation_item_layout_avatar);
     contentLayout = (LinearLayout) itemView.findViewById(R.id.conversation_item_layout_content);
@@ -71,37 +85,111 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
   public void bindData(Object o) {
     reset();
     final AVIMConversation conversation = (AVIMConversation) o;
-    if (null != conversation) {
-      if (null == conversation.getCreatedAt()) {
-        conversation.fetchInfoInBackground(new AVIMConversationCallback() {
-          @Override
-          public void done(AVIMException e) {
-            if (e != null) {
-              LCIMLogUtils.logException(e);
-            } else {
-              updateName(conversation);
-              updateIcon(conversation);
-            }
-          }
-        });
-      } else {
-        updateName(conversation);
-        updateIcon(conversation);
+
+
+    if (conversation instanceof NotificationCategory) {
+
+      unreadView.setVisibility(View.GONE);
+
+      final NotificationCategory category = (NotificationCategory) conversation;
+
+      if(category.getName().equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
+        avatarView.setImageResource(R.drawable.ic_message_invite);
+      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
+        avatarView.setImageResource(R.drawable.ic_message_socialnews);
+      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.ANSWERS_NOTIFICATION)) {
+        avatarView.setImageResource(R.drawable.ic_message_qanswerme);
+      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.ARTICLE_NOTIFICATION)) {
+        avatarView.setImageResource(R.drawable.ic_message_transactionmessage);
+      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
+        avatarView.setImageResource(R.drawable.ic_message_course_information);
+      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.FINANCE_NOTIFICATION)) {
+        avatarView.setImageResource(R.drawable.ic_message_recommendedselection);
+      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
+        avatarView.setImageResource(R.drawable.ic_xjs_msg);
+      }else {
+        avatarView.setImageResource(R.drawable.default_avatar_grey);
       }
 
-      updateUnreadCount(conversation);
-      updateLastMessage(conversation.getLastMessage());
+      nameView.setText(category.remarks);
+
+      //holder.iconView.setType(MessageImageView.TYPE_MARK);
+
+      ArrayList<Notification> notifications = category.notifications;
+      if (category.count <= 0) {
+        //holder.iconView.setCount(0);
+        noUnReadView.setVisibility(View.GONE);
+        if (notifications!=null && notifications.size()>0) {
+          Notification notify = notifications.get(0);
+          timeView.setText(TimeUtil.format(notify.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+          messageView.setText(notify.body);
+        }else{
+          timeView.setText("");
+          messageView.setText("");
+        }
+      }else {
+
+        noUnReadView.setVisibility(View.VISIBLE);
+
+        Notification notify = notifications.get(0);
+        timeView.setText(TimeUtil.format(notify.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+        messageView.setText(notify.body);
+        //.iconView.setCount(category.count);
+      }
+
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          onConversationItemClick(conversation);
+
+          enterCategoryList(category);
+
+          if (category.count> 0) {
+             category.count = 0;
+
+            getContext().sendBroadcast(new Intent(ACTION_UPDATE));
+
+          }
         }
       });
 
-      itemView.setOnLongClickListener(new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-          //FIXME
+
+    }else {
+
+      noUnReadView.setVisibility(View.GONE);
+
+      if (null != conversation) {
+        if (null == conversation.getCreatedAt()) {
+          conversation.fetchInfoInBackground(new AVIMConversationCallback() {
+            @Override
+            public void done(AVIMException e) {
+              if (e != null) {
+                LCIMLogUtils.logException(e);
+                avatarView.setImageResource(R.drawable.default_avatar_grey);
+                nameView.setText("");
+              } else {
+                updateName(conversation);
+                updateIcon(conversation);
+              }
+            }
+          });
+        } else {
+          updateName(conversation);
+          updateIcon(conversation);
+        }
+
+        updateUnreadCount(conversation);
+        updateLastMessage(conversation.getLastMessage());
+        itemView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            onConversationItemClick(conversation);
+          }
+        });
+
+        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+          @Override
+          public boolean onLongClick(View v) {
+            //FIXME
 //          AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 //          builder.setItems(new String[]{"删除该聊天"}, new DialogInterface.OnClickListener() {
 //            public void onClick(DialogInterface dialog, int which) {
@@ -110,10 +198,18 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
 //          });
 //          AlertDialog dialog = builder.create();
 //          dialog.show();
-          return false;
-        }
-      });
+            return false;
+          }
+        });
+      }else{
+        nameView.setText("");
+        timeView.setText("");
+        messageView.setText("");
+        avatarView.setImageResource(R.drawable.default_avatar_grey);
+        unreadView.setVisibility(View.GONE);
+      }
     }
+
   }
 
   /**
@@ -164,8 +260,13 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
               LCIMLogUtils.logException(e);
             }
             if (!TextUtils.isEmpty(s)) {
-              Picasso.with(getContext()).load(s)
-                .placeholder(R.drawable.default_avatar_grey).into(avatarView);
+              Glide.with(getContext()).load(s)
+                      .bitmapTransform(circleTransform)
+                      .placeholder(R.drawable.default_avatar_grey)
+                      .error(R.drawable.default_avatar_grey)
+                      .into(avatarView);
+//              Picasso.with(getContext()).load(s).e
+//                .placeholder(R.drawable.default_avatar_grey).into(avatarView);
             } else {
               avatarView.setImageResource(R.drawable.default_avatar_grey);
             }
@@ -211,6 +312,14 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
     } catch (ActivityNotFoundException exception) {
       Log.i(LCIMConstants.LCIM_LOG_TAG, exception.toString());
     }
+  }
+
+  private void enterCategoryList(NotificationCategory category) {
+
+    Intent intent = new Intent(getContext(), NotificationCategoryListActivity.class);
+    intent.putExtra(NotificationConstant.KEY_NOTIFICATION_CATEGORY_ID, category.id);
+    intent.putExtra(NotificationConstant.KEY_NOTIFICATION_TITLE, category.remarks);
+    ((BaseActivity) getContext()).startActivityForResult(intent, NotificationConstant.REQUEST_NOTIFICATION_CATEGORY_LIST);
   }
 
   public static ViewHolderCreator HOLDER_CREATOR = new ViewHolderCreator<LCIMConversationItemHolder>() {

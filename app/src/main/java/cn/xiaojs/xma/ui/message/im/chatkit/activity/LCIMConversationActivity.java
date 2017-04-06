@@ -96,9 +96,6 @@ public class LCIMConversationActivity extends FragmentActivity {
         getConversation(accountId);
       } else if (extras.containsKey(LCIMConstants.CONVERSATION_ID)) {
         String conversationId = extras.getString(LCIMConstants.CONVERSATION_ID);
-
-        accountId = conversationId;
-
         updateConversation(LCChatKit.getInstance().getClient().getConversation(conversationId));
       } else {
         showToast("memberId or conversationId is needed");
@@ -146,8 +143,12 @@ public class LCIMConversationActivity extends FragmentActivity {
    */
   protected void updateConversation(AVIMConversation conversation) {
     if (null != conversation) {
+
       conversationFragment.setConversation(conversation);
       LCIMConversationItemCache.getInstance().clearUnread(conversation.getConversationId());
+
+      accountId = LCIMConversationUtils.getConversationPeerId(conversation);
+
       LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
         @Override
         protected void internalDone0(String s, AVException e) {
@@ -158,6 +159,7 @@ public class LCIMConversationActivity extends FragmentActivity {
           }
         }
       });
+
     }
   }
 

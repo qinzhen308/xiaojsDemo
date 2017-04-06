@@ -253,6 +253,15 @@ public class DataManager {
     }
 
     /**
+     * 获取缓存中的联系人
+     * @param context
+     * @return
+     */
+    public static Map<String, Contact> getContacts(Context context) {
+        return getCache(context).getContactIds();
+    }
+
+    /**
      * 通过用户ID，判断用户是否存在联系人中
      * @param context
      * @param accountId
@@ -260,8 +269,8 @@ public class DataManager {
      */
     public static boolean existInContacts(Context context, String accountId) {
         if (!TextUtils.isEmpty(accountId)) {
-            Set<String> ids = getCache(context).getContactIds();
-            if (ids !=null && ids.contains(accountId)) {
+            Map<String, Contact> ids = getCache(context).getContactIds();
+            if (ids !=null && ids.get(accountId) != null) {
                 return true;
             }
         }
@@ -305,7 +314,7 @@ public class DataManager {
         contactDao.clearContacts(context);
 
         DataManager.MemCache cache = getCache(context);
-        Set<String> ids = cache.getContactIds();
+        Map<String,Contact> ids = cache.getContactIds();
         ids.clear();
 
         contactDao.addContact(context, contactGroups,ids);
@@ -466,12 +475,12 @@ public class DataManager {
 
         private Context context;
         private Map<Long, ContactGroup> groupMap;
-        private Set<String> contactIds;
+        private Map<String,Contact> contacts;
         //private ArrayList<ContactGroup> contactGroups;
 
         private MemCache(Context context) {
             this.context = context.getApplicationContext();
-            contactIds = new HashSet<>();
+            contacts = new HashMap<>();
         }
 
         private static MemCache getDataCache(Context context) {
@@ -502,8 +511,8 @@ public class DataManager {
                 groupMap.clear();
             }
 
-            if (contactIds !=null) {
-                contactIds.clear();
+            if (contacts !=null) {
+                contacts.clear();
             }
         }
 
@@ -511,11 +520,11 @@ public class DataManager {
             return groupMap;
         }
 
-        protected Set<String> getContactIds() {
-            if (contactIds ==null) {
-                contactIds = new HashSet<>();
+        protected Map<String,Contact> getContactIds() {
+            if (contacts ==null) {
+                contacts = new HashMap<>();
             }
-            return contactIds;
+            return contacts;
         }
 
         ///////////////////////////////////////////////////////////////
@@ -533,20 +542,20 @@ public class DataManager {
             }
 
             //contacts
-            contactIds = contactDao.getContactIds(context);
+            contacts = contactDao.getContactIds(context);
 
         }
 
-        public void addContactId(String accountId) {
-            if (contactIds == null) {
-                contactIds = new HashSet<>();
+        public void addContactId(String accountId, Contact contact) {
+            if (contacts == null) {
+                contacts = new HashMap<>();
             }
-            contactIds.add(accountId);
+            contacts.put(accountId, contact);
         }
 
         public void removeContactId(String accountId) {
-            if (contactIds != null) {
-                contactIds.remove(accountId);
+            if (contacts != null) {
+                contacts.remove(accountId);
             }
         }
 

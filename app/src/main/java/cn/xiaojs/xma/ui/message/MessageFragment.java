@@ -111,10 +111,10 @@ public class MessageFragment extends BaseFragment {
             }
 
             for (Conversation conversation : conversations) {
-                NotificationCategory category = new NotificationCategory();
-                category.from = NotificationCategory.MsgFrom.FROM_JMESSAGE;
-                category.conversation = conversation;
-                categoryList.add(category);
+//                NotificationCategory category = new NotificationCategory();
+//                category.from = NotificationCategory.MsgFrom.FROM_JMESSAGE;
+//                //category.conversation = conversation;
+//                categoryList.add(category);
             }
         }
     }
@@ -183,38 +183,38 @@ public class MessageFragment extends BaseFragment {
             if (category.from == NotificationCategory.MsgFrom.FROM_JMESSAGE) {
 
                 holder.iconView.setType(MessageImageView.TYPE_NUM);
-                holder.iconView.setCount(category.conversation.getUnReadMsgCnt());
+                //holder.iconView.setCount(category.conversation.getUnReadMsgCnt());
 
-                Message lastMsg = category.conversation.getLatestMessage();
-                if (lastMsg != null) {
-                    //
-                    holder.timeView.setText(TimeUtil.format(new Date(lastMsg.getCreateTime()), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
-                }else {
-                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
-                    holder.timeView.setText("");
-                    holder.titleView.setText("");
-                    holder.contentView.setText("");
-                }
+//                Message lastMsg = category.conversation.getLatestMessage();
+//                if (lastMsg != null) {
+//                    //
+//                    holder.timeView.setText(TimeUtil.format(new Date(lastMsg.getCreateTime()), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+//                }else {
+//                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
+//                    holder.timeView.setText("");
+//                    holder.titleView.setText("");
+//                    holder.contentView.setText("");
+//                }
 
             }else {
 
-                if(category.name.equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
-                    holder.iconView.setImageResource(R.drawable.ic_message_invite);
-                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
-                    holder.iconView.setImageResource(R.drawable.ic_message_socialnews);
-                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ANSWERS_NOTIFICATION)) {
-                    holder.iconView.setImageResource(R.drawable.ic_message_qanswerme);
-                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ARTICLE_NOTIFICATION)) {
-                    holder.iconView.setImageResource(R.drawable.ic_message_transactionmessage);
-                }else if(category.name.equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
-                    holder.iconView.setImageResource(R.drawable.ic_message_course_information);
-                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FINANCE_NOTIFICATION)) {
-                    holder.iconView.setImageResource(R.drawable.ic_message_recommendedselection);
-                }else if(category.name.equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
-                    holder.iconView.setImageResource(R.drawable.ic_xjs_msg);
-                }else {
-                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
-                }
+//                if(category.name.equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
+//                    holder.iconView.setImageResource(R.drawable.ic_message_invite);
+//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
+//                    holder.iconView.setImageResource(R.drawable.ic_message_socialnews);
+//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ANSWERS_NOTIFICATION)) {
+//                    holder.iconView.setImageResource(R.drawable.ic_message_qanswerme);
+//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ARTICLE_NOTIFICATION)) {
+//                    holder.iconView.setImageResource(R.drawable.ic_message_transactionmessage);
+//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
+//                    holder.iconView.setImageResource(R.drawable.ic_message_course_information);
+//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FINANCE_NOTIFICATION)) {
+//                    holder.iconView.setImageResource(R.drawable.ic_message_recommendedselection);
+//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
+//                    holder.iconView.setImageResource(R.drawable.ic_xjs_msg);
+//                }else {
+//                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
+//                }
 
                 holder.titleView.setText(category.remarks);
 

@@ -58,7 +58,8 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/fragment_conversation_srl_pullrefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/px110">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_conversation_srl_view"

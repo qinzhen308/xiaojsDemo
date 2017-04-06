@@ -59,7 +59,7 @@ public class XiaojsApplication extends Application {
         JPushInterface.init(getApplicationContext());
 
         //lean cloud
-        LCChatKit.getInstance().setProfileProvider(UserProvider.getUserProvider());
+        LCChatKit.getInstance().setProfileProvider(UserProvider.getUserProvider(this));
         AVOSCloud.setDebugLogEnabled(XiaojsConfig.DEBUG);
         LCChatKit.getInstance().init(getApplicationContext(),
                 XiaojsConfig.LEANCLOUD_APPID,

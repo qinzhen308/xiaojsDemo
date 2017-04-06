@@ -88,7 +88,7 @@ public class LCIMConversationUtils {
    * @param conversation
    * @return
    */
-  private static String getConversationPeerId(AVIMConversation conversation) {
+  public static String getConversationPeerId(AVIMConversation conversation) {
     if (null != conversation && 2 == conversation.getMembers().size()) {
       String currentUserId = LCChatKit.getInstance().getCurrentUserId();
       String firstMemeberId = conversation.getMembers().get(0);

@@ -190,7 +190,7 @@ public class  LessonHomeActivity extends BaseActivity{
                     @Override
                     public void onFollow(long group) {
                         if (group > 0) {
-                            SocialManager.followContact(LessonHomeActivity.this, tea._id, group, new APIServiceCallback<Relation>() {
+                            SocialManager.followContact(LessonHomeActivity.this, tea._id,tea.getBasic().getName(), group, new APIServiceCallback<Relation>() {
                                 @Override
                                 public void onSuccess(Relation object) {
                                     ToastUtil.showToast(getApplicationContext(), R.string.followed);

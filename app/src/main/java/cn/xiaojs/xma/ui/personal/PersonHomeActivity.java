@@ -388,7 +388,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     private void follow(long group) {
         if (mBean != null && !mBean.isFollowed) {//这里需要弹框选择分组
-            SocialManager.followContact(this, mAccount, group, new APIServiceCallback<Relation>() {
+            SocialManager.followContact(this, mAccount,mPersonName, group, new APIServiceCallback<Relation>() {
                 @Override
                 public void onSuccess(Relation object) {
                     ToastUtil.showToast(getApplicationContext(), R.string.followed);

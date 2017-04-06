@@ -49,7 +49,7 @@ public class PersonOriAdapter extends SearchAdapter<AccountInfo, PersonOriAdapte
     }
 
     @Override
-    protected void setViewContent(Holder holder, AccountInfo bean, int position) {
+    protected void setViewContent(Holder holder, final AccountInfo bean, int position) {
 
         holder.name.setText(bean.basic.getName());
         holder.tag.setText(StringUtil.protectCardNo(bean.phone.subsNum));
@@ -75,7 +75,7 @@ public class PersonOriAdapter extends SearchAdapter<AccountInfo, PersonOriAdapte
 
             @Override
             public void onClick(View v) {
-                chooseGroup(aid);
+                chooseGroup(bean);
             }
         });
 
@@ -121,22 +121,22 @@ public class PersonOriAdapter extends SearchAdapter<AccountInfo, PersonOriAdapte
     }
 
 
-    private void chooseGroup(final String aid) {
+    private void chooseGroup(final AccountInfo bean) {
 
         BaseBusiness.showFollowDialog(mContext, new BaseBusiness.OnFollowListener() {
             @Override
             public void onFollow(long group) {
                 if (group > 0) {
-                    toFollow(aid, group);
+                    toFollow(bean, group);
                 }
             }
         });
 
     }
 
-    private void toFollow(String aid, long group) {
+    private void toFollow(AccountInfo bean, long group) {
 
-        SocialManager.followContact(mContext, aid, group, new APIServiceCallback<Relation>() {
+        SocialManager.followContact(mContext, bean.id,bean.basic.getName(), group, new APIServiceCallback<Relation>() {
             @Override
             public void onSuccess(Relation object) {
                 Toast.makeText(mContext, R.string.followed, Toast.LENGTH_SHORT).show();

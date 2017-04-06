@@ -194,14 +194,16 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
      * @param context
      * @return
      */
-    public Set<String> getContactIds(Context context) {
+    public Map<String, Contact> getContactIds(Context context) {
         SQLiteDatabase db = DBHelper.getReadDatabase(context);
-        Set<String> ids = null;
+        Map<String, Contact> contactsMap = null;
         Cursor cursor = null;
 
         try {
             String sql = new StringBuilder("select ")
                     .append(DBTables.TContact.CID)
+                    .append(", ")
+                    .append(DBTables.TContact.NAME)
                     .append(" from ")
                     .append(DBTables.TContact.TABLE_NAME)
                     .append(" where ")
@@ -213,12 +215,20 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
 
             cursor = db.rawQuery(sql, null);
             if (cursor != null && cursor.getCount() > 0) {
-                ids = new HashSet<>(cursor.getCount());
+                contactsMap = new HashMap<>(cursor.getCount());
                 cursor.moveToFirst();
                 while (!cursor.isAfterLast()) {
                     String id = cursor.getString(cursor
                             .getColumnIndexOrThrow(DBTables.TContact.CID));
-                    ids.add(id);
+
+                    String name = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.NAME));
+
+                    Contact contact = new Contact();
+                    contact.name = name;
+                    contact.id = id;
+
+                    contactsMap.put(id, contact);
                 }
             }
 
@@ -229,7 +239,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                 cursor.close();
             }
         }
-        return ids;
+        return contactsMap;
     }
 
     /**
@@ -483,7 +493,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
      * @param context
      * @param contactGroups
      */
-    public void addContact(Context context, ArrayList<ContactGroup> contactGroups, Set<String> ids) {
+    public void addContact(Context context, ArrayList<ContactGroup> contactGroups, Map<String,Contact> ids) {
 
         SQLiteDatabase db = DBHelper.getWriteDb(context);
         try {
@@ -528,14 +538,18 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     String cid = isclass? contact.id: contact.account;
                     stmt.bindString(2, cid);
 
-                    if (ids != null && !isclass) {
-                        ids.add(cid);
-                    }
-
                     stmt.bindLong(3, contact.followType);
 
                     String name = isclass? contact.title : contact.alias;
                     stmt.bindString(4, name);
+
+                    if (ids != null && !isclass) {
+
+                        Contact con = new Contact();
+                        con.id = cid;
+                        con.name = name;
+                        ids.put(cid, con);
+                    }
 
                     String url = contact.avatar;
                     String s = url != null? url :"";

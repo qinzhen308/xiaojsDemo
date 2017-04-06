@@ -20,6 +20,7 @@ import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.social.Comment;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
@@ -40,6 +41,7 @@ import retrofit2.Response;
 public class SocialRequest extends ServiceRequest {
 
     private String currentAccountId;
+    private String currentName;
 
     public SocialRequest(Context context, APIServiceCallback callback) {
         super(context, callback);
@@ -147,9 +149,10 @@ public class SocialRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_UPDATES,call);
     }
 
-    public void followContact(String contact, long group) {
+    public void followContact(String contact,String name, long group) {
 
         currentAccountId = contact;
+        currentName = name;
 
         FollowParam param = new FollowParam();
         param.contact = contact;
@@ -231,7 +234,10 @@ public class SocialRequest extends ServiceRequest {
 //                DataManager.lanuchContactService(getContext(), result);
 //            }
         }else if (apiType == APIType.FOLLOW_CONTACT) {
-            DataManager.getCache(getContext()).addContactId(currentAccountId);
+            Contact contact = new Contact();
+            contact.id = currentAccountId;
+            contact.name = currentName;
+            DataManager.getCache(getContext()).addContactId(currentAccountId, contact);
         }else if (apiType == APIType.UNFOLLOW_CONTACT) {
             DataManager.getCache(getContext()).removeContactId(currentAccountId);
         }

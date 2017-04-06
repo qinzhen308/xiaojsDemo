@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -92,11 +93,19 @@ public class LCIMChatItemImageHolder extends LCIMChatItemHolder {
       contentView.getLayoutParams().width = (int) viewWidth;
 
       if (!TextUtils.isEmpty(localFilePath)) {
-        Picasso.with(getContext().getApplicationContext()).load(new File(localFilePath)).
-          resize((int) viewWidth, (int) viewHeight).centerCrop().into(contentView);
+
+        Glide.with(getContext().getApplicationContext()).load(new File(localFilePath)).
+                override((int) viewWidth, (int) viewHeight).centerCrop().into(contentView);
+
+//        Picasso.with(getContext().getApplicationContext()).load(new File(localFilePath)).
+//          resize((int) viewWidth, (int) viewHeight).centerCrop().into(contentView);
       } else if (!TextUtils.isEmpty(imageMsg.getFileUrl())) {
-        Picasso.with(getContext().getApplicationContext()).load(imageMsg.getFileUrl()).
-          resize((int) viewWidth, (int) viewHeight).centerCrop().into(contentView);
+
+        Glide.with(getContext().getApplicationContext()).load(imageMsg.getFileUrl()).
+                override((int) viewWidth, (int) viewHeight).centerCrop().into(contentView);
+
+//        Picasso.with(getContext().getApplicationContext()).load(imageMsg.getFileUrl()).
+//          resize((int) viewWidth, (int) viewHeight).centerCrop().into(contentView);
       } else {
         contentView.setImageResource(0);
       }

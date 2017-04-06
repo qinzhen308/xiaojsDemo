@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import cn.xiaojs.xma.ui.widget.CircleTransform;
+
 
 /**
  * Created by wli on 15/8/25.
@@ -14,8 +16,12 @@ import android.view.ViewGroup;
 
 public abstract class LCIMCommonViewHolder<T> extends RecyclerView.ViewHolder {
 
+  protected CircleTransform circleTransform;
+
   public LCIMCommonViewHolder(Context context, ViewGroup root, int layoutRes) {
     super(LayoutInflater.from(context).inflate(layoutRes, root, false));
+
+    circleTransform = new CircleTransform(context);
   }
 
   public Context getContext() {

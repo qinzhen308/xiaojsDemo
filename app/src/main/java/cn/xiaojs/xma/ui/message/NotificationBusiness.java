@@ -26,17 +26,17 @@ public class NotificationBusiness {
 
     public static List<NotificationCategory> getPlatformMessageCategory(List<NotificationCategory> notifications){
         List<NotificationCategory> result = new ArrayList<>();
-        for (NotificationCategory notification : notifications){
-            if (NotificationTemplate.ANSWERS_NOTIFICATION.equalsIgnoreCase(notification.name)
-                    ||NotificationTemplate.PLATFORM_NOTIFICATION.equalsIgnoreCase(notification.name)
-                    ||NotificationTemplate.FOLLOW_NOTIFICATION.equalsIgnoreCase(notification.name)
-                    ||NotificationTemplate.INVITATION_NOTIFICATION.equalsIgnoreCase(notification.name)
-                    ||NotificationTemplate.CTL_NOTIFICATION.equalsIgnoreCase(notification.name)
-                    ||NotificationTemplate.FINANCE_NOTIFICATION.equalsIgnoreCase(notification.name)
-                    ||NotificationTemplate.ARTICLE_NOTIFICATION.equalsIgnoreCase(notification.name)){
-                result.add(notification);
-            }
-        }
+//        for (NotificationCategory notification : notifications){
+//            if (NotificationTemplate.ANSWERS_NOTIFICATION.equalsIgnoreCase(notification.name)
+//                    ||NotificationTemplate.PLATFORM_NOTIFICATION.equalsIgnoreCase(notification.name)
+//                    ||NotificationTemplate.FOLLOW_NOTIFICATION.equalsIgnoreCase(notification.name)
+//                    ||NotificationTemplate.INVITATION_NOTIFICATION.equalsIgnoreCase(notification.name)
+//                    ||NotificationTemplate.CTL_NOTIFICATION.equalsIgnoreCase(notification.name)
+//                    ||NotificationTemplate.FINANCE_NOTIFICATION.equalsIgnoreCase(notification.name)
+//                    ||NotificationTemplate.ARTICLE_NOTIFICATION.equalsIgnoreCase(notification.name)){
+//                result.add(notification);
+//            }
+//        }
 
         return result;
     }
@@ -45,14 +45,14 @@ public class NotificationBusiness {
         if (notifications == null)
             return null;
 
-        String category = getMessageCategory(position);
-        if (!TextUtils.isEmpty(category)){
-            for (NotificationCategory notificationCategory : notifications){
-                if (category.equalsIgnoreCase(notificationCategory.name)){
-                    return notificationCategory;
-                }
-            }
-        }
+//        String category = getMessageCategory(position);
+//        if (!TextUtils.isEmpty(category)){
+//            for (NotificationCategory notificationCategory : notifications){
+//                if (category.equalsIgnoreCase(notificationCategory.name)){
+//                    return notificationCategory;
+//                }
+//            }
+//        }
 
         return null;
     }
@@ -81,7 +81,7 @@ public class NotificationBusiness {
     public static List<NotificationCategory> getPlatformCategory(){
         List<NotificationCategory> list = new ArrayList<>();
         for (int i = 0 ; i < 7 ; i++){
-            list.add(new NotificationCategory());
+            //list.add(new NotificationCategory());
         }
         return list;
     }

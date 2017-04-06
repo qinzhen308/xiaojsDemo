@@ -241,12 +241,13 @@ public class SocialManager {
      */
     public static void followContact(Context context,
                                      String contact,
+                                     String name,
                                      long group,
                                      APIServiceCallback<Relation> callback) {
 
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.followContact(contact,group);
+        socialRequest.followContact(contact,name, group);
     }
 
 

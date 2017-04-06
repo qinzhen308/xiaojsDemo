@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -31,9 +32,11 @@ public class LCIMImageActivity extends Activity {
     String path = intent.getStringExtra(LCIMConstants.IMAGE_LOCAL_PATH);
     String url = intent.getStringExtra(LCIMConstants.IMAGE_URL);
     if (TextUtils.isEmpty(path)) {
-      Picasso.with(this).load(url).into(imageView);
+      Glide.with(this).load(url).into(imageView);
+      //Picasso.with(this).load(url).into(imageView);
     } else {
-      Picasso.with(this).load(new File(path)).into(imageView);
+      Glide.with(this).load(new File(path)).into(imageView);
+      //Picasso.with(this).load(new File(path)).into(imageView);
     }
 
   }

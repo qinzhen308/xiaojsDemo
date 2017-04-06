@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVCallback;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import de.greenrobot.event.EventBus;
 
@@ -94,8 +94,15 @@ public class LCIMChatItemHolder extends LCIMCommonViewHolder {
           nameView.setText(userProfile.getUserName());
           final String avatarUrl = userProfile.getAvatarUrl();
           if (!TextUtils.isEmpty(avatarUrl)) {
-            Picasso.with(getContext()).load(avatarUrl)
-              .placeholder(R.drawable.default_avatar_grey).into(avatarView);
+
+            Glide.with(getContext()).load(avatarUrl)
+                    .bitmapTransform(circleTransform)
+                    .placeholder(R.drawable.default_avatar_grey)
+                    .error(R.drawable.default_avatar_grey)
+                    .into(avatarView);
+
+//            Picasso.with(getContext()).load(avatarUrl)
+//              .placeholder(R.drawable.default_avatar_grey).into(avatarView);
           }
         }
       }

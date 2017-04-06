@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/px96"
+        android:layout_height="wrap_content"
         android:background="@color/moment_comment_bg"
         android:orientation="vertical">
 
@@ -11,7 +11,7 @@
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/px96"
             android:minHeight="@dimen/lcim_bottom_bar_height"
             android:orientation="horizontal"
             android:paddingTop="@dimen/px6"
@@ -24,13 +24,32 @@
                 android:layout_width="0dp"
                 android:imeOptions="actionSend"
                 android:background="@color/white"/>
-        <ImageButton
-                android:id="@+id/input_bar_btn_action"
-                style="@style/lcim_input_bar_button_style"
-                android:src="@drawable/ic_home_picture"
-                android:layout_width="wrap_content"
+
+        <FrameLayout
+                android:layout_width="@dimen/px100"
                 android:layout_height="match_parent"
-                android:paddingRight="10dp"/>
+                android:paddingRight="10dp">
+
+            <ImageButton
+                    android:id="@+id/input_bar_btn_action"
+                    style="@style/lcim_input_bar_button_style"
+                    android:src="@drawable/ic_home_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+            <Button
+                    android:id="@+id/input_bar_btn_send_text"
+                    style="@style/lcim_input_bar_button_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/send"
+                    android:textSize="@dimen/px28"
+                    android:textColor="@color/white"
+                    android:padding="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/orange_round_bg_selector"
+                    android:visibility="gone"/>
+        </FrameLayout>
     </LinearLayout>
 
     <include layout="@layout/lcim_bottom_bar_more_layout"/>

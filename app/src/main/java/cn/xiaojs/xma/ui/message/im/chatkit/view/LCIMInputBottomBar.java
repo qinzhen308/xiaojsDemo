@@ -41,7 +41,7 @@ public class LCIMInputBottomBar extends LinearLayout {
   /**
    * 发送文本的Button
    */
-  //private View sendTextBtn;
+  private View sendTextBtn;
 
   /**
    * 切换到语音输入的 Button
@@ -90,7 +90,7 @@ public class LCIMInputBottomBar extends LinearLayout {
    * 隐藏底部的图片、emtion 等 layout
    */
   public void hideMoreLayout() {
-//    moreLayout.setVisibility(View.GONE);
+    moreLayout.setVisibility(View.GONE);
   }
 
 
@@ -98,7 +98,7 @@ public class LCIMInputBottomBar extends LinearLayout {
     View.inflate(context, R.layout.lcim_chat_input_bottom_bar_layout, this);
     actionBtn = findViewById(R.id.input_bar_btn_action);
     contentEditText = (EditText) findViewById(R.id.input_bar_et_content);
-//    sendTextBtn = findViewById(R.id.input_bar_btn_send_text);
+    sendTextBtn = findViewById(R.id.input_bar_btn_send_text);
 //    voiceBtn = findViewById(R.id.input_bar_btn_voice);
 //    keyboardBtn = findViewById(R.id.input_bar_btn_keyboard);
       moreLayout = findViewById(R.id.input_bar_layout_more);
@@ -144,28 +144,28 @@ public class LCIMInputBottomBar extends LinearLayout {
 //      }
 //    });
 
-//    sendTextBtn.setOnClickListener(new OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-//        String content = contentEditText.getText().toString();
-//        if (TextUtils.isEmpty(content)) {
-//          Toast.makeText(getContext(), R.string.lcim_message_is_null, Toast.LENGTH_SHORT).show();
-//          return;
-//        }
-//
-//        contentEditText.setText("");
-//        new Handler().postDelayed(new Runnable() {
-//          @Override
-//          public void run() {
-//            sendTextBtn.setEnabled(true);
-//          }
-//        }, MIN_INTERVAL_SEND_MESSAGE);
-//
-//        EventBus.getDefault().post(
-//          new LCIMInputBottomBarTextEvent(LCIMInputBottomBarEvent.INPUTBOTTOMBAR_SEND_TEXT_ACTION,
-//            content, getTag()));
-//      }
-//    });
+    sendTextBtn.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        String content = contentEditText.getText().toString();
+        if (TextUtils.isEmpty(content)) {
+          Toast.makeText(getContext(), R.string.lcim_message_is_null, Toast.LENGTH_SHORT).show();
+          return;
+        }
+
+        contentEditText.setText("");
+        new Handler().postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            sendTextBtn.setEnabled(true);
+          }
+        }, MIN_INTERVAL_SEND_MESSAGE);
+
+        EventBus.getDefault().post(
+          new LCIMInputBottomBarTextEvent(LCIMInputBottomBarEvent.INPUTBOTTOMBAR_SEND_TEXT_ACTION,
+            content, getTag()));
+      }
+    });
 
     pictureBtn.setOnClickListener(new OnClickListener() {
       @Override
@@ -215,9 +215,9 @@ public class LCIMInputBottomBar extends LinearLayout {
     contentEditText.setVisibility(View.VISIBLE);
 //    recordBtn.setVisibility(View.GONE);
 //    voiceBtn.setVisibility(contentEditText.getText().length() > 0 ? GONE : VISIBLE);
-//    sendTextBtn.setVisibility(contentEditText.getText().length() > 0 ? VISIBLE : GONE);
+    sendTextBtn.setVisibility(contentEditText.getText().length() > 0 ? VISIBLE : GONE);
 //    keyboardBtn.setVisibility(View.GONE);
-//    moreLayout.setVisibility(View.GONE);
+    moreLayout.setVisibility(View.GONE);
     contentEditText.requestFocus();
     LCIMSoftInputUtils.showSoftInput(getContext(), contentEditText);
   }
@@ -230,7 +230,7 @@ public class LCIMInputBottomBar extends LinearLayout {
 //    recordBtn.setVisibility(View.VISIBLE);
 //    voiceBtn.setVisibility(GONE);
 //    keyboardBtn.setVisibility(VISIBLE);
-//    moreLayout.setVisibility(View.GONE);
+    moreLayout.setVisibility(View.GONE);
     LCIMSoftInputUtils.hideSoftInput(getContext(), contentEditText);
   }
 
@@ -247,7 +247,7 @@ public class LCIMInputBottomBar extends LinearLayout {
       public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
         boolean showSend = charSequence.length() > 0;
 //        keyboardBtn.setVisibility(!showSend ? View.VISIBLE : GONE);
-//        sendTextBtn.setVisibility(showSend ? View.VISIBLE : GONE);
+        sendTextBtn.setVisibility(showSend ? View.VISIBLE : GONE);
 //        voiceBtn.setVisibility(View.GONE);
       }
 

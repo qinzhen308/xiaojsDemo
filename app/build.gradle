@@ -65,7 +65,7 @@ dependencies {
     //avoscloud-push 为推送与实时聊天需要的包
     compile ('cn.leancloud.android:avoscloud-push:v3.+@aar'){transitive = true}
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    //compile 'com.squareup.picasso:picasso:2.5.2'
     //network & Rest api
     //image
     //butterknife
