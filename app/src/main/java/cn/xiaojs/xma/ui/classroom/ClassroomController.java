@@ -17,13 +17,11 @@ package cn.xiaojs.xma.ui.classroom;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
-import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
-import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.StudentVideoController;
 import cn.xiaojs.xma.ui.classroom.live.TeacherVideoController;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;

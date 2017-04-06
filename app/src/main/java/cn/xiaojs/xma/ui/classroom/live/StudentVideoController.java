@@ -191,9 +191,17 @@ public class StudentVideoController extends VideoController {
 
     @Override
     public void takeVideoFrame(FrameCapturedCallback callback) {
-        Bitmap bmp = mPlayView.getPlayer().getTextureView().getBitmap();
-        if (callback != null) {
-            callback.onFrameCaptured(bmp);
+        if (mPlayView.getVisibility() == View.VISIBLE) {
+            Bitmap bmp = mPlayView.getPlayer().getTextureView().getBitmap();
+            if (callback != null) {
+                callback.onFrameCaptured(bmp);
+            }
+        } else if (mIndividualView.getVisibility() == View.VISIBLE) {
+            ((LiveRecordView)mIndividualView).captureOriginalFrame(callback);
+        } else {
+            if (callback != null) {
+                callback.onFrameCaptured(null);
+            }
         }
     }
 

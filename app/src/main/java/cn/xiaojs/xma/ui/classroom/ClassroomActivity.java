@@ -1176,13 +1176,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     };
 
     private void enterVideoOrImageEditing(Bitmap bmp) {
-        if (bmp != null) {
-            mPageState = PAGE_EDIT_VIDEO;
-            mClassroomController.enterVideoEditing(bmp, mOnEditedVideoShareListener);
-            hideTopBottomPanel();
-        } else {
-            mPageState = PAGE_TOP;
-        }
+        mPageState = PAGE_EDIT_VIDEO;
+        mClassroomController.enterVideoEditing(bmp, mOnEditedVideoShareListener);
+        hideTopBottomPanel();
     }
 
     private OnEditedVideoShareListener mOnEditedVideoShareListener = new OnEditedVideoShareListener() {

@@ -1628,13 +1628,15 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mCourseBmp != null) {
             Bitmap bmp = Bitmap.createBitmap(mDoodleBitmap.getWidth(), mDoodleBitmap.getHeight(), Bitmap.Config.ARGB_4444);
             Canvas c = new Canvas(bmp);
-            if (mCourseBmp != null) {
-                c.drawBitmap(mCourseBmp, mSrcCourseRect, mDesCourseRect, null);
-            }
+            c.drawBitmap(mCourseBmp, mSrcCourseRect, mDesCourseRect, null);
             c.drawBitmap(mDoodleBitmap, 0, 0, null);
             return bmp;
         } else {
-            return mDoodleBitmap;
+            Bitmap bmp = Bitmap.createBitmap(mDoodleBitmap.getWidth(), mDoodleBitmap.getHeight(), Bitmap.Config.ARGB_4444);
+            Canvas c = new Canvas(bmp);
+            c.drawColor(Color.WHITE);
+            c.drawBitmap(mDoodleBitmap, 0, 0, null);
+            return bmp;
         }
     }
 

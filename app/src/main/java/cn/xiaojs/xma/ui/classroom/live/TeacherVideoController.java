@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.live;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -178,7 +179,18 @@ public class TeacherVideoController extends VideoController {
 
     @Override
     public void takeVideoFrame(FrameCapturedCallback callback) {
-        mPublishView.captureOriginalFrame(callback);
+        if (mIndividualView.getVisibility() == View.VISIBLE) {
+            Bitmap bmp = ((PlayerTextureView)mIndividualView).getPlayer().getTextureView().getBitmap();
+            if (callback != null) {
+                callback.onFrameCaptured(bmp);
+            }
+        } else if (mPublishView.getVisibility() == View.VISIBLE) {
+            mPublishView.captureOriginalFrame(callback);
+        } else {
+            if (callback != null) {
+                callback.onFrameCaptured(null);
+            }
+        }
     }
 
     @Override
