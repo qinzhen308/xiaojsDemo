@@ -304,7 +304,7 @@ public class ProfileActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(mAvatarUrl)){
                     mBasic.setAvatar(mAvatarUrl);
                     XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
-                    AccountPref.setAvatorTime(ProfileActivity.this, XiaojsConfig.AVATOR_TIME);
+                    //AccountPref.setAvatorTime(ProfileActivity.this, XiaojsConfig.AVATOR_TIME);
                 }
 
 
