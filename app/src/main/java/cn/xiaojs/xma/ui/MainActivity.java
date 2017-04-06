@@ -175,7 +175,7 @@ public class MainActivity extends BaseTabActivity {
         switch (reason) {
             case user_logout:
                 //退出登陆，跳转到登陆页面
-                APPUtils.exitAndLogin(MainActivity.this,R.string.relogin);
+                //APPUtils.exitAndLogin(MainActivity.this,R.string.relogin);
                 break;
             case user_deleted:
             case user_password_change:
