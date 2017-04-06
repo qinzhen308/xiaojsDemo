@@ -190,7 +190,7 @@
     <string name="live_lesson_label_hint">添加标签更容易被搜索</string>
     <string name="add_label">添加标签</string>
     <string name="add_label_hint">%1$d个字内</string>
-    <string name="teacher_introduction">教师介绍</string>
+    <string name="teacher_introduction">老师介绍</string>
     <string name="teacher_introduction_title">师资介绍</string>
     <string name="teacher_introduction_hint">请填写师资介绍</string>
     <string name="audit">旁听</string>
@@ -215,7 +215,7 @@
     <string name="prepare_lesson">备课</string>
     <string name="evaluate">评价</string>
     <string name="lesson_again">再次开课</string>
-    <string name="lesson_recreate">重新开课</string>
+    <string name="lesson_recreate">编辑</string>
     <string name="invite">邀请</string>
 
     <!--lesson creation-->

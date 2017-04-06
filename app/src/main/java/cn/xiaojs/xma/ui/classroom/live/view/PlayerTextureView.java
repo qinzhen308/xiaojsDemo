@@ -29,9 +29,14 @@ import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class PlayerTextureView extends BaseMediaView {
+    private static final int MESSAGE_ID_RECONNECTING = 0x01;
+    private static final int MESSAGE_MEDIA_INFO_RENDERING_START = 0x02;
+
     private PLVideoTextureView mPlayer;
     private static final String TAG = "PlayerTextureView";
     private boolean mIsPause;
@@ -58,6 +63,38 @@ public class PlayerTextureView extends BaseMediaView {
     public PlayerTextureView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(PLVideoTextureView.ASPECT_RATIO_16_9);
+    }
+
+    @Override
+    protected void initHandler() {
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                onHandleMessage(msg);
+            }
+        };
+    }
+
+    private void onHandleMessage(Message msg) {
+        switch (msg.what) {
+            case MESSAGE_ID_RECONNECTING:
+                if (!Utils.isLiveStreamingAvailable()) {
+                    //finish();
+                    return;
+                }
+                if (mIsPause || !Utils.isNetworkAvailable(getContext())) {
+                    sendReconnectMessage();
+                    return;
+                }
+                if (mPlayer != null) {
+                    mPlayer.setVideoPath(getPath());
+                    mPlayer.start();
+                }
+                break;
+            case MESSAGE_MEDIA_INFO_RENDERING_START:
+                showLoading(false);
+                break;
+        }
     }
 
     private void init(int ratio) {
@@ -91,6 +128,7 @@ public class PlayerTextureView extends BaseMediaView {
         mPlayer.setOnErrorListener(mOnErrorListener);
         mPlayer.setOnPreparedListener(mPrepared);
         mPlayer.setDisplayAspectRatio(ratio);
+        mPlayer.setOnInfoListener(mOnInfoListener);
         //setBackgroundResource(R.drawable.common_white_bg_corner);
     }
 
@@ -150,6 +188,17 @@ public class PlayerTextureView extends BaseMediaView {
         }
         mIsMute = !mIsMute;
     }
+
+    private PLMediaPlayer.OnInfoListener mOnInfoListener = new PLMediaPlayer.OnInfoListener() {
+        @Override
+        public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
+            if (what == PLMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START) {
+                mHandler.removeMessages(MESSAGE_MEDIA_INFO_RENDERING_START);
+                mHandler.sendEmptyMessage(MESSAGE_MEDIA_INFO_RENDERING_START);
+            }
+            return false;
+        }
+    };
 
     private PLMediaPlayer.OnCompletionListener mOnCompletionListener = new PLMediaPlayer.OnCompletionListener() {
         @Override
@@ -230,9 +279,9 @@ public class PlayerTextureView extends BaseMediaView {
     private PLMediaPlayer.OnPreparedListener mPrepared = new PLMediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(PLMediaPlayer plMediaPlayer) {
+            Log.e(TAG, "Play prepared !");
         }
     };
-    private static final int MESSAGE_ID_RECONNECTING = 0x01;
 
     private void sendReconnectMessage() {
         if (mHandler == null) {
@@ -253,27 +302,6 @@ public class PlayerTextureView extends BaseMediaView {
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_ID_RECONNECTING), 500);
     }
-
-    protected Handler mHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what != MESSAGE_ID_RECONNECTING) {
-                return;
-            }
-            if (!Utils.isLiveStreamingAvailable()) {
-                //finish();
-                return;
-            }
-            if (mIsPause || !Utils.isNetworkAvailable(getContext())) {
-                sendReconnectMessage();
-                return;
-            }
-            if (mPlayer != null) {
-                mPlayer.setVideoPath(getPath());
-                mPlayer.start();
-            }
-        }
-    };
 
     @Override
     protected void close() {
@@ -306,6 +334,12 @@ public class PlayerTextureView extends BaseMediaView {
 
     public boolean isResume() {
         return mResume;
+    }
+
+    //TODO to be optimized
+    public void delayHideLoading() {
+        mHandler.removeMessages(MESSAGE_MEDIA_INFO_RENDERING_START);
+        mHandler.sendEmptyMessageDelayed(MESSAGE_MEDIA_INFO_RENDERING_START, 2000);
     }
 
 }

@@ -92,6 +92,11 @@ public class TeacherVideoController extends VideoController {
             if (mStreamListener != null) {
                 mStreamListener.onStreamStarted(mUser, StreamType.TYPE_STREAM_PEER_TO_PEER);
             }
+
+            if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
+                mNeedStreamRePlaying = false;
+                mPlayView.delayHideLoading();
+            }
         } else if (mPlayType == StreamType.TYPE_STREAM_INDIVIDUAL) {
             mIndividualView.setPath(mPlayStreamUrl);
             mIndividualView.setVisibility(View.VISIBLE);
@@ -105,6 +110,11 @@ public class TeacherVideoController extends VideoController {
 
             if (mStreamListener != null) {
                 mStreamListener.onStreamStarted(mUser, StreamType.TYPE_STREAM_INDIVIDUAL);
+            }
+
+            if (mIndividualView instanceof PlayerTextureView && mNeedStreamRePlaying) {
+                mNeedStreamRePlaying = false;
+                ((PlayerTextureView)mIndividualView).delayHideLoading();
             }
         }
     }
@@ -156,7 +166,7 @@ public class TeacherVideoController extends VideoController {
             mPlayView.setVisibility(View.GONE);
 
             if (mStreamListener != null) {
-                mStreamListener.onStreamStopped(Constants.User.STUDENT, type);
+                mStreamListener.onStreamStopped(mUser, type);
             }
         } else if (type == StreamType.TYPE_STREAM_INDIVIDUAL) {
             mStreamPlaying = false;
@@ -167,7 +177,7 @@ public class TeacherVideoController extends VideoController {
 
 
             if (mStreamListener != null) {
-                mStreamListener.onStreamStopped(Constants.User.STUDENT, type);
+                mStreamListener.onStreamStopped(mUser, type);
             }
         }
     }

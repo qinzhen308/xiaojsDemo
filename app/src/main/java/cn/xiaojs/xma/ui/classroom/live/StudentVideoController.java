@@ -92,6 +92,14 @@ public class StudentVideoController extends VideoController {
         mPlayView.setVisibility(View.VISIBLE);
         mPlayView.resume();
         mPlayView.showLoading(true);
+        if (mStreamListener != null) {
+            mStreamListener.onStreamStarted(mUser, mPlayType);
+        }
+
+        if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
+            mNeedStreamRePlaying = false;
+            mPlayView.delayHideLoading();
+        }
     }
 
     /**
@@ -136,6 +144,7 @@ public class StudentVideoController extends VideoController {
                 if (mStreamPublishing) {
                     if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                         mStreamPublishing = false;
+                        mNeedStreamRePublishing = true;
                         if (mStreamListener != null) {
                             mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_INDIVIDUAL);
                         }
@@ -147,6 +156,7 @@ public class StudentVideoController extends VideoController {
                                 if (args != null && args.length > 0) {
                                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                                     if (response.result) {
+                                        mNeedStreamRePublishing = true;
                                         if (mStreamListener != null) {
                                             mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_INDIVIDUAL);
                                         }
