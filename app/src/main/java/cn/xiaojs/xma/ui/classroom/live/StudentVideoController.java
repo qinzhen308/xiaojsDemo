@@ -76,20 +76,12 @@ public class StudentVideoController extends VideoController {
             mStreamPublishing = true;
             mPublishView.setPath(mPublishStreamUrl);
             mPublishView.setVisibility(View.VISIBLE);
-            if (!mInitPublishVideo) {
-                mPublishView.start();
-            } else {
-                mPublishView.resume();
-            }
+            mPublishView.resume();
         } else if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL) {
             mStreamPublishing = true;
             mIndividualView.setPath(mPublishStreamUrl);
             mIndividualView.setVisibility(View.VISIBLE);
-            if (!mInitIndividualPublishVideo) {
-                mIndividualView.start();
-            } else {
-                mIndividualView.resume();
-            }
+            mIndividualView.resume();
         }
     }
 

@@ -42,9 +42,6 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected PlayerTextureView mPlayView;
     protected BaseMediaView mIndividualView;
 
-    protected boolean mInitPublishVideo = false;
-    protected boolean mInitIndividualPublishVideo = false;
-
     protected String mPlayStreamUrl;
     protected String mPublishStreamUrl;
 
@@ -259,11 +256,7 @@ public abstract class VideoController implements StreamConfirmCallback {
         public void onStateChanged(StreamingState streamingState, Object o) {
             switch (streamingState) {
                 case STREAMING:
-                    if (mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
-                        mInitPublishVideo = true;
-                    } else if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL){
-                        mInitIndividualPublishVideo = true;
-                    }
+                    //do some thing
                     break;
             }
             onSteamStateChanged(streamingState, o);

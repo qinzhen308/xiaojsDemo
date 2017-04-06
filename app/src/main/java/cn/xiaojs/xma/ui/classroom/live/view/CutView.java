@@ -101,12 +101,6 @@ public class CutView extends FrameLayout {
 
     }
 
-    public void setCaptureView(SurfaceCaptureView captureView) {
-        if (mPlayer != null) {
-            mPlayer.setCaptureView(captureView);
-        }
-    }
-
     public PlayerTextureView getPlayer() {
         return mPlayer;
     }

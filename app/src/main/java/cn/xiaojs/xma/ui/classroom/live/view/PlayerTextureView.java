@@ -36,7 +36,6 @@ public class PlayerTextureView extends BaseMediaView {
     private static final String TAG = "PlayerTextureView";
     private boolean mIsPause;
     private boolean mIsMute;
-    private SurfaceCaptureView mCaptureView;
     private int TIME_OUT = 60 * 1000; //60s
     private boolean mRetry = true;
     private long mRetryTime = 0;
@@ -119,9 +118,6 @@ public class PlayerTextureView extends BaseMediaView {
         if (mPlayer != null && !mPlayer.isPlaying()) {
             mPlayer.start();
         }
-        if (mCaptureView != null) {
-            mCaptureView.start();
-        }
         mRetry = true;
         mResume = true;
         mIsPause = false;
@@ -132,9 +128,6 @@ public class PlayerTextureView extends BaseMediaView {
         if (mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.pause();
         }
-        if (mCaptureView != null) {
-            mCaptureView.stop();
-        }
         mResume = false;
         mIsPause = true;
     }
@@ -142,9 +135,6 @@ public class PlayerTextureView extends BaseMediaView {
     @Override
     public void destroy() {
         stopInternal();
-        if (mCaptureView != null) {
-            mCaptureView.stop();
-        }
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
@@ -240,9 +230,6 @@ public class PlayerTextureView extends BaseMediaView {
     private PLMediaPlayer.OnPreparedListener mPrepared = new PLMediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(PLMediaPlayer plMediaPlayer) {
-            if (mCaptureView != null) {
-                mCaptureView.start();
-            }
         }
     };
     private static final int MESSAGE_ID_RECONNECTING = 0x01;
@@ -311,10 +298,6 @@ public class PlayerTextureView extends BaseMediaView {
     @Override
     protected boolean isMute() {
         return mIsMute;
-    }
-
-    public void setCaptureView(SurfaceCaptureView captureView) {
-        mCaptureView = captureView;
     }
 
     public PLVideoTextureView getPlayer(){

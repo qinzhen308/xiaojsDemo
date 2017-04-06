@@ -196,11 +196,6 @@ public class LiveRecordView extends BaseMediaView implements
         StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
         mAspect.setShowMode(AspectFrameLayout.SHOW_MODE.REAL);
         mProfile = new StreamingProfile();
-//        try {
-//            mProfile.setPublishUrl("rtmp://pili-publish.ps.qiniucdn.com/NIU7PS/xiaojiaoshi-test?key=efdbc36f-8759-44c2-bdd8-873521b6724a");
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
 
         mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3)
                 .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
@@ -285,6 +280,8 @@ public class LiveRecordView extends BaseMediaView implements
                     mIsReady = true;
                     //id = MSG_SHOW_LOADING;
                     //start();
+                    mHandler.removeCallbacksAndMessages(null);
+                    mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
                     info("READY");
                     break;
                 /**
@@ -497,9 +494,7 @@ public class LiveRecordView extends BaseMediaView implements
 
     @Override
     public void start() {
-        //startStreamingInThread ();
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
+        //do nothing
     }
 
     private void stopStreamingInternal() {

@@ -72,12 +72,7 @@ public class TeacherVideoController extends VideoController {
         mStreamPublishing = true;
         mPublishView.setPath(mPublishStreamUrl);
         mPublishView.setVisibility(View.VISIBLE);
-        boolean init = mPublishType == StreamType.TYPE_STREAM_PUBLISH ? mInitPublishVideo : mInitIndividualPublishVideo;
-        if (!init) {
-            mPublishView.start();
-        } else {
-            mPublishView.resume();
-        }
+        mPublishView.resume();
     }
 
     @Override
