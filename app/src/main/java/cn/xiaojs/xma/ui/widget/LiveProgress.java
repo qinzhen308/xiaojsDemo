@@ -28,6 +28,7 @@ import cn.xiaojs.xma.R;
 
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.ctl.RoomData;
 import cn.xiaojs.xma.ui.view.AnimationView;
 import cn.xiaojs.xma.util.TimeUtil;
 
@@ -44,7 +45,6 @@ public class LiveProgress extends LinearLayout {
     AnimationView animation;
     @BindView(R.id.live_progress_cur_state)
     TextView state;
-
 
 
     public LiveProgress(Context context) {
@@ -88,17 +88,21 @@ public class LiveProgress extends LinearLayout {
     private void showLiveStateAndTime(String liveState, long duration, long finishOn) {
 
 
-
     }
 
-    public void showTimeBar(String liveState, long duration, long finishOn){
+    public void showTimeBar(RoomData data, long duration) {
+        if (data == null) {
+            return;
+        }
 
+        String liveState = data.liveState;
+        long finishOn = data.finishOn;
         long cur = duration * 60 - finishOn;
+        long total = duration * 60;
 
-        if (liveState.equals(Live.LiveSessionState.DELAY)) {
-
-            long delat = cur - (duration *60);
-            state.setText("已超时" + (delat/60) + "分钟");
+        if (Live.LiveSessionState.DELAY.equals(liveState)) {
+            long delat = cur - (duration * 60);
+            state.setText("已超时" + (delat / 60) + "分钟");
 
             String timestr = TimeUtil.formatSecondTime(cur);
             curTime.setText(timestr);
@@ -106,15 +110,20 @@ public class LiveProgress extends LinearLayout {
             progress.setProgress(100);
             return;
 
-        }else if(liveState.equals(Live.LiveSessionState.RESET)) {
+        } else if (Live.LiveSessionState.RESET.equals(liveState)) {
             state.setText("课间休息");
-        }else{
+            cur = data.hasTaken;
+            curTime.setText(TimeUtil.formatSecondTime(data.hasTaken));
+            totalTime.setText(TimeUtil.formatSecondTime(total));
+            int pro = (int) (((float) cur / total) * 100);
+            progress.setProgress(pro);
+        } else if (Live.LiveSessionState.LIVE.equals(liveState)){
             state.setText("上课中");
+            cur = total - finishOn;
+            curTime.setText(TimeUtil.formatSecondTime(cur));
+            totalTime.setText(TimeUtil.formatSecondTime(total));
+            int pro = (int) (((float) cur / total) * 100);
+            progress.setProgress(pro);
         }
-
-        curTime.setText(TimeUtil.formatSecondTime(cur));
-        totalTime.setText(TimeUtil.formatSecondTime(finishOn));
-        int pro = (int) (((float)cur/finishOn) * 100);
-        progress.setProgress(pro);
     }
 }

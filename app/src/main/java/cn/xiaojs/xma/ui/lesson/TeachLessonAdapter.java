@@ -319,7 +319,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 holder.state.setBackgroundResource(R.drawable.course_state_on_bg);
                 holder.operation.setEnterColor(R.color.font_orange);
                 holder.progressWrapper.setVisibility(View.VISIBLE);
-                holder.progress.showTimeBar(bean.getClassroom().liveState,bean.getSchedule().getDuration(), bean.getClassroom().finishOn);
+                holder.progress.showTimeBar(bean.getClassroom() ,bean.getSchedule().getDuration());
             } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
                 holder.state.setVisibility(View.GONE);
                 holder.operation.setEnterColor(R.color.common_text);

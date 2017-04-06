@@ -491,7 +491,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         //init ui
         initPanel();
-        //setControllerBtnStyle(ctlSession.state);
         mLessonDuration = ctlSession.ctl != null ? ctlSession.ctl.duration : 0;
         mTotalTimeTv.setText(TimeUtil.formatMinuteTime(mLessonDuration));
 
@@ -511,9 +510,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             setPendingLivePlayTime(ctlSession.startOn);
             mPlayUrl = ctlSession.playUrl;
             mClassroomController.playStream(StreamType.TYPE_STREAM_INDIVIDUAL, mPlayUrl);
-        } else {
+        } else if (Live.LiveSessionState.RESET.equals(ctlSession.state)){
             mPlayTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
+
+            int progress = Math.round(100 * (ctlSession.hasTaken / (float) (mLessonDuration * 60)));
+            mLiveProgress.setProgress(progress);
         }
+
         setControllerBtnStyle(ctlSession.state);
         initTips(ctlSession.state);
 
