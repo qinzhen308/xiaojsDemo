@@ -1693,6 +1693,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 //ClassroomActivity.this.finish();
                 mLiveSessionState = Live.LiveSessionState.FINISHED;
                 setControllerBtnStyle(mLiveSessionState);
+                if (mClassroomController != null) {
+                    mClassroomController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
+                }
             }
 
             @Override
@@ -2044,7 +2047,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case StreamType.TYPE_STREAM_PUBLISH:
                 //老师自己暂停推流
                 if (user == Constants.User.TEACHER) {
-                    setTips(R.string.cls_not_break_title, R.string.cls_not_break_desc);
+                    setTips(R.string.cls_not_break_title, R.string.cls_not_break_desc_teacher);
                 }
                 break;
             case StreamType.TYPE_STREAM_PLAY:
