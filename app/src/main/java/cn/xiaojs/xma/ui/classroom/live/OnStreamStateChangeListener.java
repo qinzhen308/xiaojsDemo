@@ -27,13 +27,4 @@ public interface OnStreamStateChangeListener {
      */
     public void onStreamStopped(Constants.User user, int type);
 
-    /**
-     * 当使用播放流
-     */
-    public void onStreamPlay(StreamConfirmCallback callback);
-
-    /**
-     * 当使用播放流
-     */
-    public void onStreamPublish(StreamConfirmCallback callback);
 }

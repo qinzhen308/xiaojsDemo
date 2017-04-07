@@ -31,8 +31,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true">
 
+        <!--播放时间-->
         <TextView
-                android:id="@+id/publish_time"
+                android:id="@+id/count_down_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -46,6 +47,22 @@
                 android:layout_marginLeft="@dimen/px20"
                 android:layout_marginTop="@dimen/px20"
                 android:text="00:00:00"/>
+
+        <!--xx直播秀-->
+        <TextView
+                android:id="@+id/live_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/count_down_time"
+                android:padding="@dimen/px10"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/px28"
+                android:drawablePadding="@dimen/px10"
+                android:background="@drawable/cr_corner_gray_bg"
+                android:layout_marginLeft="@dimen/px15"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/px20"/>
 
         <ImageView
                 android:id="@+id/publish_camera_switcher"
@@ -200,7 +217,7 @@
                 android:background="@drawable/cr_corner_gray_bg">
 
             <TextView
-                    android:id="@+id/play_time"
+                    android:id="@+id/count_time"
                     android:textColor="@color/font_white"
                     android:textSize="@dimen/font_20px"
                     android:layout_width="wrap_content"

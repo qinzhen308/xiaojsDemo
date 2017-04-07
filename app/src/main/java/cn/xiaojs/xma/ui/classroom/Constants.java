@@ -29,6 +29,10 @@ public interface Constants {
      * if allow to live for mobile network
      */
     public final static String KEY_MOBILE_NETWORK_LIVE = "key_mobile_network_live";
+    /**
+     * if allow to live single lesson for mobile network
+     */
+    public final static String KEY_MOBILE_NETWORK_LIVE_4_LESSON = "key_mobile_network_live_4_lesson";
 
     /**
      * quality

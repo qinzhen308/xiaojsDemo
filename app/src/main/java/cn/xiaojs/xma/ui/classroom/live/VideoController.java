@@ -18,18 +18,24 @@ import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
 public abstract class VideoController implements StreamConfirmCallback {
     protected Context mContext;
@@ -62,6 +68,7 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected int mPublishType;
 
     private Handler mHandler;
+    private CommonDialog mMobileNetworkDialog;
 
     public VideoController(Context context, View root, OnStreamStateChangeListener listener) {
         mContext = context;
@@ -191,9 +198,7 @@ public abstract class VideoController implements StreamConfirmCallback {
 
         mPublishType = type;
         mPublishStreamUrl = url;
-        if (mStreamListener != null) {
-            mStreamListener.onStreamPublish(this);
-        }
+        handleNetworkLiveDialog(true);
     }
 
     /**
@@ -226,9 +231,7 @@ public abstract class VideoController implements StreamConfirmCallback {
 
         mPlayType = type;
         if (mPlayView != null && !TextUtils.isEmpty(mPlayStreamUrl)) {
-            if (mStreamListener != null) {
-                mStreamListener.onStreamPlay(this);
-            }
+            handleNetworkLiveDialog(false);
         }
     }
 
@@ -313,6 +316,54 @@ public abstract class VideoController implements StreamConfirmCallback {
 
     public boolean needStreamRePlaying() {
         return mNeedStreamRePlaying;
+    }
+
+    /**
+     * 处理移动网络的弹出对话框，提示是否允许使用移动网络进行直播
+     * @param publishStream
+     */
+    private void handleNetworkLiveDialog(final boolean publishStream) {
+        if (ClassroomBusiness.getCurrentNetwork(mContext) == ClassroomBusiness.NETWORK_OTHER) {
+            boolean open = XjsUtils.getSharedPreferences().getBoolean(Constants.KEY_MOBILE_NETWORK_LIVE, false);
+            boolean allowMobileLive = XjsUtils.getSharedPreferences().getBoolean(Constants.KEY_MOBILE_NETWORK_LIVE_4_LESSON, false);
+            if (!open && !allowMobileLive) {
+                if (mMobileNetworkDialog == null) {
+                    mMobileNetworkDialog = new CommonDialog(mContext);
+                    int width = DeviceUtil.getScreenWidth(mContext) / 2;
+                    int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    mMobileNetworkDialog.setTitle(R.string.mobile_network_title);
+                    mMobileNetworkDialog.setDesc(R.string.mobile_network_desc);
+                    mMobileNetworkDialog.setLefBtnText(R.string.mobile_network_forbid);
+                    mMobileNetworkDialog.setRightBtnText(R.string.mobile_network_allow);
+                    mMobileNetworkDialog.setDialogLayout(width, height);
+                    mMobileNetworkDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                        @Override
+                        public void onClick() {
+                            mMobileNetworkDialog.dismiss();
+                            XjsUtils.getSharedPreferences().edit().putBoolean(Constants.KEY_MOBILE_NETWORK_LIVE_4_LESSON, true).apply();
+                            if (publishStream) {
+                                confirmPublishStream(true);
+                            } else {
+                                confirmPlayStream(true);
+                            }
+                        }
+                    });
+                }
+                mMobileNetworkDialog.show();
+            } else {
+                if (publishStream) {
+                    confirmPublishStream(true);
+                } else {
+                    confirmPlayStream(true);
+                }
+            }
+        } else {
+            if (publishStream) {
+                confirmPublishStream(true);
+            } else {
+                confirmPlayStream(true);
+            }
+        }
     }
 
 }
