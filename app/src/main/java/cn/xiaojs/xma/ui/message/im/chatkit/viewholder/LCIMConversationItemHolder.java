@@ -103,7 +103,7 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
       unreadView.setVisibility(View.GONE);
 
       final NotificationCategory category = (NotificationCategory) conversation;
-      Log.i("aaa", "name="+category.getName()+"  this="+this);
+      //Log.i("aaa", "name="+category.getName()+"  this="+this);
       if(category.getName().equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
         avatarView.setImageResource(R.drawable.ic_message_invite);
       }else if(category.getName().equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
@@ -181,7 +181,7 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
         } else {
           updateName(conversation);
           updateIcon(conversation);
-          Log.i("aaa",  "===========this="+this);
+          //Log.i("aaa",  "===========this="+this);
         }
 
         updateUnreadCount(conversation);
