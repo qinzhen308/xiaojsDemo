@@ -66,7 +66,6 @@ import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
-import cn.xiaojs.xma.ui.classroom.live.StreamConfirmCallback;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
@@ -107,9 +106,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.55F;
     private final static int REQUEST_PERMISSION = 1000;
 
-    private final static int MSG_RESET_TIME = 1 << 0;
-    private final static int MSG_PLAY_TIME = 1 << 1;
+    //private final static int MSG_RESET_TIME = 1 << 0;
+    private final static int MSG_COUNT_TIME = 1 << 1;
     private final static int MSG_COUNT_DOWN_TIME = 1 << 2;
+    private final static int MSG_LIVE_SHOW_COUNT_DOWN_TIME = 1 << 3;
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
@@ -246,8 +246,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
     private long mLessonDuration;
     private long mResetTotalTime = 30 * 60; //s
-    private long mPlayTotalTime = 0;
+    private long mCountTime = 0;
     private long mCountDownTime = 0;
+    private long mLiveShowCountDownTime = 0;
     private long mHasTaken = 0;
 
     private int mPageState = PAGE_TOP;
@@ -511,7 +512,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         initWhiteboardController();
 
         if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
-            setPlayTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
+            setCountTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
             if (mUser == Constants.User.TEACHER) {
                 mClassroomController.publishStream(StreamType.TYPE_STREAM_PUBLISH, ctlSession.publishUrl);
             } else if (mUser == Constants.User.STUDENT) {
@@ -520,11 +521,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             }
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
                 Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
-            setPendingLivePlayTime(ctlSession.startOn);
+            setCountDownTime(ctlSession.startOn, true);
             mPlayUrl = ctlSession.playUrl;
             mClassroomController.playStream(StreamType.TYPE_STREAM_INDIVIDUAL, mPlayUrl);
         } else if (Live.LiveSessionState.RESET.equals(ctlSession.state)) {
-            mCountTimeTv.setText(TimeUtil.formatSecondTime(ctlSession.hasTaken));
+            setCountTime(ctlSession.hasTaken, false);
 
             mHasTaken = ctlSession.hasTaken;
             int progress = Math.round(100 * (ctlSession.hasTaken / (float) (mLessonDuration * 60)));
@@ -1772,15 +1773,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             }
                         }
 
-                        setResetTime(false);
-                        setPlayTime(mSyncState.timeline != null ? mSyncState.timeline.hasTaken : 0, true);
+                        setResetTime();
+                        setCountDownTime(mSyncState.timeline != null ? mSyncState.timeline.hasTaken : 0, true);
                     } else if (Live.LiveSessionState.LIVE.equals(mSyncState.from) && Live.LiveSessionState.RESET.equals(mSyncState.to)) {
                         if (mUser != Constants.User.TEACHER) {
                             mLiveSessionState = Live.LiveSessionState.RESET;
                         }
 
-                        setResetTime(true);
-                        setPlayTime(mSyncState.timeline != null ? mSyncState.timeline.hasTaken : 0, false);
+                        setResetTime();
+                        setCountDownTime(mSyncState.timeline != null ? mSyncState.timeline.hasTaken : 0, false);
                     } else if (Live.LiveSessionState.DELAY.equals(mSyncState.from) && Live.LiveSessionState.FINISHED.equals(mSyncState.to)) {
                         mLiveSessionState = Live.LiveSessionState.FINISHED;
                         setControllerBtnStyle(mLiveSessionState);
@@ -1818,32 +1819,41 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     }
 
-    private void setResetTime(boolean show) {
-        mHandler.removeMessages(MSG_RESET_TIME);
-        mResetTotalTime = 30 * 60;
-
-        Message msg = new Message();
-        msg.what = MSG_RESET_TIME;
-        msg.arg1 = show ? 1 : 0;
-        mHandler.sendMessage(msg);
+    private void setResetTime() {
+        setCountDownTime(30 * 60, true);
     }
 
-    private void setPlayTime(long hasTaken, boolean play) {
-        mHandler.removeMessages(MSG_PLAY_TIME);
-        mPlayTotalTime = hasTaken;
-
-        Message msg = new Message();
-        msg.what = MSG_PLAY_TIME;
-        msg.arg1 = play ? 1 : 0;
-        mHandler.sendMessage(msg);
-    }
-
-    private void setPendingLivePlayTime(long startOn) {
+    private void setCountDownTime(long startOn, boolean play) {
         mHandler.removeMessages(MSG_COUNT_DOWN_TIME);
         mCountDownTime = startOn;
 
         Message msg = new Message();
         msg.what = MSG_COUNT_DOWN_TIME;
+        msg.arg1 = play ? 1 : 0;
+        mHandler.sendMessage(msg);
+    }
+
+    private void setLiveShowCountDownTime() {
+        mHandler.removeMessages(MSG_LIVE_SHOW_COUNT_DOWN_TIME);
+        mLiveShowCountDownTime = 10 * 60; //10 minute
+
+        mLiveShowTv.setVisibility(View.VISIBLE);
+        Message msg = new Message();
+        msg.what = MSG_LIVE_SHOW_COUNT_DOWN_TIME;
+        mHandler.sendMessage(msg);
+    }
+
+    private void hideLiveShowCountDownTime() {
+        mLiveShowTv.setVisibility(View.GONE);
+    }
+
+    private void setCountTime(long hasTaken, boolean play) {
+        mHandler.removeMessages(MSG_COUNT_TIME);
+        mCountTime = hasTaken;
+
+        Message msg = new Message();
+        msg.what = MSG_COUNT_TIME;
+        msg.arg1 = play ? 1 : 0;
         mHandler.sendMessage(msg);
     }
 
@@ -1853,43 +1863,53 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (msg != null) {
                 Message m = mHandler.obtainMessage();
                 switch (msg.what) {
-                    case MSG_RESET_TIME:
+                    case MSG_COUNT_DOWN_TIME:
                         if (msg.arg1 == 1) {
-                            mResetTotalTime--;
-                            mResetTimeTv.setVisibility(View.VISIBLE);
-                            mResetTimeTv.setText(TimeUtil.formatSecondTime(mResetTotalTime));
-                            m.what = MSG_RESET_TIME;
+                            mCountDownTime--;
+                            String time = TimeUtil.formatSecondTime(mCountDownTime);
+                            if (Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)
+                                    || Live.LiveSessionState.CLAIM_STREAM_STOPPED.equals(mLiveSessionState)) {
+                                mCountDownTimeTv.setText(getString(R.string.cls_distance_class, time));
+                                mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
+                            } else {
+                                mCountDownTimeTv.setText(time);
+                                mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_start, 0, 0, 0);
+                            }
+
                             m.arg1 = 1;
+                            m.what = MSG_COUNT_DOWN_TIME;
                             mHandler.sendMessageDelayed(m, 1000);
                         } else {
-                            mResetTimeTv.setVisibility(View.GONE);
-                        }
-                        break;
-                    case MSG_PLAY_TIME:
-                        //播放
-                        if (msg.arg1 == 1) {
-                            mPlayTotalTime++;
-                            String t = TimeUtil.formatSecondTime(mPlayTotalTime);
-                            mCountDownTimeTv.setText(t);
-                            mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_start, 0, 0, 0);
-                            m.what = MSG_PLAY_TIME;
-                            m.arg1 = 1;
-                            mHandler.sendMessageDelayed(m, 1000);
-                            if (mLessonDuration > 0) {
-                                int progress = Math.round(100 * (mPlayTotalTime / (float) (mLessonDuration * 60)));
-                                mLiveProgress.setProgress(progress);
-                            }
-                        } else if (msg.arg1 == 0) {
-                            //暂停
-                            String t = TimeUtil.formatSecondTime(mPlayTotalTime);
+                            String t = TimeUtil.formatSecondTime(mCountDownTime);
                             mCountDownTimeTv.setText(t);
                             mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
                         }
                         break;
-                    case MSG_COUNT_DOWN_TIME:
-                        mCountDownTime--;
-                        mCountTimeTv.setText(TimeUtil.formatSecondTime(mCountDownTime));
-                        m.what = MSG_COUNT_DOWN_TIME;
+                    case MSG_COUNT_TIME:
+                        if (msg.arg1 == 1) {
+                            mCountTime++;
+                            String t = TimeUtil.formatSecondTime(mCountTime);
+                            mCountTimeTv.setText(t);
+                            m.arg1 = 1;
+                            m.what = MSG_COUNT_TIME;
+                            mHandler.sendMessageDelayed(m, 1000);
+
+                            if (mLessonDuration > 0) {
+                                int progress = Math.round(100 * (mCountTime / (float) (mLessonDuration * 60)));
+                                mLiveProgress.setProgress(progress);
+                            }
+                        } else if (msg.arg1 == 0) {
+                            String t = TimeUtil.formatSecondTime(mCountTime);
+                            mCountTimeTv.setText(t);
+                        }
+                        break;
+                    case MSG_LIVE_SHOW_COUNT_DOWN_TIME:
+                        mLiveShowCountDownTime--;
+                        String name = "";
+                        String time = TimeUtil.formatSecondTime(mLiveShowCountDownTime);
+                        mLiveShowTv.setText(getString(R.string.cls_live_show, name, time));
+
+                        m.what = MSG_LIVE_SHOW_COUNT_DOWN_TIME;
                         mHandler.sendMessageDelayed(m, 1000);
                         break;
                 }
@@ -1963,10 +1983,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                                 //reconnected
                                 if (mNetworkState == ClassroomBusiness.NETWORK_WIFI) {
                                     if (mClassroomController.needStreamRePlaying()) {
-                                        handleNetworkLiveDialog(false);
+                                        handleMobileNetworkLiveDialog(false);
                                     }
                                     if (mClassroomController.needStreamRePublishing()) {
-                                        handleNetworkLiveDialog(true);
+                                        handleMobileNetworkLiveDialog(true);
                                     }
                                 } else if (mNetworkState == ClassroomBusiness.NETWORK_NONE) {
                                     mClassroomController.onResumeVideo();
@@ -1977,10 +1997,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         //reconnected
                         if (mNetworkState == ClassroomBusiness.NETWORK_WIFI) {
                             if (mClassroomController.needStreamRePlaying()) {
-                                handleNetworkLiveDialog(false);
+                                handleMobileNetworkLiveDialog(false);
                             }
                             if (mClassroomController.needStreamRePublishing()) {
-                                handleNetworkLiveDialog(true);
+                                handleMobileNetworkLiveDialog(true);
                             }
                         } else if (mNetworkState == ClassroomBusiness.NETWORK_NONE) {
                             mClassroomController.onResumeVideo();
@@ -1999,7 +2019,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 mLiveSessionState = mBeforeClamSteamState;
                 setControllerBtnStyle(mLiveSessionState);
                 setTips(R.string.cls_not_on_class_title, R.string.cls_not_on_class_desc);
-                setPlayTime(0, false);
+                setCountDownTime(0, false);
                 break;
             case StreamType.TYPE_STREAM_PEER_TO_PEER:
                 if (user == Constants.User.TEACHER) {
@@ -2010,20 +2030,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 //老师自己暂停推流
                 if (user == Constants.User.TEACHER) {
                     setTips(R.string.cls_not_break_title, R.string.cls_not_break_desc_teacher);
-                    setPlayTime(mPlayTotalTime, false);
+                    setCountDownTime(mCountTime, false);
                 }
                 break;
             case StreamType.TYPE_STREAM_PLAY:
                 //学生接收到直播推流暂停
                 if (user == Constants.User.STUDENT) {
                     setTips(R.string.cls_not_break_title, R.string.cls_not_break_desc);
-                    setPlayTime(mPlayTotalTime, false);
+                    setCountDownTime(mCountTime, false);
                 }
                 break;
         }
 
         cancelProgress();
-
+        hideLiveShowCountDownTime();
         if (XiaojsConfig.DEBUG) {
             String s = getTxtString(user, type);
             Toast.makeText(this, "=====stop=====" + s, Toast.LENGTH_SHORT).show();
@@ -2041,18 +2061,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case StreamType.TYPE_STREAM_PLAY:
                 break;
             case StreamType.TYPE_STREAM_INDIVIDUAL:
-                setPlayTime(0, true);
+                if (Live.LiveSessionState.CLAIM_STREAM_STOPPED.equals(mLiveSessionState)) {
+                    setLiveShowCountDownTime();
+                }
                 break;
             case StreamType.TYPE_STREAM_PUBLISH:
                 if (user == Constants.User.TEACHER && Live.LiveSessionState.LIVE.equals(mLiveSessionState)) {
-                    setPlayTime(mPlayTotalTime > 0 ? mPlayTotalTime : mHasTaken, true);
+                    setCountDownTime(mCountTime > 0 ? mCountTime : mHasTaken, true);
                 }
                 break;
         }
 
+        cancelProgress();
         hideTips();
         setControllerBtnStyle(mLiveSessionState);
-        cancelProgress();
         if (XiaojsConfig.DEBUG) {
             String s = getTxtString(user, type);
             Toast.makeText(this, "=====started=====" + s, Toast.LENGTH_SHORT).show();
@@ -2079,7 +2101,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         return (user == Constants.User.TEACHER ? "老师" : "学生") + txt;
     }
 
-    private void handleNetworkLiveDialog(final boolean publishStream) {
+    /**
+     * 处理移动网络播放直播
+     *
+     * @param publishStream true：推流 false 播放流
+     */
+    private void handleMobileNetworkLiveDialog(final boolean publishStream) {
         if (ClassroomBusiness.getCurrentNetwork(this) == ClassroomBusiness.NETWORK_OTHER) {
             boolean open = XjsUtils.getSharedPreferences().getBoolean(Constants.KEY_MOBILE_NETWORK_LIVE, false);
             boolean allowMobileLive = XjsUtils.getSharedPreferences().getBoolean(Constants.KEY_MOBILE_NETWORK_LIVE_4_LESSON, false);

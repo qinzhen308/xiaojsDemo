@@ -224,6 +224,7 @@
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
                     android:paddingLeft="@dimen/px15"
+                    android:text="00:00:00"
                     android:layout_height="wrap_content"/>
 
             <SeekBar
