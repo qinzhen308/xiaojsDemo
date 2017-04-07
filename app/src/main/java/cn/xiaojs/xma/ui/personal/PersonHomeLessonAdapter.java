@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.personal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -106,6 +108,17 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
 
     @Override
     protected void onDataItemClick(int position, PersonHomeUserLesson bean) {
+        String state = bean.state;
+        if (TextUtils.isEmpty(state)
+                ||state.equalsIgnoreCase(LessonState.ACKNOWLEDGED)
+                || state.equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
+                || state.equalsIgnoreCase(LessonState.DRAFT)
+                || state.equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
+                || state.equalsIgnoreCase(LessonState.CANCELLED)
+                || state.equalsIgnoreCase(LessonState.REJECTED)) {
+            return;
+        }
+
         Intent i = new Intent(mContext, LessonHomeActivity.class);
         i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
         i.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);

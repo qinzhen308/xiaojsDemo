@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -300,12 +301,14 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
 
     @Override
     protected void onDataItemClick(int position, EnrolledLesson bean) {
-
-        if (bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
-                || bean.getState().equalsIgnoreCase(LessonState.DRAFT)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
-                || bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
+        String state = bean.getState();
+        if (TextUtils.isEmpty(state)
+                ||state.equalsIgnoreCase(LessonState.ACKNOWLEDGED)
+                || state.equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
+                || state.equalsIgnoreCase(LessonState.DRAFT)
+                || state.equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
+                || state.equalsIgnoreCase(LessonState.CANCELLED)
+                || state.equalsIgnoreCase(LessonState.REJECTED)) {
             return;
         }
 
