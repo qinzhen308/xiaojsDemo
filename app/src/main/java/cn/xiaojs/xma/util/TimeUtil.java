@@ -2,6 +2,7 @@ package cn.xiaojs.xma.util;
 
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -900,7 +901,7 @@ public class TimeUtil {
         String hh = "00";
         if (h < 10) {
             hh = "0" + h;
-        } else if (h >= 0 && h <= 59) {
+        } else if (h >= 0) {
             hh = String.valueOf(h);
         }
 
@@ -918,6 +919,7 @@ public class TimeUtil {
             ss = String.valueOf(s);
         }
 
+        Log.i("aaa", "" + hh + ":" + mm + ":" + ss);
         return hh + ":" + mm + ":" + ss;
 
     }
