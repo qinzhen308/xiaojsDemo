@@ -187,3 +187,15 @@
 -keep class com.amap.api.location.**{*;}
 -keep class com.amap.api.fence.**{*;}
 -keep class com.autonavi.aps.amapapi.model.**{*;}
+
+#===================lean cloud chatkit==================================
+-keepclassmembers class cn.xiaojs.xma.ui.message.im.** {
+    <fields>;
+    <methods>;
+}
+
+-keepclassmembers class com.avos.avoscloud.** {
+    <fields>;
+    <methods>;
+}
+

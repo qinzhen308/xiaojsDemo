@@ -204,7 +204,7 @@
     <string name="sale_promotion">促销</string>
     <string name="input_tips"><![CDATA[<font color="#cc0000">%1$d</font>]]>/%2$d字</string>
 
-    <string name="home_search_hint">输入手机号搜索个人或机构</string>
+    <string name="home_search_hint">课/个人/机构</string>
     <string name="course_of_learn">我报的班</string>
     <string name="course_of_teach">我授的课</string>
     <string name="my_course">我的课</string>
