@@ -154,7 +154,7 @@ public class ErrorPrompts {
                 } else if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
                     errorMessage = "该课已下架";
                 } else if (errorCode.equals(Errors.QUOTA_LIMIT)) {
-                    errorMessage = "名额已满";
+                    errorMessage = "报名已满";
                 } else if (errorCode.equals(Errors.NO_ENROLL)) {
                     errorMessage = "停止招生";
                 } else {
@@ -185,7 +185,7 @@ public class ErrorPrompts {
                 } else if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
                     errorMessage = "该课已下架";
                 } else if (errorCode.equals(Errors.QUOTA_LIMIT)) {
-                    errorMessage = "名额已满";
+                    errorMessage = "报名已满";
                 } else if (errorCode.equals(Errors.NO_ENROLL)) {
                     errorMessage = "停止报名";
                 } else if (errorCode.equals(Errors.BAD_SUBTOTAL)) {
