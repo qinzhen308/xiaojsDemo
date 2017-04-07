@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -29,6 +30,7 @@ import cn.xiaojs.xma.R;
 public class EditTextDel extends EditText {
     private Drawable mDelDrawable;
     private boolean isNeedDelete = true;
+    private boolean mForbidEnterChar = false;
 
     public EditTextDel(Context context) {
         super(context);
@@ -66,6 +68,7 @@ public class EditTextDel extends EditText {
             @Override
             public void afterTextChanged(Editable s) {
                 setDrawable();
+                filterEnterChar(s);
             }
         });
         setDrawable();
@@ -92,11 +95,32 @@ public class EditTextDel extends EditText {
 
     /**
      * 是否需要右侧的删除按钮
-     *
-     * @param isNeedDel
      */
     public void isNeedDelete(boolean isNeedDel) {
         isNeedDelete = isNeedDel;
+    }
+
+    /**
+     * 是否禁止输入回车换行符
+     */
+    public void setForbidEnterChar(boolean forbid) {
+        mForbidEnterChar = forbid;
+    }
+
+    /**
+     * 过滤回车换行符
+     */
+    private void filterEnterChar(Editable s) {
+        if (mForbidEnterChar) {
+            String text = s.toString();
+            if (!TextUtils.isEmpty(text)) {
+                char lastChar = text.charAt(text.length() - 1);
+                if (lastChar == 10 || lastChar == 13) {
+                    //delete
+                    s.delete(text.length() - 1, text.length());
+                }
+            }
+        }
     }
 
 

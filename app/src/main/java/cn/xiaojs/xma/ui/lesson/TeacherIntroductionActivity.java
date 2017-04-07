@@ -79,7 +79,9 @@ public class TeacherIntroductionActivity extends BaseActivity {
             if (mLesson.getTeachersIntro() != null) {
                 String text = mLesson.getTeachersIntro().getText();
                 mInputContentEdt.setText(text);
-                mInputContentEdt.setSelection(text.length());
+                if (!TextUtils.isEmpty(text)) {
+                    mInputContentEdt.setSelection(text.length());
+                }
             }
         }
     }

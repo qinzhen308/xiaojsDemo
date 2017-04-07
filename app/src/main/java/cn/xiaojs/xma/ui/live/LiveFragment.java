@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -277,10 +278,13 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void enterLessonHome(LiveItem liveItem, boolean fromTeach) {
-        if (LessonState.ACKNOWLEDGED.equalsIgnoreCase(liveItem.state)
+        if (TextUtils.isEmpty(liveItem.state)
+                || LessonState.ACKNOWLEDGED.equalsIgnoreCase(liveItem.state)
                 || LessonState.PENDING_FOR_ACK.equalsIgnoreCase(liveItem.state)
                 || LessonState.DRAFT.equalsIgnoreCase(liveItem.state)
-                || LessonState.PENDING_FOR_APPROVAL.equalsIgnoreCase(liveItem.state)) {
+                || LessonState.PENDING_FOR_APPROVAL.equalsIgnoreCase(liveItem.state)
+                || LessonState.CANCELLED.equals(liveItem.state)
+                || LessonState.REJECTED.equalsIgnoreCase(liveItem.state)) {
             return;
         }
 

@@ -21,7 +21,6 @@ import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
-import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
@@ -155,6 +154,7 @@ public class MainActivity extends BaseTabActivity {
         autoClose();
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Fragment fragment = getCurrentFragment();
@@ -198,14 +198,14 @@ public class MainActivity extends BaseTabActivity {
 
     private void requestPermission() {
 
-        if (PermissionUtil.isOverMarshmallow()){
-
-            String[] needPermissions = {
-                    Manifest.permission.VIBRATE
-            };
-
-            PermissionGen.needPermission(this,1,needPermissions);
-        }
+//        if (PermissionUtil.isOverMarshmallow()){
+//
+//            String[] needPermissions = {
+//                    Manifest.permission.VIBRATE
+//            };
+//
+//            PermissionGen.needPermission(this,1,needPermissions);
+//        }
     }
 
     private void showTips() {

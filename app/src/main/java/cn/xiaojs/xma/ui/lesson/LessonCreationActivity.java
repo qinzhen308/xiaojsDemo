@@ -241,6 +241,7 @@ public class LessonCreationActivity extends BaseActivity {
 
         //TODO test
         mChargeWaySwitcher.setEnabled(false);
+        mLessonNameEdt.setForbidEnterChar(true);
     }
 
     private void closeCourCreateTips() {

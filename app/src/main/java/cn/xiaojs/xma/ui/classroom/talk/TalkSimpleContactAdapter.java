@@ -115,7 +115,6 @@ public class TalkSimpleContactAdapter extends BaseAdapter implements View.OnClic
         Glide.with(mContext)
                 .load(portraitUrl)
                 .transform(new CircleTransform(mContext))
-                .signature(new StringSignature(DeviceUtil.getSignature()))
                 .placeholder(R.drawable.default_avatar)
                 .error(R.drawable.default_avatar)
                 .into(holder.portrait);

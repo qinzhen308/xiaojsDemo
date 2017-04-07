@@ -319,7 +319,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 holder.state.setBackgroundResource(R.drawable.course_state_on_bg);
                 holder.operation.setEnterColor(R.color.font_orange);
                 holder.progressWrapper.setVisibility(View.VISIBLE);
-                holder.progress.showTimeBar(bean.getClassroom().liveState,bean.getSchedule().getDuration(), bean.getClassroom().finishOn);
+                holder.progress.showTimeBar(bean.getClassroom(), bean.getSchedule().getDuration());
             } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
                 holder.state.setVisibility(View.GONE);
                 holder.operation.setEnterColor(R.color.common_text);
@@ -791,12 +791,15 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
     @Override
     protected void onDataItemClick(int position, TeachLesson bean) {
+        String state = bean.getState();
 
-        if (bean.getState().equalsIgnoreCase(LessonState.ACKNOWLEDGED)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
-                || bean.getState().equalsIgnoreCase(LessonState.DRAFT)
-                || bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
-                || bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
+        if (TextUtils.isEmpty(state)
+                || state.equalsIgnoreCase(LessonState.ACKNOWLEDGED)
+                || state.equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
+                || state.equalsIgnoreCase(LessonState.DRAFT)
+                || state.equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
+                || state.equalsIgnoreCase(LessonState.CANCELLED)
+                || state.equalsIgnoreCase(LessonState.REJECTED)) {
             return;
         }
 

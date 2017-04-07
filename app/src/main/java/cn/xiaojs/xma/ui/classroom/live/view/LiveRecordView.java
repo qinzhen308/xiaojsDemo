@@ -58,7 +58,7 @@ import cn.xiaojs.xma.util.XjsUtils;
 
 public class LiveRecordView extends BaseMediaView implements
         SurfaceTextureCallback,
-        AudioSourceCallback{
+        AudioSourceCallback {
 
     private static final String TAG = "LiveRecordView";
     private static final int MSG_START_STREAMING = 0;
@@ -79,54 +79,61 @@ public class LiveRecordView extends BaseMediaView implements
 
     private boolean mMute;
     private int mQuality = Constants.QUALITY_STANDARD;
-    private boolean mResume = false;
 
     private int mCurrentCamFacingIndex;
     private boolean mIsReady;
     private Switcher mCameraSwitcher = new Switcher();
-    protected Handler mHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            if (mMediaStreamingManager == null)
-                return;
-            switch (msg.what) {
-                case MSG_START_STREAMING:
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean success = mMediaStreamingManager.startStreaming();
-                            if (XiaojsConfig.DEBUG){
-                                Logger.i(success+"");
-                            }
-                        }
-                    }).start();
-                    break;
-                case MSG_STOP_STREAMING:
-                    boolean success = mMediaStreamingManager.stopStreaming();
-                    if (XiaojsConfig.DEBUG){
-                        Logger.i(success+"");
-                    }
-                    break;
-                case MSG_MUTE:
-                    mMediaStreamingManager.mute(mMute = !mMute);
-                    break;
-                case MSG_HIDE_LOADING:
-                    showLoading(false);
-                    break;
-                case MSG_SHOW_LOADING:
-                    showLoading(true);
-                    break;
-                default:
-                    Log.e(TAG, "Invalid message");
-                    break;
-            }
 
-            Object obj = msg.obj;
-            if (obj != null){
-                ToastUtil.showToast(getContext(),obj.toString());
+    @Override
+    protected void initHandler() {
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                onHandleMessage(msg);
             }
+        };
+    }
+
+    private void onHandleMessage(Message msg) {
+        if (mMediaStreamingManager == null)
+            return;
+        switch (msg.what) {
+            case MSG_START_STREAMING:
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean success = mMediaStreamingManager.startStreaming();
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.i(success + "");
+                        }
+                    }
+                }).start();
+                break;
+            case MSG_STOP_STREAMING:
+                boolean success = mMediaStreamingManager.stopStreaming();
+                if (XiaojsConfig.DEBUG) {
+                    Logger.i(success + "");
+                }
+                break;
+            case MSG_MUTE:
+                mMediaStreamingManager.mute(mMute = !mMute);
+                break;
+            case MSG_HIDE_LOADING:
+                showLoading(false);
+                break;
+            case MSG_SHOW_LOADING:
+                showLoading(true);
+                break;
+            default:
+                Log.e(TAG, "Invalid message");
+                break;
         }
-    };
+
+        Object obj = msg.obj;
+        if (obj != null) {
+            ToastUtil.showToast(getContext(), obj.toString());
+        }
+    }
 
     public LiveRecordView(Context context) {
         super(context);
@@ -139,7 +146,7 @@ public class LiveRecordView extends BaseMediaView implements
     @Override
     protected View initMediaView() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View v = inflater.inflate(R.layout.layout_live_record_view,null);
+        View v = inflater.inflate(R.layout.layout_live_record_view, null);
         mAspect = (AspectFrameLayout) v.findViewById(R.id.camera_afl);
         mPreviewFrameView = (CameraPreviewFrameView) v.findViewById(R.id.camera_preview_surfaceView);
         init();
@@ -189,11 +196,6 @@ public class LiveRecordView extends BaseMediaView implements
         StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
         mAspect.setShowMode(AspectFrameLayout.SHOW_MODE.REAL);
         mProfile = new StreamingProfile();
-//        try {
-//            mProfile.setPublishUrl("rtmp://pili-publish.ps.qiniucdn.com/NIU7PS/xiaojiaoshi-test?key=efdbc36f-8759-44c2-bdd8-873521b6724a");
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
 
         mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3)
                 .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
@@ -236,8 +238,8 @@ public class LiveRecordView extends BaseMediaView implements
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
     }
 
-    public void setPublishUrl(String url){
-        if (mProfile != null){
+    public void setPublishUrl(String url) {
+        if (mProfile != null) {
             try {
                 mProfile.setPublishUrl(url);
             } catch (URISyntaxException e) {
@@ -250,7 +252,7 @@ public class LiveRecordView extends BaseMediaView implements
         mOuterStreamingStateChangedListener = listener;
     }
 
-    private class OnStreamingState implements StreamingStateChangedListener{
+    private class OnStreamingState implements StreamingStateChangedListener {
 
         @Override
         public void onStateChanged(StreamingState streamingState, Object extra) {
@@ -278,6 +280,8 @@ public class LiveRecordView extends BaseMediaView implements
                     mIsReady = true;
                     //id = MSG_SHOW_LOADING;
                     //start();
+                    mHandler.removeCallbacksAndMessages(null);
+                    mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
                     info("READY");
                     break;
                 /**
@@ -430,7 +434,7 @@ public class LiveRecordView extends BaseMediaView implements
 
     }
 
-    private void info(String info){
+    private void info(String info) {
         if (XiaojsConfig.DEBUG) {
             Message msg = Message.obtain();
             msg.obj = info;
@@ -440,7 +444,7 @@ public class LiveRecordView extends BaseMediaView implements
 
     @Override
     public void resume() {
-        if (mMediaStreamingManager != null){
+        if (mMediaStreamingManager != null) {
             mMediaStreamingManager.resume();
             mResume = true;
         }
@@ -449,10 +453,10 @@ public class LiveRecordView extends BaseMediaView implements
     @Override
     public void pause() {
         mIsReady = false;
-        if (mHandler != null){
+        if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
-        if (mMediaStreamingManager != null){
+        if (mMediaStreamingManager != null) {
             mMediaStreamingManager.pause();
         }
 
@@ -461,7 +465,7 @@ public class LiveRecordView extends BaseMediaView implements
 
     @Override
     public void destroy() {
-        if (mHandler != null){
+        if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
@@ -485,18 +489,16 @@ public class LiveRecordView extends BaseMediaView implements
     public void switchCamera() {
         //切换摄像头
         mHandler.removeCallbacks(mCameraSwitcher);
-        mHandler.postDelayed(mCameraSwitcher,100);
+        mHandler.postDelayed(mCameraSwitcher, 100);
     }
 
     @Override
     public void start() {
-        //startStreamingInThread ();
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING),50);
+        //do nothing
     }
 
-    private void stopStreamingInternal(){
-        if (mMediaStreamingManager != null){
+    private void stopStreamingInternal() {
+        if (mMediaStreamingManager != null) {
             mMediaStreamingManager.destroy();
             mMediaStreamingManager = null;
         }
@@ -569,6 +571,7 @@ public class LiveRecordView extends BaseMediaView implements
         mMediaStreamingManager.captureFrame(0, 0, callback);
     }
 
+    @Override
     public boolean isResume() {
         return mResume;
     }

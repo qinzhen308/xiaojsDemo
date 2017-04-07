@@ -15,6 +15,9 @@ package cn.xiaojs.xma.ui.classroom.live.view;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -40,6 +43,8 @@ public abstract class BaseMediaView extends FrameLayout {
     private GestureDetector mGesture;
     private String mPath;
     private boolean touchable = true;
+    protected boolean mResume = false;
+    protected Handler mHandler;
 
     public BaseMediaView(Context context) {
         super(context);
@@ -57,6 +62,7 @@ public abstract class BaseMediaView extends FrameLayout {
     }
 
     private void init() {
+        initHandler();
         setKeepScreenOn(true);
         LayoutInflater.from(getContext()).inflate(R.layout.layout_media_base_view, this, true);
         mContainer = (FrameLayout) findViewById(R.id.media_container);
@@ -68,18 +74,22 @@ public abstract class BaseMediaView extends FrameLayout {
         mGesture = new GestureDetector(getContext(), new CustomerOnGestureListener());
     }
 
+    protected void initHandler() {
+
+    }
+
     protected abstract View initMediaView();
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (touchable){
-            if (!normal){
+        if (touchable) {
+            if (!normal) {
                 scale();
                 return true;
             }
             mGesture.onTouchEvent(event);
             return true;
-        }else {
+        } else {
             return false;
         }
 
@@ -127,7 +137,7 @@ public abstract class BaseMediaView extends FrameLayout {
         }
     }
 
-    public void setTouchable(boolean touchable){
+    public void setTouchable(boolean touchable) {
         this.touchable = touchable;
     }
 
@@ -208,7 +218,11 @@ public abstract class BaseMediaView extends FrameLayout {
         return this instanceof PlayerTextureView;
     }
 
-    protected boolean isMute(){
+    protected boolean isMute() {
+        return false;
+    }
+
+    public boolean isResume() {
         return false;
     }
 }

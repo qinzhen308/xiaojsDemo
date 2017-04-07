@@ -105,6 +105,7 @@
                 android:layout_marginTop="@dimen/px15"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
+                android:maxLines="2"
                 android:layout_height="wrap_content"/>
 
         <LinearLayout

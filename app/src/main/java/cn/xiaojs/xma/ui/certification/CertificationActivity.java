@@ -231,7 +231,14 @@ public class CertificationActivity extends BaseActivity {
         mStatusDesc.setText("很高兴认识您，您可以享受更多小教室服务与权益");
 
         if (!failed) {
-            mIdCard.setText(status.identity.no);
+            String identityNO = status.identity.no;
+            StringBuilder sb = new StringBuilder();
+            sb.append(identityNO.charAt(0));
+            for (int i = 0; i < identityNO.length() - 2; i++) {
+                sb.append("*");
+            }
+            sb.append(identityNO.charAt(identityNO.length() - 1));
+            mIdCard.setText(sb.toString());
             mName.setText(status.basic.name);
 
             mSubmitTime.setText(getTime(status.requestedOn));

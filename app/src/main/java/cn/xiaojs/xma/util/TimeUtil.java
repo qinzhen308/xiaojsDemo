@@ -900,7 +900,7 @@ public class TimeUtil {
         String hh = "00";
         if (h < 10) {
             hh = "0" + h;
-        } else if (h >= 0 && h <= 59) {
+        } else if (h >= 0) {
             hh = String.valueOf(h);
         }
 
@@ -919,6 +919,5 @@ public class TimeUtil {
         }
 
         return hh + ":" + mm + ":" + ss;
-
     }
 }

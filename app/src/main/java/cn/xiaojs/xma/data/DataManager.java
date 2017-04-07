@@ -18,6 +18,7 @@ import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.DataCacheManager;
 import cn.xiaojs.xma.util.FileUtil;
@@ -77,8 +78,9 @@ public class DataManager {
                 LeanCloudUtil.open(XiaojsConfig.mLoginUser.getId());
             }
 
+            XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
+            //AccountPref.setAvatorTime(context, XiaojsConfig.AVATOR_TIME);
 
-            XiaojsConfig.AVATOR_TIME = AccountPref.getAvatorTime(context);
 
             lanuchInitDataService(context, null);
 

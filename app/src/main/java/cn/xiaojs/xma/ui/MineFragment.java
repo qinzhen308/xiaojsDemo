@@ -102,8 +102,8 @@ public class MineFragment extends BaseFragment {
         orderLayout.setEnabled(false);;
         mBlurFloatUpBg = new ColorDrawable(getResources().getColor(R.color.blur_float_up_bg));
         mEvaluation.setGrading(EvaluationStar.Grading.THREE_HALF);
-        //set default ugc
         initBaseInfo();
+        //set default ugc
         setUgc(null);
         loadData();
         showAbilities();

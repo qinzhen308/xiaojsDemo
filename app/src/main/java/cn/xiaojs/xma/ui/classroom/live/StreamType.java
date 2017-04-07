@@ -9,22 +9,14 @@ package cn.xiaojs.xma.ui.classroom.live;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/3/20
+ * Date:2017/3/31
  * Desc:
  *
  * ======================================================================================== */
 
-import cn.xiaojs.xma.ui.classroom.Constants;
-
-public interface OnStreamStateChangeListener {
-    /**
-     * 当流已经开始
-     */
-    public void onStreamStarted(Constants.User user, int type);
-
-    /**
-     * 当前流已经暂停
-     */
-    public void onStreamStopped(Constants.User user, int type);
-
+public class StreamType {
+    public final static int TYPE_STREAM_PLAY = 1; //播放流
+    public final static int TYPE_STREAM_PEER_TO_PEER = 2; //一对一流(播放流和推送流)
+    public final static int TYPE_STREAM_PUBLISH = 3; //直播推流
+    public final static int TYPE_STREAM_INDIVIDUAL = 4; //个人推流
 }

@@ -75,7 +75,7 @@ public class AccountBusiness {
 
                         XiaojsConfig.mLoginUser = user;
                         XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
-                        AccountPref.setAvatorTime(activity, XiaojsConfig.AVATOR_TIME);
+                        //AccountPref.setAvatorTime(activity, XiaojsConfig.AVATOR_TIME);
 
                         AccountDataManager.setPhone(activity,String.valueOf(loginParams.getMobile()));
                         //enter main page

@@ -79,7 +79,9 @@ public class LiveLessonBriefActivity extends BaseActivity {
             if (mLesson.getOverview() != null) {
                 String text = mLesson.getOverview().getText();
                 mInputContentEdt.setText(text);
-                mInputContentEdt.setSelection(text.length());
+                if (!TextUtils.isEmpty(text)) {
+                    mInputContentEdt.setSelection(text.length());
+                }
             }
         }
     }
