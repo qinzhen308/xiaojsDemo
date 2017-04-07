@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +16,6 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
-import cn.xiaojs.xma.common.permissiongen.PermissionGen;
-import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
