@@ -255,12 +255,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         onMeasureFinished(mMeasureFinished);
     }
 
-    private String[] paths = new String[]{"http://img5.imgtn.bdimg.com/it/u=3600871538,1052340553&fm=11&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=359655142,108274987&fm=23&gp=0.jpg",
-            "http://img1.imgtn.bdimg.com/it/u=3168845475,492408544&fm=23&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=4195912740,1434023583&fm=11&gp=0.jpg",
-            "http://d.hiphotos.baidu.com/zhidao/pic/item/6a600c338744ebf839e379c5d9f9d72a6159a7bd.jpg"};
-
     private void onMeasureFinished(boolean finished) {
         if (finished) {
             createDoodleCanvas();
