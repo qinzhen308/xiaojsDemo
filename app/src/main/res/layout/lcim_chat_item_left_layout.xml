@@ -25,7 +25,7 @@
         <ImageView
             android:id="@+id/chat_left_iv_avatar"
             style="@style/LCIMAvatar"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_marginRight="10dp"/>
 
         <LinearLayout

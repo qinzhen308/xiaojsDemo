@@ -31,6 +31,7 @@ import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SingleSelectDialog;
 import cn.xiaojs.xma.util.JpushUtil;
+import cn.xiaojs.xma.util.LeanCloudUtil;
 import cn.xiaojs.xma.util.StringUtil;
 
 public class BaseBusiness {
@@ -182,12 +183,13 @@ public class BaseBusiness {
 
     public static void advisory(final Context context, boolean followed, String accountId, String name, String sex, final OnFollowListener listener) {
         if (followed) {
-                // FIXME 进入聊天界面
-                //JpushUtil.launchChat(context, accountId, name);
-        }else {
+            //进入聊天界面
+            //JpushUtil.launchChat(context, accountId, name);
+            LeanCloudUtil.lanchChatPage(context, accountId);
+        } else {
             final CommonDialog dialog = new CommonDialog(context);
 
-            dialog.setDesc(context.getString(R.string.none_follow_tip, StringUtil.getTa(sex),StringUtil.getTa(sex)));
+            dialog.setDesc(context.getString(R.string.none_follow_tip, StringUtil.getTa(sex), StringUtil.getTa(sex)));
             dialog.setOkText(context.getString(R.string.follow_somebody, StringUtil.getTa(sex)));
             dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
                 @Override
@@ -199,7 +201,7 @@ public class BaseBusiness {
                 @Override
                 public void onClick() {
                     dialog.dismiss();
-                    showFollowDialog(context,listener);
+                    showFollowDialog(context, listener);
                 }
             });
 

@@ -3,12 +3,12 @@ package cn.xiaojs.xma.ui.message.im.chatkit.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -22,12 +22,14 @@ import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
 public class LCIMImageActivity extends Activity {
 
   private ImageView imageView;
+  private LinearLayout rootLay;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.lcim_chat_image_brower_layout);
     imageView = (ImageView) findViewById(R.id.imageView);
+    rootLay = (LinearLayout) findViewById(R.id.root_lay);
     Intent intent = getIntent();
     String path = intent.getStringExtra(LCIMConstants.IMAGE_LOCAL_PATH);
     String url = intent.getStringExtra(LCIMConstants.IMAGE_URL);
@@ -39,5 +41,19 @@ public class LCIMImageActivity extends Activity {
       //Picasso.with(this).load(new File(path)).into(imageView);
     }
 
+    rootLay.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+      }
+    });
+
+  }
+
+  @Override
+  public void onBackPressed() {
+    super.onBackPressed();
+    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
   }
 }

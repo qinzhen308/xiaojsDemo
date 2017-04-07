@@ -223,6 +223,9 @@ public class APPUtils {
     public static void exitAndLogin(Context context,@StringRes int exitTips) {
         LoginDataManager.requestLogoutByAPI(context, null);
 
+        //logout im
+        LeanCloudUtil.close(AccountDataManager.getAccountID(context));
+
         //总是退出成功
         Toast.makeText(context, exitTips, Toast.LENGTH_SHORT).show();
         XiaojsConfig.mLoginUser = null;

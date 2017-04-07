@@ -142,5 +142,7 @@ public class XiaojsConfig {
 
     public static String AVATOR_TIME;
 
+    public static boolean CURRENT_PAGE_IN_MESSAGE = false;
+
 
 }

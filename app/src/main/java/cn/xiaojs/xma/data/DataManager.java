@@ -113,6 +113,14 @@ public class DataManager {
         context.startService(i);
     }
 
+    public static void setHasMessage(Context context,boolean has) {
+        DataPref.setHasMessage(context,has);
+    }
+
+    public static boolean hasMessage(Context context) {
+        return DataPref.hasMessage(context);
+    }
+
     /**
      * 初始化APP内存缓存数据，比较耗时
      * @param context

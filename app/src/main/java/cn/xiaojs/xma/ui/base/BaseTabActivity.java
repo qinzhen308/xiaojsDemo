@@ -33,6 +33,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.ui.widget.GooeyMenu;
 import cn.xiaojs.xma.ui.widget.LazyViewPager;
 import cn.xiaojs.xma.ui.widget.RedTipTextView;
@@ -210,6 +212,15 @@ public abstract class BaseTabActivity extends BaseActivity {
         @Override
         public void onClick(View v) {
             setTabSelected(index);
+
+            if (index == 2) {
+                hiddenMessageTips();
+                XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = true;
+                DataManager.setHasMessage(BaseTabActivity.this,false);
+            }else {
+                XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = false;
+            }
+
         }
     }
 
@@ -224,5 +235,28 @@ public abstract class BaseTabActivity extends BaseActivity {
             mRotateLeft = null;
         }
         super.onDestroy();
+    }
+
+    public void showMessageTips() {
+
+        if (mTabs == null) return;
+
+        RedTipTextView redTipTextView = mTabs.get(2);
+
+        if (!redTipTextView.mTipEnable) {
+            redTipTextView.setTipEnable(true);
+        }
+
+
+    }
+
+    public void hiddenMessageTips() {
+
+        if (mTabs == null) return;
+
+        RedTipTextView redTipTextView = mTabs.get(2);
+        if (redTipTextView.mTipEnable) {
+            redTipTextView.setTipEnable(false);
+        }
     }
 }

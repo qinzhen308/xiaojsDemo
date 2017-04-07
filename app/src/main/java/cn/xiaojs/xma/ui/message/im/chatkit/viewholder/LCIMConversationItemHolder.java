@@ -24,11 +24,13 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.target.Target;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.platform.NotificationTemplate;
@@ -64,6 +66,10 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
   RelativeLayout avatarLayout;
   LinearLayout contentLayout;
 
+  private final Object LOCK = new Object();
+  private List<Target<GlideDrawable>> mTargets = new ArrayList<Target<GlideDrawable>>();
+
+
   public LCIMConversationItemHolder(ViewGroup root) {
     super(root.getContext(), root, R.layout.lcim_conversation_item);
     initView();
@@ -83,16 +89,21 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
 
   @Override
   public void bindData(Object o) {
-    reset();
+    //reset();
+    synchronized (LOCK) {
+      for (Target<GlideDrawable> target : mTargets) {
+         target.getRequest().pause();
+      }
+
+      mTargets.clear();
+    }
     final AVIMConversation conversation = (AVIMConversation) o;
-
-
     if (conversation instanceof NotificationCategory) {
 
       unreadView.setVisibility(View.GONE);
 
       final NotificationCategory category = (NotificationCategory) conversation;
-
+      Log.i("aaa", "name="+category.getName()+"  this="+this);
       if(category.getName().equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
         avatarView.setImageResource(R.drawable.ic_message_invite);
       }else if(category.getName().equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
@@ -107,21 +118,17 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
         avatarView.setImageResource(R.drawable.ic_message_recommendedselection);
       }else if(category.getName().equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
         avatarView.setImageResource(R.drawable.ic_xjs_msg);
-      }else {
+      } else {
         avatarView.setImageResource(R.drawable.default_avatar_grey);
       }
-
       nameView.setText(category.remarks);
-
-      //holder.iconView.setType(MessageImageView.TYPE_MARK);
 
       ArrayList<Notification> notifications = category.notifications;
       if (category.count <= 0) {
-        //holder.iconView.setCount(0);
         noUnReadView.setVisibility(View.GONE);
         if (notifications!=null && notifications.size()>0) {
           Notification notify = notifications.get(0);
-          timeView.setText(TimeUtil.format(notify.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+          timeView.setText(TimeUtil.getTimeByNow(notify.createdOn));
           messageView.setText(notify.body);
         }else{
           timeView.setText("");
@@ -132,9 +139,8 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
         noUnReadView.setVisibility(View.VISIBLE);
 
         Notification notify = notifications.get(0);
-        timeView.setText(TimeUtil.format(notify.createdOn,TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+        timeView.setText(TimeUtil.getTimeByNow(notify.createdOn));
         messageView.setText(notify.body);
-        //.iconView.setCount(category.count);
       }
 
       itemView.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +181,7 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
         } else {
           updateName(conversation);
           updateIcon(conversation);
+          Log.i("aaa",  "===========this="+this);
         }
 
         updateUnreadCount(conversation);
@@ -216,11 +223,12 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
    * 一开始的时候全部置为空，避免因为异步请求造成的刷新不及时而导致的展示原有的缓存数据
    */
   private void reset() {
-    avatarView.setImageResource(0);
+    avatarView.setImageResource(R.drawable.default_avatar_grey);
     nameView.setText("");
     timeView.setText("");
     messageView.setText("");
     unreadView.setVisibility(View.GONE);
+    noUnReadView.setVisibility(View.GONE);
   }
 
   /**
@@ -234,6 +242,7 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
       protected void internalDone0(String s, AVException e) {
         if (null != e) {
           LCIMLogUtils.logException(e);
+          nameView.setText("");
         } else {
           nameView.setText(s);
         }
@@ -260,11 +269,14 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
               LCIMLogUtils.logException(e);
             }
             if (!TextUtils.isEmpty(s)) {
-              Glide.with(getContext()).load(s)
+              Target<GlideDrawable> target =  Glide.with(getContext()).load(s)
                       .bitmapTransform(circleTransform)
                       .placeholder(R.drawable.default_avatar_grey)
                       .error(R.drawable.default_avatar_grey)
                       .into(avatarView);
+              synchronized (LOCK) {
+                mTargets.add(target);
+              }
 //              Picasso.with(getContext()).load(s).e
 //                .placeholder(R.drawable.default_avatar_grey).into(avatarView);
             } else {
@@ -295,9 +307,13 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
   private void updateLastMessage(AVIMMessage message) {
     if (null != message) {
       Date date = new Date(message.getTimestamp());
-      SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
-      timeView.setText(format.format(date));
+      //SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+      //timeView.setText(format.format(date));
+      timeView.setText(TimeUtil.getTimeByNow(date));
       messageView.setText(getMessageeShorthand(getContext(), message));
+    }else{
+      timeView.setText("");
+      messageView.setText("");
     }
   }
 

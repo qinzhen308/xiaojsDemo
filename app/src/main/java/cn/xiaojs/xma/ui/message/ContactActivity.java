@@ -126,7 +126,7 @@ public class ContactActivity extends BaseActivity {
 
                 String name = TextUtils.isEmpty(contact.title)? contact.alias : contact.title;
                 String tid = contact.account;
-                //FIXME 进入聊天界面
+                //进入聊天界面
                 LeanCloudUtil.lanchChatPage(ContactActivity.this,tid);
                 //JpushUtil.launchChat(ContactActivity.this, tid,name);
 

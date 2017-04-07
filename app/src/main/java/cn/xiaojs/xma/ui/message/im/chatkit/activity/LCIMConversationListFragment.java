@@ -54,6 +54,8 @@ public class LCIMConversationListFragment extends Fragment {
 
     private UpdateReceiver updateReceiver;
 
+    private ArrayList<NotificationCategory> notificationCategories;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,7 +85,7 @@ public class LCIMConversationListFragment extends Fragment {
         IntentFilter filter = new IntentFilter();
         filter.addAction(LCIMConversationItemHolder.ACTION_UPDATE);
         updateReceiver = new UpdateReceiver();
-        getContext().registerReceiver(updateReceiver,filter);
+        getContext().registerReceiver(updateReceiver, filter);
 
         return view;
     }
@@ -100,6 +102,8 @@ public class LCIMConversationListFragment extends Fragment {
         super.onResume();
         //updateConversationList();
         getMessageOverview();
+
+
     }
 
     @Override
@@ -107,7 +111,7 @@ public class LCIMConversationListFragment extends Fragment {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
 
-        if (updateReceiver!= null) {
+        if (updateReceiver != null) {
             getContext().unregisterReceiver(updateReceiver);
             updateReceiver = null;
         }
@@ -166,27 +170,35 @@ public class LCIMConversationListFragment extends Fragment {
 
 
     private void getMessageOverview() {
-        Pagination pagination = new Pagination();
-        pagination.setPage(1);
-        pagination.setMaxNumOfObjectsPerPage(100);
 
-        NotificationDataManager.requestNotificationsOverview(getContext(), pagination,
-                new APIServiceCallback<GNOResponse>() {
-                    @Override
-                    public void onSuccess(GNOResponse object) {
+        if (notificationCategories != null) {
+            updateConversationList(notificationCategories);
+        } else {
+            Pagination pagination = new Pagination();
+            pagination.setPage(1);
+            pagination.setMaxNumOfObjectsPerPage(100);
 
-                        if (object != null && object.categories != null) {
-                            updateConversationList(object.categories);
-                        }else{
+            NotificationDataManager.requestNotificationsOverview(getContext(), pagination,
+                    new APIServiceCallback<GNOResponse>() {
+                        @Override
+                        public void onSuccess(GNOResponse object) {
+
+                            if (object != null && object.categories != null) {
+                                notificationCategories = object.categories;
+                                updateConversationList(notificationCategories);
+                            } else {
+                                updateConversationList(null);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(String errorCode, String errorMessage) {
                             updateConversationList(null);
                         }
-                    }
+                    });
+        }
 
-                    @Override
-                    public void onFailure(String errorCode, String errorMessage) {
-                        updateConversationList(null);
-                    }
-                });
+
     }
 
 

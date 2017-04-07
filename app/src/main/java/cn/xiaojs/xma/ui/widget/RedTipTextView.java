@@ -28,7 +28,7 @@ import cn.xiaojs.xma.R;
 
 public class RedTipTextView extends TextView {
 
-    private boolean mTipEnable;
+    public boolean mTipEnable;
     private Bitmap mMark;
     private Paint mPaint;
     private boolean hasDrawable;

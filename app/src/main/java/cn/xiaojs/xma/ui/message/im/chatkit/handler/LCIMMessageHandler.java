@@ -9,7 +9,12 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
+import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMFileMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMVideoMessage;
 
 import de.greenrobot.event.EventBus;
 
@@ -84,8 +89,11 @@ public class LCIMMessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
   private void sendNotification(final AVIMTypedMessage message, final AVIMConversation conversation) {
     if (null != conversation && null != message) {
-      final String notificationContent = message instanceof AVIMTextMessage ?
-        ((AVIMTextMessage) message).getText() : context.getString(R.string.lcim_unspport_message_type);
+//      String notificationContent = message instanceof AVIMTextMessage ?
+//        ((AVIMTextMessage) message).getText() : context.getString(R.string.lcim_unspport_message_type);
+
+      final String notificationContent = getNotificationContent(message);
+
       LCIMProfileCache.getInstance().getCachedUser(message.getFrom(), new AVCallback<LCChatKitUser>() {
         @Override
         protected void internalDone0(LCChatKitUser userProfile, AVException e) {
@@ -116,5 +124,23 @@ public class LCIMMessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
     intent.setPackage(context.getPackageName());
     intent.addCategory(Intent.CATEGORY_DEFAULT);
     return intent;
+  }
+
+  private String getNotificationContent(final AVIMTypedMessage message) {
+    if (message instanceof AVIMTextMessage) {
+      return ((AVIMTextMessage) message).getText();
+    } else if (message instanceof AVIMImageMessage) {
+      return context.getString(R.string.lcim_message_shorthand_image);
+    } else if (message instanceof AVIMAudioMessage) {
+      return context.getString(R.string.lcim_message_shorthand_audio);
+    } else if (message instanceof AVIMFileMessage) {
+      return context.getString(R.string.lcim_message_shorthand_file);
+    } else if (message instanceof AVIMLocationMessage) {
+      return context.getString(R.string.lcim_message_shorthand_location);
+    } else if (message instanceof AVIMVideoMessage) {
+      return context.getString(R.string.lcim_message_shorthand_video);
+    } else {
+      return context.getString(R.string.lcim_message_shorthand_unknown);
+    }
   }
 }

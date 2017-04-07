@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,13 +10,18 @@ import android.support.v4.app.Fragment;
 
 import com.orhanobut.logger.Logger;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
@@ -32,6 +38,8 @@ import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
+
+import static cn.xiaojs.xma.XiaojsApplication.ACTION_NEW_MESSAGE;
 
 public class MainActivity extends BaseTabActivity {
 
@@ -65,7 +73,13 @@ public class MainActivity extends BaseTabActivity {
             }
         }
 
+        showTips();
+
         hasShow = UpgradeManager.checkUpgrade(MainActivity.this);
+
+        if (!hasShow) {
+            requestPermission();
+        }
 
     }
 
@@ -166,6 +180,7 @@ public class MainActivity extends BaseTabActivity {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(UpgradeManager.ACTION_SHOW_UPGRADE);
+        filter.addAction(ACTION_NEW_MESSAGE);
 
         upgradeReceiver = new UpgradeReceiver();
 
@@ -176,8 +191,30 @@ public class MainActivity extends BaseTabActivity {
     @Override
     protected void onDestroy() {
         unregisterReceiver(upgradeReceiver);
+
         super.onDestroy();
     }
+
+
+    private void requestPermission() {
+
+        if (PermissionUtil.isOverMarshmallow()){
+
+            String[] needPermissions = {
+                    Manifest.permission.VIBRATE
+            };
+
+            PermissionGen.needPermission(this,1,needPermissions);
+        }
+    }
+
+    private void showTips() {
+
+        if (!XiaojsConfig.CURRENT_PAGE_IN_MESSAGE && DataManager.hasMessage(this)) {
+            showMessageTips();
+        }
+    }
+
 
 
     private class UpgradeReceiver extends BroadcastReceiver {
@@ -194,6 +231,11 @@ public class MainActivity extends BaseTabActivity {
                     UpgradeManager.showUpgrade(MainActivity.this);
                     hasShow = true;
                 }
+            }else if (action.equals(ACTION_NEW_MESSAGE)) {
+                if (!XiaojsConfig.CURRENT_PAGE_IN_MESSAGE) {
+                    showMessageTips();
+                }
+
             }
         }
     }

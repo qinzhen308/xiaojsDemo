@@ -49,6 +49,7 @@
                 android:layout_alignParentRight="true"
                 android:src="@drawable/opera_selector"
                 android:background="@android:color/transparent"
+                android:visibility="gone"
                 />
 
         <ImageButton
@@ -58,6 +59,7 @@
                 android:layout_toLeftOf="@id/chat_right_btn"
                 android:src="@drawable/clazz_info_selector"
                 android:background="@android:color/transparent"
+                android:layout_alignParentRight="true"
                 />
 
     </RelativeLayout>

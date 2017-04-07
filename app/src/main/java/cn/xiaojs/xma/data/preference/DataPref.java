@@ -29,10 +29,24 @@ public class DataPref {
     private static final String PREF_SERVER_IP = "sip";
     private static final String PREF_XAS_PORT = "xas_port";
     private static final String PREF_XLS_PORT = "xls_port";
+    private static final String PREF_NEW_MSG = "nmsg";
 
     protected static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
+
+
+    public static void setHasMessage(final Context context,boolean has) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putBoolean(PREF_NEW_MSG, has).apply();
+
+    }
+
+    public static boolean hasMessage(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getBoolean(PREF_NEW_MSG, false);
+    }
+
 
     public static void setXLSPort(final Context context,String port) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);

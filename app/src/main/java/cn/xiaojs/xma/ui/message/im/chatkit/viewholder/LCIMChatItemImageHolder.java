@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.message.im.chatkit.viewholder;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.widget.ImageView;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -54,6 +54,8 @@ public class LCIMChatItemImageHolder extends LCIMChatItemHolder {
           intent.putExtra(LCIMConstants.IMAGE_LOCAL_PATH, ((AVIMImageMessage) message).getLocalFilePath());
           intent.putExtra(LCIMConstants.IMAGE_URL, ((AVIMImageMessage) message).getFileUrl());
           getContext().startActivity(intent);
+          ((Activity)getContext()).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
         } catch (ActivityNotFoundException exception) {
           Log.i(LCIMConstants.LCIM_LOG_TAG, exception.toString());
         }
