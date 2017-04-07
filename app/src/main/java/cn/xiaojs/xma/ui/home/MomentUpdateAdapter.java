@@ -16,12 +16,15 @@ package cn.xiaojs.xma.ui.home;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
@@ -65,7 +68,7 @@ public class MomentUpdateAdapter extends AbsSwipeAdapter<DynUpdate, MomentUpdate
         holder.name.setText(bean.behavedBy.name);
         holder.behavior.setText(bean.tips);
         holder.time.setText(TimeUtil.getTimeFromNow(bean.createdOn));
-        if (bean.body == null){
+        if (bean.body == null || TextUtils.isEmpty(bean.body.summary)){
             holder.content.setVisibility(View.GONE);
         }else {
             holder.content.setVisibility(View.VISIBLE);

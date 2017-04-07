@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.w3c.dom.Text;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -75,6 +77,8 @@ public class MomentDetailActivity extends BaseActivity {
     TextView mPraise;
     @BindView(R.id.moment_detail_footer_image)
     ImageView mFooterImage;
+
+    private TextView commentCountView;
 
     private String mMomentId;
     private MomentDetailAdapter mAdapter;
@@ -164,6 +168,8 @@ public class MomentDetailActivity extends BaseActivity {
     private void initList() {
         mList = (PullToRefreshSwipeListView) findViewById(R.id.moment_detail_list);
         View header = LayoutInflater.from(this).inflate(R.layout.layout_moment_detail_header, null);
+        commentCountView = (TextView) header.findViewById(R.id.moment_detail_comment_summary);
+
         mList.getRefreshableView().addHeaderView(header);
 
         mList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -190,6 +196,11 @@ public class MomentDetailActivity extends BaseActivity {
 //
 //            }
 //        });
+    }
+
+
+    public void updateCommentCount(int count) {
+        commentCountView.setText(count+"条评论");
     }
 
     private void initView(DynamicDetail detail) {

@@ -159,6 +159,13 @@ public class LessonOperationView extends RelativeLayout {
         divider2.setVisibility(GONE);
     }
 
+    public void hiddenOpera123() {
+        opera1.setVisibility(GONE);
+        opera2.setVisibility(GONE);
+        opera3.setVisibility(GONE);
+    }
+
+
     public void setEnterColor(@ColorRes int color) {
         enter.setTextColor(getResources().getColor(color));
     }

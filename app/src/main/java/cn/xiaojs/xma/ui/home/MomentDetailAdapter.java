@@ -108,7 +108,12 @@ public class MomentDetailAdapter extends AbsSwipeAdapter<Comment, MomentDetailAd
             public void onSuccess(CollectionPage<Comment> object) {
                 if (object != null) {
                     //MomentDetailAdapter.this.onSuccess(object.objectsOfPage);
+                    ((MomentDetailActivity)mContext).updateCommentCount(object.objectsOfPage.size());
+
                     MomentDetailAdapter.this.onSuccess(HomeBusiness.resolveComments(object.objectsOfPage));
+
+
+
                 } else {
                     MomentDetailAdapter.this.onSuccess(null);
                 }
