@@ -53,7 +53,7 @@ android {
         abortOnError false
     }
 
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '24.0.3'
 }
 
 dependencies {

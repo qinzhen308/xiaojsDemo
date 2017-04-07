@@ -10,7 +10,8 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        //classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'com.meituan.android.walle:plugin:1.0.5'
 
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
@@ -39,6 +40,6 @@ task clean(type: Delete) {
 
 ext {
     compileSdkVersion = 24
-    buildToolsVersion = "25.0.0"
+    buildToolsVersion = "24.0.3"
     targetSdkVersion = 24
 }
