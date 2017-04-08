@@ -29,6 +29,7 @@ import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 
+import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
 import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
@@ -53,7 +54,7 @@ public class MainActivity extends BaseTabActivity {
         List<Fragment> fs = new ArrayList<>();
         fs.add(new HomeFragment());
         fs.add(new LiveFragment());
-        //fs.add(new NotificationFragment());
+        //fs.add(new MessageFragment());
         fs.add(new LCIMConversationListFragment());
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);

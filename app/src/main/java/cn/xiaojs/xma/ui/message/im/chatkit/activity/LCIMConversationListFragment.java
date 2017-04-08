@@ -94,7 +94,7 @@ public class LCIMConversationListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //updateConversationList();
-        getMessageOverview();
+        //getMessageOverview();
     }
 
     @Override
@@ -171,9 +171,9 @@ public class LCIMConversationListFragment extends Fragment {
 
     private void getMessageOverview() {
 
-        if (notificationCategories != null) {
-            updateConversationList(notificationCategories);
-        } else {
+//        if (notificationCategories != null) {
+//            updateConversationList(notificationCategories);
+//        } else {
             Pagination pagination = new Pagination();
             pagination.setPage(1);
             pagination.setMaxNumOfObjectsPerPage(100);
@@ -187,16 +187,25 @@ public class LCIMConversationListFragment extends Fragment {
                                 notificationCategories = object.categories;
                                 updateConversationList(notificationCategories);
                             } else {
-                                updateConversationList(null);
+
+                                if (notificationCategories !=null) {
+                                    updateConversationList(notificationCategories);
+                                }else{
+                                    updateConversationList(null);
+                                }
                             }
                         }
 
                         @Override
                         public void onFailure(String errorCode, String errorMessage) {
-                            updateConversationList(null);
+                            if (notificationCategories !=null) {
+                                updateConversationList(notificationCategories);
+                            }else{
+                                updateConversationList(null);
+                            }
                         }
                     });
-        }
+        //}
 
 
     }
