@@ -718,6 +718,7 @@
     <string name="unfollow_forbidden">您不能取消关注此账号</string>
     <string name="student">同学</string>
     <string name="search_empty_tips">暂无搜索结果~</string>
+    <string name="stranger">陌生人</string>
 
 
 </resources>

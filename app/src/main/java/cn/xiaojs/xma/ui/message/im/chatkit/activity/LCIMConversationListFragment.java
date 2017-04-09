@@ -161,6 +161,10 @@ public class LCIMConversationListFragment extends Fragment {
                 continue;
             }
 
+//            if (conversation == null) {
+//                continue;
+//            }
+
             conversationList.add(conversation);
         }
 

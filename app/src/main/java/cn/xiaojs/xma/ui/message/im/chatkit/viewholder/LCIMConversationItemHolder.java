@@ -261,9 +261,14 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
             protected void internalDone0(String s, AVException e) {
                 if (null != e) {
                     LCIMLogUtils.logException(e);
-                    nameView.setText("");
+                    nameView.setText(R.string.stranger);
                 } else {
-                    nameView.setText(s);
+
+                    if(TextUtils.isEmpty(s)) {
+                        nameView.setText(R.string.stranger);
+                    }else{
+                        nameView.setText(s);
+                    }
                 }
             }
         });

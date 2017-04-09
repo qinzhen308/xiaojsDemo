@@ -172,15 +172,15 @@ public class ContactActivity extends BaseActivity {
     }
 
 
-    private void expandALL() {
-
-        int groupCount = contactAdapter.getGroupCount();
-        for (int i = 0; i < groupCount; i++) {
-
-            listView.expandGroup(i, false);
-
-        }
-    }
+//    private void expandALL() {
+//
+//        int groupCount = contactAdapter.getGroupCount();
+//        for (int i = 0; i < groupCount; i++) {
+//
+//            listView.expandGroup(i, false);
+//
+//        }
+//    }
 
     private void toSearch(String query) {
 
@@ -189,7 +189,7 @@ public class ContactActivity extends BaseActivity {
 
         contactAdapter.filterDta(query);
 
-        expandALL();
+        //expandALL();
 
     }
 
@@ -480,7 +480,7 @@ public class ContactActivity extends BaseActivity {
             contactAdapter.changeData(contactData);
         }
 
-        expandALL();
+        //expandALL();
     }
 
 

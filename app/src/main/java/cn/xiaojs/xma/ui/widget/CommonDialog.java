@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -65,6 +66,14 @@ public class CommonDialog extends Dialog {
         mTitle = (TextView) findViewById(R.id.common_dialog_title);
         mDesc = (TextView) findViewById(R.id.common_dialog_desc);
         mContainer = (FrameLayout) findViewById(R.id.common_dialog_container);
+
+        FrameLayout rootLay = (FrameLayout) findViewById(R.id.common_dialog_root);
+        rootLay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         mNormal = (RelativeLayout) findViewById(R.id.common_dialog_normal_wrapper);
         mLeftButton = (Button) findViewById(R.id.left_btn);
         mRightButton = (Button) findViewById(R.id.right_btn);
@@ -73,8 +82,10 @@ public class CommonDialog extends Dialog {
         int width = DeviceUtil.getScreenWidth(getContext()) - 2 * getContext().getResources().getDimensionPixelSize(R.dimen.px60);
         dialogWindow.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         dialogWindow.setAttributes(params);
+
         dialogWindow.setLayout(width, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(Gravity.CENTER);
+
         mLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
