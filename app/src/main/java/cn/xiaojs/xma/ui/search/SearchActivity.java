@@ -191,6 +191,9 @@ public class SearchActivity extends BaseActivity {
         mCategory.setVisibility(View.VISIBLE);
         mEmpty.setVisibility(View.GONE);
 
+
+        reset();
+
         LessonSearch lessonSearch = searchResponse.results.lesson;
         if (lessonSearch !=null && lessonSearch.doc_count > 0) {
             final List<LessonInfo> lessonInfoList = lessonSearch.docs;
@@ -304,6 +307,12 @@ public class SearchActivity extends BaseActivity {
             }
         }
 
+    }
+
+    private void reset() {
+        mLessonWrapper.setVisibility(View.GONE);
+        mOrganizationWrapper.setVisibility(View.GONE);
+        mPeopleWrapper.setVisibility(View.GONE);
     }
 
 
