@@ -166,7 +166,7 @@ public class MomentHeader extends RelativeLayout {
             return;
         }
 
-        SocialManager.followContact(getContext(), mOwner.id,mOwner.alias, group, new APIServiceCallback<Relation>() {
+        SocialManager.followContact(getContext(), mOwner.account,mOwner.alias, group, new APIServiceCallback<Relation>() {
             @Override
             public void onSuccess(Relation object) {
                 ToastUtil.showToast(getContext(), R.string.followed);

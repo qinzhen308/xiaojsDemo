@@ -394,6 +394,7 @@ public class  LessonHomeActivity extends BaseActivity{
                 mLessonEnrollLayout.setVisibility(View.VISIBLE);
                 mConsultingBtn.setVisibility(View.GONE);
                 applyBtn.setText("进入教室");
+                applyBtn.setEnabled(true);
             }else{
                 mLessonEnrollLayout.setVisibility(View.GONE);
                 mConsultingBtn.setVisibility(View.VISIBLE);

@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -99,7 +100,7 @@ public class ImageLine extends LinearLayout {
         image.setScaleType(ImageView.ScaleType.FIT_XY);
 
         Glide.with(getContext())
-                .load(Account.getAvatar(record.createdBy.getId(),radius * 2))
+                .load(Account.getAvatar(record.createdBy.getId(), XiaojsConfig.PORTRAIT_SIZE))
                 .bitmapTransform(new CircleTransform(getContext()))
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
