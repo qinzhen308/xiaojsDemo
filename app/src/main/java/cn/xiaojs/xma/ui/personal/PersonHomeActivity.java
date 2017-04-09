@@ -180,8 +180,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         }
         mBean = home;
 
-        //FIXME 接口isFollowed没有返回正确的值，所以先从内存中判断。
-        mBean.isFollowed = DataManager.existInContacts(this,mAccount);
+        //mBean.isFollowed = DataManager.existInContacts(this,mAccount);
 
         if (!mIsMyself) {
             headerNormal(home.isFollowed);
