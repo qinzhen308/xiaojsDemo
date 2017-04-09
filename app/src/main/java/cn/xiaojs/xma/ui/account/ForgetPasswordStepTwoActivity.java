@@ -48,6 +48,8 @@ public class ForgetPasswordStepTwoActivity extends BaseActivity {
 
         mPhoneNum = getIntent().getLongExtra(KEY_MOBILE, 0);
         mCode = getIntent().getIntExtra(KEY_CODE, 0);
+
+        mNewPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
     }
 
     @OnClick({R.id.left_view, R.id.hide_show_pwd, R.id.set_pwd})

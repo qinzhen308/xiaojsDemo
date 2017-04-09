@@ -63,7 +63,11 @@ public class SingleSelectDialog {
             }
 
             View view = LayoutInflater.from(mContext).inflate(R.layout.layout_dlg_list, null);
-            ListView groupListView = (ListView) view;
+            MaxableListView groupListView = (MaxableListView) view;
+
+            if (items.length> 8) {
+                groupListView.setListViewHeight(8*80);
+            }
 
             SelectAdapter adapter = new SelectAdapter(mContext, R.layout.layout_single_select_item, R.id.title, items);
             groupListView.setAdapter(adapter);

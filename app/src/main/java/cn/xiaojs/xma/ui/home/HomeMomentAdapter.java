@@ -183,7 +183,9 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
     private void deleteByOwner(Dynamic.DynOwner owner) {
         List<Dynamic> removes = new ArrayList<>();
         for (Dynamic dynamic : getList()) {
-            if (dynamic.owner.account.equalsIgnoreCase(owner.account)) {
+            if (dynamic.owner.account != null
+                    && owner.account!=null
+                    && dynamic.owner.account.equalsIgnoreCase(owner.account)) {
                 removes.add(dynamic);
             }
         }

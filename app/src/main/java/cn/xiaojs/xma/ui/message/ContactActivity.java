@@ -523,6 +523,11 @@ public class ContactActivity extends BaseActivity {
 
         }
 
+        //FIXME 因为没有实现群聊，屏蔽班级显示
+        if (class_pos >=0 && class_pos < contactData.size()) {
+            contactData.remove(class_pos);
+        }
+
         contactData.addAll(tempMap.values());
 
     }

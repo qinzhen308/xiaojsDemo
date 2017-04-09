@@ -42,6 +42,8 @@ public class ModifyPasswordActivity extends BaseActivity {
     protected void addViewContent() {
         setMiddleTitle(R.string.account_safe);
         addView(R.layout.activity_modify_pwd);
+
+        mNewPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
     }
 
     @OnClick({R.id.left_view, R.id.hide_show_pwd, R.id.modify_pwd})

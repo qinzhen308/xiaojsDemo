@@ -79,6 +79,8 @@ public class RegisterActivity extends BaseActivity {
         mRegPwdEdit.setDelDrawable(R.drawable.ic_account_edit_text_del);
 
         setMiddleTitle(R.string.register);
+
+        mRegPwdEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
     }
 
     @OnClick({R.id.left_view, R.id.get_verify_code, R.id.hide_show_pwd,

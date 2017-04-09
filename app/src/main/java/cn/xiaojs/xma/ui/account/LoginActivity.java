@@ -84,6 +84,8 @@ public class LoginActivity extends BaseActivity {
         mLoginNamedEdit.setDelDrawable(R.drawable.ic_account_edit_text_del);
         mLoginPwdEdit.setDelDrawable(R.drawable.ic_account_edit_text_del);
 
+        mLoginPwdEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
         initRegGuideStyle();
         initLoginInfo();
 
