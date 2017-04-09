@@ -58,6 +58,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.LeanCloudUtil;
 import okhttp3.ResponseBody;
@@ -70,7 +71,7 @@ public class ContactActivity extends BaseActivity {
     PullToRefreshExpandableListView listView;
 
     @BindView(R.id.search_view)
-    EditText editText;
+    EditTextDel editText;
 
     private ContactAdapter contactAdapter;
 

@@ -37,7 +37,8 @@
                 android:paddingBottom="@dimen/px15"
                 android:paddingTop="@dimen/px15"
                 android:layout_marginLeft="@dimen/px30"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:singleLine="true"/>
 
         <TextView
                 android:id="@+id/search_ok"

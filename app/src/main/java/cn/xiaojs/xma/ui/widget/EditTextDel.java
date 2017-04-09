@@ -48,6 +48,9 @@ public class EditTextDel extends EditText {
     }
 
     private void init() {
+
+        setSingleLine(true);
+
         mDelDrawable = getResources().getDrawable(R.drawable.ic_edit_text_del);
         try {
             setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.px20));

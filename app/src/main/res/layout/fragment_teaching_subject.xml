@@ -76,6 +76,6 @@
             android:divider="@android:color/transparent"
             android:listSelector="@android:color/transparent"
             android:dividerHeight="0px"
-            android:background="@color/white"/>
+            />
 
 </LinearLayout>

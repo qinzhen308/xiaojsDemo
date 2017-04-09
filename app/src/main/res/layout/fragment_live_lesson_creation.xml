@@ -472,7 +472,8 @@
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
                     android:textSize="@dimen/font_28px"
-                    android:text="@string/publish_to_circle"/>
+                    android:text="@string/publish_to_circle"
+                    android:visibility="gone"/>
 
             <View
                     android:layout_width="match_parent"
