@@ -281,10 +281,12 @@ public class LiveLessonDetailActivity extends BaseActivity {
                     //close
                     mLessonBriefSwitcher = false;
                     mLessonBriefTv.setMaxLines(INTRO_DEFAULT_LINES);
+                    mUnfoldLessonBriefTv.setText(R.string.unfold_view_all);
                 } else {
                     //open
                     mLessonBriefSwitcher = true;
                     mLessonBriefTv.setMaxLines(INTRO_MAX_LINES);
+                    mUnfoldLessonBriefTv.setText(R.string.put_way);
                 }
                 break;
             case R.id.unfold_teacher_intro:
