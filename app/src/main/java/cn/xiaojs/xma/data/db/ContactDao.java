@@ -208,7 +208,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     .append(DBTables.TContact.TABLE_NAME)
                     .append(" where ")
                     .append(DBTables.TContact.FOLLOW_TYPE)
-                    .append(" = '")
+                    .append(" <> '")
                     .append(CLASSES)
                     .append("'")
                     .toString();
@@ -229,6 +229,8 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     contact.id = id;
 
                     contactsMap.put(id, contact);
+
+                    cursor.moveToNext();
                 }
             }
 

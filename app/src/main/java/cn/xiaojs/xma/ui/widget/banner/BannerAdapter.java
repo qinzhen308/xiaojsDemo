@@ -15,12 +15,15 @@ package cn.xiaojs.xma.ui.widget.banner;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.util.List;
+
+import cn.xiaojs.xma.ui.ArticleActivity;
 
 public class BannerAdapter extends PagerAdapter {
 
@@ -55,6 +58,15 @@ public class BannerAdapter extends PagerAdapter {
         image.setLayoutParams(lp);
         image.setImageResource(beans.get(position).resId);
         image.setScaleType(ImageView.ScaleType.FIT_XY);
+        image.setClickable(true);
+        image.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                mContext.startActivity(new Intent(mContext, ArticleActivity.class));
+            }
+        });
         container.addView(image);
         return image;
     }

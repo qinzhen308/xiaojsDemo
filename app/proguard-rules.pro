@@ -194,8 +194,7 @@
     <methods>;
 }
 
--keepclassmembers class com.avos.avoscloud.** {
-    <fields>;
-    <methods>;
+-keep class com.avos.avoscloud.** {
+    *;
 }
 

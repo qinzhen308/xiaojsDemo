@@ -240,6 +240,7 @@
         </activity>
         <activity android:name=".ui.account.AgreementActivity"/>
         <activity android:name=".ui.mine.AboutActivity"/>
+        <activity android:name=".ui.ArticleActivity"/>
         <activity android:name=".ui.lesson.EnrolledStudentActivity">
         </activity>
         <!-- QQ -->

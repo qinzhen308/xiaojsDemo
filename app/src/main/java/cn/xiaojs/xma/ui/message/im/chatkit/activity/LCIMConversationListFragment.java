@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,7 +153,15 @@ public class LCIMConversationListFragment extends Fragment {
 
 
         for (String convId : convIdList) {
-            conversationList.add(LCChatKit.getInstance().getClient().getConversation(convId));
+
+            AVIMConversation conversation = LCChatKit.getInstance().getClient().getConversation(convId);
+            if (conversation == null
+                    || TextUtils.isEmpty(conversation.getCreator())
+                    || TextUtils.isEmpty(conversation.getConversationId())) {
+                continue;
+            }
+
+            conversationList.add(conversation);
         }
 
         itemAdapter.setDataList(conversationList);
