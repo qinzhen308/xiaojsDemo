@@ -39,6 +39,9 @@ import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
+import cn.xiaojs.xma.ui.home.HomeFragment;
+import cn.xiaojs.xma.ui.home.HomeMomentAdapter;
+import cn.xiaojs.xma.ui.home.MomentDetailActivity;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -62,7 +65,17 @@ public class MomentHeader extends RelativeLayout {
     @BindView(R.id.moment_header_focus)
     FollowView mFollow;
 
+    private MomentDetailActivity detailActivity;
+
     private Dynamic.DynOwner mOwner;
+
+
+
+    public void setDetailActivity(MomentDetailActivity detailActivity) {
+        this.detailActivity = detailActivity;
+    }
+
+
 
     public MomentHeader(Context context) {
         super(context);
@@ -171,6 +184,10 @@ public class MomentHeader extends RelativeLayout {
             public void onSuccess(Relation object) {
                 ToastUtil.showToast(getContext(), R.string.followed);
                 mFollow.setVisibility(GONE);
+
+                if (detailActivity !=null) {
+                    detailActivity.followSuccessed(mOwner.account);
+                }
 
                 Contact contact = new Contact();
                 contact.alias = mOwner.alias;

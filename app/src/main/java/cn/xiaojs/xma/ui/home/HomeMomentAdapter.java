@@ -103,11 +103,11 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
             }
         });
 
-//        if (bean.owner.followed || 判断是不是自己本人){
-//            holder.ugc.setVisibility(View.VISIBLE);
-//        }else{
-//            holder.ugc.setVisibility(View.GONE);
-//        }
+        if (isFollowed(bean)){
+            holder.ugc.setVisibility(View.VISIBLE);
+        }else{
+            holder.ugc.setVisibility(View.GONE);
+        }
     }
 
     private void personalHome(Dynamic bean) {
@@ -175,8 +175,8 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         if (!bean.owner.followed)
             return;
 
-        if (AccountDataManager.unFollowable(mContext,bean.owner.account)) {
-            Toast.makeText(mContext, R.string.unfollow_forbidden,Toast.LENGTH_SHORT).show();
+        if (AccountDataManager.unFollowable(mContext, bean.owner.account)) {
+            Toast.makeText(mContext, R.string.unfollow_forbidden, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -198,7 +198,7 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         List<Dynamic> removes = new ArrayList<>();
         for (Dynamic dynamic : getList()) {
             if (dynamic.owner.account != null
-                    && owner.account!=null
+                    && owner.account != null
                     && dynamic.owner.account.equalsIgnoreCase(owner.account)) {
                 removes.add(dynamic);
             }
@@ -270,60 +270,76 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
     protected void onDataItemClick(int position, final Dynamic bean) {
 
 //        if (bean.owner.followed) {
-            Intent intent = new Intent(mContext, MomentDetailActivity.class);
-            intent.putExtra(HomeConstant.KEY_MOMENT_ID, bean.id);
-            intent.putExtra(HomeConstant.KEY_ITEM_POSITION, position);
-            ((BaseActivity) mContext).startActivityForResult(intent, HomeConstant.REQUEST_CODE_MOMENT_DETAIL);
+        Intent intent = new Intent(mContext, MomentDetailActivity.class);
+        intent.putExtra(HomeConstant.KEY_MOMENT_ID, bean.id);
+        intent.putExtra(HomeConstant.KEY_ITEM_POSITION, position);
+        ((BaseActivity) mContext).startActivityForResult(intent, HomeConstant.REQUEST_CODE_MOMENT_DETAIL);
 //        }else {
-//
-//            final CommonDialog dialog = new CommonDialog(mContext);
-//
-//            dialog.setDesc("您只有关注了他，才能查看更多哦~");
-//            dialog.setOkText("关注他");
-//            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-//                @Override
-//                public void onClick() {
-//                    dialog.dismiss();
-//                }
-//            });
-//            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-//                @Override
-//                public void onClick() {
-//                    dialog.dismiss();
-//
-//                    BaseBusiness.showFollowDialog(mContext, new BaseBusiness.OnFollowListener() {
-//                        @Override
-//                        public void onFollow(long group) {
-//                            if (group > 0) {
-//                                follow(group,bean);
-//                            }
-//                        }
-//                    });
-//                }
-//            });
-//
-//            dialog.show();
-//        }
+
 
     }
 
 
-    private void follow(final long group,final Dynamic bean) {
+    private boolean isFollowed(final Dynamic bean) {
+
+        if (bean == null || bean.owner == null) {
+            return false;
+        }
+
+        String id = bean.owner.account;
+        if (AccountDataManager.getAccountID(mContext).equals(id)) {
+            return true;
+        }
+        return bean.owner.followed;
+    }
+
+    private void showFollowFirst(final Dynamic bean) {
+
+        final CommonDialog dialog = new CommonDialog(mContext);
+
+        dialog.setDesc("您只有关注了他，才能查看更多哦~");
+        dialog.setOkText("关注他");
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+
+                BaseBusiness.showFollowDialog(mContext, new BaseBusiness.OnFollowListener() {
+                    @Override
+                    public void onFollow(long group) {
+                        if (group > 0) {
+                            follow(group, bean);
+                        }
+                    }
+                });
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void follow(final long group, final Dynamic bean) {
         if (bean.owner == null) {
             return;
         }
 
-        SocialManager.followContact(mContext, bean.owner.account,bean.owner.alias, group, new APIServiceCallback<Relation>() {
+        SocialManager.followContact(mContext, bean.owner.account, bean.owner.alias, group, new APIServiceCallback<Relation>() {
             @Override
             public void onSuccess(Relation object) {
                 ToastUtil.showToast(mContext, R.string.followed);
-                bean.owner.followed = true;
-                notifyDataSetChanged();
 
-//                Contact contact = new Contact();
-//                contact.alias = mOwner.alias;
-//                contact.account = mOwner.id;
-//                DataManager.addContact(mContext, group, contact);
+                updateFollow(bean.owner.account);
+
+                Contact contact = new Contact();
+                contact.alias = bean.owner.alias;
+                contact.account = bean.owner.id;
+                DataManager.addContact(mContext, group, contact);
             }
 
             @Override
@@ -345,7 +361,6 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
     }
 
     public void update(DynamicStatus status) {
-        if (status != null) {
             for (Dynamic dynamic : getList()) {
                 if (dynamic.id.equalsIgnoreCase(status.id)) {
                     dynamic.liked = status.liked;
@@ -354,6 +369,27 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
                     break;
                 }
             }
+    }
+
+    public void updateFollow(String account) {
+        if (account != null) {
+            for (Dynamic dynamic : getList()) {
+                if (dynamic.owner.account.equalsIgnoreCase(account)) {
+                    dynamic.owner.followed = true;
+                }
+            }
+            notifyDataSetChanged();
+        }
+    }
+
+    public void updateUnFollow(String account) {
+        if (account != null) {
+            for (Dynamic dynamic : getList()) {
+                if (dynamic.owner.account.equalsIgnoreCase(account)) {
+                    dynamic.owner.followed = false;
+                }
+            }
+            notifyDataSetChanged();
         }
     }
 
@@ -385,15 +421,16 @@ public class HomeMomentAdapter extends AbsSwipeAdapter<Dynamic, HomeMomentAdapte
         }
 
         public void showOrHiddenMore(Dynamic bean) {
-            if (AccountDataManager.unFollowable(mContext,bean.owner.account)) {
+            if (AccountDataManager.unFollowable(mContext, bean.owner.account)) {
                 ugc.setMoreVisibility(View.GONE);
-            }else {
+            } else {
                 ugc.setMoreVisibility(View.VISIBLE);
             }
         }
 
         public Holder(View view) {
             super(view);
+
         }
     }
 
