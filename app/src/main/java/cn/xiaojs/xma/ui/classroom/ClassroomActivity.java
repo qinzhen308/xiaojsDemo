@@ -494,11 +494,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * @param ctlSession   课程session
      */
     private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession, final OnDataLoadListener dataLoadListener) {
-        if (Constants.TEACHING_MODE == ctlSession.mode) {
-            mUser = Constants.User.TEACHER;
-        } else {
-            mUser = ClassroomBusiness.getUser(ctlSession.psType);
+        mUser = ClassroomBusiness.getUser(ctlSession.psType);
+        if (mUser == Constants.User.TEACHER) {
+            if (Constants.PARTICIPANT_MODE == ctlSession.mode) {
+                mUser = Constants.User.STUDENT;
+                //屏蔽聊天和视频截图按钮
+                mTakePicBtn.setVisibility(View.GONE);
+                mEnterTalkBtn.setVisibility(View.GONE);
+            }
         }
+
         mLiveSessionState = ctlSession.state;
         mLessonTitle.setText(!TextUtils.isEmpty(ctlSession.titleOfPrimary) ? ctlSession.titleOfPrimary : ctlSession.ctl.title);
         mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
