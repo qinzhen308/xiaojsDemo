@@ -429,7 +429,7 @@ public class TimeUtil {
             strBuilder.append(hh).append("小时");
         }
 
-        if (dd <=0 && mm >0) {
+        if (dd <= 0 && mm > 0) {
             strBuilder.append(mm).append("分钟");
         }
 
@@ -767,6 +767,13 @@ public class TimeUtil {
      * 根据传入的日期返回xx分钟之前/后,今天、明天、昨天或者具体时间
      */
     public static String getTimeByNow(Date date) {
+        return getTimeByNow(date, false);
+    }
+
+    /**
+     * 根据传入的日期返回xx分钟之前/后,今天、明天、昨天或者具体时间
+     */
+    public static String getTimeByNow(Date date, boolean needYear) {
         StringBuilder time = new StringBuilder();
         Date now = new Date(System.currentTimeMillis());
         if (inOneHour(date, now)) {
@@ -781,7 +788,11 @@ public class TimeUtil {
             time.append("明天 ");
             time.append(format(date, TIME_HH_MM));
         } else if (getTime(date, Calendar.YEAR) == getTime(now, Calendar.YEAR)) {//同一年
-            time.append(format(date, TIME_MM_DD_HH_MM));
+            if (needYear) {
+                time.append(format(date, TIME_YYYY_MM_DD_HH_MM));
+            } else {
+                time.append(format(date, TIME_MM_DD_HH_MM));
+            }
         } else {
             time.append(format(date, TIME_YYYY_MM_DD_HH_MM));
         }

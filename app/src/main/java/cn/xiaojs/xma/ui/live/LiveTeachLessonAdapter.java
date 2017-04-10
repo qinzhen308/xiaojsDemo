@@ -103,7 +103,7 @@ public class LiveTeachLessonAdapter extends CanInScrollviewListView.Adapter {
         }
         holder.enrollDesc.setText(mContext.getString(R.string.course_stu, bean.getEnroll().current, bean.getEnroll().max));
 
-        holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart()) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
+        holder.time.setText(TimeUtil.getTimeByNow(bean.getSchedule().getStart(), true) + " " + TimeUtil.getTimeFormat(bean.getSchedule().getStart(), bean.getSchedule().getDuration()));
         holder.name.setText(bean.getTitle());
         //Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
         if (TextUtils.isEmpty(bean.getState()))
