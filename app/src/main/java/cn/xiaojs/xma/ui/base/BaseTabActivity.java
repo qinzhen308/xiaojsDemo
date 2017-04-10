@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.base;
  *
  * ======================================================================================== */
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
@@ -175,6 +176,15 @@ public abstract class BaseTabActivity extends BaseActivity {
         mViewPager.setCurrentItem(position);
         mCurrentIndex = position;
         onTabClick(position);
+
+        if (position == 2) {
+            hiddenMessageTips();
+            XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = true;
+            DataManager.setHasMessage(BaseTabActivity.this,false);
+        }else {
+            XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = false;
+        }
+
     }
 
     protected void onTabClick(int position) {
@@ -212,14 +222,6 @@ public abstract class BaseTabActivity extends BaseActivity {
         @Override
         public void onClick(View v) {
             setTabSelected(index);
-
-            if (index == 2) {
-                hiddenMessageTips();
-                XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = true;
-                DataManager.setHasMessage(BaseTabActivity.this,false);
-            }else {
-                XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = false;
-            }
 
         }
     }

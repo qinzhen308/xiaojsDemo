@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import com.orhanobut.logger.Logger;
 
@@ -33,6 +34,7 @@ import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
 import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
+import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -46,6 +48,7 @@ public class MainActivity extends BaseTabActivity {
 
     private UpgradeReceiver upgradeReceiver;
     private boolean hasShow = false;
+
 
     @Override
     protected void initView() {
@@ -78,14 +81,21 @@ public class MainActivity extends BaseTabActivity {
             requestPermission();
         }
 
+        dealFromNotify(getIntent());
+
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (intent != null) {
-            int position = intent.getIntExtra(KEY_POSITION, -1);
-            if (position >= 0) {
-                setTabSelected(position);
+
+        if (dealFromNotify(intent)) {
+
+        }else {
+            if (intent != null) {
+                int position = intent.getIntExtra(KEY_POSITION, -1);
+                if (position >= 0) {
+                    setTabSelected(position);
+                }
             }
         }
     }
@@ -97,6 +107,27 @@ public class MainActivity extends BaseTabActivity {
 //        if (fragment != null && fragment instanceof NotificationFragment) {
 //            ((NotificationFragment) fragment).notifyConversation();
 //        }
+    }
+
+
+    private boolean dealFromNotify(Intent intent) {
+        String action = intent.getAction();
+        if (!TextUtils.isEmpty(action) && action.equals(LCIMConstants.CHAT_NOTIFICATION_ACTION)) {
+
+            setTabSelected(2);
+
+            Intent ifarIntent = new Intent();
+            ifarIntent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
+            ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, intent.getStringExtra(LCIMConstants.CONVERSATION_ID));
+            ifarIntent.putExtra(LCIMConstants.PEER_ID, intent.getStringExtra(LCIMConstants.PEER_ID));
+            ifarIntent.setPackage(getPackageName());
+            ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+            startActivity(ifarIntent);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -192,6 +223,8 @@ public class MainActivity extends BaseTabActivity {
 
         super.onDestroy();
     }
+
+
 
 
     private void requestPermission() {

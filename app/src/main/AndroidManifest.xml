@@ -58,7 +58,8 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".ui.SplashActivity"
-                android:theme="@style/SplashTheme">
+                android:theme="@style/SplashTheme"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -89,7 +90,12 @@
         <activity
                 android:name=".ui.MainActivity"
                 android:launchMode="singleTask"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                >
+            <intent-filter>
+                <action android:name="cn.leancloud.chatkit.chat_notification_action"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
         <activity
                 android:name=".common.crop.CropImageActivity"
@@ -443,23 +449,24 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
         <!-- 实时通信模块、推送 END -->
 
-        <activity android:name=".ui.message.im.chatkit.activity.LCIMConversationActivity"
-                  android:launchMode="singleTask">
+        <activity
+                android:name=".ui.message.im.chatkit.activity.LCIMConversationActivity"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="cn.leancloud.chatkit.conversation_item_click_action"/>
-                <action android:name="cn.leancloud.chatkit.chat_notification_action"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.message.im.chatkit.activity.LCIMImageActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/scan_image_activity"/>
+        <activity
+                android:name=".ui.message.im.chatkit.activity.LCIMImageActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/scan_image_activity"/>
 
     </application>
 

@@ -596,8 +596,23 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mIconResId = resId;
     }
 
+
     public void setButtonDesc(String desc) {
         mButtonDesc = desc;
+    }
+
+    public void setIconNow(int resId) {
+        mIconResId = resId;
+        mEmptyImage.setImageResource(mIconResId);
+    }
+
+    public void setDescNow(String desc) {
+        mDesc = desc;
+        mEmptyDesc.setText(mDesc);
+    }
+
+    public void setButtonVisible(int visible) {
+        mEmptyButton.setVisibility(visible);
     }
 
     private void addEmptyView() {

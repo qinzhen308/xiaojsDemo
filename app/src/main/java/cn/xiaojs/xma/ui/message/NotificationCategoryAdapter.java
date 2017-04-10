@@ -62,7 +62,7 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
         }else {
             holder.content.setTextColor(mContext.getResources().getColor(R.color.font_black));
         }
-        holder.time.setText(TimeUtil.getTimeByNow(bean.createdOn));
+        holder.time.setText(TimeUtil.getTimeFromNow(bean.createdOn));
         holder.content.setText(bean.body);
         if (bean.actions != null && bean.actions.length == 2){
             holder.opera2.setText(bean.actions[0].getTitle());

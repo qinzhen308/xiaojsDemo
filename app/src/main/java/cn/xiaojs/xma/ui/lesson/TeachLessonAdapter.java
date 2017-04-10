@@ -64,6 +64,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     private Criteria mCriteria;
     private LessonFragment mFragment;
 
+
     public TeachLessonAdapter(Context context, PullToRefreshSwipeListView listView, LessonFragment fragment) {
         super(context, listView);
         mFragment = fragment;
@@ -284,7 +285,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 holder.operation.hiddenDiver();
                 holder.operation.hiddenOpera123();
                 holder.operation.setItems(null);
-            }else{
+            } else {
                 holder.operation.setItems(items);
             }
 
@@ -828,7 +829,23 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         mFragment.hideTop();
                     }
                 }
+
+
                 TeachLessonAdapter.this.onSuccess(object.getObjectsOfPage());
+
+                if (mContext instanceof TeachLessonActivity) {
+                    TeachLessonActivity activity = ((TeachLessonActivity) mContext);
+                    if (activity.timePosition > 0 || activity.statePosition > 0) {
+                        setDescNow("没有符合该筛选条件的课～");
+                        setIconNow(R.drawable.ic_data_empty);
+                        setButtonVisible(View.GONE);
+                    } else {
+                        setDescNow("你还没开过课哦～");
+                        setIconNow(R.drawable.ic_teach_empty);
+                        setButtonVisible(View.VISIBLE);
+                    }
+                }
+
             }
 
             @Override
@@ -852,6 +869,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             mFragment.showTop();
         }
     }
+
 
     @Override
     protected void onEmptyButtonClick() {

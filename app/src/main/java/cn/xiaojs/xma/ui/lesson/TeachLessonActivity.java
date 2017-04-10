@@ -43,9 +43,9 @@ public class TeachLessonActivity extends BaseActivity {
     @BindView(R.id.course_filter)
     TextView mFilter;
 
-    private int timePosition;
-    private int statePosition;
-    private int sourcePosition;
+    protected int timePosition;
+    protected int statePosition;
+    protected int sourcePosition;
 
     private TeachLessonAdapter mAdapter;
 
