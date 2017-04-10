@@ -116,9 +116,10 @@
                 android:layout_height="wrap_content">
 
             <TextView
-                    android:id="@+id/following"
+                    android:id="@+id/fans"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_23px"
+                    android:layout_marginLeft="@dimen/px30"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -132,10 +133,9 @@
                     android:background="@color/white"/>
 
             <TextView
-                    android:id="@+id/fans"
+                    android:id="@+id/following"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_23px"
-                    android:layout_marginLeft="@dimen/px30"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
