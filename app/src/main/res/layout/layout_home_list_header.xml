@@ -8,7 +8,7 @@
     <cn.xiaojs.xma.ui.widget.banner.BannerView
             android:id="@+id/home_banner"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px335"/>
+            android:layout_height="@dimen/px345"/>
 
     <ImageView
             android:id="@+id/empty_image"
