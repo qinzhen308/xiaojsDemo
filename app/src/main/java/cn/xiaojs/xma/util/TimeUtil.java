@@ -750,21 +750,32 @@ public class TimeUtil {
     public static String getTimeFromNow(Date date) {
         StringBuilder time = new StringBuilder();
         Date now = new Date(System.currentTimeMillis());
-        if (inOneHour(date, now)) {
-            int target = getTime(date, Calendar.MINUTE);
-            int nowMin = getTime(now, Calendar.MINUTE);
+        if (durationOneHour(date, now)) {
 
-            int fact = nowMin - target;
-            if (fact > 0) {
-                time.append(fact);
-                time.append("分钟前");
-            } else {
+            long delta = now.getTime() - date.getTime();
+            long minutes = toMinutes(delta);
+            if (minutes <=0) {
                 time.append("刚刚");
+            }else{
+                time.append(minutes);
+                time.append("分钟前");
             }
+
+
+//            int target = getTime(date, Calendar.MINUTE);
+//            int nowMin = getTime(now, Calendar.MINUTE);
+//
+//            int fact = nowMin - target;
+//            if (fact > 0) {
+//                time.append(fact);
+//                time.append("分钟前");
+//            } else {
+//                time.append("刚刚");
+//            }
 
         } else if (isSameDay(date, now)) {
             time.append(format(date, TIME_HH_MM));
-        } else if (isYesterday(date, now)) {
+        } else if (isYesterday2(date, now)) {
             time.append("昨天 ");
             time.append(format(date, TIME_HH_MM));
         } else {
@@ -811,6 +822,27 @@ public class TimeUtil {
         return time.toString();
     }
 
+    public static String getShorTimeOrWithYear(Date date, boolean needYear) {
+        StringBuilder time = new StringBuilder();
+        Date now = new Date(System.currentTimeMillis());
+        if (inOneHour(date, now)) {
+            time.append(getTimeInOneHour(date, now));
+        } else if (isSameDay(date, now)) {
+            time.append(format(date, TIME_HH_MM));
+        } else if (isYesterday(date, now)) {
+            time.append("昨天 ");
+            time.append(format(date, TIME_HH_MM));
+        }else {
+            if (needYear) {
+                time.append(format(date, TIME_YYYY_MM_DD_HH_MM));
+            } else {
+                time.append(format(date, TIME_MM_DD_HH_MM));
+            }
+        }
+        return time.toString();
+    }
+
+
     private static boolean isSameDay(Date dayOne, Date dayTwo) {
         return getTime(dayOne, Calendar.YEAR) == getTime(dayTwo, Calendar.YEAR)
                 && getTime(dayOne, Calendar.MONTH) == getTime(dayTwo, Calendar.MONTH)
@@ -824,6 +856,14 @@ public class TimeUtil {
         return false;
     }
 
+    private static boolean durationOneHour(Date target, Date now) {
+        if (isSameDay(target, now)) {
+            return now.getTime() - target.getTime() < 60 * 60 * 1000;
+        }
+        return false;
+    }
+
+
     private static boolean isYesterday(Date target, Date now) {
         long dis = now.getTime() - target.getTime();
         if (dis > 1000 * 3600 * 24 && dis < 1000 * 3600 * 24 * 2) {
@@ -831,6 +871,16 @@ public class TimeUtil {
         }
         return false;
     }
+
+
+    private static boolean isYesterday2(Date target, Date now) {
+        long dis = now.getTime() - target.getTime();
+        if (dis < 1000 * 3600 * 24 * 2) {
+            return true;
+        }
+        return false;
+    }
+
 
     private static boolean isTomorrow(Date target, Date now) {
         long dis = target.getTime() - now.getTime();
@@ -941,5 +991,30 @@ public class TimeUtil {
         }
 
         return hh + ":" + mm + ":" + ss;
+    }
+
+
+    private static long toSeconds(long date) {
+        return date / 1000L;
+    }
+
+    private static long toMinutes(long date) {
+        return toSeconds(date) / 60L;
+    }
+
+    private static long toHours(long date) {
+        return toMinutes(date) / 60L;
+    }
+
+    private static long toDays(long date) {
+        return toHours(date) / 24L;
+    }
+
+    private static long toMonths(long date) {
+        return toDays(date) / 30L;
+    }
+
+    private static long toYears(long date) {
+        return toMonths(date) / 365L;
     }
 }
