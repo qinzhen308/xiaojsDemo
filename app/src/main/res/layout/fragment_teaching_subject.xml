@@ -4,6 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:focusable="true"
+              android:background="@color/main_bg"
               android:focusableInTouchMode="true">
 
     <include layout="@layout/layout_base_header"/>
@@ -75,7 +76,6 @@
             android:layout_height="match_parent"
             android:divider="@android:color/transparent"
             android:listSelector="@android:color/transparent"
-            android:dividerHeight="0px"
-            />
+            android:dividerHeight="0px"/>
 
 </LinearLayout>
