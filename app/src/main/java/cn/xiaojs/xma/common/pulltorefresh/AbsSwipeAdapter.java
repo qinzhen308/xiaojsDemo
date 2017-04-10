@@ -165,7 +165,10 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     }
 
-    public PullToRefreshBase.Mode getRefreshMode() {
+    /**
+     * 子类复写下拉刷新模式
+     */
+    protected PullToRefreshBase.Mode getRefreshMode() {
         return PullToRefreshBase.Mode.BOTH;
     }
 
@@ -642,7 +645,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         if (mEmptyLayout != null) {
             ViewGroup.LayoutParams params = mEmptyLayout.getLayoutParams();
             if (params instanceof RelativeLayout.LayoutParams) {
-                relParams = (RelativeLayout.LayoutParams)params;
+                relParams = (RelativeLayout.LayoutParams) params;
             }
         }
 
@@ -691,7 +694,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         if (mFailedLayout != null) {
             ViewGroup.LayoutParams params = mFailedLayout.getLayoutParams();
             if (params instanceof RelativeLayout.LayoutParams) {
-                relParams = (RelativeLayout.LayoutParams)params;
+                relParams = (RelativeLayout.LayoutParams) params;
             }
         }
 

@@ -1,7 +1,6 @@
 package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,11 +11,11 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.CategoriesManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
-import retrofit2.http.PUT;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -44,6 +43,11 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
 
     public void setOnSubjectSelectedListener(OnSubjectSelectedListener listener) {
         mSelectedListener = listener;
+    }
+
+    @Override
+    protected PullToRefreshBase.Mode getRefreshMode() {
+        return PullToRefreshBase.Mode.DISABLED;
     }
 
     @Override
@@ -94,14 +98,17 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
 
     @Override
     protected void doRequest() {
+        showProgress(false);
         CategoriesManager.getSubjects(mContext, mParentId, mPagination, new APIServiceCallback<List<CSubject>>() {
             @Override
             public void onSuccess(List<CSubject> object) {
+                cancelProgress();
                 TeachingSubjectAdapter.this.onSuccess(object);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
                 TeachingSubjectAdapter.this.onFailure(errorCode, errorMessage);
             }
         });
