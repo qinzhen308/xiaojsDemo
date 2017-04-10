@@ -278,10 +278,10 @@ public class LiveRecordView extends BaseMediaView implements
                 case READY:
                     // start streaming when READY
                     mIsReady = true;
-                    //id = MSG_SHOW_LOADING;
-                    //start();
-                    mHandler.removeCallbacksAndMessages(null);
-                    mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
+                    if (mHandler != null) {
+                        mHandler.removeCallbacksAndMessages(null);
+                        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
+                    }
                     info("READY");
                     break;
                 /**
@@ -425,7 +425,9 @@ public class LiveRecordView extends BaseMediaView implements
                     info("TORCH_INFO");
                     break;
             }
-            mHandler.sendMessage(mHandler.obtainMessage(id));
+            if (mHandler != null) {
+                mHandler.sendMessage(mHandler.obtainMessage(id));
+            }
 
             if (mOuterStreamingStateChangedListener != null) {
                 mOuterStreamingStateChangedListener.onStateChanged(streamingState, extra);
@@ -438,7 +440,9 @@ public class LiveRecordView extends BaseMediaView implements
         if (XiaojsConfig.DEBUG) {
             Message msg = Message.obtain();
             msg.obj = info;
-            mHandler.sendMessage(msg);
+            if (mHandler != null) {
+                mHandler.sendMessage(msg);
+            }
         }
     }
 
