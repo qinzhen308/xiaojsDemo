@@ -210,8 +210,12 @@ public class MineFragment extends BaseFragment {
 
     private void setUgc(Account account) {
         if (account != null && account.stats != null) {
-            mFansTv.setText(getString(R.string.fans_num, account.stats.fans));
-            mFollowingTv.setText(getString(R.string.follow_num, account.stats.followships));
+
+            int fancount = account.stats.fans > 0? account.stats.fans: 0;
+            int followcount = account.stats.followships > 0? account.stats.followships: 0;
+
+            mFansTv.setText(getString(R.string.fans_num, fancount));
+            mFollowingTv.setText(getString(R.string.follow_num, followcount));
         } else {
             mFansTv.setText(getString(R.string.fans_num, 0));
             mFollowingTv.setText(getString(R.string.follow_num, 0));

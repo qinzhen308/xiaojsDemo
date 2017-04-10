@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.ui.message.im.chatkit.LCChatKit;
 import cn.xiaojs.xma.ui.message.im.chatkit.cache.LCIMConversationItemCache;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
@@ -45,8 +46,6 @@ public class LCIMConversationActivity extends FragmentActivity {
 
     protected LCIMConversationFragment conversationFragment;
 
-    private AVIMConversation conversation;
-
     private String accountId;
 
     @Override
@@ -56,6 +55,8 @@ public class LCIMConversationActivity extends FragmentActivity {
         ButterKnife.bind(this);
         conversationFragment = (LCIMConversationFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
         initByIntent(getIntent());
+
+        DataManager.setHasMessage(this,false);
     }
 
 
