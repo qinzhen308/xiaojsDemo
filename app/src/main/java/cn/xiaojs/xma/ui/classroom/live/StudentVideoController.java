@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.live;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
 public class StudentVideoController extends VideoController {
     private CommonDialog mAgreeOpenCamera;
@@ -73,12 +75,10 @@ public class StudentVideoController extends VideoController {
     @Override
     public void confirmPublishStream(boolean confirm) {
         if (mPublishType == StreamType.TYPE_STREAM_PEER_TO_PEER) {
-            mStreamPublishing = true;
             mPublishView.setPath(mPublishStreamUrl);
             mPublishView.setVisibility(View.VISIBLE);
             mPublishView.resume();
         } else if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL) {
-            mStreamPublishing = true;
             mIndividualView.setPath(mPublishStreamUrl);
             mIndividualView.setVisibility(View.VISIBLE);
             mIndividualView.resume();
@@ -139,7 +139,7 @@ public class StudentVideoController extends VideoController {
                     mPublishView.setVisibility(View.GONE);
                 }
             }
-        } else if (type == StreamType.TYPE_STREAM_INDIVIDUAL){
+        } else if (type == StreamType.TYPE_STREAM_INDIVIDUAL) {
             if (mIndividualView != null) {
                 if (mStreamPublishing) {
                     if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
@@ -199,7 +199,7 @@ public class StudentVideoController extends VideoController {
                 callback.onFrameCaptured(bmp);
             }
         } else if (mIndividualView.getVisibility() == View.VISIBLE) {
-            ((LiveRecordView)mIndividualView).captureOriginalFrame(callback);
+            ((LiveRecordView) mIndividualView).captureOriginalFrame(callback);
         } else {
             if (callback != null) {
                 callback.onFrameCaptured(null);
@@ -211,6 +211,7 @@ public class StudentVideoController extends VideoController {
     public void onSteamStateChanged(StreamingState streamingState, Object data) {
         switch (streamingState) {
             case STREAMING:
+                mStreamPublishing = true;
                 FeedbackStatus fbStatus = new FeedbackStatus();
                 fbStatus.status = Live.MediaStatus.READY;
                 int eventType = mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL ? Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;
@@ -222,14 +223,24 @@ public class StudentVideoController extends VideoController {
                             if (response != null && response.result) {
                                 if (mStreamListener != null) {
                                     mStreamListener.onStreamStarted(mUser, mPublishType);
+                                    muteOrUnmute();
                                 }
+
                             } else {
                                 //暂停推流
-                                pausePublishStream(mPublishType);
+                                if (!mPausePublishByToggleResolution) {
+                                    pausePublishStream(mPublishType);
+                                }
+
+                                mPausePublishByToggleResolution = false;
                             }
                         } else {
                             //暂停推流
-                            pausePublishStream(mPublishType);
+                            if (!mPausePublishByToggleResolution) {
+                                pausePublishStream(mPublishType);
+                            }
+
+                            mPausePublishByToggleResolution = false;
                         }
                     }
                 });
@@ -297,6 +308,49 @@ public class StudentVideoController extends VideoController {
     protected void onStringingStopped(Object... args) {
         if (args != null && args.length > 0) {
             pausePlayStream(mPlayType);
+        }
+    }
+
+    @Override
+    public void openOrCloseCamera() {
+
+    }
+
+    @Override
+    public void muteOrUnmute() {
+        SharedPreferences sf = XjsUtils.getSharedPreferences();
+        boolean audioOpen = sf.getBoolean(Constants.KEY_MICROPHONE_OPEN, true);
+        if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL) {
+            if (audioOpen) {
+                if (mIndividualView.isMute()) {
+                    mIndividualView.mute();
+                }
+            } else {
+                if (!mIndividualView.isMute()) {
+                    mIndividualView.mute();
+                }
+            }
+        } else if (mPublishType == Su.EventType.STREAMING_STARTED) {
+            if (audioOpen) {
+                if (mPublishView.isMute()) {
+                    mPublishView.mute();
+                }
+            } else {
+                if (!mPublishView.isMute()) {
+                    mPublishView.mute();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void togglePublishResolution() {
+        if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL) {
+            if (mIndividualView instanceof LiveRecordView) {
+                ((LiveRecordView)mIndividualView).togglePublishResolution();
+            }
+        } else if (mPublishType == Su.EventType.STREAMING_STARTED) {
+            mPublishView.togglePublishResolution();
         }
     }
 }

@@ -41,28 +41,14 @@ public interface Constants {
     public final static int QUALITY_STANDARD = 1; // 标准
     public final static int QUALITY_FLUENT = 2; // 流畅
 
-    public final static int SHARE_IMG_SIZE = 800; //分享图片的大小不超过800
+    /**
+     * switcher
+     */
+    public final static int SWITCHER_MOBILE_NETWORK_LIVE = 1; //移动网络直播
+    public final static int SWITCHER_CAMERA = 2; //摄像头是否打开
+    public final static int SWITCHER_AUDIO = 3; //麦克风是否打开
 
-    /**
-     * classroom url
-     */
-    public final static String CLASSROOM_BASE_URL = "192.168.100.3";
-    /**
-     * classroom port
-     */
-    public final static String CLASSROOM_PORT = "7000";
-    /**
-     * classroom path(namespace), which lesson id
-     */
-    public final static String CLASSROOM_PATH = "9689A606";
-    /**
-     * draw
-     */
-    public final static String ROOM_DRAW = "drawing";
-    /**
-     * chat
-     */
-    public final static String ROOM_CHAT = "聊天";
+    public final static int SHARE_IMG_SIZE = 800; //分享图片的大小不超过800
 
     /**
      * 客户端用户

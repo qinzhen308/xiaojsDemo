@@ -69,6 +69,7 @@ public abstract class VideoController implements StreamConfirmCallback {
 
     private Handler mHandler;
     private CommonDialog mMobileNetworkDialog;
+    protected boolean mPausePublishByToggleResolution;
 
     public VideoController(Context context, View root, OnStreamStateChangeListener listener) {
         mContext = context;
@@ -265,6 +266,18 @@ public abstract class VideoController implements StreamConfirmCallback {
         }
     };
 
+    /**
+     * 开启静音/取消静音
+     */
+    public abstract void muteOrUnmute();
+
+    /**
+     * 打开/关闭摄像头
+     */
+    public abstract void openOrCloseCamera();
+
+    public abstract void togglePublishResolution();
+
     public void release() {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
@@ -364,6 +377,10 @@ public abstract class VideoController implements StreamConfirmCallback {
                 confirmPlayStream(true);
             }
         }
+    }
+
+    public void setPublishStreamByToggleResolution(boolean isToggleResolution) {
+        mPausePublishByToggleResolution = isToggleResolution;
     }
 
 }

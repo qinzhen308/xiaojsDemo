@@ -889,6 +889,29 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void openSetting() {
         if (mSettingPanel == null) {
             mSettingPanel = new SettingPanel(this);
+            mSettingPanel.setOnSettingChangedListener(new OnSettingChangedListener() {
+                @Override
+                public void onResolutionChanged(int quality) {
+                    //切换推流视频分辨率
+                    if (mClassroomController != null) {
+                        mClassroomController.togglePublishStreamResolution();
+                    }
+                }
+
+                @Override
+                public void onSwitcherChanged(int switcher, boolean open) {
+                    if (mClassroomController != null) {
+                        switch (switcher) {
+                            case Constants.SWITCHER_AUDIO:
+                                mClassroomController.muteOrUnmute();
+                                break;
+                            case Constants.SWITCHER_CAMERA:
+                                mClassroomController.openOrCloseCamera();
+                                break;
+                        }
+                    }
+                }
+            });
         }
         mSettingPanel.show(mDrawerLayout, mRightDrawer);
         mOpenedPanel = mSettingPanel;
