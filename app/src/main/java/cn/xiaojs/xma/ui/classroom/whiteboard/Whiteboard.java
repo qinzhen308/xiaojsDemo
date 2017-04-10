@@ -41,6 +41,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -425,10 +426,17 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             @Override
             protected Bitmap doInBackground(Void... params) {
                 try {
+                    int w = mBlackboardWidth;
+                    int h = mBlackboardHeight;
+                    if (w == 0 || h == 0) {
+                        w = ProtocolConfigs.VIRTUAL_WIDTH;
+                        h = ProtocolConfigs.VIRTUAL_HEIGHT;
+                    }
+
                     return Glide.with(mContext)
                             .load(uri)
                             .asBitmap()
-                            .into(mBlackboardWidth, mBlackboardHeight)
+                            .into(w, h)
                             .get();
                 } catch (Exception e) {
                     Logger.i(e != null ? e.getLocalizedMessage() : "null");
