@@ -55,148 +55,140 @@ import cn.xiaojs.xma.util.TimeUtil;
  */
 public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
 
-  public static final String ACTION_UPDATE = "lc_notify_update";
+    public static final String ACTION_UPDATE = "lc_notify_update";
 
-  ImageView avatarView;
-  TextView unreadView;
-  TextView noUnReadView;
-  TextView messageView;
-  TextView timeView;
-  TextView nameView;
-  RelativeLayout avatarLayout;
-  LinearLayout contentLayout;
+    ImageView avatarView;
+    TextView unreadView;
+    TextView noUnReadView;
+    TextView messageView;
+    TextView timeView;
+    TextView nameView;
+    RelativeLayout avatarLayout;
+    LinearLayout contentLayout;
 
-  private final Object LOCK = new Object();
-  private List<Target<GlideDrawable>> mTargets = new ArrayList<Target<GlideDrawable>>();
+    private final Object LOCK = new Object();
+    private List<Target<GlideDrawable>> mTargets = new ArrayList<Target<GlideDrawable>>();
 
 
-  public LCIMConversationItemHolder(ViewGroup root) {
-    super(root.getContext(), root, R.layout.lcim_conversation_item);
-    initView();
-  }
-
-  public void initView() {
-    avatarView = (ImageView) itemView.findViewById(R.id.conversation_item_iv_avatar);
-    nameView = (TextView) itemView.findViewById(R.id.conversation_item_tv_name);
-
-    timeView = (TextView) itemView.findViewById(R.id.conversation_item_tv_time);
-    unreadView = (TextView) itemView.findViewById(R.id.conversation_item_tv_unread);
-    noUnReadView = (TextView) itemView.findViewById(R.id.notify_item_tv_unread);
-    messageView = (TextView) itemView.findViewById(R.id.conversation_item_tv_message);
-    avatarLayout = (RelativeLayout) itemView.findViewById(R.id.conversation_item_layout_avatar);
-    contentLayout = (LinearLayout) itemView.findViewById(R.id.conversation_item_layout_content);
-  }
-
-  @Override
-  public void bindData(Object o) {
-    //reset();
-    synchronized (LOCK) {
-      for (Target<GlideDrawable> target : mTargets) {
-         target.getRequest().pause();
-      }
-
-      mTargets.clear();
+    public LCIMConversationItemHolder(ViewGroup root) {
+        super(root.getContext(), root, R.layout.lcim_conversation_item);
+        initView();
     }
-    final AVIMConversation conversation = (AVIMConversation) o;
-    if (conversation instanceof NotificationCategory) {
 
-      unreadView.setVisibility(View.GONE);
+    public void initView() {
+        avatarView = (ImageView) itemView.findViewById(R.id.conversation_item_iv_avatar);
+        nameView = (TextView) itemView.findViewById(R.id.conversation_item_tv_name);
 
-      final NotificationCategory category = (NotificationCategory) conversation;
-      Log.i("aaa", "name="+category.getName()+"  this="+this);
-      if(category.getName().equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
-        avatarView.setImageResource(R.drawable.ic_message_invite);
-      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
-        avatarView.setImageResource(R.drawable.ic_message_socialnews);
-      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.ANSWERS_NOTIFICATION)) {
-        avatarView.setImageResource(R.drawable.ic_message_qanswerme);
-      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.ARTICLE_NOTIFICATION)) {
-        avatarView.setImageResource(R.drawable.ic_message_transactionmessage);
-      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
-        avatarView.setImageResource(R.drawable.ic_message_course_information);
-      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.FINANCE_NOTIFICATION)) {
-        avatarView.setImageResource(R.drawable.ic_message_recommendedselection);
-      }else if(category.getName().equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
-        avatarView.setImageResource(R.drawable.ic_xjs_msg);
-      } else {
-        avatarView.setImageResource(R.drawable.default_avatar_grey);
-      }
-      nameView.setText(category.remarks);
+        timeView = (TextView) itemView.findViewById(R.id.conversation_item_tv_time);
+        unreadView = (TextView) itemView.findViewById(R.id.conversation_item_tv_unread);
+        noUnReadView = (TextView) itemView.findViewById(R.id.notify_item_tv_unread);
+        messageView = (TextView) itemView.findViewById(R.id.conversation_item_tv_message);
+        avatarLayout = (RelativeLayout) itemView.findViewById(R.id.conversation_item_layout_avatar);
+        contentLayout = (LinearLayout) itemView.findViewById(R.id.conversation_item_layout_content);
+    }
 
-      ArrayList<Notification> notifications = category.notifications;
-      if (category.count <= 0) {
-        noUnReadView.setVisibility(View.GONE);
-        if (notifications!=null && notifications.size()>0) {
-          Notification notify = notifications.get(0);
-          timeView.setText(TimeUtil.getTimeByNow(notify.createdOn));
-          messageView.setText(notify.body);
-        }else{
-          timeView.setText("");
-          messageView.setText("");
+    @Override
+    public void bindData(Object o) {
+        reset();
+        synchronized (LOCK) {
+            for (Target<GlideDrawable> target : mTargets) {
+                target.getRequest().pause();
+            }
+
+            mTargets.clear();
         }
-      }else {
+        final AVIMConversation conversation = (AVIMConversation) o;
+        if (conversation instanceof NotificationCategory) {
 
-        noUnReadView.setVisibility(View.VISIBLE);
+            unreadView.setVisibility(View.GONE);
 
-        Notification notify = notifications.get(0);
-        timeView.setText(TimeUtil.getTimeByNow(notify.createdOn));
-        messageView.setText(notify.body);
-      }
+            final NotificationCategory category = (NotificationCategory) conversation;
+            //Log.i("aaa", "name="+category.getName()+"  this="+this);
+            updateNotifyIcon(category.getName());
+            nameView.setText(category.remarks);
 
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+            ArrayList<Notification> notifications = category.notifications;
+            if (category.count <= 0) {
+                noUnReadView.setVisibility(View.GONE);
+                if (notifications != null && notifications.size() > 0) {
+                    Notification notify = notifications.get(0);
+                    timeView.setText(TimeUtil.getTimeByNow(notify.createdOn));
+                    messageView.setText(notify.body);
+                } else {
+                    timeView.setText("");
+                    messageView.setText("");
+                }
+            } else {
 
-          enterCategoryList(category);
+                noUnReadView.setVisibility(View.VISIBLE);
 
-          if (category.count> 0) {
-             category.count = 0;
+                Notification notify = notifications.get(0);
+                timeView.setText(TimeUtil.getTimeByNow(notify.createdOn));
+                messageView.setText(notify.body);
+            }
 
-            getContext().sendBroadcast(new Intent(ACTION_UPDATE));
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-          }
-        }
-      });
+                    enterCategoryList(category);
+
+                    if (category.count > 0) {
+                        category.count = 0;
+
+                        getContext().sendBroadcast(new Intent(ACTION_UPDATE));
+
+                    }
+                }
+            });
 
 
-    }else {
+        } else {
 
-      noUnReadView.setVisibility(View.GONE);
+            noUnReadView.setVisibility(View.GONE);
 
-      if (null != conversation) {
-        if (null == conversation.getCreatedAt()) {
-          conversation.fetchInfoInBackground(new AVIMConversationCallback() {
-            @Override
-            public void done(AVIMException e) {
-              if (e != null) {
-                LCIMLogUtils.logException(e);
-                avatarView.setImageResource(R.drawable.default_avatar_grey);
-                nameView.setText("");
-              } else {
+            if (null == conversation.getCreatedAt()) {
+                conversation.fetchInfoInBackground(new AVIMConversationCallback() {
+                    @Override
+                    public void done(AVIMException e) {
+                        if (e != null) {
+                            LCIMLogUtils.logException(e);
+                            nameView.setText("");
+                            Target<GlideDrawable> target = Glide.with(getContext()).load(R.drawable.default_avatar_grey)
+                                    .bitmapTransform(circleTransform)
+                                    .placeholder(R.drawable.default_avatar_grey)
+                                    .error(R.drawable.default_avatar_grey)
+                                    .into(avatarView);
+
+                            synchronized (LOCK) {
+                                mTargets.add(target);
+                            }
+                        } else {
+                            updateName(conversation);
+                            updateIcon(conversation);
+                        }
+                    }
+                });
+            } else {
                 updateName(conversation);
                 updateIcon(conversation);
-              }
             }
-          });
-        } else {
-          updateName(conversation);
-          updateIcon(conversation);
-          Log.i("aaa",  "===========this="+this);
-        }
 
-        updateUnreadCount(conversation);
-        updateLastMessage(conversation.getLastMessage());
-        itemView.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            onConversationItemClick(conversation);
-          }
-        });
+            //Log.i("aaa",  "===========this="+this);
 
-        itemView.setOnLongClickListener(new View.OnLongClickListener() {
-          @Override
-          public boolean onLongClick(View v) {
-            //FIXME
+            updateUnreadCount(conversation);
+            updateLastMessage(conversation.getLastMessage());
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onConversationItemClick(conversation);
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    //FIXME
 //          AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 //          builder.setItems(new String[]{"删除该聊天"}, new DialogInterface.OnClickListener() {
 //            public void onClick(DialogInterface dialog, int which) {
@@ -205,172 +197,203 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
 //          });
 //          AlertDialog dialog = builder.create();
 //          dialog.show();
-            return false;
-          }
-        });
-      }else{
+                    return false;
+                }
+            });
+        }
+
+    }
+
+    /**
+     * 一开始的时候全部置为空，避免因为异步请求造成的刷新不及时而导致的展示原有的缓存数据
+     */
+    private void reset() {
+        avatarView.setImageResource(R.drawable.default_avatar_grey);
         nameView.setText("");
         timeView.setText("");
         messageView.setText("");
-        avatarView.setImageResource(R.drawable.default_avatar_grey);
         unreadView.setVisibility(View.GONE);
-      }
+        noUnReadView.setVisibility(View.GONE);
     }
 
-  }
 
-  /**
-   * 一开始的时候全部置为空，避免因为异步请求造成的刷新不及时而导致的展示原有的缓存数据
-   */
-  private void reset() {
-    avatarView.setImageResource(R.drawable.default_avatar_grey);
-    nameView.setText("");
-    timeView.setText("");
-    messageView.setText("");
-    unreadView.setVisibility(View.GONE);
-    noUnReadView.setVisibility(View.GONE);
-  }
+    private void updateNotifyIcon(String categoryName) {
 
-  /**
-   * 更新 name，单聊的话展示对方姓名，群聊展示所有用户的用户名
-   *
-   * @param conversation
-   */
-  private void updateName(AVIMConversation conversation) {
-    LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
-      @Override
-      protected void internalDone0(String s, AVException e) {
-        if (null != e) {
-          LCIMLogUtils.logException(e);
-          nameView.setText("");
+        int resid;
+
+        if (categoryName.equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
+            resid = R.drawable.ic_message_invite;
+        } else if (categoryName.equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
+            resid = R.drawable.ic_message_socialnews;
+        } else if (categoryName.equalsIgnoreCase(NotificationTemplate.ANSWERS_NOTIFICATION)) {
+            resid = R.drawable.ic_message_qanswerme;
+        } else if (categoryName.equalsIgnoreCase(NotificationTemplate.ARTICLE_NOTIFICATION)) {
+            resid = R.drawable.ic_message_transactionmessage;
+        } else if (categoryName.equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
+            resid = R.drawable.ic_message_course_information;
+        } else if (categoryName.equalsIgnoreCase(NotificationTemplate.FINANCE_NOTIFICATION)) {
+            resid = R.drawable.ic_message_recommendedselection;
+        } else if (categoryName.equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
+            resid = R.drawable.ic_xjs_msg;
         } else {
-          nameView.setText(s);
+            resid = R.drawable.default_avatar_grey;
         }
-      }
-    });
-  }
 
-  /**
-   * 更新 item icon，目前的逻辑为：
-   * 单聊：展示对方的头像
-   * 群聊：展示一个静态的 icon
-   *
-   * @param conversation
-   */
-  private void updateIcon(AVIMConversation conversation) {
-    if (null != conversation) {
-      if (conversation.isTransient() || conversation.getMembers().size() > 2) {
-        avatarView.setImageResource(R.drawable.lcim_group_icon);
-      } else {
-        LCIMConversationUtils.getConversationPeerIcon(conversation, new AVCallback<String>() {
-          @Override
-          protected void internalDone0(String s, AVException e) {
-            if (null != e) {
-              LCIMLogUtils.logException(e);
+
+        Target<GlideDrawable> target = Glide.with(getContext())
+                .load(resid)
+                .bitmapTransform(circleTransform)
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
+                .into(avatarView);
+
+        synchronized (LOCK) {
+            mTargets.add(target);
+        }
+    }
+
+    /**
+     * 更新 name，单聊的话展示对方姓名，群聊展示所有用户的用户名
+     */
+    private void updateName(AVIMConversation conversation) {
+        LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
+            @Override
+            protected void internalDone0(String s, AVException e) {
+                if (null != e) {
+                    LCIMLogUtils.logException(e);
+                    nameView.setText(R.string.stranger);
+                } else {
+
+                    if(TextUtils.isEmpty(s)) {
+                        nameView.setText(R.string.stranger);
+                    }else{
+                        nameView.setText(s);
+                    }
+                }
             }
-            if (!TextUtils.isEmpty(s)) {
-              Target<GlideDrawable> target =  Glide.with(getContext()).load(s)
-                      .bitmapTransform(circleTransform)
-                      .placeholder(R.drawable.default_avatar_grey)
-                      .error(R.drawable.default_avatar_grey)
-                      .into(avatarView);
-              synchronized (LOCK) {
-                mTargets.add(target);
-              }
+        });
+    }
+
+    /**
+     * 更新 item icon，目前的逻辑为：
+     * 单聊：展示对方的头像
+     * 群聊：展示一个静态的 icon
+     */
+    private void updateIcon(AVIMConversation conversation) {
+        if (null != conversation) {
+            if (conversation.isTransient() || conversation.getMembers().size() > 2) {
+                //avatarView.setImageResource(R.drawable.lcim_group_icon);
+                Target<GlideDrawable> target = Glide.with(getContext()).load(R.drawable.lcim_group_icon)
+                        .bitmapTransform(circleTransform)
+                        .placeholder(R.drawable.default_avatar_grey)
+                        .error(R.drawable.default_avatar_grey)
+                        .into(avatarView);
+                synchronized (LOCK) {
+                    mTargets.add(target);
+                }
+
+            } else {
+                LCIMConversationUtils.getConversationPeerIcon(conversation, new AVCallback<String>() {
+                    @Override
+                    protected void internalDone0(String s, AVException e) {
+                        if (null != e) {
+                            LCIMLogUtils.logException(e);
+                        }
+                        Target<GlideDrawable> target = Glide.with(getContext()).load(s)
+                                .bitmapTransform(circleTransform)
+                                .placeholder(R.drawable.default_avatar_grey)
+                                .error(R.drawable.default_avatar_grey)
+                                .into(avatarView);
+                        synchronized (LOCK) {
+                            mTargets.add(target);
+                        }
 //              Picasso.with(getContext()).load(s).e
 //                .placeholder(R.drawable.default_avatar_grey).into(avatarView);
-            } else {
-              avatarView.setImageResource(R.drawable.default_avatar_grey);
+                    }
+                });
             }
-          }
-        });
-      }
+        }
     }
-  }
 
-  /**
-   * 更新未读消息数量
-   *
-   * @param conversation
-   */
-  private void updateUnreadCount(AVIMConversation conversation) {
-    int num = LCIMConversationItemCache.getInstance().getUnreadCount(conversation.getConversationId());
-    unreadView.setText(num + "");
-    unreadView.setVisibility(num > 0 ? View.VISIBLE : View.GONE);
-  }
-
-  /**
-   * 更新 item 的展示内容，及最后一条消息的内容
-   *
-   * @param message
-   */
-  private void updateLastMessage(AVIMMessage message) {
-    if (null != message) {
-      Date date = new Date(message.getTimestamp());
-      //SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
-      //timeView.setText(format.format(date));
-      timeView.setText(TimeUtil.getTimeByNow(date));
-      messageView.setText(getMessageeShorthand(getContext(), message));
-    }else{
-      timeView.setText("");
-      messageView.setText("");
+    /**
+     * 更新未读消息数量
+     */
+    private void updateUnreadCount(AVIMConversation conversation) {
+        int num = LCIMConversationItemCache.getInstance().getUnreadCount(conversation.getConversationId());
+        unreadView.setText(num + "");
+        unreadView.setVisibility(num > 0 ? View.VISIBLE : View.GONE);
     }
-  }
 
-  private void onConversationItemClick(AVIMConversation conversation) {
-    try {
-      Intent intent = new Intent();
-      intent.setPackage(getContext().getPackageName());
-      intent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
-      intent.addCategory(Intent.CATEGORY_DEFAULT);
-      intent.putExtra(LCIMConstants.CONVERSATION_ID, conversation.getConversationId());
-      getContext().startActivity(intent);
-    } catch (ActivityNotFoundException exception) {
-      Log.i(LCIMConstants.LCIM_LOG_TAG, exception.toString());
+    /**
+     * 更新 item 的展示内容，及最后一条消息的内容
+     */
+    private void updateLastMessage(AVIMMessage message) {
+        if (null != message) {
+            Date date = new Date(message.getTimestamp());
+            //SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+            //timeView.setText(format.format(date));
+            timeView.setText(TimeUtil.getTimeByNow(date));
+            messageView.setText(getMessageeShorthand(getContext(), message));
+        } else {
+            timeView.setText("");
+            messageView.setText("");
+        }
     }
-  }
 
-  private void enterCategoryList(NotificationCategory category) {
-
-    Intent intent = new Intent(getContext(), NotificationCategoryListActivity.class);
-    intent.putExtra(NotificationConstant.KEY_NOTIFICATION_CATEGORY_ID, category.id);
-    intent.putExtra(NotificationConstant.KEY_NOTIFICATION_TITLE, category.remarks);
-    ((BaseActivity) getContext()).startActivityForResult(intent, NotificationConstant.REQUEST_NOTIFICATION_CATEGORY_LIST);
-  }
-
-  public static ViewHolderCreator HOLDER_CREATOR = new ViewHolderCreator<LCIMConversationItemHolder>() {
-    @Override
-    public LCIMConversationItemHolder createByViewGroupAndType(ViewGroup parent, int viewType) {
-      return new LCIMConversationItemHolder(parent);
+    private void onConversationItemClick(AVIMConversation conversation) {
+        try {
+            Intent intent = new Intent();
+            intent.setPackage(getContext().getPackageName());
+            intent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.putExtra(LCIMConstants.CONVERSATION_ID, conversation.getConversationId());
+            getContext().startActivity(intent);
+        } catch (ActivityNotFoundException exception) {
+            Log.i(LCIMConstants.LCIM_LOG_TAG, exception.toString());
+        }
     }
-  };
 
-  private static CharSequence getMessageeShorthand(Context context, AVIMMessage message) {
-    if (message instanceof AVIMTypedMessage) {
-      AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(
-        ((AVIMTypedMessage) message).getMessageType());
-      switch (type) {
-        case TextMessageType:
-          return ((AVIMTextMessage) message).getText();
-        case ImageMessageType:
-          return context.getString(R.string.lcim_message_shorthand_image);
-        case LocationMessageType:
-          return context.getString(R.string.lcim_message_shorthand_location);
-        case AudioMessageType:
-          return context.getString(R.string.lcim_message_shorthand_audio);
-        default:
-          CharSequence shortHand = "";
-          if (message instanceof LCChatMessageInterface) {
-            LCChatMessageInterface messageInterface = (LCChatMessageInterface) message;
-            shortHand = messageInterface.getShorthand();
-          }
-          if (TextUtils.isEmpty(shortHand)) {
-            shortHand = context.getString(R.string.lcim_message_shorthand_unknown);
-          }
-          return shortHand;
-      }
-    } else {
-      return message.getContent();
+    private void enterCategoryList(NotificationCategory category) {
+
+        Intent intent = new Intent(getContext(), NotificationCategoryListActivity.class);
+        intent.putExtra(NotificationConstant.KEY_NOTIFICATION_CATEGORY_ID, category.id);
+        intent.putExtra(NotificationConstant.KEY_NOTIFICATION_TITLE, category.remarks);
+        ((BaseActivity) getContext()).startActivityForResult(intent, NotificationConstant.REQUEST_NOTIFICATION_CATEGORY_LIST);
     }
-  }
+
+    public static ViewHolderCreator HOLDER_CREATOR = new ViewHolderCreator<LCIMConversationItemHolder>() {
+        @Override
+        public LCIMConversationItemHolder createByViewGroupAndType(ViewGroup parent, int viewType) {
+            return new LCIMConversationItemHolder(parent);
+        }
+    };
+
+    private static CharSequence getMessageeShorthand(Context context, AVIMMessage message) {
+        if (message instanceof AVIMTypedMessage) {
+            AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(
+                    ((AVIMTypedMessage) message).getMessageType());
+            switch (type) {
+                case TextMessageType:
+                    return ((AVIMTextMessage) message).getText();
+                case ImageMessageType:
+                    return context.getString(R.string.lcim_message_shorthand_image);
+                case LocationMessageType:
+                    return context.getString(R.string.lcim_message_shorthand_location);
+                case AudioMessageType:
+                    return context.getString(R.string.lcim_message_shorthand_audio);
+                default:
+                    CharSequence shortHand = "";
+                    if (message instanceof LCChatMessageInterface) {
+                        LCChatMessageInterface messageInterface = (LCChatMessageInterface) message;
+                        shortHand = messageInterface.getShorthand();
+                    }
+                    if (TextUtils.isEmpty(shortHand)) {
+                        shortHand = context.getString(R.string.lcim_message_shorthand_unknown);
+                    }
+                    return shortHand;
+            }
+        } else {
+            return message.getContent();
+        }
+    }
 }

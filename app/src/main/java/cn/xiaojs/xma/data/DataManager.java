@@ -271,6 +271,16 @@ public class DataManager {
         return getCache(context).getContactIds();
     }
 
+
+    public static void reloadContactWhenEmpty(Context context) {
+
+        Map<String,Contact> cos = DataManager.getContacts(context);
+        if ( cos== null  || cos.size()<= 0) {
+            getCache(context).reloadContactFromDb();
+        }
+
+    }
+
     /**
      * 通过用户ID，判断用户是否存在联系人中
      * @param context
@@ -554,6 +564,11 @@ public class DataManager {
             //contacts
             contacts = contactDao.getContactIds(context);
 
+        }
+
+        public void reloadContactFromDb() {
+            ContactDao contactDao = new ContactDao();
+            contacts = contactDao.getContactIds(context);
         }
 
         public void addContactId(String accountId, Contact contact) {

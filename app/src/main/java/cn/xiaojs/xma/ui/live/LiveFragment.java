@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
@@ -103,6 +104,10 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         mEnrollLessonTitleView.setOnClickListener(this);
         View search = v.findViewById(R.id.my_course_search);
         search.setOnClickListener(this);
+
+        RelativeLayout searchLay = (RelativeLayout) v.findViewById(R.id.s_root);
+        searchLay.setOnClickListener(this);
+
         mOpenLesson.setOnClickListener(this);
         //ButterKnife.bind(this,v);
         return v;
@@ -307,6 +312,7 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 Intent enroll = new Intent(mContext, EnrollLessonActivity.class);
                 mContext.startActivity(enroll);
                 break;
+            case R.id.s_root:
             case R.id.my_course_search:
                 Intent search = new Intent(mContext, SearchActivity.class);
                 mContext.startActivity(search);

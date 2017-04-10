@@ -370,7 +370,7 @@ public class  LessonHomeActivity extends BaseActivity{
                 }
 
             }else if (lessonState.equals(Ctl.LiveLessonState.FINISHED)) {
-                applyBtn.setText("已完课");
+                applyBtn.setText("停止报名");
                 applyBtn.setEnabled(false);
             }else {
 
@@ -387,9 +387,22 @@ public class  LessonHomeActivity extends BaseActivity{
 
         String accId = AccountDataManager.getAccountID(this);
         if (mLessonDetail.getCreatedBy().equals(accId)){
-            mLessonEnrollLayout.setVisibility(View.GONE);
+
+            if (lessonState.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
+                    || lessonState.equalsIgnoreCase(LessonState.LIVE)
+                    || lessonState.equalsIgnoreCase(LessonState.FINISHED)) {
+                mLessonEnrollLayout.setVisibility(View.VISIBLE);
+                mConsultingBtn.setVisibility(View.GONE);
+                applyBtn.setText("进入教室");
+                applyBtn.setEnabled(true);
+            }else{
+                mLessonEnrollLayout.setVisibility(View.GONE);
+                mConsultingBtn.setVisibility(View.VISIBLE);
+            }
+
         }else{
             mLessonEnrollLayout.setVisibility(View.VISIBLE);
+            mConsultingBtn.setVisibility(View.VISIBLE);
         }
 
     }
@@ -510,13 +523,28 @@ public class  LessonHomeActivity extends BaseActivity{
         if (mLessonDetail == null) return;
 
         String lessonState = mLessonDetail.getState();
-        if (!lessonState.equals(Ctl.LiveLessonState.CANCELLED)) {
 
-            if(mLessonDetail.isEnrolled) {
-                dealEnrolled();
-            }else{
-                enterConfirmPayPage();
+        String accId = AccountDataManager.getAccountID(this);
+        if (mLessonDetail.getCreatedBy().equals(accId)){
+
+            if (lessonState.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
+                    || lessonState.equalsIgnoreCase(LessonState.LIVE)
+                    || lessonState.equalsIgnoreCase(LessonState.FINISHED)) {
+                enterClass(mLessonDetail.ticket);
             }
+
+
+        } else {
+
+            if (!lessonState.equals(Ctl.LiveLessonState.CANCELLED)) {
+
+                if(mLessonDetail.isEnrolled) {
+                    dealEnrolled();
+                }else{
+                    enterConfirmPayPage();
+                }
+            }
+
         }
     }
 

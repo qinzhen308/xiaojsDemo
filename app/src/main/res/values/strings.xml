@@ -32,6 +32,7 @@
     <string name="unit_price_by_hour">元/小时</string>
     <string name="per_hour">/小时</string>
     <string name="unfold_view_all">展开查看全部</string>
+    <string name="put_way">收起</string>
     <string name="reload">重新加载</string>
     <string name="load_failed_tip">数据加载失败</string>
     <string name="empty_activity_tip">您还没有动态～</string>
@@ -102,7 +103,7 @@
     <string name="verity_code_countdown">%1$sS</string>
     <string name="verity_code_re_send">重新发送</string>
     <string name="pwd_hint">请输入6&#8211;16位密码</string>
-    <string name="register_protocol">《小教室用户注册协议》</string>
+    <string name="register_protocol">《小教室用户服务协议》</string>
     <string name="register_protocol_agree">点击注册默认您同意</string>
     <string name="name_empty">请输入姓名</string>
     <string name="name_length_less_than_2">请输入至少2个字的姓名</string>
@@ -205,7 +206,7 @@
     <string name="sale_promotion">促销</string>
     <string name="input_tips"><![CDATA[<font color="#cc0000">%1$d</font>]]>/%2$d字</string>
 
-    <string name="home_search_hint">输入手机号搜索个人或机构</string>
+    <string name="home_search_hint">课/个人/机构</string>
     <string name="course_of_learn">我报的班</string>
     <string name="course_of_teach">我授的课</string>
     <string name="my_course">我的课</string>
@@ -718,6 +719,7 @@
     <string name="unfollow_forbidden">您不能取消关注此账号</string>
     <string name="student">同学</string>
     <string name="search_empty_tips">暂无搜索结果~</string>
+    <string name="stranger">陌生人</string>
 
 
 </resources>

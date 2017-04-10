@@ -45,32 +45,18 @@ public class LeanCloudUtil {
     }
 
 
-    public static void close(final String accountId) {
+    public static void close() {
 
-        LCChatKit.getInstance().open(accountId, new AVIMClientCallback() {
+        LCChatKit.getInstance().close(new AVIMClientCallback() {
             @Override
             public void done(AVIMClient avimClient, AVIMException e) {
                 if (e == null) {
-
-                    avimClient.close(new AVIMClientCallback() {
-                        @Override
-                        public void done(AVIMClient avimClient, AVIMException e) {
-                            if (e == null) {
-                                if (XiaojsConfig.DEBUG) {
-                                    Logger.d("close success: "  + accountId);
-                                }
-                            }else {
-                                if (XiaojsConfig.DEBUG) {
-                                    Logger.d("close failed: "  + accountId);
-                                }
-                            }
-                        }
-                    });
-
-
-                } else {
                     if (XiaojsConfig.DEBUG) {
-                        Logger.d("close failed: "  + accountId);
+                        Logger.d("close success");
+                    }
+                }else {
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("close failed");
                     }
                 }
             }

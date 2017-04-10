@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.message;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -14,7 +15,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -150,7 +154,7 @@ public class PostDynamicActivity extends BaseActivity {
             //editText.addRecipient(contact.account,display);
 
             Contact c = atContacts.get(i);
-            builder.append(c.alias);
+            builder.append("@").append(c.alias);
             if (i != size - 1) {
                 builder.append(", ");
             }
@@ -178,8 +182,13 @@ public class PostDynamicActivity extends BaseActivity {
 
         DynPost dynPost = new DynPost();
 
-
         if (!TextUtils.isEmpty(postText)) {
+
+            String atStr = remind.getText().toString();
+            if (!TextUtils.isEmpty(atStr)) {
+                postText = postText + " " + atStr;
+            }
+
             dynPost.text = postText;
         }
 
@@ -195,10 +204,16 @@ public class PostDynamicActivity extends BaseActivity {
             dynPost.audience = audience;
         }
 
-//        List<String> mentioneds = editText.getRecipientIds();
-//        if (mentioneds != null) {
-//            dynPost.mentioned = mentioneds;
-//        }
+        //List<String> mentioneds = editText.getRecipientIds();
+        if (atContacts != null && atContacts.size() > 0) {
+            List<String> mentioneds = new ArrayList<>(atContacts.size());
+            for (Contact contact : atContacts) {
+                String aid = contact.account;
+                mentioneds.add(aid);
+            }
+            dynPost.mentioned = mentioneds;
+        }
+
 
         SocialManager.postActivity(this, dynPost, new APIServiceCallback<Dynamic>() {
             @Override

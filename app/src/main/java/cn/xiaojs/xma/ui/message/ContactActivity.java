@@ -58,6 +58,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.JpushUtil;
 import cn.xiaojs.xma.util.LeanCloudUtil;
 import okhttp3.ResponseBody;
@@ -70,7 +71,7 @@ public class ContactActivity extends BaseActivity {
     PullToRefreshExpandableListView listView;
 
     @BindView(R.id.search_view)
-    EditText editText;
+    EditTextDel editText;
 
     private ContactAdapter contactAdapter;
 
@@ -171,15 +172,15 @@ public class ContactActivity extends BaseActivity {
     }
 
 
-    private void expandALL() {
-
-        int groupCount = contactAdapter.getGroupCount();
-        for (int i = 0; i < groupCount; i++) {
-
-            listView.expandGroup(i, false);
-
-        }
-    }
+//    private void expandALL() {
+//
+//        int groupCount = contactAdapter.getGroupCount();
+//        for (int i = 0; i < groupCount; i++) {
+//
+//            listView.expandGroup(i, false);
+//
+//        }
+//    }
 
     private void toSearch(String query) {
 
@@ -188,7 +189,7 @@ public class ContactActivity extends BaseActivity {
 
         contactAdapter.filterDta(query);
 
-        expandALL();
+        //expandALL();
 
     }
 
@@ -479,7 +480,7 @@ public class ContactActivity extends BaseActivity {
             contactAdapter.changeData(contactData);
         }
 
-        expandALL();
+        //expandALL();
     }
 
 
@@ -520,6 +521,11 @@ public class ContactActivity extends BaseActivity {
 //                break;
 //            }
 
+        }
+
+        //FIXME 因为没有实现群聊，屏蔽班级显示
+        if (class_pos >=0 && class_pos < contactData.size()) {
+            contactData.remove(class_pos);
         }
 
         contactData.addAll(tempMap.values());

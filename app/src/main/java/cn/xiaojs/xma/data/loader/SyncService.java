@@ -26,6 +26,7 @@ import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.Upgrade;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.util.NetUtil;
 
@@ -67,15 +68,31 @@ public class SyncService extends IntentService {
                         Intent i = new Intent(DataManager.ACTION_UPDATE_CONTACT_FROM_DB);
                         i.putExtra(DataManager.EXTRA_CONTACT, newCGroups);
                         sendBroadcast(i);
+                    } else {
+
+                        DataManager.reloadContactWhenEmpty(context);
+                    }
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("sync service: TYPE_FETCH_CONTACT_FROM_NET");
+                        //Logger.d(DataManager.getContacts(context));
                     }
 
                     break;
                 case DataManager.TYPE_CONTACT:
+
                     ArrayList<ContactGroup> entry = (ArrayList<ContactGroup>) intent.
                             getSerializableExtra(DataManager.EXTRA_CONTACT);
                     if (entry != null) {
                         DataManager.syncContactData(context, entry);
                     }
+
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("sync service: TYPE_CONTACT");
+                        //Logger.d(DataManager.getContacts(context));
+                    }
+
                     break;
 
                 case DataManager.TYPE_INIT:
@@ -84,10 +101,17 @@ public class SyncService extends IntentService {
 
                     ArrayList<ContactGroup> contactGroups = null;
                     //同步联系人到DB
+
                     try {
                         if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
                             contactGroups = SocialManager.getContacts(context);
-                            DataManager.syncContactData(context, contactGroups);
+                            if (contactGroups == null) {
+
+                                DataManager.reloadContactWhenEmpty(context);
+
+                            } else {
+                                DataManager.syncContactData(context, contactGroups);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -164,6 +188,10 @@ public class SyncService extends IntentService {
                     //check update
 
 
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("sync service: TYPE_INIT");
+                        //Logger.d(DataManager.getContacts(context));
+                    }
 
                     break;
 
@@ -172,12 +200,11 @@ public class SyncService extends IntentService {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if (XiaojsConfig.DEBUG) {
                 Logger.d("sync data end ...");
             }
         }
-
 
 
     }

@@ -107,10 +107,13 @@
                     android:drawableRight="@drawable/ic_entrance"
                     android:drawablePadding="@dimen/px10"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"/>
 
             <TextView
-                    android:layout_toLeftOf="@+id/remind_somebody"
+                    android:layout_toLeftOf="@id/remind_somebody"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_29px"
                     android:paddingTop="@dimen/font_30px"

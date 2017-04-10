@@ -280,7 +280,14 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.operation.setVisibility(View.VISIBLE);
             holder.operation.enableMore(true);
             holder.operation.enableEnter(true);
-            holder.operation.setItems(items);
+            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+                holder.operation.hiddenDiver();
+                holder.operation.hiddenOpera123();
+                holder.operation.setItems(null);
+            }else{
+                holder.operation.setItems(items);
+            }
+
             //holder.operation.hiddenDiver();
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
@@ -704,7 +711,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             String[] items = new String[]{
                     //mContext.getString(R.string.prepare_lesson),
                     mContext.getString(R.string.share),
-                    mContext.getString(R.string.look_detail),
+                    //mContext.getString(R.string.look_detail),
                     mContext.getString(publishId),
                     mContext.getString(R.string.lesson_again)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
@@ -719,13 +726,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 0://分享
                             share(bean);
                             break;
-                        case 1://查看详情
-                            detail(bean);
-                            break;
-                        case 2://发布到主页
+//                        case 1://查看详情
+//                            detail(bean);
+//                            break;
+                        case 1://发布到主页
                             publish(bean);
                             break;
-                        case 3://再次开课
+                        case 2://再次开课
                             lessonAgain(bean);
                             break;
                     }

@@ -9,6 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVCallback;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +31,8 @@ import cn.xiaojs.xma.model.NotificationCategory;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConversationUtils;
+import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.util.TimeUtil;
 
@@ -57,14 +63,14 @@ public class MessageFragment extends BaseFragment {
                     return;
                 }
 
-                NotificationCategory category = messageAdapter.getItem(position);
-                enterCategoryList(category);
-
-                //消除红点
-                if (category.count > 0) {
-                    category.count = 0;
-                    messageAdapter.notifyDataSetChanged();
-                }
+//                NotificationCategory category = messageAdapter.getItem(position);
+//                enterCategoryList(category);
+//
+//                //消除红点
+//                if (category.count > 0) {
+//                    category.count = 0;
+//                    messageAdapter.notifyDataSetChanged();
+//                }
 
             }
         });
@@ -89,7 +95,7 @@ public class MessageFragment extends BaseFragment {
 
                     getConversation(categoryList);
 
-                    messageAdapter.setData(categoryList);
+                    //messageAdapter.setData(categoryList);
                 }
             }
 
@@ -111,10 +117,10 @@ public class MessageFragment extends BaseFragment {
             }
 
             for (Conversation conversation : conversations) {
-//                NotificationCategory category = new NotificationCategory();
-//                category.from = NotificationCategory.MsgFrom.FROM_JMESSAGE;
-//                //category.conversation = conversation;
-//                categoryList.add(category);
+                NotificationCategory category = new NotificationCategory();
+                category.from = NotificationCategory.MsgFrom.FROM_JMESSAGE;
+                //category.conversation = conversation;
+                categoryList.add(category);
             }
         }
     }
@@ -129,29 +135,29 @@ public class MessageFragment extends BaseFragment {
 
     private class MessageAdapter extends BaseAdapter {
 
-        private List<NotificationCategory> categories;
+        private List<AVIMConversation> conversations;
 
-        public void setData(List<NotificationCategory> datas) {
-            categories = datas;
+        public void setData(List<AVIMConversation> datas) {
+            conversations = datas;
             notifyDataSetChanged();
         }
 
         @Override
         public int getCount() {
 
-            if (categories== null) {
+            if (conversations== null) {
                 return 0;
             }
-            return categories.size();
+            return conversations.size();
         }
 
         @Override
-        public NotificationCategory getItem(int position) {
+        public AVIMConversation getItem(int position) {
 
-            if (categories == null){
+            if (conversations == null){
                 return null;
             }
-            return categories.get(position);
+            return conversations.get(position);
         }
 
         @Override
@@ -177,44 +183,30 @@ public class MessageFragment extends BaseFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            NotificationCategory category = categories.get(position);
+            AVIMConversation conversation = conversations.get(position);
 
 
-            if (category.from == NotificationCategory.MsgFrom.FROM_JMESSAGE) {
+            if (conversation instanceof NotificationCategory) {
 
-                holder.iconView.setType(MessageImageView.TYPE_NUM);
-                //holder.iconView.setCount(category.conversation.getUnReadMsgCnt());
+                final NotificationCategory category = (NotificationCategory) conversation;
 
-//                Message lastMsg = category.conversation.getLatestMessage();
-//                if (lastMsg != null) {
-//                    //
-//                    holder.timeView.setText(TimeUtil.format(new Date(lastMsg.getCreateTime()), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
-//                }else {
-//                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
-//                    holder.timeView.setText("");
-//                    holder.titleView.setText("");
-//                    holder.contentView.setText("");
-//                }
-
-            }else {
-
-//                if(category.name.equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
-//                    holder.iconView.setImageResource(R.drawable.ic_message_invite);
-//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
-//                    holder.iconView.setImageResource(R.drawable.ic_message_socialnews);
-//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ANSWERS_NOTIFICATION)) {
-//                    holder.iconView.setImageResource(R.drawable.ic_message_qanswerme);
-//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ARTICLE_NOTIFICATION)) {
-//                    holder.iconView.setImageResource(R.drawable.ic_message_transactionmessage);
-//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
-//                    holder.iconView.setImageResource(R.drawable.ic_message_course_information);
-//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FINANCE_NOTIFICATION)) {
-//                    holder.iconView.setImageResource(R.drawable.ic_message_recommendedselection);
-//                }else if(category.name.equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
-//                    holder.iconView.setImageResource(R.drawable.ic_xjs_msg);
-//                }else {
-//                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
-//                }
+                if(category.name.equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_invite);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_socialnews);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ANSWERS_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_qanswerme);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.ARTICLE_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_transactionmessage);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_course_information);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.FINANCE_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_message_recommendedselection);
+                }else if(category.name.equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
+                    holder.iconView.setImageResource(R.drawable.ic_xjs_msg);
+                }else {
+                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
+                }
 
                 holder.titleView.setText(category.remarks);
 
@@ -237,6 +229,30 @@ public class MessageFragment extends BaseFragment {
                     holder.contentView.setText(notify.body);
                     holder.iconView.setCount(category.count);
                 }
+
+            }else {
+
+                LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
+                    @Override
+                    protected void internalDone0(String s, AVException e) {
+
+                    }
+                });
+
+
+//                holder.iconView.setType(MessageImageView.TYPE_NUM);
+                //holder.iconView.setCount(category.conversation.getUnReadMsgCnt());
+
+//                Message lastMsg = category.conversation.getLatestMessage();
+//                if (lastMsg != null) {
+//                    //
+//                    holder.timeView.setText(TimeUtil.format(new Date(lastMsg.getCreateTime()), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+//                }else {
+//                    holder.iconView.setImageResource(R.drawable.default_avatar_grey);
+//                    holder.timeView.setText("");
+//                    holder.titleView.setText("");
+//                    holder.contentView.setText("");
+//                }
             }
 
             return convertView;

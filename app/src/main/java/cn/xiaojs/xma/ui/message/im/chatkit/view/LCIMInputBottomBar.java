@@ -15,9 +15,7 @@ import de.greenrobot.event.EventBus;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMInputBottomBarEvent;
-import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMInputBottomBarRecordEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMInputBottomBarTextEvent;
-import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMPathUtils;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMSoftInputUtils;
 
 
@@ -178,11 +176,14 @@ public class LCIMInputBottomBar extends LinearLayout {
     cameraBtn.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        EventBus.getDefault().post(new LCIMInputBottomBarEvent(
-          LCIMInputBottomBarEvent.INPUTBOTTOMBAR_CAMERA_ACTION, getTag()));
+
+          EventBus.getDefault().post(new LCIMInputBottomBarEvent(
+                  LCIMInputBottomBarEvent.INPUTBOTTOMBAR_CAMERA_ACTION, getTag()));
+
       }
     });
   }
+
 
   public void addActionView(View view) {
     actionLayout.addView(view);

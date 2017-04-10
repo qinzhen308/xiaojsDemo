@@ -224,7 +224,7 @@ public class APPUtils {
         LoginDataManager.requestLogoutByAPI(context, null);
 
         //logout im
-        LeanCloudUtil.close(AccountDataManager.getAccountID(context));
+        LeanCloudUtil.close();
 
         //总是退出成功
         Toast.makeText(context, exitTips, Toast.LENGTH_SHORT).show();

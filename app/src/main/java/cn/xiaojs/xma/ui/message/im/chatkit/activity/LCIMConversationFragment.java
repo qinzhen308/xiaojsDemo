@@ -1,14 +1,20 @@
 package cn.xiaojs.xma.ui.message.im.chatkit.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Keep;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +40,10 @@ import java.io.IOException;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
+import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.ui.message.im.chatkit.LCIMChatAdapter;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMIMTypeMessageEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMInputBottomBarEvent;
@@ -54,6 +64,8 @@ public class LCIMConversationFragment extends Fragment {
 
   private static final int REQUEST_IMAGE_CAPTURE = 1;
   private static final int REQUEST_IMAGE_PICK = 2;
+
+  private final int PERMISSION_CODE = 0x10;
 
   protected AVIMConversation imConversation;
 
@@ -245,7 +257,8 @@ public class LCIMConversationFragment extends Fragment {
           dispatchPickPictureIntent();
           break;
         case LCIMInputBottomBarEvent.INPUTBOTTOMBAR_CAMERA_ACTION:
-          dispatchTakePictureIntent();
+          //dispatchTakePictureIntent();
+          checkCameraPermisson();
           break;
         default:
           break;
@@ -414,5 +427,39 @@ public class LCIMConversationFragment extends Fragment {
       Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
     }
     return (null == e);
+  }
+
+
+  private void checkCameraPermisson() {
+
+    if (PermissionUtil.isOverMarshmallow()
+            && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+
+        requestPermissions(new String[]{Manifest.permission.CAMERA},
+                PERMISSION_CODE);
+
+    }else {
+      dispatchTakePictureIntent();
+    }
+  }
+
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    switch (requestCode) {
+      case PERMISSION_CODE: {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          dispatchTakePictureIntent();
+
+        } else {
+
+          // permission denied, boo! Disable the
+          // functionality that depends on this permission.
+        }
+        return;
+      }
+    }
   }
 }
