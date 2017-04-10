@@ -180,7 +180,7 @@ public class PlayerTextureView extends BaseMediaView {
     }
 
     @Override
-    protected void mute() {
+    public void mute() {
         if (mIsMute) {
             mPlayer.setVolume(1f, 1f);
         } else {
@@ -324,7 +324,7 @@ public class PlayerTextureView extends BaseMediaView {
     }
 
     @Override
-    protected boolean isMute() {
+    public boolean isMute() {
         return mIsMute;
     }
 

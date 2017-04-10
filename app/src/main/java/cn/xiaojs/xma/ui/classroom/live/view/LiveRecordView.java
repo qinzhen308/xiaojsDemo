@@ -167,47 +167,7 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     public void init() {
-        mQuality = XjsUtils.getSharedPreferences().getInt(Constants.KEY_QUALITY, Constants.QUALITY_STANDARD);
-        int fps = Config.VIDEO_STANDARD_FPS;
-        int bps = Config.VIDEO_STANDARD_BITRATE;
-        int resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
-        switch (mQuality) {
-            case Constants.QUALITY_FLUENT:
-                fps = Config.VIDEO_FLUENT_FPS;
-                bps = Config.VIDEO_FLUENT_BITRATE;
-                resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_240;
-                break;
-            case Constants.QUALITY_STANDARD:
-                fps = Config.VIDEO_STANDARD_FPS;
-                bps = Config.VIDEO_STANDARD_BITRATE;
-                resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
-                break;
-            case Constants.QUALITY_HIGH:
-                fps = Config.VIDEO_STANDARD_FPS;
-                bps = Config.VIDEO_HIGH_BITRATE;
-                resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_720;
-                break;
-        }
-
-        //设置音频的采样率为 44100 HZ，码率为 48 kbps。44100 是 Android 平台唯一保证所有设备支持的采样率
-        StreamingProfile.AudioProfile aProfile = new StreamingProfile.AudioProfile(Config.AUDIO_SAMPLING_RATE, Config.AUDIO_BITRATE);
-        // fps is 24, video bitrate is 512 * 1024 bps, maxKeyFrameInterval is 48
-        StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(fps, bps, Config.VIDEO_MAX_KEY_FRAME_INTERVAL);
-        StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
-        mAspect.setShowMode(AspectFrameLayout.SHOW_MODE.REAL);
-        mProfile = new StreamingProfile();
-
-        mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3)
-                .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
-                .setEncodingSizeLevel(resolution)
-                .setEncoderRCMode(StreamingProfile.EncoderRCModes.BITRATE_PRIORITY)//码率优先
-                .setAVProfile(avProfile)
-                .setDnsManager(getMyDnsManager())
-                //若注册了 mCameraStreamingManager.setStreamStatusCallback ，每隔 3 秒回调 StreamStatus 信息
-                .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
-                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.LAND)
-                .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
-
+        setStreamingProfile();
 
         CameraStreamingSetting.CAMERA_FACING_ID cameraFacingId = chooseCameraFacingId();
         mCurrentCamFacingIndex = cameraFacingId.ordinal();
@@ -484,7 +444,7 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     @Override
-    protected void mute() {
+    public void mute() {
         //本地静音
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_MUTE), 50);
     }
@@ -567,7 +527,7 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     @Override
-    protected boolean isMute() {
+    public boolean isMute() {
         return mMute;
     }
 
@@ -578,5 +538,66 @@ public class LiveRecordView extends BaseMediaView implements
     @Override
     public boolean isResume() {
         return mResume;
+    }
+
+    public void togglePublishResolution() {
+        if (mMediaStreamingManager == null) {
+            return;
+        }
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+
+        mMediaStreamingManager.stopStreaming();
+        setStreamingProfile();
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
+        }
+    }
+
+    private void setStreamingProfile() {
+        if (mProfile == null) {
+            mProfile = new StreamingProfile();
+        }
+        mQuality = XjsUtils.getSharedPreferences().getInt(Constants.KEY_QUALITY, Constants.QUALITY_STANDARD);
+        int fps = Config.VIDEO_STANDARD_FPS;
+        int bps = Config.VIDEO_STANDARD_BITRATE;
+        int resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
+        switch (mQuality) {
+            case Constants.QUALITY_FLUENT:
+                fps = Config.VIDEO_FLUENT_FPS;
+                bps = Config.VIDEO_FLUENT_BITRATE;
+                resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_240;
+                break;
+            case Constants.QUALITY_STANDARD:
+                fps = Config.VIDEO_STANDARD_FPS;
+                bps = Config.VIDEO_STANDARD_BITRATE;
+                resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
+                break;
+            case Constants.QUALITY_HIGH:
+                fps = Config.VIDEO_STANDARD_FPS;
+                bps = Config.VIDEO_HIGH_BITRATE;
+                resolution = StreamingProfile.VIDEO_ENCODING_HEIGHT_720;
+                break;
+        }
+
+        //设置音频的采样率为 44100 HZ，码率为 48 kbps。44100 是 Android 平台唯一保证所有设备支持的采样率
+        StreamingProfile.AudioProfile aProfile = new StreamingProfile.AudioProfile(Config.AUDIO_SAMPLING_RATE, Config.AUDIO_BITRATE);
+        // fps is 24, video bitrate is 512 * 1024 bps, maxKeyFrameInterval is 48
+        StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(fps, bps, Config.VIDEO_MAX_KEY_FRAME_INTERVAL);
+        StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
+        mAspect.setShowMode(AspectFrameLayout.SHOW_MODE.REAL);
+
+        mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3)
+                .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
+                .setEncodingSizeLevel(resolution)
+                .setEncoderRCMode(StreamingProfile.EncoderRCModes.BITRATE_PRIORITY)//码率优先
+                .setAVProfile(avProfile)
+                .setDnsManager(getMyDnsManager())
+                //若注册了 mCameraStreamingManager.setStreamStatusCallback ，每隔 3 秒回调 StreamStatus 信息
+                .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
+                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.LAND)
+                .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
     }
 }

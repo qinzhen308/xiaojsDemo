@@ -207,4 +207,23 @@ public class ClassroomController {
         return mVideoController.hasStreamPublishing();
     }
 
+    public void muteOrUnmute (){
+        if (hasStreamPublish()) {
+            mVideoController.muteOrUnmute();
+        }
+    }
+
+    public void openOrCloseCamera() {
+        if (hasStreamPublish()) {
+            mVideoController.openOrCloseCamera();
+        }
+    }
+
+    public void togglePublishStreamResolution() {
+        if (hasStreamPublish()) {
+            mVideoController.setPublishStreamByToggleResolution(true);
+            mVideoController.togglePublishResolution();
+        }
+    }
+
 }

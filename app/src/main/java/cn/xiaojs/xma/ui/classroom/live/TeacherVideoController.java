@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.live;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
@@ -33,6 +34,7 @@ import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.util.XjsUtils;
 
 public class TeacherVideoController extends VideoController {
     private int loadingSize = 36;
@@ -69,7 +71,6 @@ public class TeacherVideoController extends VideoController {
 
     @Override
     public void confirmPublishStream(boolean confirm) {
-        mStreamPublishing = true;
         mPublishView.setPath(mPublishStreamUrl);
         mPublishView.setVisibility(View.VISIBLE);
         mPublishView.resume();
@@ -202,6 +203,7 @@ public class TeacherVideoController extends VideoController {
     public void onSteamStateChanged(StreamingState streamingState, Object data) {
         switch (streamingState) {
             case STREAMING:
+                mStreamPublishing = true;
                 SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new SocketManager.AckListener() {
                     @Override
                     public void call(final Object... args) {
@@ -210,12 +212,21 @@ public class TeacherVideoController extends VideoController {
                             if (response != null && response.result) {
                                 if (mStreamListener != null) {
                                     mStreamListener.onStreamStarted(mUser, mPublishType);
+                                    muteOrUnmute();
                                 }
                             } else {
-                                pausePublishStream(mPublishType);
+                                if (!mPausePublishByToggleResolution) {
+                                    pausePublishStream(mPublishType);
+                                }
+
+                                mPausePublishByToggleResolution = false;
                             }
                         } else {
-                            pausePublishStream(mPublishType);
+                            if (!mPausePublishByToggleResolution) {
+                                pausePublishStream(mPublishType);
+                            }
+
+                            mPausePublishByToggleResolution = false;
                         }
                     }
                 });
@@ -253,4 +264,30 @@ public class TeacherVideoController extends VideoController {
             pausePlayStream(mPlayType);
         }
     }
+
+    @Override
+    public void openOrCloseCamera() {
+
+    }
+
+    @Override
+    public void muteOrUnmute() {
+        SharedPreferences sf = XjsUtils.getSharedPreferences();
+        boolean audioOpen = sf.getBoolean(Constants.KEY_MICROPHONE_OPEN, true);
+        if (audioOpen) {
+            if (mPublishView.isMute()) {
+                mPublishView.mute();
+            }
+        } else {
+            if (!mPublishView.isMute()) {
+                mPublishView.mute();
+            }
+        }
+    }
+
+    @Override
+    public void togglePublishResolution() {
+        mPublishView.togglePublishResolution();
+    }
+
 }

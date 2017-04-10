@@ -157,7 +157,7 @@ public abstract class BaseMediaView extends FrameLayout {
 
     public abstract void destroy();
 
-    protected abstract void mute();
+    public abstract void mute();
 
     protected void close() {
         if (isPlayer()) {
@@ -218,7 +218,7 @@ public abstract class BaseMediaView extends FrameLayout {
         return this instanceof PlayerTextureView;
     }
 
-    protected boolean isMute() {
+    public boolean isMute() {
         return false;
     }
 

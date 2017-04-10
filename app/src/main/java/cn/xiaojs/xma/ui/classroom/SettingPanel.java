@@ -35,8 +35,14 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
     private ToggleButton mTalkSwitcher;
     private ToggleButton mMobileNetworkLiveSwitcher;
 
+    private OnSettingChangedListener mOnSettingChangedListener;
+
     public SettingPanel(Context context) {
         super(context);
+    }
+
+    public void setOnSettingChangedListener(OnSettingChangedListener listener) {
+        mOnSettingChangedListener = listener;
     }
 
     @Override
@@ -85,19 +91,27 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
             v.setSelected(true);
         }
         SharedPreferences.Editor editor = XjsUtils.getSharedPreferences().edit();
+        int quality = QUALITY_STANDARD;
         switch (v.getId()) {
             case R.id.fluent:
+                quality = QUALITY_FLUENT;
                 editor.putInt(KEY_QUALITY, QUALITY_FLUENT);
                 break;
             case R.id.standard_definition:
+                quality = QUALITY_STANDARD;
                 editor.putInt(KEY_QUALITY, QUALITY_STANDARD);
                 break;
             case R.id.high_definition:
+                quality = QUALITY_HIGH;
                 editor.putInt(KEY_QUALITY, QUALITY_HIGH);
                 break;
         }
 
         editor.apply();
+
+        if (mOnSettingChangedListener != null) {
+            mOnSettingChangedListener.onResolutionChanged(quality);
+        }
     }
 
     private void reset() {
@@ -112,12 +126,21 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
         switch (buttonView.getId()) {
             case R.id.mobile_network_watch_live:
                 editor.putBoolean(KEY_MOBILE_NETWORK_LIVE, isChecked);
+                if (mOnSettingChangedListener != null) {
+                    mOnSettingChangedListener.onSwitcherChanged(Constants.SWITCHER_MOBILE_NETWORK_LIVE, isChecked);
+                }
                 break;
             case R.id.camera_switcher:
                 editor.putBoolean(KEY_CAMERA_OPEN, isChecked);
+                if (mOnSettingChangedListener != null) {
+                    mOnSettingChangedListener.onSwitcherChanged(Constants.SWITCHER_CAMERA, isChecked);
+                }
                 break;
             case R.id.microphone_switcher:
                 editor.putBoolean(KEY_MICROPHONE_OPEN, isChecked);
+                if (mOnSettingChangedListener != null) {
+                    mOnSettingChangedListener.onSwitcherChanged(Constants.SWITCHER_AUDIO, isChecked);
+                }
                 break;
             case R.id.class_room_talk:
                 editor.putBoolean(KEY_MULTI_TALK_OPEN, isChecked);
