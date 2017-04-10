@@ -520,6 +520,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         //init whiteboard
         initWhiteboardController();
 
+        setControllerBtnStyle(ctlSession.state);
+        setTipsByState(ctlSession.state);
+
         if (Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
             mCountDownTime = ctlSession.finishOn;
             setCountTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
@@ -543,9 +546,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             int progress = Math.round(100 * (ctlSession.hasTaken / (float) (mLessonDuration * 60)));
             mLiveProgress.setProgress(progress);
         }
-
-        setControllerBtnStyle(ctlSession.state);
-        setTipsByState(ctlSession.state);
 
         //init talk
         initTalk();
