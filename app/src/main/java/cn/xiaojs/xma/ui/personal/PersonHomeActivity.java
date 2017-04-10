@@ -243,8 +243,12 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
         mPortraitView.setSex(home.profile.sex);
         mName.setText(home.profile.name);
-        mFans.setText(getString(R.string.fans_num, home.profile.stats.fans));
-        mFollows.setText(getString(R.string.follow_num, home.profile.stats.followships));
+
+        int fancount = home.profile.stats.fans > 0? home.profile.stats.fans: 0;
+        int followcount = home.profile.stats.followships > 0? home.profile.stats.followships: 0;
+
+        mFans.setText(getString(R.string.fans_num, fancount));
+        mFollows.setText(getString(R.string.follow_num, followcount));
         mPersonName = home.profile.name;
         if (Account.TypeName.ORGANIZATION.equalsIgnoreCase(home.profile.typeName)) {
             mFooterSingle.setVisibility(View.VISIBLE);
