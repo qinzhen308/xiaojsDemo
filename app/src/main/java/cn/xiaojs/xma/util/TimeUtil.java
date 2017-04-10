@@ -708,23 +708,34 @@ public class TimeUtil {
         return new Date(cal.getTimeInMillis());
     }
 
+    public static Date dayAfter(int day) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.MILLISECOND, 999);
+
+        return new Date(cal.getTimeInMillis() + 1000 * 3600 * 24 * day);
+    }
+
+
     public static Date monthBefore(int before) {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
+        cal.setTime(beforeDawn());
         cal.add(cal.MONTH, -before);
         return new Date(cal.getTimeInMillis());
     }
 
     public static Date monthAfter(int after) {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
+        cal.setTime(middleNight());
         cal.add(cal.MONTH, after);
         return new Date(cal.getTimeInMillis());
     }
 
     public static Date yearBefore(int before) {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
+        cal.setTime(beforeDawn());
         cal.add(cal.YEAR, -before);
         return new Date(cal.getTimeInMillis());
     }

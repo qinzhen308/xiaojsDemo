@@ -17,6 +17,8 @@ package cn.xiaojs.xma.ui.lesson;
 import android.content.Context;
 import android.content.Intent;
 
+import com.orhanobut.logger.Logger;
+
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.model.Criteria;
@@ -53,15 +55,17 @@ public class LessonBusiness {
     }
 
     public static Date getStartDate(int position){
+
+        Logger.d("getStartDate: " + position);
+
         switch (position){
             case 0:
                 return TimeUtil.original();
             case 1:
-                return TimeUtil.beforeDawn();
             case 2:
             case 3:
             case 4:
-                return TimeUtil.now();
+                return TimeUtil.beforeDawn();
             case 5:
                 return TimeUtil.monthBefore(6);
             case 6:
@@ -73,20 +77,23 @@ public class LessonBusiness {
     }
 
     public static Date getEndDate(int position){
+
+        Logger.d("getEndDate: " + position);
+
         switch (position){
             case 0:
                 return TimeUtil.yearAfter(10);
             case 1:
                 return TimeUtil.middleNight();
             case 2:
-                return new Date(System.currentTimeMillis() + 1000 * 3600 * 24 * 7);
+                return TimeUtil.dayAfter(7);
             case 3:
                 return TimeUtil.monthAfter(1);
             case 4:
                 return TimeUtil.monthAfter(3);
             case 5:
             case 6:
-                return TimeUtil.now();
+                return TimeUtil.middleNight();
 
             default:
                 return TimeUtil.original();
