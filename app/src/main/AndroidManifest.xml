@@ -65,12 +65,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="luanchapp" android:host="cn.xiaojs.xma" android:pathPrefix="/android"/>
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.VIEW" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
+                <!--<data android:scheme="luanchapp" android:host="cn.xiaojs.xma" android:pathPrefix="/android"/>-->
+            <!--</intent-filter>-->
         </activity>
         <activity android:name=".ui.TestAPIActivity">
 
