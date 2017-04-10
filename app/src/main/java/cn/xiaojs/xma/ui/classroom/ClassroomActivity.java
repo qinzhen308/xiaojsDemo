@@ -106,6 +106,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.55F;
     private final static int REQUEST_PERMISSION = 1000;
 
+    private final static int TYPE_COUNT_DOWN_NORMAL = 0;
+    private final static int TYPE_COUNT_DOWN_DELAY = 1;
+
     private final static int MSG_RESET_TIME = 1 << 0;
     private final static int MSG_COUNT_TIME = 1 << 1;
     private final static int MSG_COUNT_DOWN_TIME = 1 << 2;
@@ -249,6 +252,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private long mCountTime = 0;
     private long mCountDownTime = 0;
     private long mLiveShowCountDownTime = 0;
+    private long mDelayTime = 0;
     private long mHasTaken = 0;
 
     private int mPageState = PAGE_TOP;
@@ -1785,6 +1789,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                         setResetTime();
                         setCountTime(mSyncState.timeline != null ? mSyncState.timeline.hasTaken : 0, false);
+                    } else if (Live.LiveSessionState.LIVE.equals(mSyncState.from) && Live.LiveSessionState.DELAY.equals(mSyncState.to)) {
+                        setDelayTime();
+                        setCountTime(mLessonDuration * 60, false);
                     } else if (Live.LiveSessionState.DELAY.equals(mSyncState.from) && Live.LiveSessionState.FINISHED.equals(mSyncState.to)) {
                         mLiveSessionState = Live.LiveSessionState.FINISHED;
                         setControllerBtnStyle(mLiveSessionState);
@@ -1826,7 +1833,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         setCountDownTime(mCountDownTime, false);
     }
 
+    private void setDelayTime() {
+        setCountDownTime(mCountDownTime, true, TYPE_COUNT_DOWN_DELAY);
+    }
+
     private void setCountDownTime(long startOn, boolean play) {
+        setCountDownTime(startOn, play, TYPE_COUNT_DOWN_NORMAL);
+    }
+
+    private void setCountDownTime(long startOn, boolean play, int type) {
         mHandler.removeMessages(MSG_COUNT_DOWN_TIME);
         mCountDownTime = startOn;
         Message msg = mHandler.obtainMessage(MSG_COUNT_DOWN_TIME);
@@ -1835,6 +1850,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
         msg.what = MSG_COUNT_DOWN_TIME;
         msg.arg1 = play ? 1 : 0;
+        msg.arg2 = type;
         mHandler.sendMessage(msg);
     }
 
@@ -1877,28 +1893,40 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
                         break;
                     case MSG_COUNT_DOWN_TIME:
-                        if (msg.arg1 == 1) {
-                            mCountDownTime--;
-                            String time = TimeUtil.formatSecondTime(mCountDownTime);
-                            if (Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)
-                                    || Live.LiveSessionState.CLAIM_STREAM_STOPPED.equals(mLiveSessionState)) {
-                                mCountDownTimeTv.setText(getString(R.string.cls_distance_class, time));
-                                mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
+                        if (msg.arg2 == TYPE_COUNT_DOWN_NORMAL) {
+                            if (msg.arg1 == 1) {
+                                mCountDownTime--;
+                                String time = TimeUtil.formatSecondTime(mCountDownTime);
+                                if (Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)
+                                        || Live.LiveSessionState.CLAIM_STREAM_STOPPED.equals(mLiveSessionState)) {
+                                    mCountDownTimeTv.setText(getString(R.string.cls_distance_class, time));
+                                    mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
+                                } else {
+                                    mCountDownTimeTv.setText(time);
+                                    mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_start, 0, 0, 0);
+                                }
+
+                                m.arg1 = 1;
+                                m.arg2 = TYPE_COUNT_DOWN_NORMAL;
+                                m.what = MSG_COUNT_DOWN_TIME;
+                                mHandler.sendMessageDelayed(m, 1000);
                             } else {
-                                mCountDownTimeTv.setText(time);
-                                mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_start, 0, 0, 0);
+                                if (Live.LiveSessionState.RESET.equals(mLiveSessionState)) {
+                                    mCountDownTimeTv.setText(getString(R.string.cls_break_time_desc, TimeUtil.formatSecondTime(mCountDownTime)));
+                                } else {
+                                    mCountDownTimeTv.setText(TimeUtil.formatSecondTime(mCountDownTime));
+                                }
+                                mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
                             }
+                        } else if (msg.arg2 == TYPE_COUNT_DOWN_DELAY){
+                            mDelayTime++;
+                            mCountDownTimeTv.setText(getString(R.string.cls_distance_class, mDelayTime));
+                            mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
 
                             m.arg1 = 1;
+                            m.arg2 = TYPE_COUNT_DOWN_DELAY;
                             m.what = MSG_COUNT_DOWN_TIME;
                             mHandler.sendMessageDelayed(m, 1000);
-                        } else {
-                            if (Live.LiveSessionState.RESET.equals(mLiveSessionState)) {
-                                mCountDownTimeTv.setText(getString(R.string.cls_break_time_desc, TimeUtil.formatSecondTime(mCountDownTime)));
-                            } else {
-                                mCountDownTimeTv.setText(TimeUtil.formatSecondTime(mCountDownTime));
-                            }
-                            mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
                         }
                         break;
                     case MSG_COUNT_TIME:
