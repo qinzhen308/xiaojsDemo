@@ -27,7 +27,7 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
-import cn.xiaojs.xma.model.EnrolledLesson;
+import cn.xiaojs.xma.model.ctl.LiveItem;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
@@ -38,23 +38,17 @@ import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
 
 public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
-//    private final int MAX = 2;
-
     private Context mContext;
-    private List<EnrolledLesson> lessons;
+    private List<LiveItem> mLessons;
 
-    public LiveEnrollLessonAdapter(Context context,List<EnrolledLesson> lessons){
+    public LiveEnrollLessonAdapter(Context context, List<LiveItem> lessons) {
         mContext = context;
-        this.lessons = lessons;
+        mLessons = lessons;
     }
+
     @Override
     public int getCount() {
-        if (lessons == null)
-            return 0;
-//        if (lessons.size() > MAX){
-//            return MAX;
-//        }
-        return lessons.size();
+        return mLessons == null ? 0 : mLessons.size();
     }
 
     @Override
@@ -69,7 +63,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-       Holder holder = null;
+        Holder holder = null;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_enroll_lesson_item, null);
             holder = new Holder(convertView);
@@ -77,47 +71,19 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-//        holder.enter.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-//        holder.enter.getPaint().setAntiAlias(true);
-////        holder.time.setText("12:00");
-////        holder.image.setImageResource(R.drawable.default_portrait);
-////        holder.title.setText("titletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitletitle");
-////        holder.stuNum.setText("111人学过");
-//        Bitmap b1 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b2 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b3 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b4 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b5 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b6 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b7 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b8 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b9= BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//        Bitmap b10 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_center_shader);
-//
-//        List<Bitmap> list = new ArrayList<>();
-//        list.add(b1);
-//        list.add(b2);
-//        list.add(b3);
-//        list.add(b4);
-//        list.add(b5);
-//        list.add(b6);
-//        list.add(b7);
-//        list.add(b8);
-//        list.add(b9);
-//        list.add(b10);
-//        //holder.imageFlow.showWithNum(list,mContext.getResources().getDimensionPixelSize(R.dimen.px20),mContext.getResources().getDimensionPixelSize(R.dimen.px2));
-//        holder.imageFlow.show(list,mContext.getResources().getDimensionPixelSize(R.dimen.px20),mContext.getResources().getDimensionPixelSize(R.dimen.px5));
 
-        final EnrolledLesson bean = lessons.get(position);
+        final LiveItem bean = mLessons.get(position);
         holder.reset();
-        holder.name.setText(bean.getTitle());
+
+        holder.name.setText(bean.title);
         holder.lessonCount.setText("共1节");
-        holder.persons.show(bean);
+        holder.persons.show(bean.teacher, null, bean.enroll);
         //Glide.with(mContext).load(bean.getCover()).error(R.drawable.default_lesson_cover).into(holder.image);
-        if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
+        if (bean.state.equalsIgnoreCase(LessonState.CANCELLED)) {
             holder.status.setVisibility(View.VISIBLE);
-            holder.status.show(bean);
+            holder.status.show(bean.state, bean.schedule);
             holder.operation.setVisibility(View.GONE);
+            holder.operation.setEnterColor(R.color.common_text);
 //            String[] items = new String[]{mContext.getString(R.string.data_bank)};
 //            holder.operation.setItems(items);
 //            holder.operation.enableMore(false);
@@ -127,66 +93,31 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
 //                    databank(bean);
 //                }
 //            });
-        } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-            holder.operation.setVisibility(View.GONE);
-            holder.status.setVisibility(View.VISIBLE);
-            holder.status.show(bean);
-//            String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
-            String[] items = new String[]{" "};
-            holder.operation.setItems(items);
-            holder.operation.enableMore(false);
-            holder.operation.enableEnter(true);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
                     switch (position) {
-                        case 1:
-                            //schedule(bean);
-                            //databank(bean);
-                            break;
-                        case 2:
-                            //databank(bean);
-                            break;
                         case ENTER:
                             enterClass(bean);
                             break;
                     }
                 }
             });
-        } else if (bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
+        } else if (bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
             holder.operation.setVisibility(View.VISIBLE);
-            holder.status.setVisibility(View.GONE);
-            holder.progressWrapper.setVisibility(View.VISIBLE);
-            //String[] items = new String[]{mContext.getString(R.string.data_bank)};
-            String[] items = new String[]{" "};
-            holder.operation.setItems(items);
-            holder.operation.enableMore(false);
-            holder.operation.enableEnter(true);
-            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
-                @Override
-                public void onClick(int position) {
-                    if (position == ENTER){
-                        enterClass(bean);
-                    }else {
-                        databank(bean);
-                    }
-                }
-            });
-        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
-            holder.operation.setVisibility(View.VISIBLE);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.status.setVisibility(View.VISIBLE);
-            holder.status.show(bean);
+            holder.status.show(bean.state, bean.schedule);
             //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
             String[] items = new String[]{" "};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
-            holder.operation.enableEnter(true);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
-                            //schedule(bean);
+                            ////schedule(bean);
                             //databank(bean);
                             break;
                         case 2:
@@ -198,34 +129,95 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
                     }
                 }
             });
-        } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
+        } else if (bean.state.equalsIgnoreCase(LessonState.LIVE)) {
+            holder.operation.setVisibility(View.VISIBLE);
+            holder.operation.setEnterColor(R.color.font_orange);
+            holder.status.setVisibility(View.GONE);
+            holder.progressWrapper.setVisibility(View.VISIBLE);
+            holder.progress.showTimeBar(bean.classroom, bean.schedule.getDuration());
+            //String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            String[] items = new String[]{" "};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1:
+                            //databank(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
+                    }
+                }
+            });
+        } else if (bean.state.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
+            holder.operation.setVisibility(View.VISIBLE);
+            holder.operation.setEnterColor(R.color.common_text);
             holder.status.setVisibility(View.VISIBLE);
-            holder.status.show(bean);
-            holder.operation.setVisibility(View.GONE);
+            holder.status.show(bean.state, bean.schedule);
+            //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            String[] items = new String[]{" "};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case 1:
+                            ////schedule(bean);
+
+                            //databank(bean);
+                            break;
+                        case 2:
+                            //databank(bean);
+                            break;
+                        case ENTER:
+                            enterClass(bean);
+                            break;
+                    }
+                }
+            });
+        } else if (bean.state.equalsIgnoreCase(LessonState.STOPPED)) {
+            holder.status.setVisibility(View.VISIBLE);
+            holder.status.show(bean.state, bean.schedule);
+            holder.operation.setVisibility(View.VISIBLE);
+            holder.operation.setEnterColor(R.color.common_text);
+            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+                @Override
+                public void onClick(int position) {
+                    switch (position) {
+                        case ENTER:
+                            enterClass(bean);
+                            break;
+                    }
+                }
+            });
         }
         return convertView;
     }
 
     //资料库
-    private void databank(EnrolledLesson bean) {
+    private void databank(LiveItem bean) {
         Intent intent = new Intent(mContext, MaterialActivity.class);
         mContext.startActivity(intent);
     }
 
     //退课
-    private void dropClass(EnrolledLesson bean) {
+    private void dropClass(LiveItem bean) {
 
     }
 
     //评价
-    private void evaluate(EnrolledLesson bean) {
+    private void evaluate(LiveItem bean) {
 
     }
 
     //进入教室
-    private void enterClass(EnrolledLesson bean) {
+    private void enterClass(LiveItem bean) {
         Intent i = new Intent();
-        i.putExtra(Constants.KEY_TICKET, bean.getTicket());
+        i.putExtra(Constants.KEY_TICKET, bean.ticket);
         i.setClass(mContext, ClassroomActivity.class);
         mContext.startActivity(i);
     }

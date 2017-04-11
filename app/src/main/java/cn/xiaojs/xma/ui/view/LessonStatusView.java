@@ -16,13 +16,12 @@ package cn.xiaojs.xma.ui.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.orhanobut.logger.Logger;
 
 import java.util.Date;
 
@@ -31,8 +30,7 @@ import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.model.EnrolledLesson;
-import cn.xiaojs.xma.util.DeviceUtil;
-import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.util.TimeUtil;
 
 public class LessonStatusView extends RelativeLayout {
@@ -86,31 +84,41 @@ public class LessonStatusView extends RelativeLayout {
     }
 
     public void show(EnrolledLesson bean) {
-        if (bean == null)
+        if (bean == null) {
             return;
+        }
+
+        show(bean.getState(), bean.getSchedule());
+    }
+
+    public void show(String state, Schedule schedule) {
+        if (schedule == null || TextUtils.isEmpty(state)) {
+            return;
+        }
+
         reset();
-        if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
-            time.setText(TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
+        if (state.equalsIgnoreCase(LessonState.CANCELLED)) {
+            time.setText(TimeUtil.format(schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + schedule.getDuration() + "分钟");
             title.setText("因老师个人原因，该班已取消");
             this.status.setVisibility(VISIBLE);
             this.status.setText(R.string.course_state_cancel);
             this.status.setBackgroundResource(R.drawable.course_state_cancel_bg);
             mark.setBackgroundResource(R.color.hor_divide_line);
-        } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-            time.setText(TimeUtil.format(bean.getSchedule().getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
+        } else if (state.equalsIgnoreCase(LessonState.FINISHED)) {
+            time.setText(TimeUtil.format(schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + schedule.getDuration() + "分钟");
             title.setText("此课已结束");
             end.setVisibility(VISIBLE);
             //evaluate.setVisibility(VISIBLE);
             //review.setVisibility(VISIBLE);
             mark.setBackgroundResource(R.color.hor_divide_line);
-        } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
+        } else if (state.equalsIgnoreCase(LessonState.STOPPED)) {
             this.status.setVisibility(VISIBLE);
             this.status.setText(R.string.force_stop);
             this.status.setBackgroundResource(R.drawable.course_state_stop_bg);
-        } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
+        } else if (state.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
 
-            Date date =bean.getSchedule().getStart();
-            time.setText(TimeUtil.format(date, TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + bean.getSchedule().getDuration() + "分钟");
+            Date date = schedule.getStart();
+            time.setText(TimeUtil.format(date, TimeUtil.TIME_YYYY_MM_DD_HH_MM) + " " + schedule.getDuration() + "分钟");
             title.setText(TimeUtil.distanceDay(date, false));
         }
     }

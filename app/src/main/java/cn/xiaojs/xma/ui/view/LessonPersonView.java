@@ -28,6 +28,8 @@ import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.EnrolledLesson;
+import cn.xiaojs.xma.model.Teacher;
+import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -86,14 +88,21 @@ public class LessonPersonView extends LinearLayout {
         circleTransform = new CircleTransform(getContext());
     }
 
-    public void show(EnrolledLesson bean){
-        if (bean == null)
+    public void show(EnrolledLesson bean) {
+        if (bean == null) {
             return;
-        if (bean.getTeacher() !=null && bean.getTeacher().getBasic() != null){
-            name1.setText(bean.getTeacher().getBasic().getName());
+        }
+
+        show(bean.getTeacher(), bean.getCreatedBy(), bean.getEnroll());
+
+    }
+
+    public void show(Teacher teacher, cn.xiaojs.xma.model.account.Account createBy, Enroll enroll) {
+        if (teacher != null && teacher.getBasic() != null) {
+            name1.setText(teacher.getBasic().getName());
             desc1.setText("主讲");
 
-            String avatar = Account.getAvatar(bean.getTeacher().getId(), image1.getMeasuredWidth());
+            String avatar = Account.getAvatar(teacher.getId(), image1.getMeasuredWidth());
             Glide.with(getContext())
                     .load(avatar)
                     .bitmapTransform(circleTransform)
@@ -101,28 +110,28 @@ public class LessonPersonView extends LinearLayout {
                     .error(R.drawable.default_avatar_grey)
                     .into(image1);
 
-        }else if (bean.getCreatedBy() !=null && bean.getCreatedBy().getBasic() != null) {
-            name1.setText(bean.getCreatedBy().getBasic().getName());
+        } else if (createBy != null && createBy.getBasic() != null) {
+            name1.setText(createBy.getBasic().getName());
             desc1.setText("主讲");
 
-            String avatar = Account.getAvatar(bean.getCreatedBy().getId(), image1.getMeasuredWidth());
+            String avatar = Account.getAvatar(createBy.getId(), image1.getMeasuredWidth());
             Glide.with(getContext())
                     .load(avatar)
                     .bitmapTransform(circleTransform)
                     .placeholder(R.drawable.default_avatar_grey)
                     .error(R.drawable.default_avatar_grey)
                     .into(image1);
-        }else {
+        } else {
             name1.setText("未知");
             desc1.setText("主讲");
             image1.setImageResource(R.drawable.default_avatar_grey);
         }
 
-        if (bean.getEnroll() != null && bean.getEnroll().current > 0) {
+        if (enroll != null && enroll.current > 0) {
             image2.setImageResource(R.drawable.default_avatar_grey);
             name2.setText("同学");
-            desc2.setText(bean.getEnroll().current + "人");
-        }else{
+            desc2.setText(enroll.current + "人");
+        } else {
             image2.setVisibility(GONE);
             name2.setVisibility(GONE);
             desc2.setVisibility(GONE);

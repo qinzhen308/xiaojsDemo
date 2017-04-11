@@ -102,7 +102,7 @@
                 android:id="@+id/enroll_lesson_hold_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px30"
-                android:background="@color/ver_divide_line"/>
+                android:background="@color/main_bg"/>
 
         <LinearLayout
                 android:id="@+id/lesson_all_2"

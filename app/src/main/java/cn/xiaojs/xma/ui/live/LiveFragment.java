@@ -52,8 +52,8 @@ import cn.xiaojs.xma.util.TimeUtil;
 
 public class LiveFragment extends BaseFragment implements View.OnClickListener {
     HorizontalAdaptScrollerView mHorizontalListView;
-    CanInScrollviewListView mLessonList;
-    CanInScrollviewListView mLessonList2;
+    CanInScrollviewListView mTeachingLessonList;
+    CanInScrollviewListView mEnrollLessonList;
 
     View mTeacherWrapper;
     View mStudentWrapper;
@@ -80,8 +80,8 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         View v = mContext.getLayoutInflater().inflate(R.layout.fragment_live, null);
         mHorizontalListView = (HorizontalAdaptScrollerView) v.findViewById(R.id.home_live_brilliant);
 
-        mLessonList = (CanInScrollviewListView) v.findViewById(R.id.home_live_list);
-        mLessonList2 = (CanInScrollviewListView) v.findViewById(R.id.home_live_list2);
+        mTeachingLessonList = (CanInScrollviewListView) v.findViewById(R.id.home_live_list);
+        mEnrollLessonList = (CanInScrollviewListView) v.findViewById(R.id.home_live_list2);
 
         mTeacherWrapper = v.findViewById(R.id.teacher_wrapper);
         mStudentWrapper = v.findViewById(R.id.student_wrapper);
@@ -96,10 +96,12 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         mEnrollLessonHoldView = v.findViewById(R.id.enroll_lesson_hold_view);
         mOpenLesson = (ImageView) v.findViewById(R.id.open_lesson);
 
-        mLessonList.setNeedDivider(true);
-        mLessonList.setDividerHeight(mContext.getResources().getDimensionPixelSize(R.dimen.px30));
-        mLessonList.setDividerColor(R.color.main_bg);
-        mLessonList2.setDividerColor(R.color.main_bg);
+        mTeachingLessonList.setNeedDivider(true);
+        mTeachingLessonList.setDividerHeight(mContext.getResources().getDimensionPixelSize(R.dimen.px30));
+        mTeachingLessonList.setDividerColor(R.color.main_bg);
+        mEnrollLessonList.setNeedDivider(true);
+        mEnrollLessonList.setDividerHeight(mContext.getResources().getDimensionPixelSize(R.dimen.px30));
+        mEnrollLessonList.setDividerColor(R.color.main_bg);
         mTeachLessonTitleView.setOnClickListener(this);
         mEnrollLessonTitleView.setOnClickListener(this);
         View search = v.findViewById(R.id.my_course_search);
@@ -191,10 +193,10 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 //只有教的课，没有学的课
                 mTeachLessonAllView.setVisibility(View.VISIBLE);
                 mTeachLessonTitleView.setVisibility(View.VISIBLE);
-                LiveClassAdapter adapter = new LiveClassAdapter(mContext, liveClasses.taught, false);
-                mLessonList.setAdapter(adapter);
-                mLessonList2.setVisibility(View.GONE);
-                mLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                LiveTeachingClassAdapter adapter = new LiveTeachingClassAdapter(mContext, liveClasses.taught, false);
+                mTeachingLessonList.setAdapter(adapter);
+                mEnrollLessonList.setVisibility(View.GONE);
+                mTeachingLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         enterLessonHome(liveClasses.taught.get(position), true);
@@ -205,10 +207,10 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                     && (liveClasses.enrolled != null && !liveClasses.enrolled.isEmpty())) {
                 //只有学的课，没有教的
                 mEnrollLessonAllView.setVisibility(View.VISIBLE);
-                LiveClassAdapter adapter = new LiveClassAdapter(mContext, liveClasses.enrolled, true);
-                mLessonList2.setAdapter(adapter);
-                mLessonList.setVisibility(View.GONE);
-                mLessonList2.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                LiveEnrollLessonAdapter adapter = new LiveEnrollLessonAdapter(mContext, liveClasses.enrolled);
+                mEnrollLessonList.setAdapter(adapter);
+                mTeachingLessonList.setVisibility(View.GONE);
+                mEnrollLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         enterLessonHome(liveClasses.enrolled.get(position), false);
@@ -227,17 +229,17 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 mEnrollLessonAllView.setVisibility(View.VISIBLE);
                 mTeachLessonTitleView.setVisibility(View.VISIBLE);
                 mEnrollLessonTitleView.setVisibility(View.VISIBLE);
-                LiveClassAdapter teach = new LiveClassAdapter(mContext, liveClasses.taught, false);
-                mLessonList.setAdapter(teach);
-                LiveClassAdapter enroll = new LiveClassAdapter(mContext, liveClasses.enrolled, true);
-                mLessonList2.setAdapter(enroll);
-                mLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                LiveTeachingClassAdapter teach = new LiveTeachingClassAdapter(mContext, liveClasses.taught, false);
+                mTeachingLessonList.setAdapter(teach);
+                LiveEnrollLessonAdapter enroll = new LiveEnrollLessonAdapter(mContext, liveClasses.enrolled);
+                mEnrollLessonList.setAdapter(enroll);
+                mTeachingLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         enterLessonHome(liveClasses.taught.get(position), true);
                     }
                 });
-                mLessonList2.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                mEnrollLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         enterLessonHome(liveClasses.enrolled.get(position), false);
