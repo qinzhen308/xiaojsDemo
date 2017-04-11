@@ -35,7 +35,7 @@ public class ClassroomController {
     private VideoController mVideoController;
     private WhiteboardController mBoardController;
     protected Constants.User mUser;
-    private VideoEditingFragment mVideoEditFragment;
+    private PhotoDoodleFragment mPhotoDoodleFragment;
 
     public ClassroomController(Context context, View root, Constants.User client, int appType, OnStreamStateChangeListener listener) {
         init(context, root, client, appType, listener);
@@ -79,23 +79,23 @@ public class ClassroomController {
     /**
      * 进入视频编辑页面
      */
-    public void enterVideoEditing(Bitmap bmp, OnEditedVideoShareListener listener) {
+    public void enterPhotoDoodle(Bitmap bmp, OnPhotoDoodleShareListener listener) {
         if (mContext instanceof ClassroomActivity) {
-            mVideoEditFragment = new VideoEditingFragment();
-            mVideoEditFragment.setBitmap(bmp);
-            mVideoEditFragment.setEditedVideoShareListener(listener);
+            mPhotoDoodleFragment = new PhotoDoodleFragment();
+            mPhotoDoodleFragment.setBitmap(bmp);
+            mPhotoDoodleFragment.setPhotoDoodleShareListener(listener);
             ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
-                    .add(R.id.video_edit_layout, mVideoEditFragment).commit();
+                    .add(R.id.video_edit_layout, mPhotoDoodleFragment).commit();
         }
     }
 
     /**
      * 退出视频编辑页面
      */
-    public void exitVideoEditing() {
-        if (mContext instanceof ClassroomActivity && mVideoEditFragment != null) {
+    public void exitPhotoDoodle() {
+        if (mContext instanceof ClassroomActivity && mPhotoDoodleFragment != null) {
             ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
-                    .remove(mVideoEditFragment).commit();
+                    .remove(mPhotoDoodleFragment).commit();
         }
     }
 

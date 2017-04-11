@@ -1049,7 +1049,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     @Override
                     protected void onPostExecute(Bitmap bmp) {
                         //enter video edit fragment
-                        enterVideoOrImageEditing(bmp);
+                        enterPhotoDoodle(bmp);
                     }
                 }.execute(key);
             }
@@ -1187,17 +1187,17 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Runnable mCaptureFrameRunnable = new Runnable() {
         @Override
         public void run() {
-            enterVideoOrImageEditing(mCaptureFrame);
+            enterPhotoDoodle(mCaptureFrame);
         }
     };
 
-    private void enterVideoOrImageEditing(Bitmap bmp) {
+    private void enterPhotoDoodle(Bitmap bmp) {
         mPageState = PAGE_EDIT_VIDEO;
-        mClassroomController.enterVideoEditing(bmp, mOnEditedVideoShareListener);
+        mClassroomController.enterPhotoDoodle(bmp, mOnPhotoDoodleShareListener);
         hideTopBottomPanel();
     }
 
-    private OnEditedVideoShareListener mOnEditedVideoShareListener = new OnEditedVideoShareListener() {
+    private OnPhotoDoodleShareListener mOnPhotoDoodleShareListener = new OnPhotoDoodleShareListener() {
         @Override
         public void onVideoShared(final Attendee attendee, final Bitmap bitmap) {
             //send msg
@@ -1224,11 +1224,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     };
 
-    public void exitVideoEditing() {
+    public void exitPhotoDoodle() {
         if (mClassroomController != null) {
             mPageState = PAGE_TOP;
             mCurrentControllerLevel = InteractiveLevel.MAIN_PANEL;
-            mClassroomController.exitVideoEditing();
+            mClassroomController.exitPhotoDoodle();
             hideWhiteBoardPanel();
         }
     }
@@ -1620,7 +1620,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 mOpenedPanel.close(mDrawerLayout, mOpenedDrawer);
                 return false;
             } else if (mPageState == PAGE_EDIT_VIDEO) {
-                exitVideoEditing();
+                exitPhotoDoodle();
                 return false;
             } else {
                 showExitDialog();

@@ -18,6 +18,6 @@ import android.graphics.Bitmap;
 
 import cn.xiaojs.xma.model.live.Attendee;
 
-public interface OnEditedVideoShareListener {
+public interface OnPhotoDoodleShareListener {
     public void onVideoShared(Attendee attendee, Bitmap bmp);
 }

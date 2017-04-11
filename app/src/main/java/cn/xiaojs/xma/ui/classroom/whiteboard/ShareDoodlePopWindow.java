@@ -1,7 +1,6 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
-import cn.xiaojs.xma.ui.classroom.OnEditedVideoShareListener;
+import cn.xiaojs.xma.ui.classroom.OnPhotoDoodleShareListener;
 import cn.xiaojs.xma.ui.classroom.talk.InviteFriendAdapter;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -57,9 +56,9 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     private String mTicket;
     private ContactAdapter mContactAdapter;
     private WhiteboardController mBoardController;
-    private OnEditedVideoShareListener mEditedVideoShareListener;
+    private OnPhotoDoodleShareListener mEditedVideoShareListener;
 
-    public ShareDoodlePopWindow(Context context, String ticket, WhiteboardController controller, OnEditedVideoShareListener listener) {
+    public ShareDoodlePopWindow(Context context, String ticket, WhiteboardController controller, OnPhotoDoodleShareListener listener) {
         mContext = context;
         mTicket = ticket;
         mEditedVideoShareListener = listener;

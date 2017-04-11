@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -39,7 +38,7 @@ import cn.xiaojs.xma.util.CacheUtil;
  *
  * ======================================================================================== */
 
-public class VideoEditingFragment extends BaseFragment {
+public class PhotoDoodleFragment extends BaseFragment {
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
 
@@ -53,7 +52,7 @@ public class VideoEditingFragment extends BaseFragment {
     private boolean mAnimating;
     private PanelAnimListener mPanelAnimListener;
     private String mTicket;
-    private OnEditedVideoShareListener mEditedVideoShareListener;
+    private OnPhotoDoodleShareListener mPhotoDoodleShareListener;
 
     @Override
     protected View getContentView() {
@@ -88,7 +87,7 @@ public class VideoEditingFragment extends BaseFragment {
                 break;
             case R.id.back_in_doodle:
                 if (mContext instanceof ClassroomActivity) {
-                    ((ClassroomActivity)mContext).exitVideoEditing();
+                    ((ClassroomActivity)mContext).exitPhotoDoodle();
                 }
                 break;
             case R.id.share_doodle:
@@ -114,8 +113,8 @@ public class VideoEditingFragment extends BaseFragment {
         mBitmap = bmp;
     }
 
-    public void setEditedVideoShareListener(OnEditedVideoShareListener listener) {
-        mEditedVideoShareListener = listener;
+    public void setPhotoDoodleShareListener(OnPhotoDoodleShareListener listener) {
+        mPhotoDoodleShareListener = listener;
     }
 
     /**
@@ -123,7 +122,7 @@ public class VideoEditingFragment extends BaseFragment {
      */
     private void selectShareContact(View anchor) {
         if (mSharePopWindow == null) {
-            mSharePopWindow = new ShareDoodlePopWindow(mContext, mTicket, mBoardController, mEditedVideoShareListener);
+            mSharePopWindow = new ShareDoodlePopWindow(mContext, mTicket, mBoardController, mPhotoDoodleShareListener);
         }
 
         int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);
