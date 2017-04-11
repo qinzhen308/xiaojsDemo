@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.FollowParam;
 import cn.xiaojs.xma.model.social.LikedRecord;
 import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.ui.home.HomeFragment;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -238,8 +239,20 @@ public class SocialRequest extends ServiceRequest {
             contact.id = currentAccountId;
             contact.name = currentName;
             DataManager.getCache(getContext()).addContactId(currentAccountId, contact);
+
+            Intent i = new Intent(HomeFragment.ACTION_UPDATE_FOWLLED);
+            i.putExtra(HomeFragment.EXTRA_FOWLLED_ID,currentAccountId);
+            getContext().sendBroadcast(i);
+
+            //FIXME 添加数据库放到此处
+
         }else if (apiType == APIType.UNFOLLOW_CONTACT) {
             DataManager.getCache(getContext()).removeContactId(currentAccountId);
+
+            Intent i = new Intent(HomeFragment.ACTION_UPDATE_UN_FOWLLED);
+            i.putExtra(HomeFragment.EXTRA_FOWLLED_ID,currentAccountId);
+            getContext().sendBroadcast(i);
+
         }
     }
 }

@@ -17,6 +17,8 @@ package cn.xiaojs.xma.ui.home;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -52,6 +54,12 @@ import cn.xiaojs.xma.util.DeviceUtil;
 
 public class HomeFragment extends BaseFragment {
 
+    public static final String ACTION_UPDATE_FOWLLED = "au_followed";
+    public static final String EXTRA_FOWLLED_ID = "account_id";
+
+    public static final String ACTION_UPDATE_UN_FOWLLED = "au_unfollowed";
+
+
     @BindView(R.id.home_banner)
     BannerView mBanner;
 
@@ -78,13 +86,31 @@ public class HomeFragment extends BaseFragment {
 
     private HomeMomentAdapter mAdapter;
 
+    private UpdateFollowReceiver updateFollowReceiver;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("refresh");
 
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        updateFollowReceiver = new UpdateFollowReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_UPDATE_FOWLLED);
+
+        getActivity().registerReceiver(updateFollowReceiver,intentFilter);
+
+    }
+
+    @Override
+    public void onDetach() {
+        getActivity().unregisterReceiver(updateFollowReceiver);
+        super.onDetach();
     }
 
     @Override
@@ -127,6 +153,10 @@ public class HomeFragment extends BaseFragment {
                 mark();
             }
         });
+
+
+
+
     }
 
     @Override
@@ -311,4 +341,22 @@ public class HomeFragment extends BaseFragment {
             mAdapter.doRefresh();
         }
     }
+
+    private class UpdateFollowReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+            if (action.equals(ACTION_UPDATE_FOWLLED)) {
+                String account = intent.getStringExtra(EXTRA_FOWLLED_ID);
+                mAdapter.updateFollow(account);
+            }else if (action.equals(ACTION_UPDATE_UN_FOWLLED)) {
+                String account = intent.getStringExtra(EXTRA_FOWLLED_ID);
+                mAdapter.updateUnFollow(account);
+            }
+        }
+
+    }
+
 }

@@ -26,6 +26,9 @@ Release
  > $ ./gradlew clean assembleReleaseChannels -PchannelFile=channel
 
     注意：生成release包后，要对混淆映射文件Mapping.txt等进行保存备份。
+    git tag -a v1.4 -m 'my version 1.4'
+    git tag -v v1.4.2.1
+    git push origin --tags
 
 
 

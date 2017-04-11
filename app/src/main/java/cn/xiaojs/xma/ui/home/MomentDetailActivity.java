@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
@@ -47,18 +49,25 @@ import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.DynamicStatus;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.social.Comment;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.DynamicDetail;
 import cn.xiaojs.xma.model.social.LikedRecord;
+import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.view.MomentContent;
 import cn.xiaojs.xma.ui.view.MomentHeader;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ImageMatrixExpandableLayout;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
+
+import static cn.xiaojs.xma.ui.home.HomeFragment.ACTION_UPDATE_FOWLLED;
+import static cn.xiaojs.xma.ui.home.HomeFragment.EXTRA_FOWLLED_ID;
 
 public class MomentDetailActivity extends BaseActivity {
 
@@ -77,6 +86,13 @@ public class MomentDetailActivity extends BaseActivity {
     TextView mPraise;
     @BindView(R.id.moment_detail_footer_image)
     ImageView mFooterImage;
+
+    @BindView(R.id.right_image)
+    ImageView rightImageView;
+
+    @BindView(R.id.moment_footer_lay)
+    LinearLayout momentFooter;
+
 
     private TextView commentCountView;
 
@@ -112,6 +128,8 @@ public class MomentDetailActivity extends BaseActivity {
                 .error(R.drawable.default_avatar_grey)
                 .into(mFooterImage);
 
+
+        mHeader.setDetailActivity(this);
 
     }
 
@@ -207,7 +225,9 @@ public class MomentDetailActivity extends BaseActivity {
         if (detail == null)
             return;
 
-        if (AccountDataManager.unFollowable(this,detail.owner.account)) {
+        if (!AccountDataManager.getAccountID(this).equals(detail.owner.account)
+                && (AccountDataManager.unFollowable(this,detail.owner.account) || !detail.owner.followed)) {
+
             setRightImage(-1);
         }else{
             setRightImage(R.drawable.ic_lesson_more);
@@ -226,11 +246,26 @@ public class MomentDetailActivity extends BaseActivity {
             mPraise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_praise_off, 0, 0, 0);
         }
 
+        if (isFollowed(detail)) {
+            mPraise.setVisibility(View.VISIBLE);
+            momentFooter.setVisibility(View.VISIBLE);
+        }else {
+            mPraise.setVisibility(View.GONE);
+            momentFooter.setVisibility(View.GONE);
+        }
+
+
         //FIXME H5页面出来后，可打开注释代码
 //        if (detail.scope == Social.ShareScope.PUBLIC){//公开动态可分享
 //            setRightImage2(R.drawable.share_selector);
 //        }
     }
+
+
+    public void followSuccessed(String account) {
+        request();
+    }
+
 
     @Override
     protected boolean delayBindView() {
@@ -356,6 +391,7 @@ public class MomentDetailActivity extends BaseActivity {
             if (mDetail.liked) {
                 //取消赞
             } else {
+
                 //赞
                 SocialManager.likeActivity(this, mDetail.id, new APIServiceCallback<Dynamic.DynStatus>() {
                     @Override
@@ -460,4 +496,19 @@ public class MomentDetailActivity extends BaseActivity {
             }
         });
     }
+
+
+    private boolean isFollowed(final Dynamic bean) {
+
+        if (bean == null || bean.owner == null) {
+            return false;
+        }
+
+        String id = bean.owner.account;
+        if (AccountDataManager.getAccountID(this).equals(id)) {
+            return true;
+        }
+        return bean.owner.followed;
+    }
+
 }
