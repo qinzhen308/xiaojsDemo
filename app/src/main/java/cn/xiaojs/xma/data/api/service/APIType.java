@@ -155,4 +155,6 @@ public class APIType {
 
     public static final int SEARCH_LESSONS = 88;
 
+    public static final int DELETE_DOCUMENT = 89;
+
 }

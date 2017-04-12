@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.material.TokenPair;
 import cn.xiaojs.xma.model.material.UploadParam;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.material.UserDoc;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 
@@ -56,5 +57,10 @@ public class CollaRequest extends ServiceRequest{
     public void getDocuments(String id, String subtype, int page, int limit) {
         Call<UserDoc> call = getService().getDocuments(id,subtype,page,limit);
         enqueueRequest(APIType.GET_DOCUMENTS, call);
+    }
+
+    public void deleteDocument(String documentId, boolean shared) {
+        Call<ResponseBody> call = getService().deleteDocument(documentId, shared);
+        enqueueRequest(APIType.DELETE_DOCUMENT, call);
     }
 }

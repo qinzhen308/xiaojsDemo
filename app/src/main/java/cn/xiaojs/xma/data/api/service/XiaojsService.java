@@ -540,6 +540,13 @@ public interface XiaojsService {
                                @Query("page") int page,
                                @Query("limit") int limit);
 
+    //Delete Document
+    @DELETE("/v1/collaboration/documents/{document}")
+    Call<ResponseBody> deleteDocument(@Path("document") String document, @Query("shared") boolean shared);
+
+    //Share Document
+    //@PATCH("/v1/collaboration/documents/{document}/share")
+    //shareDocument(@Path("document") String document);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
