@@ -62,4 +62,10 @@ public class Collaboration {
 
     }
 
+    public class ShareType{
+        public static final String SHORTCUT = "Shortcut";
+        public static final String SEND = "Send";
+        public static final String COPY = "Copy";
+    }
+
 }
