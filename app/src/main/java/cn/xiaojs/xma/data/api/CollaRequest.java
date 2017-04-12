@@ -11,6 +11,8 @@ import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.material.LibCriteria;
 import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.ShareDoc;
+import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.TokenPair;
 import cn.xiaojs.xma.model.material.UploadParam;
 import cn.xiaojs.xma.model.material.UploadReponse;
@@ -62,5 +64,10 @@ public class CollaRequest extends ServiceRequest{
     public void deleteDocument(String documentId, boolean shared) {
         Call<ResponseBody> call = getService().deleteDocument(documentId, shared);
         enqueueRequest(APIType.DELETE_DOCUMENT, call);
+    }
+
+    public void shareDocument(String document, ShareResource resource) {
+        Call<ShareDoc> call = getService().shareDocument(document, resource);
+        enqueueRequest(APIType.SHARE_DOCUMENT, call);
     }
 }

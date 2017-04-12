@@ -12,6 +12,8 @@ import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.material.LibCriteria;
 import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.ShareDoc;
+import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UploadParam;
 import cn.xiaojs.xma.model.material.UserDoc;
 
@@ -171,6 +173,22 @@ public class CollaManager {
         CollaRequest request = new CollaRequest(context,callback);
         request.deleteDocument(documentId, shared);
 
+    }
+
+    /**
+     * 分享文档
+     * @param context
+     * @param document
+     * @param resource
+     * @param callback
+     */
+    public static void shareDocument(Context context,
+                                     String document,
+                                     ShareResource resource,
+                                     APIServiceCallback<ShareDoc> callback) {
+
+        CollaRequest request = new CollaRequest(context,callback);
+        request.shareDocument(document, resource);
     }
 
 

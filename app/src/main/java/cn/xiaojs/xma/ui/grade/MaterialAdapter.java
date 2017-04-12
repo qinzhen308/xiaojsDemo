@@ -30,6 +30,7 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
@@ -53,6 +54,11 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             mIsMine = true;
         }
         mOwner = owner;
+    }
+
+    @Override
+    protected PullToRefreshBase.Mode getRefreshMode() {
+        return PullToRefreshBase.Mode.DISABLED;
     }
 
     @Override
@@ -80,7 +86,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
             thumbnail(bean.key, R.drawable.ic_pdf, holder);
         } else {
-            holder.image.setImageResource(R.drawable.ic_unknown);
+            thumbnail(bean.key, R.drawable.ic_unknown, holder);
         }
         holder.name.setText(bean.name);
         StringBuilder sb = new StringBuilder();
@@ -119,6 +125,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
     private void thumbnail(String key, int errorResId, Holder holder) {
         Glide.with(mContext)
                 .load(Social.getDrawing(key, true))
+                .placeholder(errorResId)
                 .error(errorResId)
                 .into(holder.image);
     }

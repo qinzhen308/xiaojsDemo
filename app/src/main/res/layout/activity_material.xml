@@ -46,18 +46,30 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
 
             <ImageView
                     android:id="@+id/material_right_image2"
-                    android:layout_toLeftOf="@id/material_right_image"
-                    android:layout_centerInParent="true"
                     android:paddingLeft="@dimen/px30"
                     android:paddingRight="@dimen/px30"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
+            <!--<ImageView-->
+                    <!--android:id="@+id/material_right_image2"-->
+                    <!--android:layout_toLeftOf="@id/material_right_image"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--android:paddingLeft="@dimen/px30"-->
+                    <!--android:paddingRight="@dimen/px30"-->
+                    <!--android:paddingTop="@dimen/px16"-->
+                    <!--android:paddingBottom="@dimen/px16"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"/>-->
         </RelativeLayout>
 
 

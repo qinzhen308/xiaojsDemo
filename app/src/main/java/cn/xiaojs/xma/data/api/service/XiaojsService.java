@@ -43,6 +43,8 @@ import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
 import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.ShareDoc;
+import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.TokenPair;
 import cn.xiaojs.xma.model.material.UploadParam;
 import cn.xiaojs.xma.model.material.UploadReponse;
@@ -545,8 +547,8 @@ public interface XiaojsService {
     Call<ResponseBody> deleteDocument(@Path("document") String document, @Query("shared") boolean shared);
 
     //Share Document
-    //@PATCH("/v1/collaboration/documents/{document}/share")
-    //shareDocument(@Path("document") String document);
+    @PATCH("/v1/collaboration/documents/{document}/share")
+    Call<ShareDoc> shareDocument(@Path("document") String document, @Body ShareResource resource);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
