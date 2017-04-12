@@ -40,6 +40,7 @@ import cn.xiaojs.xma.model.GELessonsResponse;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.view.LessonPersonView;
@@ -122,7 +123,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
             //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
-            String[] items = new String[]{" "};
+            String[] items = new String[]{mContext.getString(R.string.data_bank)};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -131,7 +132,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
                     switch (position) {
                         case 1:
                             ////schedule(bean);
-                            //databank(bean);
+                            databank(bean);
                             break;
                         case 2:
                             //databank(bean);
@@ -149,7 +150,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.progressWrapper.setVisibility(View.VISIBLE);
             holder.progress.showTimeBar(bean.getClassroom() ,bean.getSchedule().getDuration());
             //String[] items = new String[]{mContext.getString(R.string.data_bank)};
-            String[] items = new String[]{" "};
+            String[] items = new String[]{mContext.getString(R.string.data_bank)};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -157,7 +158,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
-                            //databank(bean);
+                            databank(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -171,7 +172,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
             //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
-            String[] items = new String[]{" "};
+            String[] items = new String[]{mContext.getString(R.string.data_bank)};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -181,7 +182,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
                         case 1:
                             ////schedule(bean);
 
-                            //databank(bean);
+                            databank(bean);
                             break;
                         case 2:
                             //databank(bean);
@@ -229,7 +230,8 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
 
     //资料库
     private void databank(EnrolledLesson bean) {
-        Intent intent = new Intent(mContext, MaterialActivity.class);
+        Intent intent = new Intent(mContext, ClassMaterialActivity.class);
+        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.getId());
         mContext.startActivity(intent);
     }
 

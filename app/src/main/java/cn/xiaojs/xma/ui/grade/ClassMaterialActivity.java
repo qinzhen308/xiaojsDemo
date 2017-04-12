@@ -29,6 +29,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Keep;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,31 +47,28 @@ import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseConstant;
+import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.message.ChoiceContactActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
 
-import static cn.xiaojs.xma.ui.message.PostDynamicActivity.EXTRA_CLASS_POS;
 import static cn.xiaojs.xma.ui.message.ShareScopeActivity.REQUEST_CHOOSE_CLASS_CODE;
 
-public class MaterialActivity extends BaseActivity {
-    private static final int REQUEST_PERMISSION = 1000;
+public class ClassMaterialActivity extends BaseActivity {
 
-    public static final String KEY_IS_MINE = "key_is_mine";
-
-    private boolean mIsMine;
+    public static final String EXTRA_LESSON_ID = "lesson_id";
+    private static final int REQUEST_PERMISSION = 1002;
 
     @BindView(R.id.material_list)
     PullToRefreshSwipeListView mList;
@@ -89,7 +87,12 @@ public class MaterialActivity extends BaseActivity {
     @BindView(R.id.material_right_image2)
     ImageView mRightImage2;
 
-    MaterialAdapter mAdapter;
+    @BindView(R.id.lay_tips)
+    LinearLayout tipsLay;
+    @BindView(R.id.tip_text_view)
+    TextView tipsTextView;
+
+    ClassMaterialAdapter mAdapter;
     CollaManager mManager;
     private Uri mUri;
 
@@ -100,24 +103,29 @@ public class MaterialActivity extends BaseActivity {
         addView(R.layout.activity_material);
         //setRightImage(R.drawable.upload_selector);
         needHeader(false);
-        Intent intent = getIntent();
-        if (intent != null) {
-            mIsMine = intent.getBooleanExtra(KEY_IS_MINE, false);
-        }
-        if (mIsMine) {
-            mTitle.setText(R.string.data_bank_of_mine);
-        } else {
-            mTitle.setText(R.string.data_bank);
-        }
-        mAdapter = new MaterialAdapter(this, mList, XiaojsConfig.mLoginUser.getId());
+
+        mTitle.setText(R.string.class_data_bank);
+        tipsTextView.setText(R.string.class_data_tips);
+        mRightImage2.setVisibility(View.GONE);
+
+        tipsLay.setVisibility(View.VISIBLE);
+
+        String lessonId = getIntent().getStringExtra(EXTRA_LESSON_ID);
+
+        mAdapter = new ClassMaterialAdapter(this, mList, lessonId);
         mList.setAdapter(mAdapter);
         mRightImage2.setImageResource(R.drawable.upload_selector);
         mRightImage.setImageResource(R.drawable.ic_my_download);
+
+
     }
 
-    @OnClick({R.id.material_left_image, R.id.material_right_image, R.id.material_right_image2, R.id.material_up_load_close})
+    @OnClick({R.id.material_left_image, R.id.material_right_image, R.id.material_right_image2, R.id.material_up_load_close, R.id.lesson_creation_tips_close})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.lesson_creation_tips_close:
+                tipsLay.setVisibility(View.GONE);
+                break;
             case R.id.material_left_image:
                 finish();
                 break;
@@ -163,23 +171,12 @@ public class MaterialActivity extends BaseActivity {
                         addToLibrary(new File(mUri.getPath()));
                     } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(mUri.getScheme())) {
                         if (PermissionUtil.isOverMarshmallow()) {
-                            PermissionGen.needPermission(MaterialActivity.this, REQUEST_PERMISSION,
+                            PermissionGen.needPermission(ClassMaterialActivity.this, REQUEST_PERMISSION,
                                     Manifest.permission.READ_EXTERNAL_STORAGE);
                         } else {
                             addToLibrary(queryFileFromDataBase());
                         }
                     }
-                }
-            }
-        } else if (requestCode == REQUEST_CHOOSE_CLASS_CODE) {
-            if (resultCode == RESULT_OK) {
-                ArrayList<Contact> choiceContacts = (ArrayList<Contact>) data.getSerializableExtra(
-                        ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
-
-                if (choiceContacts != null && choiceContacts.size() > 0) {
-
-                    Contact chooseClass = choiceContacts.get(0);
-                    toshare(targetDocId, chooseClass.account);
                 }
             }
         }
@@ -203,7 +200,7 @@ public class MaterialActivity extends BaseActivity {
             if (picturePath != null) {
                 return new File(picturePath);
             } else {
-                return new File(getPath(MaterialActivity.this, mUri));
+                return new File(getPath(ClassMaterialActivity.this, mUri));
             }
         }
 
@@ -371,38 +368,6 @@ public class MaterialActivity extends BaseActivity {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
-
-    public void chooseShare(String docmentId) {
-
-        targetDocId = docmentId;
-
-        Intent i = new Intent(this, ChooseClassActivity.class);
-        startActivityForResult(i, REQUEST_CHOOSE_CLASS_CODE);
-    }
-
-    private void toshare(String documentId, String targetId) {
-
-        ShareResource resource = new ShareResource();
-        resource.targetId = targetId;
-        resource.subtype = Collaboration.SubType.STANDA_LONE_LESSON;
-        //resource.sharedType = Collaboration.ShareType.COPY;
-
-        showProgress(true);
-        CollaManager.shareDocument(this, documentId, resource, new APIServiceCallback<ShareDoc>() {
-            @Override
-            public void onSuccess(ShareDoc object) {
-                cancelProgress();
-                Toast.makeText(MaterialActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress();
-                Toast.makeText(MaterialActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     public void confirmDel(final String docId) {
         final CommonDialog dialog = new CommonDialog(this);
         dialog.setTitle("提示");
@@ -435,33 +400,14 @@ public class MaterialActivity extends BaseActivity {
                     mAdapter.doRequest();
                 }
 
-                Toast.makeText(MaterialActivity.this, R.string.delete_success,Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClassMaterialActivity.this, R.string.delete_success,Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(MaterialActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClassMaterialActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
-//    private class BytesTask extends AsyncTask<Uri,Integer, String ad>{
-//
-//        @Override
-//        protected byte[] doInBackground(Uri... params) {
-//
-//            if(){
-//
-//            }
-//
-//            return new byte[0];
-//        }
-//
-//        @Override
-//        protected void onPostExecute(byte[] bytes) {
-//            super.onPostExecute(bytes);
-//        }
-//    }
 }

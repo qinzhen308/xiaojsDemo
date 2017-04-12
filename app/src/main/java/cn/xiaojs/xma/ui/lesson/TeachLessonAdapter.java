@@ -49,6 +49,7 @@ import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -273,7 +274,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 //            holder.assistants.show(l);
 //            String[] items = new String[]{/*mContext.getString(R.string.prepare_lesson),*/
 //                    mContext.getString(R.string.class_home)};
-            String[] items = new String[]{mContext.getString(R.string.look_detail)};
+            String[] items = new String[]{mContext.getString(R.string.data_bank)};
 
 //            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
 //                items[0] = mContext.getString(R.string.lesson_again);
@@ -295,13 +296,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
-                            detail(bean);
+                            //detail(bean);
 //                            if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
 //                                lessonAgain(bean);
 //                            } else {
 //                                prepare(bean);
 //                            }
-                            //home(bean);
+                            databank(bean);
                             break;
 //                        case 2://班级主页
 //                            home(bean);
@@ -449,6 +450,13 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     //班级圈
     private void circle(TeachLesson bean) {
         //modifyLesson(bean);
+    }
+
+    //资料库
+    private void databank(TeachLesson bean) {
+        Intent intent = new Intent(mContext, ClassMaterialActivity.class);
+        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.getId());
+        mContext.startActivity(intent);
     }
 
     //进入教室

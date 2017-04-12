@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.common.xf_foundation.schemas;
 
+import android.text.TextUtils;
+
 /**
  * Created by maxiaobao on 2017/2/4.
  */
@@ -66,6 +68,52 @@ public class Collaboration {
         public static final String SHORTCUT = "Shortcut";
         public static final String SEND = "Send";
         public static final String COPY = "Copy";
+    }
+
+
+    public static boolean isImage(String mimeType) {
+        if (TextUtils.isEmpty(mimeType)) return false;
+
+        if (mimeType.equals(PictureMimeTypes.BMP)
+                || mimeType.equals(PictureMimeTypes.GIF)
+                || mimeType.equals(PictureMimeTypes.JPEG)
+                || mimeType.equals(PictureMimeTypes.JPG)
+                || mimeType.equals(PictureMimeTypes.PNG)
+                || mimeType.equals(PictureMimeTypes.TIFF)) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public static boolean isVideo(String mimeType) {
+        if (TextUtils.isEmpty(mimeType)) return false;
+
+        if (mimeType.equals(VideoMimeTypes.AVI)
+                || mimeType.equals(VideoMimeTypes.MOV)
+                || mimeType.equals(VideoMimeTypes.MP4)
+                || mimeType.equals(VideoMimeTypes.MPEG)
+                || mimeType.equals(VideoMimeTypes.MPG)
+                || mimeType.equals(VideoMimeTypes.OGG)
+                || mimeType.equals(VideoMimeTypes.QT)
+                || mimeType.equals(VideoMimeTypes.THREE_GPP)) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public static boolean isPPT(String mimeType) {
+        if (TextUtils.isEmpty(mimeType)) return false;
+
+        if (mimeType.equals(OfficeMimeTypes.PPT) || mimeType.equals(OfficeMimeTypes.PPTX)) {
+            return true;
+        }
+
+        return false;
+
     }
 
 }

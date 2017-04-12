@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 
@@ -83,4 +84,15 @@ public class UIUtils {
             context.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
+
+    public static void toImageViewActivity(Activity context, ArrayList<String> photos){
+        if (photos != null && photos.size() > 0){
+            Intent intent = new Intent(context, ImageViewActivity.class);
+            intent.putExtra(ImageViewActivity.IMAGE_PATH_KEY,photos);
+            context.startActivity(intent);
+            context.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }
+    }
+
+
 }

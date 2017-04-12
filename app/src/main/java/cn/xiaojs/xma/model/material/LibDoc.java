@@ -22,6 +22,10 @@ public class LibDoc {
     public String name;
     public String key;
 
+    public DocOwner owner;
+
+
+
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)

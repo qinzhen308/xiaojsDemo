@@ -16,7 +16,10 @@ package cn.xiaojs.xma.ui.grade;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,7 +37,9 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CollaManager;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.material.LibDoc;
@@ -42,19 +47,24 @@ import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.UIUtils;
 import cn.xiaojs.xma.util.XjsUtils;
 
-public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Holder> {
+public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialAdapter.Holder> {
 
     private boolean mIsMine;
     private String mOwner;
 
-    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView, String owner) {
+    private String myAccountId;
+
+    public ClassMaterialAdapter(Context context, PullToRefreshSwipeListView listView, String owner) {
         super(context, listView);
         if (TextUtils.isEmpty(owner)) {
             mIsMine = true;
         }
         mOwner = owner;
+
+        myAccountId = AccountDataManager.getAccountID(mContext);
     }
 
     @Override
@@ -65,11 +75,10 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
     @Override
     protected void setViewContent(final Holder holder, final LibDoc bean, int position) {
         holder.showOpera(false);
-        if (mIsMine) {
-            holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.share_selector, 0, 0);
-            holder.opera2.setText(R.string.share);
-        }
-
+//        if (mIsMine) {
+//            holder.opera2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.share_selector, 0, 0);
+//            holder.opera2.setText(R.string.share);
+//        }
 
         if (FileUtil.DOC == FileUtil.getFileType(bean.mimeType)) {
             thumbnail(bean.key, R.drawable.ic_word, holder);
@@ -92,13 +101,35 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
         holder.desc.setText(sb);
 
+        if (!TextUtils.isEmpty(bean.owner.name)) {
+
+            String author = bean.owner.name;
+
+            SpannableString spanString = new SpannableString(author);
+            ForegroundColorSpan span = new ForegroundColorSpan(mContext.getResources().getColor(R.color.font_blue));
+            spanString.setSpan(span, 0, author.length()-1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            holder.desc.append("  ");
+            holder.desc.append("分享：" + spanString);
+        }else {
+            holder.desc.append("");
+        }
+
+        if (bean.owner.id.equals(myAccountId)) {
+            holder.opera3.setVisibility(View.VISIBLE);
+            holder.expand.setVisibility(View.VISIBLE);
+        }else{
+            holder.opera3.setVisibility(View.GONE);
+            holder.expand.setVisibility(View.GONE);
+        }
+
+
         holder.expand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.showOpera(holder.opera.getVisibility() != View.VISIBLE);
             }
         });
-
 
         holder.opera1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,20 +138,11 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             }
         });
 
-        holder.opera2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                ((MaterialActivity)mContext).chooseShare(bean.id);
-
-            }
-        });
-
         holder.opera3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                ((MaterialActivity)mContext).confirmDel(bean.id);
+                ((ClassMaterialActivity)mContext).confirmDel(bean.id);
 
             }
         });
@@ -128,7 +150,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MaterialUtil.openMaterial((MaterialActivity)mContext, bean);
+                MaterialUtil.openMaterial((ClassMaterialActivity)mContext, bean);
             }
         });
     }
@@ -166,19 +188,19 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
     @Override
     protected void doRequest() {
-        CollaManager.getDocuments(mContext, mOwner, Collaboration.SubType.PERSON, mPagination, new APIServiceCallback<UserDoc>() {
+        CollaManager.getDocuments(mContext, mOwner, Collaboration.SubType.STANDA_LONE_LESSON, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
                 if (object != null && object.documents.size() > 0) {
-                    MaterialAdapter.this.onSuccess(object.documents);
+                    ClassMaterialAdapter.this.onSuccess(object.documents);
                 } else {
-                    MaterialAdapter.this.onSuccess(null);
+                    ClassMaterialAdapter.this.onSuccess(null);
                 }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                MaterialAdapter.this.onFailure(errorCode, errorMessage);
+                ClassMaterialAdapter.this.onFailure(errorCode, errorMessage);
             }
         });
     }
@@ -218,7 +240,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         public Holder(View view) {
             super(view);
 
-            opera3.setVisibility(View.VISIBLE);
+            opera2.setVisibility(View.GONE);
         }
     }
 }

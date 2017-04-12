@@ -39,6 +39,12 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.SHARE_DOCUMENT:
+                errorMessage = "分享失败";
+                break;
+            case APIType.DELETE_DOCUMENT:
+                errorMessage = "删除失败";
+                break;
             case APIType.REQUEST_VERIFICATION:
                 errorMessage = "提交认证失败";
                 break;
