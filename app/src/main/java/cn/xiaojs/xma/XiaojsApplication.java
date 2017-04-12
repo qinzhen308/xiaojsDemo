@@ -20,6 +20,7 @@ import cn.xiaojs.xma.ui.message.im.chatkit.LCChatKit;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMIMTypeMessageEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMOfflineMessageCountChangeEvent;
 import cn.xiaojs.xma.util.APPUtils;
+import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.XjsUtils;
 
 /**
@@ -91,8 +92,7 @@ public class XiaojsApplication extends Application {
             Logger.d("onEvent: LCIMIMTypeMessageEvent--------");
         }
 
-        DataManager.setHasMessage(this,true);
-        sendBroadcast(new Intent(ACTION_NEW_MESSAGE));
+        MessageUitl.newMessageCome(this);
     }
 
     /**
@@ -103,8 +103,7 @@ public class XiaojsApplication extends Application {
         if(XiaojsConfig.DEBUG) {
             Logger.d("onEvent: LCIMOfflineMessageCountChangeEvent--------");
         }
-        DataManager.setHasMessage(this,true);
-        sendBroadcast(new Intent(ACTION_NEW_MESSAGE));
+        MessageUitl.newMessageCome(this);
     }
 
 

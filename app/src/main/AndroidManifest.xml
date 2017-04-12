@@ -96,6 +96,10 @@
                 <action android:name="cn.leancloud.chatkit.chat_notification_action"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="cn.xiaojs.xma.action_new_push_opened"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
         <activity
                 android:name=".common.crop.CropImageActivity"

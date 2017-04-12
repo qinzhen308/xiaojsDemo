@@ -168,8 +168,10 @@ public class LCIMConversationListFragment extends Fragment {
             conversationList.add(conversation);
         }
 
-        itemAdapter.setDataList(conversationList);
-        itemAdapter.notifyDataSetChanged();
+        if (itemAdapter != null) {
+            itemAdapter.setDataList(conversationList);
+            itemAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -182,7 +184,7 @@ public class LCIMConversationListFragment extends Fragment {
     }
 
 
-    private void getMessageOverview() {
+    public void getMessageOverview() {
 
 //        if (notificationCategories != null) {
 //            updateConversationList(notificationCategories);

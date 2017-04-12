@@ -33,6 +33,7 @@ import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.SingleSelectDialog;
+import cn.xiaojs.xma.util.MessageUitl;
 
 /**
  * Created by wli on 16/2/29.
@@ -56,7 +57,7 @@ public class LCIMConversationActivity extends FragmentActivity {
         conversationFragment = (LCIMConversationFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
         initByIntent(getIntent());
 
-        DataManager.setHasMessage(this,false);
+        MessageUitl.setHasMessage(this,false);
     }
 
 

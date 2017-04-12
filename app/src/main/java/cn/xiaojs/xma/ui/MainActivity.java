@@ -36,6 +36,7 @@ import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
 
 import static cn.xiaojs.xma.XiaojsApplication.ACTION_NEW_MESSAGE;
@@ -49,6 +50,8 @@ public class MainActivity extends BaseTabActivity {
     private UpgradeReceiver upgradeReceiver;
     private boolean hasShow = false;
 
+    private LCIMConversationListFragment conversationListFragment;
+
 
     @Override
     protected void initView() {
@@ -58,7 +61,9 @@ public class MainActivity extends BaseTabActivity {
         fs.add(new HomeFragment());
         fs.add(new LiveFragment());
         //fs.add(new MessageFragment());
-        fs.add(new LCIMConversationListFragment());
+        conversationListFragment = new LCIMConversationListFragment();
+
+        fs.add(conversationListFragment);
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);
         addViews(new int[]{R.string.home_tab_index, R.string.home_tab_live, R.string.home_tab_message, R.string.home_tab_mine},
@@ -124,6 +129,11 @@ public class MainActivity extends BaseTabActivity {
             ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
 
             startActivity(ifarIntent);
+            return true;
+        }
+
+        if (!TextUtils.isEmpty(action) && action.equals(MessageUitl.ACTION_NEW_PUSH)) {
+            setTabSelected(2);
             return true;
         }
 
@@ -263,8 +273,27 @@ public class MainActivity extends BaseTabActivity {
                     hasShow = true;
                 }
             }else if (action.equals(ACTION_NEW_MESSAGE)) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("receiver new MESSAGE...");
+                }
+
                 if (!XiaojsConfig.CURRENT_PAGE_IN_MESSAGE) {
                     showMessageTips();
+                }
+
+            }else if (action.equals(MessageUitl.ACTION_NEW_PUSH)) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("receiver new PUSH...");
+                }
+
+                if (!XiaojsConfig.CURRENT_PAGE_IN_MESSAGE) {
+                    showMessageTips();
+                }
+
+                if (conversationListFragment != null) {
+                    conversationListFragment.getMessageOverview();
                 }
 
             }

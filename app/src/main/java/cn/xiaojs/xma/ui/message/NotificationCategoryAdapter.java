@@ -31,8 +31,10 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.NotificationDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.GENotificationsResponse;
 import cn.xiaojs.xma.model.Notification;
 import cn.xiaojs.xma.model.NotificationCriteria;
@@ -74,7 +76,7 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
                 public void onClick(View v) {
                     //同意
 
-                    dealNotify(bean.doc.id, Ctl.ACKDecision.ACKNOWLEDGE);
+                    dealNotify(bean, Ctl.ACKDecision.ACKNOWLEDGE);
                 }
             });
 
@@ -82,7 +84,7 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
                 @Override
                 public void onClick(View v) {
                     //拒绝
-                    dealNotify(bean.doc.id, Ctl.ACKDecision.REFUSED);
+                    dealNotify(bean, Ctl.ACKDecision.REFUSED);
                 }
             });
 
@@ -212,24 +214,66 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
     }
 
 
-    private void dealNotify(String orgId, int decision) {
+    private void dealNotify(final Notification bean, final int decision) {
 
         DealAck dealAck = new DealAck();
         dealAck.decision = decision;
 
         showProgress(false);
-        AccountDataManager.acknowledgeInvitation(mContext, orgId, dealAck, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-                cancelProgress();
-                Toast.makeText(mContext,"操作成功", Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress();
-                Toast.makeText(mContext,errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (bean.doc.subtype.equals("StandaloneLesson")) {
+
+            LessonDataManager.acknowledgeLesson(mContext, bean.doc.id, dealAck, new APIServiceCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    cancelProgress();
+                    bean.state = Platform.NotificationState.DISMISSED;
+                    bean.actions = null;
+                    notifyDataSetChanged();
+
+                    if (decision == Ctl.ACKDecision.ACKNOWLEDGE) {
+                        Toast.makeText(mContext,"您已同意", Toast.LENGTH_SHORT).show();
+                    }else if (decision == Ctl.ACKDecision.REFUSED){
+                        Toast.makeText(mContext,"您已拒绝", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(mContext,"操作成功", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+
+                }
+            });
+
+        }else if (bean.doc.subtype.equals("ITTOInvitation")) {
+            AccountDataManager.acknowledgeInvitation(mContext, bean.doc.id, dealAck, new APIServiceCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    cancelProgress();
+                    bean.state = Platform.NotificationState.DISMISSED;
+                    bean.actions = null;
+                    notifyDataSetChanged();
+
+                    if (decision == Ctl.ACKDecision.ACKNOWLEDGE) {
+                        Toast.makeText(mContext,"您已同意", Toast.LENGTH_SHORT).show();
+                    }else if (decision == Ctl.ACKDecision.REFUSED){
+                        Toast.makeText(mContext,"您已拒绝", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(mContext,"操作成功", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    Toast.makeText(mContext,errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
     }
 }

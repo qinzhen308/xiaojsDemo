@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.message;
  * ======================================================================================== */
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,12 +34,21 @@ import cn.xiaojs.xma.model.NotificationCriteria;
 import cn.xiaojs.xma.ui.base.BaseListActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
 
 public class NotificationCategoryListActivity extends BaseListActivity {
     private String categoryId;
 
     private NotificationCategoryAdapter adapter;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        MessageUitl.setHasMessage(this,false);
+    }
 
     @Override
     protected void initData() {
