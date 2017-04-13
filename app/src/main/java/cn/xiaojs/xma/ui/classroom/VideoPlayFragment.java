@@ -1,9 +1,11 @@
 package cn.xiaojs.xma.ui.classroom;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,10 @@ import cn.xiaojs.xma.util.TimeUtil;
 public class VideoPlayFragment extends BaseFragment {
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.55F;
     private final static int MSG_COUNT_TIME = 0;
+    private final static int MSG_HIDE_VIDEO_CONTROLLER = 1;
+
+    private final static int ANIM_SHOW = 1 << 1;
+    private final static int ANIM_HIDE = 1 << 2;
 
     @BindView(R.id.play_pause_btn)
     ImageView mPlayPauseBtn;
@@ -50,6 +56,8 @@ public class VideoPlayFragment extends BaseFragment {
     TextView mCountTimeTv;
     @BindView(R.id.total_time)
     TextView mTotalTimeTv;
+    @BindView(R.id.live_progress_layout)
+    View mLiveProgressLayout;
     @BindView(R.id.live_progress)
     SeekBar mLiveProgress;
 
@@ -67,6 +75,10 @@ public class VideoPlayFragment extends BaseFragment {
     private Handler mHandler;
     private long mCurrPosition;
     private long mDuration;
+    private boolean mPause;
+    private boolean mAnimating;
+
+    private PanelAnimListener mPanelAnimListener;
 
     @Override
     protected View getContentView() {
@@ -82,10 +94,23 @@ public class VideoPlayFragment extends BaseFragment {
 
         mViewWidth = getResources().getDisplayMetrics().widthPixels;
         mViewHeight = getResources().getDisplayMetrics().heightPixels;
+        mPanelAnimListener = new PanelAnimListener();
+
+        mVideoPlayerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLiveProgressLayout.getVisibility() == View.VISIBLE) {
+                    hideVideoController();
+                } else {
+                    showVideoController();
+                }
+            }
+        });
 
         initHandler();
         initLiveProgress();
 
+        mVideoPlayerView.setTouchable(false);
         if (mDoc != null) {
             mUrl = ClassroomBusiness.getImageUrl(mDoc.key);
             if (!TextUtils.isEmpty(mUrl)) {
@@ -116,7 +141,7 @@ public class VideoPlayFragment extends BaseFragment {
                             int videoW = plMediaPlayer.getVideoWidth();
                             int videoH = plMediaPlayer.getVideoHeight();
 
-                            float ratio = videoW / (float)videoH;
+                            float ratio = videoW / (float) videoH;
                             int temp = (int) (ratio * mViewHeight);
                             if (temp > mViewWidth) {
                                 // depend width
@@ -132,12 +157,10 @@ public class VideoPlayFragment extends BaseFragment {
                             layoutParams.width = videoW;
                             layoutParams.height = videoH;
                             mHandler.sendEmptyMessage(MSG_COUNT_TIME);
+                            //mLiveProgress.setEnabled(true);
                         }
                     }
                 });
-
-                //auto play
-                play();
             }
         }
     }
@@ -163,11 +186,28 @@ public class VideoPlayFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onResume() {
+        super.onResume();
+        play();
+        if (mPause && mVideoPlayerView != null) {
+            mPause = false;
+            mVideoPlayerView.showLoading(false);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        pause();
+        mPause = true;
+    }
+
+    @Override
+    public void onDestroyView() {
         if (mVideoPlayerView != null) {
             mVideoPlayerView.destroy();
         }
+        super.onDestroyView();
     }
 
     private void initHandler() {
@@ -184,6 +224,24 @@ public class VideoPlayFragment extends BaseFragment {
         ViewGroup.LayoutParams params = mLiveProgress.getLayoutParams();
         params.width = (int) (w * LIVE_PROGRESS_WIDTH_FACTOR);
         mLiveProgress.setEnabled(false);
+
+        mLiveProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mHandler.removeMessages(MSG_COUNT_TIME);
+                mCurrPosition = (int) ((seekBar.getProgress() / (float) 100) * mDuration);
+                seekTo(mCurrPosition);
+            }
+        });
     }
 
     private void play() {
@@ -196,9 +254,12 @@ public class VideoPlayFragment extends BaseFragment {
             mVideoPlayerView.showLoading(true);
             mVideoPlayerView.resume();
         } else {
-            mVideoPlayerView.showLoading(true);
+            mVideoPlayerView.showLoading(false);
             mVideoPlayerView.resume();
         }
+        mCurrPosition = mPlMediaPlayer != null ? mPlMediaPlayer.getCurrentPosition() : 0;
+        mHandler.sendEmptyMessage(MSG_COUNT_TIME);
+        mHandler.sendEmptyMessageDelayed(MSG_HIDE_VIDEO_CONTROLLER, 2000);
     }
 
     public void pause() {
@@ -209,10 +270,19 @@ public class VideoPlayFragment extends BaseFragment {
         mCurrPosition = mPlMediaPlayer != null ? mPlMediaPlayer.getCurrentPosition() : 0;
     }
 
+    public void seekTo(long position) {
+        if (mPlMediaPlayer != null) {
+            pause();
+            mPlMediaPlayer.seekTo(position);
+            play();
+        }
+    }
+
     private void onHandleMessage(Message msg) {
         switch (msg.what) {
             case MSG_COUNT_TIME:
-                mCurrPosition += 1000;
+                mCurrPosition = mCurrPosition + 1000;
+                Log.i("aaa", "onHandleMessage  mCurrPosition=" + mCurrPosition);
                 if (mCurrPosition > mDuration) {
                     mCurrPosition = mDuration;
                 }
@@ -223,7 +293,81 @@ public class VideoPlayFragment extends BaseFragment {
                 if (mCurrPosition < mDuration) {
                     mHandler.sendEmptyMessageDelayed(MSG_COUNT_TIME, 1000);
                 }
+
+                int progress = (int) ((mCurrPosition / (float) mDuration) * 100);
+                mLiveProgress.setProgress(progress);
                 break;
+            case MSG_HIDE_VIDEO_CONTROLLER:
+                hideVideoController();
+                break;
+        }
+    }
+
+    private void showVideoController() {
+        if (mAnimating) {
+            return;
+        }
+        mLiveProgressLayout.animate()
+                .alpha(1.0f)
+                .setListener(mPanelAnimListener.with(mLiveProgressLayout).play(ANIM_SHOW))
+                .start();
+    }
+
+    private void hideVideoController() {
+        if (mAnimating) {
+            return;
+        }
+        mLiveProgressLayout.animate()
+                .alpha(0.0f)
+                .setListener(mPanelAnimListener.with(mLiveProgressLayout).play(ANIM_HIDE))
+                .start();
+    }
+
+    /**
+     * 动画监听器
+     */
+    private class PanelAnimListener implements Animator.AnimatorListener {
+        private View mV;
+        private int mAnimType;
+
+        public PanelAnimListener with(View v) {
+            mV = v;
+            return this;
+        }
+
+        public PanelAnimListener play(int type) {
+            mAnimType = type;
+            return this;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+            mAnimating = true;
+            if (mAnimType == ANIM_SHOW && mV != null) {
+                mV.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            mAnimating = false;
+            if (mAnimType == ANIM_HIDE && mV != null) {
+                mV.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            mAnimating = false;
+            mV = null;
+            if (mAnimType == ANIM_SHOW && mV != null) {
+                mV.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
         }
     }
 
