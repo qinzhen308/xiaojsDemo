@@ -33,7 +33,6 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
-import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
@@ -207,7 +206,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             mWhiteboardLayout.setVisibility(View.VISIBLE);
             mWhiteboardLayer = new WhiteboardLayer();
             mCurrWhiteboard.setLayer(mWhiteboardLayer);
-            mCurrWhiteboard.setSrcBitmap(bmp);
+            mCurrWhiteboard.setDoodleBackground(bmp);
             mCurrWhiteboard.setUndoRedoListener(this);
             mUndo.setEnabled(false);
             mRedo.setEnabled(false);
@@ -219,7 +218,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             mWhiteboardLayout.setVisibility(View.GONE);
         }
         if (mCurrWhiteboard != null) {
-            mCurrWhiteboard.recycleCourseBmp();
+            mCurrWhiteboard.recycleBackgroundBmp();
         }
     }
 
@@ -505,6 +504,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     @Override
     public void onWhiteboardSelected(Whiteboard whiteboard) {
         setWhiteboard(whiteboard);
+        whiteboard.setNeedBitmapPool(true);
         if (mContext instanceof ClassroomActivity) {
             ((ClassroomActivity) mContext).onWhiteboardSelected(whiteboard);
         }
