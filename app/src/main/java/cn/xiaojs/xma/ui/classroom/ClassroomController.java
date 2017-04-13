@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.StringSignature;
 import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
@@ -126,13 +127,11 @@ public class ClassroomController {
                 @Override
                 protected Bitmap doInBackground(Void... params) {
                     try {
-                        int w = ProtocolConfigs.VIRTUAL_WIDTH;;
-                        int h = ProtocolConfigs.VIRTUAL_HEIGHT;
                         return Glide.with(mContext)
                                 .load(url)
                                 .asBitmap()
                                 .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                                .into(w, h)
+                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                 .get();
                     } catch (Exception e) {
                         Logger.i(e != null ? e.getLocalizedMessage() : "null");

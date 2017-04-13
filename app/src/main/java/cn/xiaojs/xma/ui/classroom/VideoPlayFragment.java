@@ -207,6 +207,10 @@ public class VideoPlayFragment extends BaseFragment {
         if (mVideoPlayerView != null) {
             mVideoPlayerView.destroy();
         }
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
         super.onDestroyView();
     }
 
@@ -304,7 +308,7 @@ public class VideoPlayFragment extends BaseFragment {
     }
 
     private void showVideoController() {
-        if (mAnimating) {
+        if (mAnimating || mLiveProgressLayout == null || mHandler == null) {
             return;
         }
         mLiveProgressLayout.animate()
@@ -315,7 +319,7 @@ public class VideoPlayFragment extends BaseFragment {
     }
 
     private void hideVideoController() {
-        if (mAnimating) {
+        if (mAnimating || mLiveProgressLayout == null) {
             return;
         }
         mLiveProgressLayout.animate()

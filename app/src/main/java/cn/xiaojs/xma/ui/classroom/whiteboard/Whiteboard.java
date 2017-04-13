@@ -92,6 +92,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     //picker color by taking whiteboard pixel
     public final static int MODE_COLOR_PICKER = 5;
 
+    public final static int BG_SCALE_TYPE_FIT_XY = 1;
+    public final static int BG_SCALE_TYPE_FIT_CENTER = 2;
+
     private final float DOODLE_CANVAS_RATIO = WhiteboardLayer.DOODLE_CANVAS_RATIO; // w:h = 4:3
 
     private final int BG_COLOR = Color.argb(255, 255, 255, 255);
@@ -137,10 +140,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     /**
      * the bitmap of whiteboard background
      */
-    private Bitmap mCourseBmp;
-    private Uri mCourseUri;
-    private Rect mSrcCourseRect;
-    private Rect mDesCourseRect;
+    private Bitmap mBackgroundBmp;
+    private Uri mBackgroundUri;
+    private Rect mSrcBackgroundRect;
+    private Rect mDesBackgroundRect;
     private WhiteboardLayer mLayer;
 
     private ArrayList<Doodle> mAllDoodles;
@@ -181,6 +184,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private List<Integer> mRedoRecordIds;
 
     private BitmapPool mDoodleBitmapPool;
+    private int mBackgroundScaleType = BG_SCALE_TYPE_FIT_CENTER;
 
     public Whiteboard(Context context) {
         super(context);
@@ -261,9 +265,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (finished) {
             createDoodleCanvas();
 
-            if (mCourseBmp != null) {
-                mSrcCourseRect = new Rect(0, 0, mCourseBmp.getWidth(), mCourseBmp.getHeight());
-                mDesCourseRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
+            if (mBackgroundBmp != null) {
+                mSrcBackgroundRect = new Rect(0, 0, mBackgroundBmp.getWidth(), mBackgroundBmp.getHeight());
+                //mDesBackgroundRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
+                setBackgroundBmpDrawDestRect(mBackgroundBmp);
             }
         }
     }
@@ -390,19 +395,60 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         postInvalidate();
 
         if (mLayer != null && !TextUtils.isEmpty(mLayer.getCoursePath())) {
-            loadCourse(Uri.parse(mLayer.getCoursePath()));
+            loadBackground(Uri.parse(mLayer.getCoursePath()));
         }
     }
 
-    public void setSrcBitmap(Bitmap bmp) {
+    public void setDoodleBackground(Bitmap bmp) {
         if (bmp == null) {
             return;
         }
 
-        mSrcCourseRect = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
-        mDesCourseRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
-        mCourseBmp = bmp;
+        mSrcBackgroundRect = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
+        //mDesBackgroundRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
+        mBackgroundBmp = bmp;
+        setBackgroundBmpDrawDestRect(mBackgroundBmp);
+
         postInvalidate();
+    }
+
+    private void setBackgroundBmpDrawDestRect(Bitmap bitmap) {
+        if (bitmap == null) {
+            mDesBackgroundRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
+        } else {
+            switch (mBackgroundScaleType) {
+                case BG_SCALE_TYPE_FIT_CENTER:
+                    float ratio = bitmap.getWidth() / (float)bitmap.getHeight();
+                    int temp = (int) (ratio * mBlackboardHeight);
+                    int w = 0;
+                    int h = 0;
+                    if (temp > mBlackboardWidth) {
+                        // depend width
+                        w = mBlackboardWidth;
+                        h = (int) (mBlackboardWidth / ratio);
+                    } else {
+                        // depend height
+                        h = mBlackboardHeight;
+                        w = temp;
+                    }
+
+                    //int offsetX = (mBlackboardWidth - w) / 2;
+                    //int offsetY = (mBlackboardHeight - h) / 2;
+                    mDesBackgroundRect = new Rect(0, 0, w, h);
+                    break;
+                case BG_SCALE_TYPE_FIT_XY:
+                    mDesBackgroundRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 图片背景scale Type
+     * @param type
+     */
+    public void setScaleType(int type) {
+        mBackgroundScaleType = type;
     }
 
     /**
@@ -414,19 +460,22 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
     }
 
+    /**
+     * 白板选择回调
+     */
     public void onWhiteboardSelected() {
         setGeometryShapeId(GeometryShape.RECTANGLE);
         switchMode(Whiteboard.MODE_NONE);
     }
 
     /**
-     * 加载课件
+     * 加载背景
      *
-     * @param uri 课件对于图片的uri
+     * @param uri 图片的uri
      */
-    private void loadCourse(final Uri uri) {
-        mCourseUri = uri;
-        //load course img
+    private void loadBackground(final Uri uri) {
+        mBackgroundUri = uri;
+        //load bg img
         new AsyncTask<Void, Integer, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Void... params) {
@@ -434,8 +483,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     int w = mBlackboardWidth;
                     int h = mBlackboardHeight;
                     if (w == 0 || h == 0) {
-                        w = ProtocolConfigs.VIRTUAL_WIDTH;
-                        h = ProtocolConfigs.VIRTUAL_HEIGHT;
+                        w = Target.SIZE_ORIGINAL;
+                        h = Target.SIZE_ORIGINAL;
                     }
 
                     return Glide.with(mContext)
@@ -454,9 +503,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             @Override
             protected void onPostExecute(Bitmap bitmap) {
                 if (bitmap != null) {
-                    mSrcCourseRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-                    mDesCourseRect = new Rect(0, 0, mBlackboardWidth, mBlackboardHeight);
-                    mCourseBmp = bitmap;
+                    mSrcBackgroundRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                    mBackgroundBmp = bitmap;
+                    setBackgroundBmpDrawDestRect(mBackgroundBmp);
                     postInvalidate();
                 }
             }
@@ -514,8 +563,21 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         canvas.concat(mDisplayMatrix);
 
         //2. draw course image
-        if (mCourseBmp != null) {
-            canvas.drawBitmap(mCourseBmp, mSrcCourseRect, mDesCourseRect, null);
+        if (mBackgroundBmp != null) {
+            int offsetX = 0;
+            int offsetY = 0;
+            switch (mBackgroundScaleType) {
+                case BG_SCALE_TYPE_FIT_CENTER:
+                    offsetX = (mBlackboardWidth - mDesBackgroundRect.width()) / 2;
+                    offsetY = (mBlackboardHeight - mDesBackgroundRect.height()) / 2;
+                    break;
+                case BG_SCALE_TYPE_FIT_XY:
+
+                    break;
+            }
+            canvas.translate(offsetX, offsetY);
+            canvas.drawBitmap(mBackgroundBmp, mSrcBackgroundRect, mDesBackgroundRect, null);
+            canvas.translate(-offsetX, offsetY);
         }
 
         //3. draw doodle bitmap
@@ -1321,10 +1383,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mClassroomGestureDetector = null;
     }
 
-    public void recycleCourseBmp() {
-        if (mCourseBmp != null && !mCourseBmp.isRecycled()) {
-            mCourseBmp.recycle();
-            mCourseBmp = null;
+    public void recycleBackgroundBmp() {
+        if (mBackgroundBmp != null && !mBackgroundBmp.isRecycled()) {
+            mBackgroundBmp.recycle();
+            mBackgroundBmp = null;
         }
     }
 
@@ -1633,10 +1695,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public Bitmap getWhiteboardBitmap() {
         //return mDoodleBitmap;
-        if (mCourseBmp != null) {
+        if (mBackgroundBmp != null) {
             Bitmap bmp = Bitmap.createBitmap(mDoodleBitmap.getWidth(), mDoodleBitmap.getHeight(), Bitmap.Config.ARGB_4444);
             Canvas c = new Canvas(bmp);
-            c.drawBitmap(mCourseBmp, mSrcCourseRect, mDesCourseRect, null);
+            c.drawBitmap(mBackgroundBmp, mSrcBackgroundRect, mDesBackgroundRect, null);
             c.drawBitmap(mDoodleBitmap, 0, 0, null);
             return bmp;
         } else {
