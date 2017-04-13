@@ -37,9 +37,11 @@ public class LibDoc implements Serializable {
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"index"})
     public static class ExportImg implements Serializable{
         public String name;
+        //ignore field, for sort
+        public int index;
     }
 
 }

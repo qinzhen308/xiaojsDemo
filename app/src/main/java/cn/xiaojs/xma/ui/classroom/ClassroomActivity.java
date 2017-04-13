@@ -35,6 +35,7 @@ import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -83,6 +84,7 @@ import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 import io.socket.client.Socket;
@@ -1286,7 +1288,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 enterVideoPlayer(doc);
             } else if (mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
                     || mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)) {
-                LibDoc.ExportImg[] images  = doc.exported != null ? doc.exported.images : null;
+                ArrayList<LibDoc.ExportImg> images  = MaterialUtil.getSortImgs(doc.exported != null ? doc.exported.images : null);
                 if (images != null) {
                     ArrayList<String> imgUrls = new ArrayList<String>();
                     for (LibDoc.ExportImg img : images) {
