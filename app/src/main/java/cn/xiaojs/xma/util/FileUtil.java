@@ -45,6 +45,7 @@ public class FileUtil {
     public static String INTERNAL_CACHE_DIR;
 
     public static final int UNKNOWN = -1;
+    public static final int ALL = 0;
     public static final int DOC = 1;
     public static final int XLS = 2;
     public static final int PPT = 3;

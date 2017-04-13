@@ -35,6 +35,7 @@ import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,6 +48,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
@@ -60,6 +62,7 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingMode;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
@@ -81,6 +84,7 @@ import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 import io.socket.client.Socket;
@@ -117,8 +121,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
 
-    private final static int PAGE_EDIT_VIDEO = 1024;
-    private final static int PAGE_TOP = 2048;
+    private final static int PHOTO_DOODLE = 1024;
+    private final static int DOCUMENT_PAGE = 2048;
+    private final static int VIDEO_PLAY = 4096;
+    private final static int PAGE_TOP = 0;
 
     //drawer
     @BindView(R.id.drawer_layout)
@@ -243,6 +249,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private Boolean mSktConnected = false;
 
     private String mTicket = "";
+    private String mLessonID;
     private SyncStateResponse mSyncState;
     private Constants.User mUser = Constants.User.STUDENT;
     private int mAppType = Platform.AppType.UNKNOWN;
@@ -289,6 +296,82 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
         //register network
         registerNetworkReceiver();
+
+        mLeftPanel.setVisibility(View.VISIBLE);
+        mWhiteboardToolbarBtn.setImageResource(R.drawable.cr_open_docs);
+    }
+
+    @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.course_ware_btn, R.id.setting_btn,
+            R.id.play_pause_btn, R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.enter_talk_btn,
+            R.id.wb_toolbar_btn, R.id.color_picker_btn, R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn,
+            R.id.eraser_btn, R.id.text_btn, R.id.finish_btn, R.id.main_screen_setting, R.id.save_white_board_btn,
+            R.id.undo, R.id.redo, R.id.publish_camera_switcher, R.id.publish_take_pic, R.id.title_bar, R.id.live_progress_layout})
+    public void onPanelItemClick(View v) {
+        switch (v.getId()) {
+            case R.id.back_btn:
+                showExitDialog();
+                break;
+            case R.id.finish_btn:
+                showFinishDialog();
+                break;
+            case R.id.blackboard_switcher_btn:
+                openWhiteBoardManager();
+                break;
+            case R.id.play_pause_btn:
+                //handlePlayOrPauseLesson();
+                playOrPauseLessonWithCheckSocket();
+                break;
+            case R.id.course_ware_btn:
+                openCourseWarePanel();
+                break;
+            case R.id.setting_btn:
+                openSetting();
+                break;
+            case R.id.notify_msg_btn:
+                openAllMessage();
+                break;
+            case R.id.contact_btn:
+                openTalk(TalkPanel.MODE_CONTACT);
+                break;
+            case R.id.qa_btn:
+                openQuestionAnswer();
+                break;
+            case R.id.enter_talk_btn:
+                openTalk(TalkPanel.MODE_TALK);
+                break;
+            case R.id.wb_toolbar_btn:
+                //switchWhiteBoardToolbar();
+                enterDocument();
+                break;
+            case R.id.main_screen_setting:
+                setWhiteboardMainScreen();
+                break;
+            case R.id.save_white_board_btn:
+                saveWhiteboard();
+                break;
+            case R.id.select_btn:
+            case R.id.handwriting_btn:
+            case R.id.shape_btn:
+            case R.id.eraser_btn:
+            case R.id.text_btn:
+            case R.id.color_picker_btn:
+            case R.id.undo:
+            case R.id.redo:
+                handleWhitePanelClick(v);
+                break;
+            case R.id.publish_camera_switcher:
+                switchCamera();
+                break;
+            case R.id.publish_take_pic:
+                enterPhotoDoodle();
+                break;
+            case R.id.title_bar:
+            case R.id.live_progress_layout:
+                //do nothing，set onClick listener to prevent event penetration.
+                break;
+            default:
+                break;
+        }
     }
 
     private void initParams() {
@@ -494,6 +577,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * @param ctlSession   课程session
      */
     private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession, final OnDataLoadListener dataLoadListener) {
+        mLessonID = ctlSession.ctl != null ? ctlSession.ctl.id : "";
         mUser = ClassroomBusiness.getUser(ctlSession.psType);
         if (mUser == Constants.User.TEACHER) {
             if (Constants.PARTICIPANT_MODE == ctlSession.mode) {
@@ -653,78 +737,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             }
             mLessonTitle.setText(wbColl.getTitle());
             mClassroomController.onSwitchWhiteboardCollection(wbColl);
-        }
-    }
-
-    @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.course_ware_btn, R.id.setting_btn,
-            R.id.play_pause_btn, R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.enter_talk_btn,
-            R.id.wb_toolbar_btn, R.id.color_picker_btn, R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn,
-            R.id.eraser_btn, R.id.text_btn, R.id.finish_btn, R.id.main_screen_setting, R.id.save_white_board_btn,
-            R.id.undo, R.id.redo, R.id.publish_camera_switcher, R.id.publish_take_pic, R.id.title_bar, R.id.live_progress_layout})
-    public void onPanelItemClick(View v) {
-        switch (v.getId()) {
-            case R.id.back_btn:
-                showExitDialog();
-                break;
-            case R.id.finish_btn:
-                showFinishDialog();
-                break;
-            case R.id.blackboard_switcher_btn:
-                openWhiteBoardManager();
-                break;
-            case R.id.play_pause_btn:
-                //handlePlayOrPauseLesson();
-                playOrPauseLessonWithCheckSocket();
-                break;
-            case R.id.course_ware_btn:
-                openCourseWarePanel();
-                break;
-            case R.id.setting_btn:
-                openSetting();
-                break;
-            case R.id.notify_msg_btn:
-                openAllMessage();
-                break;
-            case R.id.contact_btn:
-                openTalk(TalkPanel.MODE_CONTACT);
-                break;
-            case R.id.qa_btn:
-                openQuestionAnswer();
-                break;
-            case R.id.enter_talk_btn:
-                openTalk(TalkPanel.MODE_TALK);
-                break;
-            case R.id.wb_toolbar_btn:
-                switchWhiteBoardToolbar();
-                break;
-            case R.id.main_screen_setting:
-                setWhiteboardMainScreen();
-                break;
-            case R.id.save_white_board_btn:
-                saveWhiteboard();
-                break;
-            case R.id.select_btn:
-            case R.id.handwriting_btn:
-            case R.id.shape_btn:
-            case R.id.eraser_btn:
-            case R.id.text_btn:
-            case R.id.color_picker_btn:
-            case R.id.undo:
-            case R.id.redo:
-                handleWhitePanelClick(v);
-                break;
-            case R.id.publish_camera_switcher:
-                switchCamera();
-                break;
-            case R.id.publish_take_pic:
-                enterVideoEditing();
-                break;
-            case R.id.title_bar:
-            case R.id.live_progress_layout:
-                //do nothing
-                break;
-            default:
-                break;
         }
     }
 
@@ -1170,7 +1182,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     }
 
-    private void enterVideoEditing() {
+    private void enterPhotoDoodle() {
         if (mClassroomController != null && mPageState == PAGE_TOP) {
             mClassroomController.takeVideoFrame(mFrameCaptureCallback);
         }
@@ -1192,8 +1204,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     };
 
     private void enterPhotoDoodle(Bitmap bmp) {
-        mPageState = PAGE_EDIT_VIDEO;
+        mPageState = PHOTO_DOODLE;
         mClassroomController.enterPhotoDoodle(bmp, mOnPhotoDoodleShareListener);
+        hideTopBottomPanel();
+    }
+
+    private void enterPhotoDoodle(String url) {
+        mPageState = PHOTO_DOODLE;
+        mClassroomController.enterPhotoDoodle(url, mOnPhotoDoodleShareListener);
+        hideTopBottomPanel();
+    }
+
+    private void enterPhotoDoodle(ArrayList<String> imgUrls) {
+        mPageState = PHOTO_DOODLE;
+        mClassroomController.enterPhotoDoodle(imgUrls, mOnPhotoDoodleShareListener);
         hideTopBottomPanel();
     }
 
@@ -1233,6 +1257,65 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     }
 
+    public void enterDocument() {
+        if (mClassroomController != null) {
+            mPageState = DOCUMENT_PAGE;
+            mEnterTalkBtn.setVisibility(View.GONE);
+            mClassroomController.enterDocumentFragment();
+        }
+    }
+
+    public void exitDocument() {
+        if (mClassroomController != null) {
+            mPageState = PAGE_TOP;
+            mEnterTalkBtn.setVisibility(View.VISIBLE);
+            mClassroomController.exitDocumentFragment();
+        }
+    }
+
+    public void exitDocumentWithAction(LibDoc doc) {
+        if (mClassroomController != null) {
+            mPageState = PAGE_TOP;
+            mEnterTalkBtn.setVisibility(View.VISIBLE);
+            mClassroomController.exitDocumentFragment();
+
+            String mimeType = doc.mimeType != null ? doc.mimeType.toLowerCase() : "";
+            String url = ClassroomBusiness.getImageUrl(doc.key);
+
+            if (mimeType.startsWith(Collaboration.PictureMimeTypes.ALL)) {
+                enterPhotoDoodle(url);
+            } else if (mimeType.startsWith(Collaboration.VideoMimeTypes.ALL)) {
+                enterVideoPlayer(doc);
+            } else if (mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
+                    || mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)) {
+                ArrayList<LibDoc.ExportImg> images  = MaterialUtil.getSortImgs(doc.exported != null ? doc.exported.images : null);
+                if (images != null) {
+                    ArrayList<String> imgUrls = new ArrayList<String>();
+                    for (LibDoc.ExportImg img : images) {
+                        imgUrls.add(ClassroomBusiness.getImageUrl(img.name));
+                    }
+                    enterPhotoDoodle(imgUrls);
+                } else {
+                    Toast.makeText(this, R.string.cr_ppt_open_fail, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    public void enterVideoPlayer(LibDoc doc) {
+        if (mClassroomController != null) {
+            mPageState = VIDEO_PLAY;
+            mClassroomController.playVideo(doc);
+        }
+    }
+
+    public void exitVideoPlayer() {
+        if (mClassroomController != null) {
+            mPageState = PAGE_TOP;
+            mClassroomController.exitPlayVideo();
+        }
+    }
+
     private void switchCamera() {
         if (mClassroomController != null) {
             mClassroomController.switchCamera();
@@ -1248,7 +1331,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (mBottomPanel.getVisibility() == View.VISIBLE) {
                     mNeedOpenWhiteBoardPanel = false;
                     hideTopBottomPanel();
-                } else if (mPageState != PAGE_EDIT_VIDEO) {
+                } else if (mPageState != PHOTO_DOODLE) {
                     showTopBottomPanel();
                 }
             }
@@ -1276,7 +1359,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (mBottomPanel.getVisibility() == View.VISIBLE) {
                     mNeedOpenWhiteBoardPanel = false;
                     hideTopBottomPanel();
-                } else if (mPageState != PAGE_EDIT_VIDEO) {
+                } else if (mPageState != PHOTO_DOODLE) {
                     showTopBottomPanel();
                 }
             }
@@ -1329,12 +1412,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         unregisterNetworkReceiver();
     }
 
+    public void setCurrentControllerLevel(int level) {
+        mCurrentControllerLevel = level;
+    }
+
     public int getInteractiveLevel() {
         return mCurrentControllerLevel;
     }
 
     public String getTicket() {
         return mTicket;
+    }
+
+    public String getLessonId() {
+        return mLessonID;
     }
 
     /**
@@ -1619,8 +1710,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             if (mOpenedDrawer != null && mOpenedPanel != null) {
                 mOpenedPanel.close(mDrawerLayout, mOpenedDrawer);
                 return false;
-            } else if (mPageState == PAGE_EDIT_VIDEO) {
+            } else if (mPageState == PHOTO_DOODLE) {
                 exitPhotoDoodle();
+                return false;
+            } else if (mPageState == DOCUMENT_PAGE) {
+                exitDocument();
+                return false;
+            } else if (mPageState == VIDEO_PLAY) {
+                exitVideoPlayer();
                 return false;
             } else {
                 showExitDialog();
@@ -1946,7 +2043,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                                 }
                                 mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
                             }
-                        } else if (msg.arg2 == TYPE_COUNT_DOWN_DELAY){
+                        } else if (msg.arg2 == TYPE_COUNT_DOWN_DELAY) {
                             mDelayTime++;
                             mCountDownTimeTv.setText(getString(R.string.cls_distance_class, mDelayTime));
                             mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);

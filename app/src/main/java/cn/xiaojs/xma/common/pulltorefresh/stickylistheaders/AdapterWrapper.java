@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author Jake Wharton (jakewharton@gmail.com)
  */
-class AdapterWrapper extends BaseAdapter implements StickyListHeadersAdapter {
+public class AdapterWrapper extends BaseAdapter implements StickyListHeadersAdapter {
 
 	interface OnHeaderClickListener {
 		public void onHeaderClick(View header, int itemPosition, long headerId);

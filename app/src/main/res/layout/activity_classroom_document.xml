@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:clickable="true">
 
     <RelativeLayout
             android:id="@+id/title"
@@ -105,6 +106,7 @@
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
                     android:text="@string/word"
+                    android:visibility="gone"
                     android:gravity="center"/>
 
             <TextView
@@ -116,6 +118,7 @@
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
                     android:text="@string/pdf"
+                    android:visibility="gone"
                     android:gravity="center"/>
 
             <TextView
@@ -138,6 +141,18 @@
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
                     android:text="@string/hand_writing"
+                    android:visibility="gone"
+                    android:gravity="center"/>
+
+            <TextView
+                    android:id="@+id/video"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@drawable/cr_doc_txt_selector"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:text="@string/video"
                     android:gravity="center"/>
 
         </LinearLayout>
@@ -166,7 +181,8 @@
                 android:paddingLeft="@dimen/px20"
                 android:paddingRight="@dimen/px20"
                 android:paddingTop="@dimen/px10"
-                android:paddingBottom="@dimen/px10">
+                android:paddingBottom="@dimen/px10"
+                android:visibility="gone">
 
             <ImageView
                     android:id="@+id/upload"
@@ -204,8 +220,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/px10"
-                android:paddingBottom="@dimen/px10">
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20">
 
             <TextView
                     android:layout_width="wrap_content"

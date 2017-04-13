@@ -428,6 +428,11 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     @Override
+    public void stop() {
+
+    }
+
+    @Override
     public void destroy() {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);

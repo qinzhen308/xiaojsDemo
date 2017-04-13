@@ -44,6 +44,7 @@ public class PlayerTextureView extends BaseMediaView {
     private int TIME_OUT = 60 * 1000; //60s
     private boolean mRetry = true;
     private long mRetryTime = 0;
+    private PLMediaPlayer.OnInfoListener mOnInfoWrapperListener;
 
     public PlayerTextureView(Context context) {
         super(context);
@@ -171,6 +172,15 @@ public class PlayerTextureView extends BaseMediaView {
     }
 
     @Override
+    public void stop() {
+        if (mPlayer != null && mPlayer.isPlaying()) {
+            mPlayer.stopPlayback();
+        }
+        mResume = false;
+        mIsPause = true;
+    }
+
+    @Override
     public void destroy() {
         stopInternal();
         if (mHandler != null) {
@@ -195,6 +205,10 @@ public class PlayerTextureView extends BaseMediaView {
             if (what == PLMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START) {
                 mHandler.removeMessages(MESSAGE_MEDIA_INFO_RENDERING_START);
                 mHandler.sendEmptyMessage(MESSAGE_MEDIA_INFO_RENDERING_START);
+            }
+
+            if (mOnInfoWrapperListener != null) {
+                mOnInfoWrapperListener.onInfo(plMediaPlayer, what, extra);
             }
             return false;
         }

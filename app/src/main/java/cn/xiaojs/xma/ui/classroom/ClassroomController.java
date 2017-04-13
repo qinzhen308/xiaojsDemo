@@ -16,15 +16,31 @@ package cn.xiaojs.xma.ui.classroom;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
+import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.ui.classroom.document.DocumentFragment;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StudentVideoController;
 import cn.xiaojs.xma.ui.classroom.live.TeacherVideoController;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
+import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 
@@ -36,6 +52,8 @@ public class ClassroomController {
     private WhiteboardController mBoardController;
     protected Constants.User mUser;
     private PhotoDoodleFragment mPhotoDoodleFragment;
+    private DocumentFragment mDocumentFragment;
+    private VideoPlayFragment mVideoPlayFragment;
 
     public ClassroomController(Context context, View root, Constants.User client, int appType, OnStreamStateChangeListener listener) {
         init(context, root, client, appType, listener);
@@ -77,25 +95,145 @@ public class ClassroomController {
     }
 
     /**
-     * 进入视频编辑页面
+     * 进入图片编辑页面
      */
     public void enterPhotoDoodle(Bitmap bmp, OnPhotoDoodleShareListener listener) {
         if (mContext instanceof ClassroomActivity) {
             mPhotoDoodleFragment = new PhotoDoodleFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(Constants.KEY_IMG_DISPLAY_MODE, PhotoDoodleFragment.MODE_SINGLE_IMG);
+            mPhotoDoodleFragment.setArguments(bundle);
             mPhotoDoodleFragment.setBitmap(bmp);
             mPhotoDoodleFragment.setPhotoDoodleShareListener(listener);
             ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
-                    .add(R.id.video_edit_layout, mPhotoDoodleFragment).commit();
+                    .add(R.id.photo_doodle_layout, mPhotoDoodleFragment).commit();
         }
     }
 
     /**
-     * 退出视频编辑页面
+     * 进入图片编辑页面
+     */
+    public void enterPhotoDoodle(final String url, final OnPhotoDoodleShareListener listener) {
+        if (mContext instanceof ClassroomActivity) {
+            //load course img
+            new AsyncTask<Void, Integer, Bitmap>() {
+
+                @Override
+                protected void onPreExecute() {
+                    ((ClassroomActivity)mContext).showProgress(true);
+                }
+
+                @Override
+                protected Bitmap doInBackground(Void... params) {
+                    try {
+                        int w = ProtocolConfigs.VIRTUAL_WIDTH;;
+                        int h = ProtocolConfigs.VIRTUAL_HEIGHT;
+                        return Glide.with(mContext)
+                                .load(url)
+                                .asBitmap()
+                                .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                                .into(w, h)
+                                .get();
+                    } catch (Exception e) {
+                        Logger.i(e != null ? e.getLocalizedMessage() : "null");
+                    }
+
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    ((ClassroomActivity)mContext).cancelProgress();
+                    if (bitmap != null) {
+                        mPhotoDoodleFragment = new PhotoDoodleFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(Constants.KEY_IMG_DISPLAY_MODE, PhotoDoodleFragment.MODE_SINGLE_IMG);
+                        mPhotoDoodleFragment.setArguments(bundle);
+                        mPhotoDoodleFragment.setBitmap(bitmap);
+                        mPhotoDoodleFragment.setPhotoDoodleShareListener(listener);
+                        ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+                                .add(R.id.photo_doodle_layout, mPhotoDoodleFragment).commit();
+                    } else {
+                        Toast.makeText(mContext, R.string.cls_pic_load_fail, Toast.LENGTH_SHORT).show();
+                        exitPhotoDoodle();
+                    }
+                }
+            }.execute();
+        }
+    }
+
+    /**
+     * 进入图片编辑，图片可以左右滑动
+     * @param imgUrlList
+     * @param listener
+     */
+    public void enterPhotoDoodle(ArrayList<String> imgUrlList, final OnPhotoDoodleShareListener listener) {
+        mPhotoDoodleFragment = new PhotoDoodleFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.KEY_IMG_DISPLAY_MODE, PhotoDoodleFragment.MODE_MULTI_IMG);
+        bundle.putStringArrayList(Constants.KEY_IMG_LIST, imgUrlList);
+        mPhotoDoodleFragment.setArguments(bundle);
+        mPhotoDoodleFragment.setPhotoDoodleShareListener(listener);
+        ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+                .add(R.id.photo_doodle_layout, mPhotoDoodleFragment).commit();
+    }
+
+    /**
+     * 退出图片编辑页面
      */
     public void exitPhotoDoodle() {
         if (mContext instanceof ClassroomActivity && mPhotoDoodleFragment != null) {
             ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
                     .remove(mPhotoDoodleFragment).commit();
+        }
+    }
+
+    /**
+     * 进入文档页面
+     */
+    public void enterDocumentFragment() {
+        if (mContext instanceof ClassroomActivity) {
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.KEY_LESSON_ID, ((ClassroomActivity)mContext).getLessonId());
+            mDocumentFragment = new DocumentFragment();
+            mDocumentFragment.setArguments(bundle);
+            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+                    .add(R.id.document_layout, mDocumentFragment).commit();
+        }
+    }
+
+    /**
+     * 退出文档页面
+     */
+    public void exitDocumentFragment() {
+        if (mContext instanceof ClassroomActivity && mDocumentFragment != null) {
+            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+                    .remove(mDocumentFragment).commit();
+        }
+    }
+
+    /**
+     * 进入视频播放
+     * @param doc
+     */
+    public void playVideo(LibDoc doc) {
+        if (mContext instanceof ClassroomActivity) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.KEY_LIB_DOC, doc);
+            mVideoPlayFragment = new VideoPlayFragment();
+            mVideoPlayFragment.setArguments(bundle);
+            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+                    .add(R.id.document_layout, mVideoPlayFragment).commit();
+        }
+    }
+
+    /**
+     * 退出视频播放
+     */
+    public void exitPlayVideo() {
+        if (mContext instanceof ClassroomActivity && mVideoPlayFragment != null) {
+            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+                    .remove(mVideoPlayFragment).commit();
         }
     }
 

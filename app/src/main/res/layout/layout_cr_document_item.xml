@@ -15,14 +15,14 @@
             android:background="@color/main_bg">
 
         <TextView
-                android:id="@+id/rename"
+                android:id="@+id/share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_gray"
                 android:textSize="@dimen/font_24px"
                 android:drawablePadding="@dimen/px10"
                 android:drawableLeft="@drawable/ic_cr_doc_rename"
-                android:text="@string/rename"
+                android:text="@string/share"
                 android:gravity="center"
                 android:paddingTop="@dimen/px25"
                 android:paddingBottom="@dimen/px25"

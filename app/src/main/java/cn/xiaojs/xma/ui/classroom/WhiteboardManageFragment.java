@@ -28,7 +28,6 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.classroom.document.DocumentActivity;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardManager;
@@ -218,8 +217,6 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
                             mWbAdapter.exitCloseMode(true);
                         }
                     }
-                    Intent i = new Intent(mContext, DocumentActivity.class);
-                    getActivity().startActivityForResult(i, REQUEST_OPEN_DOCS);
                     break;
                 case R.id.del_white_board:
                     //remove white boards
