@@ -67,6 +67,7 @@ public class JPushReceiver extends BroadcastReceiver {
 			}
 
 			Intent pushIntent = MessageUitl.getPushNotificationIntent(context,"-1");
+			pushIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(pushIntent);
             
 //        	//打开自定义的Activity

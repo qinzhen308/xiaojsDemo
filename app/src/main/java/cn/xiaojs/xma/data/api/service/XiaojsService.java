@@ -538,9 +538,9 @@ public interface XiaojsService {
     //Get Documents
     @GET("/v1/collaboration/documents")
     Call<UserDoc> getDocuments(@Query("id") String id,
-                               @Query("subtype") String subtype,
-                               @Query("page") int page,
-                               @Query("limit") int limit);
+                               @Query("subtype") String subtype
+                               /*@Query("page") int page,
+                               @Query("limit") int limit*/);
 
     //Delete Document
     @DELETE("/v1/collaboration/documents/{document}")

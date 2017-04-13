@@ -7,11 +7,12 @@
               android:layout_height="wrap_content">
 
     <RelativeLayout
-            android:layout_margin="@dimen/px30"
+            android:layout_marginLeft="@dimen/px30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         <ImageView
+                android:layout_marginTop="@dimen/px30"
                 android:id="@+id/material_item_image"
                 android:scaleType="fitXY"
                 android:layout_alignParentLeft="true"
@@ -22,21 +23,20 @@
 
         <ImageView
                 android:id="@+id/material_item_expand"
-                android:scaleType="fitXY"
+                android:scaleType="centerInside"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_arrow_down"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:layout_height="50dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="12dp"
                 />
 
         <LinearLayout
                 android:layout_toRightOf="@+id/material_item_image"
                 android:layout_toLeftOf="@+id/material_item_expand"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginRight="@dimen/px30"
+                android:layout_margin="@dimen/px30"
                 android:orientation="vertical"
                 android:layout_centerInParent="true"
                 android:layout_width="match_parent"

@@ -51,6 +51,7 @@ import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.Doc;
+import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UploadReponse;
@@ -402,7 +403,7 @@ public class MaterialActivity extends BaseActivity {
         startActivityForResult(i, REQUEST_CHOOSE_CLASS_CODE);
     }
 
-    private void toshare(String documentId, String targetId) {
+    private void toshare(String documentId,final String targetId) {
 
         ShareResource resource = new ShareResource();
         resource.targetId = targetId;
@@ -414,15 +415,46 @@ public class MaterialActivity extends BaseActivity {
             @Override
             public void onSuccess(ShareDoc object) {
                 cancelProgress();
-                Toast.makeText(MaterialActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MaterialActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
+                shareSuccess(targetId);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(MaterialActivity.this, R.string.share_material_to_class_failed,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MaterialActivity.this, errorMessage,Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void shareSuccess(final String classId) {
+        final CommonDialog dialog = new CommonDialog(this);
+        dialog.setTitle("提示");
+        dialog.setDesc(R.string.shareok_and_to_class);
+        dialog.setLefBtnText(R.string.dont_go);
+        dialog.setRightBtnText(R.string.go_class);
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                databank(classId);
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    //资料库
+    private void databank(String classid) {
+        Intent intent = new Intent(this, ClassMaterialActivity.class);
+        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, classid);
+        startActivity(intent);
     }
 
     public void confirmDel(final String docId) {

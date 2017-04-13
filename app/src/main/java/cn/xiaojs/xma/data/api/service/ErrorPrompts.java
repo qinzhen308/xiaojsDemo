@@ -40,7 +40,11 @@ public class ErrorPrompts {
 
         switch (apiType) {
             case APIType.SHARE_DOCUMENT:
-                errorMessage = "分享失败";
+                if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
+                    errorMessage = "您已经分享该资料到此班级中了";
+                }else {
+                    errorMessage = "分享到班级失败";
+                }
                 break;
             case APIType.DELETE_DOCUMENT:
                 errorMessage = "删除失败";

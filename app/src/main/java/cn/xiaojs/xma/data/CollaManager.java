@@ -148,7 +148,7 @@ public class CollaManager {
         }
 
         CollaRequest request = new CollaRequest(context, callback);
-        request.getDocuments(id, subtype, page, limit);
+        request.getDocuments(id, subtype);
     }
 
     /**
@@ -178,7 +178,7 @@ public class CollaManager {
         }
 
         CollaRequest request = new CollaRequest(context, callback);
-        request.getDocuments(id, subtype, page, limit);
+        request.getDocuments(id, subtype);
     }
 
     /**

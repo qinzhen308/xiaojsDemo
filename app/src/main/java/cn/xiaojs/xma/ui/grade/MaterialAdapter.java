@@ -83,6 +83,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             thumbnail(bean.key, R.drawable.ic_picture, holder);
         } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
             thumbnail(bean.key, R.drawable.ic_pdf, holder);
+        } else if (FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)){
+            thumbnail(bean.key, R.drawable.ic_video_mine, holder);
         } else {
             thumbnail(bean.key, R.drawable.ic_unknown, holder);
         }
@@ -168,10 +170,12 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
     @Override
     protected void doRequest() {
+        showProgress(true);
         CollaManager.getDocuments(mContext, mOwner, Collaboration.SubType.PERSON, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
-                if (object != null && object.documents.size() > 0) {
+                cancelProgress();
+                if (object != null && object.documents!=null && object.documents.size() > 0) {
                     MaterialAdapter.this.onSuccess(object.documents);
                 } else {
                     MaterialAdapter.this.onSuccess(null);
@@ -180,6 +184,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+
+                cancelProgress();
                 MaterialAdapter.this.onFailure(errorCode, errorMessage);
             }
         });

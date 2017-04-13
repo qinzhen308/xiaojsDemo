@@ -70,9 +70,17 @@ public class XiaojsApplication extends Application {
         //lean cloud
         LCChatKit.getInstance().setProfileProvider(UserProvider.getUserProvider(this));
         AVOSCloud.setDebugLogEnabled(XiaojsConfig.DEBUG);
-        LCChatKit.getInstance().init(getApplicationContext(),
-                XiaojsConfig.LEANCLOUD_APPID,
-                XiaojsConfig.LEANCLOUD_APPKEY);
+
+        if(APPUtils.isProEvn()) {
+            LCChatKit.getInstance().init(getApplicationContext(),
+                    XiaojsConfig.LEANCLOUD_APPID,
+                    XiaojsConfig.LEANCLOUD_APPKEY);
+        }else{
+            LCChatKit.getInstance().init(getApplicationContext(),
+                    XiaojsConfig.TEST_LEANCLOUD_APPID,
+                    XiaojsConfig.TEST_LEANCLOUD_APPKEY);
+        }
+
         AVIMClient.setAutoOpen(true);
 
         //init data cache

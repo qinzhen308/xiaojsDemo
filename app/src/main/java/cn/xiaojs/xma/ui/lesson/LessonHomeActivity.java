@@ -386,7 +386,8 @@ public class  LessonHomeActivity extends BaseActivity{
         }
 
         String accId = AccountDataManager.getAccountID(this);
-        if (mLessonDetail.getCreatedBy().equals(accId)){
+        if (mLessonDetail.getCreatedBy().equals(accId)
+                || (mLessonDetail.getTeacher() !=null && mLessonDetail.getTeacher()._id.equals(accId)) ){
 
             if (lessonState.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
                     || lessonState.equalsIgnoreCase(LessonState.LIVE)
@@ -525,7 +526,8 @@ public class  LessonHomeActivity extends BaseActivity{
         String lessonState = mLessonDetail.getState();
 
         String accId = AccountDataManager.getAccountID(this);
-        if (mLessonDetail.getCreatedBy().equals(accId)){
+        if (mLessonDetail.getCreatedBy().equals(accId)
+                || (mLessonDetail.getTeacher()!= null && mLessonDetail.getTeacher()._id.equals(accId)) ){
 
             if (lessonState.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
                     || lessonState.equalsIgnoreCase(LessonState.LIVE)

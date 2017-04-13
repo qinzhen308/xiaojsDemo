@@ -730,6 +730,9 @@
     <string name="class_data_tips">来源：个人或机构从自己的资料库里分享至班级</string>
     <string name="delete_success">删除成功</string>
     <string name="share_material_to_class_failed">分享到班级失败</string>
+    <string name="shareok_and_to_class">分享成功，现在可以去班级中查看了</string>
+    <string name="dont_go">暂时不去</string>
+    <string name="go_class">去班级查看</string>
 
 
 </resources>
