@@ -90,7 +90,7 @@ public abstract class BaseMediaView extends FrameLayout {
             mGesture.onTouchEvent(event);
             return true;
         } else {
-            return false;
+            return super.onTouchEvent(event);
         }
 
     }

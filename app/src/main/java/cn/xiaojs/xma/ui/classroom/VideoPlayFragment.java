@@ -259,7 +259,7 @@ public class VideoPlayFragment extends BaseFragment {
         }
         mCurrPosition = mPlMediaPlayer != null ? mPlMediaPlayer.getCurrentPosition() : 0;
         mHandler.sendEmptyMessage(MSG_COUNT_TIME);
-        mHandler.sendEmptyMessageDelayed(MSG_HIDE_VIDEO_CONTROLLER, 2000);
+        mHandler.sendEmptyMessageDelayed(MSG_HIDE_VIDEO_CONTROLLER, 3000);
     }
 
     public void pause() {
@@ -311,6 +311,7 @@ public class VideoPlayFragment extends BaseFragment {
                 .alpha(1.0f)
                 .setListener(mPanelAnimListener.with(mLiveProgressLayout).play(ANIM_SHOW))
                 .start();
+        mHandler.sendEmptyMessageDelayed(MSG_HIDE_VIDEO_CONTROLLER, 3000);
     }
 
     private void hideVideoController() {
