@@ -6,14 +6,13 @@
         android:background="@color/main_bg"
         android:clickable="true">
 
-    <!--资料库的视频view(全屏)-->
     <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
             android:id="@+id/video_player"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone"
-            android:background="#000000"/>
+            android:background="@color/black"/>
 
     <ImageView
             android:id="@+id/back"

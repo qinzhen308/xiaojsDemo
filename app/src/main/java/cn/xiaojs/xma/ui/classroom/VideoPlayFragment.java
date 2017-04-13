@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -55,6 +56,9 @@ public class VideoPlayFragment extends BaseFragment {
     private boolean mStarted = false;
     private boolean mPlaying = false;
 
+    private int mViewHeight;
+    private int mViewWidth;
+
     @Override
     protected View getContentView() {
         return LayoutInflater.from(mContext).inflate(R.layout.fragment_cls_video_player, null);
@@ -67,13 +71,15 @@ public class VideoPlayFragment extends BaseFragment {
             mDoc = (LibDoc) data.getSerializable(Constants.KEY_LIB_DOC);
         }
 
+        mViewWidth = getResources().getDisplayMetrics().widthPixels;
+        mViewHeight = getResources().getDisplayMetrics().heightPixels;
+
         initLiveProgress();
 
         if (mDoc != null) {
             mUrl = ClassroomBusiness.getImageUrl(mDoc.key);
             if (!TextUtils.isEmpty(mUrl)) {
                 PLVideoTextureView player = mVideoPlayerView.getPlayer();
-
                 player.setOnInfoListener(new PLMediaPlayer.OnInfoListener() {
                     @Override
                     public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
@@ -81,7 +87,7 @@ public class VideoPlayFragment extends BaseFragment {
                             case PLMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START:
                                 break;
                             case 10003:
-                                mTotalTimeTv.setText(TimeUtil.formatSecondTime(extra / 100));
+                                //mTotalTimeTv.setText(TimeUtil.formatSecondTime(extra / 100));
                                 break;
                         }
 
@@ -98,6 +104,36 @@ public class VideoPlayFragment extends BaseFragment {
                         }
                     }
                 });
+
+                player.setOnPreparedListener(new PLMediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(PLMediaPlayer plMediaPlayer) {
+                        if (plMediaPlayer != null) {
+                            mTotalTimeTv.setText(TimeUtil.formatSecondTime(plMediaPlayer.getDuration() / 1000));
+                            int videoW = plMediaPlayer.getVideoWidth();
+                            int videoH = plMediaPlayer.getVideoHeight();
+
+                            float ratio = videoW / (float)videoH;
+                            int temp = (int) (ratio * mViewHeight);
+                            if (temp > mViewWidth) {
+                                // depend width
+                                videoW = mViewWidth;
+                                videoH = (int) (mViewWidth / ratio);
+                            } else {
+                                // depend height
+                                videoH = mViewHeight;
+                                videoW = temp;
+                            }
+
+                            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoPlayerView.getLayoutParams();
+                            layoutParams.width = videoW;
+                            layoutParams.height = videoH;
+                        }
+                    }
+                });
+
+                //auto play
+                play();
             }
         }
     }
@@ -112,22 +148,9 @@ public class VideoPlayFragment extends BaseFragment {
                 break;
             case R.id.play_pause_btn:
                 if (mPlaying) {
-                    mPlaying = false;
-                    mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
-                    mVideoPlayerView.pause();
+                    pause();
                 } else {
-                    mPlaying = true;
-                    mVideoPlayerView.setVisibility(View.VISIBLE);
-                    mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
-                    if (!mStarted) {
-                        mStarted = true;
-                        mVideoPlayerView.setPath(mUrl);
-                        mVideoPlayerView.showLoading(true);
-                        mVideoPlayerView.resume();
-                    } else {
-                        mVideoPlayerView.showLoading(true);
-                        mVideoPlayerView.resume();
-                    }
+                    play();
                 }
                 break;
             default:
@@ -148,6 +171,27 @@ public class VideoPlayFragment extends BaseFragment {
         ViewGroup.LayoutParams params = mLiveProgress.getLayoutParams();
         params.width = (int) (w * LIVE_PROGRESS_WIDTH_FACTOR);
         mLiveProgress.setEnabled(false);
+    }
+
+    private void play() {
+        mPlaying = true;
+        mVideoPlayerView.setVisibility(View.VISIBLE);
+        mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
+        if (!mStarted) {
+            mStarted = true;
+            mVideoPlayerView.setPath(mUrl);
+            mVideoPlayerView.showLoading(true);
+            mVideoPlayerView.resume();
+        } else {
+            mVideoPlayerView.showLoading(true);
+            mVideoPlayerView.resume();
+        }
+    }
+
+    public void pause() {
+        mPlaying = false;
+        mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
+        mVideoPlayerView.pause();
     }
 
 }
