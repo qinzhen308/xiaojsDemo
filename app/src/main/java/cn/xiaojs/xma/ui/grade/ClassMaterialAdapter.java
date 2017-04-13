@@ -65,6 +65,8 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
         mOwner = owner;
 
         myAccountId = AccountDataManager.getAccountID(mContext);
+
+        setDescNow("空空如也～");
     }
 
     @Override
@@ -203,6 +205,13 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
                 ClassMaterialAdapter.this.onFailure(errorCode, errorMessage);
             }
         });
+    }
+
+    @Override
+    protected void onDataEmpty() {
+        super.onDataEmpty();
+
+
     }
 
     class Holder extends BaseHolder {

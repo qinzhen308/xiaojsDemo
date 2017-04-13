@@ -3,6 +3,7 @@ package cn.xiaojs.xma.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,6 +54,14 @@ public class MaterialUtil {
             }
 
         } else {
+
+            Toast.makeText(activity,"暂不支持打开此格式的文件",Toast.LENGTH_SHORT).show();
+//            String url = new StringBuilder(ApiManager.getFileBucket()).append("/").append(bean.key).toString();
+//
+//            Uri data = Uri.parse(url);
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setDataAndType(data, mimeType);
+//            activity.startActivity(intent);
 
         }
 

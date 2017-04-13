@@ -135,12 +135,33 @@ public class MaterialActivity extends BaseActivity {
                 upload();
                 break;
             case R.id.material_up_load_close://取消上传
-                if (mManager != null) {
-                    mManager.cancelAdd();
-                }
+                confirmCancel();
                 break;
         }
     }
+
+    public void confirmCancel() {
+        final CommonDialog dialog = new CommonDialog(this);
+        dialog.setTitle("提示");
+        dialog.setDesc("确定需要取消上传资料么？");
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                if (mManager != null) {
+                    mManager.cancelAdd();
+                }
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
 
     private void upload() {
 
@@ -245,6 +266,7 @@ public class MaterialActivity extends BaseActivity {
                     ToastUtil.showToast(getApplicationContext(), R.string.up_load_failure);
                 }
             }
+
         });
     }
 
@@ -398,7 +420,7 @@ public class MaterialActivity extends BaseActivity {
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(MaterialActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MaterialActivity.this, R.string.share_material_to_class_failed,Toast.LENGTH_SHORT).show();
             }
         });
     }

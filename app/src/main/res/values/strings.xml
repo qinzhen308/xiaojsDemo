@@ -547,7 +547,7 @@
 
     <!-- material -->
     <string name="up_loading">上传中...</string>
-    <string name="up_load_failure">上传失败！</string>
+    <string name="up_load_failure">上传资料失败！</string>
     <string name="up_load_success">上传成功！</string>
     <string name="up_load_cancel">取消上传！</string>
     <string name="download_of_mine">我的下载</string>
@@ -729,6 +729,7 @@
     <string name="stranger">陌生人</string>
     <string name="class_data_tips">来源：个人或机构从自己的资料库里分享至班级</string>
     <string name="delete_success">删除成功</string>
+    <string name="share_material_to_class_failed">分享到班级失败</string>
 
 
 </resources>

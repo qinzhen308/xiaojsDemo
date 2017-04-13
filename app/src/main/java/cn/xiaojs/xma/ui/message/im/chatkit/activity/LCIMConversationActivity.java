@@ -18,13 +18,18 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.orhanobut.logger.Logger;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.ui.message.im.chatkit.LCChatKit;
 import cn.xiaojs.xma.ui.message.im.chatkit.cache.LCIMConversationItemCache;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
@@ -33,6 +38,7 @@ import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.SingleSelectDialog;
+import cn.xiaojs.xma.util.LeanCloudUtil;
 import cn.xiaojs.xma.util.MessageUitl;
 
 /**
@@ -137,8 +143,9 @@ public class LCIMConversationActivity extends FragmentActivity {
 
     private void initByIntent(Intent intent) {
         if (null == LCChatKit.getInstance().getClient()) {
-            //FIXME
-            showToast("please login first!");
+            if (XiaojsConfig.DEBUG) {
+                showToast("please login first!");
+            }
             finish();
             return;
         }
@@ -148,12 +155,17 @@ public class LCIMConversationActivity extends FragmentActivity {
             if (extras.containsKey(LCIMConstants.PEER_ID)) {
 
                 accountId = extras.getString(LCIMConstants.PEER_ID);
-                getConversation(accountId);
+                String name = extras.getString(LCIMConstants.PEER_NAME);
+                getConversation(accountId,name);
+
             } else if (extras.containsKey(LCIMConstants.CONVERSATION_ID)) {
                 String conversationId = extras.getString(LCIMConstants.CONVERSATION_ID);
                 updateConversation(LCChatKit.getInstance().getClient().getConversation(conversationId));
             } else {
-                showToast("memberId or conversationId is needed");
+                if (XiaojsConfig.DEBUG) {
+                    showToast("memberId or conversationId is needed");
+                }
+
                 finish();
             }
         }
@@ -166,6 +178,8 @@ public class LCIMConversationActivity extends FragmentActivity {
 
         if (!TextUtils.isEmpty(title)) {
             titleView.setText(title);
+        }else {
+            titleView.setText(R.string.stranger);
         }
 
 
@@ -192,7 +206,7 @@ public class LCIMConversationActivity extends FragmentActivity {
     /**
      * 主动刷新 UI
      */
-    protected void updateConversation(AVIMConversation conversation) {
+    protected void updateConversation(final AVIMConversation conversation) {
         if (null != conversation) {
 
             conversationFragment.setConversation(conversation);
@@ -206,6 +220,28 @@ public class LCIMConversationActivity extends FragmentActivity {
                     if (null != e) {
                         LCIMLogUtils.logException(e);
                     } else {
+
+                        if (null != e) {
+                            LCIMLogUtils.logException(e);
+
+                            String name = LeanCloudUtil.getNameByAttrs(conversation);
+                            if(!TextUtils.isEmpty(name)) {
+                                s = name;
+                                conversation.setName(s);
+                            }
+                        } else {
+
+                            if (TextUtils.isEmpty(s)) {
+                                s = LeanCloudUtil.getNameByAttrs(conversation);
+
+                                if (!TextUtils.isEmpty(s)) {
+                                    conversation.setName(s);
+                                }
+
+                            }
+                        }
+
+
                         initActionBar(s);
                     }
                 }
@@ -218,14 +254,19 @@ public class LCIMConversationActivity extends FragmentActivity {
      * 获取 conversation
      * 为了避免重复的创建，createConversation 参数 isUnique 设为 true·
      */
-    protected void getConversation(final String memberId) {
+    protected void getConversation(final String memberId,final String name) {
+
+        Map<String,Object> attrs = LeanCloudUtil.getAttrMap(this, memberId,name);
+
         LCChatKit.getInstance().getClient().createConversation(
-                Arrays.asList(memberId), "", null, false, true, new AVIMConversationCreatedCallback() {
+                Arrays.asList(memberId), name, attrs, false, true, new AVIMConversationCreatedCallback() {
                     @Override
                     public void done(AVIMConversation avimConversation, AVIMException e) {
                         if (null != e) {
                             showToast(e.getMessage());
                         } else {
+
+                            avimConversation.setName(name);
                             updateConversation(avimConversation);
                         }
                     }

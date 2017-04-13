@@ -24,10 +24,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.ui.message.im.chatkit.LCChatKitUser;
 import cn.xiaojs.xma.ui.message.im.chatkit.cache.LCIMProfileCache;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMMessageResendEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
+import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConversationUtils;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
 
 /**
@@ -36,151 +39,165 @@ import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
  */
 public class LCIMChatItemHolder extends LCIMCommonViewHolder {
 
-  protected boolean isLeft;
+    protected boolean isLeft;
 
-  protected AVIMMessage message;
-  protected ImageView avatarView;
-  protected TextView timeView;
-  protected TextView nameView;
-  protected LinearLayout conventLayout;
-  protected FrameLayout statusLayout;
-  protected ProgressBar progressBar;
-  protected TextView statusView;
-  protected ImageView errorView;
+    protected AVIMMessage message;
+    protected ImageView avatarView;
+    protected TextView timeView;
+    protected TextView nameView;
+    protected LinearLayout conventLayout;
+    protected FrameLayout statusLayout;
+    protected ProgressBar progressBar;
+    protected TextView statusView;
+    protected ImageView errorView;
 
-  public LCIMChatItemHolder(Context context, ViewGroup root, boolean isLeft) {
-    super(context, root, isLeft ? R.layout.lcim_chat_item_left_layout : R.layout.lcim_chat_item_right_layout);
-    this.isLeft = isLeft;
-    initView();
-  }
-
-  public void initView() {
-    if (isLeft) {
-      avatarView = (ImageView) itemView.findViewById(R.id.chat_left_iv_avatar);
-      timeView = (TextView) itemView.findViewById(R.id.chat_left_tv_time);
-      nameView = (TextView) itemView.findViewById(R.id.chat_left_tv_name);
-      conventLayout = (LinearLayout) itemView.findViewById(R.id.chat_left_layout_content);
-      statusLayout = (FrameLayout) itemView.findViewById(R.id.chat_left_layout_status);
-      statusView = (TextView) itemView.findViewById(R.id.chat_left_tv_status);
-      progressBar = (ProgressBar) itemView.findViewById(R.id.chat_left_progressbar);
-      errorView = (ImageView) itemView.findViewById(R.id.chat_left_tv_error);
-    } else {
-      avatarView = (ImageView) itemView.findViewById(R.id.chat_right_iv_avatar);
-      timeView = (TextView) itemView.findViewById(R.id.chat_right_tv_time);
-      nameView = (TextView) itemView.findViewById(R.id.chat_right_tv_name);
-      conventLayout = (LinearLayout) itemView.findViewById(R.id.chat_right_layout_content);
-      statusLayout = (FrameLayout) itemView.findViewById(R.id.chat_right_layout_status);
-      progressBar = (ProgressBar) itemView.findViewById(R.id.chat_right_progressbar);
-      errorView = (ImageView) itemView.findViewById(R.id.chat_right_tv_error);
-      statusView = (TextView) itemView.findViewById(R.id.chat_right_tv_status);
+    public LCIMChatItemHolder(Context context, ViewGroup root, boolean isLeft) {
+        super(context, root, isLeft ? R.layout.lcim_chat_item_left_layout : R.layout.lcim_chat_item_right_layout);
+        this.isLeft = isLeft;
+        initView();
     }
 
-    setAvatarClickEvent();
-    setResendClickEvent();
-  }
+    public void initView() {
+        if (isLeft) {
+            avatarView = (ImageView) itemView.findViewById(R.id.chat_left_iv_avatar);
+            timeView = (TextView) itemView.findViewById(R.id.chat_left_tv_time);
+            nameView = (TextView) itemView.findViewById(R.id.chat_left_tv_name);
+            conventLayout = (LinearLayout) itemView.findViewById(R.id.chat_left_layout_content);
+            statusLayout = (FrameLayout) itemView.findViewById(R.id.chat_left_layout_status);
+            statusView = (TextView) itemView.findViewById(R.id.chat_left_tv_status);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.chat_left_progressbar);
+            errorView = (ImageView) itemView.findViewById(R.id.chat_left_tv_error);
+        } else {
+            avatarView = (ImageView) itemView.findViewById(R.id.chat_right_iv_avatar);
+            timeView = (TextView) itemView.findViewById(R.id.chat_right_tv_time);
+            nameView = (TextView) itemView.findViewById(R.id.chat_right_tv_name);
+            conventLayout = (LinearLayout) itemView.findViewById(R.id.chat_right_layout_content);
+            statusLayout = (FrameLayout) itemView.findViewById(R.id.chat_right_layout_status);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.chat_right_progressbar);
+            errorView = (ImageView) itemView.findViewById(R.id.chat_right_tv_error);
+            statusView = (TextView) itemView.findViewById(R.id.chat_right_tv_status);
+        }
 
-  @Override
-  public void bindData(Object o) {
-    message = (AVIMMessage) o;
-    timeView.setText(millisecsToDateString(message.getTimestamp()));
-    nameView.setText("");
-    avatarView.setImageResource(R.drawable.default_avatar_grey);
-    LCIMProfileCache.getInstance().getCachedUser(message.getFrom(), new AVCallback<LCChatKitUser>() {
-      @Override
-      protected void internalDone0(LCChatKitUser userProfile, AVException e) {
-        if (null != e) {
-          LCIMLogUtils.logException(e);
-        } else if (null != userProfile) {
-          nameView.setText(userProfile.getUserName());
-          final String avatarUrl = userProfile.getAvatarUrl();
-          if (!TextUtils.isEmpty(avatarUrl)) {
+        setAvatarClickEvent();
+        setResendClickEvent();
+    }
 
-            Glide.with(getContext()).load(avatarUrl)
-                    .bitmapTransform(circleTransform)
-                    .placeholder(R.drawable.default_avatar_grey)
-                    .error(R.drawable.default_avatar_grey)
-                    .into(avatarView);
+    @Override
+    public void bindData(Object o) {
+        message = (AVIMMessage) o;
+        timeView.setText(millisecsToDateString(message.getTimestamp()));
+        nameView.setText("");
+        //avatarView.setImageResource(R.drawable.default_avatar_grey);
+        LCIMProfileCache.getInstance().getCachedUser(message.getFrom(), new AVCallback<LCChatKitUser>() {
+            @Override
+            protected void internalDone0(LCChatKitUser userProfile, AVException e) {
+
+                String avatarUrl = "";
+
+                if (null != e) {
+                    LCIMLogUtils.logException(e);
+
+                    String targetId = message.getFrom();
+                    avatarUrl = Account.getAvatar(targetId, XiaojsConfig.PORTRAIT_SIZE);
+
+                } else if (null != userProfile) {
+                    nameView.setText(userProfile.getUserName());
+                    avatarUrl = userProfile.getAvatarUrl();
+                    if (TextUtils.isEmpty(avatarUrl)) {
+
+                        String targetId = message.getFrom();
+
+                        avatarUrl = Account.getAvatar(targetId, XiaojsConfig.PORTRAIT_SIZE);
 
 //            Picasso.with(getContext()).load(avatarUrl)
 //              .placeholder(R.drawable.default_avatar_grey).into(avatarView);
-          }
-        }
-      }
-    });
+                    }
+                }else{
+                    String targetId = message.getFrom();
+                    avatarUrl = Account.getAvatar(targetId, XiaojsConfig.PORTRAIT_SIZE);
+                }
 
-    switch (message.getMessageStatus()) {
-      case AVIMMessageStatusFailed:
-        statusLayout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        statusView.setVisibility(View.GONE);
-        errorView.setVisibility(View.VISIBLE);
-        break;
-      case AVIMMessageStatusSent:
-        statusLayout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        statusView.setVisibility(View.VISIBLE);
-        statusView.setVisibility(View.GONE);
-        errorView.setVisibility(View.GONE);
-        break;
-      case AVIMMessageStatusSending:
-        statusLayout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        statusView.setVisibility(View.GONE);
-        errorView.setVisibility(View.GONE);
-        break;
-      case AVIMMessageStatusNone:
-      case AVIMMessageStatusReceipt:
-        statusLayout.setVisibility(View.GONE);
-        break;
+                Glide.with(getContext()).load(avatarUrl)
+                        .bitmapTransform(circleTransform)
+                        .placeholder(R.drawable.default_avatar_grey)
+                        .error(R.drawable.default_avatar_grey)
+                        .into(avatarView);
+            }
+        });
+
+        switch (message.getMessageStatus()) {
+            case AVIMMessageStatusFailed:
+                statusLayout.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                statusView.setVisibility(View.GONE);
+                errorView.setVisibility(View.VISIBLE);
+                break;
+            case AVIMMessageStatusSent:
+                statusLayout.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                statusView.setVisibility(View.VISIBLE);
+                statusView.setVisibility(View.GONE);
+                errorView.setVisibility(View.GONE);
+                break;
+            case AVIMMessageStatusSending:
+                statusLayout.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                statusView.setVisibility(View.GONE);
+                errorView.setVisibility(View.GONE);
+                break;
+            case AVIMMessageStatusNone:
+            case AVIMMessageStatusReceipt:
+                statusLayout.setVisibility(View.GONE);
+                break;
+        }
     }
-  }
 
-  public void showTimeView(boolean isShow) {
-    timeView.setVisibility(isShow ? View.VISIBLE : View.GONE);
-  }
+    public void showTimeView(boolean isShow) {
+        timeView.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
 
-  public void showUserName(boolean isShow) {
-    nameView.setVisibility(isShow ? View.VISIBLE : View.GONE);
-  }
+    public void showUserName(boolean isShow) {
+        nameView.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
 
-  /**
-   * 设置头像点击按钮的事件
-   */
-  private void setAvatarClickEvent() {
-    avatarView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        try {
-          Intent intent = new Intent();
-          intent.setPackage(getContext().getPackageName());
-          intent.setAction(LCIMConstants.AVATAR_CLICK_ACTION);
-          intent.addCategory(Intent.CATEGORY_DEFAULT);
-          getContext().startActivity(intent);
-        } catch (ActivityNotFoundException exception) {
-          Log.i(LCIMConstants.LCIM_LOG_TAG, exception.toString());
-        }
-      }
-    });
-  }
+    /**
+     * 设置头像点击按钮的事件
+     */
+    private void setAvatarClickEvent() {
+        avatarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent = new Intent();
+                    intent.setPackage(getContext().getPackageName());
+                    intent.setAction(LCIMConstants.AVATAR_CLICK_ACTION);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    getContext().startActivity(intent);
+                } catch (ActivityNotFoundException exception) {
+                    Log.i(LCIMConstants.LCIM_LOG_TAG, exception.toString());
+                }
+            }
+        });
+    }
 
-  /**
-   * 设置发送失败的叹号按钮的事件
-   */
-  private void setResendClickEvent() {
-    errorView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        LCIMMessageResendEvent event = new LCIMMessageResendEvent();
-        event.message = message;
-        EventBus.getDefault().post(event);
-      }
-    });
-  }
+    /**
+     * 设置发送失败的叹号按钮的事件
+     */
+    private void setResendClickEvent() {
+        errorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LCIMMessageResendEvent event = new LCIMMessageResendEvent();
+                event.message = message;
+                EventBus.getDefault().post(event);
+            }
+        });
+    }
 
-  //TODO 展示更人性一点
-  private static String millisecsToDateString(long timestamp) {
-    SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
-    return format.format(new Date(timestamp));
-  }
+    //TODO 展示更人性一点
+    private static String millisecsToDateString(long timestamp) {
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+        return format.format(new Date(timestamp));
+    }
 }
 

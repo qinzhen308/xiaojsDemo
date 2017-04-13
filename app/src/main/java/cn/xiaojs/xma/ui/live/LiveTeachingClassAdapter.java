@@ -28,6 +28,7 @@ import cn.xiaojs.xma.model.ctl.LiveItem;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
@@ -231,13 +232,13 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                             dealAck(position, bean, Ctl.ACKDecision.ACKNOWLEDGE);
                             break;
                         case 2://拒绝
-                            dealAck(position,bean, Ctl.ACKDecision.REFUSED);
+                            dealAck(position, bean, Ctl.ACKDecision.REFUSED);
                             break;
                     }
                 }
             });
 
-        } else if(bean.state.equalsIgnoreCase(LessonState.ACKNOWLEDGED)) {
+        } else if (bean.state.equalsIgnoreCase(LessonState.ACKNOWLEDGED)) {
             holder.state.setText("已确认");
             holder.state.setBackgroundResource(R.drawable.course_state_ackledged_bg);
             holder.operation.setVisibility(View.GONE);
@@ -270,7 +271,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                 || bean.state.equalsIgnoreCase(LessonState.LIVE)
                 || bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
             holder.assistants.setVisibility(View.VISIBLE);
-                String[] items = new String[]{" "};
+            String[] items = new String[]{mContext.getString(R.string.data_bank)};
             if (bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
                 holder.operation.enableMore(false);
             } else {
@@ -279,13 +280,13 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
             //holder.operation.enableMore(true);
             holder.operation.enableEnter(true);
             holder.operation.setItems(items);
-            holder.operation.hiddenDiver();
+            //holder.operation.hiddenDiver();
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
-                            home(bean);
+                            databank(bean);
                             break;
                         case 2://班级主页
                             home(bean);
@@ -358,15 +359,14 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                 cancelProgress();
                 if (descion == Ctl.ACKDecision.ACKNOWLEDGE) {
                     bean.state = LessonState.ACKNOWLEDGED;
-                    Toast.makeText(mContext,"您已同意",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "您已同意", Toast.LENGTH_SHORT).show();
 
                     notifyDataSetChanged();
-                }else{
-                    Toast.makeText(mContext,"您已拒绝",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "您已拒绝", Toast.LENGTH_SHORT).show();
                     mLessons.remove(position);
                     notifyDataSetChanged();
                 }
-
 
 
             }
@@ -374,7 +374,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(mContext,errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -483,6 +483,13 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
     //备课
     private void prepare(LiveItem bean) {
 
+    }
+
+    //资料库
+    private void databank(LiveItem bean) {
+        Intent intent = new Intent(mContext, ClassMaterialActivity.class);
+        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.id);
+        mContext.startActivity(intent);
     }
 
     //班级主页
@@ -613,8 +620,8 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                 public void onItemClick(int position) {
                     switch (position) {
                         //case 0://备课
-                            //prepare(bean);
-                            //break;
+                        //prepare(bean);
+                        //break;
                         case 0://分享
                             share(bean);
                             break;

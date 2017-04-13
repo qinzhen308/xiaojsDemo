@@ -118,17 +118,26 @@ public class ContactActivity extends BaseActivity {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 ContactGroup contactGroup = contactAdapter.getGroup(groupPosition);
+                Contact contact = contactGroup.collection.get(childPosition);
+                String name = TextUtils.isEmpty(contact.title)? contact.alias : contact.title;
+
                 if (contactGroup.group == CLASSES) {
-                    Toast.makeText(ContactActivity.this,"正在开发中",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ContactActivity.this,"正在开发中",Toast.LENGTH_SHORT).show();
+
+//                    ArrayList<String> ids = new ArrayList<String>();
+//                    ids.add(AccountDataManager.getAccountID(ContactActivity.this));
+//                    ids.add("58dfjlfjsdfjslf");
+//                    ids.add("58rietuo453495832");
+//                    ids.add("123456789   ");
+//
+//                    LeanCloudUtil.lanchGroupChat(ContactActivity.this,name,contact.account,ids);
                     return false;
                 }
 
-                Contact contact = contactGroup.collection.get(childPosition);
 
-                String name = TextUtils.isEmpty(contact.title)? contact.alias : contact.title;
                 String tid = contact.account;
                 //进入聊天界面
-                LeanCloudUtil.lanchChatPage(ContactActivity.this,tid);
+                LeanCloudUtil.lanchChatPage(ContactActivity.this,tid,name);
                 //JpushUtil.launchChat(ContactActivity.this, tid,name);
 
                 return false;
