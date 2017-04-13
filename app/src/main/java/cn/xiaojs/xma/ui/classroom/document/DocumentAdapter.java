@@ -80,10 +80,10 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         return getList();
     }
 
-    @Override
+    /*@Override
     protected PullToRefreshBase.Mode getRefreshMode() {
         return PullToRefreshBase.Mode.PULL_FROM_END;
-    }
+    }*/
 
     @Override
     public void showProgress(boolean cancelable) {
