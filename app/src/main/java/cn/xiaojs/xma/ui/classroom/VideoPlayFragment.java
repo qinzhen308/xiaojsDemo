@@ -1,6 +1,8 @@
 package cn.xiaojs.xma.ui.classroom;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +40,7 @@ import cn.xiaojs.xma.util.TimeUtil;
 
 public class VideoPlayFragment extends BaseFragment {
     private final static float LIVE_PROGRESS_WIDTH_FACTOR = 0.55F;
+    private final static int MSG_COUNT_TIME = 0;
 
     @BindView(R.id.play_pause_btn)
     ImageView mPlayPauseBtn;
@@ -59,6 +62,12 @@ public class VideoPlayFragment extends BaseFragment {
     private int mViewHeight;
     private int mViewWidth;
 
+    private PLMediaPlayer mPlMediaPlayer;
+
+    private Handler mHandler;
+    private long mCurrPosition;
+    private long mDuration;
+
     @Override
     protected View getContentView() {
         return LayoutInflater.from(mContext).inflate(R.layout.fragment_cls_video_player, null);
@@ -74,42 +83,36 @@ public class VideoPlayFragment extends BaseFragment {
         mViewWidth = getResources().getDisplayMetrics().widthPixels;
         mViewHeight = getResources().getDisplayMetrics().heightPixels;
 
+        initHandler();
         initLiveProgress();
 
         if (mDoc != null) {
             mUrl = ClassroomBusiness.getImageUrl(mDoc.key);
             if (!TextUtils.isEmpty(mUrl)) {
-                PLVideoTextureView player = mVideoPlayerView.getPlayer();
-                player.setOnInfoListener(new PLMediaPlayer.OnInfoListener() {
-                    @Override
-                    public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
-                        switch (what) {
-                            case PLMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START:
-                                break;
-                            case 10003:
-                                //mTotalTimeTv.setText(TimeUtil.formatSecondTime(extra / 100));
-                                break;
-                        }
+                PLVideoTextureView pLVideoTextureView = mVideoPlayerView.getPlayer();
 
-                        return false;
-                    }
-                });
-
-                player.setOnCompletionListener(new PLMediaPlayer.OnCompletionListener() {
+                pLVideoTextureView.setOnCompletionListener(new PLMediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(PLMediaPlayer plMediaPlayer) {
                         mPlaying = false;
+                        mCurrPosition = 0;
+                        mHandler.removeMessages(MSG_COUNT_TIME);
+                        if (mCountTimeTv != null) {
+                            mCountTimeTv.setText(TimeUtil.formatSecondTime(0));
+                        }
                         if (mPlayPauseBtn != null) {
                             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
                         }
                     }
                 });
 
-                player.setOnPreparedListener(new PLMediaPlayer.OnPreparedListener() {
+                pLVideoTextureView.setOnPreparedListener(new PLMediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(PLMediaPlayer plMediaPlayer) {
                         if (plMediaPlayer != null) {
-                            mTotalTimeTv.setText(TimeUtil.formatSecondTime(plMediaPlayer.getDuration() / 1000));
+                            mPlMediaPlayer = plMediaPlayer;
+                            mDuration = plMediaPlayer.getDuration();
+                            mTotalTimeTv.setText(TimeUtil.formatSecondTime(mDuration / 1000));
                             int videoW = plMediaPlayer.getVideoWidth();
                             int videoH = plMediaPlayer.getVideoHeight();
 
@@ -128,6 +131,7 @@ public class VideoPlayFragment extends BaseFragment {
                             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoPlayerView.getLayoutParams();
                             layoutParams.width = videoW;
                             layoutParams.height = videoH;
+                            mHandler.sendEmptyMessage(MSG_COUNT_TIME);
                         }
                     }
                 });
@@ -166,6 +170,15 @@ public class VideoPlayFragment extends BaseFragment {
         }
     }
 
+    private void initHandler() {
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                onHandleMessage(msg);
+            }
+        };
+    }
+
     private void initLiveProgress() {
         int w = getResources().getDisplayMetrics().widthPixels;
         ViewGroup.LayoutParams params = mLiveProgress.getLayoutParams();
@@ -192,6 +205,26 @@ public class VideoPlayFragment extends BaseFragment {
         mPlaying = false;
         mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
         mVideoPlayerView.pause();
+        mHandler.removeMessages(MSG_COUNT_TIME);
+        mCurrPosition = mPlMediaPlayer != null ? mPlMediaPlayer.getCurrentPosition() : 0;
+    }
+
+    private void onHandleMessage(Message msg) {
+        switch (msg.what) {
+            case MSG_COUNT_TIME:
+                mCurrPosition += 1000;
+                if (mCurrPosition > mDuration) {
+                    mCurrPosition = mDuration;
+                }
+                if (mCountTimeTv != null) {
+                    mCountTimeTv.setText(TimeUtil.formatSecondTime(mCurrPosition / 1000));
+                }
+
+                if (mCurrPosition < mDuration) {
+                    mHandler.sendEmptyMessageDelayed(MSG_COUNT_TIME, 1000);
+                }
+                break;
+        }
     }
 
 }
