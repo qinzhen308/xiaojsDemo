@@ -42,6 +42,7 @@ import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.signature.StringSignature;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -387,6 +388,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mDoodleBitmapPool = BitmapPool.getPool(BitmapPool.TYPE_DOODLE);
         }
         postInvalidate();
+
+        if (mLayer != null && !TextUtils.isEmpty(mLayer.getCoursePath())) {
+            loadCourse(Uri.parse(mLayer.getCoursePath()));
+        }
     }
 
     public void setSrcBitmap(Bitmap bmp) {
@@ -436,6 +441,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     return Glide.with(mContext)
                             .load(uri)
                             .asBitmap()
+                            .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                             .into(w, h)
                             .get();
                 } catch (Exception e) {

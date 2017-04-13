@@ -28,6 +28,7 @@ public class Collaboration {
     }
 
     public class PictureMimeTypes {
+        public static final String ALL = "image/";
         public static final String BMP = "image/bmp";
         public static final String GIF = "image/gif";
         public static final String PNG = "image/png";
@@ -37,11 +38,13 @@ public class Collaboration {
     }
 
     public class AudioMimeTypes {
+        public static final String ALL = "audio/";
         public static final String MP3 = "audio/mpeg";
         public static final String WAV = "audio/x-wav";
     }
 
     public class VideoMimeTypes {
+        public static final String ALL = "video/";
         public static final String MPEG = "video/mpeg";
         public static final String MPG = "video/mpeg";
         public static final String MOV = "video/quicktime";

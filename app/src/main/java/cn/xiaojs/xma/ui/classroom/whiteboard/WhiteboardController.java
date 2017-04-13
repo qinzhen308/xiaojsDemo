@@ -119,7 +119,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
         mWhiteboardSv = (WhiteboardScrollerView) root.findViewById(R.id.white_board_scrollview);
         mWhiteboardLayout = (WhiteboardLayout) root.findViewById(R.id.white_board_layout);
-        mCurrWhiteboard = mWhiteboardLayout.getWhiteboard();
+
         mPanel = root.findViewById(R.id.white_board_panel);
         mSelection = (ImageView) root.findViewById(R.id.select_btn);
         mHandWriting = (ImageView) root.findViewById(R.id.handwriting_btn);
@@ -138,15 +138,16 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     }
 
     /**
-     * 初始白板数据(第一期暂时不用)
+     * 初始白板数据
      */
-    private void initWhiteboardData(Context context) {
+    public void initWhiteboardData(Context context, WhiteboardCollection boardColl) {
         mWhiteboardAdapter = new WhiteboardAdapter(context);
         mWhiteboardSv.setOffscreenPageLimit(2);
         mWhiteboardSv.setAdapter(mWhiteboardAdapter);
         mWhiteboardAdapter.setOnWhiteboardListener(this);
 
-        SocketManager.on(Event.BOARD, mOnBoard);
+        mWhiteboardAdapter.setData(boardColl, 0);
+        //SocketManager.on(Event.BOARD, mOnBoard);
     }
 
     /**
@@ -197,7 +198,12 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     }
 
     public void showWhiteboardLayout(Bitmap bmp) {
+        if (mWhiteboardSv != null) {
+            mWhiteboardSv.setVisibility(View.GONE);
+        }
+
         if (mWhiteboardLayout != null) {
+            mCurrWhiteboard = mWhiteboardLayout.getWhiteboard();
             mWhiteboardLayout.setVisibility(View.VISIBLE);
             mWhiteboardLayer = new WhiteboardLayer();
             mCurrWhiteboard.setLayer(mWhiteboardLayer);
@@ -211,7 +217,23 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     public void hideWhiteboardLayout() {
         if (mWhiteboardLayout != null) {
             mWhiteboardLayout.setVisibility(View.GONE);
+        }
+        if (mCurrWhiteboard != null) {
             mCurrWhiteboard.recycleCourseBmp();
+        }
+    }
+
+    public void setWhiteboardScrollerAdapter(WhiteboardAdapter adapter) {
+        if (mWhiteboardSv != null) {
+            mWhiteboardSv.setVisibility(View.VISIBLE);
+            mUndo.setEnabled(false);
+            mRedo.setEnabled(false);
+            mWhiteboardSv.setAdapter(adapter);
+            adapter.setOnWhiteboardListener(this);
+        }
+
+        if (mWhiteboardLayout != null) {
+            mWhiteboardLayout.setVisibility(View.GONE);
         }
     }
 

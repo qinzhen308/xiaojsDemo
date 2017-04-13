@@ -44,6 +44,7 @@
     <string name="pdf">PDF</string>
     <string name="image">图片</string>
     <string name="hand_writing">板书</string>
+    <string name="video">视频</string>
     <string name="screen_shot">截图</string>
     <string name="file_name">文件名</string>
     <string name="size">大小</string>
@@ -81,6 +82,7 @@
     <string name="cls_distance_class">距离上课还有%1$s</string>
     <string name="cls_break_time_desc">课间休息&#x0020;%1$s</string>
     <string name="cls_delay_time_desc">本课已延时&#x0020;%1$s</string>
+    <string name="cls_pic_load_fail">图片加载失败</string>
 
     <string name="select_for_you">您已选:</string>
     <string name="search_subject_tips">请输入您要找的学科类目</string>
@@ -449,6 +451,8 @@
     <string name="paint_size">粗细</string>
     <string name="cr_contact_empty">暂无成员</string>
     <string name="cr_notify_empty">暂无消息</string>
+    <string name="cr_doc_share_succ">您已经成功分享到班级资料库</string>
+    <string name="cr_ppt_open_fail">打开PP失败</string>
 
     <!-- 社交-->
     <string name="contact">联系人</string>

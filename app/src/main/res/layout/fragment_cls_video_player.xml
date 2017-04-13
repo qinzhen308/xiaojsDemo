@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_bg"
+        android:clickable="true">
+
+    <!--资料库的视频view(全屏)-->
+    <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
+            android:id="@+id/video_player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:background="#000000"/>
+
+    <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cr_video_edit_back_btn"
+            android:padding="@dimen/px20"/>
+
+    <LinearLayout
+            android:id="@+id/live_progress_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/px20"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/cr_corner_gray_bg">
+
+        <ImageView
+                android:id="@+id/play_pause_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cr_start"
+                android:layout_marginLeft="@dimen/px8"
+                android:paddingRight="@dimen/px8"
+                android:padding="@dimen/px20"/>
+
+        <TextView
+                android:id="@+id/count_time"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_20px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:paddingLeft="@dimen/px15"
+                android:text="00:00:00"/>
+
+        <SeekBar
+                android:id="@+id/live_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px12"
+                android:layout_marginRight="@dimen/px12"
+                android:maxHeight="@dimen/px2"
+                android:minHeight="@dimen/px2"
+                android:thumbOffset="@dimen/px7"
+                android:foregroundGravity="center_vertical"
+                android:thumb="@null"
+                android:clickable="false"
+                android:progressDrawable="@drawable/live_progress_bar"/>
+
+
+        <TextView
+                android:id="@+id/total_time"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_20px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/px15"
+                android:text="00:00:00"/>
+    </LinearLayout>
+
+</RelativeLayout>

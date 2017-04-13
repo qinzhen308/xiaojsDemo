@@ -26,7 +26,8 @@ public class WhiteboardAdapter extends PagerAdapter {
     private List<WhiteboardLayer> mLayers;
     private OnWhiteboardListener mOnWhiteboardListener;
     private Whiteboard mCurrWhiteboard;
-    private WhiteboardCollection mWhiteboardCollection;
+    //为了记录历史白板集合滑动到那一块白板
+    private WhiteboardCollection mCurrWhiteboardCollection;
 
     public WhiteboardAdapter(Context context) {
         mContext = context;
@@ -38,12 +39,12 @@ public class WhiteboardAdapter extends PagerAdapter {
     }
 
     public void setData(WhiteboardCollection wbColl) {
-        mWhiteboardCollection = wbColl;
+        mCurrWhiteboardCollection = wbColl;
         setLayers(wbColl.getWhiteboardLayer(), wbColl.getCurrIndex());
     }
 
     public void setData(WhiteboardCollection wbColl, int index) {
-        mWhiteboardCollection = wbColl;
+        mCurrWhiteboardCollection = wbColl;
         setLayers(wbColl.getWhiteboardLayer(), index);
     }
 
@@ -92,7 +93,7 @@ public class WhiteboardAdapter extends PagerAdapter {
         if (object instanceof WhiteboardLayout) {
             WhiteboardLayout wbLayout = (WhiteboardLayout)object;
             Whiteboard wb = wbLayout.getWhiteboard();
-            mWhiteboardCollection.setCurrIndex(position);
+            mCurrWhiteboardCollection.setCurrIndex(position);
             if (mOnWhiteboardListener != null) {
                 mCurrWhiteboard = wb;
                 mOnWhiteboardListener.onWhiteboardSelected(wb);

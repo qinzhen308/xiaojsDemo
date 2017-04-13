@@ -728,6 +728,13 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
 
     }
 
+    public void setList(List<B> data) {
+        mBeanList = data;
+        if (mBeanList == null || mBeanList.isEmpty()) {//接口数据为空，本地数据也为空，则显示空视图
+            changeRequestStatus(STATE_ALL_EMPTY);
+        }
+    }
+
     public List<B> getList() {
         return mBeanList;
     }

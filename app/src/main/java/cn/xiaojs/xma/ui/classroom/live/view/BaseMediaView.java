@@ -155,6 +155,8 @@ public abstract class BaseMediaView extends FrameLayout {
 
     public abstract void pause();
 
+    public abstract void stop();
+
     public abstract void destroy();
 
     public abstract void mute();

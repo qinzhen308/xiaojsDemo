@@ -28,7 +28,6 @@ public class CollaManager {
 
     /**
      * Provides access to collaboration interfaces accessible to the Xiaojs client applications.
-     * @param context
      */
     public void addToLibrary(Context context,
                              @NonNull final String filePath,
@@ -37,7 +36,7 @@ public class CollaManager {
         UploadParam param = new UploadParam();
         param.fileName = fileName;
 
-        addToLibrary(context,filePath,param,qiniuService);
+        addToLibrary(context, filePath, param, qiniuService);
     }
 
     public void addToLibrary(Context context,
@@ -48,7 +47,7 @@ public class CollaManager {
         UploadParam param = new UploadParam();
         param.fileName = fileName;
         param.toOrgLib = toOrLib;
-        addToLibrary(context,filePath,param,qiniuService);
+        addToLibrary(context, filePath, param, qiniuService);
     }
 
     public void addToLibrary(Context context,
@@ -59,7 +58,7 @@ public class CollaManager {
         UploadParam param = new UploadParam();
         param.fileName = fileName;
         param.ticket = ticket;
-        addToLibrary(context,filePath,param,qiniuService);
+        addToLibrary(context, filePath, param, qiniuService);
     }
 
     public void addToLibrary(Context context,
@@ -72,7 +71,7 @@ public class CollaManager {
         param.fileName = fileName;
         param.toOrgLib = toOrLib;
         param.ticket = ticket;
-        addToLibrary(context,filePath,param,qiniuService);
+        addToLibrary(context, filePath, param, qiniuService);
     }
 
     private void addToLibrary(Context context,
@@ -80,8 +79,8 @@ public class CollaManager {
                               @NonNull UploadParam param,
                               @NonNull QiniuService qiniuService) {
 
-        qiniuRequest = new QiniuRequest(context,filePath,param,qiniuService);
-        qiniuRequest.getToken(Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY,1);
+        qiniuRequest = new QiniuRequest(context, filePath, param, qiniuService);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY, 1);
     }
 
     public void addToLibrary(Context context,
@@ -92,7 +91,7 @@ public class CollaManager {
         UploadParam param = new UploadParam();
         param.fileName = fileName;
         param.ticket = ticket;
-        addToLibrary(context,bytes,param,qiniuService);
+        addToLibrary(context, bytes, param, qiniuService);
     }
 
     private void addToLibrary(Context context,
@@ -100,8 +99,8 @@ public class CollaManager {
                               @NonNull UploadParam param,
                               @NonNull QiniuService qiniuService) {
 
-        qiniuRequest = new QiniuRequest(context,data,param,qiniuService);
-        qiniuRequest.getToken(Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY,1);
+        qiniuRequest = new QiniuRequest(context, data, param, qiniuService);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY, 1);
     }
 
     /**
@@ -116,16 +115,12 @@ public class CollaManager {
 
     /**
      * Returns overview for all non-empty document categories in specific library.
-     * @param context
-     * @param criteria
-     * @param pagination
-     * @param callback
      */
     public static void getLibraryOverview(Context context,
-                                   LibCriteria criteria,
-                                   Pagination pagination,
-                                   APIServiceCallback<LibOverview> callback) {
-        CollaRequest request = new CollaRequest(context,callback);
+                                          LibCriteria criteria,
+                                          Pagination pagination,
+                                          APIServiceCallback<LibOverview> callback) {
+        CollaRequest request = new CollaRequest(context, callback);
         request.getLibraryOverview(criteria, pagination);
     }
 
@@ -147,30 +142,56 @@ public class CollaManager {
 
         int page = 1;
         int limit = 10;
-        if (pagination!=null){
+        if (pagination != null) {
             page = pagination.getPage();
             limit = pagination.getMaxNumOfObjectsPerPage();
         }
 
-        CollaRequest request = new CollaRequest(context,callback);
-        request.getDocuments(id,subtype,page,limit);
+        CollaRequest request = new CollaRequest(context, callback);
+        request.getDocuments(id, subtype, page, limit);
     }
 
     /**
      *
-     * 删除文档
      * @param context
-     * @param documentId
-     * @param shared shared 表示是否删除此文档分享出去的文档,
-     *               (根据产品设计, 此处应该为 true ) 仅在分享的文档为 Shortcut 或 Send 方式时有效.
+     * @param id
+     * @param subtype
+     * @param pagination
+     * @param limit
      * @param callback
+     */
+    public static void getDocuments(Context context,
+                                    String id,
+                                    String subtype,
+                                    Pagination pagination,
+                                    int limit,
+                                    APIServiceCallback<UserDoc> callback) {
+
+
+        if (limit <= 0) {
+            limit = 10;
+        }
+
+        int page = 1;
+        if (pagination != null) {
+            page = pagination.getPage();
+        }
+
+        CollaRequest request = new CollaRequest(context, callback);
+        request.getDocuments(id, subtype, page, limit);
+    }
+
+    /**
+     * 删除文档
+     *
+     * @param shared shared 表示是否删除此文档分享出去的文档, (根据产品设计, 此处应该为 true ) 仅在分享的文档为 Shortcut 或 Send 方式时有效.
      */
     public static void deleteDocument(Context context,
                                       String documentId,
-                                      boolean shared ,
+                                      boolean shared,
                                       APIServiceCallback callback) {
 
-        CollaRequest request = new CollaRequest(context,callback);
+        CollaRequest request = new CollaRequest(context, callback);
         request.deleteDocument(documentId, shared);
 
     }
