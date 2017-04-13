@@ -30,6 +30,7 @@ import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.model.ctl.LiveItem;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.view.LessonPersonView;
@@ -109,7 +110,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean.state, bean.schedule);
             //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
-            String[] items = new String[]{" "};
+            String[] items = new String[]{mContext.getString(R.string.data_bank)};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -118,7 +119,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
                     switch (position) {
                         case 1:
                             ////schedule(bean);
-                            //databank(bean);
+                            databank(bean);
                             break;
                         case 2:
                             //databank(bean);
@@ -135,8 +136,8 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.status.setVisibility(View.GONE);
             holder.progressWrapper.setVisibility(View.VISIBLE);
             holder.progress.showTimeBar(bean.classroom, bean.schedule.getDuration());
-            //String[] items = new String[]{mContext.getString(R.string.data_bank)};
-            String[] items = new String[]{" "};
+            String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            //String[] items = new String[]{" "};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -144,7 +145,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
-                            //databank(bean);
+                            databank(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -157,8 +158,8 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.operation.setEnterColor(R.color.common_text);
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean.state, bean.schedule);
-            //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
-            String[] items = new String[]{" "};
+            String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
+            //String[] items = new String[]{" "};
             holder.operation.setItems(items);
             holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
@@ -168,7 +169,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
                         case 1:
                             ////schedule(bean);
 
-                            //databank(bean);
+                            databank(bean);
                             break;
                         case 2:
                             //databank(bean);
@@ -200,7 +201,8 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
 
     //资料库
     private void databank(LiveItem bean) {
-        Intent intent = new Intent(mContext, MaterialActivity.class);
+        Intent intent = new Intent(mContext, ClassMaterialActivity.class);
+        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.id);
         mContext.startActivity(intent);
     }
 

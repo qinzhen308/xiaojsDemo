@@ -86,12 +86,12 @@ public class ImageViewActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mMsg = mConv.getMessage(mMsgIdList.get(position % mPathList.size()));
-                ImageContent ic = (ImageContent) mMsg.getContent();
-                if (ic.getLocalPath() == null) {
-//                    mLoadBtn.setVisibility(View.VISIBLE);
-                    downloadImage();
-                }
+//                mMsg = mConv.getMessage(mMsgIdList.get(position % mPathList.size()));
+//                ImageContent ic = (ImageContent) mMsg.getContent();
+//                if (ic.getLocalPath() == null) {
+////                    mLoadBtn.setVisibility(View.VISIBLE);
+//                    downloadImage();
+//                }
             }
 
             @Override

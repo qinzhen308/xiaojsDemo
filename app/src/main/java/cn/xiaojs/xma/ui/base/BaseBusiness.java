@@ -185,7 +185,7 @@ public class BaseBusiness {
         if (followed) {
             //进入聊天界面
             //JpushUtil.launchChat(context, accountId, name);
-            LeanCloudUtil.lanchChatPage(context, accountId);
+            LeanCloudUtil.lanchChatPage(context, accountId,name);
         } else {
             final CommonDialog dialog = new CommonDialog(context);
 

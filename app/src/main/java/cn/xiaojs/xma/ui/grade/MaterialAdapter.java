@@ -55,6 +55,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             mIsMine = true;
         }
         mOwner = owner;
+
+        setDescNow("空空如也～");
     }
 
     @Override

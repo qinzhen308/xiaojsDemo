@@ -15,6 +15,7 @@ public class LCIMConstants {
    * 参数传递的 key 值，表示对方的 id，跳转到 LCIMConversationActivity 时可以设置
    */
   public static final String PEER_ID = getPrefixConstant("peer_id");
+  public static final String PEER_NAME = getPrefixConstant("peer_name");
 
   /**
    * 参数传递的 key 值，表示回话 id，跳转到 LCIMConversationActivity 时可以设置

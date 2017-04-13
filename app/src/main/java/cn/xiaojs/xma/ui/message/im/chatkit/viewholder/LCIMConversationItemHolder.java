@@ -33,7 +33,9 @@ import java.util.Date;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.platform.NotificationTemplate;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.Notification;
 import cn.xiaojs.xma.model.NotificationCategory;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -47,6 +49,7 @@ import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConversationUtils;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
+import cn.xiaojs.xma.util.LeanCloudUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /**
@@ -255,19 +258,31 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
     /**
      * 更新 name，单聊的话展示对方姓名，群聊展示所有用户的用户名
      */
-    private void updateName(AVIMConversation conversation) {
+    private void updateName(final AVIMConversation conversation) {
         LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
             @Override
             protected void internalDone0(String s, AVException e) {
                 if (null != e) {
                     LCIMLogUtils.logException(e);
-                    nameView.setText(R.string.stranger);
+
+                    String name = LeanCloudUtil.getNameByAttrs(conversation);
+                    if(TextUtils.isEmpty(name)) {
+                        nameView.setText(R.string.stranger);
+                    }else{
+                        nameView.setText(name);
+                        conversation.setName(name);
+                    }
                 } else {
+
+                    if (TextUtils.isEmpty(s)) {
+                        s = LeanCloudUtil.getNameByAttrs(conversation);
+                    }
 
                     if(TextUtils.isEmpty(s)) {
                         nameView.setText(R.string.stranger);
                     }else{
                         nameView.setText(s);
+                        conversation.setName(s);
                     }
                 }
             }
@@ -279,7 +294,7 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
      * 单聊：展示对方的头像
      * 群聊：展示一个静态的 icon
      */
-    private void updateIcon(AVIMConversation conversation) {
+    private void updateIcon(final AVIMConversation conversation) {
         if (null != conversation) {
             if (conversation.isTransient() || conversation.getMembers().size() > 2) {
                 //avatarView.setImageResource(R.drawable.lcim_group_icon);
@@ -298,7 +313,18 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
                     protected void internalDone0(String s, AVException e) {
                         if (null != e) {
                             LCIMLogUtils.logException(e);
+
                         }
+
+                        if (TextUtils.isEmpty(s)) {
+                            String targetId = LCIMConversationUtils.getConversationPeerId(conversation);
+                            if (!TextUtils.isEmpty(targetId)) {
+
+                                String url = Account.getAvatar(targetId, XiaojsConfig.PORTRAIT_SIZE);
+                                s = url;
+                            }
+                        }
+
                         Target<GlideDrawable> target = Glide.with(getContext()).load(s)
                                 .bitmapTransform(circleTransform)
                                 .placeholder(R.drawable.default_avatar_grey)

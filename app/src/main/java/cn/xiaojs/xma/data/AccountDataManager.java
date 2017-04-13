@@ -46,10 +46,16 @@ import java.util.Set;
 public class AccountDataManager {
 
 
+    public static User getUser(Context context) {
+        if (XiaojsConfig.mLoginUser == null) {
+            XiaojsConfig.mLoginUser = getUserInfo(context);
+        }
+        return  XiaojsConfig.mLoginUser;
+    }
 
     public static Account getAccont(Context context) {
         if (XiaojsConfig.mLoginUser == null) {
-            XiaojsConfig.mLoginUser = getUserInfo(context);
+            XiaojsConfig.mLoginUser = getUser(context);
         }
 
         return XiaojsConfig.mLoginUser.getAccount();

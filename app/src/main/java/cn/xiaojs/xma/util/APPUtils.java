@@ -80,6 +80,7 @@ public class APPUtils {
         }
 
         return channel;
+        //return "pro";
     }
 
     public static boolean isBackgroundThread(){
@@ -256,4 +257,6 @@ public class APPUtils {
 
         context.startActivity(intent);
     }
+
+
 }
