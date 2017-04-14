@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,7 +156,7 @@ public class VideoPlayFragment extends BaseFragment {
                             layoutParams.width = videoW;
                             layoutParams.height = videoH;
                             mHandler.sendEmptyMessage(MSG_COUNT_TIME);
-                            //mLiveProgress.setEnabled(true);
+                            mLiveProgress.setEnabled(true);
                         }
                     }
                 });
@@ -268,9 +267,10 @@ public class VideoPlayFragment extends BaseFragment {
 
     public void pause() {
         mPlaying = false;
+        mHandler.removeMessages(MSG_COUNT_TIME);
+        mHandler.removeMessages(MSG_HIDE_VIDEO_CONTROLLER);
         mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
         mVideoPlayerView.pause();
-        mHandler.removeMessages(MSG_COUNT_TIME);
         mCurrPosition = mPlMediaPlayer != null ? mPlMediaPlayer.getCurrentPosition() : 0;
     }
 
@@ -286,7 +286,6 @@ public class VideoPlayFragment extends BaseFragment {
         switch (msg.what) {
             case MSG_COUNT_TIME:
                 mCurrPosition = mCurrPosition + 1000;
-                Log.i("aaa", "onHandleMessage  mCurrPosition=" + mCurrPosition);
                 if (mCurrPosition > mDuration) {
                     mCurrPosition = mDuration;
                 }
