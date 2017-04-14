@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
@@ -426,7 +427,13 @@ public class LCIMConversationFragment extends Fragment {
   private boolean filterException(Exception e) {
     if (null != e) {
       LCIMLogUtils.logException(e);
-      Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+      if (XiaojsConfig.DEBUG) {
+        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+      }
+
+      Toast.makeText(getContext(), "当前用户不在该对话中", Toast.LENGTH_SHORT).show();
+      getActivity().finish();
+
     }
     return (null == e);
   }

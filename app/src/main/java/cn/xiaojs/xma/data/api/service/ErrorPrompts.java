@@ -41,7 +41,7 @@ public class ErrorPrompts {
         switch (apiType) {
             case APIType.SHARE_DOCUMENT:
                 if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
-                    errorMessage = "您已经分享该资料到此班级中了";
+                    errorMessage = "您分享的资料已在该班级中存在了";
                 }else {
                     errorMessage = "分享到班级失败";
                 }

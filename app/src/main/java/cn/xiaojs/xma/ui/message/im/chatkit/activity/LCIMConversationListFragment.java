@@ -155,11 +155,11 @@ public class LCIMConversationListFragment extends Fragment {
         for (String convId : convIdList) {
 
             AVIMConversation conversation = LCChatKit.getInstance().getClient().getConversation(convId);
-//            if (conversation == null
-//                    || TextUtils.isEmpty(conversation.getCreator())
-//                    || TextUtils.isEmpty(conversation.getConversationId())) {
-//                continue;
-//            }
+            if (conversation == null
+                    || TextUtils.isEmpty(conversation.getCreator())
+                    || TextUtils.isEmpty(conversation.getConversationId())) {
+                continue;
+            }
 
 //            if (conversation == null) {
 //                continue;
