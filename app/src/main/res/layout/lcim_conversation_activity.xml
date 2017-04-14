@@ -31,6 +31,7 @@
                     android:maxWidth="@dimen/px300"
                     android:ellipsize="end"
                     android:textColor="@color/font_black"
+                    android:singleLine="true"
                     android:textSize="@dimen/font_34px"/>
 
             <TextView

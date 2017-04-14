@@ -232,6 +232,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
     private void databank(EnrolledLesson bean) {
         Intent intent = new Intent(mContext, ClassMaterialActivity.class);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.getId());
+        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.getTitle());
         mContext.startActivity(intent);
     }
 

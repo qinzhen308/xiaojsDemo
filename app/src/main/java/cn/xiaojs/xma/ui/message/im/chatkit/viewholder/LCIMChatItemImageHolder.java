@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.bumptech.glide.Glide;
@@ -30,8 +31,8 @@ public class LCIMChatItemImageHolder extends LCIMChatItemHolder {
   private static final int MAX_DEFAULT_HEIGHT = 400;
   private static final int MAX_DEFAULT_WIDTH = 300;
 
-  public LCIMChatItemImageHolder(Context context, ViewGroup root, boolean isLeft) {
-    super(context, root, isLeft);
+  public LCIMChatItemImageHolder(Context context, ViewGroup root, boolean isLeft, AVIMConversation conversation) {
+    super(context, root, isLeft,conversation);
   }
 
   @Override

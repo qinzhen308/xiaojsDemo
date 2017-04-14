@@ -34,6 +34,8 @@ public class Contact implements Serializable{
 
     public String cover;
 
+    public String chatId;
+
     public boolean unfollowable;
 
 //

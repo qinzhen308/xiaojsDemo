@@ -203,6 +203,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
     private void databank(LiveItem bean) {
         Intent intent = new Intent(mContext, ClassMaterialActivity.class);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.id);
+        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.title);
         mContext.startActivity(intent);
     }
 

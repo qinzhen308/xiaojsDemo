@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class LCIMConversationActivity extends FragmentActivity {
 
     @BindView(R.id.chat_title)
     TextView titleView;
+    @BindView(R.id.chat_right_btn2)
+    ImageButton rightBtn2;
 
     protected LCIMConversationFragment conversationFragment;
 
@@ -209,43 +212,61 @@ public class LCIMConversationActivity extends FragmentActivity {
     protected void updateConversation(final AVIMConversation conversation) {
         if (null != conversation) {
 
+            if (LeanCloudUtil.isGroupChat(conversation)){
+                rightBtn2.setVisibility(View.GONE);
+            }
+
             conversationFragment.setConversation(conversation);
             LCIMConversationItemCache.getInstance().clearUnread(conversation.getConversationId());
 
             accountId = LCIMConversationUtils.getConversationPeerId(conversation);
 
-            LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
-                @Override
-                protected void internalDone0(String s, AVException e) {
-                    if (null != e) {
-                        LCIMLogUtils.logException(e);
-                    } else {
+            if (LeanCloudUtil.isGroupChat(conversation)) {
+                String title = LeanCloudUtil.getGroupChatTitle(conversation);
 
+                if (TextUtils.isEmpty(title)) {
+                    title = getResources().getString(R.string.stranger_group);
+                }
+
+                initActionBar(title);
+
+            }else {
+                LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
+                    @Override
+                    protected void internalDone0(String s, AVException e) {
                         if (null != e) {
                             LCIMLogUtils.logException(e);
-
-                            String name = LeanCloudUtil.getNameByAttrs(conversation);
-                            if(!TextUtils.isEmpty(name)) {
-                                s = name;
-                                conversation.setName(s);
-                            }
                         } else {
 
-                            if (TextUtils.isEmpty(s)) {
-                                s = LeanCloudUtil.getNameByAttrs(conversation);
+                            if (null != e) {
+                                LCIMLogUtils.logException(e);
 
-                                if (!TextUtils.isEmpty(s)) {
+                                String name = LeanCloudUtil.getNameByAttrs(conversation);
+                                if(!TextUtils.isEmpty(name)) {
+                                    s = name;
                                     conversation.setName(s);
                                 }
+                            } else {
 
+                                if (TextUtils.isEmpty(s)) {
+                                    s = LeanCloudUtil.getNameByAttrs(conversation);
+
+                                    if (!TextUtils.isEmpty(s)) {
+                                        conversation.setName(s);
+                                    }
+
+                                }
                             }
+
+                            if(TextUtils.isEmpty(s)) {
+                                s = getResources().getString(R.string.stranger);
+                            }
+
+                            initActionBar(s);
                         }
-
-
-                        initActionBar(s);
                     }
-                }
-            });
+                });
+            }
 
         }
     }

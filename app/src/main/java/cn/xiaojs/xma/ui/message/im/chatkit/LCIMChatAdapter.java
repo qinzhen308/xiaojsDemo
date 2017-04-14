@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.message.im.chatkit;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
@@ -43,8 +44,11 @@ public class LCIMChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   private boolean isShowUserName = true;
   protected List<AVIMMessage> messageList = new ArrayList<AVIMMessage>();
 
-  public LCIMChatAdapter() {
-    super();
+  protected AVIMConversation avimConversation;
+
+
+  public void setAVIMConversation(AVIMConversation conversation) {
+    avimConversation = conversation;
   }
 
   public void setMessageList(List<AVIMMessage> messages) {
@@ -87,24 +91,24 @@ public class LCIMChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     switch (viewType) {
       case ITEM_LEFT:
       case ITEM_LEFT_TEXT:
-        return new LCIMChatItemTextHolder(parent.getContext(), parent, true);
+        return new LCIMChatItemTextHolder(parent.getContext(), parent, true,avimConversation);
       case ITEM_LEFT_IMAGE:
-        return new LCIMChatItemImageHolder(parent.getContext(), parent, true);
+        return new LCIMChatItemImageHolder(parent.getContext(), parent, true,avimConversation);
       case ITEM_LEFT_AUDIO:
-        return new LCIMChatItemAudioHolder(parent.getContext(), parent, true);
+        return new LCIMChatItemAudioHolder(parent.getContext(), parent, true,avimConversation);
       case ITEM_LEFT_LOCATION:
-        return new LCIMChatItemLocationHolder(parent.getContext(), parent, true);
+        return new LCIMChatItemLocationHolder(parent.getContext(), parent, true,avimConversation);
       case ITEM_RIGHT:
       case ITEM_RIGHT_TEXT:
-        return new LCIMChatItemTextHolder(parent.getContext(), parent, false);
+        return new LCIMChatItemTextHolder(parent.getContext(), parent, false,avimConversation);
       case ITEM_RIGHT_IMAGE:
-        return new LCIMChatItemImageHolder(parent.getContext(), parent, false);
+        return new LCIMChatItemImageHolder(parent.getContext(), parent, false,avimConversation);
       case ITEM_RIGHT_AUDIO:
-        return new LCIMChatItemAudioHolder(parent.getContext(), parent, false);
+        return new LCIMChatItemAudioHolder(parent.getContext(), parent, false,avimConversation);
       case ITEM_RIGHT_LOCATION:
-        return new LCIMChatItemLocationHolder(parent.getContext(), parent, false);
+        return new LCIMChatItemLocationHolder(parent.getContext(), parent, false,avimConversation);
       default:
-        return new LCIMChatItemTextHolder(parent.getContext(), parent, true);
+        return new LCIMChatItemTextHolder(parent.getContext(), parent, true,avimConversation);
     }
   }
 

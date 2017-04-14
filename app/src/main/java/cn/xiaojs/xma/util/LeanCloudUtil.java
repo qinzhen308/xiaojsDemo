@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.Conversation;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.orhanobut.logger.Logger;
@@ -33,6 +34,8 @@ import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConversationUtils;
 public class LeanCloudUtil {
 
     public static final String ATTR_LEAGUERS = "leaguers";
+    public static final String ATTR_CHATNAME = "chatName";
+    public static final String ATTR_COVER = "cover";
 
     public static void lanchChatPage(Context context, String accountId, String name) {
         Intent intent = new Intent(context, LCIMConversationActivity.class);
@@ -43,18 +46,11 @@ public class LeanCloudUtil {
 
     public static void lanchGroupChat(final Context context,
                                       String title,
-                                      String peerId,
-                                      ArrayList<String> memberIds) {
+                                      String conversationId) {
 
-        LCChatKit.getInstance().getClient().createConversation(
-                memberIds, title, null, false, true, new AVIMConversationCreatedCallback() {
-                    @Override
-                    public void done(AVIMConversation avimConversation, AVIMException e) {
-                        Intent intent = new Intent(context, LCIMConversationActivity.class);
-                        intent.putExtra(LCIMConstants.CONVERSATION_ID, avimConversation.getConversationId());
-                        context.startActivity(intent);
-                    }
-                });
+        Intent intent = new Intent(context, LCIMConversationActivity.class);
+        intent.putExtra(LCIMConstants.CONVERSATION_ID, conversationId);
+        context.startActivity(intent);
     }
 
     public static void open(final String accountId) {
@@ -63,12 +59,12 @@ public class LeanCloudUtil {
             @Override
             public void done(AVIMClient avimClient, AVIMException e) {
                 if (e == null) {
-                   if (XiaojsConfig.DEBUG) {
-                       Logger.d("leancloud open success: " + accountId);
-                   }
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("leancloud open success: " + accountId);
+                    }
                 } else {
                     if (XiaojsConfig.DEBUG) {
-                        Logger.d("leancloud open failed: "  + accountId);
+                        Logger.d("leancloud open failed: " + accountId);
                     }
                 }
             }
@@ -86,7 +82,7 @@ public class LeanCloudUtil {
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("close success");
                     }
-                }else {
+                } else {
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("close failed");
                     }
@@ -96,17 +92,17 @@ public class LeanCloudUtil {
 
     }
 
-    public static Map<String,Object> getAttrMap(Context context,String memberId,String name) {
+    public static Map<String, Object> getAttrMap(Context context, String memberId, String name) {
         User user = AccountDataManager.getUser(context);
 
-        HashMap<String,String> leaguers = new HashMap<>();
-        leaguers.put(user.getId(),user.getName());
-        leaguers.put(memberId,name);
+        HashMap<String, String> leaguers = new HashMap<>();
+        leaguers.put(user.getId(), user.getName());
+        leaguers.put(memberId, name);
 
-        Object o = (Object)leaguers;
+        Object o = (Object) leaguers;
 
-        Map<String,Object> attrs = new HashMap<>();
-        attrs.put(ATTR_LEAGUERS,o);
+        Map<String, Object> attrs = new HashMap<>();
+        attrs.put(ATTR_LEAGUERS, o);
 
         return attrs;
     }
@@ -128,9 +124,9 @@ public class LeanCloudUtil {
 
 
         Object object = conversation.getAttribute(ATTR_LEAGUERS);
-        if (object !=null && object instanceof Map) {
+        if (object != null && object instanceof Map) {
 
-            Map<String,String> attr = (Map<String, String>) object;
+            Map<String, String> attr = (Map<String, String>) object;
 
             if (attr != null) {
                 return attr.get(targetId);
@@ -140,5 +136,63 @@ public class LeanCloudUtil {
 
         return "";
 
+    }
+
+    public static String getNameByAttrs(AVIMConversation conversation, String targetId) {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("getNameByAttrs--------------");
+        }
+
+        if (TextUtils.isEmpty(targetId)) return "";
+
+        Object object = conversation.getAttribute(ATTR_LEAGUERS);
+        if (object != null && object instanceof Map) {
+
+            Map<String, String> attr = (Map<String, String>) object;
+
+            if (attr != null) {
+                return attr.get(targetId);
+            }
+
+        }
+
+        return "";
+
+    }
+
+
+    public static String getGroupChatTitle(AVIMConversation conversation) {
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("getGroupChatTitle--------------");
+        }
+
+
+        if (conversation == null) return "";
+
+        return (String) conversation.getAttribute(ATTR_CHATNAME);
+
+    }
+
+    public static String getGroupChatCover(AVIMConversation conversation) {
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("getGroupChatCover--------------");
+        }
+
+
+        if (conversation == null) return "";
+
+        return (String) conversation.getAttribute(ATTR_COVER);
+
+    }
+
+
+    public static boolean isGroupChat(AVIMConversation conversation) {
+
+        if (conversation.isTransient() || conversation.getMembers().size() > 2) {
+            return true;
+        }
+
+        return false;
     }
 }

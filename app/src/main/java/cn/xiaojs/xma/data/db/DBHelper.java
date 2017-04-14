@@ -26,6 +26,18 @@ public final class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        if (oldVersion < 2) {
+            //version 2 新增CHAT_ID 字段
+            String addColumnSql = new StringBuilder("ALTER TABLE ")
+                    .append(TContact.TABLE_NAME)
+                    .append(" ADD ")
+                    .append(TContact.CHAT_ID)
+                    .append(" TEXT")
+                    .toString();
+
+            db.execSQL(addColumnSql);
+        }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +141,8 @@ public final class DBHelper extends SQLiteOpenHelper {
                 .append(TContact.LAST_MSG)
                 .append(" TEXT,")
                 .append(TContact.COVER)
+                .append(" TEXT,")
+                .append(TContact.CHAT_ID)
                 .append(" TEXT,")
                 .append(TContact.GNAME)
                 .append(" TEXT")

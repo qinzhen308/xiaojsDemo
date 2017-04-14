@@ -158,6 +158,9 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     String subtype = cursor.getString(cursor
                             .getColumnIndexOrThrow(DBTables.TContact.SUBTYPE));
 
+                    String chatid = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.CHAT_ID));
+
 //                    String avatar = cursor.getString(cursor
 //                            .getColumnIndexOrThrow(DBTables.TContact.AVATOR));
 
@@ -165,6 +168,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     contact.account = id;
                     contact.alias = name;
                     contact.subtype = subtype;
+                    contact.chatId = chatid;
 
                     contacts.add(contact);
 
@@ -437,6 +441,9 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     String cover = cursor.getString(cursor
                             .getColumnIndexOrThrow(DBTables.TContact.COVER));
 
+                    String chatId = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.CHAT_ID));
+
 
 
                     Contact contact = new Contact();
@@ -445,6 +452,7 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     contact.followType = followType;
                     contact.avatar = avatar;
                     contact.cover = cover;
+                    contact.chatId = chatId;
 
                     boolean isclass = gid == CLASSES;
 
@@ -521,8 +529,10 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
             sb.append(",");
             sb.append(DBTables.TContact.STARTED);
             sb.append(",");
+            sb.append(DBTables.TContact.CHAT_ID);
+            sb.append(",");
             sb.append(DBTables.TContact.COVER);
-            sb.append(") VALUES(?,?,?,?,?,?,?,?,?,?)");
+            sb.append(") VALUES(?,?,?,?,?,?,?,?,?,?,?)");
 
             SQLiteStatement stmt = db.compileStatement(sb.toString());
             for (ContactGroup group : contactGroups) {
@@ -569,8 +579,11 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                     String start = TextUtils.isEmpty(contact.startedOn)? "" : contact.startedOn;
                     stmt.bindString(9,start);
 
+                    String chatId = TextUtils.isEmpty(contact.chatId)? "" : contact.chatId;
+                    stmt.bindString(10,chatId);
+
                     String cover = TextUtils.isEmpty(contact.cover)? "" : contact.cover;
-                    stmt.bindString(10,cover);
+                    stmt.bindString(11,cover);
 
 
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVCallback;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.bumptech.glide.Glide;
 
@@ -32,6 +33,7 @@ import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMMessageResendEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConversationUtils;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
+import cn.xiaojs.xma.util.LeanCloudUtil;
 
 /**
  * Created by wli on 15/9/17.
@@ -51,10 +53,17 @@ public class LCIMChatItemHolder extends LCIMCommonViewHolder {
     protected TextView statusView;
     protected ImageView errorView;
 
-    public LCIMChatItemHolder(Context context, ViewGroup root, boolean isLeft) {
+    private AVIMConversation imConversation;
+
+    public LCIMChatItemHolder(Context context, ViewGroup root, boolean isLeft, AVIMConversation conversation) {
         super(context, root, isLeft ? R.layout.lcim_chat_item_left_layout : R.layout.lcim_chat_item_right_layout);
         this.isLeft = isLeft;
+
+        imConversation = conversation;
+
         initView();
+
+
     }
 
     public void initView() {
@@ -100,6 +109,9 @@ public class LCIMChatItemHolder extends LCIMCommonViewHolder {
                     String targetId = message.getFrom();
                     avatarUrl = Account.getAvatar(targetId, XiaojsConfig.PORTRAIT_SIZE);
 
+                    String name = LeanCloudUtil.getNameByAttrs(imConversation, targetId);
+                    nameView.setText(name);
+
                 } else if (null != userProfile) {
                     nameView.setText(userProfile.getUserName());
                     avatarUrl = userProfile.getAvatarUrl();
@@ -115,7 +127,12 @@ public class LCIMChatItemHolder extends LCIMCommonViewHolder {
                 }else{
                     String targetId = message.getFrom();
                     avatarUrl = Account.getAvatar(targetId, XiaojsConfig.PORTRAIT_SIZE);
+
+                    String name = LeanCloudUtil.getNameByAttrs(imConversation,targetId);
+                    nameView.setText(name);
                 }
+
+
 
                 Glide.with(getContext()).load(avatarUrl)
                         .bitmapTransform(circleTransform)

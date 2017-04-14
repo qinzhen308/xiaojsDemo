@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 
@@ -19,8 +20,8 @@ public class LCIMChatItemTextHolder extends LCIMChatItemHolder {
 
   protected TextView contentView;
 
-  public LCIMChatItemTextHolder(Context context, ViewGroup root, boolean isLeft) {
-    super(context, root, isLeft);
+  public LCIMChatItemTextHolder(Context context, ViewGroup root, boolean isLeft, AVIMConversation conversation) {
+    super(context, root, isLeft,conversation);
   }
 
   @Override

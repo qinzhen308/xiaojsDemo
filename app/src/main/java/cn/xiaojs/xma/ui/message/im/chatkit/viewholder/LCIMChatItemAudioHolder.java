@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 
 import cn.xiaojs.xma.R;
@@ -25,8 +26,8 @@ public class LCIMChatItemAudioHolder extends LCIMChatItemHolder {
   private static double itemMaxWidth = 0;
   private static int itemMinWidth = 200;
 
-  public LCIMChatItemAudioHolder(Context context, ViewGroup root, boolean isLeft) {
-    super(context, root, isLeft);
+  public LCIMChatItemAudioHolder(Context context, ViewGroup root, boolean isLeft,AVIMConversation conversation) {
+    super(context, root, isLeft,conversation);
   }
 
   @Override

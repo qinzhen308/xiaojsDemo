@@ -27,6 +27,8 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Keep;
+import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,6 +70,7 @@ import static cn.xiaojs.xma.ui.message.ShareScopeActivity.REQUEST_CHOOSE_CLASS_C
 public class ClassMaterialActivity extends BaseActivity {
 
     public static final String EXTRA_LESSON_ID = "lesson_id";
+    public static final String EXTRA_LESSON_NAME = "lesson_name";
     private static final int REQUEST_PERMISSION = 1002;
 
     @BindView(R.id.material_list)
@@ -104,13 +107,20 @@ public class ClassMaterialActivity extends BaseActivity {
         //setRightImage(R.drawable.upload_selector);
         needHeader(false);
 
-        mTitle.setText(R.string.class_data_bank);
         tipsTextView.setText(R.string.class_data_tips);
         mRightImage2.setVisibility(View.GONE);
 
         tipsLay.setVisibility(View.VISIBLE);
 
         String lessonId = getIntent().getStringExtra(EXTRA_LESSON_ID);
+        String lessonName = getIntent().getStringExtra(EXTRA_LESSON_NAME);
+
+
+        mTitle.setEms(8);
+        mTitle.setSingleLine(true);
+        mTitle.setEllipsize(TextUtils.TruncateAt.END);
+        mTitle.setText(lessonName);
+        //mTitle.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
 
         mAdapter = new ClassMaterialAdapter(this, mList, lessonId);
         mList.setAdapter(mAdapter);

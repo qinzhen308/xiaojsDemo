@@ -201,7 +201,7 @@ public class MaterialActivity extends BaseActivity {
                 if (choiceContacts != null && choiceContacts.size() > 0) {
 
                     Contact chooseClass = choiceContacts.get(0);
-                    toshare(targetDocId, chooseClass.account);
+                    toshare(targetDocId, chooseClass.account, chooseClass.alias);
                 }
             }
         }
@@ -403,7 +403,7 @@ public class MaterialActivity extends BaseActivity {
         startActivityForResult(i, REQUEST_CHOOSE_CLASS_CODE);
     }
 
-    private void toshare(String documentId,final String targetId) {
+    private void toshare(String documentId,final String targetId,final String classname) {
 
         ShareResource resource = new ShareResource();
         resource.targetId = targetId;
@@ -416,7 +416,7 @@ public class MaterialActivity extends BaseActivity {
             public void onSuccess(ShareDoc object) {
                 cancelProgress();
                 //Toast.makeText(MaterialActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
-                shareSuccess(targetId);
+                shareSuccess(targetId, classname);
             }
 
             @Override
@@ -427,7 +427,7 @@ public class MaterialActivity extends BaseActivity {
         });
     }
 
-    public void shareSuccess(final String classId) {
+    public void shareSuccess(final String classId, final String classname) {
         final CommonDialog dialog = new CommonDialog(this);
         dialog.setTitle("提示");
         dialog.setDesc(R.string.shareok_and_to_class);
@@ -438,7 +438,7 @@ public class MaterialActivity extends BaseActivity {
             @Override
             public void onClick() {
                 dialog.dismiss();
-                databank(classId);
+                databank(classId, classname);
             }
         });
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
@@ -451,9 +451,10 @@ public class MaterialActivity extends BaseActivity {
     }
 
     //资料库
-    private void databank(String classid) {
+    private void databank(String classid, String name) {
         Intent intent = new Intent(this, ClassMaterialActivity.class);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, classid);
+        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, name);
         startActivity(intent);
     }
 

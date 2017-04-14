@@ -215,6 +215,7 @@
     <string name="course_of_teach">我授的课</string>
     <string name="my_course">我的课</string>
     <string name="cls_moment">班级圈</string>
+    <string name="choose_class">选择班级</string>
     <string name="into_cls">进入教室</string>
     <string name="data_bank">资料库</string>
     <string name="class_data_bank">班级资料库</string>
@@ -727,6 +728,7 @@
     <string name="student">同学</string>
     <string name="search_empty_tips">暂无搜索结果~</string>
     <string name="stranger">陌生人</string>
+    <string name="stranger_group">陌生群组</string>
     <string name="class_data_tips">来源：个人或机构从自己的资料库里分享至班级</string>
     <string name="delete_success">删除成功</string>
     <string name="share_material_to_class_failed">分享到班级失败</string>

@@ -54,6 +54,9 @@ public class DBTables {
      *
      * version 1
      * Init base columns: cid, gid, name, avator, followType
+     *
+     * version 2 :1.0.2.26
+     * new column: chatid
      */
     public static final class TContact implements BaseColumns {
         //Table name
@@ -83,6 +86,8 @@ public class DBTables {
 
         public static final String GNAME = "gname";
         public static final String COVER = "cover";
+
+        public static final String CHAT_ID = "chatid";
 
         //public static final String UN_FOLLOWABLE = "unfollowable";
 

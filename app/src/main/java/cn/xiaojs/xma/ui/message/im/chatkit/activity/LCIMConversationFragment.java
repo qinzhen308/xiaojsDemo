@@ -102,7 +102,7 @@ public class LCIMConversationFragment extends Fragment {
     layoutManager = new LinearLayoutManager(getActivity());
     recyclerView.setLayoutManager(layoutManager);
 
-    itemAdapter = getAdpter();
+    itemAdapter = new LCIMChatAdapter();
     itemAdapter.resetRecycledViewPoolSize(recyclerView);
     recyclerView.setAdapter(itemAdapter);
 
@@ -112,6 +112,7 @@ public class LCIMConversationFragment extends Fragment {
 
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
+
     refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override
       public void onRefresh() {
@@ -137,9 +138,9 @@ public class LCIMConversationFragment extends Fragment {
     });
   }
 
-  protected LCIMChatAdapter getAdpter() {
-    return new LCIMChatAdapter();
-  }
+//  protected LCIMChatAdapter getAdpter() {
+//    return new LCIMChatAdapter(imConversation);
+//  }
 
   @Override
   public void onResume() {
@@ -166,6 +167,7 @@ public class LCIMConversationFragment extends Fragment {
 
   public void setConversation(final AVIMConversation conversation) {
     imConversation = conversation;
+    itemAdapter.setAVIMConversation(imConversation);
     refreshLayout.setEnabled(true);
     inputBottomBar.setTag(imConversation.getConversationId());
     fetchMessages();

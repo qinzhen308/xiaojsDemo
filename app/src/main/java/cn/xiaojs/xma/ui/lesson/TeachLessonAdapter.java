@@ -456,6 +456,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     private void databank(TeachLesson bean) {
         Intent intent = new Intent(mContext, ClassMaterialActivity.class);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.getId());
+        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.getTitle());
         mContext.startActivity(intent);
     }
 

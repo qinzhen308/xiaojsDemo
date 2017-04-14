@@ -100,7 +100,7 @@ public class XiaojsConfig {
     //DB name
     public static final String DB_NAME = "xdb";
     //DB current version
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 2;
 
 
 

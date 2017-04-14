@@ -124,13 +124,7 @@ public class ContactActivity extends BaseActivity {
                 if (contactGroup.group == CLASSES) {
                     //Toast.makeText(ContactActivity.this,"正在开发中",Toast.LENGTH_SHORT).show();
 
-//                    ArrayList<String> ids = new ArrayList<String>();
-//                    ids.add(AccountDataManager.getAccountID(ContactActivity.this));
-//                    ids.add("58dfjlfjsdfjslf");
-//                    ids.add("58rietuo453495832");
-//                    ids.add("123456789   ");
-//
-//                    LeanCloudUtil.lanchGroupChat(ContactActivity.this,name,contact.account,ids);
+                    LeanCloudUtil.lanchGroupChat(ContactActivity.this,name,contact.chatId);
                     return false;
                 }
 
@@ -533,9 +527,9 @@ public class ContactActivity extends BaseActivity {
         }
 
         //FIXME 因为没有实现群聊，屏蔽班级显示
-        if (class_pos >=0 && class_pos < contactData.size()) {
-            contactData.remove(class_pos);
-        }
+//        if (class_pos >=0 && class_pos < contactData.size()) {
+//            contactData.remove(class_pos);
+//        }
 
         contactData.addAll(tempMap.values());
 

@@ -259,34 +259,65 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
      * 更新 name，单聊的话展示对方姓名，群聊展示所有用户的用户名
      */
     private void updateName(final AVIMConversation conversation) {
-        LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
-            @Override
-            protected void internalDone0(String s, AVException e) {
-                if (null != e) {
-                    LCIMLogUtils.logException(e);
 
-                    String name = LeanCloudUtil.getNameByAttrs(conversation);
-                    if(TextUtils.isEmpty(name)) {
-                        nameView.setText(R.string.stranger);
-                    }else{
-                        nameView.setText(name);
-                        conversation.setName(name);
-                    }
-                } else {
+        if (conversation.isTransient() || conversation.getMembers().size() > 2) {
+            LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
+                @Override
+                protected void internalDone0(String s, AVException e) {
+                    if (null != e) {
+                        LCIMLogUtils.logException(e);
 
-                    if (TextUtils.isEmpty(s)) {
-                        s = LeanCloudUtil.getNameByAttrs(conversation);
-                    }
+                        String name = LeanCloudUtil.getGroupChatTitle(conversation);
+                        if(TextUtils.isEmpty(name)) {
+                            nameView.setText(R.string.stranger_group);
+                        }else{
+                            nameView.setText(name);
+                            conversation.setName(name);
+                        }
+                    } else {
+                        s = LeanCloudUtil.getGroupChatTitle(conversation);
 
-                    if(TextUtils.isEmpty(s)) {
-                        nameView.setText(R.string.stranger);
-                    }else{
-                        nameView.setText(s);
-                        conversation.setName(s);
+                        if(TextUtils.isEmpty(s)) {
+                            nameView.setText(R.string.stranger_group);
+                        }else{
+                            nameView.setText(s);
+                            conversation.setName(s);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }else {
+
+            LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
+                @Override
+                protected void internalDone0(String s, AVException e) {
+                    if (null != e) {
+                        LCIMLogUtils.logException(e);
+
+                        String name = LeanCloudUtil.getNameByAttrs(conversation);
+                        if(TextUtils.isEmpty(name)) {
+                            nameView.setText(R.string.stranger);
+                        }else{
+                            nameView.setText(name);
+                            conversation.setName(name);
+                        }
+                    } else {
+
+                        if (TextUtils.isEmpty(s)) {
+                            s = LeanCloudUtil.getNameByAttrs(conversation);
+                        }
+
+                        if(TextUtils.isEmpty(s)) {
+                            nameView.setText(R.string.stranger);
+                        }else{
+                            nameView.setText(s);
+                            conversation.setName(s);
+                        }
+                    }
+                }
+            });
+
+        }
     }
 
     /**
@@ -296,12 +327,16 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
      */
     private void updateIcon(final AVIMConversation conversation) {
         if (null != conversation) {
-            if (conversation.isTransient() || conversation.getMembers().size() > 2) {
+            if (LeanCloudUtil.isGroupChat(conversation)) {
                 //avatarView.setImageResource(R.drawable.lcim_group_icon);
-                Target<GlideDrawable> target = Glide.with(getContext()).load(R.drawable.lcim_group_icon)
+
+                String targetId = LeanCloudUtil.getGroupChatCover(conversation);
+                String url = Account.getAvatar(targetId, XiaojsConfig.PORTRAIT_SIZE);
+
+                Target<GlideDrawable> target = Glide.with(getContext()).load(url)
                         .bitmapTransform(circleTransform)
-                        .placeholder(R.drawable.default_avatar_grey)
-                        .error(R.drawable.default_avatar_grey)
+                        .placeholder(R.drawable.ic_chat_group_avator)
+                        .error(R.drawable.ic_chat_group_avator)
                         .into(avatarView);
                 synchronized (LOCK) {
                     mTargets.add(target);

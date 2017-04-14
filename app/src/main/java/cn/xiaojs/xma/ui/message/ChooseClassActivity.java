@@ -38,7 +38,7 @@ public class ChooseClassActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_share_scope);
-        setMiddleTitle(R.string.cls_moment);
+        setMiddleTitle(R.string.choose_class);
         setRightText(R.string.finish);
         setRightTextColor(getResources().getColor(R.color.font_orange));
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
