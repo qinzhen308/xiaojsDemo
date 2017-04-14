@@ -155,7 +155,7 @@ public class LessonBusiness {
         return criteria;
     }
 
-    public static void enterEnrollRegisterPage(Context context, String lessonId, String cover, String title, long startTime, int duration) {
+    public static void enterEnrollRegisterPage(Context context, String lessonId, String cover, String title, long startTime, long duration) {
         Intent intent = new Intent(context, EnrollRegisterActivity.class);
         intent.putExtra(EnrollRegisterActivity.KEY_LESSON, lessonId);
         intent.putExtra(EnrollRegisterActivity.KEY_COVER, cover);

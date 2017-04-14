@@ -21,6 +21,7 @@ public class LCIMConstants {
    * 参数传递的 key 值，表示回话 id，跳转到 LCIMConversationActivity 时可以设置
    */
   public static final String CONVERSATION_ID = getPrefixConstant("conversation_id");
+  public static final String CONVERSATION_NAME = getPrefixConstant("conversation_name");
 
   /**
    * LCIMConversationActivity 中头像点击事件发送的 action

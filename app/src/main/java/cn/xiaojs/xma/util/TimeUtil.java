@@ -672,7 +672,7 @@ public class TimeUtil {
         return time;
     }
 
-    public static String getTimeFormat(Date date, int duration) {
+    public static String getTimeFormat(Date date, long duration) {
 
         return duration + "分钟";
     }

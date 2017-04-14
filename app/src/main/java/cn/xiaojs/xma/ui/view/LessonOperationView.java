@@ -88,7 +88,14 @@ public class LessonOperationView extends RelativeLayout {
     }
 
     public void enableMore(boolean b) {
+
         enable = b;
+
+        if (b) {
+            more.setVisibility(VISIBLE);
+        }else{
+            more.setVisibility(GONE);
+        }
     }
 
     private boolean enable;

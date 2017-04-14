@@ -170,11 +170,14 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
     @Override
     protected void doRequest() {
-        showProgress(true);
         CollaManager.getDocuments(mContext, mOwner, Collaboration.SubType.PERSON, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
-                cancelProgress();
+
+                if (getList() !=null) {
+                    getList().clear();
+                }
+
                 if (object != null && object.documents!=null && object.documents.size() > 0) {
                     MaterialAdapter.this.onSuccess(object.documents);
                 } else {
@@ -184,8 +187,6 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-
-                cancelProgress();
                 MaterialAdapter.this.onFailure(errorCode, errorMessage);
             }
         });

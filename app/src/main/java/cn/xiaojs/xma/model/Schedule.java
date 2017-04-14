@@ -14,7 +14,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Schedule implements Serializable {
     private Date start;
-    private int duration;
+    private long duration;
     private Recurrence recurrence;
 
     public Recurrence getRecurrence() {
@@ -33,11 +33,11 @@ public class Schedule implements Serializable {
         this.start = start;
     }
 
-    public int getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 }

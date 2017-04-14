@@ -44,6 +44,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
@@ -112,6 +113,9 @@ public class MaterialActivity extends BaseActivity {
         }
         mAdapter = new MaterialAdapter(this, mList, XiaojsConfig.mLoginUser.getId());
         mList.setAdapter(mAdapter);
+
+        mList.setMode(PullToRefreshBase.Mode.DISABLED);
+
         mRightImage2.setImageResource(R.drawable.upload_selector);
         mRightImage.setImageResource(R.drawable.ic_my_download);
     }

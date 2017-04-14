@@ -51,6 +51,7 @@ public class LeanCloudUtil {
 
         Intent intent = new Intent(context, LCIMConversationActivity.class);
         intent.putExtra(LCIMConstants.CONVERSATION_ID, conversationId);
+        intent.putExtra(LCIMConstants.CONVERSATION_NAME, title);
         context.startActivity(intent);
     }
 

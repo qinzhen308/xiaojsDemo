@@ -78,7 +78,7 @@ public class SalePromotionActivity extends BaseActivity {
     private String mUnitPriceStr;
     Promotion[] mPromotions;
     private long mLessonStartTime;
-    private int mLimit;
+    private long mLimit;
 
     @Override
     protected void addViewContent() {

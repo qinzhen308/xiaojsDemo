@@ -328,6 +328,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 holder.operation.setEnterColor(R.color.common_text);
                 holder.end.setVisibility(View.VISIBLE);
             }
+        }else{
+            holder.operation.enableMore(false);
         }
 
         if (LessonState.PENDING_FOR_LIVE.equalsIgnoreCase(bean.getState())
@@ -685,7 +687,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
                     mContext.getString(publishId),
-                    mContext.getString(R.string.modify_lesson_time),
+                    /*mContext.getString(R.string.modify_lesson_time),*/
                     mContext.getString(R.string.cancel_lesson)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             dialog.setItems(items);
@@ -705,10 +707,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 3://发布到主页
                             publish(bean);
                             break;
-                        case 4://修改上课时间
-                            modifyLesson(bean);
-                            break;
-                        case 5://取消上课
+//                        case 4://修改上课时间
+//                            modifyLesson(bean);
+//                            break;
+                        case 4://取消上课
                             cancelLesson(bean);
                             break;
                     }

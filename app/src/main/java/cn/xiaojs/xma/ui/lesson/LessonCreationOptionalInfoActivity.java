@@ -79,7 +79,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
     private float mPrice;
     private int mPricingType;
     private long mLessonStartTime;
-    private int mLimit;
+    private long mLimit;
     private boolean mIsFree = true;
     private boolean mIsMandatory = true;
     private int mDarkGrayFont;

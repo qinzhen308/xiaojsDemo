@@ -553,8 +553,8 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                     mContext.getString(R.string.registration),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
-                    mContext.getString(publishId),
-                    mContext.getString(R.string.modify_lesson_time),
+                    /*mContext.getString(publishId),*/
+                    /*mContext.getString(R.string.modify_lesson_time),*/
                     mContext.getString(R.string.cancel_lesson)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             dialog.setItems(items);
@@ -571,13 +571,13 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 2://查看详情
                             detail(bean);
                             break;
-                        case 3://发布到主页
-                            publish(bean);
-                            break;
-                        case 4://修改上课时间
-                            modifyLesson(bean);
-                            break;
-                        case 5://取消上课
+//                        case 3://发布到主页
+//                            publish(bean);
+//                            break;
+//                        case 4://修改上课时间
+//                            modifyLesson(bean);
+//                            break;
+                        case 3://取消上课
                             cancelLesson(bean);
                             break;
                     }
@@ -587,8 +587,8 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
         } else if (bean.state.equalsIgnoreCase(LessonState.LIVE)) {
             String[] items = new String[]{
                     mContext.getString(R.string.share),
-                    mContext.getString(R.string.look_detail),
-                    mContext.getString(publishId)};
+                    mContext.getString(R.string.look_detail)
+                    /*mContext.getString(publishId)*/};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -601,9 +601,9 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 1://查看详情
                             detail(bean);
                             break;
-                        case 2://发布到主页
-                            publish(bean);
-                            break;
+//                        case 2://发布到主页
+//                            publish(bean);
+//                            break;
                     }
                 }
             });
@@ -613,7 +613,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                     //mContext.getString(R.string.prepare_lesson),
                     mContext.getString(R.string.share),
                     mContext.getString(R.string.look_detail),
-                    mContext.getString(publishId),
+                    /*mContext.getString(publishId),*/
                     mContext.getString(R.string.lesson_again)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             dialog.setItems(items);
@@ -630,10 +630,10 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 1://查看详情
                             detail(bean);
                             break;
-                        case 2://发布到主页
-                            publish(bean);
-                            break;
-                        case 3://再次开课
+//                        case 2://发布到主页
+//                            publish(bean);
+//                            break;
+                        case 2://再次开课
                             lessonAgain(bean);
                             break;
                     }

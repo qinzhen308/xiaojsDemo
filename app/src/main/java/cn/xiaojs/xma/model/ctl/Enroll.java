@@ -11,7 +11,7 @@ import java.io.Serializable;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Enroll implements Serializable{
-    public int max;
-    public int current;
+    public long max;
+    public long current;
     public boolean mandatory;
 }
