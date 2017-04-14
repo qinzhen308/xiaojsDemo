@@ -59,7 +59,9 @@ public class ClassroomController {
         mUser = client;
 
         //init video controller
-        if (client == Constants.User.TEACHER) {
+        if (client == Constants.User.TEACHER
+                || client == Constants.User.ASSISTANT
+                || client == Constants.User.REMOTE_ASSISTANT) {
             mVideoController = new TeacherVideoController(context, root, listener);
         } else if (client == Constants.User.STUDENT) {
             mVideoController = new StudentVideoController(context, root, listener);

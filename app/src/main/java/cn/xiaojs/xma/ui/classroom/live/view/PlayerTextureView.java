@@ -30,9 +30,7 @@ import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
-import cn.xiaojs.xma.util.ToastUtil;
 
 public class PlayerTextureView extends BaseMediaView {
     private static final int MESSAGE_ID_RECONNECTING = 0x01;

@@ -35,7 +35,6 @@ import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -479,27 +478,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     /**
-     * 显示设置导航提示
+     * 初始化, 启动bootSession
      */
-    private void showSettingNav() {
-        SharedPreferences sf = XjsUtils.getSharedPreferences();
-        boolean flag = sf.getBoolean(Constants.KEY_CLASSROOM_FIRST_USE, true);
-        if (flag) {
-            SettingDialog setDialog = new SettingDialog(this);
-            setDialog.show();
-
-            sf.edit().putBoolean(Constants.KEY_CLASSROOM_FIRST_USE, false).commit();
-        }
-    }
-
     private void initData(boolean showProgress, final OnDataLoadListener dataLoadListener) {
         if (ClassroomBusiness.getCurrentNetwork(this) == ClassroomBusiness.NETWORK_NONE) {
             mTipView.setVisibility(View.VISIBLE);
             return;
-        } else {
-            mTipView.setVisibility(View.GONE);
         }
 
+        mTipView.setVisibility(View.GONE);
         if (showProgress) {
             showProgress(true);
         }
@@ -510,6 +497,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (XiaojsConfig.DEBUG) {
                     Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
                 }
+
                 if (ctlSession != null) {
                     if (ctlSession.accessible) {
                         onBootSessionSucc(false, ctlSession, dataLoadListener);
@@ -579,7 +567,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession, final OnDataLoadListener dataLoadListener) {
         mLessonID = ctlSession.ctl != null ? ctlSession.ctl.id : "";
         mUser = ClassroomBusiness.getUser(ctlSession.psType);
-        if (mUser == Constants.User.TEACHER) {
+        if (mUser == Constants.User.TEACHER
+                || mUser == Constants.User.ASSISTANT
+                || mUser == Constants.User.REMOTE_ASSISTANT) {
             if (Constants.PARTICIPANT_MODE == ctlSession.mode) {
                 mUser = Constants.User.STUDENT;
                 //屏蔽聊天和视频截图按钮
@@ -1046,7 +1036,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         } else if (type == OnImageClickListener.IMG_FROM_QINIU) {
                             try {
                                 return Glide.with(ClassroomActivity.this)
-                                        .load(ClassroomBusiness.getImageUrl(key))
+                                        .load(ClassroomBusiness.getMediaUrl(key))
                                         .asBitmap()
                                         .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                         .get();
@@ -1280,7 +1270,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mClassroomController.exitDocumentFragment();
 
             String mimeType = doc.mimeType != null ? doc.mimeType.toLowerCase() : "";
-            String url = ClassroomBusiness.getImageUrl(doc.key);
+            String url = ClassroomBusiness.getMediaUrl(doc.key);
 
             if (mimeType.startsWith(Collaboration.PictureMimeTypes.ALL)) {
                 enterPhotoDoodle(url);
@@ -1288,11 +1278,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 enterVideoPlayer(doc);
             } else if (mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
                     || mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)) {
-                ArrayList<LibDoc.ExportImg> images  = MaterialUtil.getSortImgs(doc.exported != null ? doc.exported.images : null);
+                ArrayList<LibDoc.ExportImg> images = MaterialUtil.getSortImgs(doc.exported != null ? doc.exported.images : null);
                 if (images != null) {
                     ArrayList<String> imgUrls = new ArrayList<String>();
                     for (LibDoc.ExportImg img : images) {
-                        imgUrls.add(ClassroomBusiness.getImageUrl(img.name));
+                        imgUrls.add(ClassroomBusiness.getMediaUrl(img.name));
                     }
                     enterPhotoDoodle(imgUrls);
                 } else {

@@ -112,7 +112,7 @@ public class VideoPlayFragment extends BaseFragment {
 
         mVideoPlayerView.setTouchable(false);
         if (mDoc != null) {
-            mUrl = ClassroomBusiness.getImageUrl(mDoc.key);
+            mUrl = ClassroomBusiness.getMediaUrl(mDoc.key);
             if (!TextUtils.isEmpty(mUrl)) {
                 PLVideoTextureView pLVideoTextureView = mVideoPlayerView.getPlayer();
 

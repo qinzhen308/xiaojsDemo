@@ -102,10 +102,13 @@ public class ClassroomBusiness {
     }
 
     public static String getSnapshot(String name, int size) {
-         return ApiManager.getFileBucket() + "/" + name + "?imageView2/0/w/" + size;
+        return ApiManager.getFileBucket() + "/" + name + "?imageView2/0/w/" + size;
     }
 
-    public static String getImageUrl(String name) {
+    /**
+     * 得到多媒体对应在七牛服务器的url
+     */
+    public static String getMediaUrl(String name) {
         return ApiManager.getFileBucket() + "/" + name;
     }
 
@@ -123,7 +126,7 @@ public class ClassroomBusiness {
             return null;
         }
 
-        String imgData  = content.substring(BASE64_JPEG_HEADER.length());
+        String imgData = content.substring(BASE64_JPEG_HEADER.length());
         try {
             byte[] data = Base64.decode(imgData);
             return BitmapFactory.decodeByteArray(data, 0, data.length);
@@ -137,7 +140,7 @@ public class ClassroomBusiness {
             return null;
         }
 
-        String imgData  = content.substring(BASE64_JPEG_HEADER.length());
+        String imgData = content.substring(BASE64_JPEG_HEADER.length());
         try {
             byte[] data = Base64.decode(imgData);
             return data;
