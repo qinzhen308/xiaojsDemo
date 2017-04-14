@@ -20,23 +20,21 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
-import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
-import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Criteria;
@@ -44,8 +42,8 @@ import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
+import cn.xiaojs.xma.model.Teacher;
 import cn.xiaojs.xma.model.account.DealAck;
-import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
@@ -55,7 +53,7 @@ import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
-import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.NumberUtil;
 import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -140,7 +138,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
-            holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.lesson_recreate),
                     mContext.getString(R.string.look_detail)};//mContext.getString(R.string.delete) 删除接口目前还不支持
             holder.state.setText(R.string.examine_failure);
@@ -211,7 +208,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_ACK)) {
-            holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{"同意", "拒绝"};
             holder.state.setText("待确认");
             holder.state.setBackgroundResource(R.drawable.course_state_examine_bg);
@@ -242,7 +238,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             holder.operation.enableEnter(false);
 
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)) {
-            holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.cancel_examine),
                     mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.examining);
@@ -268,7 +263,6 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         } else if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
                 || bean.getState().equalsIgnoreCase(LessonState.LIVE)
                 || bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-            holder.assistants.setVisibility(View.VISIBLE);
 //            List<Bitmap> l = new ArrayList<>();
 //            l.add(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_ad));
 //            holder.assistants.show(l);
@@ -339,6 +333,34 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         if (LessonState.PENDING_FOR_LIVE.equalsIgnoreCase(bean.getState())
                 || LessonState.DRAFT.equalsIgnoreCase(bean.getState())) {
 
+        }
+
+        //设置助教，目前最多显示3个助教
+        Teacher[] assistants = bean.getAssistants();
+        if (assistants != null && assistants.length > 0) {
+            holder.assistantsWrapper.setVisibility(View.VISIBLE);
+            int size = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
+            int margin = mContext.getResources().getDimensionPixelSize(R.dimen.px10);
+            int i = 0;
+            holder.assistants.removeAllViews();
+            for (Teacher teacher : assistants) {
+                String url = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(teacher.getId(), 40);
+                RoundedImageView roundImgView = new RoundedImageView(mContext);
+                roundImgView.setImageResource(R.drawable.default_avatar_grey);
+                roundImgView.setOval(true);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
+                params.rightMargin = margin;
+                holder.assistants.addView(roundImgView, params);
+                Glide.with(mContext)
+                        .load(url)
+                        .error(R.drawable.default_avatar_grey)
+                        .into(roundImgView);
+                if (++i > 2) {
+                    break;
+                }
+            }
+        } else {
+            holder.assistantsWrapper.setVisibility(View.GONE);
         }
     }
 
@@ -963,7 +985,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         TextView enrollDesc;
 
         @BindView(R.id.assistants)
-        ImageFlowLayout assistants;
+        LinearLayout assistants;
 
         @BindView(R.id.teach_lesson_opera)
         LessonOperationView operation;

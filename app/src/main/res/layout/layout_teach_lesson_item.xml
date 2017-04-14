@@ -87,6 +87,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
                         android:layout_width="wrap_content"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
 
                     <TextView
@@ -97,11 +98,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
-                    <cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout
+                    <LinearLayout
                             android:id="@+id/assistants"
+                            android:layout_marginLeft="@dimen/px10"
                             android:layout_gravity="center_vertical"
+                            android:orientation="horizontal"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content">
+                    </LinearLayout>
                 </LinearLayout>
 
                 <TextView
