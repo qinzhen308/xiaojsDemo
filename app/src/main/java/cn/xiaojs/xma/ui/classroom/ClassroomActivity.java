@@ -1298,6 +1298,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 } else {
                     Toast.makeText(this, R.string.cr_ppt_open_fail, Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(this, R.string.cr_not_support_doc, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -2252,6 +2254,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         cancelProgress();
         hideTips();
         setControllerBtnStyle(mLiveSessionState);
+        if (mClassroomController != null) {
+            mClassroomController.exitPlayVideo();
+        }
+
         if (XiaojsConfig.DEBUG) {
             String s = getTxtString(user, type);
             Toast.makeText(this, "=====started=====" + s, Toast.LENGTH_SHORT).show();

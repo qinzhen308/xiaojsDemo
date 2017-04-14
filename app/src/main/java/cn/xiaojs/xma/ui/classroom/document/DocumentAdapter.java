@@ -4,11 +4,11 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
@@ -17,6 +17,7 @@ import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.material.LibDoc;
@@ -24,6 +25,8 @@ import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
@@ -53,6 +56,9 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
     private String mType;
     private int drawSize = 30;
 
+    private CommonDialog mDelDocDialog;
+    private String mMyAccountId;
+
     public DocumentAdapter(Context context, PullToRefreshSwipeListView listView, List<LibDoc> data) {
         super(context, listView, data);
         init();
@@ -66,24 +72,30 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         init();
     }
 
-    public void setData(List<LibDoc> data) {
+    public void setData(List<LibDoc> data, String type) {
+        mType = type;
         setList(data);
+    }
+
+    public String getType() {
+        return mType;
     }
 
     private void init() {
         mDefaultBgColor = mContext.getResources().getColor(R.color.white);
         mHoverBgColor = mContext.getResources().getColor(R.color.main_blue);
         drawSize = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
+        mMyAccountId = AccountDataManager.getAccountID(mContext);
     }
 
     public List<LibDoc> getData() {
         return getList();
     }
 
-    /*@Override
+    @Override
     protected PullToRefreshBase.Mode getRefreshMode() {
-        return PullToRefreshBase.Mode.PULL_FROM_END;
-    }*/
+        return PullToRefreshBase.Mode.DISABLED;
+    }
 
     @Override
     public void showProgress(boolean cancelable) {
@@ -129,6 +141,18 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         //holder.fileName.setCompoundDrawablesWithIntrinsicBounds(drawId, 0, 0, 0);
         holder.action.setVisibility(bean.showAction ? View.VISIBLE : View.GONE);
         //holder.info.setBackgroundColor(bean.isShowAction() ? mHoverBgColor : mDefaultBgColor);
+
+        if (mType == Collaboration.SubType.STANDA_LONE_LESSON) {
+            String owner = bean.owner != null ? bean.owner.id : "";
+            if (owner != null && owner.equals(mMyAccountId)) {
+                //myself
+                holder.more.setVisibility(View.VISIBLE);
+            } else {
+                holder.more.setVisibility(View.GONE);
+            }
+        } else {
+            holder.more.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -153,16 +177,22 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         holder.share.setOnClickListener(this);
         holder.delete.setOnClickListener(this);
 
+        if (mType == Collaboration.SubType.STANDA_LONE_LESSON) {
+            holder.share.setVisibility(View.GONE);
+        } else {
+            holder.share.setVisibility(View.VISIBLE);
+        }
+
         return holder;
     }
 
     @Override
     protected void doRequest() {
-        //showProgress(true);
+        showProgress(true);
         CollaManager.getDocuments(mContext, mOwnerId, mType, mPagination, LIMIT_DATA, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
-                //cancelProgress();
+                cancelProgress();
                 if (object != null && object.documents.size() > 0) {
                     DocumentAdapter.this.onSuccess(object.documents);
                 } else {
@@ -172,7 +202,7 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                //cancelProgress();
+                cancelProgress();
                 DocumentAdapter.this.onFailure(errorCode, errorMessage);
             }
         });
@@ -222,23 +252,7 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
                     });
                     break;
                 case R.id.delete:
-                    //delete
-                    clsDoc = data.get(pos);
-                    showProgress(false);
-                    CollaManager.deleteDocument(mContext, clsDoc.id, true, new APIServiceCallback() {
-                        @Override
-                        public void onSuccess(Object object) {
-                            cancelProgress();
-                            data.remove(pos);
-                            notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onFailure(String errorCode, String errorMessage) {
-                            cancelProgress();
-                            Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    showDelDocDialog(data, pos);
                     break;
             }
         }
@@ -260,4 +274,48 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         public TextView share;
         public TextView delete;
     }
+
+    /**
+     * 删除文档，弹出选择确认
+     * @param data
+     * @param pos
+     */
+    private void showDelDocDialog(final List<LibDoc> data, final int pos) {
+        if (mDelDocDialog == null) {
+            mDelDocDialog = new CommonDialog(mContext);
+            mDelDocDialog.setTitle(R.string.tips);
+            mDelDocDialog.setDesc(R.string.cls_doc_del_desc);
+            int width = DeviceUtil.getScreenWidth(mContext) / 2;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mDelDocDialog.setDialogLayout(width, height);
+            mDelDocDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mDelDocDialog.dismiss();
+                    //delete
+                    LibDoc clsDoc = data.get(pos);
+                    showProgress(false);
+                    boolean shared = mType == Collaboration.SubType.STANDA_LONE_LESSON;
+                    CollaManager.deleteDocument(mContext, clsDoc.id, shared, new APIServiceCallback() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            cancelProgress();
+                            data.remove(pos);
+                            Toast.makeText(mContext, R.string.cls_doc_del_succ, Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onFailure(String errorCode, String errorMessage) {
+                            cancelProgress();
+                            Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
+
+        mDelDocDialog.show();
+    }
+
 }

@@ -69,20 +69,7 @@
     <string name="mobile_network_allow">继续使用</string>
     <string name="lead_teacher">主讲</string>
     <string name="assistant_teacher">助教</string>
-    <string name="cls_not_on_class_title">还未到上课时间，请耐心等待!</string>
-    <string name="cls_not_on_class_desc">你现在可以和成员聊天，或者进行直播秀</string>
-    <string name="cls_break_title">课间休息!</string>
-    <string name="cls_break_desc">稍作休息，等待老师继续上课</string>
-    <string name="cls_break_desc_teacher">课间休息中，点击上课按钮继续上课</string>
-    <string name="cls_finish_title">本课已结束!</string>
-    <string name="cls_not_connected">教室未连接上，请退出后重新进入</string>
-    <string name="cls_pending_class_title">可以开始上课啦!</string>
-    <string name="cls_pending_class_desc">点击上课按钮开始上课</string>
-    <string name="cls_live_show">%1$s&#x0020;正在直播秀&#x0020;%2$s</string>
-    <string name="cls_distance_class">距离上课还有%1$s</string>
-    <string name="cls_break_time_desc">课间休息&#x0020;%1$s</string>
-    <string name="cls_delay_time_desc">本课已延时&#x0020;%1$s</string>
-    <string name="cls_pic_load_fail">图片加载失败</string>
+    <string name="tips">提示</string>
 
     <string name="select_for_you">您已选:</string>
     <string name="search_subject_tips">请输入您要找的学科类目</string>
@@ -447,12 +434,28 @@
     <string name="video_loading">视频正在加载中...</string>
     <string name="save_edit_video_succ">保存到资料库成功</string>
     <string name="save_edit_video_fail">保存到资料库失败</string>
-    <!--whiteboard-->
+    <string name="cr_not_support_doc">暂时不支持打开此格式的文件</string>
+    <string name="cls_not_on_class_title">还未到上课时间，请耐心等待!</string>
+    <string name="cls_not_on_class_desc">你现在可以和成员聊天，或者进行直播秀</string>
+    <string name="cls_break_title">课间休息!</string>
+    <string name="cls_break_desc">稍作休息，等待老师继续上课</string>
+    <string name="cls_break_desc_teacher">课间休息中，点击上课按钮继续上课</string>
+    <string name="cls_finish_title">本课已结束!</string>
+    <string name="cls_not_connected">教室未连接上，请退出后重新进入</string>
+    <string name="cls_pending_class_title">可以开始上课啦!</string>
+    <string name="cls_pending_class_desc">点击上课按钮开始上课</string>
+    <string name="cls_live_show">%1$s&#x0020;正在直播秀&#x0020;%2$s</string>
+    <string name="cls_distance_class">距离上课还有%1$s</string>
+    <string name="cls_break_time_desc">课间休息&#x0020;%1$s</string>
+    <string name="cls_delay_time_desc">本课已延时&#x0020;%1$s</string>
+    <string name="cls_pic_load_fail">图片加载失败</string>
+    <string name="cls_doc_del_succ">文档已被删除</string>
+    <string name="cls_doc_del_desc">确定需要删除该资料吗？</string>
     <string name="clear_all_doodle">清除全部</string>
     <string name="paint_size">粗细</string>
     <string name="cr_contact_empty">暂无成员</string>
     <string name="cr_notify_empty">暂无消息</string>
-    <string name="cr_doc_share_succ">您已经成功分享到班级资料库</string>
+    <string name="cr_doc_share_succ">分享成功</string>
     <string name="cr_ppt_open_fail">打开PP失败</string>
 
     <!-- 社交-->

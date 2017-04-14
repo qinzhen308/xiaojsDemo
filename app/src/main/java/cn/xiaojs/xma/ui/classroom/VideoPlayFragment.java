@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -310,17 +311,21 @@ public class VideoPlayFragment extends BaseFragment {
         if (mAnimating || mLiveProgressLayout == null || mHandler == null) {
             return;
         }
-        mLiveProgressLayout.animate()
+        mHandler.removeMessages(MSG_HIDE_VIDEO_CONTROLLER);
+        ViewPropertyAnimator propertyAnimator = mLiveProgressLayout.animate();
+        propertyAnimator
                 .alpha(1.0f)
                 .setListener(mPanelAnimListener.with(mLiveProgressLayout).play(ANIM_SHOW))
                 .start();
-        mHandler.sendEmptyMessageDelayed(MSG_HIDE_VIDEO_CONTROLLER, 3000);
+
+        mHandler.sendEmptyMessageDelayed(MSG_HIDE_VIDEO_CONTROLLER, propertyAnimator.getDuration() + 3000);
     }
 
     private void hideVideoController() {
         if (mAnimating || mLiveProgressLayout == null) {
             return;
         }
+        mHandler.removeMessages(MSG_HIDE_VIDEO_CONTROLLER);
         mLiveProgressLayout.animate()
                 .alpha(0.0f)
                 .setListener(mPanelAnimListener.with(mLiveProgressLayout).play(ANIM_HIDE))

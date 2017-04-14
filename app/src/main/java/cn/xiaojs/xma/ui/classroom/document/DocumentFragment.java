@@ -189,6 +189,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
 
         mTempData.clear();
         List<LibDoc> allData = mCurrDocumentAdapter.getData();
+        String type = mCurrDocumentAdapter.getType();
         String filterMineType = "";
 
         switch (v.getId()) {
@@ -240,7 +241,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         if (mFilterDocumentAdapter == null) {
             mFilterDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mTempData);
         } else {
-            mFilterDocumentAdapter.setData(mTempData);
+            mFilterDocumentAdapter.setData(mTempData, type);
         }
 
         mDocListView.setAdapter(mFilterDocumentAdapter);
