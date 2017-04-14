@@ -16,11 +16,8 @@ package cn.xiaojs.xma.ui.classroom;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -31,7 +28,6 @@ import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.material.LibDoc;
@@ -40,8 +36,6 @@ import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StudentVideoController;
 import cn.xiaojs.xma.ui.classroom.live.TeacherVideoController;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
-import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
-import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 

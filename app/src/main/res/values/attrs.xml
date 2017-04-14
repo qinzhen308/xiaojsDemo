@@ -2,91 +2,91 @@
 <resources>
     <!-- rounded image -->
     <declare-styleable name="RoundedImageView">
-        <attr name="corner_radius" format="dimension" />
-        <attr name="border_width" format="dimension" />
-        <attr name="border_color" format="color" />
-        <attr name="mask_color" format="color" />
-        <attr name="mutate_background" format="boolean" />
-        <attr name="oval" format="boolean" />
-        <attr name="android:scaleType" />
-        <attr name="label_src" format="reference" />
-        <attr name="label_offsetleft" format="dimension" />
-        <attr name="label_offsettop" format="dimension" />
-        <attr name="label_offsetright" format="dimension" />
-        <attr name="label_offsetbottom" format="dimension" />
+        <attr name="corner_radius" format="dimension"/>
+        <attr name="border_width" format="dimension"/>
+        <attr name="border_color" format="color"/>
+        <attr name="mask_color" format="color"/>
+        <attr name="mutate_background" format="boolean"/>
+        <attr name="oval" format="boolean"/>
+        <attr name="android:scaleType"/>
+        <attr name="label_src" format="reference"/>
+        <attr name="label_offsetleft" format="dimension"/>
+        <attr name="label_offsettop" format="dimension"/>
+        <attr name="label_offsetright" format="dimension"/>
+        <attr name="label_offsetbottom" format="dimension"/>
         <attr name="label_visible" format="boolean"></attr>
-        <attr name="label_gravity" />
+        <attr name="label_gravity"/>
     </declare-styleable>
 
     <!-- rounded image label-->
     <attr name="label_gravity">
-        <flag name="left" value="2" />
-        <flag name="top" value="4" />
-        <flag name="right" value="8" />
-        <flag name="bottom" value="16" />
-        <flag name="center" value="96" />
-        <flag name="center_horizontal" value="32" />
-        <flag name="center_vertical" value="64" />
+        <flag name="left" value="2"/>
+        <flag name="top" value="4"/>
+        <flag name="right" value="8"/>
+        <flag name="bottom" value="16"/>
+        <flag name="center" value="96"/>
+        <flag name="center_horizontal" value="32"/>
+        <flag name="center_vertical" value="64"/>
     </attr>
 
     <declare-styleable name="GooeyMenu">
 
-        <attr name="no_of_menu" format="integer" />
-        <attr name="fab_radius" format="dimension" />
-        <attr name="menu_radius" format="dimension" />
-        <attr name="gap_between_menu_fab" format="dimension" />
-        <attr name="menu_drawable" format="reference" />
+        <attr name="no_of_menu" format="integer"/>
+        <attr name="fab_radius" format="dimension"/>
+        <attr name="menu_radius" format="dimension"/>
+        <attr name="gap_between_menu_fab" format="dimension"/>
+        <attr name="menu_drawable" format="reference"/>
     </declare-styleable>
 
     <!-- Defines the custom XML attributes supported for a HorizontalListView -->
     <declare-styleable name="HorizontalListView">
-        <attr name="dividerWidth" format="dimension" />
-        <attr name="android:divider" />
-        <attr name="android:requiresFadingEdge" />
-        <attr name="android:fadingEdgeLength" />
+        <attr name="dividerWidth" format="dimension"/>
+        <attr name="android:divider"/>
+        <attr name="android:requiresFadingEdge"/>
+        <attr name="android:fadingEdgeLength"/>
     </declare-styleable>
 
     <declare-styleable name="RedTipTextView">
         <attr name="hasDrawable" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="BottomLineTextView">
-        <attr name="line_height" format="integer|reference" />
+        <attr name="line_height" format="integer|reference"/>
     </declare-styleable>
 
     <declare-styleable name="MessageImageView">
-        <attr name="isCircle" format="boolean" />
+        <attr name="isCircle" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="StickyListHeadersListView">
 
         <!-- View attributes -->
-        <attr name="android:clipToPadding" />
-        <attr name="android:scrollbars" />
-        <attr name="android:overScrollMode" />
-        <attr name="android:padding" />
-        <attr name="android:paddingLeft" />
-        <attr name="android:paddingTop" />
-        <attr name="android:paddingRight" />
-        <attr name="android:paddingBottom" />
+        <attr name="android:clipToPadding"/>
+        <attr name="android:scrollbars"/>
+        <attr name="android:overScrollMode"/>
+        <attr name="android:padding"/>
+        <attr name="android:paddingLeft"/>
+        <attr name="android:paddingTop"/>
+        <attr name="android:paddingRight"/>
+        <attr name="android:paddingBottom"/>
 
         <!-- ListView attributes -->
-        <attr name="android:fadingEdgeLength" />
-        <attr name="android:requiresFadingEdge" />
-        <attr name="android:cacheColorHint" />
-        <attr name="android:choiceMode" />
-        <attr name="android:drawSelectorOnTop" />
-        <attr name="android:fastScrollEnabled" />
-        <attr name="android:fastScrollAlwaysVisible" />
-        <attr name="android:listSelector" />
-        <attr name="android:scrollingCache" />
-        <attr name="android:scrollbarStyle" />
-        <attr name="android:divider" />
-        <attr name="android:dividerHeight" />
-        <attr name="android:transcriptMode" />
+        <attr name="android:fadingEdgeLength"/>
+        <attr name="android:requiresFadingEdge"/>
+        <attr name="android:cacheColorHint"/>
+        <attr name="android:choiceMode"/>
+        <attr name="android:drawSelectorOnTop"/>
+        <attr name="android:fastScrollEnabled"/>
+        <attr name="android:fastScrollAlwaysVisible"/>
+        <attr name="android:listSelector"/>
+        <attr name="android:scrollingCache"/>
+        <attr name="android:scrollbarStyle"/>
+        <attr name="android:divider"/>
+        <attr name="android:dividerHeight"/>
+        <attr name="android:transcriptMode"/>
 
         <!-- StickyListHeaders attributes -->
-        <attr name="hasStickyHeaders" format="boolean" />
-        <attr name="isDrawingListUnderStickyHeader" format="boolean" />
+        <attr name="hasStickyHeaders" format="boolean"/>
+        <attr name="isDrawingListUnderStickyHeader" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="SwipeListView">
@@ -122,97 +122,97 @@
     <declare-styleable name="PullToRefresh">
 
         <!-- A drawable to use as the background of the Refreshable View -->
-        <attr name="ptrRefreshableViewBackground" format="reference|color" />
+        <attr name="ptrRefreshableViewBackground" format="reference|color"/>
 
         <!-- A drawable to use as the background of the Header and Footer Loading Views -->
-        <attr name="ptrHeaderBackground" format="reference|color" />
+        <attr name="ptrHeaderBackground" format="reference|color"/>
 
         <!-- Text Color of the Header and Footer Loading Views -->
-        <attr name="ptrHeaderTextColor" format="reference|color" />
+        <attr name="ptrHeaderTextColor" format="reference|color"/>
 
         <!-- Text Color of the Header and Footer Loading Views Sub Header -->
-        <attr name="ptrHeaderSubTextColor" format="reference|color" />
+        <attr name="ptrHeaderSubTextColor" format="reference|color"/>
 
         <!-- Mode of Pull-to-Refresh that should be used -->
         <attr name="ptrMode">
-            <flag name="disabled" value="0x0" />
-            <flag name="pullFromStart" value="0x1" />
-            <flag name="pullFromEnd" value="0x2" />
-            <flag name="both" value="0x3" />
-            <flag name="manualOnly" value="0x4" />
+            <flag name="disabled" value="0x0"/>
+            <flag name="pullFromStart" value="0x1"/>
+            <flag name="pullFromEnd" value="0x2"/>
+            <flag name="both" value="0x3"/>
+            <flag name="manualOnly" value="0x4"/>
 
             <!-- These last two are depreacted -->
-            <flag name="pullDownFromTop" value="0x1" />
-            <flag name="pullUpFromBottom" value="0x2" />
+            <flag name="pullDownFromTop" value="0x1"/>
+            <flag name="pullUpFromBottom" value="0x2"/>
         </attr>
 
         <!-- Whether the Indicator overlay(s) should be used -->
-        <attr name="ptrShowIndicator" format="reference|boolean" />
+        <attr name="ptrShowIndicator" format="reference|boolean"/>
 
         <!-- Drawable to use as Loading Indicator. Changes both Header and Footer. -->
-        <attr name="ptrDrawable" format="reference" />
+        <attr name="ptrDrawable" format="reference"/>
 
         <!-- Drawable to use as Loading Indicator in the Header View. Overrides value set in ptrDrawable. -->
-        <attr name="ptrDrawableStart" format="reference" />
+        <attr name="ptrDrawableStart" format="reference"/>
 
         <!-- Drawable to use as Loading Indicator in the Footer View. Overrides value set in ptrDrawable. -->
-        <attr name="ptrDrawableEnd" format="reference" />
+        <attr name="ptrDrawableEnd" format="reference"/>
 
         <!-- Whether Android's built-in Over Scroll should be utilised for Pull-to-Refresh. -->
-        <attr name="ptrOverScroll" format="reference|boolean" />
+        <attr name="ptrOverScroll" format="reference|boolean"/>
 
         <!-- Base text color, typeface, size, and style for Header and Footer Loading Views -->
-        <attr name="ptrHeaderTextAppearance" format="reference" />
+        <attr name="ptrHeaderTextAppearance" format="reference"/>
 
         <!-- Base text color, typeface, size, and style for Header and Footer Loading Views Sub Header -->
-        <attr name="ptrSubHeaderTextAppearance" format="reference" />
+        <attr name="ptrSubHeaderTextAppearance" format="reference"/>
 
         <!-- Style of Animation should be used displayed when pulling. -->
         <attr name="ptrAnimationStyle">
-            <flag name="rotate" value="0x0" />
-            <flag name="flip" value="0x1" />
+            <flag name="rotate" value="0x0"/>
+            <flag name="flip" value="0x1"/>
         </attr>
 
         <!-- Whether the user can scroll while the View is Refreshing -->
-        <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean" />
+        <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean"/>
 
         <!--
         	Whether PullToRefreshListView has it's extras enabled. This allows the user to be
         	able to scroll while refreshing, and behaves better. It acheives this by adding
         	Header and/or Footer Views to the ListView.
         -->
-        <attr name="ptrListViewExtrasEnabled" format="reference|boolean" />
+        <attr name="ptrListViewExtrasEnabled" format="reference|boolean"/>
 
         <!--
         	Whether the Drawable should be continually rotated as you pull. This only
         	takes effect when using the 'Rotate' Animation Style.
         -->
-        <attr name="ptrRotateDrawableWhilePulling" format="reference|boolean" />
+        <attr name="ptrRotateDrawableWhilePulling" format="reference|boolean"/>
 
         <!-- BELOW HERE ARE DEPRECEATED. DO NOT USE. -->
-        <attr name="ptrAdapterViewBackground" format="reference|color" />
-        <attr name="ptrDrawableTop" format="reference" />
-        <attr name="ptrDrawableBottom" format="reference" />
+        <attr name="ptrAdapterViewBackground" format="reference|color"/>
+        <attr name="ptrDrawableTop" format="reference"/>
+        <attr name="ptrDrawableBottom" format="reference"/>
     </declare-styleable>
     <declare-styleable name="load_attr">
         <attr name="lsize" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="WhiteBoardCircle">
-        <attr name="color" format="color" />
-        <attr name="circle_border_width" format="dimension" />
-        <attr name="circle_border_color" format="color" />
+        <attr name="color" format="color"/>
+        <attr name="circle_border_width" format="dimension"/>
+        <attr name="circle_border_color" format="color"/>
     </declare-styleable>
 
     <!-- 文字末尾带图标的控件 -->
     <declare-styleable name="IconTextView">
 
         <!-- 字体颜色 -->
-        <attr name="android:textColor" />
+        <attr name="android:textColor"/>
         <!-- 字体大小 -->
-        <attr name="android:textSize" />
+        <attr name="android:textSize"/>
         <!-- 文字内容 -->
-        <attr name="android:text" />
+        <attr name="android:text"/>
         <!-- 图标 -->
         <attr name="icon" format="reference"></attr>
         <!-- 文字行间距 -->
@@ -223,83 +223,92 @@
         <attr name="iconSpacing" format="reference|dimension"></attr>
         <!-- 文字显示位置 -->
         <attr name="gravity">
-            <flag name="left" value="0" />
-            <flag name="center" value="1" />
+            <flag name="left" value="0"/>
+            <flag name="center" value="1"/>
         </attr>
     </declare-styleable>
 
     <declare-styleable name="SwipeLayout">
         <attr name="drag_edge">
-            <flag name="left" value="1" />
-            <flag name="right" value="2" />
-            <flag name="top" value="4" />
-            <flag name="bottom" value="8" />
+            <flag name="left" value="1"/>
+            <flag name="right" value="2"/>
+            <flag name="top" value="4"/>
+            <flag name="bottom" value="8"/>
         </attr>
-        <attr name="leftEdgeSwipeOffset" format="dimension" />
-        <attr name="rightEdgeSwipeOffset" format="dimension" />
-        <attr name="topEdgeSwipeOffset" format="dimension" />
-        <attr name="bottomEdgeSwipeOffset" format="dimension" />
+        <attr name="leftEdgeSwipeOffset" format="dimension"/>
+        <attr name="rightEdgeSwipeOffset" format="dimension"/>
+        <attr name="topEdgeSwipeOffset" format="dimension"/>
+        <attr name="bottomEdgeSwipeOffset" format="dimension"/>
         <attr name="show_mode" format="enum">
-            <enum name="lay_down" value="0" />
-            <enum name="pull_out" value="1" />
+            <enum name="lay_down" value="0"/>
+            <enum name="pull_out" value="1"/>
         </attr>
-        <attr name="clickToClose" format="boolean" />
+        <attr name="clickToClose" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="ScrollTabIndicator">
-        <attr name="pstsIndicatorColor" format="color" />
-        <attr name="pstsUnderlineColor" format="color" />
-        <attr name="pstsDividerColor" format="color" />
-        <attr name="pstsIndicatorHeight" format="dimension" />
-        <attr name="pstsUnderlineHeight" format="dimension" />
-        <attr name="pstsDividerPadding" format="dimension" />
-        <attr name="pstsTabPaddingLeftRight" format="dimension" />
-        <attr name="pstsScrollOffset" format="dimension" />
-        <attr name="pstsTabBackground" format="reference" />
-        <attr name="pstsShouldExpand" format="boolean" />
-        <attr name="pstsTextAllCaps" format="boolean" />
+        <attr name="pstsIndicatorColor" format="color"/>
+        <attr name="pstsUnderlineColor" format="color"/>
+        <attr name="pstsDividerColor" format="color"/>
+        <attr name="pstsIndicatorHeight" format="dimension"/>
+        <attr name="pstsUnderlineHeight" format="dimension"/>
+        <attr name="pstsDividerPadding" format="dimension"/>
+        <attr name="pstsTabPaddingLeftRight" format="dimension"/>
+        <attr name="pstsScrollOffset" format="dimension"/>
+        <attr name="pstsTabBackground" format="reference"/>
+        <attr name="pstsShouldExpand" format="boolean"/>
+        <attr name="pstsTextAllCaps" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="drop_down_list_attr">
-        <attr name="isDropDownStyle" format="boolean" />
-        <attr name="isOnBottomStyle" format="boolean" />
-        <attr name="isAutoLoadOnBottom" format="boolean" />
+        <attr name="isDropDownStyle" format="boolean"/>
+        <attr name="isOnBottomStyle" format="boolean"/>
+        <attr name="isAutoLoadOnBottom" format="boolean"/>
     </declare-styleable>
     <attr name="siArrowPosition">
-        <enum name="left" value="0" />
-        <enum name="right" value="1" />
+        <enum name="left" value="0"/>
+        <enum name="right" value="1"/>
     </attr>
     <attr name="siBorderType">
-        <enum name="stroke" value="0" />
-        <enum name="fill" value="1" />
+        <enum name="stroke" value="0"/>
+        <enum name="fill" value="1"/>
     </attr>
     <attr name="siStrokeCap">
-        <enum name="butt" value="0" />
-        <enum name="round" value="1" />
-        <enum name="square" value="2" />
+        <enum name="butt" value="0"/>
+        <enum name="round" value="1"/>
+        <enum name="square" value="2"/>
     </attr>
     <attr name="siStrokeJoin">
-        <enum name="bevel" value="0" />
-        <enum name="miter" value="1" />
-        <enum name="round" value="2" />
+        <enum name="bevel" value="0"/>
+        <enum name="miter" value="1"/>
+        <enum name="round" value="2"/>
+    </attr>
+    <!-- 播放器 -->
+    <declare-styleable name="PlayerTextureView">
+        <attr name="play_mode"/>
+    </declare-styleable>
+    <!--直播和点播-->
+    <attr name="play_mode">
+        <enum name="live" value="1"/>
+        <enum name="video" value="0"/>
     </attr>
     <declare-styleable name="ShaderImageView">
-        <attr name="siArrowPosition" />
-        <attr name="siBorderAlpha" format="float" />
-        <attr name="siBorderColor" format="color" />
+        <attr name="siArrowPosition"/>
+        <attr name="siBorderAlpha" format="float"/>
+        <attr name="siBorderColor" format="color"/>
         <!-- ShaderImageView-->
-        <attr name="siBorderType" />
-        <attr name="siBorderWidth" format="dimension" />
-        <attr name="siForeground" format="integer|reference" />
+        <attr name="siBorderType"/>
+        <attr name="siBorderWidth" format="dimension"/>
+        <attr name="siForeground" format="integer|reference"/>
         <!--  Rounded Image View-->
-        <attr name="siRadius" format="dimension" />
+        <attr name="siRadius" format="dimension"/>
         <!-- PorterImageView-->
-        <attr name="siShape" format="integer|reference" />
-        <attr name="siSquare" format="boolean" />
-        <attr name="siStrokeCap" />
-        <attr name="siStrokeJoin" />
-        <attr name="siStrokeMiter" format="dimension" />
+        <attr name="siShape" format="integer|reference"/>
+        <attr name="siSquare" format="boolean"/>
+        <attr name="siStrokeCap"/>
+        <attr name="siStrokeJoin"/>
+        <attr name="siStrokeMiter" format="dimension"/>
         <!-- BubbleImageView-->
-        <attr name="siTriangleHeight" format="dimension" />
+        <attr name="siTriangleHeight" format="dimension"/>
     </declare-styleable>
 </resources>

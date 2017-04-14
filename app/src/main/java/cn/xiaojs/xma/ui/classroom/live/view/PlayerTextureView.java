@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.live.view;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -45,25 +46,26 @@ public class PlayerTextureView extends BaseMediaView {
     private boolean mRetry = true;
     private long mRetryTime = 0;
     private PLMediaPlayer.OnInfoListener mOnInfoWrapperListener;
+    private int mIsLiveStreaming = 1; // 1:live  0:video
 
     public PlayerTextureView(Context context) {
         super(context);
-        init(PLVideoTextureView.ASPECT_RATIO_16_9);
+        init(PLVideoTextureView.ASPECT_RATIO_16_9, null);
     }
 
     public PlayerTextureView(Context context, int ratio) {
         super(context);
-        init(ratio);
+        init(ratio, null);
     }
 
     public PlayerTextureView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(PLVideoTextureView.ASPECT_RATIO_16_9);
+        init(PLVideoTextureView.ASPECT_RATIO_16_9, attrs);
     }
 
     public PlayerTextureView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(PLVideoTextureView.ASPECT_RATIO_16_9);
+        init(PLVideoTextureView.ASPECT_RATIO_16_9, attrs);
     }
 
     @Override
@@ -98,7 +100,13 @@ public class PlayerTextureView extends BaseMediaView {
         }
     }
 
-    private void init(int ratio) {
+    private void init(int ratio, AttributeSet attrs) {
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PlayerTextureView);
+        if (a != null) {
+            mIsLiveStreaming = a.getInteger(R.styleable.PlayerTextureView_play_mode, 1);
+            a.recycle();
+        }
+
         mPlayer.setBufferingIndicator(mLoadingLayout);
         //showLoading(true);
         AVOptions options = new AVOptions();
@@ -107,8 +115,10 @@ public class PlayerTextureView extends BaseMediaView {
         options.setInteger(AVOptions.KEY_PREPARE_TIMEOUT, 10 * 1000);
         options.setInteger(AVOptions.KEY_GET_AV_FRAME_TIMEOUT, 10 * 1000);
         // Some optimization with buffering mechanism when be set to 1
-        options.setInteger(AVOptions.KEY_LIVE_STREAMING, 1);
-        options.setInteger(AVOptions.KEY_DELAY_OPTIMIZATION, 1);
+        options.setInteger(AVOptions.KEY_LIVE_STREAMING, mIsLiveStreaming);
+        if (mIsLiveStreaming == 1) {
+            options.setInteger(AVOptions.KEY_DELAY_OPTIMIZATION, 1);
+        }
 
         // 1 -> hw codec enable, 0 -> disable [recommended]
         options.setInteger(AVOptions.KEY_MEDIACODEC, 1);
