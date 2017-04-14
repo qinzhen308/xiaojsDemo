@@ -27,6 +27,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
 
+import de.greenrobot.event.EventBus;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -188,22 +190,21 @@ public class LCIMConversationItemHolder extends LCIMCommonViewHolder {
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    //FIXME
-//          AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//          builder.setItems(new String[]{"删除该聊天"}, new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int which) {
-//              EventBus.getDefault().post(new LCIMConversationItemLongClickEvent(conversation));
-//            }
-//          });
-//          AlertDialog dialog = builder.create();
-//          dialog.show();
+
+        }
+
+        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                if (conversation instanceof NotificationCategory) {
                     return false;
                 }
-            });
-        }
+
+                EventBus.getDefault().post(new LCIMConversationItemLongClickEvent(conversation));
+                return false;
+            }
+        });
 
     }
 

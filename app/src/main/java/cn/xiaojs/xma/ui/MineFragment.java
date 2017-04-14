@@ -37,6 +37,7 @@ import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.certification.CertificationActivity;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
+import cn.xiaojs.xma.ui.lesson.SubjectSelectorActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.mine.MyOrderActivity;
@@ -136,8 +137,12 @@ public class MineFragment extends BaseFragment {
 //            case R.id.my_favorites_layout:
 //                break;
             case R.id.teach_ability_layout:
-                //startActivity(new Intent(mContext, TeachingAbilityActivity.class));
-                Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+
+                Intent intent = new Intent();
+                intent.setClass(mContext, SubjectSelectorActivity.class);
+                intent.putExtra(SubjectSelectorActivity.EXTRA_NORMAL, 1);
+
+                //Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
                 startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
                 break;
             case R.id.name_auth_layout:

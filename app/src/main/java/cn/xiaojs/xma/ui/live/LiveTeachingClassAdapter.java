@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -675,7 +676,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
         TextView enrollDesc;
 
         @BindView(R.id.assistants)
-        ImageFlowLayout assistants;
+        LinearLayout assistants;
 
         @BindView(R.id.teach_lesson_opera)
         LessonOperationView operation;

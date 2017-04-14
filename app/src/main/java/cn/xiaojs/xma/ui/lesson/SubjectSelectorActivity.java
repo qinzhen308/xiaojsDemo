@@ -35,6 +35,8 @@ import cn.xiaojs.xma.ui.mine.TeachingAbilityActivity;
 public class SubjectSelectorActivity extends BaseActivity {
     private final static int REQUEST_ADD_SUBJECT = 100;
 
+    public final static String EXTRA_NORMAL = "normal";
+
     @BindView(R.id.subject_list)
     ListView mSubjectListView;
 
@@ -44,7 +46,14 @@ public class SubjectSelectorActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         setMiddleTitle(R.string.subject_category_select);
-        setRightText(R.string.finish);
+
+        int normal = getIntent().getIntExtra(EXTRA_NORMAL,-1);
+        if (normal == 1) {
+            setRightText(-1);
+        }else {
+            setRightText(R.string.finish);
+        }
+
         mRightText.setTextColor(getResources().getColor(R.color.font_orange));
 
         addView(R.layout.activity_select_subject);

@@ -45,13 +45,17 @@ import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.LoginDataManager;
+import cn.xiaojs.xma.ui.message.im.chatkit.LCChatKit;
 import cn.xiaojs.xma.ui.message.im.chatkit.LCIMChatAdapter;
+import cn.xiaojs.xma.ui.message.im.chatkit.cache.LCIMConversationItemCache;
+import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMConversationItemLongClickEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMIMTypeMessageEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMInputBottomBarEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMInputBottomBarRecordEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMInputBottomBarTextEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMMessageResendEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMAudioHelper;
+import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConversationUtils;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMLogUtils;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMNotificationUtils;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMPathUtils;
@@ -200,7 +204,16 @@ public class LCIMConversationFragment extends Fragment {
     imConversation.queryMessages(new AVIMMessagesQueryCallback() {
       @Override
       public void done(List<AVIMMessage> messageList, AVIMException e) {
-        if (filterException(e)) {
+        if (e != null) {
+
+          LCIMLogUtils.logException(e);
+          if (XiaojsConfig.DEBUG) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+          }
+          //如果出现问题，就删除该会话
+          LCIMConversationItemCache.getInstance().deleteConversation(imConversation.getConversationId());
+
+        }else {
           itemAdapter.setMessageList(messageList);
           recyclerView.setAdapter(itemAdapter);
           itemAdapter.notifyDataSetChanged();
@@ -431,8 +444,8 @@ public class LCIMConversationFragment extends Fragment {
         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
       }
 
-      Toast.makeText(getContext(), "当前用户不在该对话中", Toast.LENGTH_SHORT).show();
-      getActivity().finish();
+      //Toast.makeText(getContext(), "当前用户不在该对话中", Toast.LENGTH_SHORT).show();
+      //getActivity().finish();
 
     }
     return (null == e);

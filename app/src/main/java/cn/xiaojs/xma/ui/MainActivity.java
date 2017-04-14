@@ -121,10 +121,14 @@ public class MainActivity extends BaseTabActivity {
 
             setTabSelected(2);
 
+
+            String cid = intent.getStringExtra(LCIMConstants.CONVERSATION_ID);
+            String pid = intent.getStringExtra(LCIMConstants.PEER_ID);
+
             Intent ifarIntent = new Intent();
             ifarIntent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
-            ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, intent.getStringExtra(LCIMConstants.CONVERSATION_ID));
-            ifarIntent.putExtra(LCIMConstants.PEER_ID, intent.getStringExtra(LCIMConstants.PEER_ID));
+            ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, cid);
+            ifarIntent.putExtra(LCIMConstants.PEER_ID, pid);
             ifarIntent.setPackage(getPackageName());
             ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
 

@@ -1,7 +1,9 @@
 package cn.xiaojs.xma.ui.message.im.chatkit.activity;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -40,6 +42,7 @@ import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMIMTypeMessageEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.event.LCIMOfflineMessageCountChangeEvent;
 import cn.xiaojs.xma.ui.message.im.chatkit.view.LCIMDividerItemDecoration;
 import cn.xiaojs.xma.ui.message.im.chatkit.viewholder.LCIMConversationItemHolder;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 
 /**
  * Created by wli on 16/2/29.
@@ -130,12 +133,29 @@ public class LCIMConversationListFragment extends Fragment {
     /**
      * 删除会话列表中的某个 item
      */
-    public void onEvent(LCIMConversationItemLongClickEvent event) {
+    public void onEvent(final LCIMConversationItemLongClickEvent event) {
         if (null != event.conversation) {
-            String conversationId = event.conversation.getConversationId();
-            LCIMConversationItemCache.getInstance().deleteConversation(conversationId);
-            //updateConversationList();
-            getMessageOverview();
+
+            final CommonDialog dialog = new CommonDialog(getActivity());
+            dialog.setTitle("提示");
+            dialog.setDesc("确定需要删除该聊天吗？");
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    String conversationId = event.conversation.getConversationId();
+                    LCIMConversationItemCache.getInstance().deleteConversation(conversationId);
+                    //updateConversationList();
+                    getMessageOverview();
+                }
+            });
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
         }
     }
 
@@ -155,11 +175,11 @@ public class LCIMConversationListFragment extends Fragment {
         for (String convId : convIdList) {
 
             AVIMConversation conversation = LCChatKit.getInstance().getClient().getConversation(convId);
-            if (conversation == null
-                    || TextUtils.isEmpty(conversation.getCreator())
-                    || TextUtils.isEmpty(conversation.getConversationId())) {
-                continue;
-            }
+//            if (conversation == null
+//                    || TextUtils.isEmpty(conversation.getCreator())
+//                    || TextUtils.isEmpty(conversation.getConversationId())) {
+//                continue;
+//            }
 
 //            if (conversation == null) {
 //                continue;
@@ -189,37 +209,37 @@ public class LCIMConversationListFragment extends Fragment {
 //        if (notificationCategories != null) {
 //            updateConversationList(notificationCategories);
 //        } else {
-            Pagination pagination = new Pagination();
-            pagination.setPage(1);
-            pagination.setMaxNumOfObjectsPerPage(100);
+        Pagination pagination = new Pagination();
+        pagination.setPage(1);
+        pagination.setMaxNumOfObjectsPerPage(100);
 
-            NotificationDataManager.requestNotificationsOverview(getContext(), pagination,
-                    new APIServiceCallback<GNOResponse>() {
-                        @Override
-                        public void onSuccess(GNOResponse object) {
+        NotificationDataManager.requestNotificationsOverview(getContext(), pagination,
+                new APIServiceCallback<GNOResponse>() {
+                    @Override
+                    public void onSuccess(GNOResponse object) {
 
-                            if (object != null && object.categories != null) {
-                                notificationCategories = object.categories;
+                        if (object != null && object.categories != null) {
+                            notificationCategories = object.categories;
+                            updateConversationList(notificationCategories);
+                        } else {
+
+                            if (notificationCategories != null) {
                                 updateConversationList(notificationCategories);
                             } else {
-
-                                if (notificationCategories !=null) {
-                                    updateConversationList(notificationCategories);
-                                }else{
-                                    updateConversationList(null);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(String errorCode, String errorMessage) {
-                            if (notificationCategories !=null) {
-                                updateConversationList(notificationCategories);
-                            }else{
                                 updateConversationList(null);
                             }
                         }
-                    });
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        if (notificationCategories != null) {
+                            updateConversationList(notificationCategories);
+                        } else {
+                            updateConversationList(null);
+                        }
+                    }
+                });
         //}
 
 

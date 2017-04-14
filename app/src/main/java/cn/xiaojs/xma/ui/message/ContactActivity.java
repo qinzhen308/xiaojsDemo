@@ -124,6 +124,10 @@ public class ContactActivity extends BaseActivity {
                 if (contactGroup.group == CLASSES) {
                     //Toast.makeText(ContactActivity.this,"正在开发中",Toast.LENGTH_SHORT).show();
 
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("-------chatid------:" + contact.chatId);
+                    }
+
                     LeanCloudUtil.lanchGroupChat(ContactActivity.this,name,contact.chatId);
                     return false;
                 }

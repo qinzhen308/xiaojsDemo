@@ -381,7 +381,7 @@ public class ClassMaterialActivity extends BaseActivity {
     public void confirmDel(final String docId) {
         final CommonDialog dialog = new CommonDialog(this);
         dialog.setTitle("提示");
-        dialog.setDesc("确定需要删除该资料么？");
+        dialog.setDesc("确定需要删除该资料吗？");
         dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {

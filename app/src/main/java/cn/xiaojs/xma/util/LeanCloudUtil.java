@@ -35,6 +35,7 @@ public class LeanCloudUtil {
 
     public static final String ATTR_LEAGUERS = "leaguers";
     public static final String ATTR_CHATNAME = "chatName";
+    public static final String ATTR_TYPE = "type";
     public static final String ATTR_COVER = "cover";
 
     public static void lanchChatPage(Context context, String accountId, String name) {
@@ -108,7 +109,7 @@ public class LeanCloudUtil {
 
         Map<String, Object> attrs = new HashMap<>();
         attrs.put(ATTR_LEAGUERS, o);
-
+        attrs.put(ATTR_TYPE,0);
         return attrs;
     }
 

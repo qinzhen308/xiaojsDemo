@@ -66,7 +66,7 @@ public class LCIMConversationActivity extends FragmentActivity {
         conversationFragment = (LCIMConversationFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
         initByIntent(getIntent());
 
-        MessageUitl.setHasMessage(this,false);
+        MessageUitl.setHasMessage(this, false);
     }
 
 
@@ -159,9 +159,9 @@ public class LCIMConversationActivity extends FragmentActivity {
 
                 accountId = extras.getString(LCIMConstants.PEER_ID);
                 String name = extras.getString(LCIMConstants.PEER_NAME);
-                getConversation(accountId,name);
+                getConversation(accountId, name);
 
-            } else if (extras.containsKey(LCIMConstants.CONVERSATION_ID)) {
+            }else if (extras.containsKey(LCIMConstants.CONVERSATION_ID)) {
                 String conversationId = extras.getString(LCIMConstants.CONVERSATION_ID);
                 updateConversation(LCChatKit.getInstance().getClient().getConversation(conversationId));
             } else {
@@ -181,7 +181,7 @@ public class LCIMConversationActivity extends FragmentActivity {
 
         if (!TextUtils.isEmpty(title)) {
             titleView.setText(title);
-        }else {
+        } else {
             titleView.setText(R.string.stranger);
         }
 
@@ -212,7 +212,7 @@ public class LCIMConversationActivity extends FragmentActivity {
     protected void updateConversation(final AVIMConversation conversation) {
         if (null != conversation) {
 
-            if (LeanCloudUtil.isGroupChat(conversation)){
+            if (LeanCloudUtil.isGroupChat(conversation)) {
                 rightBtn2.setVisibility(View.GONE);
             }
 
@@ -230,7 +230,7 @@ public class LCIMConversationActivity extends FragmentActivity {
 
                 initActionBar(title);
 
-            }else {
+            } else {
                 LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
                     @Override
                     protected void internalDone0(String s, AVException e) {
@@ -242,7 +242,7 @@ public class LCIMConversationActivity extends FragmentActivity {
                                 LCIMLogUtils.logException(e);
 
                                 String name = LeanCloudUtil.getNameByAttrs(conversation);
-                                if(!TextUtils.isEmpty(name)) {
+                                if (!TextUtils.isEmpty(name)) {
                                     s = name;
                                     conversation.setName(s);
                                 }
@@ -258,7 +258,7 @@ public class LCIMConversationActivity extends FragmentActivity {
                                 }
                             }
 
-                            if(TextUtils.isEmpty(s)) {
+                            if (TextUtils.isEmpty(s)) {
                                 s = getResources().getString(R.string.stranger);
                             }
 
@@ -275,9 +275,9 @@ public class LCIMConversationActivity extends FragmentActivity {
      * 获取 conversation
      * 为了避免重复的创建，createConversation 参数 isUnique 设为 true·
      */
-    protected void getConversation(final String memberId,final String name) {
+    protected void getConversation(final String memberId, final String name) {
 
-        Map<String,Object> attrs = LeanCloudUtil.getAttrMap(this, memberId,name);
+        Map<String, Object> attrs = LeanCloudUtil.getAttrMap(this, memberId, name);
 
         LCChatKit.getInstance().getClient().createConversation(
                 Arrays.asList(memberId), name, attrs, false, true, new AVIMConversationCreatedCallback() {

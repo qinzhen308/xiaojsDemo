@@ -36,11 +36,13 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
+import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -318,6 +320,12 @@ public class CertificationActivity extends BaseActivity {
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
+
+                if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
+                    apply(null);
+                    return;
+                }
+
 
                 if (AccountDataManager.isVerified(CertificationActivity.this)) {
                     success(null,true);
