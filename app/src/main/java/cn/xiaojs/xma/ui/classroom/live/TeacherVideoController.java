@@ -71,8 +71,8 @@ public class TeacherVideoController extends VideoController {
 
     @Override
     public void confirmPublishStream(boolean confirm) {
-        mPublishView.setPath(mPublishStreamUrl);
         mPublishView.setVisibility(View.VISIBLE);
+        mPublishView.setPath(mPublishStreamUrl);
         mPublishView.resume();
     }
 

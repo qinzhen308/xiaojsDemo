@@ -668,7 +668,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)) {
             setTips(R.string.cls_pending_class_title, R.string.cls_pending_class_desc);
         } else if (Live.LiveSessionState.RESET.equals(liveSessionState)) {
-            setTips(R.string.cls_break_title, R.string.cls_break_desc);
+            if (mUser == Constants.User.TEACHER
+                    || mUser == Constants.User.ASSISTANT
+                    || mUser == Constants.User.REMOTE_ASSISTANT) {
+                setTips(R.string.cls_break_title, R.string.cls_break_desc_teacher);
+            } else {
+                setTips(R.string.cls_break_title, R.string.cls_break_desc);
+            }
         } else if (Live.LiveSessionState.LIVE.equals(liveSessionState)) {
             hideTips();
         } else if (Live.LiveSessionState.FINISHED.equals(liveSessionState)) {
@@ -2204,7 +2210,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             case StreamType.TYPE_STREAM_INDIVIDUAL:
                 mLiveSessionState = mBeforeClamSteamState;
                 setControllerBtnStyle(mLiveSessionState);
-                setTips(R.string.cls_not_on_class_title, R.string.cls_not_on_class_desc);
+                setTipsByState(mLiveSessionState);
                 setCountDownTime(mCountDownTime, true);
                 break;
             case StreamType.TYPE_STREAM_PEER_TO_PEER:
