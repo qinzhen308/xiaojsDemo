@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -116,6 +115,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private final static int MSG_COUNT_TIME = 1 << 1;
     private final static int MSG_COUNT_DOWN_TIME = 1 << 2;
     private final static int MSG_LIVE_SHOW_COUNT_DOWN_TIME = 1 << 3;
+    private final static int MSG_SOCKET_TIME_OUT = 1 << 4;
 
     private final static int ANIM_SHOW = 1 << 1;
     private final static int ANIM_HIDE = 1 << 2;
@@ -124,6 +124,9 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private final static int DOCUMENT_PAGE = 2048;
     private final static int VIDEO_PLAY = 4096;
     private final static int PAGE_TOP = 0;
+
+    private final static int SOCKET_TIME_OUT = 1500; //1.5s
+    private int mSocketRetryCount = 0;
 
     //drawer
     @BindView(R.id.drawer_layout)
@@ -243,6 +246,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private CommonDialog mFinishDialog;
     private CommonDialog mMobileNetworkDialog;
     private CommonDialog mKickOutDialog;
+    private CommonDialog mContinueConnectClassroomDialog;
 
     private Socket mSocket;
     private Boolean mSktConnected = false;
@@ -317,8 +321,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 openWhiteBoardManager();
                 break;
             case R.id.play_pause_btn:
-                //handlePlayOrPauseLesson();
-                playOrPauseLessonWithCheckSocket();
+                //playOrPauseLessonWithCheckSocket();
+                playOrPauseLesson();
                 break;
             case R.id.course_ware_btn:
                 openCourseWarePanel();
@@ -486,14 +490,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             return;
         }
 
-        mTipView.setVisibility(View.GONE);
         if (showProgress) {
             showProgress(true);
         }
         LiveManager.bootSession(this, mTicket, new APIServiceCallback<CtlSession>() {
             @Override
             public void onSuccess(CtlSession ctlSession) {
-                cancelProgress();
                 if (XiaojsConfig.DEBUG) {
                     Toast.makeText(ClassroomActivity.this, "BootSession 成功", Toast.LENGTH_SHORT).show();
                 }
@@ -502,6 +504,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     if (ctlSession.accessible) {
                         onBootSessionSucc(false, ctlSession, dataLoadListener);
                     } else {
+                        cancelProgress();
                         checkForceKickOut(ctlSession, dataLoadListener);
                     }
                 } else {
@@ -519,7 +522,8 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     dataLoadListener.onDataLoaded(false);
                 }
 
-                setTips(0, R.string.cls_not_connected);
+                //setTips(0, R.string.cls_not_connected);
+                showContinueConnectClassroom();
             }
         });
     }
@@ -730,7 +734,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         }
     }
 
-    private void playOrPauseLessonWithCheckSocket() {
+    /*private void playOrPauseLessonWithCheckSocket() {
         if (!mSktConnected) {
             if (mClassroomController != null) {
                 mClassroomController.onPauseVideo();
@@ -746,7 +750,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         } else {
             playOrPauseLesson();
         }
-    }
+    }*/
 
     /**
      * 开启或暂停课，除老师外的其他参与者的状态变化在socket的回调里面进行处理
@@ -754,7 +758,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
      * @see #mSyncStateListener
      */
     private void playOrPauseLesson() {
-        if (TextUtils.isEmpty(mTicket)) {
+        if (TextUtils.isEmpty(mTicket) || !mSktConnected) {
             return;
         }
 
@@ -852,11 +856,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             Toast.makeText(ClassroomActivity.this, "claim streaming succ", Toast.LENGTH_SHORT).show();
                         }
                     } else {
+                        cancelProgress();
+                        mLiveSessionState = Live.LiveSessionState.CLAIM_STREAM_STOPPED;
                         if (XiaojsConfig.DEBUG) {
                             Toast.makeText(ClassroomActivity.this, "claim streaming fail:" + response.details, Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
+                    mLiveSessionState = Live.LiveSessionState.CLAIM_STREAM_STOPPED;
                     if (XiaojsConfig.DEBUG) {
                         Toast.makeText(ClassroomActivity.this, "claim streaming fail", Toast.LENGTH_SHORT).show();
                     }
@@ -1808,8 +1815,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
 
     private void initSocketIO(String ticket, String secret, boolean force) {
+        SocketManager.close();
         SocketManager.init(ClassroomActivity.this, ticket, secret, true, true, force);
         mSocket = SocketManager.getSocket();
+        mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
+        mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
     }
 
     private void listenSocket() {
@@ -1840,8 +1850,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 if (XiaojsConfig.DEBUG) {
                     Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
                 }
-                mSktConnected = true;
             }
+            cancelProgress();
+            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
+            mSktConnected = true;
         }
     };
 
@@ -2079,6 +2091,15 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         m.what = MSG_LIVE_SHOW_COUNT_DOWN_TIME;
                         mHandler.sendMessageDelayed(m, 1000);
                         break;
+                    case MSG_SOCKET_TIME_OUT:
+                        if (!mSktConnected && mSocketRetryCount++ < 3) {
+                            //reconnect
+                            initData(false, null);
+                        } else {
+                            cancelProgress();
+                            showContinueConnectClassroom();
+                        }
+                        break;
                 }
             }
         }
@@ -2120,7 +2141,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         if (mClassroomController != null) {
                             mClassroomController.onPauseVideo();
                         }
-                        SocketManager.close();
                         initData(false, new OnDataLoadListener() {
                             @Override
                             public void onDataLoaded(boolean success) {
@@ -2143,7 +2163,6 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         if (mClassroomController != null) {
                             mClassroomController.onPauseVideo();
                         }
-                        SocketManager.close();
                         initData(false, new OnDataLoadListener() {
                             @Override
                             public void onDataLoaded(boolean success) {
@@ -2340,24 +2359,64 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     }
 
     private void setTips(String title, String desc) {
-        mTipView.setVisibility(View.VISIBLE);
+        if (mTipView.getVisibility() != View.VISIBLE) {
+            mTipView.setVisibility(View.VISIBLE);
+        }
 
         if (!TextUtils.isEmpty(title)) {
-            mTipTitleTv.setVisibility(View.VISIBLE);
+            if (mTipTitleTv.getVisibility() != View.VISIBLE) {
+                mTipTitleTv.setVisibility(View.VISIBLE);
+            }
             mTipTitleTv.setText(title);
         } else {
-            mTipTitleTv.setVisibility(View.GONE);
+            if (mTipTitleTv.getVisibility() != View.GONE) {
+                mTipTitleTv.setVisibility(View.GONE);
+            }
         }
 
         if (!TextUtils.isEmpty(desc)) {
-            mTipDescTv.setVisibility(View.VISIBLE);
+            if (mTipDescTv.getVisibility() != View.VISIBLE) {
+                mTipDescTv.setVisibility(View.VISIBLE);
+            }
             mTipDescTv.setText(desc);
         } else {
-            mTipDescTv.setVisibility(View.GONE);
+            if (mTipDescTv.getVisibility() != View.GONE) {
+                mTipDescTv.setVisibility(View.GONE);
+            }
         }
     }
 
     private void hideTips() {
         mTipView.setVisibility(View.GONE);
+    }
+
+    private void showContinueConnectClassroom() {
+        if (mContinueConnectClassroomDialog == null) {
+            mContinueConnectClassroomDialog = new CommonDialog(this);
+            int width = DeviceUtil.getScreenWidth(this) / 2;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mContinueConnectClassroomDialog.setTitle(R.string.cr_live_connect_fail_title);
+            mContinueConnectClassroomDialog.setDesc(R.string.cr_live_connect_fail_desc);
+            mContinueConnectClassroomDialog.setLefBtnText(R.string.cr_live_connect_fail_exit);
+            mContinueConnectClassroomDialog.setRightBtnText(R.string.cr_live_connect_fail_continue);
+            mContinueConnectClassroomDialog.setDialogLayout(width, height);
+            mContinueConnectClassroomDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mContinueConnectClassroomDialog.dismiss();
+                    mSocketRetryCount = 0;
+                    initData(true, null);
+                }
+            });
+
+            mContinueConnectClassroomDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    ClassroomActivity.this.finish();
+                }
+            });
+        }
+
+        mContinueConnectClassroomDialog.show();
     }
 }

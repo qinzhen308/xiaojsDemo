@@ -75,12 +75,12 @@ public class StudentVideoController extends VideoController {
     @Override
     public void confirmPublishStream(boolean confirm) {
         if (mPublishType == StreamType.TYPE_STREAM_PEER_TO_PEER) {
-            mPublishView.setPath(mPublishStreamUrl);
             mPublishView.setVisibility(View.VISIBLE);
+            mPublishView.setPath(mPublishStreamUrl);
             mPublishView.resume();
         } else if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL) {
-            mIndividualView.setPath(mPublishStreamUrl);
             mIndividualView.setVisibility(View.VISIBLE);
+            mIndividualView.setPath(mPublishStreamUrl);
             mIndividualView.resume();
         }
     }
@@ -88,8 +88,8 @@ public class StudentVideoController extends VideoController {
     @Override
     public void confirmPlayStream(boolean confirm) {
         mStreamPlaying = true;
-        mPlayView.setPath(mPlayStreamUrl);
         mPlayView.setVisibility(View.VISIBLE);
+        mPlayView.setPath(mPlayStreamUrl);
         mPlayView.resume();
         mPlayView.showLoading(true);
         if (mStreamListener != null) {
@@ -109,66 +109,62 @@ public class StudentVideoController extends VideoController {
     public void pausePublishStream(int type) {
         if (type == StreamType.TYPE_STREAM_PEER_TO_PEER) {
             if (mPublishView != null) {
-                if (mStreamPublishing) {
-                    if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
-                        mNeedStreamRePublishing = true;
-                        if (mStreamListener != null) {
-                            mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_PEER_TO_PEER);
-                        }
-                    } else {
-                        //send stopped stream
-                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
-                                new SocketManager.AckListener() {
-                                    @Override
-                                    public void call(Object... args) {
-                                        if (args != null && args.length > 0) {
-                                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                            if (response.result) {
-                                                mNeedStreamRePublishing = true;
-                                                if (mStreamListener != null) {
-                                                    mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_PEER_TO_PEER);
-                                                }
+                if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
+                    mNeedStreamRePublishing = true;
+                    if (mStreamListener != null) {
+                        mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_PEER_TO_PEER);
+                    }
+                } else {
+                    //send stopped stream
+                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                            new SocketManager.AckListener() {
+                                @Override
+                                public void call(Object... args) {
+                                    if (args != null && args.length > 0) {
+                                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                        if (response.result) {
+                                            mNeedStreamRePublishing = true;
+                                            if (mStreamListener != null) {
+                                                mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_PEER_TO_PEER);
                                             }
                                         }
                                     }
-                                });
-                    }
-
-                    mStreamPublishing = false;
-                    mPublishView.pause();
-                    mPublishView.setVisibility(View.GONE);
+                                }
+                            });
                 }
+
+                mStreamPublishing = false;
+                mPublishView.pause();
+                mPublishView.setVisibility(View.GONE);
             }
         } else if (type == StreamType.TYPE_STREAM_INDIVIDUAL) {
             if (mIndividualView != null) {
-                if (mStreamPublishing) {
-                    if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
-                        mStreamPublishing = false;
-                        mNeedStreamRePublishing = true;
-                        if (mStreamListener != null) {
-                            mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_INDIVIDUAL);
-                        }
-                    } else {
-                        //send stopped stream
-                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED), new SocketManager.AckListener() {
-                            @Override
-                            public void call(Object... args) {
-                                if (args != null && args.length > 0) {
-                                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                    if (response.result) {
-                                        mNeedStreamRePublishing = true;
-                                        if (mStreamListener != null) {
-                                            mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_INDIVIDUAL);
-                                        }
+                if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
+                    mStreamPublishing = false;
+                    mNeedStreamRePublishing = true;
+                    if (mStreamListener != null) {
+                        mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_INDIVIDUAL);
+                    }
+                } else {
+                    //send stopped stream
+                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED), new SocketManager.AckListener() {
+                        @Override
+                        public void call(Object... args) {
+                            if (args != null && args.length > 0) {
+                                StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                if (response.result) {
+                                    mNeedStreamRePublishing = true;
+                                    if (mStreamListener != null) {
+                                        mStreamListener.onStreamStopped(mUser, StreamType.TYPE_STREAM_INDIVIDUAL);
                                     }
                                 }
                             }
-                        });
-                    }
-                    mStreamPublishing = false;
-                    mIndividualView.pause();
-                    mIndividualView.setVisibility(View.GONE);
+                        }
+                    });
                 }
+                mStreamPublishing = false;
+                mIndividualView.pause();
+                mIndividualView.setVisibility(View.GONE);
             }
 
         }
@@ -347,7 +343,7 @@ public class StudentVideoController extends VideoController {
     public void togglePublishResolution() {
         if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL) {
             if (mIndividualView instanceof LiveRecordView) {
-                ((LiveRecordView)mIndividualView).togglePublishResolution();
+                ((LiveRecordView) mIndividualView).togglePublishResolution();
             }
         } else if (mPublishType == Su.EventType.STREAMING_STARTED) {
             mPublishView.togglePublishResolution();

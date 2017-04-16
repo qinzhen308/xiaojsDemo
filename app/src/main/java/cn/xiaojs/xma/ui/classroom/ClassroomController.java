@@ -102,7 +102,7 @@ public class ClassroomController {
             mPhotoDoodleFragment.setArguments(bundle);
             mPhotoDoodleFragment.setBitmap(bmp);
             mPhotoDoodleFragment.setPhotoDoodleShareListener(listener);
-            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+            ((ClassroomActivity) mContext).getSupportFragmentManager().beginTransaction()
                     .add(R.id.photo_doodle_layout, mPhotoDoodleFragment).commit();
         }
     }
@@ -117,7 +117,7 @@ public class ClassroomController {
 
                 @Override
                 protected void onPreExecute() {
-                    ((ClassroomActivity)mContext).showProgress(true);
+                    ((ClassroomActivity) mContext).showProgress(true);
                 }
 
                 @Override
@@ -138,7 +138,7 @@ public class ClassroomController {
 
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
-                    ((ClassroomActivity)mContext).cancelProgress();
+                    ((ClassroomActivity) mContext).cancelProgress();
                     if (bitmap != null) {
                         mPhotoDoodleFragment = new PhotoDoodleFragment();
                         Bundle bundle = new Bundle();
@@ -146,7 +146,7 @@ public class ClassroomController {
                         mPhotoDoodleFragment.setArguments(bundle);
                         mPhotoDoodleFragment.setBitmap(bitmap);
                         mPhotoDoodleFragment.setPhotoDoodleShareListener(listener);
-                        ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+                        ((ClassroomActivity) mContext).getSupportFragmentManager().beginTransaction()
                                 .add(R.id.photo_doodle_layout, mPhotoDoodleFragment).commit();
                     } else {
                         Toast.makeText(mContext, R.string.cls_pic_load_fail, Toast.LENGTH_SHORT).show();
@@ -159,8 +159,6 @@ public class ClassroomController {
 
     /**
      * 进入图片编辑，图片可以左右滑动
-     * @param imgUrlList
-     * @param listener
      */
     public void enterPhotoDoodle(ArrayList<String> imgUrlList, final OnPhotoDoodleShareListener listener) {
         mPhotoDoodleFragment = new PhotoDoodleFragment();
@@ -169,7 +167,7 @@ public class ClassroomController {
         bundle.putStringArrayList(Constants.KEY_IMG_LIST, imgUrlList);
         mPhotoDoodleFragment.setArguments(bundle);
         mPhotoDoodleFragment.setPhotoDoodleShareListener(listener);
-        ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+        ((ClassroomActivity) mContext).getSupportFragmentManager().beginTransaction()
                 .add(R.id.photo_doodle_layout, mPhotoDoodleFragment).commit();
     }
 
@@ -178,7 +176,7 @@ public class ClassroomController {
      */
     public void exitPhotoDoodle() {
         if (mContext instanceof ClassroomActivity && mPhotoDoodleFragment != null) {
-            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+            ((ClassroomActivity) mContext).getSupportFragmentManager().beginTransaction()
                     .remove(mPhotoDoodleFragment).commit();
         }
     }
@@ -189,10 +187,10 @@ public class ClassroomController {
     public void enterDocumentFragment() {
         if (mContext instanceof ClassroomActivity) {
             Bundle bundle = new Bundle();
-            bundle.putString(Constants.KEY_LESSON_ID, ((ClassroomActivity)mContext).getLessonId());
+            bundle.putString(Constants.KEY_LESSON_ID, ((ClassroomActivity) mContext).getLessonId());
             mDocumentFragment = new DocumentFragment();
             mDocumentFragment.setArguments(bundle);
-            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+            ((ClassroomActivity) mContext).getSupportFragmentManager().beginTransaction()
                     .add(R.id.document_layout, mDocumentFragment).commit();
         }
     }
@@ -202,14 +200,13 @@ public class ClassroomController {
      */
     public void exitDocumentFragment() {
         if (mContext instanceof ClassroomActivity && mDocumentFragment != null) {
-            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+            ((ClassroomActivity) mContext).getSupportFragmentManager().beginTransaction()
                     .remove(mDocumentFragment).commit();
         }
     }
 
     /**
      * 进入视频播放
-     * @param doc
      */
     public void playVideo(LibDoc doc) {
         if (mContext instanceof ClassroomActivity) {
@@ -217,7 +214,7 @@ public class ClassroomController {
             bundle.putSerializable(Constants.KEY_LIB_DOC, doc);
             mVideoPlayFragment = new VideoPlayFragment();
             mVideoPlayFragment.setArguments(bundle);
-            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+            ((ClassroomActivity) mContext).getSupportFragmentManager().beginTransaction()
                     .add(R.id.document_layout, mVideoPlayFragment).commit();
         }
     }
@@ -227,7 +224,7 @@ public class ClassroomController {
      */
     public void exitPlayVideo() {
         if (mContext instanceof ClassroomActivity && mVideoPlayFragment != null) {
-            ((ClassroomActivity)mContext).getSupportFragmentManager().beginTransaction()
+            ((ClassroomActivity) mContext).getSupportFragmentManager().beginTransaction()
                     .remove(mVideoPlayFragment).commit();
         }
     }
@@ -298,7 +295,6 @@ public class ClassroomController {
 
     /**
      * 开始推流
-     * @param type
      */
     public void publishStream(int type, String url) {
         mVideoController.publishStream(type, url);
@@ -320,11 +316,11 @@ public class ClassroomController {
         mVideoController.playStream();
     }
 
-    public boolean needStreamRePublishing () {
+    public boolean needStreamRePublishing() {
         return mVideoController.needStreamRePublishing();
     }
 
-    public boolean needStreamRePlaying () {
+    public boolean needStreamRePlaying() {
         return mVideoController.needStreamRePlaying();
     }
 
@@ -340,7 +336,7 @@ public class ClassroomController {
         return mVideoController.hasStreamPublishing();
     }
 
-    public void muteOrUnmute (){
+    public void muteOrUnmute() {
         if (hasStreamPublish()) {
             mVideoController.muteOrUnmute();
         }

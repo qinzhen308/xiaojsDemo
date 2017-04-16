@@ -333,7 +333,6 @@ public abstract class VideoController implements StreamConfirmCallback {
 
     /**
      * 处理移动网络的弹出对话框，提示是否允许使用移动网络进行直播
-     * @param publishStream
      */
     private void handleNetworkLiveDialog(final boolean publishStream) {
         if (ClassroomBusiness.getCurrentNetwork(mContext) == ClassroomBusiness.NETWORK_OTHER) {

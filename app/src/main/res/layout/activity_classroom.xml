@@ -65,8 +65,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:textColor="@color/font_black"
-                        android:textSize="@dimen/font_32px"
-                        android:text="@string/no_network"/>
+                        android:textSize="@dimen/font_32px"/>
 
                 <TextView
                         android:id="@+id/tip_txt_view"
@@ -74,8 +73,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:textColor="@color/font_dark_gray"
-                        android:textSize="@dimen/font_28px"
-                        android:text="@string/no_network"/>
+                        android:textSize="@dimen/font_28px"/>
             </LinearLayout>
 
         </FrameLayout>

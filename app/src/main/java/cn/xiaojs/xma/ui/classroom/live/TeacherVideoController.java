@@ -115,7 +115,7 @@ public class TeacherVideoController extends VideoController {
 
             if (mIndividualView instanceof PlayerTextureView && mNeedStreamRePlaying) {
                 mNeedStreamRePlaying = false;
-                ((PlayerTextureView)mIndividualView).delayHideLoading();
+                ((PlayerTextureView) mIndividualView).delayHideLoading();
             }
         }
     }
@@ -126,27 +126,25 @@ public class TeacherVideoController extends VideoController {
     @Override
     public void pausePublishStream(final int type) {
         if (mPublishView != null) {
-            if (mStreamPublishing) {
-                if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
-                    mNeedStreamRePublishing = true;
-                    if (mStreamListener != null) {
-                        mStreamListener.onStreamStopped(mUser, type);
-                    }
-                } else {
-                    //send stopped stream
-                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
-                            new SocketManager.AckListener() {
-                                @Override
-                                public void call(Object... args) {
-                                    if (args != null && args.length > 0) {
-                                        mNeedStreamRePublishing = true;
-                                        if (mStreamListener != null) {
-                                            mStreamListener.onStreamStopped(mUser, type);
-                                        }
+            if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
+                mNeedStreamRePublishing = true;
+                if (mStreamListener != null) {
+                    mStreamListener.onStreamStopped(mUser, type);
+                }
+            } else {
+                //send stopped stream
+                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                        new SocketManager.AckListener() {
+                            @Override
+                            public void call(Object... args) {
+                                if (args != null && args.length > 0) {
+                                    mNeedStreamRePublishing = true;
+                                    if (mStreamListener != null) {
+                                        mStreamListener.onStreamStopped(mUser, type);
                                     }
                                 }
-                            });
-                }
+                            }
+                        });
             }
             mStreamPublishing = false;
             mPublishView.pause();
@@ -186,7 +184,7 @@ public class TeacherVideoController extends VideoController {
     @Override
     public void takeVideoFrame(FrameCapturedCallback callback) {
         if (mIndividualView.getVisibility() == View.VISIBLE) {
-            Bitmap bmp = ((PlayerTextureView)mIndividualView).getPlayer().getTextureView().getBitmap();
+            Bitmap bmp = ((PlayerTextureView) mIndividualView).getPlayer().getTextureView().getBitmap();
             if (callback != null) {
                 callback.onFrameCaptured(bmp);
             }
