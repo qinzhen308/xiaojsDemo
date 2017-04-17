@@ -268,6 +268,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private int mPageState = PAGE_TOP;
     private Bitmap mCaptureFrame;
     private String mPlayUrl;
+    private String mPublishUrl;
     private NetworkChangedBReceiver mNetworkChangedBReceiver;
     private boolean mAllowMobileNetworkLive;
     private int mNetworkState = ClassroomBusiness.NETWORK_NONE;
@@ -275,6 +276,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     //private boolean mTeaPeerPlayStream;
     private Map<String, Boolean> mPeerPlaySteamMap;
     private String mTeaPeerPlayAccountId;
+    private boolean mNeedInitStream; //init stream after socket connected
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -605,16 +607,20 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mCountDownTime = ctlSession.finishOn;
             setCountTime(ctlSession.ctl.duration * 60 - ctlSession.finishOn, true);
             if (mUser == Constants.User.TEACHER) {
-                mClassroomController.publishStream(StreamType.TYPE_STREAM_PUBLISH, ctlSession.publishUrl);
+                mPublishUrl = ctlSession.publishUrl;
+                mNeedInitStream = true;
+                //mClassroomController.publishStream(StreamType.TYPE_STREAM_PUBLISH, ctlSession.publishUrl);
             } else if (mUser == Constants.User.STUDENT) {
                 mPlayUrl = ctlSession.playUrl;
-                mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
+                mNeedInitStream = true;
+                //mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
             }
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
                 Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
             setCountDownTime(ctlSession.startOn, true);
             mPlayUrl = ctlSession.playUrl;
-            mClassroomController.playStream(StreamType.TYPE_STREAM_INDIVIDUAL, mPlayUrl);
+            mNeedInitStream = true;
+            //mClassroomController.playStream(StreamType.TYPE_STREAM_INDIVIDUAL, mPlayUrl);
         } else if (Live.LiveSessionState.RESET.equals(ctlSession.state)) {
             mCountDownTime = mLessonDuration * 60 - ctlSession.hasTaken;
             setResetTime();
@@ -1865,6 +1871,21 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             cancelProgress();
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mSktConnected = true;
+
+
+            if (mNeedInitStream) {
+                mNeedInitStream = false;
+                if (Live.LiveSessionState.LIVE.equals(mLiveSessionState)) {
+                    if (mUser == Constants.User.TEACHER) {
+                        mClassroomController.publishStream(StreamType.TYPE_STREAM_PUBLISH, mPublishUrl);
+                    } else if (mUser == Constants.User.STUDENT) {
+                        mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
+                    }
+                } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(mLiveSessionState) ||
+                        Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)) {
+                    mClassroomController.playStream(StreamType.TYPE_STREAM_INDIVIDUAL, mPlayUrl);
+                }
+            }
         }
     };
 
@@ -2027,6 +2048,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         public void handleMessage(Message msg) {
             if (msg != null) {
                 Message m = mHandler.obtainMessage();
+                String time;
                 switch (msg.what) {
                     case MSG_RESET_TIME:
                         mCountDownTimeTv.setText(getString(R.string.cls_break_time_desc, TimeUtil.formatSecondTime(mCountDownTime)));
@@ -2036,7 +2058,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                         if (msg.arg2 == TYPE_COUNT_DOWN_NORMAL) {
                             if (msg.arg1 == 1) {
                                 mCountDownTime--;
-                                String time = TimeUtil.formatSecondTime(mCountDownTime);
+                                time = TimeUtil.formatSecondTime(mCountDownTime);
                                 if (Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)
                                         || Live.LiveSessionState.CLAIM_STREAM_STOPPED.equals(mLiveSessionState)) {
                                     mCountDownTimeTv.setText(getString(R.string.cls_distance_class, time));
@@ -2046,10 +2068,12 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                                     mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_start, 0, 0, 0);
                                 }
 
-                                m.arg1 = 1;
-                                m.arg2 = TYPE_COUNT_DOWN_NORMAL;
-                                m.what = MSG_COUNT_DOWN_TIME;
-                                mHandler.sendMessageDelayed(m, 1000);
+                                if (!time.contains("天")) {
+                                    m.arg1 = 1;
+                                    m.arg2 = TYPE_COUNT_DOWN_NORMAL;
+                                    m.what = MSG_COUNT_DOWN_TIME;
+                                    mHandler.sendMessageDelayed(m, 1000);
+                                }
                             } else {
                                 if (Live.LiveSessionState.RESET.equals(mLiveSessionState)) {
                                     mCountDownTimeTv.setText(getString(R.string.cls_break_time_desc, TimeUtil.formatSecondTime(mCountDownTime)));
@@ -2060,13 +2084,16 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                             }
                         } else if (msg.arg2 == TYPE_COUNT_DOWN_DELAY) {
                             mDelayTime++;
+                            time = getString(R.string.cls_distance_class, mDelayTime);
                             mCountDownTimeTv.setText(getString(R.string.cls_distance_class, mDelayTime));
                             mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
 
-                            m.arg1 = 1;
-                            m.arg2 = TYPE_COUNT_DOWN_DELAY;
-                            m.what = MSG_COUNT_DOWN_TIME;
-                            mHandler.sendMessageDelayed(m, 1000);
+                            if (!time.contains("天")) {
+                                m.arg1 = 1;
+                                m.arg2 = TYPE_COUNT_DOWN_DELAY;
+                                m.what = MSG_COUNT_DOWN_TIME;
+                                mHandler.sendMessageDelayed(m, 1000);
+                            }
                         }
                         break;
                     case MSG_COUNT_TIME:
@@ -2096,11 +2123,13 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     case MSG_LIVE_SHOW_COUNT_DOWN_TIME:
                         mLiveShowCountDownTime--;
                         String name = "";
-                        String time = TimeUtil.formatSecondTime(mLiveShowCountDownTime);
+                        time = TimeUtil.formatSecondTime(mLiveShowCountDownTime);
                         mLiveShowTv.setText(getString(R.string.cls_live_show, name, time));
 
-                        m.what = MSG_LIVE_SHOW_COUNT_DOWN_TIME;
-                        mHandler.sendMessageDelayed(m, 1000);
+                        if (!time.contains("天")) {
+                            m.what = MSG_LIVE_SHOW_COUNT_DOWN_TIME;
+                            mHandler.sendMessageDelayed(m, 1000);
+                        }
                         break;
                     case MSG_SOCKET_TIME_OUT:
                         if (!mSktConnected && mSocketRetryCount++ < 3) {

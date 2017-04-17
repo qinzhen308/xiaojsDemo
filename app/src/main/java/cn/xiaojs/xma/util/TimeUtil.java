@@ -965,9 +965,10 @@ public class TimeUtil {
             return "00:00:00";
         }
 
-        long h = second / 3600;
+        long h = (second % (24 * 3600)) / 3600;
         long m = (second % 3600) / 60;
         long s = second % 60;
+        long day = second / (24 * 3600);
 
         String hh = "00";
         if (h < 10) {
@@ -990,7 +991,11 @@ public class TimeUtil {
             ss = String.valueOf(s);
         }
 
-        return hh + ":" + mm + ":" + ss;
+        if (day > 0) {
+            return day + "天";
+        } else {
+            return hh + ":" + mm + ":" + ss;
+        }
     }
 
 
