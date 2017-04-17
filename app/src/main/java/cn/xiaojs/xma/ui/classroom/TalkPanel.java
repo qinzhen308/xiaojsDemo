@@ -504,17 +504,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                     addMyself2Attendees(mLiveCollection);
                     mContactBookAdapter.setData(mLiveCollection);
                     setEmptyContactView();
-                    if (XiaojsConfig.DEBUG) {
-                        Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
-                    }
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
                     setEmptyContactView();
-                    if (XiaojsConfig.DEBUG) {
-                        Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
-                    }
                 }
             });
         }
@@ -554,9 +548,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
                 @Override
                 public void onSuccess(LiveCollection<Attendee> liveCollection) {
-                    if (XiaojsConfig.DEBUG) {
-                        Toast.makeText(mContext, "获取联系成功", Toast.LENGTH_SHORT).show();
-                    }
                     mLiveCollection = liveCollection;
                     addMyself2Attendees(mLiveCollection);
                     mTalkContactAdapter.setData(liveCollection);
@@ -565,9 +556,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
-                    if (XiaojsConfig.DEBUG) {
-                        Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
-                    }
                 }
             });
         }
@@ -696,9 +684,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private SocketManager.EventListener mOnJoin = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(mContext, "someone enter", Toast.LENGTH_SHORT).show();
-            }
             updateContactList(true, args);
         }
     };
@@ -709,9 +694,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
     private SocketManager.EventListener mOnLeave = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(mContext, "someone exit", Toast.LENGTH_SHORT).show();
-            }
             updateContactList(false, args);
         }
     };
@@ -763,9 +745,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         @Override
         public void call(final Object... args) {
             if (mContext instanceof Activity && args != null && args.length > 0) {
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(mContext, "接收到消息", Toast.LENGTH_SHORT).show();
-                }
                 //TODO fix同一条消息多次回调?
                 handleReceivedMsg(args);
             }
@@ -943,16 +922,6 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
 
             if (talkResponse == null) {
                 return;
-            }
-
-
-            if (XiaojsConfig.DEBUG) {
-                if (talkResponse.result) {
-                    Toast.makeText(mContext, "消息发送成功", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(mContext, "消息发送失败", Toast.LENGTH_SHORT).show();
-                    //TODO resend
-                }
             }
         } catch (Exception e) {
 

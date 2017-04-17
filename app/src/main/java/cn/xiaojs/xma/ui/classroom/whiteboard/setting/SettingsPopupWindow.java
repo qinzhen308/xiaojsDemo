@@ -49,8 +49,7 @@ public abstract class SettingsPopupWindow {
         mPopupWindow.setTouchable(true);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setClippingEnabled(false);
 
         if (mPopupWindow.getBackground() != null) {

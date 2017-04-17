@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,9 +69,11 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
 
     private void init() {
         setFocusable(true);
+        setTouchable(true);
         setOutsideTouchable(true);
-        setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         setClippingEnabled(false);
+        setBackgroundDrawable(new ColorDrawable());
+        setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
         View v = LayoutInflater.from(mContext).inflate(R.layout.layout_share_contact_book, null);
         setContentView(v);
@@ -107,17 +110,11 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
                 }
                 mListView.setAdapter(mContactAdapter);
                 mEmptyView.setVisibility(attendees == null || attendees.isEmpty() ? View.VISIBLE : View.GONE);
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(mContext, "获取好友列表成功", Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 mEmptyView.setVisibility(View.VISIBLE);
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(mContext, "获取联系:" + errorMessage, Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }
@@ -132,16 +129,6 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
         switch (v.getId()) {
             case R.id.check_to_discussion:
                 if (mContactAdapter != null) {
-                    /*if (mCheckMode == MODE_UN_CHECK_ALL) {
-                        mCheckMode = MODE_CHECK_ALL;
-                        mCheckToDiscussionBtn.setImageResource(R.drawable.ic_multi_checked);
-                        mContactAdapter.checkAll();
-                    } else {
-                        mCheckMode = MODE_UN_CHECK_ALL;
-                        mContactAdapter.unCheckAll();
-                        mCheckToDiscussionBtn.setImageResource(R.drawable.ic_multi_no_checked);
-                        mCheckToDiscussionBtn.setSelected(false);
-                    }*/
                     mCheckToDiscussionBtn.setSelected(true);
                     mContactAdapter.unCheckAll();
                 }
