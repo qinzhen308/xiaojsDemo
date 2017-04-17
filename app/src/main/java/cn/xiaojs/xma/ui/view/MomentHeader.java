@@ -146,7 +146,8 @@ public class MomentHeader extends RelativeLayout {
 
         Glide.with(getContext())
                 .load(url)
-                .error(R.drawable.default_avatar)
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
                 .into(mHead);
     }
 

@@ -1,7 +1,9 @@
 package cn.xiaojs.xma;
 
 import android.app.Application;
-import android.content.Intent;
+import android.content.Context;
+import android.os.Build;
+import android.support.multidex.MultiDex;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -30,6 +32,17 @@ import cn.xiaojs.xma.util.XjsUtils;
 public class XiaojsApplication extends Application {
 
     public static final String ACTION_NEW_MESSAGE = "xjs_lc_new_msg";
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        if( Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            MultiDex.install(this);
+        }
+
+    }
 
     @Override
     public void onCreate() {

@@ -82,11 +82,13 @@ public class SocialRequest extends ServiceRequest {
         Call<CollectionPage<Dynamic>> call = getService().getActivities(criteriaJsonstr,
                 paginationJsonstr);
 
-        enqueueRequest(APIType.GET_ACTIVITIES,
-                call,
-                pagination.getPage(),
-                CollectionPage.class,
-                Dynamic.class);
+//        enqueueRequest(APIType.GET_ACTIVITIES,
+//                call,
+//                pagination.getPage(),
+//                CollectionPage.class,
+//                Dynamic.class);
+
+        enqueueRequest(APIType.GET_ACTIVITIES,call);
 
 
     }
