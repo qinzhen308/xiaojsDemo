@@ -107,16 +107,6 @@ public class PhotoDoodleFragment extends BaseFragment {
             adapter.setData(wbColl, 0);
             mBoardController.setWhiteboardScrollerAdapter(adapter);
         }
-
-        //适配sumsang机型
-        mContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSharePopWindow != null) {
-                    mSharePopWindow.dismiss();
-                }
-            }
-        });
     }
 
     @OnClick({R.id.wb_toolbar_btn, R.id.back_in_doodle, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,

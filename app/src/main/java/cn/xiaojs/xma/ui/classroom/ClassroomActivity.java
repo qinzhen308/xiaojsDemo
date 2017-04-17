@@ -1209,18 +1209,21 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
     private void enterPhotoDoodle(Bitmap bmp) {
         mPageState = PHOTO_DOODLE;
         mClassroomController.enterPhotoDoodle(bmp, mOnPhotoDoodleShareListener);
+        mEnterTalkBtn.setVisibility(View.GONE);
         hideTopBottomPanel();
     }
 
     private void enterPhotoDoodle(String url) {
         mPageState = PHOTO_DOODLE;
         mClassroomController.enterPhotoDoodle(url, mOnPhotoDoodleShareListener);
+        mEnterTalkBtn.setVisibility(View.GONE);
         hideTopBottomPanel();
     }
 
     private void enterPhotoDoodle(ArrayList<String> imgUrls) {
         mPageState = PHOTO_DOODLE;
         mClassroomController.enterPhotoDoodle(imgUrls, mOnPhotoDoodleShareListener);
+        mEnterTalkBtn.setVisibility(View.GONE);
         hideTopBottomPanel();
     }
 
@@ -1241,6 +1244,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                     @Override
                     protected void onPostExecute(String result) {
                         if (!TextUtils.isEmpty(result)) {
+                            exitPhotoDoodle();
                             mTalkPanel.sendImg(attendee, result);
                         } else {
                             cancelProgress();
@@ -1256,6 +1260,7 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
             mPageState = PAGE_TOP;
             mCurrentControllerLevel = InteractiveLevel.MAIN_PANEL;
             mClassroomController.exitPhotoDoodle();
+            mEnterTalkBtn.setVisibility(View.VISIBLE);
             hideWhiteBoardPanel();
         }
     }
