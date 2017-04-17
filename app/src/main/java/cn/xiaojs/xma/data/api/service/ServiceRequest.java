@@ -350,9 +350,9 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
                     if (serviceCallback != null) {
 
-                        if (entity != null) {
+                        //if (entity != null) {
                             serviceCallback.onSuccess(entity);
-                        }
+                        //}
 
                         if (XiaojsConfig.DEBUG) {
                             Logger.d("load from cache completed and begin request api");
