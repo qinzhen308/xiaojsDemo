@@ -86,6 +86,8 @@
                 android:ellipsize="end"
                 android:gravity="right"
                 android:singleLine="true"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_26px"
                 android:layout_below="@id/chat_right_iv_avatar"
                 android:layout_alignRight="@id/chat_right_iv_avatar"/>
 
