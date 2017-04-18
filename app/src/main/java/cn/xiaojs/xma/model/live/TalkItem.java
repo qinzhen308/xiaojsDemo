@@ -15,7 +15,7 @@ public class TalkItem {
     public Date time;
     public TalkPerson from;
     public TalkContent body;
-
+    public String to;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)

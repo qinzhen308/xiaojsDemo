@@ -621,7 +621,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 }
                 break;
             case PEER_TALK:
-                TalkMsgAdapter adapter = getPeekTalkMsgAdapter(talkItem.from.accountId);
+                TalkMsgAdapter adapter = getPeekTalkMsgAdapter(talkItem.to);
                 if (adapter != null) {
                     adapter.add(talkItem);
                     if (updateMsgListView) {
@@ -818,6 +818,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         talkItem.body = new TalkItem.TalkContent();
         talkItem.body.text = text;
         talkItem.body.contentType = Communications.ContentType.STYLUS;
+        if (attendee == null) {
+            talkItem.to = String.valueOf(Communications.TalkType.OPEN);
+        } else {
+            talkItem.to = attendee.accountId;
+        }
 
         long sendTime = System.currentTimeMillis();
         talkItem.time = new Date(sendTime);
@@ -870,6 +875,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         talkItem.body = new TalkItem.TalkContent();
         talkItem.body.text = text;
         talkItem.body.contentType = type;
+        talkItem.to = mPeerTalkAccountId;
 
         long sendTime = System.currentTimeMillis();
         talkItem.time = new Date(sendTime);
