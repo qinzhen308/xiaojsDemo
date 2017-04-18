@@ -44,7 +44,10 @@ public class GuideBrowseActivity extends Activity {
         } else {
             images = new int[]{R.drawable.usage_student_1,
                     R.drawable.usage_student_2,
-                    R.drawable.usage_student_3};
+                    R.drawable.usage_student_3,
+                    R.drawable.usage_student_4,
+                    R.drawable.usage_student_5
+            };
         }
 
 
