@@ -128,8 +128,8 @@ public class UpgradeActivity extends Activity {
         String details = upgrade.remarks;
         if (!TextUtils.isEmpty(details)) {
             detailView.setText(details);
-            tip_titleView.setVisibility(View.VISIBLE);
-            tip_titleView.setVisibility(View.VISIBLE);
+            //tip_titleView.setVisibility(View.VISIBLE);
+            //tip_titleView.setVisibility(View.VISIBLE);
         }
 
         if (action == Platform.AvailableAction.UPGRADE) {
