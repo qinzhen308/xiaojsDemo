@@ -43,6 +43,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -669,6 +670,11 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             return;
         }
 
+        if (isLive()  && isTeacher(attendee)) {
+            Toast.makeText(mContext, R.string.cr_live_forbid_talk, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mPeerTabShow = true;
         switchToTalk();
         //getTalkSimpleContactData();
@@ -1042,5 +1048,19 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         mSearchEdt.setText(liveCollection.current + "/" + (liveCollection.total + 1));
     }
 
+    private boolean isTeacher(Attendee attendee) {
+        Constants.User user = ClassroomBusiness.getUser(attendee.psType);
+        return user == Constants.User.TEACHER
+                || user == Constants.User.ASSISTANT
+                || user == Constants.User.REMOTE_ASSISTANT;
+    }
+
+    private boolean isLive() {
+        if (mContext instanceof ClassroomActivity) {
+            return Live.LiveSessionState.LIVE.equals(((ClassroomActivity)mContext).getLiveState());
+        }
+
+        return false;
+    }
 }
 

@@ -1436,6 +1436,10 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
         return mCurrentControllerLevel;
     }
 
+    public String getLiveState() {
+        return mLiveSessionState;
+    }
+
     public String getTicket() {
         return mTicket;
     }

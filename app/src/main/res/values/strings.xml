@@ -462,6 +462,7 @@
     <string name="cr_live_connect_fail_desc">请检查您的网络链接是否正常，然后在重新连接</string>
     <string name="cr_live_connect_fail_exit">退出教室</string>
     <string name="cr_live_connect_fail_continue">重新连接</string>
+    <string name="cr_live_forbid_talk">上课时间不能和其他学生聊天</string>
 
     <!-- 社交-->
     <string name="contact">联系人</string>
