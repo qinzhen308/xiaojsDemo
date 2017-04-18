@@ -84,9 +84,9 @@ public class MainActivity extends BaseTabActivity {
 
         if (!hasShow) {
 
-            if (!DataManager.hasShowGuide(this)) {
-                showGuid();
-            }
+//            if (!DataManager.hasShowGuide(this)) {
+//                showGuid();
+//            }
 
             requestPermission();
         }
