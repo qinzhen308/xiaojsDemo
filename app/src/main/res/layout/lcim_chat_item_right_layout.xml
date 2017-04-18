@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:layout_toLeftOf="@+id/chat_right_iv_avatar"
             android:orientation="horizontal"
             android:paddingLeft="40dp">
@@ -74,20 +74,37 @@
             style="@style/LCIMAvatar"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
             android:layout_marginLeft="10dp"/>
 
         <TextView
                 android:id="@+id/chat_right_tv_name"
-                android:layout_width="45dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
                 android:ellipsize="end"
                 android:gravity="right"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_dark_gray"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="5dp"
                 android:singleLine="true"
-                android:layout_below="@id/chat_right_iv_avatar"
-                android:layout_alignRight="@id/chat_right_iv_avatar"/>
+                android:layout_alignRight="@id/chat_right_layout_content"
+                android:visibility="gone"/>
+
+        <!--<TextView-->
+                <!--android:id="@+id/chat_right_tv_name"-->
+                <!--android:layout_width="45dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="right"-->
+                <!--android:layout_marginBottom="3dp"-->
+                <!--android:layout_marginTop="3dp"-->
+                <!--android:ellipsize="end"-->
+                <!--android:gravity="right"-->
+                <!--android:singleLine="true"-->
+                <!--android:layout_below="@id/chat_right_iv_avatar"-->
+                <!--android:layout_alignRight="@id/chat_right_iv_avatar"/>-->
 
     </RelativeLayout>
 

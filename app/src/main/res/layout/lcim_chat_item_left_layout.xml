@@ -32,30 +32,34 @@
             android:id="@+id/chat_left_iv_avatar"
             style="@style/LCIMAvatar"
             android:layout_alignParentTop="true"
+            android:layout_marginTop="12dp"
             android:layout_marginRight="10dp"/>
 
-
-        <TextView
-                android:id="@+id/chat_left_tv_name"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:singleLine="true"
-                android:layout_alignLeft="@id/chat_left_iv_avatar"
-                android:layout_below="@+id/chat_left_iv_avatar"/>
 
         <LinearLayout
             android:id="@+id/chat_left_layout_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:layout_toRightOf="@+id/chat_left_iv_avatar"
             android:orientation="horizontal"
             android:paddingRight="40dp"/>
+
+        <TextView
+                android:id="@+id/chat_left_tv_name"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:layout_marginLeft="5dp"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_dark_gray"
+                android:singleLine="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@id/chat_left_layout_content"
+                />
 
         <FrameLayout
             android:id="@+id/chat_left_layout_status"
