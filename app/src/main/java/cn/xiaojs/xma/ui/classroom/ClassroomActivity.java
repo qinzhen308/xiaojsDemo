@@ -616,8 +616,11 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
                 //mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
             }
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(ctlSession.state) ||
-                Live.LiveSessionState.SCHEDULED.equals(ctlSession.state)) {
-            setCountDownTime(ctlSession.startOn, true);
+                Live.LiveSessionState.SCHEDULED.equals(ctlSession.state) ||
+                Live.LiveSessionState.FINISHED.equals(ctlSession.state)) {
+            if (!Live.LiveSessionState.FINISHED.equals(ctlSession.state)) {
+                setCountDownTime(ctlSession.startOn, true);
+            }
             mPlayUrl = ctlSession.playUrl;
             mNeedInitStream = true;
             //mClassroomController.playStream(StreamType.TYPE_STREAM_INDIVIDUAL, mPlayUrl);
