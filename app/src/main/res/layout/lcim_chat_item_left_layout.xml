@@ -57,9 +57,8 @@
                 android:textColor="@color/font_dark_gray"
                 android:singleLine="true"
                 android:layout_alignParentTop="true"
-                android:layout_above="@id/chat_left_layout_content"
                 android:layout_alignLeft="@id/chat_left_layout_content"
-                android:background="@color/blue"/>
+                />
 
         <FrameLayout
             android:id="@+id/chat_left_layout_status"

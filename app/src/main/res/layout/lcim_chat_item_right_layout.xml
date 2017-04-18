@@ -79,7 +79,7 @@
 
         <TextView
                 android:id="@+id/chat_right_tv_name"
-                android:layout_width="100dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginBottom="3dp"
@@ -90,9 +90,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="5dp"
                 android:singleLine="true"
-                android:layout_above="@id/chat_right_layout_content"
                 android:layout_alignRight="@id/chat_right_layout_content"
-                android:background="@color/blue"/>
+                android:visibility="gone"/>
 
         <!--<TextView-->
                 <!--android:id="@+id/chat_right_tv_name"-->
