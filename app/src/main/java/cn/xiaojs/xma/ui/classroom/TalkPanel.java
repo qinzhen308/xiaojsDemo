@@ -670,7 +670,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             return;
         }
 
-        if (isLive()  && isTeacher(attendee)) {
+        if (isLive() && !isTeacher(attendee)) {
             Toast.makeText(mContext, R.string.cr_live_forbid_talk, Toast.LENGTH_SHORT).show();
             return;
         }
