@@ -71,19 +71,26 @@ public abstract class VideoController implements StreamConfirmCallback {
     private CommonDialog mMobileNetworkDialog;
     protected boolean mPausePublishByToggleResolution;
 
+    protected int mPeerStreamViewWidth = 160;
+    protected int mPeerStreamViewHeight = 90;
+    protected int mPeerStreamViewTopMargin = 10;
+    protected int mPeerStreamViewMargin = 10;
+
     public VideoController(Context context, View root, OnStreamStateChangeListener listener) {
         mContext = context;
         mRoot = root;
         mStreamListener = listener;
         mHandler = new Handler();
 
+        mPeerStreamViewWidth = context.getResources().getDimensionPixelOffset(R.dimen.px160);
+        mPeerStreamViewHeight = context.getResources().getDimensionPixelOffset(R.dimen.px90);
+        mPeerStreamViewMargin = context.getResources().getDimensionPixelOffset(R.dimen.px10);
+        mPeerStreamViewTopMargin = context.getResources().getDimensionPixelOffset(R.dimen.px110);
+
         init(root);
+        //一个activity不能多个LiveRecordView同时存在
         if (mPublishView != null) {
             mPublishView.setOnStreamingStateListener(mStreamingStateChangedListener);
-        }
-        //个人推流的时候
-        if (mIndividualView instanceof LiveRecordView) {
-            ((LiveRecordView) mIndividualView).setOnStreamingStateListener(mStreamingStateChangedListener);
         }
 
         onResume();

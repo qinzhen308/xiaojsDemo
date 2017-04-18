@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.live.view;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -36,7 +37,9 @@ import com.qiniu.pili.droid.streaming.CameraStreamingSetting;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.MediaStreamingManager;
 import com.qiniu.pili.droid.streaming.MicrophoneStreamingSetting;
+import com.qiniu.pili.droid.streaming.StreamingPreviewCallback;
 import com.qiniu.pili.droid.streaming.StreamingProfile;
+import com.qiniu.pili.droid.streaming.StreamingSessionListener;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 import com.qiniu.pili.droid.streaming.SurfaceTextureCallback;
@@ -46,6 +49,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
@@ -58,7 +62,9 @@ import cn.xiaojs.xma.util.XjsUtils;
 
 public class LiveRecordView extends BaseMediaView implements
         SurfaceTextureCallback,
-        AudioSourceCallback {
+        AudioSourceCallback,
+        StreamingPreviewCallback,
+        StreamingSessionListener {
 
     private static final String TAG = "LiveRecordView";
     private static final int MSG_START_STREAMING = 0;
@@ -193,8 +199,8 @@ public class LiveRecordView extends BaseMediaView implements
 
         mMediaStreamingManager.setStreamingStateListener(new OnStreamingState());
         mMediaStreamingManager.setSurfaceTextureCallback(this);
-        //mMediaStreamingManager.setStreamingSessionListener(this);
-        //mMediaStreamingManager.setStreamingPreviewCallback(this);
+        mMediaStreamingManager.setStreamingSessionListener(this);
+        mMediaStreamingManager.setStreamingPreviewCallback(this);
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
     }
 
@@ -210,6 +216,36 @@ public class LiveRecordView extends BaseMediaView implements
 
     public void setOnStreamingStateListener(StreamingStateChangedListener listener) {
         mOuterStreamingStateChangedListener = listener;
+    }
+
+    @Override
+    public boolean onPreviewFrame(byte[] bytes, int i, int i1) {
+        return true;
+    }
+
+    @Override
+    public boolean onRecordAudioFailedHandled(int i) {
+        return false;
+    }
+
+    @Override
+    public boolean onRestartStreamingHandled(int i) {
+        return mMediaStreamingManager.startStreaming();
+    }
+
+    @Override
+    public Camera.Size onPreviewSizeSelected(List<Camera.Size> list) {
+        Camera.Size size = null;
+        if (list != null) {
+            for (Camera.Size s : list) {
+                if (s.height >= 480) {
+                    size = s;
+                    break;
+                }
+            }
+        }
+//        Log.e(TAG, "selected size :" + size.width + "x" + size.height);
+        return size;
     }
 
     private class OnStreamingState implements StreamingStateChangedListener {

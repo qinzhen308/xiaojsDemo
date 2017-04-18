@@ -35,6 +35,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginRight="10dp"/>
 
+
         <LinearLayout
             android:id="@+id/chat_left_layout_content"
             android:layout_width="wrap_content"
