@@ -2,9 +2,12 @@ package cn.xiaojs.xma.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,11 +47,16 @@ public class GuideBrowseActivity extends Activity {
         } else {
             images = new int[]{R.drawable.usage_student_1,
                     R.drawable.usage_student_2,
-                    R.drawable.usage_student_3};
+                    R.drawable.usage_student_3,
+                    R.drawable.usage_student_4,
+                    R.drawable.usage_student_5
+            };
         }
 
 
-        imageView.setBackgroundResource(images[index]);
+
+
+        setImageShow(images[index]);
 
     }
 
@@ -74,12 +82,21 @@ public class GuideBrowseActivity extends Activity {
             return;
         }
 
-        imageView.setBackgroundResource(images[index]);
+        setImageShow(images[index]);
 
+    }
+
+    public void setImageShow(@DrawableRes int res) {
+
+        Glide.with(this).load(res).into(imageView);
+
+        //imageView.setBackgroundResource(images[index]);
     }
 
     @Override
     public void onBackPressed() {
 
     }
+
+
 }
