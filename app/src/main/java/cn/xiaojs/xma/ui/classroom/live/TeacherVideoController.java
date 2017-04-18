@@ -18,7 +18,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
@@ -51,17 +53,13 @@ public class TeacherVideoController extends VideoController {
     @Override
     protected void init(View root) {
         /**
-         * 用于播放和学生的一对一视频（默认小窗口）
+         * 用户播放个人推流，用于播放和学生的一对一视频（默认小窗口）
          */
-        mPlayView = (PlayerTextureView) root.findViewById(R.id.tea_player_video);
+        mPlayView = (PlayerTextureView) root.findViewById(R.id.live_video);
         /**
          * 用于推流视频（直播推流或个人推流）
          */
         mPublishView = (LiveRecordView) root.findViewById(R.id.publish_video);
-        /**
-         * 用于个人推流的播放
-         */
-        mIndividualView = (PlayerTextureView) root.findViewById(R.id.live_video);
     }
 
     @Override
@@ -79,44 +77,39 @@ public class TeacherVideoController extends VideoController {
     @Override
     public void confirmPlayStream(boolean confirm) {
         mStreamPlaying = true;
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPlayView.getLayoutParams();
         if (mPlayType == StreamType.TYPE_STREAM_PEER_TO_PEER) {
-            mPlayView.setPath(mPlayStreamUrl);
-            mPlayView.setVisibility(View.VISIBLE);
-            mPlayView.resume();
-            mPlayView.showLoading(true);
+            params.width = mPeerStreamViewWidth;
+            params.height = mPeerStreamViewHeight;
+            params.gravity = Gravity.LEFT | Gravity.TOP;
+            params.topMargin = mPeerStreamViewTopMargin;
+            params.leftMargin = mPeerStreamViewMargin;
+            mContainer.bringChildToFront(mPlayView);
+        } else if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL) {
+            params.width = FrameLayout.LayoutParams.MATCH_PARENT;
+            params.height = FrameLayout.LayoutParams.MATCH_PARENT;
+            params.gravity = Gravity.CENTER;
+            mContainer.bringChildToFront(mPublishView);
+            params.leftMargin = 0;
+            params.bottomMargin = 0;
+        }
+        mPlayView.setVisibility(View.VISIBLE);
+        mPlayView.setPath(mPlayStreamUrl);
+        mPlayView.resume();
+        mPlayView.showLoading(true);
 
-            if (!TextUtils.isEmpty(mPlayStreamUrl)) {
-                mPlayView.setVisibility(View.VISIBLE);
-                mPlayView.showLoading(true, loadingSize, loadingDesc);
-            }
 
-            if (mStreamListener != null) {
-                mStreamListener.onStreamStarted(mUser, StreamType.TYPE_STREAM_PEER_TO_PEER);
-            }
+        if (mStreamListener != null) {
+            mStreamListener.onStreamStarted(mUser, StreamType.TYPE_STREAM_PEER_TO_PEER);
+        }
 
-            if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
-                mNeedStreamRePlaying = false;
-                mPlayView.delayHideLoading();
-            }
-        } else if (mPlayType == StreamType.TYPE_STREAM_INDIVIDUAL) {
-            mIndividualView.setPath(mPlayStreamUrl);
-            mIndividualView.setVisibility(View.VISIBLE);
-            mIndividualView.resume();
-            mIndividualView.showLoading(true);
+        if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
+            mNeedStreamRePlaying = false;
+            mPlayView.delayHideLoading();
+        }
 
-            if (!TextUtils.isEmpty(mPlayStreamUrl)) {
-                mIndividualView.setVisibility(View.VISIBLE);
-                mIndividualView.showLoading(true, loadingSize, loadingDesc);
-            }
-
-            if (mStreamListener != null) {
-                mStreamListener.onStreamStarted(mUser, StreamType.TYPE_STREAM_INDIVIDUAL);
-            }
-
-            if (mIndividualView instanceof PlayerTextureView && mNeedStreamRePlaying) {
-                mNeedStreamRePlaying = false;
-                ((PlayerTextureView) mIndividualView).delayHideLoading();
-            }
+        if (mPlayType == StreamType.TYPE_STREAM_PEER_TO_PEER) {
+            mPlayView.showLoading(true, loadingSize, loadingDesc);
         }
     }
 
@@ -157,34 +150,21 @@ public class TeacherVideoController extends VideoController {
      */
     @Override
     public void pausePlayStream(int type) {
-        if (type == StreamType.TYPE_STREAM_PEER_TO_PEER) {
-            mStreamPlaying = false;
-            mNeedStreamRePlaying = true;
-            mPlayView.pause();
-            mPlayView.showLoading(false);
-            mPlayView.setVisibility(View.GONE);
+        mStreamPlaying = false;
+        mNeedStreamRePlaying = true;
+        mPlayView.pause();
+        mPlayView.showLoading(false);
+        mPlayView.setVisibility(View.GONE);
 
-            if (mStreamListener != null) {
-                mStreamListener.onStreamStopped(mUser, type);
-            }
-        } else if (type == StreamType.TYPE_STREAM_INDIVIDUAL) {
-            mStreamPlaying = false;
-            mNeedStreamRePlaying = true;
-            mIndividualView.pause();
-            mIndividualView.showLoading(false);
-            mIndividualView.setVisibility(View.GONE);
-
-
-            if (mStreamListener != null) {
-                mStreamListener.onStreamStopped(mUser, type);
-            }
+        if (mStreamListener != null) {
+            mStreamListener.onStreamStopped(mUser, type);
         }
     }
 
     @Override
     public void takeVideoFrame(FrameCapturedCallback callback) {
-        if (mIndividualView.getVisibility() == View.VISIBLE) {
-            Bitmap bmp = ((PlayerTextureView) mIndividualView).getPlayer().getTextureView().getBitmap();
+        if (mPlayView.getVisibility() == View.VISIBLE) {
+            Bitmap bmp = mPlayView.getPlayer().getTextureView().getBitmap();
             if (callback != null) {
                 callback.onFrameCaptured(bmp);
             }

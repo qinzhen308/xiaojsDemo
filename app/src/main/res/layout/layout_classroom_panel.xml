@@ -195,15 +195,6 @@
 
         </RelativeLayout>
 
-        <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
-                android:id="@+id/stu_publish_video"
-                android:visibility="gone"
-                android:layout_width="@dimen/px144"
-                android:layout_height="@dimen/px81"
-                android:layout_below="@+id/title_bar"
-                android:layout_marginTop="@dimen/px15"
-                android:layout_marginLeft="@dimen/px15"/>
-
         <LinearLayout
                 android:id="@+id/live_progress_layout"
                 android:layout_width="wrap_content"
@@ -435,17 +426,6 @@
                 android:padding="@dimen/px25"/>
 
     </LinearLayout>
-
-    <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
-            android:id="@+id/tea_player_video"
-            android:layout_width="@dimen/px160"
-            android:layout_height="@dimen/px90"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="@dimen/px20"
-            android:layout_marginLeft="@dimen/px20"
-            android:visibility="gone"/>
-
 
     <!--视频采集view-->
     <ImageView

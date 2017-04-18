@@ -46,7 +46,6 @@ public abstract class VideoController implements StreamConfirmCallback {
      */
     protected LiveRecordView mPublishView;
     protected PlayerTextureView mPlayView;
-    protected BaseMediaView mIndividualView;
 
     protected String mPlayStreamUrl;
     protected String mPublishStreamUrl;
@@ -75,6 +74,7 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected int mPeerStreamViewHeight = 90;
     protected int mPeerStreamViewTopMargin = 10;
     protected int mPeerStreamViewMargin = 10;
+    protected ViewGroup mContainer;
 
     public VideoController(Context context, View root, OnStreamStateChangeListener listener) {
         mContext = context;
@@ -86,6 +86,7 @@ public abstract class VideoController implements StreamConfirmCallback {
         mPeerStreamViewHeight = context.getResources().getDimensionPixelOffset(R.dimen.px90);
         mPeerStreamViewMargin = context.getResources().getDimensionPixelOffset(R.dimen.px10);
         mPeerStreamViewTopMargin = context.getResources().getDimensionPixelOffset(R.dimen.px110);
+        mContainer = (ViewGroup)root.findViewById(R.id.stream_content_layout);
 
         init(root);
         //一个activity不能多个LiveRecordView同时存在
@@ -120,9 +121,6 @@ public abstract class VideoController implements StreamConfirmCallback {
         if (mPublishView != null && !mPublishView.isResume()) {
             mPublishView.resume();
         }
-        if (mIndividualView != null && !mIndividualView.isResume()) {
-            mIndividualView.resume();
-        }
 
         if (mNeedStreamRePublishing) {
             mNeedStreamRePublishing = false;
@@ -151,9 +149,6 @@ public abstract class VideoController implements StreamConfirmCallback {
         }
         if (mPublishView != null) {
             mPublishView.destroy();
-        }
-        if (mIndividualView != null) {
-            mIndividualView.destroy();
         }
     }
 

@@ -187,8 +187,8 @@ public abstract class BaseMediaView extends FrameLayout {
         } else {
             lp.width = getResources().getDimensionPixelSize(Config.NORMAL_WIDTH);
             lp.height = getResources().getDimensionPixelSize(Config.NORMAL_HEIGHT);
-            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.px18);
-            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.px15);
+            lp.rightMargin = getResources().getDimensionPixelSize(R.dimen.px10);
+            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.px110);
         }
         setLayoutParams(lp);
         normal = !normal;

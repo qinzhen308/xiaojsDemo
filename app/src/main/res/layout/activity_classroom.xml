@@ -10,23 +10,30 @@
             android:layout_height="wrap_content"
             android:background="@color/classroom_white_bg">
 
-        <!--直播视频view(全屏)-->
-        <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
-                android:id="@+id/live_video"
+        <FrameLayout
+                android:id="@+id/stream_content_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:background="#000000"/>
+                android:layout_gravity="center_vertical">
 
-        <!--推流视频view(全屏)-->
-        <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
-                android:id="@+id/publish_video"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:background="#000000"/>
+            <!--直播视频view(全屏)-->
+            <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
+                    android:id="@+id/live_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:background="#000000"/>
+
+            <!--推流视频view(全屏)-->
+            <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
+                    android:id="@+id/publish_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:background="#000000"/>
+        </FrameLayout>
 
         <!--白板列表, 第一期暂时没有-->
         <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView
@@ -78,7 +85,7 @@
 
         </FrameLayout>
 
-        <!--控制面板, (包含)直播-->
+        <!--控制面板-->
         <include
                 android:id="@+id/main_panel"
                 layout="@layout/layout_classroom_panel"/>
