@@ -624,7 +624,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
                 TalkMsgAdapter adapter = getPeekTalkMsgAdapter(talkItem.from.accountId);
                 if (adapter != null) {
                     adapter.add(talkItem);
-                    if (updateMsgListView && (mPeerTalkAccountId != null && mPeerTalkAccountId.equals(talkItem.from.accountId))) {
+                    if (updateMsgListView) {
                         mTalkMsgLv.setAdapter(adapter);
                     }
                 }
