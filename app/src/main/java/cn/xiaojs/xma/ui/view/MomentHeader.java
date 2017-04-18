@@ -19,6 +19,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,11 +40,9 @@ import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
-import cn.xiaojs.xma.ui.home.HomeFragment;
-import cn.xiaojs.xma.ui.home.HomeMomentAdapter;
 import cn.xiaojs.xma.ui.home.MomentDetailActivity;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.IconTextView;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
@@ -61,13 +60,15 @@ public class MomentHeader extends RelativeLayout {
     @BindView(R.id.moment_header_role)
     TextView mTag;
     @BindView(R.id.moment_header_image)
-    RoundedImageView mHead;
+    ImageView mHead;
     @BindView(R.id.moment_header_focus)
     FollowView mFollow;
 
     private MomentDetailActivity detailActivity;
 
     private Dynamic.DynOwner mOwner;
+
+    private CircleTransform circleTransform;
 
 
 
@@ -102,9 +103,11 @@ public class MomentHeader extends RelativeLayout {
     private void init() {
         inflate(getContext(), R.layout.layout_moment_header, this);
         ButterKnife.bind(this);
+
+        circleTransform = new CircleTransform(getContext());
     }
 
-    public RoundedImageView getPortraitView() {
+    public ImageView getPortraitView() {
         return mHead;
     }
 
@@ -146,6 +149,7 @@ public class MomentHeader extends RelativeLayout {
 
         Glide.with(getContext())
                 .load(url)
+                .bitmapTransform(circleTransform)
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
                 .into(mHead);

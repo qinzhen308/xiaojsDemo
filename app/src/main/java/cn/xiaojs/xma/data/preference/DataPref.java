@@ -31,8 +31,21 @@ public class DataPref {
     private static final String PREF_XLS_PORT = "xls_port";
     private static final String PREF_NEW_MSG = "nmsg";
 
+    private static final String PREF_SHOW_GUIDE = "show_guide";
+
     protected static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static void setShowGuide(final Context context,boolean show) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putBoolean(PREF_SHOW_GUIDE, show).apply();
+
+    }
+
+    public static boolean hasShowGuide(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getBoolean(PREF_SHOW_GUIDE, false);
     }
 
 

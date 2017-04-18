@@ -4,13 +4,10 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content">
 
-    <cn.xiaojs.xma.ui.widget.RoundedImageView
+    <ImageView
             android:id="@+id/moment_header_image"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
-            app:oval="true"
-            app:border_width="@dimen/px2"
-            app:border_color="#f2f5f9"
             android:src="@drawable/default_avatar"
             android:scaleType="fitXY"
             android:layout_width="@dimen/px77"

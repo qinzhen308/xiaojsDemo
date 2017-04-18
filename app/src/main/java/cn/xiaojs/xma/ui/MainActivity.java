@@ -83,6 +83,11 @@ public class MainActivity extends BaseTabActivity {
         hasShow = UpgradeManager.checkUpgrade(MainActivity.this);
 
         if (!hasShow) {
+
+//            if (!DataManager.hasShowGuide(this)) {
+//                showGuid();
+//            }
+
             requestPermission();
         }
 
@@ -95,7 +100,7 @@ public class MainActivity extends BaseTabActivity {
 
         if (dealFromNotify(intent)) {
 
-        }else {
+        } else {
             if (intent != null) {
                 int position = intent.getIntExtra(KEY_POSITION, -1);
                 if (position >= 0) {
@@ -227,7 +232,7 @@ public class MainActivity extends BaseTabActivity {
 
         upgradeReceiver = new UpgradeReceiver();
 
-        registerReceiver(upgradeReceiver,filter);
+        registerReceiver(upgradeReceiver, filter);
 
     }
 
@@ -239,6 +244,10 @@ public class MainActivity extends BaseTabActivity {
     }
 
 
+    private void showGuid() {
+        GuideDialog dlg = new GuideDialog(this);
+        dlg.show();
+    }
 
 
     private void requestPermission() {
@@ -261,7 +270,6 @@ public class MainActivity extends BaseTabActivity {
     }
 
 
-
     private class UpgradeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -276,7 +284,7 @@ public class MainActivity extends BaseTabActivity {
                     UpgradeManager.showUpgrade(MainActivity.this);
                     hasShow = true;
                 }
-            }else if (action.equals(ACTION_NEW_MESSAGE)) {
+            } else if (action.equals(ACTION_NEW_MESSAGE)) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("receiver new MESSAGE...");
@@ -286,7 +294,7 @@ public class MainActivity extends BaseTabActivity {
                     showMessageTips();
                 }
 
-            }else if (action.equals(MessageUitl.ACTION_NEW_PUSH)) {
+            } else if (action.equals(MessageUitl.ACTION_NEW_PUSH)) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("receiver new PUSH...");

@@ -115,6 +115,14 @@ public class DataManager {
         context.startService(i);
     }
 
+    public static void setShowGuide(Context context, boolean show) {
+        DataPref.setShowGuide(context, show);
+    }
+
+    public static boolean hasShowGuide(Context context) {
+        return DataPref.hasShowGuide(context);
+    }
+
     public static void setHasMessage(Context context,boolean has) {
         DataPref.setHasMessage(context,has);
     }

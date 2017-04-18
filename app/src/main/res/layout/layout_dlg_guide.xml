@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="@dimen/px588"
+                android:layout_height="@dimen/px559"
+                android:background="@drawable/bg_dlg_guide">
+
+    <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_guide_close"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="34dp"
+            android:layout_marginRight="8dp"/>
+
+    <Button
+            android:id="@+id/btn_teacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_guide_teacher"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="28dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginRight="8dp"/>
+
+    <Button
+            android:id="@+id/btn_student"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_guide_student"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="28dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="8dp"
+
+            />
+
+</RelativeLayout>
