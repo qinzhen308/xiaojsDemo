@@ -35,6 +35,7 @@ import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
 import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
+import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -122,8 +123,9 @@ public class MainActivity extends BaseTabActivity {
 
     private boolean dealFromNotify(Intent intent) {
         String action = intent.getAction();
-        if (!TextUtils.isEmpty(action) && action.equals(LCIMConstants.CHAT_NOTIFICATION_ACTION)) {
 
+        //IM及时通讯
+        if (!TextUtils.isEmpty(action) && action.equals(LCIMConstants.CHAT_NOTIFICATION_ACTION)) {
             setTabSelected(2);
 
 
@@ -141,7 +143,9 @@ public class MainActivity extends BaseTabActivity {
             return true;
         }
 
-        if (!TextUtils.isEmpty(action) && action.equals(MessageUitl.ACTION_NEW_PUSH)) {
+        //PUSH推送
+        if (!TextUtils.isEmpty(action) && action.equals(MessageUitl.ACTION_PUSH_NOTIFY_OPEN)) {
+
             setTabSelected(2);
             return true;
         }
