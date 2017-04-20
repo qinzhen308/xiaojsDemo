@@ -60,7 +60,13 @@ public class JPushReceiver extends BroadcastReceiver {
 				Logger.d("[JPushReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 			}
         	
-        } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
+        } else if (JPushInterface.ACTION_NOTIFICATION_CLICK_ACTION.equals(intent.getAction())) {
+
+			if (XiaojsConfig.DEBUG) {
+				Logger.d("[JPushReceiver] 用户点击了通知");
+			}
+
+		}else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
 
 			if (XiaojsConfig.DEBUG) {
 				Logger.d("[JPushReceiver] 用户点击打开了通知");

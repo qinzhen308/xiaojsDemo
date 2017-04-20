@@ -57,6 +57,7 @@ public class LCIMConversationActivity extends FragmentActivity {
     protected LCIMConversationFragment conversationFragment;
 
     private String accountId;
+    private String conversationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,15 +156,18 @@ public class LCIMConversationActivity extends FragmentActivity {
 
         Bundle extras = intent.getExtras();
         if (null != extras) {
-            if (extras.containsKey(LCIMConstants.PEER_ID)) {
+
+            if (extras.containsKey(LCIMConstants.CONVERSATION_ID)) {
+
+                String conversationId = extras.getString(LCIMConstants.CONVERSATION_ID);
+                updateConversation(LCChatKit.getInstance().getClient().getConversation(conversationId));
+
+            } else if (extras.containsKey(LCIMConstants.PEER_ID)) {
 
                 accountId = extras.getString(LCIMConstants.PEER_ID);
                 String name = extras.getString(LCIMConstants.PEER_NAME);
                 getConversation(accountId, name);
 
-            }else if (extras.containsKey(LCIMConstants.CONVERSATION_ID)) {
-                String conversationId = extras.getString(LCIMConstants.CONVERSATION_ID);
-                updateConversation(LCChatKit.getInstance().getClient().getConversation(conversationId));
             } else {
                 if (XiaojsConfig.DEBUG) {
                     showToast("memberId or conversationId is needed");
@@ -217,7 +221,9 @@ public class LCIMConversationActivity extends FragmentActivity {
             }
 
             conversationFragment.setConversation(conversation);
-            LCIMConversationItemCache.getInstance().clearUnread(conversation.getConversationId());
+
+            conversationId = conversation.getConversationId();
+            cleanUnread();
 
             accountId = LCIMConversationUtils.getConversationPeerId(conversation);
 
@@ -299,5 +305,27 @@ public class LCIMConversationActivity extends FragmentActivity {
      */
     private void showToast(String content) {
         Toast.makeText(LCIMConversationActivity.this, content, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        cleanUnread();
+        super.onBackPressed();
+    }
+
+    @Override
+    public void finish() {
+
+        cleanUnread();
+
+        super.finish();
+    }
+
+    private void cleanUnread() {
+        if (!TextUtils.isEmpty(conversationId)) {
+            LCIMConversationItemCache.getInstance().clearUnread(conversationId);
+        }
+
+
     }
 }

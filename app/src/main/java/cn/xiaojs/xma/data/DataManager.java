@@ -84,6 +84,8 @@ public class DataManager {
 
             lanuchInitDataService(context, null);
 
+            //jpush
+            JpushUtil.resumePush(context);
 
             //jpush alias/tags
             AccountDataManager.setAliaTagsWithCheck(context);

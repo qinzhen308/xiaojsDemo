@@ -93,6 +93,9 @@ public class LoginRequest extends ServiceRequest {
 
             DataManager.lanuchInitDataService(getContext(), info.contactGroups);
 
+            //jpush
+            JpushUtil.resumePush(getContext());
+
             //open lean cloud
             LeanCloudUtil.open(info.getUser().getId());
         }

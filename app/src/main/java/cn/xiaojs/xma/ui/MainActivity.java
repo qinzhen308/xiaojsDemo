@@ -41,6 +41,7 @@ import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
 
 import static cn.xiaojs.xma.XiaojsApplication.ACTION_NEW_MESSAGE;
+import static cn.xiaojs.xma.util.MessageUitl.ACTION_NEW_PUSH;
 
 public class MainActivity extends BaseTabActivity {
 
@@ -128,24 +129,36 @@ public class MainActivity extends BaseTabActivity {
         if (!TextUtils.isEmpty(action) && action.equals(LCIMConstants.CHAT_NOTIFICATION_ACTION)) {
             setTabSelected(2);
 
-
-            String cid = intent.getStringExtra(LCIMConstants.CONVERSATION_ID);
-            String pid = intent.getStringExtra(LCIMConstants.PEER_ID);
-
             Intent ifarIntent = new Intent();
             ifarIntent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
-            ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, cid);
-            ifarIntent.putExtra(LCIMConstants.PEER_ID, pid);
-            ifarIntent.setPackage(getPackageName());
-            ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
 
-            startActivity(ifarIntent);
-            return true;
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+
+                boolean group = false;
+                if (extras.containsKey(LCIMConstants.IS_GROUP)) {
+                    group = intent.getBooleanExtra(LCIMConstants.IS_GROUP, false);
+                }
+
+                if (group) {
+                    String cid = intent.getStringExtra(LCIMConstants.CONVERSATION_ID);
+                    ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, cid);
+
+                } else {
+                    String pid = intent.getStringExtra(LCIMConstants.PEER_ID);
+                    ifarIntent.putExtra(LCIMConstants.PEER_ID, pid);
+                }
+
+                ifarIntent.setPackage(getPackageName());
+                ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+                startActivity(ifarIntent);
+                return true;
+            }
         }
 
         //PUSH推送
         if (!TextUtils.isEmpty(action) && action.equals(MessageUitl.ACTION_PUSH_NOTIFY_OPEN)) {
-
             setTabSelected(2);
             return true;
         }
@@ -233,6 +246,7 @@ public class MainActivity extends BaseTabActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(UpgradeManager.ACTION_SHOW_UPGRADE);
         filter.addAction(ACTION_NEW_MESSAGE);
+        filter.addAction(ACTION_NEW_PUSH);
 
         upgradeReceiver = new UpgradeReceiver();
 
@@ -298,7 +312,7 @@ public class MainActivity extends BaseTabActivity {
                     showMessageTips();
                 }
 
-            } else if (action.equals(MessageUitl.ACTION_NEW_PUSH)) {
+            } else if (action.equals(ACTION_NEW_PUSH)) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("receiver new PUSH...");
@@ -308,7 +322,7 @@ public class MainActivity extends BaseTabActivity {
                     showMessageTips();
                 }
 
-                if (conversationListFragment != null) {
+                if (conversationListFragment != null && conversationListFragment.isAdded()) {
                     conversationListFragment.getMessageOverview();
                 }
 

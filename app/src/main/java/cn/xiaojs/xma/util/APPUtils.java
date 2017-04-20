@@ -227,6 +227,9 @@ public class APPUtils {
         //logout im
         LeanCloudUtil.close();
 
+        //stop jpush
+        JpushUtil.stopPush(context);
+
         //总是退出成功
         Toast.makeText(context, exitTips, Toast.LENGTH_SHORT).show();
         XiaojsConfig.mLoginUser = null;
