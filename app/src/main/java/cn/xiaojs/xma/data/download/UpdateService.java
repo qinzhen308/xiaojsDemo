@@ -162,8 +162,13 @@ public class UpdateService extends IntentService {
                         long sep = progress - smartPro;
                         between = between + sep;
                         if (between > 5 || progress > 95 || progress < 3) {
+
                             notifier.updateNotify((int)progress);
+                            sendProgress((int)progress);
+
                             between = 0;
+
+
                         }
 
                     }
@@ -209,6 +214,12 @@ public class UpdateService extends IntentService {
         }
     }
 
+
+    private void sendProgress(int progress) {
+        Intent i = new Intent(UpgradeManager.ACTION_DOWNLOAD_PROGRESS);
+        i.putExtra(UpgradeManager.EXTRA_PROGRESS, progress);
+        sendBroadcast(i);
+    }
 
 
 

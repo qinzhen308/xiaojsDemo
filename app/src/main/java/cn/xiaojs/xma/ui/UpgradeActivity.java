@@ -62,14 +62,15 @@ public class UpgradeActivity extends Activity {
             return;
         }
 
+        receiver = new UpgradeReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(UpgradeManager.ACTION_UPGRADE_DOWNLOAD_COMPLETED);
+        filter.addAction(UpgradeManager.ACTION_UPGRADE_DOWNLOAD_ERROR);
+        filter.addAction(UpgradeManager.ACTION_DOWNLOAD_PROGRESS);
+        registerReceiver(receiver,filter);
+
         if (upgrade.action == Platform.AvailableAction.UPGRADE) {
             setFinishOnTouchOutside(false);
-
-            receiver = new UpgradeReceiver();
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(UpgradeManager.ACTION_UPGRADE_DOWNLOAD_COMPLETED);
-            filter.addAction(UpgradeManager.ACTION_UPGRADE_DOWNLOAD_ERROR);
-            registerReceiver(receiver,filter);
         }
 
         bindView();
@@ -92,13 +93,15 @@ public class UpgradeActivity extends Activity {
                 }
 
                 UpgradeManager.startUpdate(UpgradeActivity.this,upgrade.uri);
-                if (upgrade.action == Platform.AvailableAction.UPGRADE) {
+                //if (upgrade.action == Platform.AvailableAction.UPGRADE) {
+                    setFinishOnTouchOutside(false);
+                    nextBtn.setVisibility(View.GONE);
                     updateBtn.setEnabled(false);
                     updateBtn.setText(R.string.upgrade_downloading);
-                    return;
-                }
 
-                finish();
+                //}
+
+                //finish();
 
 
             }
@@ -129,7 +132,6 @@ public class UpgradeActivity extends Activity {
         if (!TextUtils.isEmpty(details)) {
             detailView.setText(details);
             //tip_titleView.setVisibility(View.VISIBLE);
-            //tip_titleView.setVisibility(View.VISIBLE);
         }
 
         if (action == Platform.AvailableAction.UPGRADE) {
@@ -156,9 +158,34 @@ public class UpgradeActivity extends Activity {
                     updateBtn.setText(R.string.click_install);
                 }
 
+                if (upgrade.action != Platform.AvailableAction.UPGRADE) {
+                    setFinishOnTouchOutside(true);
+                    //nextBtn.setVisibility(View.VISIBLE);
+                }
+
             }else if(action.equals(UpgradeManager.ACTION_UPGRADE_DOWNLOAD_ERROR)) {
+
+                if (upgrade.action != Platform.AvailableAction.UPGRADE) {
+                    //nextBtn.setVisibility(View.VISIBLE);
+                    setFinishOnTouchOutside(true);
+                }
+
                 updateBtn.setEnabled(true);
                 updateBtn.setText(R.string.upgrade_error_reclick);
+            } else if (action.equals(UpgradeManager.ACTION_DOWNLOAD_PROGRESS)) {
+
+                int progress = intent.getIntExtra(UpgradeManager.EXTRA_PROGRESS,0);
+
+                String preStr = getResources().getString(R.string.upgrade_downloading);
+
+                String upProgress = new StringBuilder(preStr)
+                        .append("(")
+                        .append(progress)
+                        .append("%)")
+                        .toString();
+
+                updateBtn.setText(upProgress);
+
             }
         }
     }
