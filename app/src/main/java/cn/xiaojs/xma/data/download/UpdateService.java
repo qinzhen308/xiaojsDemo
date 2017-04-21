@@ -161,7 +161,7 @@ public class UpdateService extends IntentService {
 
                         long sep = progress - smartPro;
                         between = between + sep;
-                        if (between > 5 || progress > 95 || progress < 3) {
+                        if (between > 0.9 || progress > 95 || progress < 3) {
 
                             notifier.updateNotify((int)progress);
                             sendProgress((int)progress);
