@@ -35,11 +35,13 @@ import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
 import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
+import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
 
 import static cn.xiaojs.xma.XiaojsApplication.ACTION_NEW_MESSAGE;
+import static cn.xiaojs.xma.util.MessageUitl.ACTION_NEW_PUSH;
 
 public class MainActivity extends BaseTabActivity {
 
@@ -84,9 +86,9 @@ public class MainActivity extends BaseTabActivity {
 
         if (!hasShow) {
 
-//            if (!DataManager.hasShowGuide(this)) {
-//                showGuid();
-//            }
+            if (!DataManager.hasShowGuide(this)) {
+                showGuid();
+            }
 
             requestPermission();
         }
@@ -122,26 +124,41 @@ public class MainActivity extends BaseTabActivity {
 
     private boolean dealFromNotify(Intent intent) {
         String action = intent.getAction();
+
+        //IM及时通讯
         if (!TextUtils.isEmpty(action) && action.equals(LCIMConstants.CHAT_NOTIFICATION_ACTION)) {
-
             setTabSelected(2);
-
-
-            String cid = intent.getStringExtra(LCIMConstants.CONVERSATION_ID);
-            String pid = intent.getStringExtra(LCIMConstants.PEER_ID);
 
             Intent ifarIntent = new Intent();
             ifarIntent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
-            ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, cid);
-            ifarIntent.putExtra(LCIMConstants.PEER_ID, pid);
-            ifarIntent.setPackage(getPackageName());
-            ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
 
-            startActivity(ifarIntent);
-            return true;
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+
+                boolean group = false;
+                if (extras.containsKey(LCIMConstants.IS_GROUP)) {
+                    group = intent.getBooleanExtra(LCIMConstants.IS_GROUP, false);
+                }
+
+                if (group) {
+                    String cid = intent.getStringExtra(LCIMConstants.CONVERSATION_ID);
+                    ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, cid);
+
+                } else {
+                    String pid = intent.getStringExtra(LCIMConstants.PEER_ID);
+                    ifarIntent.putExtra(LCIMConstants.PEER_ID, pid);
+                }
+
+                ifarIntent.setPackage(getPackageName());
+                ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+                startActivity(ifarIntent);
+                return true;
+            }
         }
 
-        if (!TextUtils.isEmpty(action) && action.equals(MessageUitl.ACTION_NEW_PUSH)) {
+        //PUSH推送
+        if (!TextUtils.isEmpty(action) && action.equals(MessageUitl.ACTION_PUSH_NOTIFY_OPEN)) {
             setTabSelected(2);
             return true;
         }
@@ -229,6 +246,7 @@ public class MainActivity extends BaseTabActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(UpgradeManager.ACTION_SHOW_UPGRADE);
         filter.addAction(ACTION_NEW_MESSAGE);
+        filter.addAction(ACTION_NEW_PUSH);
 
         upgradeReceiver = new UpgradeReceiver();
 
@@ -294,7 +312,7 @@ public class MainActivity extends BaseTabActivity {
                     showMessageTips();
                 }
 
-            } else if (action.equals(MessageUitl.ACTION_NEW_PUSH)) {
+            } else if (action.equals(ACTION_NEW_PUSH)) {
 
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("receiver new PUSH...");
@@ -304,7 +322,7 @@ public class MainActivity extends BaseTabActivity {
                     showMessageTips();
                 }
 
-                if (conversationListFragment != null) {
+                if (conversationListFragment != null && conversationListFragment.isAdded()) {
                     conversationListFragment.getMessageOverview();
                 }
 

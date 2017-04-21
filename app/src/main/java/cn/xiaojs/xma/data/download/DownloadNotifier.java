@@ -59,6 +59,7 @@ public class DownloadNotifier {
         }else {
             notificationMgr.notify(notifyId, builder.getNotification());
         }
+
     }
 
     public void removeNotify() {

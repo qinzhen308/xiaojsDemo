@@ -15,7 +15,6 @@ package cn.xiaojs.xma.ui.base;
  *
  * ======================================================================================== */
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
@@ -28,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 
 import java.util.ArrayList;
 import java.util.List;

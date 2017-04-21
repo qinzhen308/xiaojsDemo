@@ -23,6 +23,8 @@ public class UpgradeManager {
 
     public static final String EXTRA_UPGRADE = "upgrade";
     public static final String EXTRA_OPEN_PATH = "open_path";
+    public static final String EXTRA_PROGRESS = "progress";
+    public static final String ACTION_DOWNLOAD_PROGRESS = "cn.xiaojs.xma.ud_progress";
     public static final String ACTION_UPGRADE_DOWNLOAD_COMPLETED = "cn.xiaojs.xma.udcompleted";
     public static final String ACTION_UPGRADE_DOWNLOAD_ERROR = "cn.xiaojs.xma.uderror";
 

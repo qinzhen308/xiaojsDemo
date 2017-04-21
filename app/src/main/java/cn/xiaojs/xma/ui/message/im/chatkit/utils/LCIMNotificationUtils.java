@@ -64,7 +64,7 @@ public class LCIMNotificationUtils {
   }
 
   public static void showNotification(Context context, String title, String content, String sound, Intent intent) {
-    PendingIntent contentIntent = PendingIntent.getActivity(context, REPLY_NOTIFY_ID, intent, 0);
+    PendingIntent contentIntent = PendingIntent.getActivity(context, REPLY_NOTIFY_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
         .setSmallIcon(context.getApplicationInfo().icon)
         .setContentTitle(title).setAutoCancel(true).setContentIntent(contentIntent)

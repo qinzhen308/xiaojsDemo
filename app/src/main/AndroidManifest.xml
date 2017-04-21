@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="cn.xiaojs.xma"
-          android:versionCode="29"
-          android:versionName="1.0.3">
+          android:versionCode="30"
+          android:versionName="1.0.4">
 
     <!-- Required -->
     <permission
@@ -93,7 +93,7 @@
                 android:screenOrientation="portrait"
                 >
             <intent-filter>
-                <action android:name="cn.leancloud.chatkit.chat_notification_action"/>
+                <action android:name="cn.xiaojs.xma.chatkit.chat_notification_action"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <intent-filter>
@@ -462,7 +462,7 @@
                 android:name=".ui.message.im.chatkit.activity.LCIMConversationActivity"
                 android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="cn.leancloud.chatkit.conversation_item_click_action"/>
+                <action android:name="cn.xiaojs.xma.chatkit.conversation_item_click_action"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

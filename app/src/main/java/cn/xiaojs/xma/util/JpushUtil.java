@@ -19,6 +19,17 @@ public class JpushUtil {
 
     public static final int STATUS_OK = 0;
 
+
+    public static void resumePush(Context context) {
+        if (JPushInterface.isPushStopped(context.getApplicationContext())) {
+            JPushInterface.resumePush(context.getApplicationContext());
+        }
+    }
+
+    public static void stopPush(Context context) {
+        JPushInterface.stopPush(context.getApplicationContext());
+    }
+
     /**
      * 设置别名和标签
      * @param context

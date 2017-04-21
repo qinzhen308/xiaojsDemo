@@ -5,7 +5,7 @@ package cn.xiaojs.xma.ui.message.im.chatkit.utils;
  * 所有常量值均放到此类里边
  */
 public class LCIMConstants {
-  private static final String LEANMESSAGE_CONSTANTS_PREFIX = "cn.leancloud.chatkit.";
+  private static final String LEANMESSAGE_CONSTANTS_PREFIX = "cn.xiaojs.xma.chatkit.";
 
   private static String getPrefixConstant(String str) {
     return LEANMESSAGE_CONSTANTS_PREFIX + str;
@@ -16,6 +16,9 @@ public class LCIMConstants {
    */
   public static final String PEER_ID = getPrefixConstant("peer_id");
   public static final String PEER_NAME = getPrefixConstant("peer_name");
+
+
+  public static final String IS_GROUP = getPrefixConstant("is_group");
 
   /**
    * 参数传递的 key 值，表示回话 id，跳转到 LCIMConversationActivity 时可以设置

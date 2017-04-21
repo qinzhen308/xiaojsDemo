@@ -45,12 +45,14 @@ public class SubjectSelectorActivity extends BaseActivity {
 
     @Override
     protected void addViewContent() {
-        setMiddleTitle(R.string.subject_category_select);
+
 
         int normal = getIntent().getIntExtra(EXTRA_NORMAL,-1);
         if (normal == 1) {
+            setMiddleTitle(R.string.teach_ability);
             setRightText(-1);
         }else {
+            setMiddleTitle(R.string.subject_category_select);
             setRightText(R.string.finish);
         }
 
