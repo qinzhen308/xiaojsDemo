@@ -25,12 +25,12 @@
         <TextView
                 android:id="@+id/tv_title"
                 android:textColor="@color/font_black"
-                android:textSize="@dimen/font_36px"
+                android:textSize="@dimen/font_32px"
                 android:textStyle="bold"
                 android:text="@string/upgrade_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:layout_marginTop="@dimen/px10"
                 />
         <View
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:textSize="@dimen/font_32px"
+                android:textSize="@dimen/font_26px"
                 android:textColor="@color/font_black"
                 android:text="@string/u_version"
                 android:layout_marginTop="20dp"
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_black"
-                android:textSize="@dimen/font_32px"
+                android:textSize="@dimen/font_26px"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:text="asdghglfihgs哦额为飞机哦俄方将哦 is 飞机哦水淀粉  第四阶段佛 is 发动机大佛寺的金佛山放假水淀粉"
@@ -90,24 +90,26 @@
                     android:id="@+id/left_btn"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:background="@drawable/common_white_bottomleft_cornor_selector"
                     android:text="@string/upgrade_nexttime"
-                    android:textSize="@dimen/font_36px"
-                    android:textColor="@color/font_dark_gray"
+                    android:textSize="@dimen/font_28px"
+                    android:background="@android:color/transparent"
+                    android:textColor="@drawable/text_grey_color_selector"
                     android:paddingTop="@dimen/px30"
                     android:paddingBottom="@dimen/px30"
                     android:layout_height="wrap_content"/>
 
-            <View style="@style/DividerVertical"/>
+            <View
+                    android:id="@+id/btn_sp"
+                    style="@style/DividerVertical"/>
 
             <Button
                     android:id="@+id/right_btn"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:background="@drawable/common_white_bottomright_cornor_selector"
                     android:text="@string/upgrade_now"
-                    android:textSize="@dimen/font_36px"
-                    android:textColor="@color/font_blue"
+                    android:textSize="@dimen/font_28px"
+                    android:background="@android:color/transparent"
+                    android:textColor="@drawable/text_blue_color_selector"
                     android:paddingTop="@dimen/px30"
                     android:paddingBottom="@dimen/px30"
                     android:layout_height="wrap_content"/>

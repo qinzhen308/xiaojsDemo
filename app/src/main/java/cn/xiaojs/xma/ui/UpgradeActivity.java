@@ -40,6 +40,9 @@ public class UpgradeActivity extends Activity {
     @BindView(R.id.right_btn)
     Button updateBtn;
 
+    @BindView(R.id.btn_sp)
+    View spaceView;
+
     @BindView(R.id.activity_upgrade)
     RelativeLayout layout;
 
@@ -48,6 +51,8 @@ public class UpgradeActivity extends Activity {
     private String filePath;
 
     UpgradeReceiver receiver;
+
+    private boolean downloading = false;
 
 
     @Override
@@ -69,10 +74,6 @@ public class UpgradeActivity extends Activity {
         filter.addAction(UpgradeManager.ACTION_DOWNLOAD_PROGRESS);
         registerReceiver(receiver,filter);
 
-        if (upgrade.action == Platform.AvailableAction.UPGRADE) {
-            setFinishOnTouchOutside(false);
-        }
-
         bindView();
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
@@ -93,9 +94,12 @@ public class UpgradeActivity extends Activity {
                 }
 
                 UpgradeManager.startUpdate(UpgradeActivity.this,upgrade.uri);
+
+                downloading = true;
                 //if (upgrade.action == Platform.AvailableAction.UPGRADE) {
                     setFinishOnTouchOutside(false);
                     nextBtn.setVisibility(View.GONE);
+                    spaceView.setVisibility(View.GONE);
                     updateBtn.setEnabled(false);
                     updateBtn.setText(R.string.upgrade_downloading);
 
@@ -135,15 +139,24 @@ public class UpgradeActivity extends Activity {
         }
 
         if (action == Platform.AvailableAction.UPGRADE) {
+            setFinishOnTouchOutside(false);
             nextBtn.setVisibility(View.GONE);
+            spaceView.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (upgrade.action != Platform.AvailableAction.UPGRADE) {
-            super.onBackPressed();
+
+        if (downloading) {
+            return;
         }
+
+        if (upgrade.action == Platform.AvailableAction.UPGRADE) {
+            return;
+        }
+
+        super.onBackPressed();
     }
 
     private class UpgradeReceiver extends BroadcastReceiver {
@@ -151,6 +164,8 @@ public class UpgradeActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(UpgradeManager.ACTION_UPGRADE_DOWNLOAD_COMPLETED)){
+
+                downloading = false;
 
                 filePath = intent.getStringExtra(UpgradeManager.EXTRA_OPEN_PATH);
                 if (!TextUtils.isEmpty(filePath)){
@@ -164,6 +179,8 @@ public class UpgradeActivity extends Activity {
                 }
 
             }else if(action.equals(UpgradeManager.ACTION_UPGRADE_DOWNLOAD_ERROR)) {
+
+                downloading = false;
 
                 if (upgrade.action != Platform.AvailableAction.UPGRADE) {
                     //nextBtn.setVisibility(View.VISIBLE);
