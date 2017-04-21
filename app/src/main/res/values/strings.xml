@@ -239,7 +239,7 @@
     <string name="optional_info">选填信息</string>
     <string name="optional_info_tips">封面、课程简介、老师介绍等</string>
     <string name="on_shelves">立即上架</string>
-    <string name="live_lesson_name_hint">请输入%1$d&#8211;%2$d字</string>
+    <string name="live_lesson_name_hint">%1$d字以内</string>
     <string name="subject_category_hint">请选择学科类目</string>
     <string name="teach_form_hint">请选择教学模式</string>
     <string name="lesson_start_time_hint">请选择上课时间</string>
@@ -249,7 +249,8 @@
     <string name="publish_personal_page">设为公开</string>
     <string name="publish_personal_page_tips">在个人主页中展示，才可以分享</string>
     <string name="publish_to_circle">发布到小圈</string>
-    <string name="live_lesson_name_error">请输入%1$d&#8211;%2$d个字的课名称</string>
+    <string name="live_lesson_name_empty">课名称不能为空</string>
+    <string name="live_lesson_name_error">课名称不能超过%1$d个字</string>
     <string name="subject_empty">请选择学科类目</string>
     <string name="teach_form_empty">请选择教学形式</string>
     <string name="lesson_people_empty">请填写报名人数</string>

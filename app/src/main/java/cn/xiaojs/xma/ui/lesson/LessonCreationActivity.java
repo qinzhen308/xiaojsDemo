@@ -69,8 +69,7 @@ public class LessonCreationActivity extends BaseActivity {
 
     private final int DEFAULT_SUT_COUNT = 50;
 
-    private final int MIN_LESSON_CHAR = 3;
-    private final int MAX_LESSON_CHAR = 25;
+    private final int MAX_LESSON_CHAR = 50;
 
     private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
 
@@ -392,7 +391,7 @@ public class LessonCreationActivity extends BaseActivity {
         mChargeWaySwitcher.setChecked(false);
         mChargeWayLayout.setVisibility(View.GONE);
 
-        mLessonNameEdt.setHint(getString(R.string.live_lesson_name_hint, MIN_LESSON_CHAR, MAX_LESSON_CHAR));
+        mLessonNameEdt.setHint(getString(R.string.live_lesson_name_hint, MAX_LESSON_CHAR));
         mLessonNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
 
         if (AccountDataManager.isVerified(this)) {
@@ -650,8 +649,14 @@ public class LessonCreationActivity extends BaseActivity {
             //String selectTip = mContext.getString(R.string.please_select);
 
             String name = mLessonNameEdt.getText().toString();
-            if (TextUtils.isEmpty(name) || name.length() < MIN_LESSON_CHAR || name.length() > MAX_LESSON_CHAR) {
-                String nameEr = mContext.getString(R.string.live_lesson_name_error, MIN_LESSON_CHAR, MAX_LESSON_CHAR);
+            if (TextUtils.isEmpty(name)) {
+                String nameEr = mContext.getString(R.string.live_lesson_name_empty);
+                Toast.makeText(mContext, nameEr, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (name.length() > MAX_LESSON_CHAR) {
+                String nameEr = mContext.getString(R.string.live_lesson_name_error, MAX_LESSON_CHAR);
                 Toast.makeText(mContext, nameEr, Toast.LENGTH_SHORT).show();
                 return false;
             }
