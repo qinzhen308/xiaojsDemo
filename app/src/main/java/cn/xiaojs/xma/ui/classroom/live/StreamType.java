@@ -16,7 +16,10 @@ package cn.xiaojs.xma.ui.classroom.live;
 
 public class StreamType {
     public final static int TYPE_STREAM_PLAY = 1; //播放流
-    public final static int TYPE_STREAM_PEER_TO_PEER = 2; //一对一流(播放流和推送流)
-    public final static int TYPE_STREAM_PUBLISH = 3; //直播推流
-    public final static int TYPE_STREAM_INDIVIDUAL = 4; //个人推流
+    public final static int TYPE_STREAM_PUBLISH = 2; //直播推流
+    public final static int TYPE_STREAM_PLAY_PEER_TO_PEER = 3; //一对一播放流
+    public final static int TYPE_STREAM_PUBLISH_PEER_TO_PEER = 4; //一对一推送流
+    public final static int TYPE_STREAM_PLAY_INDIVIDUAL = 5; //播放个人推流
+    public final static int TYPE_STREAM_PUBLISH_INDIVIDUAL = 6; //个人推流
+    public final static int TYPE_STREAM_RECLAIMED_INDIVIDUAL = 7; //个人推流(回收)
 }

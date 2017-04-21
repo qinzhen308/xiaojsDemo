@@ -20,11 +20,11 @@ public interface OnStreamStateChangeListener {
     /**
      * 当流已经开始
      */
-    public void onStreamStarted(Constants.User user, int type);
+    public void onStreamStarted(Constants.User user, int type, Object extra);
 
     /**
      * 当前流已经暂停
      */
-    public void onStreamStopped(Constants.User user, int type);
+    public void onStreamStopped(Constants.User user, int type, Object extra);
 
 }

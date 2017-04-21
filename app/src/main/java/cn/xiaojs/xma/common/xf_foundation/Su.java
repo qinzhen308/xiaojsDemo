@@ -69,8 +69,9 @@ public class Su {
         public static final int MEDIA_ABORTED = 670019;
 
         //教室踢人事件
-        public static final int   KICKOUT_DUE_TO_NEW_CONNECTION = 600108;
-
+        public static final int KICKOUT_DUE_TO_NEW_CONNECTION = 600108;
+        public static final int STREAM_RECLAIMED = 600110;
+        public static final int STOP_STREAM_BY_EXPIRATION = 600111;
     }
 
 }

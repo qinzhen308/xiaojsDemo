@@ -447,6 +447,9 @@
     <string name="cls_pending_class_desc">点击上课按钮开始上课</string>
     <string name="cls_live_show">%1$s&#x0020;正在直播秀&#x0020;%2$s</string>
     <string name="cls_distance_class">距离上课还有%1$s</string>
+    <string name="cls_live_delay">已拖堂%1$s</string>
+    <string name="cls_live_finish">已完课</string>
+    <string name="cls_live_arrived">已到上课时间</string>
     <string name="cls_break_time_desc">课间休息&#x0020;%1$s</string>
     <string name="cls_delay_time_desc">本课已延时&#x0020;%1$s</string>
     <string name="cls_pic_load_fail">图片加载失败</string>
