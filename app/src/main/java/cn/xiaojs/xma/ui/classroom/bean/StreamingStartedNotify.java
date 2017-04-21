@@ -25,4 +25,5 @@ public class StreamingStartedNotify extends StreamingNotify {
     public String claimedBy;
     public int streamMode;
     public int streamType;
+    public long finishOn;
 }

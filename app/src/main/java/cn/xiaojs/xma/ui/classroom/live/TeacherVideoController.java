@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -30,6 +31,8 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -78,14 +81,14 @@ public class TeacherVideoController extends VideoController {
     public void confirmPlayStream(boolean confirm) {
         mStreamPlaying = true;
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPlayView.getLayoutParams();
-        if (mPlayType == StreamType.TYPE_STREAM_PEER_TO_PEER) {
+        if (mPlayType == StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER) {
             params.width = mPeerStreamViewWidth;
             params.height = mPeerStreamViewHeight;
             params.gravity = Gravity.LEFT | Gravity.TOP;
             params.topMargin = mPeerStreamViewTopMargin;
             params.leftMargin = mPeerStreamViewMargin;
             mContainer.bringChildToFront(mPlayView);
-        } else if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL) {
+        } else if (mPublishType == StreamType.TYPE_STREAM_PLAY_INDIVIDUAL) {
             params.width = FrameLayout.LayoutParams.MATCH_PARENT;
             params.height = FrameLayout.LayoutParams.MATCH_PARENT;
             params.gravity = Gravity.CENTER;
@@ -100,7 +103,7 @@ public class TeacherVideoController extends VideoController {
 
 
         if (mStreamListener != null) {
-            mStreamListener.onStreamStarted(mUser, StreamType.TYPE_STREAM_PEER_TO_PEER);
+            mStreamListener.onStreamStarted(mUser, mPublishType, mExtraData);
         }
 
         if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
@@ -108,7 +111,7 @@ public class TeacherVideoController extends VideoController {
             mPlayView.delayHideLoading();
         }
 
-        if (mPlayType == StreamType.TYPE_STREAM_PEER_TO_PEER) {
+        if (mPlayType == StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER) {
             mPlayView.showLoading(true, loadingSize, loadingDesc);
         }
     }
@@ -122,7 +125,7 @@ public class TeacherVideoController extends VideoController {
             if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                 mNeedStreamRePublishing = true;
                 if (mStreamListener != null) {
-                    mStreamListener.onStreamStopped(mUser, type);
+                    mStreamListener.onStreamStopped(mUser, type, null);
                 }
             } else {
                 //send stopped stream
@@ -133,7 +136,7 @@ public class TeacherVideoController extends VideoController {
                                 if (args != null && args.length > 0) {
                                     mNeedStreamRePublishing = true;
                                     if (mStreamListener != null) {
-                                        mStreamListener.onStreamStopped(mUser, type);
+                                        mStreamListener.onStreamStopped(mUser, type, null);
                                     }
                                 }
                             }
@@ -157,7 +160,7 @@ public class TeacherVideoController extends VideoController {
         mPlayView.setVisibility(View.GONE);
 
         if (mStreamListener != null) {
-            mStreamListener.onStreamStopped(mUser, type);
+            mStreamListener.onStreamStopped(mUser, type, null);
         }
     }
 
@@ -181,7 +184,6 @@ public class TeacherVideoController extends VideoController {
     public void onSteamStateChanged(StreamingState streamingState, Object data) {
         switch (streamingState) {
             case STREAMING:
-                mStreamPublishing = true;
                 SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new SocketManager.AckListener() {
                     @Override
                     public void call(final Object... args) {
@@ -189,18 +191,19 @@ public class TeacherVideoController extends VideoController {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
                                 if (mStreamListener != null) {
-                                    mStreamListener.onStreamStarted(mUser, mPublishType);
+                                    mStreamListener.onStreamStarted(mUser, mPublishType, null);
                                     muteOrUnmute();
                                 }
+                                mStreamPublishing = true;
                             } else {
-                                if (!mPausePublishByToggleResolution) {
+                                if (!mPausePublishByToggleResolution && !mStreamPublishing) {
                                     pausePublishStream(mPublishType);
                                 }
 
                                 mPausePublishByToggleResolution = false;
                             }
                         } else {
-                            if (!mPausePublishByToggleResolution) {
+                            if (!mPausePublishByToggleResolution && !mStreamPublishing) {
                                 pausePublishStream(mPublishType);
                             }
 
@@ -219,7 +222,7 @@ public class TeacherVideoController extends VideoController {
                 MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
                 if (response != null && response.playUrl != null) {
                     mPlayStreamUrl = response.playUrl;
-                    playStream(StreamType.TYPE_STREAM_PEER_TO_PEER, response.playUrl);
+                    playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, response.playUrl);
                 }
             }
         }
@@ -231,15 +234,37 @@ public class TeacherVideoController extends VideoController {
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
                 mPlayStreamUrl = startedNotify.RTMPPlayUrl;
-                playStream(StreamType.TYPE_STREAM_INDIVIDUAL, startedNotify.RTMPPlayUrl);
+                mExtraData = startedNotify.finishOn;
+                playStream(StreamType.TYPE_STREAM_PLAY_INDIVIDUAL, startedNotify.RTMPPlayUrl, startedNotify.finishOn);
             }
         }
     }
 
     @Override
-    protected void onStringingStopped(Object... args) {
+    protected void onStreamingStopped(Object... args) {
         if (args != null && args.length > 0) {
-            pausePlayStream(mPlayType);
+            StreamingNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingNotify.class);
+            if (notify != null) {
+                pausePlayStream(mPlayType);
+            }
+        }
+    }
+
+    protected void onStreamingStoppedByExpired(Object... args) {
+        if (args != null && args.length > 0) {
+            StreamingExpirationNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingExpirationNotify.class);
+            if (notify != null) {
+                pausePublishStream(mPublishType);
+            }
+        }
+    }
+
+    protected void onStreamingReclaimed(Object... args) {
+        if (args != null && args.length > 0) {
+            StreamingNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingNotify.class);
+            if (notify != null) {
+                pausePublishStream(mPublishType);
+            }
         }
     }
 

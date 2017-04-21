@@ -309,7 +309,14 @@ public class ClassroomController {
      * 播放流
      */
     public void playStream(int type, String url) {
-        mVideoController.playStream(type, url);
+        playStream(type, url, null);
+    }
+
+    /**
+     * 播放流
+     */
+    public void playStream(int type, String url, Object extra) {
+        mVideoController.playStream(type, url, extra);
     }
 
     public void playStream() {

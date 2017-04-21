@@ -50,7 +50,7 @@ public class Live {
         public static final String ABORTED = "Aborted";
         public static final String CANCELLED = "Cancelled";
         public static final String RESET = "Rest";
-        public static final String CLAIM_STREAM_STOPPED = "ClamSteamStopped";
+        public static final String INDIVIDUAL = "Individual";
     }
 
     public class MediaStatus {

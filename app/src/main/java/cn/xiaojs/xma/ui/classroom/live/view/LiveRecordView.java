@@ -63,7 +63,6 @@ import cn.xiaojs.xma.util.XjsUtils;
 public class LiveRecordView extends BaseMediaView implements
         SurfaceTextureCallback,
         AudioSourceCallback,
-        StreamingPreviewCallback,
         StreamingSessionListener {
 
     private static final String TAG = "LiveRecordView";
@@ -200,7 +199,6 @@ public class LiveRecordView extends BaseMediaView implements
         mMediaStreamingManager.setStreamingStateListener(new OnStreamingState());
         mMediaStreamingManager.setSurfaceTextureCallback(this);
         mMediaStreamingManager.setStreamingSessionListener(this);
-        mMediaStreamingManager.setStreamingPreviewCallback(this);
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
     }
 
@@ -216,11 +214,6 @@ public class LiveRecordView extends BaseMediaView implements
 
     public void setOnStreamingStateListener(StreamingStateChangedListener listener) {
         mOuterStreamingStateChangedListener = listener;
-    }
-
-    @Override
-    public boolean onPreviewFrame(byte[] bytes, int i, int i1) {
-        return true;
     }
 
     @Override

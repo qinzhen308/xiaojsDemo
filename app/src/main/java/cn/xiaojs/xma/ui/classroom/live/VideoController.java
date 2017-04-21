@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.classroom.live;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,7 +29,6 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.Constants;
-import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -76,6 +76,8 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected int mPeerStreamViewMargin = 10;
     protected ViewGroup mContainer;
 
+    protected Object mExtraData;
+
     public VideoController(Context context, View root, OnStreamStateChangeListener listener) {
         mContext = context;
         mRoot = root;
@@ -99,6 +101,8 @@ public abstract class VideoController implements StreamConfirmCallback {
         //监听流开始或暂停
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLAIM_STREAMING), mStreamReclaimedListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION), mStreamStopByExpirationListener);
     }
 
     /**
@@ -228,11 +232,21 @@ public abstract class VideoController implements StreamConfirmCallback {
      * @see #confirmPlayStream(boolean)
      */
     public void playStream(int type, String url) {
+        playStream(type, url, null);
+    }
+
+    /**
+     * 播放流
+     *
+     * @see #confirmPlayStream(boolean)
+     */
+    public void playStream(int type, String url, Object extra) {
         if (!TextUtils.isEmpty(url)) {
             mPlayStreamUrl = url;
         }
 
         mPlayType = type;
+        mExtraData = extra;
         if (mPlayView != null && !TextUtils.isEmpty(mPlayStreamUrl)) {
             handleNetworkLiveDialog(false);
         }
@@ -296,13 +310,31 @@ public abstract class VideoController implements StreamConfirmCallback {
     private SocketManager.EventListener mStreamingStoppedListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            onStringingStopped(args);
+            onStreamingStopped(args);
+        }
+    };
+
+    private SocketManager.EventListener  mStreamReclaimedListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            onStreamingReclaimed(args);
+        }
+    };
+
+    private SocketManager.EventListener mStreamStopByExpirationListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            onStreamingStoppedByExpired(args);
         }
     };
 
     protected abstract void onStreamingStarted(Object... args);
 
-    protected abstract void onStringingStopped(Object... args);
+    protected abstract void onStreamingStopped(Object... args);
+
+    protected abstract void onStreamingStoppedByExpired(Object... args);
+
+    protected abstract void onStreamingReclaimed(Object... args);
 
     /**
      * @return 是否是流在使用，播放流和推送流

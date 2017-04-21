@@ -28,10 +28,13 @@ import com.qiniu.pili.droid.streaming.StreamingState;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -74,13 +77,13 @@ public class StudentVideoController extends VideoController {
     public void confirmPublishStream(boolean confirm) {
         //update param
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPublishView.getLayoutParams();
-        if (mPublishType == StreamType.TYPE_STREAM_PEER_TO_PEER) {
+        if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
             params.width = mPeerStreamViewWidth;
             params.height = mPeerStreamViewHeight;
             params.gravity = Gravity.LEFT | Gravity.TOP;
             params.topMargin = mPeerStreamViewTopMargin;
             params.leftMargin = mPeerStreamViewMargin;
-        } else if (mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL) {
+        } else if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL) {
             params.width = FrameLayout.LayoutParams.MATCH_PARENT;
             params.height = FrameLayout.LayoutParams.MATCH_PARENT;
             params.gravity = Gravity.CENTER;
@@ -103,7 +106,7 @@ public class StudentVideoController extends VideoController {
         mPlayView.resume();
         mPlayView.showLoading(true);
         if (mStreamListener != null) {
-            mStreamListener.onStreamStarted(mUser, mPlayType);
+            mStreamListener.onStreamStarted(mUser, mPlayType, mExtraData);
         }
 
         if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
@@ -121,7 +124,7 @@ public class StudentVideoController extends VideoController {
             if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                 mNeedStreamRePublishing = true;
                 if (mStreamListener != null) {
-                    mStreamListener.onStreamStopped(mUser, type);
+                    mStreamListener.onStreamStopped(mUser, type, null);
                 }
             } else {
                 //send stopped stream
@@ -134,7 +137,7 @@ public class StudentVideoController extends VideoController {
                                     if (response.result) {
                                         mNeedStreamRePublishing = true;
                                         if (mStreamListener != null) {
-                                            mStreamListener.onStreamStopped(mUser, type);
+                                            mStreamListener.onStreamStopped(mUser, type, null);
                                         }
                                     }
                                 }
@@ -160,7 +163,7 @@ public class StudentVideoController extends VideoController {
             mPlayView.setVisibility(View.GONE);
 
             if (mStreamListener != null) {
-                mStreamListener.onStreamStopped(Constants.User.STUDENT, type);
+                mStreamListener.onStreamStopped(mUser, type, null);
             }
         }
     }
@@ -185,24 +188,24 @@ public class StudentVideoController extends VideoController {
     public void onSteamStateChanged(StreamingState streamingState, Object data) {
         switch (streamingState) {
             case STREAMING:
-                mStreamPublishing = true;
                 FeedbackStatus fbStatus = new FeedbackStatus();
                 fbStatus.status = Live.MediaStatus.READY;
-                int eventType = mPublishType == StreamType.TYPE_STREAM_INDIVIDUAL ? Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;
+                int eventType = mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL ? Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;
                 SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), fbStatus, new SocketManager.AckListener() {
                     @Override
                     public void call(Object... args) {
                         if (args != null && args.length > 0) {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
+                                mStreamPublishing = true;
                                 if (mStreamListener != null) {
-                                    mStreamListener.onStreamStarted(mUser, mPublishType);
+                                    mStreamListener.onStreamStarted(mUser, mPublishType, null);
                                     muteOrUnmute();
                                 }
 
                             } else {
                                 //暂停推流
-                                if (!mPausePublishByToggleResolution) {
+                                if (!mPausePublishByToggleResolution && !mStreamPublishing) {
                                     pausePublishStream(mPublishType);
                                 }
 
@@ -210,7 +213,7 @@ public class StudentVideoController extends VideoController {
                             }
                         } else {
                             //暂停推流
-                            if (!mPausePublishByToggleResolution) {
+                            if (!mPausePublishByToggleResolution && !mStreamPublishing) {
                                 pausePublishStream(mPublishType);
                             }
 
@@ -240,7 +243,7 @@ public class StudentVideoController extends VideoController {
                         if (args != null && args.length > 0) {
                             OpenMediaNotify openMediaNotify = ClassroomBusiness.parseSocketBean(args[0], OpenMediaNotify.class);
                             if (openMediaNotify != null) {
-                                publishStream(StreamType.TYPE_STREAM_PEER_TO_PEER, openMediaNotify.publishUrl);
+                                publishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, openMediaNotify.publishUrl);
                             }
                         }
                     }
@@ -254,14 +257,14 @@ public class StudentVideoController extends VideoController {
     private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            pausePublishStream(StreamType.TYPE_STREAM_PEER_TO_PEER);
+            pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
         }
     };
 
     private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            pausePublishStream(StreamType.TYPE_STREAM_PEER_TO_PEER);
+            pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
         }
     };
 
@@ -270,18 +273,46 @@ public class StudentVideoController extends VideoController {
         if (args != null && args.length > 0) {
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
-                playStream(StreamType.TYPE_STREAM_PLAY, startedNotify.RTMPPlayUrl);
-                if (mStreamListener != null) {
-                    mStreamListener.onStreamStarted(mUser, StreamType.TYPE_STREAM_PLAY);
+                int type = StreamType.TYPE_STREAM_PLAY;
+                if (mContext instanceof ClassroomActivity) {
+                    String state = ((ClassroomActivity) mContext).getLiveState();
+                    if (Live.LiveSessionState.LIVE.equals(state)) {
+                        type = StreamType.TYPE_STREAM_PLAY;
+                    } else if (Live.LiveSessionState.SCHEDULED.equals(state)
+                            || Live.LiveSessionState.FINISHED.equals(state)) {
+                        type = StreamType.TYPE_STREAM_PLAY_INDIVIDUAL;
+                    }
                 }
+                playStream(type, startedNotify.RTMPPlayUrl, startedNotify.finishOn);
             }
         }
     }
 
     @Override
-    protected void onStringingStopped(Object... args) {
+    protected void onStreamingStopped(Object... args) {
         if (args != null && args.length > 0) {
-            pausePlayStream(mPlayType);
+            StreamingNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingNotify.class);
+            if (notify != null) {
+                pausePlayStream(mPlayType);
+            }
+        }
+    }
+
+    protected void onStreamingStoppedByExpired(Object... args) {
+        if (args != null && args.length > 0) {
+            StreamingExpirationNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingExpirationNotify.class);
+            if (notify != null) {
+                pausePublishStream(mPublishType);
+            }
+        }
+    }
+
+    protected void onStreamingReclaimed(Object... args) {
+        if (args != null && args.length > 0) {
+            StreamingNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingNotify.class);
+            if (notify != null) {
+                pausePublishStream(mPublishType);
+            }
         }
     }
 
