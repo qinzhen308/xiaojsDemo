@@ -29,6 +29,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Role;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -388,6 +389,7 @@ public class  LessonHomeActivity extends BaseActivity{
         String accId = AccountDataManager.getAccountID(this);
         String createBy = mLessonDetail.getCreatedBy();
         if ((!TextUtils.isEmpty(createBy) && createBy.equals(accId))
+                || isLessonRole(mLessonDetail.currentRoles)
                 || (mLessonDetail.getTeacher() !=null && mLessonDetail.getTeacher()._id.equals(accId)) ){
 
             if (lessonState.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
@@ -481,6 +483,21 @@ public class  LessonHomeActivity extends BaseActivity{
         }
     }
 
+    private boolean isLessonRole(String role) {
+
+        if (TextUtils.isEmpty(role)) return false;
+
+        if (role.equals(Role.LessonRole.LESSON_ASSISTANT)
+                || role.equals(Role.LessonRole.LESSON_AUDITOR)
+                || role.equals(Role.LessonRole.LESSON_LEAD)
+                || role.equals(Role.LessonRole.LESSON_REPRESENTATIVE)
+                || role.equals(Role.LessonRole.LESSON_STUDENT)) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     private void initTabBar() {
         String[] titles =getResources().getStringArray(R.array.lesson_home_tab_titles);
@@ -529,6 +546,7 @@ public class  LessonHomeActivity extends BaseActivity{
         String accId = AccountDataManager.getAccountID(this);
         String createBy = mLessonDetail.getCreatedBy();
         if ((createBy != null && createBy.equals(accId))
+                ||isLessonRole(mLessonDetail.currentRoles)
                 || (mLessonDetail.getTeacher()!= null && mLessonDetail.getTeacher()._id.equals(accId)) ){
 
             if (lessonState.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)

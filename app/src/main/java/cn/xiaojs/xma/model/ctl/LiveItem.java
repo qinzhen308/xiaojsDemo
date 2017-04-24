@@ -23,11 +23,13 @@ import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.Promotion;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.Teacher;
+import cn.xiaojs.xma.model.account.Account;
+
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LiveItem implements Serializable{
     public String id;
-    //private String createdBy;
+    public Account createdBy;
     public String title;
     public CSubject subject;
     public int mode;
