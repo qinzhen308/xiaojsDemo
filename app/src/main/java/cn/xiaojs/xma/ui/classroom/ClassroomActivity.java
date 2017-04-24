@@ -2261,12 +2261,14 @@ public class ClassroomActivity extends FragmentActivity implements WhiteboardAda
 
                 break;
             case StreamType.TYPE_STREAM_PUBLISH:
-                if (mClassroomController != null) {
+                if (mClassroomController != null && mUser == Constants.User.TEACHER) {
                     mClassroomController.pausePlayStream();
                 }
                 break;
             case StreamType.TYPE_STREAM_PLAY:
-
+                if (mClassroomController != null && mUser == Constants.User.STUDENT) {
+                    mClassroomController.pausePublishStream();
+                }
                 break;
 
             case StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER:

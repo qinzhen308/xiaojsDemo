@@ -294,6 +294,13 @@ public class ClassroomController {
     }
 
     /**
+     * 暂停推流
+     */
+    public void pausePublishStream() {
+        mVideoController.pausePublishStream();
+    }
+
+    /**
      * 开始推流
      */
     public void publishStream(int type, String url) {

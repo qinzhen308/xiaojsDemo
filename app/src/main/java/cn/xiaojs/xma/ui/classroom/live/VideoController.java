@@ -175,6 +175,10 @@ public abstract class VideoController implements StreamConfirmCallback {
      */
     public abstract void pausePublishStream(int type);
 
+    public void pausePublishStream() {
+        pausePublishStream(mPublishType);
+    }
+
     /**
      * 开始推流
      *
