@@ -257,6 +257,10 @@ public abstract class VideoController implements StreamConfirmCallback {
      */
     public abstract void pausePlayStream(int type);
 
+    public void pausePlayStream() {
+        pausePlayStream(mPlayType);
+    }
+
     /**
      * 推流的流状态发生变化回调
      *
@@ -416,4 +420,11 @@ public abstract class VideoController implements StreamConfirmCallback {
         mPausePublishByToggleResolution = isToggleResolution;
     }
 
+    public int getPlayType() {
+        return mPlayType;
+    }
+
+    public int getPublishType() {
+        return mPublishType;
+    }
 }

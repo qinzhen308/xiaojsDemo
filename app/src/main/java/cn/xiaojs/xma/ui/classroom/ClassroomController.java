@@ -319,6 +319,10 @@ public class ClassroomController {
         mVideoController.playStream(type, url, extra);
     }
 
+    public void pausePlayStream() {
+        mVideoController.pausePlayStream();
+    }
+
     public void playStream() {
         mVideoController.playStream();
     }
