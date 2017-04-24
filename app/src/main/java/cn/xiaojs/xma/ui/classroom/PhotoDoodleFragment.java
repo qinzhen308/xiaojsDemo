@@ -109,7 +109,7 @@ public class PhotoDoodleFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.wb_toolbar_btn, R.id.back_in_doodle, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,
+    @OnClick({R.id.open_docs_btn, R.id.back_in_doodle, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,
             R.id.color_picker_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.undo, R.id.redo})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
@@ -134,7 +134,7 @@ public class PhotoDoodleFragment extends BaseFragment {
             case R.id.save_doodle:
                 saveEditedBmpToLibrary(mBoardController.getWhiteboardBitmap());
                 break;
-            case R.id.wb_toolbar_btn:
+            case R.id.open_docs_btn:
                 switchWhiteBoardToolbar();
                 break;
             default:

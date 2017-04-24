@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/left_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/px20"
+        android:layout_marginLeft="@dimen/px16"
+        android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/whiteboard_coll_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textSize="@dimen/font_20px"
+            android:paddingLeft="@dimen/px15"
+            android:paddingRight="@dimen/px15"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:background="@drawable/ic_cr_tips_bg"/>
+
+    <ImageView
+            android:id="@+id/blackboard_switcher_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:src="@drawable/cr_blackboard_switcher"/>
+
+    <ImageView
+            android:id="@+id/course_ware_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px40"
+            android:visibility="gone"
+            android:src="@drawable/cr_teaching_switcher"/>
+
+
+    <ImageView
+            android:id="@+id/qa_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cr_qa"
+            android:layout_marginTop="@dimen/px40"
+            android:visibility="gone"/>
+
+    <ImageView
+            android:id="@+id/open_docs_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cr_open_docs"
+            android:layout_marginTop="@dimen/px40"/>
+
+</LinearLayout>

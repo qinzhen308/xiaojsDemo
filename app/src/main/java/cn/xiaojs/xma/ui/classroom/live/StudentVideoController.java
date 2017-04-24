@@ -188,6 +188,7 @@ public class StudentVideoController extends VideoController {
     public void onSteamStateChanged(StreamingState streamingState, Object data) {
         switch (streamingState) {
             case STREAMING:
+                mNeedStreamRePublishing = false;
                 FeedbackStatus fbStatus = new FeedbackStatus();
                 fbStatus.status = Live.MediaStatus.READY;
                 int eventType = mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL ? Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;

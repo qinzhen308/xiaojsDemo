@@ -127,7 +127,7 @@ public abstract class VideoController implements StreamConfirmCallback {
         }
 
         if (mNeedStreamRePublishing) {
-            mNeedStreamRePublishing = false;
+            //mNeedStreamRePublishing = false;
             publishStream(mPublishType, mPublishStreamUrl);
         }
 

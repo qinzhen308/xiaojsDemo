@@ -44,7 +44,6 @@ public class ClassroomController {
     private Context mContext;
 
     private VideoController mVideoController;
-    private WhiteboardController mBoardController;
     protected Constants.User mUser;
     private PhotoDoodleFragment mPhotoDoodleFragment;
     private DocumentFragment mDocumentFragment;
@@ -66,9 +65,6 @@ public class ClassroomController {
         } else if (client == Constants.User.STUDENT) {
             mVideoController = new StudentVideoController(context, root, listener);
         }
-
-        //init whiteboard controller
-        mBoardController = new WhiteboardController(context, root, client, appType);
     }
 
     public void onPauseVideo() {
@@ -87,7 +83,6 @@ public class ClassroomController {
      * 释放资源
      */
     public void release() {
-        mBoardController.release();
         onDestroyVideo();
     }
 
@@ -244,13 +239,6 @@ public class ClassroomController {
     }
 
     /**
-     * 设置白板为主屏
-     */
-    public void setWhiteboardMainScreen() {
-        mBoardController.setWhiteboardMainScreen();
-    }
-
-    /**
      * 是否是同步的白板
      */
     public boolean isSyncWhiteboard() {
@@ -262,28 +250,6 @@ public class ClassroomController {
      */
     public boolean isLiveWhiteboard() {
         return false;
-    }
-
-    /**
-     * 退出白板模式
-     */
-    public void exitWhiteboard() {
-        mBoardController.exitWhiteboard();
-    }
-
-    /**
-     * 保存白板
-     */
-    public void saveWhiteboard() {
-        mBoardController.saveWhiteboard();
-    }
-
-    public void handleBoardPanelItemClick(View view) {
-        mBoardController.handlePanelItemClick(view);
-    }
-
-    public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
-        mBoardController.onSwitchWhiteboardCollection(wbColl);
     }
 
     /**

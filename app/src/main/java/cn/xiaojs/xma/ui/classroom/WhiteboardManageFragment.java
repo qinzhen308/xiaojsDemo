@@ -191,7 +191,7 @@ public class WhiteboardManageFragment extends DialogFragment implements AdapterV
 
                 }
             });*/
-            ((ClassroomActivity) mContext).onSwitchWhiteboardCollection((WhiteboardCollection) obj);
+            //((ClassroomActivity) mContext).onSwitchWhiteboardCollection((WhiteboardCollection) obj);
             WhiteboardManageFragment.this.dismiss();
         }
     }

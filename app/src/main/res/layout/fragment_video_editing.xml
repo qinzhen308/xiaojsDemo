@@ -140,7 +140,7 @@
     </LinearLayout>
 
     <ImageView
-            android:id="@+id/wb_toolbar_btn"
+            android:id="@+id/open_docs_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/px20"

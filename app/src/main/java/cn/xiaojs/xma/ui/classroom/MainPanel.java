@@ -86,9 +86,11 @@ public class MainPanel extends RelativeLayout {
                 mWhiteBoardTransformation = true;
             } else {
                 //传递教室主控制面板的事件分发
-                mMainPanelGestureDetector.onTouchEvent(event);
+                if (mMainPanelGestureDetector != null) {
+                    mMainPanelGestureDetector.onTouchEvent(event);
+                }
                 //传递水平滚动的的白板事件分发
-                if (!mWhiteBoardTransformation) {
+                if (!mWhiteBoardTransformation && mWhiteboardScrollview != null) {
                     mWhiteboardScrollview.onTouchEvent(event);
                 }
             }
@@ -106,15 +108,9 @@ public class MainPanel extends RelativeLayout {
 
             return true;
         } else if (InteractiveLevel.WHITE_BOARD == getInteractiveLevel()) {
-            //if (isSyncWhiteboard()) {
-            //    mSyncWhiteboardGestureDetector.onTouchEvent(event);
-            //    return true;
-            //} else {
-            //    return false;
-            //}
-
-            //force
-            mSyncWhiteboardGestureDetector.onTouchEvent(event);
+            if (mSyncWhiteboardGestureDetector != null) {
+                mSyncWhiteboardGestureDetector.onTouchEvent(event);
+            }
             return false;
         } else {
             return false;
@@ -128,15 +124,6 @@ public class MainPanel extends RelativeLayout {
         }
 
         return InteractiveLevel.MAIN_PANEL;
-    }
-
-    private boolean isSyncWhiteboard() {
-        Context cxt = getContext();
-        if (cxt instanceof ClassroomActivity) {
-            return ((ClassroomActivity) cxt).isSyncWhiteboard();
-        }
-
-        return false;
     }
 
 }

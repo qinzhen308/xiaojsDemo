@@ -35,23 +35,6 @@
                     android:background="#000000"/>
         </FrameLayout>
 
-        <!--白板列表, 第一期暂时没有-->
-        <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView
-                android:id="@+id/white_board_scrollview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:visibility="gone">
-        </cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView>
-
-        <!--白板,本地手绘-->
-        <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayout
-                android:id="@+id/white_board_layout"
-                android:background="#FAEEEEEE"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"/>
-
         <!--提示view-->
         <FrameLayout
                 android:id="@+id/tip_view"
@@ -106,7 +89,7 @@
 
         </FrameLayout>
 
-        <!--视频播放-->
+        <!--本地视频播放-->
         <FrameLayout
                 android:id="@+id/video_play_layout"
                 android:layout_width="match_parent"

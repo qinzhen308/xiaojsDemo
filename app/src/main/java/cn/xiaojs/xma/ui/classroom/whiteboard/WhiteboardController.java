@@ -30,7 +30,6 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
@@ -505,17 +504,11 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     public void onWhiteboardSelected(Whiteboard whiteboard) {
         setWhiteboard(whiteboard);
         whiteboard.setNeedBitmapPool(true);
-        if (mContext instanceof ClassroomActivity) {
-            ((ClassroomActivity) mContext).onWhiteboardSelected(whiteboard);
-        }
     }
 
     @Override
     public void onWhiteboardRemove(Whiteboard whiteboard) {
         setWhiteboard(null);
-        if (mContext instanceof ClassroomActivity) {
-            ((ClassroomActivity) mContext).onWhiteboardRemove(whiteboard);
-        }
     }
 
     private SocketManager.EventListener mOnBoard = new SocketManager.EventListener() {
