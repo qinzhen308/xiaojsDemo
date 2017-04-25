@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -32,9 +34,13 @@ import cn.xiaojs.xma.util.APPUtils;
 
 public class SettingsActivity extends BaseActivity {
     @BindView(R.id.exit_login)
-    Button mExitLoginBtn;
+    TextView mExitLoginBtn;
+    //Button mExitLoginBtn;
     @BindView(R.id.data_cache)
     TextView mDataCacheTv;
+
+    @BindView(R.id.xjs_info)
+    TextView infoView;
 
     private Context mContext;
 
@@ -43,6 +49,15 @@ public class SettingsActivity extends BaseActivity {
         mContext = this;
         addView(R.layout.activity_settings);
         setMiddleTitle(R.string.settings);
+
+        String versionName = APPUtils.getAPPVersionName(this);
+        String infoStr = new StringBuilder(getResources()
+                .getString(R.string.app_name))
+                .append(" ")
+                .append(versionName)
+                .toString();
+
+        infoView.setText(infoStr);
 
         mDataCacheTv.setText(DataManager.getLocalDataCache(this));
     }

@@ -4,6 +4,18 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <TextView
+            android:id="@+id/xjs_info"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:drawableTop="@mipmap/ic_launcher"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_30px"
+            />
+
     <!--消息提醒设置-->
     <TextView
             android:id="@+id/message_notify_set"
@@ -77,8 +89,8 @@
             android:visibility="gone"
             style="@style/MinePageItem"/>
 
-    <View
-            style="@style/DividerHorizontal"/>
+    <!--<View-->
+            <!--style="@style/DividerHorizontal"/>-->
 
     <!--关于我们-->
     <TextView
@@ -87,16 +99,33 @@
             android:layout_height="wrap_content"
             android:text="@string/about_us"
             android:textStyle="normal"
+            android:layout_marginTop="10dp"
             style="@style/MinePageItem"/>
 
-    <Button
+
+    <TextView
             android:id="@+id/exit_login"
-            android:layout_marginTop="@dimen/px86"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/BigSubmitBtn"
-            android:layout_marginLeft="@dimen/px57"
-            android:layout_marginRight="@dimen/px57"
-            android:text="@string/exit_login"/>
+            android:text="@string/exit_login"
+            android:textStyle="normal"
+            android:gravity="center"
+            android:textColor="@color/font_orange"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/font_26px"
+            android:paddingTop="@dimen/px28"
+            android:paddingBottom="@dimen/px28"
+            android:background="@drawable/item_pressed"
+            />
+
+    <!--<Button-->
+            <!--android:id="@+id/exit_login"-->
+            <!--android:layout_marginTop="@dimen/px86"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--style="@style/BigSubmitBtn"-->
+            <!--android:layout_marginLeft="@dimen/px57"-->
+            <!--android:layout_marginRight="@dimen/px57"-->
+            <!--android:text="@string/exit_login"/>-->
 
 </LinearLayout>

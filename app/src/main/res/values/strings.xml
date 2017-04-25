@@ -462,7 +462,7 @@
     <string name="cr_notify_empty">暂无消息</string>
     <string name="cr_doc_share_succ">分享成功</string>
     <string name="cr_ppt_open_fail">打开PP失败</string>
-    <string name="cr_live_connect_fail_title">直播连接失败</string>
+    <string name="cr_live_connect_fail_title">连接教室失败</string>
     <string name="cr_live_connect_fail_desc">请检查您的网络链接是否正常，然后在重新连接</string>
     <string name="cr_live_connect_fail_exit">退出教室</string>
     <string name="cr_live_connect_fail_continue">重新连接</string>

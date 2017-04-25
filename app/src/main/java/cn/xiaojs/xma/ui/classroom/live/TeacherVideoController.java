@@ -166,13 +166,13 @@ public class TeacherVideoController extends VideoController {
 
     @Override
     public void takeVideoFrame(FrameCapturedCallback callback) {
-        if (mPlayView.getVisibility() == View.VISIBLE) {
+        if (mPublishView.getVisibility() == View.VISIBLE) {
+            mPublishView.captureOriginalFrame(callback);
+        } else if (mPlayView.getVisibility() == View.VISIBLE) {
             Bitmap bmp = mPlayView.getPlayer().getTextureView().getBitmap();
             if (callback != null) {
                 callback.onFrameCaptured(bmp);
             }
-        } else if (mPublishView.getVisibility() == View.VISIBLE) {
-            mPublishView.captureOriginalFrame(callback);
         } else {
             if (callback != null) {
                 callback.onFrameCaptured(null);

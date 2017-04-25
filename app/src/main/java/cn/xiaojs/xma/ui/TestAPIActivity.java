@@ -15,6 +15,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.common.zxing.CaptureActivity;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CategoriesManager;
 import cn.xiaojs.xma.data.DownloadManager;
@@ -118,8 +119,10 @@ public class TestAPIActivity extends Activity {
         switch (v.getId()) {
             case R.id.btn_svc: {
                 //testSendCode(this);
-                Intent intent = new Intent(this,MaterialDownloadActivity.class);
+                Intent intent = new Intent(this,CaptureActivity.class);
                 startActivity(intent);
+
+
                 break;
             }
             case R.id.btn_svm: {
