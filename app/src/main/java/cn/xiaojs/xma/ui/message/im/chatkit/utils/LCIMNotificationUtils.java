@@ -74,9 +74,11 @@ public class LCIMNotificationUtils {
         }
         manager.notify(REPLY_NOTIFY_ID, notification);
 
-        if (!NotificationsUtils.isNotificationEnabled(context) && NotificationsUtils.needOpenNotification()) {
-            //Toast
+        if (!NotificationsUtils.isNotificationEnabled(context)
+                && XjsUtils.isAppOnForeground(context)
+                && NotificationsUtils.needOpenNotification()) {
             try {
+                //Toast
                 Toast.makeText(context, R.string.jmui_open_notification_tips, Toast.LENGTH_LONG).show();
                 Intent setIntent = new Intent("android.settings.NOTIFICATION_SETTINGS");
                 setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

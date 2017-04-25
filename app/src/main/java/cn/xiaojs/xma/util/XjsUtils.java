@@ -14,13 +14,16 @@ package cn.xiaojs.xma.util;
  *
  * ======================================================================================== */
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
 import java.text.DecimalFormat;
+import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
@@ -32,7 +35,7 @@ public class XjsUtils {
 
     private static DecimalFormat mFormater = new DecimalFormat("#.##");
 
-    public static void init(Context appContext){
+    public static void init(Context appContext) {
         mAppContext = appContext;
         BITMAP_LIMIT_WIDTH = mAppContext.getResources().getDimensionPixelSize(R.dimen.px220) * 3;
         BITMAP_LIMIT_HEIGHT = BITMAP_LIMIT_WIDTH;
@@ -72,7 +75,7 @@ public class XjsUtils {
 
         String str = "B";
         double result = (double) length;
-        if(length < 1024){
+        if (length < 1024) {
             return "1KB";
         }
         // 以1024为界，找到合适的文件大小单位
@@ -103,38 +106,35 @@ public class XjsUtils {
 
     /**
      * 获取图片显示的最大规格，当前设置最大为690x690
-     * @param width
-     * @param height
-     * @return
      */
-    public static int[] getLimitFormat(int width,int height){
+    public static int[] getLimitFormat(int width, int height) {
         int[] res = new int[2];
-        if (width <= BITMAP_LIMIT_WIDTH && height <= BITMAP_LIMIT_HEIGHT){
+        if (width <= BITMAP_LIMIT_WIDTH && height <= BITMAP_LIMIT_HEIGHT) {
             res[0] = width;
             res[1] = height;
-        }else if (width > BITMAP_LIMIT_WIDTH && height <= BITMAP_LIMIT_HEIGHT){
+        } else if (width > BITMAP_LIMIT_WIDTH && height <= BITMAP_LIMIT_HEIGHT) {
             int h1 = BITMAP_LIMIT_WIDTH * height / width;
             res[0] = BITMAP_LIMIT_WIDTH;
             res[1] = h1;
-        }else if (width <= BITMAP_LIMIT_WIDTH && height > BITMAP_LIMIT_HEIGHT){
+        } else if (width <= BITMAP_LIMIT_WIDTH && height > BITMAP_LIMIT_HEIGHT) {
             int w1 = width * BITMAP_LIMIT_HEIGHT / height;
             res[0] = w1;
             res[1] = BITMAP_LIMIT_HEIGHT;
-        }else {
-            int max = Math.max(width,height);
-            int min = Math.min(width,height);
+        } else {
+            int max = Math.max(width, height);
+            int min = Math.min(width, height);
 
             int MAX = BITMAP_LIMIT_WIDTH;
-            if (max == height){
+            if (max == height) {
                 MAX = BITMAP_LIMIT_HEIGHT;
             }
 
             int tem = MAX * min / max;
 
-            if (max == width){
+            if (max == width) {
                 res[0] = MAX;
                 res[1] = tem;
-            }else {
+            } else {
                 res[0] = tem;
                 res[1] = MAX;
             }
@@ -147,9 +147,6 @@ public class XjsUtils {
 
     /**
      * 根据view显示输入法
-     *
-     * @param ctx
-     * @param view
      */
     public static void showIMM(Context ctx, View view) {
         InputMethodManager imm = (InputMethodManager) ctx
@@ -159,9 +156,6 @@ public class XjsUtils {
 
     /**
      * 隐藏输入法
-     *
-     * @param ctx
-     * @param token
      */
     public static void hideIMM(Context ctx, IBinder token) {
         InputMethodManager imm = (InputMethodManager) ctx
@@ -172,5 +166,29 @@ public class XjsUtils {
 
     public static SharedPreferences getSharedPreferences() {
         return mAppContext.getSharedPreferences(XiaojsConfig.XIAOJS_PREFERENCE_NAME, Context.MODE_PRIVATE);
+    }
+
+    /**
+     * 程序是否在前台运行
+     */
+    public static boolean isAppOnForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = context.getApplicationContext().getPackageName();
+        /**
+         * 获取Android设备中所有正在运行的App
+         */
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
+                .getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            // The name of the process that this object is associated with.
+            if (appProcess.processName.equals(packageName)
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+        return false;
     }
 }
