@@ -71,6 +71,8 @@
     <string name="lead_teacher">主讲</string>
     <string name="assistant_teacher">助教</string>
     <string name="tips">提示</string>
+    <string name="temporarily_unable">暂不</string>
+    <string name="go_to_setting">去设置</string>
 
     <string name="select_for_you">您已选:</string>
     <string name="search_subject_tips">请输入您要找的学科类目</string>
@@ -663,7 +665,8 @@
     <string name="jmui_unknown_error_toast">未知错误</string>
     <string name="jmui_system_error_toast">系统内部错误，请稍候重试</string>
     <string name="jmui_parameter_illegal">参数值不合法</string>
-    <string name="jmui_open_notification_tips">无法收到PUSH消息，需要进入系统设置开启通知管理</string>
+    <string name="jmui_open_notification_title">通知未开启</string>
+    <string name="jmui_open_notification_tips">进入系统设置开启通知管理，才能收到通知消息哦</string>
 
     <!--以下为错误码提示-->
     <string name="jmui_server_800002">AppKey信息为空</string>

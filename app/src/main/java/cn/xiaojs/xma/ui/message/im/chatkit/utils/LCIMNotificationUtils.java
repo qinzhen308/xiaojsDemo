@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import com.avos.avospush.notification.NotificationCompat;
@@ -15,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.NotificationsUtils;
 import cn.xiaojs.xma.util.XjsUtils;
 
@@ -74,12 +76,36 @@ public class LCIMNotificationUtils {
 
         if (!NotificationsUtils.isNotificationEnabled(context) && NotificationsUtils.needOpenNotification()) {
             //Toast
-            Toast.makeText(context, R.string.jmui_open_notification_tips, Toast.LENGTH_LONG).show();
+            try {
+                Toast.makeText(context, R.string.jmui_open_notification_tips, Toast.LENGTH_LONG).show();
+                Intent setIntent = new Intent("android.settings.NOTIFICATION_SETTINGS");
+                setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(setIntent);
+            } catch (Exception e) {
+
+            }
         }
     }
 
     public static void cancelNotification(Context context) {
         NotificationManager nMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nMgr.cancel(REPLY_NOTIFY_ID);
+    }
+
+    private static void showSettingTipsDialog(final Context context) {
+        CommonDialog dialog = new CommonDialog(context);
+        dialog.setDesc(R.string.jmui_open_notification_tips);
+        dialog.setTitle(R.string.jmui_open_notification_title);
+        dialog.setLefBtnText(R.string.temporarily_unable);
+        dialog.setRightBtnText(R.string.go_to_setting);
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                Intent intent = new Intent("android.settings.NOTIFICATION_SETTINGS");
+                context.startActivity(intent);
+            }
+        });
+
+        dialog.show();
     }
 }
