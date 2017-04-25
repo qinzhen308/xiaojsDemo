@@ -25,7 +25,7 @@ import cn.xiaojs.xma.util.XjsUtils;
  */
 public class LCIMNotificationUtils {
 
-    private static final int REPLY_NOTIFY_ID = "cn.xiaojs.xma".hashCode();
+    private static final int REPLY_NOTIFY_ID = 1;
 
     /**
      * tag list，用来标记是否应该展示 Notification 比如已经在聊天页面了，实际就不应该再弹出 notification
