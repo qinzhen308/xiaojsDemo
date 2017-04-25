@@ -663,6 +663,7 @@
     <string name="jmui_unknown_error_toast">未知错误</string>
     <string name="jmui_system_error_toast">系统内部错误，请稍候重试</string>
     <string name="jmui_parameter_illegal">参数值不合法</string>
+    <string name="jmui_open_notification_tips">无法收到PUSH消息，需要进入系统设置开启通知管理</string>
 
     <!--以下为错误码提示-->
     <string name="jmui_server_800002">AppKey信息为空</string>
