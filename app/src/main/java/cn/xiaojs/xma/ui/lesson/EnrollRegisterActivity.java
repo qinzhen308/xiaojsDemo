@@ -203,7 +203,18 @@ public class EnrollRegisterActivity extends BaseActivity {
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
                     cancelProgress();
-                    Toast.makeText(EnrollRegisterActivity.this, R.string.enroll_register_fail, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(EnrollRegisterActivity.this, R.string.enroll_register_fail, Toast.LENGTH_SHORT).show();
+
+                    OfflineRegistrant offlineRegistrant = new OfflineRegistrant();
+                    Registrant registrant = new Registrant();
+                    registrant.setName(name);
+                    registrant.setMobile(phoneNum);
+                    offlineRegistrant.setRegistrant(registrant);
+
+                    offlineRegister(offlineRegistrant);
+
+
+
                 }
             });
 
