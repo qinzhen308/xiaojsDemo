@@ -47,7 +47,7 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
 
     @Override
     protected PullToRefreshBase.Mode getRefreshMode() {
-        return PullToRefreshBase.Mode.DISABLED;
+        return PullToRefreshBase.Mode.PULL_FROM_START;
     }
 
     @Override
@@ -98,17 +98,14 @@ public class TeachingSubjectAdapter extends AbsSwipeAdapter<CSubject, TeachingSu
 
     @Override
     protected void doRequest() {
-        showProgress(false);
         CategoriesManager.getSubjects(mContext, mParentId, mPagination, new APIServiceCallback<List<CSubject>>() {
             @Override
             public void onSuccess(List<CSubject> object) {
-                cancelProgress();
                 TeachingSubjectAdapter.this.onSuccess(object);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress();
                 TeachingSubjectAdapter.this.onFailure(errorCode, errorMessage);
             }
         });

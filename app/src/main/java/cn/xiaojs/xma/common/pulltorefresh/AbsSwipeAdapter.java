@@ -128,6 +128,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private String mDesc1;
     private String mButtonDesc;
     private int mIconResId;
+    private PullToRefreshBase.Mode mOriginalMode = PullToRefreshBase.Mode.BOTH;
 
     public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView, List<B> data) {
         this(context, listView, false);
@@ -187,7 +188,8 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mPagination.setPage(PAGE_FIRST);
         mPagination.setMaxNumOfObjectsPerPage(getPageSize());
         mListView = listView;
-        mListView.setMode(getRefreshMode());
+        mOriginalMode = getRefreshMode();
+        mListView.setMode(mOriginalMode);
         if (leftSwipe()) {
             mListView.enableLeftSwipe();
         }
@@ -373,7 +375,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 mListView.removeEmptyView(mEmptyView);
                 mListView.removeEmptyView(mFailedView);
                 if (mListView.getMode() == PullToRefreshBase.Mode.PULL_FROM_START) {
-                    mListView.setMode(PullToRefreshBase.Mode.BOTH);
+                    mListView.setMode(mOriginalMode);
                 }
                 break;
             case STATE_LOADING:

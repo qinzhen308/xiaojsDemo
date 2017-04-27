@@ -71,7 +71,7 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
 
     @Override
     protected PullToRefreshBase.Mode getRefreshMode() {
-        return PullToRefreshBase.Mode.DISABLED;
+        return PullToRefreshBase.Mode.PULL_FROM_START;
     }
 
     @Override
