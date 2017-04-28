@@ -114,8 +114,6 @@ public class MaterialActivity extends BaseActivity {
         mAdapter = new MaterialAdapter(this, mList, XiaojsConfig.mLoginUser.getId());
         mList.setAdapter(mAdapter);
 
-        mList.setMode(PullToRefreshBase.Mode.DISABLED);
-
         mRightImage2.setImageResource(R.drawable.upload_selector);
         mRightImage.setImageResource(R.drawable.ic_my_download);
     }
