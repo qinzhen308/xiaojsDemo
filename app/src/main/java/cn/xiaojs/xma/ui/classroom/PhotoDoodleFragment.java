@@ -82,8 +82,6 @@ public class PhotoDoodleFragment extends BaseFragment {
 
         mPanelAnimListener = new PanelAnimListener();
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
-        mBoardController.onGeometryChange(GeometryShape.RECTANGLE);
-        mBoardController.onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
 
         Bundle data = getArguments();
         if (data != null) {

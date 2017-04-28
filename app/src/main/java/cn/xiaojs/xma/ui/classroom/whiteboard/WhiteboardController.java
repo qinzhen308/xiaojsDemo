@@ -209,6 +209,8 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             mCurrWhiteboard.setUndoRedoListener(this);
             mUndo.setEnabled(false);
             mRedo.setEnabled(false);
+            onGeometryChange(GeometryShape.RECTANGLE);
+            onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
         }
     }
 
@@ -476,7 +478,8 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
                 mCurrWhiteboard.setUndoRedoListener(this);
                 mCurrWhiteboard.setOnColorChangeListener(this);
                 mCurrWhiteboard.onWhiteboardSelected();
-
+                onGeometryChange(GeometryShape.RECTANGLE);
+                onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
                 reset();
             }
         }
