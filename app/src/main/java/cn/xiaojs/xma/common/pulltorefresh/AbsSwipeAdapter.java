@@ -399,7 +399,12 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 mCurrentState = STATE_NORMAL;
                 break;
             case STATE_UP_REFRESH:
-                mListView.setRefreshing();
+                if (PullToRefreshBase.Mode.PULL_FROM_START == mOriginalMode
+                        || PullToRefreshBase.Mode.BOTH == mOriginalMode) {
+                    mListView.setRefreshing();
+                } else {
+                    mListView.setRefreshing(true);
+                }
                 break;
             case STATE_DOWN_REFRESH:
 
