@@ -379,8 +379,14 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 }
                 break;
             case STATE_LOADING:
-                mListView.setFirstLoading(true);
-                mListView.setRefreshing();
+                if (PullToRefreshBase.Mode.PULL_FROM_START == mOriginalMode
+                        || PullToRefreshBase.Mode.BOTH == mOriginalMode) {
+                    mListView.setFirstLoading(true);
+                    mListView.setRefreshing();
+                } else {
+                    mListView.setFirstLoading(true);
+                    mListView.setRefreshing(true);
+                }
                 break;
             case STATE_LOADING_ERROR:
                 mListView.onRefreshComplete();
