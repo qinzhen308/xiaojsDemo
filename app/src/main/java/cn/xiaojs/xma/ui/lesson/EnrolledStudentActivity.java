@@ -23,6 +23,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
@@ -80,9 +81,11 @@ public class EnrolledStudentActivity extends BaseActivity {
 
     }
 
-    private void initViews(List<StudentInfo> studentInfos) {
+    private void initViews(EnrollPage enrollPage) {
 
-        if (studentInfos == null || studentInfos.size()<=0) {
+
+
+        if (enrollPage == null || enrollPage.students == null || enrollPage.students.size()<=0) {
             //显示空页面
             showEmptyView("还没有同学报名哦～");
             return;
@@ -92,7 +95,7 @@ public class EnrolledStudentActivity extends BaseActivity {
             studentAdapter = new StudentAdapter(this);
         }
 
-        studentAdapter.setData(studentInfos);
+        studentAdapter.setData(enrollPage.students);
 
         gridView.setAdapter(studentAdapter);
 
@@ -102,10 +105,10 @@ public class EnrolledStudentActivity extends BaseActivity {
 
         showProgress(true);
         LessonDataManager.getEnrolledStudents(this, lessonId, page, limit,
-                new APIServiceCallback<List<StudentInfo>>() {
+                new APIServiceCallback<EnrollPage>() {
 
             @Override
-            public void onSuccess(List<StudentInfo> object) {
+            public void onSuccess(EnrollPage object) {
                 cancelProgress();
                 initViews(object);
             }

@@ -28,6 +28,7 @@ import cn.xiaojs.xma.model.Pagination;
 
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
@@ -393,7 +394,7 @@ public class LessonDataManager {
                                            String lesson,
                                            int page,
                                            int limit,
-                                           APIServiceCallback<List<StudentInfo>> callback) {
+                                           APIServiceCallback<EnrollPage> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getEnrolledStudents(lesson,page,limit,"Enrolled");

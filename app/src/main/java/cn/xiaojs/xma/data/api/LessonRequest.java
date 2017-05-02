@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
+import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
@@ -233,7 +234,7 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void getEnrolledStudents(String lesson,int page, int limit, String state){
-        Call<List<StudentInfo>> call = getService().getEnrolledStudents(lesson, page, limit, state);
+        Call<EnrollPage> call = getService().getEnrolledStudents(lesson, page, limit, state);
         enqueueRequest(APIType.GET_ENROLLED_STUDENTS,call);
 
     }
