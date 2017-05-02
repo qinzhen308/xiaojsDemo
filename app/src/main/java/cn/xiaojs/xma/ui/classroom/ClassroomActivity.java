@@ -514,6 +514,10 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
         mLessonID = ctlSession.ctl != null ? ctlSession.ctl.id : "";
         mLiveSessionState = ctlSession.state;
         mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
+        //二维码扫描进入教室，需要更新ticket.
+        if (!TextUtils.isEmpty(ctlSession.ticket)) {
+            mTicket = ctlSession.ticket;
+        }
 
         mUser = ClassroomBusiness.getUser(ctlSession.psType);
         if (mUser == Constants.User.TEACHER

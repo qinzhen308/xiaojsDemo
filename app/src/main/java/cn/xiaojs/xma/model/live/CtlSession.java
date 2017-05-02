@@ -13,6 +13,7 @@ import java.util.Date;
 public class CtlSession {
 
     public String secret;
+    public String ticket;
     public Ctl ctl;
     public boolean accessible;
     public ConnectType connected;
