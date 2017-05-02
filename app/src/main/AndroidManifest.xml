@@ -260,7 +260,10 @@
         <activity android:name=".ui.lesson.EnrolledStudentActivity">
         </activity>
         <activity android:name=".ui.GuideBrowseActivity"/>
-        <activity android:name="com.kaola.qrcodescanner.qrcode.QrCodeActivity"/>
+        <activity android:name=".ui.ScanQrcodeActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name="com.kaola.qrcodescanner.qrcode.QrCodeActivity"
+                  android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"

@@ -182,7 +182,7 @@ public class MainActivity extends BaseTabActivity {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
 
                 }else {
-                    startActivity(new Intent(this, QrCodeActivity.class));
+                    startActivity(new Intent(this, ScanQrcodeActivity.class));
                 }
 
                 break;
@@ -315,7 +315,7 @@ public class MainActivity extends BaseTabActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    startActivity(new Intent(this, QrCodeActivity.class));
+                    startActivity(new Intent(this, ScanQrcodeActivity.class));
 
                 } else {
 
