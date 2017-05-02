@@ -61,7 +61,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
     @Override
     protected PullToRefreshBase.Mode getRefreshMode() {
-        return PullToRefreshBase.Mode.DISABLED;
+        return PullToRefreshBase.Mode.PULL_FROM_START;
     }
 
     @Override

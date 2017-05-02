@@ -128,6 +128,7 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
     private String mDesc1;
     private String mButtonDesc;
     private int mIconResId;
+    private PullToRefreshBase.Mode mOriginalMode = PullToRefreshBase.Mode.BOTH;
 
     public AbsSwipeAdapter(Context context, PullToRefreshSwipeListView listView, List<B> data) {
         this(context, listView, false);
@@ -187,7 +188,8 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
         mPagination.setPage(PAGE_FIRST);
         mPagination.setMaxNumOfObjectsPerPage(getPageSize());
         mListView = listView;
-        mListView.setMode(getRefreshMode());
+        mOriginalMode = getRefreshMode();
+        mListView.setMode(mOriginalMode);
         if (leftSwipe()) {
             mListView.enableLeftSwipe();
         }
@@ -373,12 +375,18 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 mListView.removeEmptyView(mEmptyView);
                 mListView.removeEmptyView(mFailedView);
                 if (mListView.getMode() == PullToRefreshBase.Mode.PULL_FROM_START) {
-                    mListView.setMode(PullToRefreshBase.Mode.BOTH);
+                    mListView.setMode(mOriginalMode);
                 }
                 break;
             case STATE_LOADING:
-                mListView.setFirstLoading(true);
-                mListView.setRefreshing();
+                if (PullToRefreshBase.Mode.PULL_FROM_START == mOriginalMode
+                        || PullToRefreshBase.Mode.BOTH == mOriginalMode) {
+                    mListView.setFirstLoading(true);
+                    mListView.setRefreshing();
+                } else {
+                    mListView.setFirstLoading(true);
+                    mListView.setRefreshing(true);
+                }
                 break;
             case STATE_LOADING_ERROR:
                 mListView.onRefreshComplete();
@@ -391,7 +399,12 @@ public abstract class AbsSwipeAdapter<B, H extends BaseHolder> extends BaseAdapt
                 mCurrentState = STATE_NORMAL;
                 break;
             case STATE_UP_REFRESH:
-                mListView.setRefreshing();
+                if (PullToRefreshBase.Mode.PULL_FROM_START == mOriginalMode
+                        || PullToRefreshBase.Mode.BOTH == mOriginalMode) {
+                    mListView.setRefreshing();
+                } else {
+                    mListView.setRefreshing(true);
+                }
                 break;
             case STATE_DOWN_REFRESH:
 

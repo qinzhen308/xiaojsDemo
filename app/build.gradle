@@ -60,6 +60,8 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.1'
 
+    compile 'com.google.zxing:core:3.3.0'
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.orhanobut:logger:1.15'
 
@@ -76,7 +78,6 @@ dependencies {
     //Logger
     //pull refresh
     //    compile project(':pulltorefresh')
-    //compile files('libs/zxing.jar')
     //3d wheel picker
     compile project(':3d_wheelpicker')
     compile files('libs/android-support-v7-recyclerview.jar')

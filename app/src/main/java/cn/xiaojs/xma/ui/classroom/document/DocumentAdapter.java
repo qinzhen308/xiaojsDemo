@@ -94,7 +94,7 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
 
     @Override
     protected PullToRefreshBase.Mode getRefreshMode() {
-        return PullToRefreshBase.Mode.DISABLED;
+        return PullToRefreshBase.Mode.PULL_FROM_START;
     }
 
     @Override
@@ -188,11 +188,9 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
 
     @Override
     protected void doRequest() {
-        showProgress(true);
         CollaManager.getDocuments(mContext, mOwnerId, mType, mPagination, LIMIT_DATA, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
-                cancelProgress();
                 if (object != null && object.documents.size() > 0) {
                     DocumentAdapter.this.onSuccess(object.documents);
                 } else {
@@ -202,7 +200,6 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress();
                 DocumentAdapter.this.onFailure(errorCode, errorMessage);
             }
         });
