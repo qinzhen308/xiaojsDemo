@@ -729,6 +729,13 @@ public class ContactActivity extends BaseActivity {
 
             final Contact c = getChild(groupPosition, childPosition);
 
+            ContactGroup contactGroup = contactAdapter.getGroup(groupPosition);
+            if (contactGroup.group == CLASSES) {//如果是班级分组里面的项，不能侧滑
+                holder.root.setSwipeEnabled(false);
+            }else {
+                holder.root.setSwipeEnabled(true);
+            }
+
             String avatar = "";
             String cover = c.cover;
             if(TextUtils.isEmpty(cover)) {
