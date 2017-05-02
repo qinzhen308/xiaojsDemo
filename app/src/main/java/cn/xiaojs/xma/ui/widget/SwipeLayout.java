@@ -971,8 +971,13 @@ public class SwipeLayout extends FrameLayout {
             }
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                boolean isDragging=mIsBeingDragged;
                 mIsBeingDragged = false;
                 mDragHelper.processTouchEvent(event);
+                //消耗掉事件，否则事件回传，导致误点击
+                if(isDragging){
+                    return true;
+                }
                 break;
 
             default://handle other action, such as ACTION_POINTER_DOWN/UP

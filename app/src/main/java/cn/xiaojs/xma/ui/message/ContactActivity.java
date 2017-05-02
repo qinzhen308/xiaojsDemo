@@ -134,7 +134,6 @@ public class ContactActivity extends BaseActivity {
                     }
 
                     LeanCloudUtil.lanchGroupChat(ContactActivity.this,name,contact.chatId);
-                    return false;
                 }
 
 
