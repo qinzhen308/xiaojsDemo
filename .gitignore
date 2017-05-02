@@ -45,3 +45,6 @@ _sandbox
 
 #lean cloud
 /leancloudchatkit/build
+
+#qrcode
+/qrcode/build

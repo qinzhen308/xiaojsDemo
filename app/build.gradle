@@ -60,7 +60,7 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.google.zxing:core:3.3.0'
+    //compile 'com.google.zxing:core:3.3.0'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.orhanobut:logger:1.15'
@@ -80,6 +80,7 @@ dependencies {
     //    compile project(':pulltorefresh')
     //3d wheel picker
     compile project(':3d_wheelpicker')
+    compile project(':qrcode')
     compile files('libs/android-support-v7-recyclerview.jar')
     //flex layout
     //qiniu

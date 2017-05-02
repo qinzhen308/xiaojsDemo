@@ -1,13 +1,18 @@
 package cn.xiaojs.xma.ui;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
+import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
 import com.orhanobut.logger.Logger;
 
 
@@ -17,6 +22,7 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
@@ -35,7 +41,6 @@ import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
 import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
 import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
-import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -46,6 +51,8 @@ import static cn.xiaojs.xma.util.MessageUitl.ACTION_NEW_PUSH;
 public class MainActivity extends BaseTabActivity {
 
     public static final String KEY_POSITION = "key_position";
+
+    private final int PERMISSION_CODE = 0x11;
 
     private long time;
 
@@ -169,7 +176,18 @@ public class MainActivity extends BaseTabActivity {
     @Override
     protected void onGooeyMenuClick(int position) {
         switch (position) {
-            case 1://开课
+            case 1:
+                if (PermissionUtil.isOverMarshmallow()
+                        && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
+
+                }else {
+                    startActivity(new Intent(this, QrCodeActivity.class));
+                }
+
+                break;
+            case 2://开课
+
                 if (AccountDataManager.isTeacher(this)) {
                     //老师可以开课
                     Intent intent = new Intent(this, LessonCreationActivity.class);
@@ -196,11 +214,11 @@ public class MainActivity extends BaseTabActivity {
                     dialog.show();
                 }
                 break;
-            case 2:
+            case 3:
                 //startActivity(new Intent(this,GradeHomeActivity.class));
                 startActivity(new Intent(this, ContactActivity.class));
                 break;
-            case 3:
+            case 4:
                 startActivityForResult(new Intent(this, PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
                 //if (JMessageClient.getMyInfo() != null){
                 //    Intent intent = new Intent(this, ChatActivity.class);
@@ -208,10 +226,10 @@ public class MainActivity extends BaseTabActivity {
                 //    startActivity(intent);
                 //}
                 break;
-            case 4:
+            case 5:
                 //startActivity(new Intent(this,PersonHomeActivity.class));
                 break;
-            case 5:
+            case 6:
                 //startActivityForResult(new Intent(this, PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
                 break;
         }
@@ -288,6 +306,27 @@ public class MainActivity extends BaseTabActivity {
     }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case PERMISSION_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    startActivity(new Intent(this, QrCodeActivity.class));
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
+    }
+
     private class UpgradeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -329,4 +368,7 @@ public class MainActivity extends BaseTabActivity {
             }
         }
     }
+
+
+
 }

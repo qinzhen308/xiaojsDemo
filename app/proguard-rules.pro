@@ -198,3 +198,7 @@
     *;
 }
 
+-keep class com.google.zxing.** {
+    *;
+}
+

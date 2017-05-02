@@ -74,6 +74,7 @@
         <item>约辅导</item>
         <item>提问</item>-->
         <item>开课</item>
+        <item>扫一扫</item>
     </string-array>
     <string-array name="course_block_tabs">
         <item>我学的课</item>
