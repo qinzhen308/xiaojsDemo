@@ -29,6 +29,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Keep;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,6 +71,8 @@ import static cn.xiaojs.xma.ui.message.ShareScopeActivity.REQUEST_CHOOSE_CLASS_C
 public class ClassMaterialActivity extends BaseActivity {
 
     public static final String EXTRA_LESSON_ID = "lesson_id";
+
+    public static final String EXTRA_DELETEABLE = "del_able";
     public static final String EXTRA_LESSON_NAME = "lesson_name";
     private static final int REQUEST_PERMISSION = 1002;
 
@@ -114,15 +117,17 @@ public class ClassMaterialActivity extends BaseActivity {
 
         String lessonId = getIntent().getStringExtra(EXTRA_LESSON_ID);
         String lessonName = getIntent().getStringExtra(EXTRA_LESSON_NAME);
+        boolean deleteAble = getIntent().getBooleanExtra(EXTRA_DELETEABLE,false);
 
 
         mTitle.setEms(8);
         mTitle.setSingleLine(true);
         mTitle.setEllipsize(TextUtils.TruncateAt.END);
         mTitle.setText(lessonName);
+        mTitle.setGravity(Gravity.CENTER);
         //mTitle.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
 
-        mAdapter = new ClassMaterialAdapter(this, mList, lessonId);
+        mAdapter = new ClassMaterialAdapter(this, mList, lessonId, deleteAble);
         mList.setAdapter(mAdapter);
         mRightImage2.setImageResource(R.drawable.upload_selector);
         mRightImage.setImageResource(R.drawable.ic_my_download);

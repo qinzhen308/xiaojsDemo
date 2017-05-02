@@ -455,6 +455,7 @@ public class MaterialActivity extends BaseActivity {
     //资料库
     private void databank(String classid, String name) {
         Intent intent = new Intent(this, ClassMaterialActivity.class);
+        //FIXME 此处如果是助教、老师、主讲进入班级资料库，他们有删除该班级所有的的权限，但是目前判断不出来身份。
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, classid);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, name);
         startActivity(intent);

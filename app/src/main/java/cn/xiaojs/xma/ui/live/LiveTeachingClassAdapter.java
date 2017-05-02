@@ -490,6 +490,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
     //资料库
     private void databank(LiveItem bean) {
         Intent intent = new Intent(mContext, ClassMaterialActivity.class);
+        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.id);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.title);
         mContext.startActivity(intent);
