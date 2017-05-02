@@ -220,7 +220,7 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
         }
     }
 
-    private void restartPreview() {
+    protected void restartPreview() {
         if (null != mCaptureActivityHandler) {
             mCaptureActivityHandler.restartPreviewAndDecode();
         }
@@ -367,13 +367,16 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
                 }
             });
         } else {
-            mDecodeManager.showResultDialog(this, resultString, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    restartPreview();
-                }
-            });
+
+            handleSuccessResult(resultString);
+
+//            mDecodeManager.showResultDialog(this, resultString, new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                    restartPreview();
+//                }
+//            });
         }
     }
 
@@ -425,6 +428,12 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
         @Override
         public void handleMessage(Message msg) {
             QrCodeActivity qrCodeActivity = mWeakQrCodeActivity.get();
+
+            if (qrCodeActivity == null) {
+                return;
+            }
+
+
             switch (msg.what) {
                 case MSG_DECODE_SUCCEED:
                     Result result = (Result) msg.obj;
@@ -443,14 +452,22 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
         }
 
         private void handleResult(String resultString) {
-            QrCodeActivity imagePickerActivity = mWeakQrCodeActivity.get();
-            mDecodeManager.showResultDialog(imagePickerActivity, resultString, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            QrCodeActivity qrCodeActivity = mWeakQrCodeActivity.get();
+            if (qrCodeActivity !=null) {
+                qrCodeActivity.handleSuccessResult(resultString);
+            }
+
+//            mDecodeManager.showResultDialog(qrCodeActivity, resultString, new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                }
+//            });
         }
+
+    }
+
+    public void handleSuccessResult(String data) {
 
     }
 }
