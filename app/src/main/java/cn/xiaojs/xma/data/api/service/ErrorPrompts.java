@@ -199,7 +199,7 @@ public class ErrorPrompts {
                 } else if (errorCode.equals(Errors.NO_ENROLL)) {
                     errorMessage = "停止报名";
                 } else if (errorCode.equals(Errors.BAD_SUBTOTAL)) {
-                    errorMessage = "折扣或者促销已过期";
+                    errorMessage = "折扣或促销已过期";
                 } else {
                     errorMessage = "报名失败";
                 }
@@ -208,8 +208,10 @@ public class ErrorPrompts {
             case APIType.PUT_LESSON_ON_SHELVES:
 
                 if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
-                    errorMessage = "您不能上架该课程";
-                } else {
+                    errorMessage = "您不能上架该课";
+                } else if (errorCode.equals(Errors.OPERATION_TIMEOUT)) {
+                    errorMessage = "课已过期，不能上架";
+                }else {
                     errorMessage = "操作失败";
                 }
 
