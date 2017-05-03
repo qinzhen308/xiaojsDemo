@@ -1,117 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:id="@+id/material_item"
+<cn.xiaojs.xma.ui.widget.CheckableLinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
               android:background="@color/white"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
 
-    <RelativeLayout
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <CheckedTextView
+            android:id="@+id/check_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkMark="@drawable/multi_check_selector"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="@dimen/px24"
+            android:visibility="gone"
+            />
 
-        <ImageView
-                android:layout_marginTop="@dimen/px30"
-                android:id="@+id/material_item_image"
-                android:scaleType="fitXY"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_word"
-                android:layout_width="@dimen/px60"
-                android:layout_height="@dimen/px60"/>
-
-        <ImageView
-                android:id="@+id/material_item_expand"
-                android:scaleType="centerInside"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_arrow_down"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:paddingLeft="14dp"
-                android:paddingRight="12dp"
-                />
-
-        <LinearLayout
-                android:layout_toRightOf="@+id/material_item_image"
-                android:layout_toLeftOf="@+id/material_item_expand"
-                android:layout_margin="@dimen/px30"
-                android:orientation="vertical"
-                android:layout_centerInParent="true"
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/material_item"
+            android:layout_weight="1.0">
+        <RelativeLayout
+                android:layout_marginLeft="@dimen/px30"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                    android:id="@+id/material_item_name"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_30px"
-                    android:text="人力资源管理实务"
+            <ImageView
+                    android:layout_marginTop="@dimen/px30"
+                    android:id="@+id/material_item_image"
+                    android:scaleType="fitXY"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_word"
+                    android:layout_width="@dimen/px60"
+                    android:layout_height="@dimen/px60"/>
+
+            <ImageView
+                    android:id="@+id/material_item_expand"
+                    android:scaleType="centerInside"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_arrow_down"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:ellipsize="middle"/>
+                    android:layout_height="50dp"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="12dp"
+                    />
+
+            <LinearLayout
+                    android:layout_toRightOf="@+id/material_item_image"
+                    android:layout_toLeftOf="@+id/material_item_expand"
+                    android:layout_margin="@dimen/px30"
+                    android:orientation="vertical"
+                    android:layout_centerInParent="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/material_item_name"
+                        android:textColor="@color/font_black"
+                        android:textSize="@dimen/font_30px"
+                        android:text="人力资源管理实务"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:ellipsize="middle"/>
+
+                <TextView
+                        android:layout_marginTop="@dimen/px10"
+                        android:id="@+id/material_item_desc"
+                        android:textSize="@dimen/font_26px"
+                        android:textColor="@color/common_text"
+                        android:text="0.8M 2017-11-11 20:22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:ellipsize="end"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+                android:id="@+id/material_item_opera_wrapper"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:background="@color/moment_write_comment_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
 
             <TextView
-                    android:layout_marginTop="@dimen/px10"
-                    android:id="@+id/material_item_desc"
-                    android:textSize="@dimen/font_26px"
+                    android:id="@+id/material_item_opera1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:textColor="@color/common_text"
-                    android:text="0.8M 2017-11-11 20:22"
-                    android:layout_width="wrap_content"
+                    android:textSize="@dimen/font_26px"
+                    android:drawableTop="@drawable/ic_download"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:text="保存到手机"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/px10"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:ellipsize="end"/>
+                    android:visibility="gone"/>
+
+            <TextView
+                    android:id="@+id/material_item_opera2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_26px"
+                    android:drawableTop="@drawable/ic_share"
+                    android:text="@string/share"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/material_item_opera3"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_26px"
+                    android:drawableTop="@drawable/ic_delete"
+                    android:text="@string/delete"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
         </LinearLayout>
-    </RelativeLayout>
-
-    <LinearLayout
-            android:id="@+id/material_item_opera_wrapper"
-            android:visibility="gone"
-            android:orientation="horizontal"
-            android:background="@color/moment_write_comment_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-        <TextView
-                android:id="@+id/material_item_opera1"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:textColor="@color/common_text"
-                android:textSize="@dimen/font_26px"
-                android:drawableTop="@drawable/ic_download"
-                android:paddingTop="@dimen/px20"
-                android:paddingBottom="@dimen/px20"
-                android:text="保存到手机"
-                android:gravity="center"
-                android:drawablePadding="@dimen/px10"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
-        <TextView
-                android:id="@+id/material_item_opera2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:textColor="@color/common_text"
-                android:textSize="@dimen/font_26px"
-                android:drawableTop="@drawable/ic_share"
-                android:text="@string/share"
-                android:gravity="center"
-                android:layout_height="wrap_content"/>
-
-        <TextView
-                android:id="@+id/material_item_opera3"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:textColor="@color/common_text"
-                android:textSize="@dimen/font_26px"
-                android:drawableTop="@drawable/ic_delete"
-                android:text="@string/delete"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
     </LinearLayout>
-</LinearLayout>
+</cn.xiaojs.xma.ui.widget.CheckableLinearLayout>

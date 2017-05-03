@@ -255,6 +255,10 @@ public abstract class PullToRefreshStickyAdapterViewBase<T extends StickyListHea
 		mRefreshableView.setOnItemClickListener(listener);
 	}
 
+	public void setChoiceMode(int choiceMode) {
+		mRefreshableView.setChoiceMode(choiceMode);
+	}
+
 	public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener listener) {
 		mRefreshableView.setOnItemLongClickListener(listener);
 	}

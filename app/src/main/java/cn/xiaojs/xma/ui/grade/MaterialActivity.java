@@ -28,7 +28,9 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Keep;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -90,12 +92,16 @@ public class MaterialActivity extends BaseActivity {
     ImageView mRightImage;
     @BindView(R.id.material_right_image2)
     ImageView mRightImage2;
+    @BindView(R.id.choice_btn)
+    Button choiceBtn;
 
     MaterialAdapter mAdapter;
     CollaManager mManager;
     private Uri mUri;
 
     private String targetDocId;
+
+    private int choiceMode = ListView.CHOICE_MODE_NONE;
 
     @Override
     protected void addViewContent() {
@@ -118,21 +124,32 @@ public class MaterialActivity extends BaseActivity {
         mRightImage.setImageResource(R.drawable.ic_my_download);
     }
 
-    @OnClick({R.id.material_left_image, R.id.material_right_image, R.id.material_right_image2, R.id.material_up_load_close})
+    @OnClick({R.id.material_left_image, R.id.material_right_image, R.id.material_right_image2,
+            R.id.material_up_load_close, R.id.choice_btn, R.id.cancel_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.material_left_image:
                 finish();
                 break;
-            case R.id.material_right_image://我的下载
+            case R.id.material_right_image:
+
+                changeChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+                //我的下载
 //                if (DownloadManager.allowDownload(this)) {
 //                    DownloadManager.enqueueDownload(this, "vipkid" + System.currentTimeMillis() + ".apk", "key", "http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk", "", "");
 //                } else {
 //                    Toast.makeText(this, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
 //                }
 
-                Intent intent = new Intent(this, MaterialDownloadActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(this, MaterialDownloadActivity.class);
+//                startActivity(intent);
+                break;
+            case R.id.choice_btn:
+
+                break;
+            case R.id.cancel_btn:
+                changeChoiceMode(ListView.CHOICE_MODE_NONE);
                 break;
             case R.id.material_right_image2://上传文件
                 upload();
@@ -141,6 +158,24 @@ public class MaterialActivity extends BaseActivity {
                 confirmCancel();
                 break;
         }
+    }
+
+    public int getChoiceMode() {
+        return choiceMode;
+    }
+
+    private void changeChoiceMode(int choiceMode) {
+        this.choiceMode = choiceMode;
+        mList.setChoiceMode(choiceMode);
+
+        if (choiceMode == ListView.CHOICE_MODE_MULTIPLE) {
+
+        }else{
+
+        }
+
+        mAdapter.notifyDataSetChanged();
+
     }
 
     public void confirmCancel() {
@@ -455,7 +490,7 @@ public class MaterialActivity extends BaseActivity {
     //资料库
     private void databank(String classid, String name) {
         Intent intent = new Intent(this, ClassMaterialActivity.class);
-        //FIXME 此处如果是助教、老师、主讲进入班级资料库，他们有删除该班级所有的的权限，但是目前判断不出来身份。
+        //FIXME 此处如果是助教、老师、主讲进入班级资料库，
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, classid);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, name);
         startActivity(intent);
