@@ -373,9 +373,18 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             @Override
             public void onSuccess(Object object) {
                 cancelProgress();
-                bean.setState(LessonState.PENDING_FOR_APPROVAL);
+
+                //如果是已经实名认证的用户开的课，上架成功后，自动通过，不需要审核
+                if (AccountDataManager.isVerified(mContext)) {
+                    bean.setState(LessonState.PENDING_FOR_LIVE);
+                    ToastUtil.showToast(mContext, R.string.shelves_ok);
+                }else {
+                    bean.setState(LessonState.PENDING_FOR_APPROVAL);
+                    ToastUtil.showToast(mContext, R.string.shelves_need_examine);
+                }
+
                 notifyData(bean);
-                ToastUtil.showToast(mContext, R.string.shelves_need_examine);
+
             }
 
             @Override
