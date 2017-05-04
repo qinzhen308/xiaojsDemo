@@ -213,4 +213,21 @@ public class CollaManager {
     }
 
 
+    /**
+     * 批量分享文档
+     * @param context
+     * @param targetId
+     * @param resource
+     * @param callback
+     */
+    public static void shareDocuments(Context context,
+                                     String targetId,
+                                     ShareResource resource,
+                                     APIServiceCallback<ShareDoc> callback) {
+
+        CollaRequest request = new CollaRequest(context,callback);
+        request.shareDocuments(targetId, resource);
+    }
+
+
 }

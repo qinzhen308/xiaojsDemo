@@ -11,4 +11,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class ShareDoc {
 
     public String id;
+
+    public String[] linked;
 }

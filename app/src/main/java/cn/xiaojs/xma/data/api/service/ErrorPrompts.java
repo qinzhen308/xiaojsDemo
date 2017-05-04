@@ -39,6 +39,14 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.SHARE_DOCUMENTS:
+                if (errorCode.equals(Errors.INVALID_OPERATION)) {
+                    errorMessage = "您分享的资料,有的已在该班级中存在了";
+                }else {
+                    errorMessage = "分享到班级失败";
+                }
+
+                break;
             case APIType.SHARE_DOCUMENT:
                 if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
                     errorMessage = "您分享的资料已在该班级中存在了";

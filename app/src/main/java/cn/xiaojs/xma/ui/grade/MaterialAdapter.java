@@ -145,7 +145,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             @Override
             public void onClick(View v) {
 
-                ((MaterialActivity)mContext).chooseShare(bean.id);
+                ((MaterialActivity)mContext).chooseShare(new String[]{bean.id});
 
             }
         });

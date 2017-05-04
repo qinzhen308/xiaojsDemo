@@ -157,5 +157,6 @@ public class APIType {
 
     public static final int DELETE_DOCUMENT = 89;
     public static final int SHARE_DOCUMENT = 90;
+    public static final int SHARE_DOCUMENTS = 91;
 
 }

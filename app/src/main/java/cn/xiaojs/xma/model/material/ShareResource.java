@@ -14,4 +14,6 @@ public class ShareResource {
     public String subtype;
     public String sharedType;
 
+    public String[] documents;
+
 }

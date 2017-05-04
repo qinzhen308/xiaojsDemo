@@ -551,6 +551,11 @@ public interface XiaojsService {
     @PATCH("/v1/collaboration/documents/{document}/share")
     Call<ShareDoc> shareDocument(@Path("document") String document, @Body ShareResource resource);
 
+    //Share Documents
+    @POST("/v1/collaboration/library/{targetId}/share")
+    Call<ShareDoc> shareDocuments(@Path("targetId") String targetId, @Body ShareResource resource);
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Contents

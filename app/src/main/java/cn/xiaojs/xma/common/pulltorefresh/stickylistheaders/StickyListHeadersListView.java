@@ -1007,9 +1007,19 @@ public class StickyListHeadersListView extends FrameLayout {
 		mList.setChoiceMode(choiceMode);
 	}
 
+	public void clearChoices() {
+		mList.clearChoices();
+	}
+
 	public void setItemChecked(int position, boolean value) {
 		mList.setItemChecked(position, value);
 	}
+
+	public long[] getCheckItemIds() {
+		return mList.getCheckItemIds();
+	}
+
+
 
 	// @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	// public int getCheckedItemCount() {
