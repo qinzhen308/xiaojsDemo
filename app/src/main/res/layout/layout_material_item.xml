@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:checkMark="@drawable/multi_check_selector"
             android:gravity="center_vertical"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="@dimen/px30"
             android:layout_gravity="center_vertical"
             android:drawablePadding="@dimen/px24"
             android:visibility="gone"
