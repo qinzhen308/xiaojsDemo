@@ -112,8 +112,13 @@ public class XiaojsConfig {
     public static final String WX_APP_ID = "wxecffc72c21a94f5a";
     //QQ
     public static final String QQ_APP_ID = "1105994736";
+
     //bugly
+    //bugly------------生产环境使用----------
     public static final String BUGLY_APP_ID = "900060174";
+    //bugly------------开发和预发布环境使用----------
+    public static final String BUGLY_APP_ID_DEV = "d4347d7369";
+
     //Jpush app key
     public static final String JPUSH_APP_KEY = "e87cffb332432eec3c0807ba";
     //ping++

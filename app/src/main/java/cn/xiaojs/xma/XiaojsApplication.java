@@ -68,7 +68,12 @@ public class XiaojsApplication extends Application {
         }
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setAppChannel(XiaojsConfig.CHANNEL);
-        CrashReport.initCrashReport(getApplicationContext(), XiaojsConfig.BUGLY_APP_ID, false, strategy);
+        if (APPUtils.isProEvn()) {
+            CrashReport.initCrashReport(getApplicationContext(), XiaojsConfig.BUGLY_APP_ID, false, strategy);
+        }else {
+            CrashReport.initCrashReport(getApplicationContext(), XiaojsConfig.BUGLY_APP_ID_DEV, false, strategy);
+        }
+
 
         //init xiaojs utils
         XjsUtils.init(this);
