@@ -42,6 +42,14 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         //assertEquals(4, 2 + 2);
 
+        String url = "http://192.168.100.3/live/590ad80c25558febef0f6957/1";
+
+        String[] items = url.split("/");
+
+        for (String item: items) {
+            System.out.println(item);
+        }
+
 
 //        Duration duration = new Duration();
 //        duration.setStart(new Date(System.currentTimeMillis()-(3600*1000*24)));

@@ -758,6 +758,10 @@
     <string name="choose_material_tips">请选择要分享的资料</string>
     <string name="shelves_ok">上架成功</string>
     <string name="forbidden_enter_class_for_cancel">该课已被取消，不能正常使用教室</string>
+    <string name="patch_share_material">批量分享资料</string>
+    <string name="go_on_share_material">继续分享</string>
+    <string name="query_go_on_share_when_confilc">以下资料在该班级中已存在，是否继续分享？</string>
+    <string name="Invalid_calss_qrcode_tips">无效的教室二维码，请扫描正确的教室二维码</string>
 
 
 </resources>

@@ -27,7 +27,9 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Keep;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -578,6 +580,54 @@ public class MaterialActivity extends BaseActivity {
         cancelProgress();
         targetDocIds = null;
     }
+
+//    private void shareConflictWithPatch() {
+//        View view = LayoutInflater.from(this).inflate(R.layout.layout_dlg_list,null);
+//        final ListView listView = (ListView) view;
+//
+//
+//        TextView headerView = new TextView(this);
+//        headerView.setText(R.string.query_go_on_share_when_confilc);
+//        headerView.setTextSize(14);
+//        headerView.setTextColor(getResources().getColor(R.color.font_light_gray));
+//        headerView.setPadding(0,0,0,10);
+//
+//
+//
+//        String[] items = new String[] {"大是大非好.pdf",
+//                "粉色的方式可点击返回款式大方.doc",
+//                "俄方看了很多事发生的反馈老师的护肤老师的风景还是到了匡扶汉室独立开发哈收到了发.mp4",
+//                "hello world.pdf"};
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+//                R.layout.layout_text_item_only,items);
+//
+//        listView.addHeaderView(headerView);
+//        listView.setAdapter(adapter);
+//
+//        final CommonDialog dialog = new CommonDialog(this);
+//        dialog.setTitle(R.string.patch_share_material);
+//        dialog.setCustomView(listView);
+//        dialog.setLefBtnText(R.string.cancel);
+//        dialog.setRightBtnText(R.string.go_on_share_material);
+//        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+//            @Override
+//            public void onClick() {
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+//            @Override
+//            public void onClick() {
+//                dialog.dismiss();
+//                //TODO 继续分享
+//            }
+//        });
+//
+//        dialog.show();
+//
+//    }
 
     public void shareSuccess(final String classId, final String classname) {
         final CommonDialog dialog = new CommonDialog(this);
