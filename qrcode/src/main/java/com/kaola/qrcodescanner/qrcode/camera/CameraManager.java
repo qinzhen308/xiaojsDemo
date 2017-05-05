@@ -14,6 +14,7 @@
 package com.kaola.qrcodescanner.qrcode.camera;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.view.SurfaceHolder;

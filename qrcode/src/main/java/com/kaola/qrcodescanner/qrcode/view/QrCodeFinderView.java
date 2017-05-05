@@ -43,7 +43,7 @@ public final class QrCodeFinderView extends RelativeLayout {
     private int mFrameColor;
     private int mLaserColor;
     private int mTextColor;
-    private Rect mFrameRect;
+    public Rect mFrameRect;
     private int mFocusThick;
     private int mAngleThick;
     private int mAngleLength;

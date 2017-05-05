@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -91,6 +92,10 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
         setContentView(R.layout.activity_qr_code);
         initView();
         initData();
+    }
+
+    public Rect getPreviewRect() {
+        return mQrCodeFinderView.mFrameRect;
     }
 
     private void checkPermission() {
