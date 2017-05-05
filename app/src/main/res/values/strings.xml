@@ -757,6 +757,7 @@
     <string name="cancel_choice_all">取消全选</string>
     <string name="choose_material_tips">请选择要分享的资料</string>
     <string name="shelves_ok">上架成功</string>
+    <string name="forbidden_enter_class_for_cancel">该课已被取消，不能正常使用教室</string>
 
 
 </resources>

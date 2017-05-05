@@ -21,6 +21,8 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -87,6 +89,46 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     }
 
     @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public View getView(int position, View view, ViewGroup viewGroup) {
+        if (mBeanList.size() > 0) {
+            Holder holder = null;
+            if (view == null) {
+                view = createItem(position);
+                holder = initHolder(view);
+                view.setTag(holder);
+            } else {
+                if ((getItemViewType(position) == TYPE_MY_SPEAKER && view.getId() != R.id.my_speaker)
+                        || (getItemViewType(position) == TYPE_OTHER_SPEAKER && view.getId() != R.id.other_speaker)) {
+                    view = createItem(position);
+                    holder = initHolder(view);
+                    view.setTag(holder);
+                } else {
+                    holder = (Holder) view.getTag();
+                }
+            }
+            if (holder == null) {//view可能会传成下方的占位view
+                view = createItem(position);
+                holder = initHolder(view);
+                view.setTag(holder);
+            }
+            setViewContent(holder, getItem(position), position);
+            return view;
+        } else {//解决加了header后，header高度超过1屏无法下拉
+            View v = new View(mContext);
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            v.setBackgroundResource(android.R.color.transparent);
+            v.setLayoutParams(lp);
+            return v;
+        }
+    }
+
+
+    @Override
     protected void setViewContent(final Holder holder, TalkItem bean, int position) {
         int size = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
         String portraitUrl = Account.getAvatar(bean.from != null ? bean.from.accountId : null, size);
@@ -131,7 +173,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
                             public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                                 super.onResourceReady(resource, animation);
                                 if (resource instanceof GlideBitmapDrawable) {
-                                    Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
+                                    Bitmap bmp = ((GlideBitmapDrawable) resource).getBitmap();
                                     if (bmp != null) {
                                         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.msgImg.getLayoutParams();
                                         int w = MAX_SIZE;

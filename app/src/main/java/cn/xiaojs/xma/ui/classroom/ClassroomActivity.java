@@ -511,8 +511,15 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
      * @param ctlSession   课程session
      */
     private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession) {
-        mLessonID = ctlSession.ctl != null ? ctlSession.ctl.id : "";
+
         mLiveSessionState = ctlSession.state;
+        if (Live.LiveSessionState.CANCELLED.equals(mLiveSessionState)) {
+            Toast.makeText(this, R.string.forbidden_enter_class_for_cancel,Toast.LENGTH_SHORT).show();
+            //finish();
+        }
+
+        mLessonID = ctlSession.ctl != null ? ctlSession.ctl.id : "";
+
         mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
         //二维码扫描进入教室，需要更新ticket.
         if (!TextUtils.isEmpty(ctlSession.ticket)) {

@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
 import com.orhanobut.logger.Logger;
@@ -177,6 +178,8 @@ public class MainActivity extends BaseTabActivity {
     protected void onGooeyMenuClick(int position) {
         switch (position) {
             case 1:
+
+                //Toast.makeText(this,"暂未开放此功能",Toast.LENGTH_SHORT).show();
                 if (PermissionUtil.isOverMarshmallow()
                         && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
