@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.kaola.qrcodescanner.R;
 import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
 
 import java.util.Collections;
@@ -38,7 +39,8 @@ final class CameraConfigurationManager {
 
     private Point cameraResolution;
     private Point bestPreviewSize;
-    //private Camera.Size mPictureResolution;
+    private Camera.Size mCameraResolution;
+    private Camera.Size mPictureResolution;
     private Context mContext;
 
     CameraConfigurationManager(Context context) {
@@ -51,11 +53,14 @@ final class CameraConfigurationManager {
     void initFromCameraParameters(Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
 
-        WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        Display display = manager.getDefaultDisplay();
+        //WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        //Display display = manager.getDefaultDisplay();
 
         Point theScreenResolution = new Point();
-        display.getSize(theScreenResolution);
+        //display.getSize(theScreenResolution);
+
+        theScreenResolution.set(1600,1200);
+
         Log.i(TAG, "Screen resolution in current orientation: " + theScreenResolution);
         cameraResolution = CameraConfigurationUtils.findBestPreviewSizeValue(parameters, theScreenResolution);
         Log.i(TAG, "Camera resolution: " + cameraResolution);
@@ -64,8 +69,8 @@ final class CameraConfigurationManager {
 
 
 //        mCameraResolution = findCloselySize(ScreenUtils.getScreenWidth(mContext), ScreenUtils.getScreenHeight(mContext),
-//            parameters.getSupportedPreviewSizes());
-        //Log.e(TAG, "Setting preview size: " + mCameraResolution.width + "-" + mCameraResolution.height);
+//                parameters.getSupportedPreviewSizes());
+//        Log.e(TAG, "Setting preview size: " + mCameraResolution.width + "-" + mCameraResolution.height);
 //        mPictureResolution = findCloselySize(ScreenUtils.getScreenWidth(mContext),
 //            ScreenUtils.getScreenHeight(mContext), parameters.getSupportedPictureSizes());
 //        Log.e(TAG, "Setting picture size: " + mPictureResolution.width + "-" + mPictureResolution.height);
@@ -81,8 +86,14 @@ final class CameraConfigurationManager {
 
         Camera.Parameters parameters = camera.getParameters();
         parameters.setPreviewSize(bestPreviewSize.x, bestPreviewSize.y);
-        //parameters.setPreviewSize(mCameraResolution.width, mCameraResolution.height);
-        parameters.setPictureSize(bestPreviewSize.x, bestPreviewSize.y);
+        //parameters.setPictureSize(bestPreviewSize.x, bestPreviewSize.y);
+//        parameters.setPreviewSize(mCameraResolution.width, mCameraResolution.height);
+//        parameters.setPreviewSize(mPictureResolution.width, mPictureResolution.height);
+
+        //int psize = mContext.getResources().getDimensionPixelSize(R.dimen.scan_rect);
+
+
+
         setZoom(parameters);
         camera.setDisplayOrientation(90);
         camera.setParameters(parameters);

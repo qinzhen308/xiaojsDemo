@@ -75,6 +75,9 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
     private Executor mQrCodeExecutor;
     private Handler mHandler;
 
+    private Rect scanRect;
+
+
     private static Intent createIntent(Context context) {
         Intent i = new Intent(context, QrCodeActivity.class);
         return i;
@@ -90,12 +93,15 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_code);
+
         initView();
         initData();
+        initScanRect();
+
     }
 
     public Rect getPreviewRect() {
-        return mQrCodeFinderView.mFrameRect;
+        return scanRect;
     }
 
     private void checkPermission() {
@@ -133,6 +139,31 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
         mInactivityTimer = new InactivityTimer(QrCodeActivity.this);
         mQrCodeExecutor = Executors.newSingleThreadExecutor();
         mHandler = new WeakHandler(this);
+    }
+
+    private void initScanRect() {
+        int scanOffset = getResources().getDimensionPixelSize(R.dimen.scan_offset);
+
+        Rect tempRect = mQrCodeFinderView.mFrameRect;
+        scanRect = new Rect();
+
+        if (tempRect.left < scanOffset) {
+            scanRect.left = 0;
+        }else {
+            scanRect.left = tempRect.left - scanOffset;
+        }
+
+        if (tempRect.top < scanOffset) {
+            scanRect.top = 0;
+        }else {
+            scanRect.top = tempRect.top - scanOffset;
+        }
+
+        scanRect.right = tempRect.right + scanOffset;
+        scanRect.bottom = tempRect.bottom + scanOffset;
+
+
+
     }
 
     private boolean hasCameraPermission() {
