@@ -717,7 +717,7 @@ public class ContactActivity extends BaseActivity {
                 mShownLayouts.add(holder.root);
                 holder.avatarView = (ImageView) convertView.findViewById(R.id.contact_avatar);
                 holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
-                holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
+//                holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
                 holder.delBtn = (Button) convertView.findViewById(R.id.del_contact);
                 holder.size = holder.avatarView.getMeasuredWidth();
 
@@ -762,7 +762,7 @@ public class ContactActivity extends BaseActivity {
             String name = isclass? c.title : c.alias;
             holder.nameView.setText(name);
 
-            holder.moveBtn.setOnClickListener(new View.OnClickListener() {
+            /*holder.moveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -775,7 +775,7 @@ public class ContactActivity extends BaseActivity {
                     }
 
                 }
-            });
+            });*/
 
             holder.delBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -888,7 +888,7 @@ public class ContactActivity extends BaseActivity {
         TextView nameView;
         TextView countView;
         ImageView avatarView;
-        Button moveBtn;
+//        Button moveBtn;
         Button delBtn;
         int size;
     }
