@@ -13,6 +13,7 @@ public class ShareResource {
     public String targetId;
     public String subtype;
     public String sharedType;
+    public boolean repeated;
 
     public String[] documents;
 
