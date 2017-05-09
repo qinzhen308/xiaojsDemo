@@ -9,7 +9,7 @@
 编译环境
 ----
 
- - Android Studio 2.2.2
+ - Android Studio 2.3.1
  - gradle
  - jdk 1.8
 
