@@ -530,7 +530,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
         if (mUser == Constants.User.TEACHER
                 || mUser == Constants.User.ASSISTANT
                 || mUser == Constants.User.REMOTE_ASSISTANT) {
-            if (Constants.PARTICIPANT_MODE == ctlSession.mode) {
+            if (Constants.PARTICIPANT_MODE == ctlSession.mode || Constants.PREVIEW_MODE == ctlSession.mode) {
                 mUser = Constants.User.STUDENT;
                 //屏蔽聊天和视频截图按钮
                 mTakePicBtn.setVisibility(View.GONE);

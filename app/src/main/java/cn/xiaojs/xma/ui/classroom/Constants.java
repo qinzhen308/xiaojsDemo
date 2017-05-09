@@ -86,4 +86,5 @@ public interface Constants {
     public static final int TEACHING_MODE = 1;
     public static final int PARTICIPANT_MODE = 2;
     public static final int MEDIA_MODE = 3;
+    public static final int PREVIEW_MODE = 4;
 }
