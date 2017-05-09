@@ -260,11 +260,8 @@ public class ApiManager {
 
         if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
             return new StringBuilder(XiaojsConfig.TEST_BASE_URL).append("/live/").toString();
-        }else if (channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)){
-            return new StringBuilder(XiaojsConfig.XLS_PRE_BASE_URL).append("/live/").toString();
         }else {
-            return new StringBuilder(XiaojsConfig.XLS_BASE_URL).append("/live/").toString();
-
+            return new StringBuilder(XiaojsConfig.SHARE_BASE_URL).append("/live/").toString();
         }
 
     }
