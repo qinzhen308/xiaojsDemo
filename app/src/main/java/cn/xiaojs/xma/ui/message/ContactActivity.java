@@ -5,11 +5,8 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -45,12 +42,12 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.data.db.ContactDao;
-import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 
@@ -64,8 +61,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.SwipeLayout;
-import cn.xiaojs.xma.util.JpushUtil;
-import cn.xiaojs.xma.util.LeanCloudUtil;
 import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.common.xf_foundation.schemas.Social.ContactGroup.CLASSES;
@@ -133,14 +128,20 @@ public class ContactActivity extends BaseActivity {
                         Logger.d("-------chatid------:" + contact.chatId);
                     }
 
-                    LeanCloudUtil.lanchGroupChat(ContactActivity.this,name,contact.chatId);
+                    //LeanCloudUtil.lanchGroupChat(ContactActivity.this,name,contact.chatId);
+                }else {
+
+                    String tid = contact.account;
+
+                    Intent intent = new Intent(ContactActivity.this, PersonHomeActivity.class);
+                    intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, tid);
+                    startActivity(intent);
+
+
+                    //进入聊天界面
+                    //LeanCloudUtil.lanchChatPage(ContactActivity.this,tid,name);
+                    //JpushUtil.launchChat(ContactActivity.this, tid,name);
                 }
-
-
-                String tid = contact.account;
-                //进入聊天界面
-                LeanCloudUtil.lanchChatPage(ContactActivity.this,tid,name);
-                //JpushUtil.launchChat(ContactActivity.this, tid,name);
 
                 return false;
             }
@@ -181,6 +182,7 @@ public class ContactActivity extends BaseActivity {
         }
 
     }
+
 
 
 //    private void expandALL() {
@@ -534,10 +536,10 @@ public class ContactActivity extends BaseActivity {
 
         }
 
-        //FIXME 因为没有实现群聊，屏蔽班级显示
-//        if (class_pos >=0 && class_pos < contactData.size()) {
-//            contactData.remove(class_pos);
-//        }
+        //因为没有实现群聊，屏蔽班级显示
+        if (class_pos >=0 && class_pos < contactData.size()) {
+            contactData.remove(class_pos);
+        }
 
         contactData.addAll(tempMap.values());
 

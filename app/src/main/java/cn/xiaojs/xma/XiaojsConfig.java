@@ -124,15 +124,6 @@ public class XiaojsConfig {
     //ping++
     public static final String PING_WALLET = "con.xiaojs.xma.wallet";
 
-    //leancloud
-    //leancloud------------线上使用----------
-    public static final String LEANCLOUD_APPID = "SGFQOeBc8aAPtB6yMlwbRsUS-gzGzoHsz";
-    public static final String LEANCLOUD_APPKEY = "REFNAOjlvptNOWHWInuyJSNR";
-    //leancloud------------测试使用----------
-    public static final String TEST_LEANCLOUD_APPID = "Meiqx1NnmUJVapeghsb6NXMK-gzGzoHsz";
-    public static final String TEST_LEANCLOUD_APPKEY = "8WRE9fekeB3Go0jWQKV1YEiQ";
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //其他
     //file provider

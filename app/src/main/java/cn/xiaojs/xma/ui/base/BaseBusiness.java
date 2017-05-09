@@ -30,8 +30,6 @@ import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SingleSelectDialog;
-import cn.xiaojs.xma.util.JpushUtil;
-import cn.xiaojs.xma.util.LeanCloudUtil;
 import cn.xiaojs.xma.util.StringUtil;
 
 public class BaseBusiness {
@@ -185,7 +183,7 @@ public class BaseBusiness {
         if (followed) {
             //进入聊天界面
             //JpushUtil.launchChat(context, accountId, name);
-            LeanCloudUtil.lanchChatPage(context, accountId,name);
+            //LeanCloudUtil.lanchChatPage(context, accountId,name);
         } else {
             final CommonDialog dialog = new CommonDialog(context);
 

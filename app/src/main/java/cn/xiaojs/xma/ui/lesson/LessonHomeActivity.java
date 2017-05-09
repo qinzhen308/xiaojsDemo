@@ -109,8 +109,8 @@ public class  LessonHomeActivity extends BaseActivity{
     View mLessonEnrollLayout;
     @BindView(R.id.apply_btn)
     Button applyBtn;
-    @BindView(R.id.consulting)
-    Button mConsultingBtn;
+//    @BindView(R.id.consulting)
+//    Button mConsultingBtn;
 
 
     @BindView(R.id.block_detail_bar)
@@ -138,7 +138,7 @@ public class  LessonHomeActivity extends BaseActivity{
         loadData();
     }
 
-    @OnClick({R.id.back_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.consulting, R.id.lay_teacher})
+    @OnClick({R.id.back_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.lay_teacher})//R.id.consulting
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.lay_teacher:
@@ -176,37 +176,37 @@ public class  LessonHomeActivity extends BaseActivity{
             case R.id.apply_btn:
                 appDeal();
                 break;
-            case R.id.consulting:
-
-                if (mLessonDetail == null) return;
-
-                final Teacher tea = mLessonDetail.getTeacher();
-                if (tea == null || tea.getBasic() == null) return;
-
-                String sex = "true";
-
-                boolean isFollowed = DataManager.existInContacts(this, tea._id);
-
-                BaseBusiness.advisory(this, isFollowed, tea._id, tea.getBasic().getName(), sex, new BaseBusiness.OnFollowListener() {
-                    @Override
-                    public void onFollow(long group) {
-                        if (group > 0) {
-                            SocialManager.followContact(LessonHomeActivity.this, tea._id,tea.getBasic().getName(), group, new APIServiceCallback<Relation>() {
-                                @Override
-                                public void onSuccess(Relation object) {
-                                    ToastUtil.showToast(getApplicationContext(), R.string.followed);
-
-                                }
-
-                                @Override
-                                public void onFailure(String errorCode, String errorMessage) {
-                                    ToastUtil.showToast(getApplicationContext(), errorMessage);
-                                }
-                            });
-                        }
-                    }
-                });
-                break;
+//            case R.id.consulting:
+//
+//                if (mLessonDetail == null) return;
+//
+//                final Teacher tea = mLessonDetail.getTeacher();
+//                if (tea == null || tea.getBasic() == null) return;
+//
+//                String sex = "true";
+//
+//                boolean isFollowed = DataManager.existInContacts(this, tea._id);
+//
+//                BaseBusiness.advisory(this, isFollowed, tea._id, tea.getBasic().getName(), sex, new BaseBusiness.OnFollowListener() {
+//                    @Override
+//                    public void onFollow(long group) {
+//                        if (group > 0) {
+//                            SocialManager.followContact(LessonHomeActivity.this, tea._id,tea.getBasic().getName(), group, new APIServiceCallback<Relation>() {
+//                                @Override
+//                                public void onSuccess(Relation object) {
+//                                    ToastUtil.showToast(getApplicationContext(), R.string.followed);
+//
+//                                }
+//
+//                                @Override
+//                                public void onFailure(String errorCode, String errorMessage) {
+//                                    ToastUtil.showToast(getApplicationContext(), errorMessage);
+//                                }
+//                            });
+//                        }
+//                    }
+//                });
+//                break;
 
         }
     }
@@ -396,17 +396,17 @@ public class  LessonHomeActivity extends BaseActivity{
                     || lessonState.equalsIgnoreCase(LessonState.LIVE)
                     || lessonState.equalsIgnoreCase(LessonState.FINISHED)) {
                 mLessonEnrollLayout.setVisibility(View.VISIBLE);
-                mConsultingBtn.setVisibility(View.GONE);
+                //mConsultingBtn.setVisibility(View.GONE);
                 applyBtn.setText("进入教室");
                 applyBtn.setEnabled(true);
             }else{
                 mLessonEnrollLayout.setVisibility(View.GONE);
-                mConsultingBtn.setVisibility(View.VISIBLE);
+                //mConsultingBtn.setVisibility(View.VISIBLE);
             }
 
         }else{
             mLessonEnrollLayout.setVisibility(View.VISIBLE);
-            mConsultingBtn.setVisibility(View.VISIBLE);
+            //mConsultingBtn.setVisibility(View.VISIBLE);
         }
 
     }

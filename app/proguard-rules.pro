@@ -188,16 +188,7 @@
 -keep class com.amap.api.fence.**{*;}
 -keep class com.autonavi.aps.amapapi.model.**{*;}
 
-#===================lean cloud chatkit==================================
--keepclassmembers class cn.xiaojs.xma.ui.message.im.** {
-    <fields>;
-    <methods>;
-}
-
--keep class com.avos.avoscloud.** {
-    *;
-}
-
+#===================zxing qrcode==================================
 -keep class com.google.zxing.** {
     *;
 }

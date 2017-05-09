@@ -450,33 +450,6 @@
 
         <service android:name="com.amap.api.location.APSService"/>
 
-
-        <!-- 实时通信模块、推送（均需要加入以下声明） START -->
-        <!-- 实时通信模块、推送都要使用 PushService -->
-        <service android:name="com.avos.avoscloud.PushService"/>
-        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
-        <!-- 实时通信模块、推送 END -->
-
-        <activity
-                android:name=".ui.message.im.chatkit.activity.LCIMConversationActivity"
-                android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="cn.xiaojs.xma.chatkit.conversation_item_click_action"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
-        <activity
-                android:name=".ui.message.im.chatkit.activity.LCIMImageActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/scan_image_activity"/>
-
     </application>
 
 </manifest>

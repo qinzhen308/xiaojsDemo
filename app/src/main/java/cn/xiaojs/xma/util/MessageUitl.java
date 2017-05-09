@@ -5,8 +5,6 @@ import android.content.Intent;
 
 import cn.xiaojs.xma.XiaojsApplication;
 import cn.xiaojs.xma.data.DataManager;
-import cn.xiaojs.xma.data.preference.DataPref;
-import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
 
 /**
  * Created by maxiaobao on 2017/4/12.

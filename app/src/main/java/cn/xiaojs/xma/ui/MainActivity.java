@@ -40,8 +40,6 @@ import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
-import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
-import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -60,7 +58,7 @@ public class MainActivity extends BaseTabActivity {
     private UpgradeReceiver upgradeReceiver;
     private boolean hasShow = false;
 
-    private LCIMConversationListFragment conversationListFragment;
+    private MessageFragment conversationFragment;
 
 
     @Override
@@ -70,10 +68,10 @@ public class MainActivity extends BaseTabActivity {
         List<Fragment> fs = new ArrayList<>();
         fs.add(new HomeFragment());
         fs.add(new LiveFragment());
-        //fs.add(new MessageFragment());
-        conversationListFragment = new LCIMConversationListFragment();
 
-        fs.add(conversationListFragment);
+        conversationFragment = new MessageFragment();
+        fs.add(conversationFragment);
+
         fs.add(new MineFragment());
         setButtonType(BUTTON_TYPE_CENTER);
         addViews(new int[]{R.string.home_tab_index, R.string.home_tab_live, R.string.home_tab_message, R.string.home_tab_mine},
@@ -134,36 +132,36 @@ public class MainActivity extends BaseTabActivity {
         String action = intent.getAction();
 
         //IM及时通讯
-        if (!TextUtils.isEmpty(action) && action.equals(LCIMConstants.CHAT_NOTIFICATION_ACTION)) {
-            setTabSelected(2);
-
-            Intent ifarIntent = new Intent();
-            ifarIntent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
-
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-
-                boolean group = false;
-                if (extras.containsKey(LCIMConstants.IS_GROUP)) {
-                    group = intent.getBooleanExtra(LCIMConstants.IS_GROUP, false);
-                }
-
-                if (group) {
-                    String cid = intent.getStringExtra(LCIMConstants.CONVERSATION_ID);
-                    ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, cid);
-
-                } else {
-                    String pid = intent.getStringExtra(LCIMConstants.PEER_ID);
-                    ifarIntent.putExtra(LCIMConstants.PEER_ID, pid);
-                }
-
-                ifarIntent.setPackage(getPackageName());
-                ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
-
-                startActivity(ifarIntent);
-                return true;
-            }
-        }
+//        if (!TextUtils.isEmpty(action) && action.equals(LCIMConstants.CHAT_NOTIFICATION_ACTION)) {
+//            setTabSelected(2);
+//
+//            Intent ifarIntent = new Intent();
+//            ifarIntent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
+//
+//            Bundle extras = intent.getExtras();
+//            if (extras != null) {
+//
+//                boolean group = false;
+//                if (extras.containsKey(LCIMConstants.IS_GROUP)) {
+//                    group = intent.getBooleanExtra(LCIMConstants.IS_GROUP, false);
+//                }
+//
+//                if (group) {
+//                    String cid = intent.getStringExtra(LCIMConstants.CONVERSATION_ID);
+//                    ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, cid);
+//
+//                } else {
+//                    String pid = intent.getStringExtra(LCIMConstants.PEER_ID);
+//                    ifarIntent.putExtra(LCIMConstants.PEER_ID, pid);
+//                }
+//
+//                ifarIntent.setPackage(getPackageName());
+//                ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
+//
+//                startActivity(ifarIntent);
+//                return true;
+//            }
+//        }
 
         //PUSH推送
         if (!TextUtils.isEmpty(action) && action.equals(MessageUitl.ACTION_PUSH_NOTIFY_OPEN)) {
@@ -364,8 +362,8 @@ public class MainActivity extends BaseTabActivity {
                     showMessageTips();
                 }
 
-                if (conversationListFragment != null && conversationListFragment.isAdded()) {
-                    conversationListFragment.getMessageOverview();
+                if (conversationFragment != null && conversationFragment.isAdded()) {
+                    conversationFragment.getMessageOverview();
                 }
 
             }

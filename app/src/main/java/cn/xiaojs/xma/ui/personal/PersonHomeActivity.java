@@ -98,8 +98,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     @BindView(R.id.person_home_message_more)
     View mFooterMultiple;
-    @BindView(R.id.person_home_message_only)
-    View mFooterSingle;
+//    @BindView(R.id.person_home_message_only)
+//    View mFooterSingle;
 
     @BindView(R.id.person_home_summary_wrapper)
     View mSummaryWrapper;
@@ -251,13 +251,13 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         mFollows.setText(getString(R.string.follow_num, followcount));
         mPersonName = home.profile.name;
         if (Account.TypeName.ORGANIZATION.equalsIgnoreCase(home.profile.typeName)) {
-            mFooterSingle.setVisibility(View.VISIBLE);
+            //mFooterSingle.setVisibility(View.VISIBLE);
         } else {
             if (!mIsMyself) {
                 if (home.isTeacher) {
                     mFooterMultiple.setVisibility(View.VISIBLE);
                 } else {
-                    mFooterSingle.setVisibility(View.VISIBLE);
+                    //mFooterSingle.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -348,19 +348,16 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only, R.id.person_home_message_btn,
-            R.id.person_home_query, R.id.scroll_tab_right_view})
+    @OnClick({R.id.scroll_tab_left_image,
+            R.id.person_home_query, R.id.scroll_tab_right_view}) //R.id.person_home_message_only, R.id.person_home_message_btn
     public void onClick(View view) {
 
         switch (view.getId()) {
             case R.id.scroll_tab_left_image:
                 finish();
                 break;
-            case R.id.person_home_message_btn:
-            case R.id.person_home_message_only://发消息
-                sendMessage();
-                break;
-//            case R.id.person_home_message:
+//            case R.id.person_home_message_btn://发消息
+//            case R.id.person_home_message_only://发消息
 //                sendMessage();
 //                break;
             case R.id.person_home_query://提问
