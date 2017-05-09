@@ -40,7 +40,7 @@ public class ErrorPrompts {
 
         switch (apiType) {
             case APIType.SHARE_DOCUMENTS:
-                if (errorCode.equals(Errors.INVALID_OPERATION)) {
+                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
                     errorMessage = "您分享的资料,有的已在该班级中存在了";
                 }else {
                     errorMessage = "分享到班级失败";
