@@ -135,7 +135,7 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
     }
 
     private void initData() {
-        CameraManager.init(this);
+        CameraManager.init(getApplicationContext());
         mInactivityTimer = new InactivityTimer(QrCodeActivity.this);
         mQrCodeExecutor = Executors.newSingleThreadExecutor();
         mHandler = new WeakHandler(this);
