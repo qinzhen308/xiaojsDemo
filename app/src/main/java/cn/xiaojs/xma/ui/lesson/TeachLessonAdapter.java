@@ -107,7 +107,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             return;
         if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)) {
             String[] items = new String[]{mContext.getString(R.string.shelves),
-                    mContext.getString(R.string.edit),
+//                    mContext.getString(R.string.edit),
                     mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.pending_shelves);
             holder.state.setBackgroundResource(R.drawable.course_state_draft_bg);
@@ -127,10 +127,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 1://上架
                             shelves(bean);
                             break;
-                        case 2://编辑
-                            edit(bean);
-                            break;
-                        case 3://查看详情
+//                        case 2://编辑
+//                            edit(bean);
+//                            break;
+                        case 2://查看详情
                             detail(bean);
                             break;
                         //删除目前接口还不支持
