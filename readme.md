@@ -35,8 +35,7 @@
 
 GIT工作流
 -------------
- - Git Fork 
- - deserted [Gitflow Workflow](http://nvie.com/posts/a-successful-git-branching-model/) [中文版参考](http://www.jianshu.com/p/104fa8b15d1e)
+ - [Gitflow Workflow](http://nvie.com/posts/a-successful-git-branching-model/) [中文版参考](http://www.jianshu.com/p/104fa8b15d1e)
 
 
 ----------
