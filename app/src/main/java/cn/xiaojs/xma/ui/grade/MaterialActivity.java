@@ -549,13 +549,9 @@ public class MaterialActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+
                 shareResult();
-
-                if(Errors.DOC_ALREADY_EXISTS.equals(errorCode)) {
-
-                }else {
-                    Toast.makeText(MaterialActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(MaterialActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
 
             }
         });
