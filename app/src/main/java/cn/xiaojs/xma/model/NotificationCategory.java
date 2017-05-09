@@ -1,8 +1,5 @@
 package cn.xiaojs.xma.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -15,20 +12,12 @@ import java.util.ArrayList;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NotificationCategory extends AVIMConversation {
+public class NotificationCategory {
 
     public String name;
     public String remarks;
     public String id;
     public int count;
-
-    public NotificationCategory() {
-        super(AVIMClient.getInstance("none"), "");
-    }
-//    public NotificationCategory(AVIMClient client, String conversationId) {
-//        super(client, conversationId);
-//    }
-
     public ArrayList<Notification> notifications;
 
     public int from = MsgFrom.FROM_PLATFORM; //0代表消息，1代表IM的

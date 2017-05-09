@@ -14,31 +14,25 @@ import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.db.ContactDao;
 import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.data.loader.SyncService;
-import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
-import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.DataCacheManager;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.JpushUtil;
-import cn.xiaojs.xma.util.LeanCloudUtil;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by maxiaobao on 2016/10/25.
@@ -72,11 +66,6 @@ public class DataManager {
         if (AccountDataManager.isLogin(context)) {
 
             XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(context);
-
-            if (XiaojsConfig.mLoginUser !=null && !TextUtils.isEmpty(XiaojsConfig.mLoginUser.getId())) {
-                //open lean cloud
-                LeanCloudUtil.open(XiaojsConfig.mLoginUser.getId());
-            }
 
             XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
             //AccountPref.setAvatorTime(context, XiaojsConfig.AVATOR_TIME);

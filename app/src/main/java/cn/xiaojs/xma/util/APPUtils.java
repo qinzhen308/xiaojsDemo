@@ -224,9 +224,6 @@ public class APPUtils {
     public static void exitAndLogin(Context context,@StringRes int exitTips) {
         LoginDataManager.requestLogoutByAPI(context, null);
 
-        //logout im
-        LeanCloudUtil.close();
-
         //stop jpush
         JpushUtil.stopPush(context);
 
