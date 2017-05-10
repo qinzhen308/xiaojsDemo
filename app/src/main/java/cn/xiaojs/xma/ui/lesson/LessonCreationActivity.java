@@ -829,7 +829,7 @@ public class LessonCreationActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
-                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED);
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_CREATION_CHANGED);
                 setResultOnFinish();
             }
 
@@ -848,7 +848,7 @@ public class LessonCreationActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_edit_success, Toast.LENGTH_SHORT).show();
-                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED);
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_CREATION_CHANGED);
                 setResultOnFinish();
             }
 

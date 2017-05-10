@@ -31,8 +31,10 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Role;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -596,6 +598,7 @@ public class  LessonHomeActivity extends BaseActivity{
                     mLessonDetail.enrollState = Ctl.EnrollmentState.ENROLLED;
                     setLayBottom();
                     ToastUtil.showToast(getApplicationContext(),"报名成功!");
+                    DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_ENROLL_CHANGED);
                 }
 
                 @Override
@@ -645,6 +648,7 @@ public class  LessonHomeActivity extends BaseActivity{
 
                 Toast.makeText(LessonHomeActivity.this,
                         R.string.enroll_lesson_success, Toast.LENGTH_SHORT).show();
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_ENROLL_CHANGED);
 
             }
 

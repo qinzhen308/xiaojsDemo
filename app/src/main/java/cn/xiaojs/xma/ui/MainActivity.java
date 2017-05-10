@@ -51,14 +51,14 @@ public class MainActivity extends BaseTabActivity {
 
     public static final String KEY_POSITION = "key_position";
 
-    private final int PERMISSION_CODE = 0x11;
+    public static final int PERMISSION_CODE = 0x11;
 
     private long time;
 
     private UpgradeReceiver upgradeReceiver;
     private boolean hasShow = false;
 
-    private MessageFragment conversationFragment;
+    //private MessageFragment conversationFragment;
 
 
     @Override
@@ -66,16 +66,17 @@ public class MainActivity extends BaseTabActivity {
         //setMiddleTitle(R.string.app_name);
         needHeader(false);
         List<Fragment> fs = new ArrayList<>();
-        fs.add(new HomeFragment());
         fs.add(new LiveFragment());
-
-        conversationFragment = new MessageFragment();
-        fs.add(conversationFragment);
-
+        fs.add(new HomeFragment());
         fs.add(new MineFragment());
-        setButtonType(BUTTON_TYPE_CENTER);
-        addViews(new int[]{R.string.home_tab_index, R.string.home_tab_live, R.string.home_tab_message, R.string.home_tab_mine},
-                new int[]{R.drawable.home_tab_selector, R.drawable.live_tab_selector, R.drawable.message_tab_selector, R.drawable.mine_tab_selector},
+
+//        conversationFragment = new MessageFragment();
+//        fs.add(conversationFragment);
+
+
+        setButtonType(BUTTON_TYPE_NONE);
+        addViews(new int[]{R.string.home_tab_class, R.string.home_tab_circle, R.string.home_tab_mine},
+                new int[]{R.drawable.home_tab_selector, R.drawable.live_tab_selector, R.drawable.mine_tab_selector},
                 fs);
 
         Intent intent = getIntent();
@@ -362,9 +363,10 @@ public class MainActivity extends BaseTabActivity {
                     showMessageTips();
                 }
 
-                if (conversationFragment != null && conversationFragment.isAdded()) {
-                    conversationFragment.getMessageOverview();
-                }
+                //FIXME MESSAGE
+//                if (conversationFragment != null && conversationFragment.isAdded()) {
+//                    conversationFragment.getMessageOverview();
+//                }
 
             }
         }

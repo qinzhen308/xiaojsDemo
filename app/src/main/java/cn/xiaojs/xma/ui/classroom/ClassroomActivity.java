@@ -1581,8 +1581,9 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
                     } else if (mUser == Constants.User.STUDENT) {
                         mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
                     }
-                } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(mLiveSessionState) ||
-                        Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)) {
+                } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(mLiveSessionState)
+                        || Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)
+                        || Live.LiveSessionState.FINISHED.equals(mLiveSessionState)) {
                     mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY_INDIVIDUAL, mPlayUrl, mIndividualStreamDuration);
                 }
             }

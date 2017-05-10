@@ -63,6 +63,7 @@ public abstract class BaseTabActivity extends BaseActivity {
 
     private int mButtonType;
     protected static final int BUTTON_TYPE_CENTER = 1;
+    protected static final int BUTTON_TYPE_NONE = 2;
 
     @Override
     protected void addViewContent() {

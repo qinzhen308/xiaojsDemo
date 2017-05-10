@@ -128,4 +128,8 @@
         <item>接收消息，但不提醒我</item>
         <!--<item>不接收任何消息</item>-->
     </string-array>
+    <string-array name="add_menu">
+        <item>扫一扫</item>
+        <item>开课</item>
+    </string-array>
 </resources>

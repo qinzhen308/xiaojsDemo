@@ -19,25 +19,25 @@ public class CommonPopupMenuList extends ListView {
 		super(context, attrs, defStyle);
 	}
 	
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-	    int maxWidth = meathureWidthByChilds() + getPaddingLeft() + getPaddingRight();
-	    super.onMeasure(MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY), heightMeasureSpec);     
-	}
-
-	public int meathureWidthByChilds() {
-	    int maxWidth = 0;
-	    for (int i = 0; i < getAdapter().getCount(); i++) {
-			View view = getAdapter().getView(i,null,this);
-			if(view == null)
-				continue;
-	        view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-	        if (view.getMeasuredWidth() > maxWidth){
-	            maxWidth = view.getMeasuredWidth();
-	        }
-	    }
-	    return maxWidth;
-	}
+//	@Override
+//	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//	    int maxWidth = meathureWidthByChilds() + getPaddingLeft() + getPaddingRight();
+//	    super.onMeasure(MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY), heightMeasureSpec);
+//	}
+//
+//	public int meathureWidthByChilds() {
+//	    int maxWidth = 0;
+//	    for (int i = 0; i < getAdapter().getCount(); i++) {
+//			View view = getAdapter().getView(i,null,this);
+//			if(view == null)
+//				continue;
+//	        view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+//	        if (view.getMeasuredWidth() > maxWidth){
+//	            maxWidth = view.getMeasuredWidth();
+//	        }
+//	    }
+//	    return maxWidth;
+//	}
 
 //	public int meathureWidthByChilds() {
 //		int maxWidth = 0;

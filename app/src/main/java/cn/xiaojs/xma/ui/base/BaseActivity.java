@@ -83,8 +83,8 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     private void registerDataChangeListener() {
-        SimpleDataChangeListener.ListenerType type = registerDataChangeListenerType();
-        if (type == null) {
+        int type = registerDataChangeListenerType();
+        if (type == 0) {
             return;
         }
         if (mDataChangeListener == null) {
@@ -299,8 +299,8 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
 
-    protected SimpleDataChangeListener.ListenerType registerDataChangeListenerType() {
-        return null;
+    protected int registerDataChangeListenerType() {
+        return 0;
     }
 
     /**

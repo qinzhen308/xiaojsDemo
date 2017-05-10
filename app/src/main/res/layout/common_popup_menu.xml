@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/popup_view_content"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/popup_menu_bg"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/px5"
-    android:paddingLeft="@dimen/px26"
-    android:paddingRight="@dimen/px26"
-    android:paddingTop="@dimen/px13" >
-
-    <cn.xiaojs.xma.ui.view.CommonPopupMenuList
+<cn.xiaojs.xma.ui.view.CommonPopupMenuList
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/listView"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/px244"
         android:layout_height="wrap_content"
         android:cacheColorHint="@null"
-        android:divider="@color/common_list_line"
-        android:dividerHeight="@dimen/px1"
         android:listSelector="@android:color/transparent"
-        android:scrollbars="none" >
-    </cn.xiaojs.xma.ui.view.CommonPopupMenuList>
-
-</LinearLayout>
+        android:layout_gravity="center"
+        android:scrollbars="none"
+        android:padding="@dimen/px15"
+        android:background="@drawable/bg_popup_menu"
+        >
+</cn.xiaojs.xma.ui.view.CommonPopupMenuList>

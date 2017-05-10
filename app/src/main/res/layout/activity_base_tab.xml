@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/px5"/>
+            android:layout_marginBottom="@dimen/px5"
+            />
 
     <LinearLayout
             android:orientation="vertical"
@@ -46,7 +47,8 @@
             android:layout_marginBottom="-5dp"
             android:layout_gravity="bottom|center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
         <ImageView
                 android:src="@drawable/ic_home_center_shadow"
