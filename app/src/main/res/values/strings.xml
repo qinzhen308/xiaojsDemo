@@ -87,6 +87,7 @@
     <string name="home_tab_message">消息</string>
     <string name="home_tab_mine">我的</string>
     <string name="qr_code">二维码</string>
+    <string name="home_tab_class">班课</string>
 
     <!--account-->
     <!--register-->
