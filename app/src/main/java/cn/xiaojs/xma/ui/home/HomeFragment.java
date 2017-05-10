@@ -26,10 +26,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,7 @@ import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.banner.BannerAdapter;
@@ -143,13 +147,17 @@ public class HomeFragment extends BaseFragment {
         //beanList.add(b2);
 //        beanList.add(b3);
         //beanList.add(b4);
+
+        ViewGroup.LayoutParams lp=mBanner.getLayoutParams();
+        lp.height= (int)(ScreenUtils.getScreenWidth(getActivity())*0.16f);
+        mBanner.setLayoutParams(lp);
         BannerAdapter adapter = new BannerAdapter(mContext,beanList);
         mBanner.setAdapter(adapter);
 
         mList.getRefreshableView().setOnScrollListener(new OnScrollYListener(mList.getRefreshableView().getWrappedList()) {
             @Override
             public void onScrollY(int y) {
-                handleScrollChanged(y);
+//                handleScrollChanged(y);
                 mark();
             }
         });
@@ -183,8 +191,7 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.home_moment_mark_wrapper,R.id.home_moment_mark_right_wrapper,
-                R.id.home_search,R.id.home_search_wrapper})
+    @OnClick({R.id.home_moment_mark_wrapper,R.id.home_moment_mark_right_wrapper,R.id.iv_write_dynamic})
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.home_moment_mark_wrapper:
@@ -192,12 +199,8 @@ public class HomeFragment extends BaseFragment {
                 Intent intent = new Intent(mContext,MomentUpdateActivity.class);
                 ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_UPDATE);
                 break;
-            case R.id.right_view:
-                break;
-            case R.id.home_search:
-            case R.id.home_search_wrapper:
-                Intent search = new Intent(mContext, SearchActivity.class);
-                mContext.startActivity(search);
+            case R.id.iv_write_dynamic:
+                startActivityForResult(new Intent(getActivity(), PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
                 break;
         }
     }

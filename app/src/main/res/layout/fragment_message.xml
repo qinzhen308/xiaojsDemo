@@ -9,6 +9,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/px90"
                     android:background="@color/white"
+        android:visibility="gone"
                     android:orientation="horizontal">
 
         <ImageView
@@ -53,7 +54,9 @@
                 />
     </RelativeLayout>
 
-    <View style="@style/DividerHorizontal"/>
+    <View
+        android:visibility="gone"
+        style="@style/DividerHorizontal"/>
 
     <!--<cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView-->
 

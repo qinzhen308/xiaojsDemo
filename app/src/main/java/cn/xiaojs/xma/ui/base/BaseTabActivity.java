@@ -209,6 +209,10 @@ public abstract class BaseTabActivity extends BaseActivity {
         return mAdapter.getItem(mCurrentIndex);
     }
 
+    public Fragment getFragment(int position) {
+        return mAdapter.getItem(position);
+    }
+
     public Fragment getFragmentByPosition(int position) {
         return mAdapter.getItem(position);
     }
