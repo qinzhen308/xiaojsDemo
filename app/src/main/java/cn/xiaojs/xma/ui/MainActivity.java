@@ -307,6 +307,14 @@ public class MainActivity extends BaseTabActivity {
         }
     }
 
+    @Override
+    public void showMessageTips() {
+        Fragment fg=getFragment(2);
+        //当前在个人中心才调，否则在切换到个人中心在onResume更新状态
+        if(fg instanceof MineFragment && fg.isAdded()){
+            ((MineFragment)fg).showMessageTips(true);
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

@@ -60,6 +60,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     @BindView(R.id.person_home)
     View mPersonHomeBtn;
+    @BindView(R.id.message_entrance)
+    View mMessageEntrace;
     //profile info
     @BindView(R.id.blur_portrait)
     ImageView mBlurImgView;
@@ -294,6 +296,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         needHeader(false);
         mBackBtn.setImageResource(R.drawable.ic_white_back);
         mPersonHomeBtn.setVisibility(View.GONE);
+        mMessageEntrace.setVisibility(View.GONE);
         mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
         if (mIsMyself) {
             mPortraitView.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());

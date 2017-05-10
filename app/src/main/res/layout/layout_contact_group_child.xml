@@ -47,8 +47,8 @@
             >
         <ImageView
                 android:id="@+id/contact_avatar"
-                android:layout_width="@dimen/px58"
-                android:layout_height="@dimen/px58"
+                android:layout_width="@dimen/px70"
+                android:layout_height="@dimen/px70"
                 android:scaleType="fitXY"
                 />
         <TextView

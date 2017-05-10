@@ -87,6 +87,42 @@
         <View
                 style="@style/DividerHorizontal"/>
 
+        <RelativeLayout
+            android:id="@+id/my_contact_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/MinePageItem">
+
+            <TextView
+                android:layout_alignParentLeft="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_26px"
+                android:drawableLeft="@drawable/ic_my_contact"
+                android:drawablePadding="@dimen/px20"
+                android:text="@string/my_contact"/>
+
+            <TextView
+                android:id="@+id/my_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/enter_my_contact"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_26px"
+                android:layout_marginRight="@dimen/px20"/>
+
+            <ImageView
+                android:id="@+id/enter_my_contact"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_entrance"/>
+        </RelativeLayout>
+
+        <View
+            style="@style/DividerHorizontal"/>
+
 
         <!--资料库-->
         <RelativeLayout

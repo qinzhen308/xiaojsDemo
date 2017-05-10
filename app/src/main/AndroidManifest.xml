@@ -198,6 +198,7 @@
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.message.ShareScopeActivity">
         </activity>
+
         <activity
                 android:name=".ui.search.SearchListActivity"
                 android:screenOrientation="portrait"/>
@@ -230,6 +231,11 @@
                 android:name=".ui.personal.PersonalInfoActivity"
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.message.CloseFriendActivity"/>
+
+        <activity
+            android:name=".ui.message.MessageCenterActivity"
+            android:screenOrientation="portrait"/>
+
         <activity
                 android:name=".TestActivity"
                 android:screenOrientation="landscape"

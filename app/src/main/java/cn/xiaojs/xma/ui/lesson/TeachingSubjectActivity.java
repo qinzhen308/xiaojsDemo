@@ -121,11 +121,11 @@ public class TeachingSubjectActivity extends BaseActivity {
             if (mSelectedSubjectTxt.length() == 0) {
                 mSelectedSubjectTxt.append(name);
             } else {
-                mSelectedSubjectTxt.append("/");
+                mSelectedSubjectTxt.append(">");
                 mSelectedSubjectTxt.append(name);
             }
         } else {
-            int index = mSelectedSubjectTxt.lastIndexOf("/"+name);
+            int index = mSelectedSubjectTxt.lastIndexOf(">"+name);
             if (index > -1) {
                 mSelectedSubjectTxt.delete(index, mSelectedSubjectTxt.length());
             } else {
