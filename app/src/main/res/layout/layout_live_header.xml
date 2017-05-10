@@ -45,7 +45,9 @@
                     android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <View style="@style/DividerHorizontal"/>
+        <View
+                style="@style/DividerHorizontal"
+                android:id="@+id/teach_divider"/>
 
         <FrameLayout
                 android:layout_width="match_parent"
@@ -81,11 +83,13 @@
                         android:layout_height="wrap_content"/>
             </LinearLayout>
 
-            <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
+            <cn.xiaojs.xma.ui.widget.AdapterListView
                     android:id="@+id/home_live_list"
                     android:divider="@color/main_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:dividerHeight="@dimen/px30"
+                    />
         </FrameLayout>
 
     </LinearLayout>
@@ -137,7 +141,9 @@
                     android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <View style="@style/DividerHorizontal"/>
+        <View
+                style="@style/DividerHorizontal"
+                android:id="@+id/enroll_divider"/>
 
         <FrameLayout
                 android:layout_width="match_parent"
@@ -156,11 +162,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-            <cn.xiaojs.xma.ui.widget.CanInScrollviewListView
+            <cn.xiaojs.xma.ui.widget.AdapterListView
                     android:id="@+id/home_live_list2"
                     android:divider="@color/main_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:dividerHeight="@dimen/px30"/>
         </FrameLayout>
     </LinearLayout>
 

@@ -160,8 +160,8 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    protected SimpleDataChangeListener.ListenerType registerDataChangeListenerType() {
-        return SimpleDataChangeListener.ListenerType.DYNAMIC_CHANGED;
+    protected int registerDataChangeListenerType() {
+        return SimpleDataChangeListener.DYNAMIC_CHANGED;
     }
 
     @Override

@@ -51,7 +51,7 @@ public class MainActivity extends BaseTabActivity {
 
     public static final String KEY_POSITION = "key_position";
 
-    private final int PERMISSION_CODE = 0x11;
+    public static final int PERMISSION_CODE = 0x11;
 
     private long time;
 

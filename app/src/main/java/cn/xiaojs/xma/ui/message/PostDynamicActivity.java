@@ -227,7 +227,7 @@ public class PostDynamicActivity extends BaseActivity {
                 //setResult(RESULT_OK);
 
                 //通知动态发生变化
-                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.DYNAMIC_CHANGED);
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.DYNAMIC_CHANGED);
                 finish();
             }
 

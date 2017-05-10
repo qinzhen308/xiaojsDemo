@@ -52,10 +52,10 @@ public class DataChangeHelper {
         }
     }
 
-    public void notifyDataChanged(SimpleDataChangeListener.ListenerType type) {
+    public void notifyDataChanged(int type) {
         if (mDataChangeListener != null) {
             for (DataChangeListener listener : mDataChangeListener) {
-                if (listener instanceof SimpleDataChangeListener && ((SimpleDataChangeListener)listener).getType() == type) {
+                if (listener instanceof SimpleDataChangeListener && (((SimpleDataChangeListener)listener).getType() & type) != 0) {
                     listener.onDataChange();
                 }
             }
