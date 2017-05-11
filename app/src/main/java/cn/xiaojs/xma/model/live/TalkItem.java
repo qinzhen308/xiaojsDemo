@@ -12,7 +12,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TalkItem {
 
-    public Date time;
+    public long time;
     public TalkPerson from;
     public TalkContent body;
     public String to;
@@ -51,8 +51,8 @@ public class TalkItem {
             return false;
         }
 
-        long mill = ((TalkItem)obj).time != null ? ((TalkItem)obj).time.getTime() : 0;
-        long thisMill = time != null ? time.getTime() : 0;
+        long mill = ((TalkItem)obj).time;
+        long thisMill = time;
 
         if (mill != thisMill) {
             return false;

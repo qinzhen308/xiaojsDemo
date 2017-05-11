@@ -772,7 +772,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
             }
 
             TalkItem talkItem = new TalkItem();
-            talkItem.time = new Date(receiveBean.time);
+            talkItem.time = receiveBean.time;
             talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
             talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
             talkItem.body.text = receiveBean.body.text;
@@ -825,7 +825,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         }
 
         long sendTime = System.currentTimeMillis();
-        talkItem.time = new Date(sendTime);
+        talkItem.time = sendTime;
 
         //update task message info
         int criteria = attendee == null ? MULTI_TALK : PEER_TALK;
@@ -878,7 +878,7 @@ public class TalkPanel extends Panel implements View.OnClickListener, OnPortrait
         talkItem.to = mPeerTalkAccountId;
 
         long sendTime = System.currentTimeMillis();
-        talkItem.time = new Date(sendTime);
+        talkItem.time = sendTime;
 
         //update task message info
         updateTalkMsgData(mTalkCriteria, talkItem, true);
