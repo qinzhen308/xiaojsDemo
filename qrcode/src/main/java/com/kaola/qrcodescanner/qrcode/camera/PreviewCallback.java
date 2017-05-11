@@ -13,7 +13,6 @@
 
 package com.kaola.qrcodescanner.qrcode.camera;
 
-import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Message;
@@ -36,10 +35,10 @@ final class PreviewCallback implements Camera.PreviewCallback {
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        Point cameraResolution = mConfigManager.getCameraResolution();
+        Camera.Size cameraResolution = mConfigManager.getCameraResolution();
         if (mPreviewHandler != null) {
             Message message =
-                mPreviewHandler.obtainMessage(mPreviewMessage, cameraResolution.x, cameraResolution.y, data);
+                    mPreviewHandler.obtainMessage(mPreviewMessage, cameraResolution.width, cameraResolution.height, data);
             message.sendToTarget();
             mPreviewHandler = null;
         } else {

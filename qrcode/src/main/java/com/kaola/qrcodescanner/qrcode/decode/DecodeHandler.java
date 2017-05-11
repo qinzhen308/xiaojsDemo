@@ -13,7 +13,6 @@
 
 package com.kaola.qrcodescanner.qrcode.decode;
 
-import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -83,33 +82,30 @@ final class DecodeHandler extends Handler {
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
-//        if (null == mRotatedData) {
-//            mRotatedData = new byte[width * height];
-//        } else {
-//            if (mRotatedData.length < width * height) {
-//                mRotatedData = new byte[width * height];
-//            }
-//        }
-//        Arrays.fill(mRotatedData, (byte) 0);
-//        for (int y = 0; y < height; y++) {
-//            for (int x = 0; x < width; x++) {
-//                if (x + y * width >= data.length) {
-//                    break;
-//                }
-//                mRotatedData[x * height + height - y - 1] = data[x + y * width];
-//            }
-//        }
-//        int tmp = width; // Here we are swapping, that's the difference to #11
-//        width = height;
-//        height = tmp;
+        if (null == mRotatedData) {
+            mRotatedData = new byte[width * height];
+        } else {
+            if (mRotatedData.length < width * height) {
+                mRotatedData = new byte[width * height];
+            }
+        }
+        Arrays.fill(mRotatedData, (byte) 0);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (x + y * width >= data.length) {
+                    break;
+                }
+                mRotatedData[x * height + height - y - 1] = data[x + y * width];
+            }
+        }
+        int tmp = width; // Here we are swapping, that's the difference to #11
+        width = height;
+        height = tmp;
 
         Result rawResult = null;
         try {
-
-            Rect rect = mActivity.getPreviewRect();
-
             PlanarYUVLuminanceSource source =
-                new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top, rect.width(), rect.height(), false);
+                    new PlanarYUVLuminanceSource(mRotatedData, width, height, 0, 0, width, height, false);
             BinaryBitmap bitmap1 = new BinaryBitmap(new HybridBinarizer(source));
             rawResult = mQrCodeReader.decode(bitmap1, mHints);
         } catch (ReaderException e) {
@@ -125,5 +121,4 @@ final class DecodeHandler extends Handler {
             message.sendToTarget();
         }
     }
-
 }

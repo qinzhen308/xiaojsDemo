@@ -181,7 +181,8 @@ public abstract class BaseTabActivity extends BaseActivity {
         if (position == 2) {
             hiddenMessageTips();
             XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = true;
-            DataManager.setHasMessage(BaseTabActivity.this,false);
+
+            //DataManager.setHasMessage(BaseTabActivity.this,false);
         }else {
             XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = false;
         }
