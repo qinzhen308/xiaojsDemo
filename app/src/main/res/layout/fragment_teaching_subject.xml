@@ -15,10 +15,21 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@color/white"
-            android:visibility="gone">
+            android:visibility="visible">
         <View style="@style/DividerHorizontal"/>
 
-        <cn.xiaojs.xma.ui.widget.EditTextDel
+        <RelativeLayout
+            android:id="@+id/s_root"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:background="@drawable/grey_conner_bg"
+            android:layout_gravity="center_vertical"
+            android:layout_height="@dimen/px60"
+            android:clickable="true"
+            android:layout_weight="1.0">
+
+            <TextView
                 android:id="@+id/search_subject"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px60"
@@ -29,13 +40,20 @@
                 android:textColorHint="@color/font_dark_gray"
                 android:hint="@string/search_subject_tips"
                 android:drawablePadding="@dimen/px12"
+                android:gravity="center"
                 android:drawableLeft="@drawable/ic_search"
                 android:background="@drawable/common_search_bg"
                 android:layout_marginLeft="@dimen/px28"
                 android:layout_marginRight="@dimen/px28"
                 android:layout_marginTop="@dimen/px16"
                 android:layout_marginBottom="@dimen/px16"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
+
+        </RelativeLayout>>
+
+
+
+
 
         <View style="@style/DividerHorizontal"/>
     </LinearLayout>
