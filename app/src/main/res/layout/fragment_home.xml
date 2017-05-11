@@ -35,7 +35,8 @@
             android:gravity="center"
             android:text="小圈"
             android:textColor="@color/font_black"
-            android:textSize="@dimen/font_28px" />
+            android:textSize="@dimen/font_32px"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/iv_write_dynamic"

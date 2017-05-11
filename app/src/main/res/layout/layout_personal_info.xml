@@ -112,21 +112,48 @@
                     android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <TextView
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/px70"
+            android:layout_marginTop="@dimen/px15"
+            android:layout_marginLeft="@dimen/px70"
+            >
+            <cn.xiaojs.xma.ui.widget.MaxLineTextView
                 android:id="@+id/my_profile_txt"
                 android:textColor="#d6e9ff"
                 android:textSize="@dimen/font_25px"
                 android:text="@string/default_profile_txt"
-                android:layout_marginTop="@dimen/px15"
-                android:layout_gravity="center_horizontal"
+                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:maxLines="2"
-                android:layout_height="wrap_content"/>
+                android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/px17"
+                />
+
+            <TextView
+                android:id="@+id/btn_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_btn_white_corner_border"
+                android:text="更多>>"
+                android:textColor="#d6e9ff"
+                android:padding="@dimen/px4"
+                android:textSize="@dimen/font_20px"
+                android:visibility="gone"
+                android:layout_marginBottom="-3dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/my_profile_txt"
+                />
+
+        </RelativeLayout>
+
+
 
         <LinearLayout
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:layout_marginTop="@dimen/px17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
