@@ -141,6 +141,8 @@ public class MineFragment extends BaseFragment {
     private void enterMessage(){
         showMessageTips(false);
         DataManager.setHasMessage(getActivity(),false);
+        //消除Tab红点
+        ((MainActivity)getActivity()).hiddenMessageTips();
         startActivity(new Intent(getActivity(), MessageCenterActivity.class));
     }
 
