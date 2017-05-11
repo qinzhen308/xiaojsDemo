@@ -58,7 +58,11 @@ public class ErrorPrompts {
                 errorMessage = "删除失败";
                 break;
             case APIType.REQUEST_VERIFICATION:
-                errorMessage = "提交认证失败";
+                if (errorCode.equals(Errors.INVALID_OPERATION)) {
+                    errorMessage = "您要认证的号码已认证或者正在审核中";
+                }else{
+                    errorMessage = "提交认证失败";
+                }
                 break;
             case APIType.BEGIN_CLASS:
                 if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
