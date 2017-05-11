@@ -257,6 +257,9 @@
                 android:name=".ui.mine.MyOrderActivity"
                 android:screenOrientation="portrait"/>
         <activity
+            android:name=".ui.mine.MySignatureDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
                 android:name=".ui.UpgradeActivity"
                 android:theme="@style/dlg_upgrade">
         </activity>
