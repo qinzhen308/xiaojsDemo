@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.lesson;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -37,6 +38,8 @@ import cn.xiaojs.xma.ui.widget.EditTextDel;
 public class TeachingSubjectFragment extends BaseFragment implements TeachingSubjectAdapter.OnSubjectSelectedListener {
     @BindView(R.id.search_subject)
     View mSearchSubjectEdt;
+    @BindView(R.id.search_subject_layout)
+    View mSearchSubjectLayout;
     @BindView(R.id.selected_subject)
     TextView mSelectedSubjectTv;
     @BindView(R.id.subject_list)
@@ -85,6 +88,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
                 }
                 break;
             case R.id.search_subject:
+//                startActivity(new Intent(getActivity(),TeachingSubjectSearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),mSearchSubjectEdt,"search_bar").toBundle());
                 startActivity(new Intent(getActivity(),TeachingSubjectSearchActivity.class));
                 break;
         }
@@ -111,7 +115,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
         if (TextUtils.isEmpty(mSelectedSubjectTxt)) {
             mSelectedSubjectLayout.setVisibility(View.GONE);
             mSelectedSubjectDivider.setVisibility(View.VISIBLE);
-            mSearchSubjectEdt.setVisibility(View.VISIBLE);
+            mSearchSubjectLayout.setVisibility(View.VISIBLE);
         } else {
             mSelectedSubjectLayout.setVisibility(View.VISIBLE);
             mSelectedSubjectDivider.setVisibility(View.GONE);
@@ -172,7 +176,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
             return;
         }
 
-        String s = mSelectedSubjectTxt + "/" + selectedSubjectTxt;
+        String s = mSelectedSubjectTxt + ">" + selectedSubjectTxt;
         SpannableString spannableString = new SpannableString(s);
         ForegroundColorSpan blueSpan = new ForegroundColorSpan(mSubjectBlueColor);
         ForegroundColorSpan graySpan = new ForegroundColorSpan(mSubjectGrayColor);

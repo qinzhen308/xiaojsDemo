@@ -11,6 +11,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/5/11.
@@ -31,7 +32,7 @@ public abstract class AbsListAdapter<T,H extends AbsListAdapter.ViewHolder> exte
 
     @Override
     public Object getItem(int position) {
-        return mList==null?null:mList.get(position);
+        return ArrayUtil.isEmpty(mList)?null:mList.get(position);
     }
 
     @Override
@@ -65,7 +66,7 @@ public abstract class AbsListAdapter<T,H extends AbsListAdapter.ViewHolder> exte
             convertView.setTag(R.id.tag_list_adapter_viewtype,type);
         }else {
             if(type==((int)convertView.getTag(R.id.tag_list_adapter_viewtype))){
-                holder=(H)convertView.getTag();
+                holder=(H)convertView.getTag(R.id.tag_list_adapter_viewholder);
             }else {
                 holder=onCreateViewHolder(parent,type);
                 convertView=holder.root;

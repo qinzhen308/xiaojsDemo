@@ -1,8 +1,16 @@
 package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
+import android.transition.ChangeImageTransform;
+import android.transition.Explode;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.KeyEvent;
+import android.view.Window;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -38,6 +46,7 @@ public class TeachingSubjectActivity extends BaseActivity {
 
     private List<TeachingSubjectFragment> mFragments;
     private StringBuilder mSelectedSubjectTxt;
+
 
     @Override
     protected void addViewContent() {

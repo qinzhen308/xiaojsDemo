@@ -1,26 +1,23 @@
 package cn.xiaojs.xma.ui.lesson;
-/*  =======================================================================================
- *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
- *
- *  This computer program source code file is protected by copyright law and international
- *  treaties. Unauthorized distribution of source code files, programs, or portion of the
- *  package, may result in severe civil and criminal penalties, and will be prosecuted to
- *  the maximum extent under the law.
- *
- *  ---------------------------------------------------------------------------------------
- * Author:zhanghui
- * Date:2016/12/12
- * Desc:搜索个人、机构、课
- *
- * ======================================================================================== */
 
-import android.content.Intent;
+/**
+ * Created by Paul Z on 2017/5/11.
+ *
+ * 搜索教学能力
+ */
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.transition.Explode;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,33 +25,20 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
-import cn.xiaojs.xma.data.SearchManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.search.AccountInfo;
-import cn.xiaojs.xma.model.search.LessonInfo;
-import cn.xiaojs.xma.model.search.LessonSearch;
-import cn.xiaojs.xma.model.search.PersonOriSearch;
-import cn.xiaojs.xma.model.search.SearchResponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.search.SearchBusiness;
-import cn.xiaojs.xma.ui.search.SearchConstant;
-import cn.xiaojs.xma.ui.search.SearchLessonAdapter;
-import cn.xiaojs.xma.ui.search.SearchListActivity;
-import cn.xiaojs.xma.ui.search.SearchOrganizationAdapter;
-import cn.xiaojs.xma.ui.search.SearchPeopleAdapter;
-import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 
 public class TeachingSubjectSearchActivity extends BaseActivity {
 
     @BindView(R.id.search_input)
     EditText mInput;
+    @BindView(R.id.search_ok)
+    TextView btnSearchOk;
 
     @BindView(R.id.listview)
     ListView mListView;
     TeachingSubjectSearchAdapter mAdapter;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 
     @Override
     protected void addViewContent() {
@@ -83,7 +67,18 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
     private void initView(){
         mAdapter=new TeachingSubjectSearchAdapter(this);
         mListView.setAdapter(mAdapter);
+        mAdapter.setOnSelectedListener(new TeachingSubjectSearchAdapter.OnSelectedListener() {
+            @Override
+            public void onSelected(int position) {
+                if(position>=0){
+                    btnSearchOk.setText(getString(R.string.ok));
+                }else {
+                    btnSearchOk.setText(getString(R.string.cancel));
+                }
+            }
+        });
     }
+
 
 
 
@@ -91,6 +86,11 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_ok:
+                if(btnSearchOk.getText().toString().equals(R.string.cancel)){
+                    Toast.makeText(getApplicationContext(),mAdapter.getSelectedItem().toString(),Toast.LENGTH_LONG).show();
+                }else {
+
+                }
                 finish();
                 break;
 
