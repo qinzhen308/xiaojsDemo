@@ -656,7 +656,12 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
         if (Live.LiveSessionState.SCHEDULED.equals(liveSessionState)) {
             setTips(R.string.cls_not_on_class_title, R.string.cls_not_on_class_desc);
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)) {
-            setTips(R.string.cls_pending_class_title, R.string.cls_pending_class_desc);
+            if (mUser == Constants.User.STUDENT) {
+                setTips(R.string.cls_not_on_class_title, 0);
+            }else {
+                setTips(R.string.cls_pending_class_title, R.string.cls_pending_class_desc);
+            }
+
         } else if (Live.LiveSessionState.RESET.equals(liveSessionState)) {
             if (mUser == Constants.User.TEACHER
                     || mUser == Constants.User.ASSISTANT
@@ -2075,7 +2080,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
     }
 
     private void setTips(int resTitleId, int resDescId) {
-        setTips(getString(resTitleId), getString(resDescId));
+        setTips(getString(resTitleId), resDescId <= 0 ? "" : getString(resDescId));
     }
 
     private void setTips(String title, String desc) {
