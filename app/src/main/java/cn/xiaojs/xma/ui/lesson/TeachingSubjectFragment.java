@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.lesson;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -35,7 +36,7 @@ import cn.xiaojs.xma.ui.widget.EditTextDel;
 
 public class TeachingSubjectFragment extends BaseFragment implements TeachingSubjectAdapter.OnSubjectSelectedListener {
     @BindView(R.id.search_subject)
-    EditTextDel mSearchSubjectEdt;
+    View mSearchSubjectEdt;
     @BindView(R.id.selected_subject)
     TextView mSelectedSubjectTv;
     @BindView(R.id.subject_list)
@@ -68,7 +69,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
         loadData();
     }
 
-    @OnClick({R.id.left_image, R.id.right_view})
+    @OnClick({R.id.left_image, R.id.right_view,R.id.search_subject})
     public void onClick(View v) {
         Activity activity = getActivity();
         switch (v.getId()) {
@@ -83,6 +84,9 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
                             ? mSubjectAdapter.getSelectedSubject() : null);
                 }
                 break;
+            case R.id.search_subject:
+                startActivity(new Intent(getActivity(),TeachingSubjectSearchActivity.class));
+                break;
         }
     }
 
@@ -90,7 +94,6 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
         mSubjectBlueColor = mContext.getResources().getColor(R.color.subject_selected_blue);
         mSubjectGrayColor = mContext.getResources().getColor(R.color.font_dark_gray);
         mRightView.setTextColor(mContext.getResources().getColor(R.color.font_orange));
-        mSearchSubjectEdt.setVisibility(View.VISIBLE);
         if (mParentCSubject != null && mParentCSubject.getType() == CSubject.TYPE_NO_CHILD) {
             mRightView.setVisibility(View.VISIBLE);
         } else {
@@ -108,6 +111,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
         if (TextUtils.isEmpty(mSelectedSubjectTxt)) {
             mSelectedSubjectLayout.setVisibility(View.GONE);
             mSelectedSubjectDivider.setVisibility(View.VISIBLE);
+            mSearchSubjectEdt.setVisibility(View.VISIBLE);
         } else {
             mSelectedSubjectLayout.setVisibility(View.VISIBLE);
             mSelectedSubjectDivider.setVisibility(View.GONE);

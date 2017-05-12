@@ -6,4 +6,6 @@
         <item name="launch_product_query" type="id"/>
         <item name="return_scan_result" type="id"/>
         <item name="managerpaymenttypeselect_tg" type="id"/>
+        <item name="tag_list_adapter_viewtype" type="id"/>
+        <item name="tag_list_adapter_viewholder" type="id"/>
 </resources>
