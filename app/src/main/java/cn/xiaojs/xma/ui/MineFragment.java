@@ -333,8 +333,10 @@ public class MineFragment extends BaseFragment {
 
         if (AccountDataManager.isVerified(getContext())) {
             cerTips.setText("已认证");
+            mUserName.setIcon(R.drawable.ic_vip);
         }else {
             cerTips.setText("未认证");
+            mUserName.setIcon(0);
         }
     }
 
