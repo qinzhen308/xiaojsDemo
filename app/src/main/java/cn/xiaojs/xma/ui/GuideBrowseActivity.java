@@ -38,25 +38,25 @@ public class GuideBrowseActivity extends Activity {
         ButterKnife.bind(this);
 
 
-        boolean teacher = getIntent().getBooleanExtra(EXTRA_TEACHER, false);
-        if (teacher) {
-            images = new int[]{R.drawable.usage_teacher_1,
-                    R.drawable.usage_teacher_2,
-                    R.drawable.usage_teacher_3,
-                    R.drawable.usage_teacher_4};
-        } else {
-            images = new int[]{R.drawable.usage_student_1,
-                    R.drawable.usage_student_2,
-                    R.drawable.usage_student_3,
-                    R.drawable.usage_student_4,
-                    R.drawable.usage_student_5
-            };
-        }
-
-
-
-
-        setImageShow(images[index]);
+//        boolean teacher = getIntent().getBooleanExtra(EXTRA_TEACHER, false);
+//        if (teacher) {
+//            images = new int[]{R.drawable.usage_teacher_1,
+//                    R.drawable.usage_teacher_2,
+//                    R.drawable.usage_teacher_3,
+//                    R.drawable.usage_teacher_4};
+//        } else {
+//            images = new int[]{R.drawable.usage_student_1,
+//                    R.drawable.usage_student_2,
+//                    R.drawable.usage_student_3,
+//                    R.drawable.usage_student_4,
+//                    R.drawable.usage_student_5
+//            };
+//        }
+//
+//
+//
+//
+//        setImageShow(images[index]);
 
     }
 
