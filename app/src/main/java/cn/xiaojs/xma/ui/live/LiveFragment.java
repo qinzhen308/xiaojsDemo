@@ -110,6 +110,10 @@ public class LiveFragment extends BaseFragment {
 
     @BindView(R.id.open_lesson)
     ImageView mOpenLesson;
+
+    @BindView(R.id.live_root)
+    LinearLayout liveRootView;
+
 //    @BindView(R.id.btn_add)
 //    ImageButton addBtnView;
 
@@ -228,6 +232,9 @@ public class LiveFragment extends BaseFragment {
             public void onSuccess(LiveClass object) {
                 cancelProgress();
                 hideFailView();
+
+                liveRootView.setVisibility(View.VISIBLE);
+
                 fillData(object);
                 mDataLoading = false;
 
@@ -241,6 +248,9 @@ public class LiveFragment extends BaseFragment {
                 cancelProgress();
                 mDataLoading = false;
                 //Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+
+                liveRootView.setVisibility(View.GONE);
+
                 showFailView();
 
                 if (swipeRefreshLayout.isRefreshing()) {

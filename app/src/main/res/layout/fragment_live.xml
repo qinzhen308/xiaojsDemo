@@ -59,7 +59,8 @@
 
             <View style="@style/DividerHorizontal"/>
 
-            <include layout="@layout/layout_live_header"/>
+            <include layout="@layout/layout_live_header"
+                    android:id="@+id/live_root"/>
         </LinearLayout>
     </ScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>
