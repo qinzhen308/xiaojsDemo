@@ -181,13 +181,13 @@ public class MainActivity extends BaseTabActivity {
             case 1:
 
                 //Toast.makeText(this,"暂未开放此功能",Toast.LENGTH_SHORT).show();
-                if (PermissionUtil.isOverMarshmallow()
-                        && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
-
-                }else {
-                    startActivity(new Intent(this, ScanQrcodeActivity.class));
-                }
+//                if (PermissionUtil.isOverMarshmallow()
+//                        && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+//                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
+//
+//                }else {
+//                    startActivity(new Intent(this, ScanQrcodeActivity.class));
+//                }
 
                 break;
             case 2://开课
@@ -309,26 +309,26 @@ public class MainActivity extends BaseTabActivity {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case PERMISSION_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    startActivity(new Intent(this, ScanQrcodeActivity.class));
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//
+//        switch (requestCode) {
+//            case PERMISSION_CODE: {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+//                    startActivity(new Intent(this, ScanQrcodeActivity.class));
+//
+//                } else {
+//
+//                    // permission denied, boo! Disable the
+//                    // functionality that depends on this permission.
+//                }
+//                return;
+//            }
+//        }
+//    }
 
     private class UpgradeReceiver extends BroadcastReceiver {
         @Override
