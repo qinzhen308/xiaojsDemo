@@ -352,7 +352,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
         mFollowPeople.show(lists);
 
-        mProfileTv.setOnOverLineChangedListener(new MaxLineTextView.OnOverSizeChangedListener() {
+        /*mProfileTv.setOnOverLineChangedListener(new MaxLineTextView.OnOverSizeChangedListener() {
             @Override
             public void onChanged(boolean isOverSize) {
                 if(isOverSize){
@@ -362,7 +362,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                     btnMore.setVisibility(View.GONE);
                 }
             }
-        });
+        });*/
     }
 
     @Override
