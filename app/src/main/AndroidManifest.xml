@@ -234,7 +234,12 @@
 
         <activity
             android:name=".ui.message.MessageCenterActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="cn.xiaojs.xma.action_push_enter_msg_center"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <activity
                 android:name=".TestActivity"

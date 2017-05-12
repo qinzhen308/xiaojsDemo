@@ -167,6 +167,7 @@ public class MainActivity extends BaseTabActivity {
         //PUSH推送
         if (!TextUtils.isEmpty(action) && action.equals(MessageUitl.ACTION_PUSH_NOTIFY_OPEN)) {
             setTabSelected(2);
+            MessageUitl.lanuchMessageCenter(this);
             return true;
         }
 

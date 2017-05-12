@@ -12,6 +12,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.DataManager;
 
 /**
  * Created by Paul Z on 2017/5/10.
@@ -30,6 +31,8 @@ public class MessageCenterActivity extends FragmentActivity {
         setContentView(R.layout.activity_common_fragment_container);
         mUnbinder=ButterKnife.bind(this);
         initView();
+
+        DataManager.setHasMessage(this,false);
     }
 
     @Override

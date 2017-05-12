@@ -16,6 +16,7 @@ public class MessageUitl {
     public static final String EXTRA_NOTIFY_PUSH_ID = "action_new_push_id";
 
     public static final String ACTION_NEW_PUSH = "action_new_push";
+    public static final String ACTION_PUSH_ENTER_MESSAGE_CENTER = "cn.xiaojs.xma.action_push_enter_msg_center";
 
 
     public static void newMessageCome(Context context) {
@@ -39,6 +40,15 @@ public class MessageUitl {
 
     public static void setHasMessage(Context context,boolean has) {
         DataManager.setHasMessage(context,has);
+    }
+
+
+    public static void lanuchMessageCenter(Context context) {
+        Intent ifarIntent = new Intent();
+        ifarIntent.setAction(MessageUitl.ACTION_PUSH_ENTER_MESSAGE_CENTER);
+        ifarIntent.setPackage(context.getPackageName());
+        ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        context.startActivity(ifarIntent);
     }
 
 }

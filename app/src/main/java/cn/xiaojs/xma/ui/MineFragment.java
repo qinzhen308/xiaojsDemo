@@ -136,13 +136,22 @@ public class MineFragment extends BaseFragment {
         if(isShow!=messageEntrace.mTipEnable){
             messageEntrace.setTipEnable(isShow);
         }
+
+        if (isShow){
+            //显示Tab红点
+            ((MainActivity)getActivity()).showMessageTips();
+        }else{
+            //消除Tab红点
+            ((MainActivity)getActivity()).hiddenMessageTips();
+        }
+
+
+
     }
 
     private void enterMessage(){
         showMessageTips(false);
         DataManager.setHasMessage(getActivity(),false);
-        //消除Tab红点
-        ((MainActivity)getActivity()).hiddenMessageTips();
         startActivity(new Intent(getActivity(), MessageCenterActivity.class));
     }
 
