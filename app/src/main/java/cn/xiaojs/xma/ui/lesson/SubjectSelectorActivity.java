@@ -43,12 +43,14 @@ public class SubjectSelectorActivity extends BaseActivity {
     private SubjectSelectorAdapter mSubjectAdapter;
     private Competency mSelectedCompetency;
 
+    private int flag = -1;
+
     @Override
     protected void addViewContent() {
 
 
-        int normal = getIntent().getIntExtra(EXTRA_NORMAL,-1);
-        if (normal == 1) {
+        flag = getIntent().getIntExtra(EXTRA_NORMAL,-1);
+        if (flag == 1) {
             setMiddleTitle(R.string.teach_ability);
             setRightText(-1);
         }else {
@@ -98,7 +100,7 @@ public class SubjectSelectorActivity extends BaseActivity {
             public void onSuccess(ClaimCompetency object) {
                 cancelProgress();
                 if (object != null) {
-                    mSubjectAdapter = new SubjectSelectorAdapter(SubjectSelectorActivity.this, object.competencies, mSelectedCompetency);
+                    mSubjectAdapter = new SubjectSelectorAdapter(SubjectSelectorActivity.this, object.competencies, mSelectedCompetency, flag);
                     mSubjectListView.setAdapter(mSubjectAdapter);
                 }
             }
