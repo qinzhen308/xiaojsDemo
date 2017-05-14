@@ -300,8 +300,9 @@ public interface XiaojsService {
     Call<ResponseBody> addOpenSubject(@Body String name);
 
     //Search Subjects
-    @GET("/v1/categories/subjects/{name}/search")
-    Call<List<CSubject>> searchSubjects(@Path("name") String name);
+    @GET("/v1/categories/subjects/{name}/search/{pagination}")
+    Call<CollectionPage<CSubject>> searchSubjects(@Path("name") String name,
+                                        @Path("pagination") String pagination);
 
 
 
