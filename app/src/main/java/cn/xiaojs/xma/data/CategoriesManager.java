@@ -8,6 +8,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.CategoriesRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 
 import com.orhanobut.logger.Logger;
@@ -82,14 +83,16 @@ public class CategoriesManager {
      * Returns subjects for subject list.
      * @param context
      * @param targetName
+     * @param pagination
      * @param callback
      */
     public static void searchSubjects(Context context,
                                       String targetName,
-                                      APIServiceCallback<List<CSubject>> callback) {
+                                      Pagination pagination,
+                                      APIServiceCallback<CollectionPage<CSubject>> callback) {
 
         CategoriesRequest categoriesRequest = new CategoriesRequest(context,callback);
-        categoriesRequest.searchSubjects(targetName);
+        categoriesRequest.searchSubjects(targetName,pagination);
     }
 
 }
