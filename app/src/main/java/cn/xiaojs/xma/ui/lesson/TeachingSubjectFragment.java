@@ -1,7 +1,9 @@
 package cn.xiaojs.xma.ui.lesson;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -35,7 +37,9 @@ import cn.xiaojs.xma.ui.widget.EditTextDel;
 
 public class TeachingSubjectFragment extends BaseFragment implements TeachingSubjectAdapter.OnSubjectSelectedListener {
     @BindView(R.id.search_subject)
-    EditTextDel mSearchSubjectEdt;
+    View mSearchSubjectEdt;
+    @BindView(R.id.search_subject_layout)
+    View mSearchSubjectLayout;
     @BindView(R.id.selected_subject)
     TextView mSelectedSubjectTv;
     @BindView(R.id.subject_list)
@@ -68,7 +72,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
         loadData();
     }
 
-    @OnClick({R.id.left_image, R.id.right_view})
+    @OnClick({R.id.left_image, R.id.right_view,R.id.search_subject})
     public void onClick(View v) {
         Activity activity = getActivity();
         switch (v.getId()) {
@@ -83,6 +87,10 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
                             ? mSubjectAdapter.getSelectedSubject() : null);
                 }
                 break;
+            case R.id.search_subject:
+//                startActivity(new Intent(getActivity(),TeachingSubjectSearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),mSearchSubjectEdt,"search_bar").toBundle());
+                startActivity(new Intent(getActivity(),TeachingSubjectSearchActivity.class));
+                break;
         }
     }
 
@@ -90,7 +98,6 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
         mSubjectBlueColor = mContext.getResources().getColor(R.color.subject_selected_blue);
         mSubjectGrayColor = mContext.getResources().getColor(R.color.font_dark_gray);
         mRightView.setTextColor(mContext.getResources().getColor(R.color.font_orange));
-        mSearchSubjectEdt.setVisibility(View.VISIBLE);
         if (mParentCSubject != null && mParentCSubject.getType() == CSubject.TYPE_NO_CHILD) {
             mRightView.setVisibility(View.VISIBLE);
         } else {
@@ -108,6 +115,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
         if (TextUtils.isEmpty(mSelectedSubjectTxt)) {
             mSelectedSubjectLayout.setVisibility(View.GONE);
             mSelectedSubjectDivider.setVisibility(View.VISIBLE);
+            mSearchSubjectLayout.setVisibility(View.VISIBLE);
         } else {
             mSelectedSubjectLayout.setVisibility(View.VISIBLE);
             mSelectedSubjectDivider.setVisibility(View.GONE);
@@ -168,7 +176,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
             return;
         }
 
-        String s = mSelectedSubjectTxt + "/" + selectedSubjectTxt;
+        String s = mSelectedSubjectTxt + ">" + selectedSubjectTxt;
         SpannableString spannableString = new SpannableString(s);
         ForegroundColorSpan blueSpan = new ForegroundColorSpan(mSubjectBlueColor);
         ForegroundColorSpan graySpan = new ForegroundColorSpan(mSubjectGrayColor);
