@@ -19,7 +19,9 @@ import android.view.View;
 import butterknife.ButterKnife;
 
 public class BaseHolder {
+    public View root;
     public BaseHolder(View view){
+        root=view;
         ButterKnife.bind(this,view);
     }
 }

@@ -191,4 +191,13 @@ public class TeachingSubjectActivity extends BaseActivity {
 //        setResult(RESULT_OK, intent);
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100&&resultCode==RESULT_OK){
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    }
 }

@@ -5,6 +5,7 @@ package cn.xiaojs.xma.ui.lesson;
  *
  * 搜索教学能力
  */
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,9 +31,14 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CategoriesManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
+import cn.xiaojs.xma.model.CompetencyParams;
+import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 public class TeachingSubjectSearchActivity extends BaseActivity {
@@ -43,8 +49,8 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
     TextView btnSearchOk;
 
     @BindView(R.id.listview)
-    ListView mListView;
-    TeachingSubjectSearchAdapter mAdapter;
+    PullToRefreshSwipeListView mListView;
+    TeachingSubjectSearchAdapter2 mAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 
@@ -73,9 +79,11 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
     }
 
     private void initView(){
-        mAdapter=new TeachingSubjectSearchAdapter(this);
+        mAdapter=new TeachingSubjectSearchAdapter2(this,mListView);
         mListView.setAdapter(mAdapter);
-        mAdapter.setOnSelectedListener(new TeachingSubjectSearchAdapter.OnSelectedListener() {
+        mListView.enableLeftSwipe(false);
+        mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        mAdapter.setOnSelectedListener(new TeachingSubjectSearchAdapter2.OnSelectedListener() {
             @Override
             public void onSelected(int position) {
                 if(position>=0){
@@ -95,11 +103,15 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.search_ok:
                 if(btnSearchOk.getText().toString().equals(R.string.cancel)){
-                    Toast.makeText(getApplicationContext(),mAdapter.getSelectedItem().toString(),Toast.LENGTH_LONG).show();
-                }else {
+//                    Toast.makeText(getApplicationContext(),mAdapter.getSelectedItem().toString(),Toast.LENGTH_LONG).show();
 
+                }else {
+                    if(mAdapter.getSelectedPosition()==0){
+                        createSubject(mAdapter.getSelectedItem());
+                    }else {
+                        finishWithResult(mAdapter.getSelectedItem());
+                    }
                 }
-                finish();
                 break;
 
         }
@@ -113,7 +125,7 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
         Message msg=new Message();
         msg.what=BEGIN_SEARCH;
         msg.obj=query;
-        handler.sendMessageDelayed(msg,1000);
+        handler.sendMessageDelayed(msg,500);
 //        List<Object> list=new ArrayList<>();
 //        if(!TextUtils.isEmpty(query)){
 //            list.add(query);
@@ -123,35 +135,92 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
     }
 
 
-    private void updateDisplay(String key,List<CSubject> object) {
-        List<Object> list=new ArrayList<>();
-        list.add(key);
-        if(object!=null){
-            list.addAll(object);
-        }
-        mAdapter.setList(list);
-        mAdapter.notifyDataSetChanged();
-    }
 
 
-    private void doRequest(final String key){
-        if(TextUtils.isEmpty(key)||key.trim().length()==0){
-            mAdapter.clear();
+
+//    private void doRequest(final String key){
+//        if(TextUtils.isEmpty(key)||key.trim().length()==0){
+//            mAdapter.clear();
+//            return;
+//        }
+//        CategoriesManager.searchSubjects(this,key ,, new APIServiceCallback<List<CSubject>>() {
+//            @Override
+//            public void onSuccess(List<CSubject> object) {
+//                updateDisplay(key,object);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//                updateDisplay(key,null);
+//            }
+//        });
+//
+//    }
+//
+
+
+    private void finishWithResult(final CSubject subject) {
+
+        if (subject == null) {
+            finish();
             return;
         }
-        CategoriesManager.searchSubjects(this,key , new APIServiceCallback<List<CSubject>>() {
+
+        CompetencyParams params = new CompetencyParams();
+        params.setSubject(subject.getId());
+
+        showProgress(false);
+        AccountDataManager.requestClaimCompetency(this, params, new APIServiceCallback<CompetencySubject>() {
             @Override
-            public void onSuccess(List<CSubject> object) {
-                updateDisplay(key,object);
+            public void onSuccess(CompetencySubject object) {
+
+                cancelProgress();
+                Toast.makeText(TeachingSubjectSearchActivity.this, R.string.claim_succ, Toast.LENGTH_SHORT).show();
+                //SecurityManager.updatePermission(TeachingSubjectActivity.this, Su.Permission.COURSE_OPEN_CREATE, true);
+                AccountDataManager.setTeacher(TeachingSubjectSearchActivity.this, true);
+
+                //更新alias and tags
+                AccountDataManager.saveAliaTags(getApplicationContext(), object.aliasAndTags);
+                AccountDataManager.submitAliaTags(getApplicationContext());
+                //更新教学能力
+                AccountDataManager.addAbility(getApplicationContext(), subject.getName());
+
+
+                Intent intent = new Intent();
+                intent.putExtra(CourseConstant.KEY_SUBJECT, subject);
+                setResult(RESULT_OK, intent);
+                finish();
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                updateDisplay(key,null);
+                cancelProgress();
+                Toast.makeText(TeachingSubjectSearchActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
-
     }
+
+
+    private void createSubject(final CSubject subject){
+        CategoriesManager.addOpenSubject(this, subject.getName(), new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                Intent intent = new Intent();
+                intent.putExtra(CourseConstant.KEY_SUBJECT, subject);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(TeachingSubjectSearchActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+    }
+
 
     Handler handler=new Handler(){
         @Override
@@ -160,7 +229,7 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
                 Logger.d("qz--handleMessage---what="+msg.what+"---key="+msg.obj);
             }
             if(msg.what==BEGIN_SEARCH){
-                doRequest((String)msg.obj);
+                mAdapter.doRequest((String)msg.obj);
             }
         }
     };

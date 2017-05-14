@@ -89,7 +89,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
                 break;
             case R.id.search_subject:
 //                startActivity(new Intent(getActivity(),TeachingSubjectSearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),mSearchSubjectEdt,"search_bar").toBundle());
-                startActivity(new Intent(getActivity(),TeachingSubjectSearchActivity.class));
+                getActivity().startActivityForResult(new Intent(getActivity(),TeachingSubjectSearchActivity.class),100);
                 break;
         }
     }
