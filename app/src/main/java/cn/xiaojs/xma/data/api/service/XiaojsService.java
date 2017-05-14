@@ -275,6 +275,9 @@ public interface XiaojsService {
                                          @Query("limit") int limit,
                                          @Query("state") String state);
 
+    //Hide Lesson
+    @PATCH("/v1/ctl/lessons/{lesson}/hidden")
+    Call<ResponseBody> hideLesson(@Path("lesson") String lesson);
 
 
 

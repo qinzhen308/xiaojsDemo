@@ -239,4 +239,9 @@ public class LessonRequest extends ServiceRequest {
 
     }
 
+    public void hideLesson(String lesson) {
+        Call<ResponseBody> call = getService().hideLesson(lesson);
+        enqueueRequest(APIType.HIDE_LESSON, call);
+    }
+
 }

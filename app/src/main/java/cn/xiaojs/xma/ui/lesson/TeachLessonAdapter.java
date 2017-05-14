@@ -108,7 +108,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         if (bean.getState().equalsIgnoreCase(LessonState.DRAFT)) {
             String[] items = new String[]{mContext.getString(R.string.shelves),
 //                    mContext.getString(R.string.edit),
-                    mContext.getString(R.string.look_detail)};
+                    mContext.getString(R.string.look_detail),
+            mContext.getString(R.string.delete)};
             holder.state.setText(R.string.pending_shelves);
             holder.state.setBackgroundResource(R.drawable.course_state_draft_bg);
 
@@ -133,13 +134,16 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 2://查看详情
                             detail(bean);
                             break;
-                        //删除目前接口还不支持
+                        case 3://删除
+                            delete(position, bean);
+                            break;
                     }
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.REJECTED)) {
             String[] items = new String[]{mContext.getString(R.string.lesson_recreate),
-                    mContext.getString(R.string.look_detail)};//mContext.getString(R.string.delete) 删除接口目前还不支持
+                    mContext.getString(R.string.look_detail),
+                    mContext.getString(R.string.delete)};
             holder.state.setText(R.string.examine_failure);
             holder.state.setBackgroundResource(R.drawable.course_state_failure_bg);
             holder.operation.setVisibility(View.VISIBLE);
@@ -157,14 +161,15 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 2://查看详情
                             detail(bean);
                             break;
-//                        case 3://删除
-//                            delete(bean);
-//                            break;
+                        case 3://删除
+                            delete(position, bean);
+                            break;
                     }
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
-            String[] items = new String[]{mContext.getString(R.string.look_detail)};
+            String[] items = new String[]{mContext.getString(R.string.look_detail),
+                    mContext.getString(R.string.delete)};
             holder.state.setText(R.string.course_state_cancel);
             holder.state.setBackgroundResource(R.drawable.course_state_cancel_bg);
             holder.operation.setVisibility(View.VISIBLE);
@@ -179,9 +184,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                         case 1://查看详情
                             detail(bean);
                             break;
-//                        case 2://删除
-//                            delete(bean);
-//                            break;
+                        case 2://删除
+                            delete(position, bean);
+                            break;
 //                        case ENTER:
 //                            enterClass(bean);
 //                            break;
@@ -189,7 +194,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 }
             });
         } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
-            String[] items = new String[]{mContext.getString(R.string.look_detail)};
+            String[] items = new String[]{mContext.getString(R.string.look_detail),
+                    mContext.getString(R.string.delete)};
             holder.state.setText(R.string.force_stop);
             holder.state.setBackgroundResource(R.drawable.course_state_stop_bg);
             holder.operation.setVisibility(View.VISIBLE);
@@ -203,6 +209,9 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                     switch (position) {
                         case 1://查看详情
                             detail(bean);
+                            break;
+                        case 2://删除
+                            delete(position, bean);
                             break;
                     }
                 }
@@ -516,7 +525,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     }
 
     //删除
-    private void delete(TeachLesson bean) {
+    private void delete(final int pos,final TeachLesson bean) {
         final CommonDialog dialog = new CommonDialog(mContext);
         dialog.setTitle(R.string.delete);
         dialog.setDesc(R.string.delete_lesson_tip);
@@ -529,11 +538,31 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
         dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
-
+                dialog.cancel();
+                hideLesson(pos, bean);
             }
         });
         dialog.show();
     }
+
+    private void hideLesson(final int pos, final TeachLesson bean) {
+        showProgress(false);
+        LessonDataManager.hideLesson(mContext, bean.getId(), new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                removeItem(pos);
+                ToastUtil.showToast(mContext, R.string.delete_success);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     //备课
     private void prepare(TeachLesson bean) {

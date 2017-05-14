@@ -122,7 +122,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
             return convertView;
         if (bean.state.equalsIgnoreCase(LessonState.DRAFT)) {
             String[] items = new String[]{mContext.getString(R.string.shelves),
-                    mContext.getString(R.string.edit),
+//                    mContext.getString(R.string.edit),
                     mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.pending_shelves);
             holder.state.setBackgroundResource(R.drawable.course_state_draft_bg);
@@ -136,11 +136,14 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 1://上架
                             shelves(bean);
                             break;
-                        case 2://编辑
-                            edit(bean);
-                            break;
-                        case 3://查看详情
+//                        case 2://编辑
+//                            edit(bean);
+//                            break;
+                        case 2://查看详情
                             detail(bean);
+                            break;
+                        case 3://删除
+                            delete(bean);
                             break;
                     }
                 }
@@ -463,7 +466,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
     }
 
     //删除
-    private void delete(LiveItem bean) {
+    private void delete(final LiveItem bean) {
         final CommonDialog dialog = new CommonDialog(mContext);
         dialog.setTitle(R.string.delete);
         dialog.setDesc(R.string.delete_lesson_tip);
@@ -477,9 +480,28 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
             @Override
             public void onClick() {
 
+                //hideLesson(pos, bean);
             }
         });
         dialog.show();
+    }
+
+    private void hideLesson(final int pos, final LiveItem bean) {
+        showProgress(false);
+        LessonDataManager.hideLesson(mContext, bean.id, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                //removeItem(pos);
+                ToastUtil.showToast(mContext, R.string.delete_success);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //备课

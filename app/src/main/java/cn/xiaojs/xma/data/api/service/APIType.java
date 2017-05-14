@@ -162,4 +162,6 @@ public class APIType {
     public static final int ADD_OPEN_SUBJECT = 92;
     public static final int SEARCH_SUBJECTS = 93;
 
+    public static final int HIDE_LESSON = 94;
+
 }
