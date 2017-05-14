@@ -10,6 +10,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.ui.base.AbsListAdapter;
 
 /**
@@ -23,11 +24,6 @@ public class TeachingSubjectSearchAdapter extends AbsListAdapter<Object, AbsList
 
     public TeachingSubjectSearchAdapter(Activity activity) {
         super(activity);
-    }
-
-    @Override
-    public int getCount() {
-        return 10;
     }
 
     public Object getSelectedItem(){
@@ -68,6 +64,9 @@ public class TeachingSubjectSearchAdapter extends AbsListAdapter<Object, AbsList
 
     public void onBindViewHolder2(final int position, ViewHolder2 holder) {
 
+        CSubject item = (CSubject)getItem(position);
+        holder.subjectName.setText(item.getName());
+        holder.subjectParentTree.setText(item.getRemarks());
         if(position==selectedPosition){
             holder.selectedStatus.setVisibility(View.VISIBLE);
             holder.subjectName.setTextColor(mContext.getResources().getColor(R.color.main_orange));
@@ -120,11 +119,13 @@ public class TeachingSubjectSearchAdapter extends AbsListAdapter<Object, AbsList
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && getItem(position) instanceof String) {
+        Object item=getItem(position);
+        if (position == 0 && item instanceof String) {
             return 1;
-        } else {
+        } else if(item instanceof CSubject){
             return 2;
         }
+        return 0;
     }
 
     public static class ViewHolder1 extends ViewHolder {

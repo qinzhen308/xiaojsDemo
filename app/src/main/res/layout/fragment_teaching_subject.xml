@@ -13,10 +13,13 @@
         android:id="@+id/search_subject_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:background="@color/white">
+        android:visibility="visible"
+        android:background="@color/white"
+        android:orientation="vertical"
+        >
         <View
             style="@style/DividerHorizontal"/>
+
 
         <RelativeLayout
             android:id="@+id/search_subject"

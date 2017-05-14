@@ -55,6 +55,13 @@ public abstract class AbsListAdapter<T,H extends AbsListAdapter.ViewHolder> exte
         }
     }
 
+    public void clear(){
+        if(mList!=null){
+            mList.clear();
+            notifyDataSetChanged();
+        }
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         H holder=null;
