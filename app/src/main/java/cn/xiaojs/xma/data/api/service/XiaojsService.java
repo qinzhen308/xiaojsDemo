@@ -295,6 +295,15 @@ public interface XiaojsService {
                                     @Query("page") int page,
                                     @Query("limit") int limit);
 
+    //Add Open Subject
+    @POST("/v1/categories/subjects")
+    Call<ResponseBody> addOpenSubject(@Body String name);
+
+    //Search Subjects
+    @GET("/v1/categories/subjects/{name}/search")
+    Call<List<CSubject>> searchSubjects(@Path("name") String name);
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

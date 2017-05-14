@@ -9,6 +9,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CSubject;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
@@ -35,6 +36,16 @@ public class CategoriesRequest extends ServiceRequest {
         Call<List<CSubject>> call = getService().getSubjects(parent,page, limit);
         enqueueRequest(APIType.GET_SUBJECTS,call);
 
+    }
+
+    public void addOpenSubject(String name) {
+        Call<ResponseBody> call = getService().addOpenSubject(name);
+        enqueueRequest(APIType.ADD_OPEN_SUBJECT,call);
+    }
+
+    public void searchSubjects(String name) {
+        Call<List<CSubject>> call = getService().searchSubjects(name);
+        enqueueRequest(APIType.SEARCH_SUBJECTS,call);
     }
 
 }
