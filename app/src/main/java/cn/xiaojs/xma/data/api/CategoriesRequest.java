@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.category.SubjectName;
+import cn.xiaojs.xma.model.category.SubjectRes;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -49,7 +50,7 @@ public class CategoriesRequest extends ServiceRequest {
         SubjectName subjectName = new SubjectName();
         subjectName.name = name;
 
-        Call<ResponseBody> call = getService().addOpenSubject(subjectName);
+        Call<SubjectRes> call = getService().addOpenSubject(subjectName);
         enqueueRequest(APIType.ADD_OPEN_SUBJECT,call);
     }
 

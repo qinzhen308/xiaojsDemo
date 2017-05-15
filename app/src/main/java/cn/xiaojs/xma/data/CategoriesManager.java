@@ -10,6 +10,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.category.SubjectRes;
 
 import com.orhanobut.logger.Logger;
 
@@ -74,7 +75,7 @@ public class CategoriesManager {
      * @param name
      * @param callback
      */
-    public static void addOpenSubject(Context context, String name, APIServiceCallback callback) {
+    public static void addOpenSubject(Context context, String name, APIServiceCallback<SubjectRes> callback) {
         CategoriesRequest categoriesRequest = new CategoriesRequest(context,callback);
         categoriesRequest.addOpenSubject(name);
     }
