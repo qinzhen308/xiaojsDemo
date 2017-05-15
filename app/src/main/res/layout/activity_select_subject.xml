@@ -24,6 +24,7 @@
             android:background="@color/main_orange">
 
         <TextView
+            android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_subject"

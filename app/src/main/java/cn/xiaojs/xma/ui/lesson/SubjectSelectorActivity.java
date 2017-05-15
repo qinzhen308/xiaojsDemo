@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
@@ -39,6 +40,8 @@ public class SubjectSelectorActivity extends BaseActivity {
 
     @BindView(R.id.subject_list)
     ListView mSubjectListView;
+    @BindView(R.id.btn_add)
+    TextView btnAdd;
 
     private SubjectSelectorAdapter mSubjectAdapter;
     private Competency mSelectedCompetency;
@@ -63,6 +66,9 @@ public class SubjectSelectorActivity extends BaseActivity {
         addView(R.layout.activity_select_subject);
         init();
         loadData();
+        if(flag==1){
+            btnAdd.setText(R.string.add);
+        }
     }
 
     private void init () {
