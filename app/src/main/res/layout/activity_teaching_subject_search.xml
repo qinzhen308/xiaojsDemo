@@ -31,7 +31,7 @@
             android:background="@drawable/grey_conner_bg"
             android:drawableLeft="@drawable/ic_search"
             android:gravity="center_vertical"
-            android:hint="@string/home_search_hint"
+            android:hint="@string/search_subject_tips"
             android:maxLines="1"
             android:paddingBottom="@dimen/px15"
             android:paddingLeft="@dimen/px10"

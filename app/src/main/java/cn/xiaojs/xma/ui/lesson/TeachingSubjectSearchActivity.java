@@ -215,7 +215,7 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
         }
 //        String regEx="[^(a-zA-Z0-9\\u4e00-\\u9fa5)]";
 //        String regEx="^[a-zA-Z0-9\u4E00-\u9FA5]+$";
-        String regEx="^[\\u4E00-\\u9FA5\\uF900-\\uFA2D\\w]{2,8}";
+        String regEx="[a-zA-Z0-9_\u4e00-\u9fa5]+";
         Pattern pattern=Pattern.compile(regEx);
         Matcher matcher=pattern.matcher(content);
         if(!matcher.matches()){
@@ -237,7 +237,7 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
 
     private void createSubject(final CSubject subject){
         String content=subject.getName();
-        if(!verifyInput(content))return;
+//        if(!verifyInput(content))return;
         showProgress(false);
         CategoriesManager.addOpenSubject(this, subject.getName(), new APIServiceCallback() {
             @Override
