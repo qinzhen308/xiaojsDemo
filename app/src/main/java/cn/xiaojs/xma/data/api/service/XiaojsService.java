@@ -39,12 +39,10 @@ import cn.xiaojs.xma.model.account.RegisterInfo;
 import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
-import cn.xiaojs.xma.model.category.SubjectRes;
 import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
-import cn.xiaojs.xma.model.ctl.StudentInfo;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
@@ -302,7 +300,7 @@ public interface XiaojsService {
 
     //Add Open Subject
     @POST("/v1/categories/subjects")
-    Call<SubjectRes> addOpenSubject(@Body SubjectName name);
+    Call<CSubject> addOpenSubject(@Body SubjectName name);
 
     //Search Subjects
     @GET("/v1/categories/subjects/{name}/search/{pagination}")
