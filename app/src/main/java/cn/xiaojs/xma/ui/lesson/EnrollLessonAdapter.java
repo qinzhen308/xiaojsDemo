@@ -99,7 +99,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
         if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
-            holder.operation.setVisibility(View.GONE);
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.setEnterColor(R.color.common_text);
             String[] items = new String[]{mContext.getString(R.string.delete)};
             holder.operation.setItems(items);

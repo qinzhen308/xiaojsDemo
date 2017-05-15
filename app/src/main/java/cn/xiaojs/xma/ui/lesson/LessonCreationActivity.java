@@ -232,6 +232,8 @@ public class LessonCreationActivity extends BaseActivity {
         if (mType == CourseConstant.TYPE_LESSON_CREATE && !close) {
             mPlaceHoldArea.setVisibility(View.GONE);
             mLessonCreateTipsView.setVisibility(View.VISIBLE);
+        } else if (mType == CourseConstant.TYPE_LESSON_EDIT) {
+            setMiddleTitle(R.string.edit);
         }
 
         loadData();

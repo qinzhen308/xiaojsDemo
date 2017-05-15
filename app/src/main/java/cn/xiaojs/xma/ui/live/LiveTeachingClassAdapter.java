@@ -142,17 +142,16 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 2://查看详情
                             detail(bean);
                             break;
-                        case 3://删除
-                            delete(bean);
-                            break;
+//                        case 3://删除
+//                            delete(bean);
+//                            break;
                     }
                 }
             });
         } else if (bean.state.equalsIgnoreCase(LessonState.REJECTED)) {
             holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.edit),
-                    mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+                    mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.examine_failure);
             holder.state.setBackgroundResource(R.drawable.course_state_failure_bg);
             holder.operation.enableMore(false);
@@ -168,15 +167,11 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 2://查看详情
                             detail(bean);
                             break;
-                        case 3://删除
-                            delete(bean);
-                            break;
                     }
                 }
             });
         } else if (bean.state.equalsIgnoreCase(LessonState.CANCELLED)) {
-            String[] items = new String[]{mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+            String[] items = new String[]{mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.course_state_cancel);
             holder.state.setBackgroundResource(R.drawable.course_state_cancel_bg);
             holder.operation.enableMore(false);
@@ -189,16 +184,12 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 1://查看详情
                             detail(bean);
                             break;
-                        case 2://删除
-                            delete(bean);
-                            break;
                     }
                 }
             });
         } else if (bean.state.equalsIgnoreCase(LessonState.STOPPED)) {
             String[] items = new String[]{mContext.getString(R.string.edit),
-                    mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+                    mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.force_stop);
             holder.state.setBackgroundResource(R.drawable.course_state_stop_bg);
             holder.operation.enableMore(false);
@@ -213,9 +204,6 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                             break;
                         case 2://查看详情
                             detail(bean);
-                            break;
-                        case 3://删除
-                            delete(bean);
                             break;
                     }
                 }
