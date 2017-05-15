@@ -50,10 +50,12 @@ import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.EnrolledLesson;
@@ -322,7 +324,7 @@ public class MaterialActivity extends BaseActivity {
                     if (targetDocIds.length == 1) {
                         toshare(targetDocIds[0], chooseClass.account, chooseClass.alias);
                     }else{
-                        toPatchShare(chooseClass.account, targetDocIds,chooseClass.alias);
+                        toPatchShare(chooseClass.account, targetDocIds,chooseClass.alias,false);
                     }
 
 
@@ -527,11 +529,12 @@ public class MaterialActivity extends BaseActivity {
         startActivityForResult(i, REQUEST_CHOOSE_CLASS_CODE);
     }
 
-    private void toPatchShare(final String targetId, String[] documentIds, final String classname) {
+    private void toPatchShare(final String targetId, String[] documentIds, final String classname,boolean repeat) {
 
         ShareResource resource = new ShareResource();
         resource.documents = documentIds;
         resource.subtype = Collaboration.SubType.STANDA_LONE_LESSON;
+        resource.repeated = repeat;
 
         showProgress(true);
         CollaManager.shareDocuments(this, targetId, resource, new APIServiceCallback<ShareDoc>() {
@@ -546,8 +549,10 @@ public class MaterialActivity extends BaseActivity {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
+
                 shareResult();
                 Toast.makeText(MaterialActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+
             }
         });
     }
