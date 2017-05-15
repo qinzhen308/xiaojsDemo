@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
@@ -45,9 +46,11 @@ import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.view.LessonPersonView;
 import cn.xiaojs.xma.ui.view.LessonStatusView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
 import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class
 EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.Holder> {
@@ -96,24 +99,22 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
         if (bean.getState().equalsIgnoreCase(LessonState.CANCELLED)) {
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
-            holder.operation.setVisibility(View.GONE);
+            holder.operation.setVisibility(View.VISIBLE);
             holder.operation.setEnterColor(R.color.common_text);
-//            String[] items = new String[]{mContext.getString(R.string.data_bank)};
-//            holder.operation.setItems(items);
-//            holder.operation.enableMore(false);
-//            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
-//                @Override
-//                public void onClick(int position) {
-//                    databank(bean);
-//                }
-//            });
+            String[] items = new String[]{mContext.getString(R.string.delete)};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
                     switch (position) {
-                        case ENTER:
-                            enterClass(bean);
+                        case 1:
+                            delete(position, bean);
                             break;
+//                        case ENTER:
+//                            enterClass(bean);
+//                            break;
                     }
                 }
             });
@@ -196,19 +197,59 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
         } else if (bean.getState().equalsIgnoreCase(LessonState.STOPPED)) {
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean);
-            holder.operation.setVisibility(View.VISIBLE);
-            holder.operation.setEnterColor(R.color.common_text);
+            String[] items = new String[]{mContext.getString(R.string.delete)};
+            holder.operation.setItems(items);
+            holder.operation.enableMore(false);
+            holder.operation.enableEnter(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
                     switch (position) {
-                        case ENTER:
-                            enterClass(bean);
+                        case 1:
+                            delete(position, bean);
                             break;
                     }
                 }
             });
         }
+    }
+
+    //删除
+    private void delete(final int pos,final EnrolledLesson bean) {
+        final CommonDialog dialog = new CommonDialog(mContext);
+        dialog.setTitle(R.string.delete);
+        dialog.setDesc(R.string.delete_lesson_tip);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                hideLesson(pos, bean);
+            }
+        });
+        dialog.show();
+    }
+
+    private void hideLesson(final int pos, final EnrolledLesson bean) {
+        showProgress(false);
+        LessonDataManager.hideLesson(mContext, bean.getId(), new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                removeItem(pos);
+                ToastUtil.showToast(mContext, R.string.delete_success);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void schedule(EnrolledLesson bean) {

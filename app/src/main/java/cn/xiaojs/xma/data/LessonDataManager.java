@@ -401,4 +401,15 @@ public class LessonDataManager {
 
     }
 
+    /**
+     * Hidden the specific standalone lesson.
+     * @param context
+     * @param lesson
+     * @param callback
+     */
+    public static void hideLesson(Context context, String lesson, APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.hideLesson(lesson);
+    }
+
 }

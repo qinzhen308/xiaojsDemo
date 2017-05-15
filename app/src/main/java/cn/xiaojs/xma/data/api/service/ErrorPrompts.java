@@ -39,6 +39,9 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.HIDE_LESSON:
+                errorMessage = "删除失败";
+                break;
             case APIType.SHARE_DOCUMENTS:
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
                     errorMessage = "您分享的资料,有的已在该班级中存在了";

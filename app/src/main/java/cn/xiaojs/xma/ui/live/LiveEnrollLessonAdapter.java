@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -27,6 +28,9 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.model.ctl.LiveItem;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.Constants;
@@ -36,7 +40,9 @@ import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.view.LessonPersonView;
 import cn.xiaojs.xma.ui.view.LessonStatusView;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
+import cn.xiaojs.xma.util.ToastUtil;
 
 public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
     private Context mContext;
@@ -85,25 +91,20 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.status.show(bean.state, bean.schedule);
             holder.operation.setVisibility(View.GONE);
             holder.operation.setEnterColor(R.color.common_text);
-//            String[] items = new String[]{mContext.getString(R.string.data_bank)};
+//            String[] items = new String[]{mContext.getString(R.string.delete)};
 //            holder.operation.setItems(items);
 //            holder.operation.enableMore(false);
+//            holder.operation.enableEnter(false);
 //            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
 //                @Override
 //                public void onClick(int position) {
-//                    databank(bean);
+//                    switch (position) {
+//                        case 1:
+//                            delete(position, bean);
+//                            break;
+//                    }
 //                }
 //            });
-            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
-                @Override
-                public void onClick(int position) {
-                    switch (position) {
-                        case ENTER:
-                            enterClass(bean);
-                            break;
-                    }
-                }
-            });
         } else if (bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
             holder.operation.setVisibility(View.VISIBLE);
             holder.operation.setEnterColor(R.color.common_text);
@@ -183,18 +184,22 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
         } else if (bean.state.equalsIgnoreCase(LessonState.STOPPED)) {
             holder.status.setVisibility(View.VISIBLE);
             holder.status.show(bean.state, bean.schedule);
-            holder.operation.setVisibility(View.VISIBLE);
+            holder.operation.setVisibility(View.GONE);
             holder.operation.setEnterColor(R.color.common_text);
-            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
-                @Override
-                public void onClick(int position) {
-                    switch (position) {
-                        case ENTER:
-                            enterClass(bean);
-                            break;
-                    }
-                }
-            });
+//            String[] items = new String[]{mContext.getString(R.string.delete)};
+//            holder.operation.setItems(items);
+//            holder.operation.enableMore(false);
+//            holder.operation.enableEnter(false);
+//            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+//                @Override
+//                public void onClick(int position) {
+//                    switch (position) {
+//                        case 1:
+//                            delete(position, bean);
+//                            break;
+//                    }
+//                }
+//            });
         }
         return convertView;
     }
@@ -205,6 +210,49 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.id);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.title);
         mContext.startActivity(intent);
+    }
+
+    //删除
+    private void delete(final int pos,final LiveItem bean) {
+        final CommonDialog dialog = new CommonDialog(mContext);
+        dialog.setTitle(R.string.delete);
+        dialog.setDesc(R.string.delete_lesson_tip);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                hideLesson(pos, bean);
+            }
+        });
+        dialog.show();
+    }
+
+    private void hideLesson(final int pos, final LiveItem bean) {
+        LessonDataManager.hideLesson(mContext, bean.id, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                removeItem(pos);
+                ToastUtil.showToast(mContext, R.string.delete_success);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void removeItem(int position) {
+        if (position > mLessons.size()) {
+            return;
+        }
+        mLessons.remove(position);
+        notifyDataSetChanged();
     }
 
     //退课
