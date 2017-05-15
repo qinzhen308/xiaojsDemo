@@ -236,14 +236,12 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
         String content=subject.getName();
         if(!verifyInput(content))return;
         showProgress(false);
-        CategoriesManager.addOpenSubject(this, subject.getName(), new APIServiceCallback() {
+        CategoriesManager.addOpenSubject(this, subject.getName(), new APIServiceCallback<CSubject>() {
             @Override
-            public void onSuccess(Object object) {
+            public void onSuccess(CSubject object) {
                 cancelProgress();
-                Intent intent = new Intent();
-                intent.putExtra(CourseConstant.KEY_SUBJECT, subject);
-                setResult(RESULT_OK, intent);
-                finish();
+                object.setName(subject.getName());
+                finishWithResult(object);
             }
 
             @Override
