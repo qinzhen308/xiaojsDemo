@@ -14,5 +14,5 @@ public class ShareDoc {
 
     public String[] linked;
 
-    public ConflictRes[] details;
+    public ConflictRes[] repeated;
 }

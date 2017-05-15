@@ -59,6 +59,7 @@ import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.Doc;
 import cn.xiaojs.xma.model.EnrolledLesson;
+import cn.xiaojs.xma.model.material.ConflictRes;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
@@ -321,11 +322,13 @@ public class MaterialActivity extends BaseActivity {
 
                     Contact chooseClass = choiceContacts.get(0);
 
-                    if (targetDocIds.length == 1) {
-                        toshare(targetDocIds[0], chooseClass.account, chooseClass.alias);
-                    }else{
-                        toPatchShare(chooseClass.account, targetDocIds,chooseClass.alias,false);
-                    }
+                    //无论是单个分享或者多个分享，都用批量分享的接口
+                    toPatchShare(chooseClass.account, targetDocIds,chooseClass.alias,false);
+//                    if (targetDocIds.length == 1) {
+//                        toshare(targetDocIds[0], chooseClass.account, chooseClass.alias);
+//                    }else{
+//                        toPatchShare(chooseClass.account, targetDocIds,chooseClass.alias,false);
+//                    }
 
 
                 }
@@ -541,9 +544,14 @@ public class MaterialActivity extends BaseActivity {
             @Override
             public void onSuccess(ShareDoc object) {
                 shareResult();
-                changeChoiceMode(ListView.CHOICE_MODE_NONE);
 
-                shareSuccess(targetId, classname);
+                if(object!= null && object.repeated !=null && object.repeated.length>0) {
+                    //说明分享的文件有已存在的，需要询问用户
+                    shareConflictWithPatch(targetId,object.repeated,classname);
+                }else{
+                    changeChoiceMode(ListView.CHOICE_MODE_NONE);
+                    shareSuccess(targetId, classname);
+                }
                 //Toast.makeText(MaterialActivity.this, R.string.shareok_and_to_class, Toast.LENGTH_SHORT).show();
             }
 
@@ -557,82 +565,84 @@ public class MaterialActivity extends BaseActivity {
         });
     }
 
-    private void toshare(String documentId, final String targetId, final String classname) {
-
-        ShareResource resource = new ShareResource();
-        resource.targetId = targetId;
-        resource.subtype = Collaboration.SubType.STANDA_LONE_LESSON;
-        //resource.sharedType = Collaboration.ShareType.COPY;
-
-        showProgress(true);
-        CollaManager.shareDocument(this, documentId, resource, new APIServiceCallback<ShareDoc>() {
-            @Override
-            public void onSuccess(ShareDoc object) {
-                shareResult();
-                //Toast.makeText(MaterialActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
-                shareSuccess(targetId, classname);
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                shareResult();
-                Toast.makeText(MaterialActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//    private void toshare(String documentId, final String targetId, final String classname) {
+//
+//        ShareResource resource = new ShareResource();
+//        resource.targetId = targetId;
+//        resource.subtype = Collaboration.SubType.STANDA_LONE_LESSON;
+//        //resource.sharedType = Collaboration.ShareType.COPY;
+//
+//        showProgress(true);
+//        CollaManager.shareDocument(this, documentId, resource, new APIServiceCallback<ShareDoc>() {
+//            @Override
+//            public void onSuccess(ShareDoc object) {
+//                shareResult();
+//                //Toast.makeText(MaterialActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
+//                shareSuccess(targetId, classname);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//                shareResult();
+//                Toast.makeText(MaterialActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     private void shareResult() {
         cancelProgress();
         targetDocIds = null;
     }
 
-//    private void shareConflictWithPatch() {
-//        View view = LayoutInflater.from(this).inflate(R.layout.layout_dlg_list,null);
-//        final ListView listView = (ListView) view;
-//
-//
-//        TextView headerView = new TextView(this);
-//        headerView.setText(R.string.query_go_on_share_when_confilc);
-//        headerView.setTextSize(14);
-//        headerView.setTextColor(getResources().getColor(R.color.font_light_gray));
-//        headerView.setPadding(0,0,0,10);
-//
-//
-//
-//        String[] items = new String[] {"大是大非好.pdf",
-//                "粉色的方式可点击返回款式大方.doc",
-//                "俄方看了很多事发生的反馈老师的护肤老师的风景还是到了匡扶汉室独立开发哈收到了发.mp4",
-//                "hello world.pdf"};
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                R.layout.layout_text_item_only,items);
-//
-//        listView.addHeaderView(headerView);
-//        listView.setAdapter(adapter);
-//
-//        final CommonDialog dialog = new CommonDialog(this);
-//        dialog.setTitle(R.string.patch_share_material);
-//        dialog.setCustomView(listView);
-//        dialog.setLefBtnText(R.string.cancel);
-//        dialog.setRightBtnText(R.string.go_on_share_material);
-//        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-//            @Override
-//            public void onClick() {
-//                dialog.dismiss();
-//            }
-//        });
-//
-//        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-//            @Override
-//            public void onClick() {
-//                dialog.dismiss();
-//                //TODO 继续分享
-//            }
-//        });
-//
-//        dialog.show();
-//
-//    }
+    private void shareConflictWithPatch(final String targetId, final ConflictRes[] conflicts, final String classname) {
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_dlg_list,null);
+        final ListView listView = (ListView) view;
+
+
+        TextView headerView = new TextView(this);
+        headerView.setText(R.string.query_go_on_share_when_confilc);
+        headerView.setTextSize(14);
+        headerView.setTextColor(getResources().getColor(R.color.font_light_gray));
+        headerView.setPadding(0,0,0,10);
+
+
+        ArrayAdapter<ConflictRes> adapter = new ArrayAdapter<ConflictRes>(this,
+                R.layout.layout_text_item_only,conflicts);
+
+
+        listView.addHeaderView(headerView);
+        listView.setAdapter(adapter);
+
+        final CommonDialog dialog = new CommonDialog(this);
+        dialog.setTitle(R.string.patch_share_material);
+        dialog.setCustomView(listView);
+        dialog.setLefBtnText(R.string.cancel);
+        dialog.setRightBtnText(R.string.go_on_share_material);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+
+                String[] documentIds = new String[conflicts.length];
+                for (int i=0; i< conflicts.length; i++){
+                    documentIds[i] = conflicts[i].id;
+                }
+
+                toPatchShare(targetId,documentIds,classname,true);
+
+            }
+        });
+
+        dialog.show();
+
+    }
 
     public void shareSuccess(final String classId, final String classname) {
         final CommonDialog dialog = new CommonDialog(this);

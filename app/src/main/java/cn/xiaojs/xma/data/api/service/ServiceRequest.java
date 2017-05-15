@@ -490,16 +490,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 if (serviceCallback != null) {
                     serviceCallback.onSuccess(object);
                 }
-            } else if(apiType == APIType.SHARE_DOCUMENTS && responseCode == 403){
-
-                T object = (T) readConflictDoc(errorBody);
-
-                if (serviceCallback != null) {
-                    serviceCallback.onSuccess(object);
-                }
-
-            }else {
-
+            } else {
                 Error error = getError(errorBody);
                 String errorCode = "-1";
 
