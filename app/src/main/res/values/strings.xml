@@ -284,6 +284,8 @@
     <string name="lesson_creation_success">创建公开课成功</string>
     <string name="lesson_edit_success">修改成功</string>
     <string name="lesson_stu_exceed">该课的学生人数超过%1$d人，建议您选择公开课的形式</string>
+    <string name="subject_input_tip">只能输入字母，汉字，数字，及三者的组合</string>
+    <string name="subject_input_tip2">不能输入纯数字</string>
 
     <!--live lesson detail-->
     <string name="live_lesson_detail">详情</string>

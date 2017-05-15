@@ -26,6 +26,8 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -201,11 +203,46 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
         });
     }
 
+    private boolean verifyInput(String content){
+        if(content.length()<2){
+            Toast.makeText(this,"不能少于2个字符",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(content.length()>8){
+            Toast.makeText(this,"不能多余8个字符",Toast.LENGTH_LONG).show();
+            return false;
+        }
+//        String regEx="[^(a-zA-Z0-9\\u4e00-\\u9fa5)]";
+//        String regEx="^[a-zA-Z0-9\u4E00-\u9FA5]+$";
+        String regEx="^[\\u4E00-\\u9FA5\\uF900-\\uFA2D\\w]{2,8}";
+        Pattern pattern=Pattern.compile(regEx);
+        Matcher matcher=pattern.matcher(content);
+        if(!matcher.matches()){
+            Toast.makeText(this,R.string.subject_input_tip,Toast.LENGTH_LONG).show();
+            return false;
+        }
+        regEx="[^(0-9)]";
+        pattern=Pattern.compile(regEx);
+        matcher=pattern.matcher(content);
+        if(!matcher.matches()){
+            Toast.makeText(this,R.string.subject_input_tip,Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+
+        return true;
+    }
+
 
     private void createSubject(final CSubject subject){
+        String content=subject.getName();
+        if(!verifyInput(content))return;
+        showProgress(false);
         CategoriesManager.addOpenSubject(this, subject.getName(), new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
+                cancelProgress();
                 Intent intent = new Intent();
                 intent.putExtra(CourseConstant.KEY_SUBJECT, subject);
                 setResult(RESULT_OK, intent);

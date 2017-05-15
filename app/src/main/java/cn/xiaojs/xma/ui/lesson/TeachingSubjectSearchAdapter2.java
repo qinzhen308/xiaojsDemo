@@ -160,20 +160,12 @@ public class TeachingSubjectSearchAdapter2 extends AbsMultipleListAdapter<CSubje
     }
 
     public void doRequest(final String key){
-        CSubject s=new CSubject();
-        List<Object> b=new ArrayList<>();
-        functionA(s);
-        functionB(b);
         this.key=key;
+        selectedPosition=-1;
+        if(mOnSelectedListener!=null){
+            mOnSelectedListener.onSelected(-1);
+        }
         doRequest();
-    }
-
-    public void functionA(Object a){
-
-    }
-
-    public void functionB(List<Object> a){
-
     }
 
 
