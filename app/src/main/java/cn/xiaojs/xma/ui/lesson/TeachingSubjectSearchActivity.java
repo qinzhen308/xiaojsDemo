@@ -213,8 +213,6 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
             Toast.makeText(this,"不能多余8个字符",Toast.LENGTH_LONG).show();
             return false;
         }
-//        String regEx="[^(a-zA-Z0-9\\u4e00-\\u9fa5)]";
-//        String regEx="^[a-zA-Z0-9\u4E00-\u9FA5]+$";
         String regEx="[a-zA-Z0-9_\u4e00-\u9fa5]+";
         Pattern pattern=Pattern.compile(regEx);
         Matcher matcher=pattern.matcher(content);
@@ -222,14 +220,13 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
             Toast.makeText(this,R.string.subject_input_tip,Toast.LENGTH_LONG).show();
             return false;
         }
-        regEx="[^(0-9)]";
+        regEx="[(0-9)]+";
         pattern=Pattern.compile(regEx);
         matcher=pattern.matcher(content);
-        if(!matcher.matches()){
-            Toast.makeText(this,R.string.subject_input_tip,Toast.LENGTH_LONG).show();
+        if(matcher.matches()){
+            Toast.makeText(this,R.string.subject_input_tip2,Toast.LENGTH_LONG).show();
             return false;
         }
-
 
         return true;
     }
@@ -237,7 +234,7 @@ public class TeachingSubjectSearchActivity extends BaseActivity {
 
     private void createSubject(final CSubject subject){
         String content=subject.getName();
-//        if(!verifyInput(content))return;
+        if(!verifyInput(content))return;
         showProgress(false);
         CategoriesManager.addOpenSubject(this, subject.getName(), new APIServiceCallback() {
             @Override
