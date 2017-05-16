@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
@@ -21,12 +21,11 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
-import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
+import cn.xiaojs.xma.ui.classroom.talk.AttendsComparator;
 import cn.xiaojs.xma.ui.classroom.talk.ContactBookAdapter;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
-import cn.xiaojs.xma.ui.widget.ClosableSlidingLayout;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 
 /*  =======================================================================================
@@ -57,6 +56,7 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick {
     private ContactBookAdapter mContactBookAdapter;
     private Constants.User mUser;
     private String mTicket;
+    private AttendsComparator mAttendsComparator;
 
     @Override
     public void onAttach(Context context) {
@@ -67,6 +67,7 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick {
     private void initParams() {
         mUser = LiveCtlSessionManager.getInstance().getUser();
         mTicket = LiveCtlSessionManager.getInstance().getTicket();
+        mAttendsComparator = new AttendsComparator();
     }
 
     @Override
@@ -107,6 +108,9 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick {
                 @Override
                 public void onSuccess(LiveCollection<Attendee> liveCollection) {
                     if (!isDetached()) {
+                        if (liveCollection != null && liveCollection.attendees != null) {
+                            Collections.sort(liveCollection.attendees, mAttendsComparator);
+                        }
                         mLiveCollection = liveCollection;
                         addMyself2Attendees(mLiveCollection);
                         mContactBookAdapter.setData(mLiveCollection);

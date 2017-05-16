@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui.classroom;
 
-import android.animation.Animator;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,8 +26,6 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
-import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
-import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import cn.xiaojs.xma.util.CacheUtil;
 
 /*  =======================================================================================
@@ -123,9 +120,7 @@ public class PhotoDoodleFragment extends BaseFragment {
                 mBoardController.handlePanelItemClick(v);
                 break;
             case R.id.back_in_doodle:
-                if (mContext instanceof ClassroomActivity) {
-                    ((ClassroomActivity)mContext).exitPhotoDoodle();
-                }
+                getFragmentManager().popBackStackImmediate();
                 break;
             case R.id.share_doodle:
                 selectShareContact(v);

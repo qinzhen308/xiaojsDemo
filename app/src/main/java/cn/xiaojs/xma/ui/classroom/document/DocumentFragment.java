@@ -125,9 +125,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private void exit() {
-        /*if (mContext instanceof ClassroomActivity) {
-            ((ClassroomActivity) mContext).exitDocument();
-        }*/
+        getFragmentManager().popBackStackImmediate();
     }
 
     private void initData() {

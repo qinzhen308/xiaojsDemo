@@ -171,9 +171,7 @@ public class VideoPlayFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                if (mContext instanceof ClassroomActivity) {
-                    ((ClassroomActivity) mContext).exitVideoPlayer();
-                }
+                getFragmentManager().popBackStackImmediate();
                 break;
             case R.id.play_pause_btn:
                 if (mPlaying) {
