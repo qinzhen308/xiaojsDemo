@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -41,7 +39,6 @@ import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Schedule;
-import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.Teacher;
 import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.Price;
@@ -49,8 +46,8 @@ import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.BlockTabView;

@@ -77,6 +77,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Oval;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
+import cn.xiaojs.xma.ui.widget.SpecialEditText;
 
 public class Whiteboard extends View implements ViewGestureListener.ViewRectChangedListener,
         Receiver<List<CommendLine>>, Sender<String> {
@@ -95,7 +96,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public final static int BG_SCALE_TYPE_FIT_XY = 1;
     public final static int BG_SCALE_TYPE_FIT_CENTER = 2;
 
-    private final float DOODLE_CANVAS_RATIO = WhiteboardLayer.DOODLE_CANVAS_RATIO; // w:h = 4:3
+    private float DOODLE_CANVAS_RATIO = WhiteboardLayer.DOODLE_CANVAS_RATIO;
 
     private final int BG_COLOR = Color.argb(255, 255, 255, 255);
 
@@ -205,6 +206,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public Whiteboard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initParams(context);
+    }
+
+    public void setCanvasRatio(float ratio) {
+        DOODLE_CANVAS_RATIO = ratio;
     }
 
     public void setGestureDetector(GestureDetector gestureDetector) {

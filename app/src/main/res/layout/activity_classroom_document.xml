@@ -238,6 +238,7 @@
                     android:paddingLeft="@dimen/px20"
                     android:paddingRight="@dimen/px20"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:text="@string/size"/>
 
             <TextView
@@ -247,6 +248,7 @@
                     android:paddingLeft="@dimen/px20"
                     android:paddingRight="@dimen/px20"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:text="@string/modify_time"/>
 
             <ImageView

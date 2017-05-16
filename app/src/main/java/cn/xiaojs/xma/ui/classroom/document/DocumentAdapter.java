@@ -24,7 +24,7 @@ import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UserDoc;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.FileUtil;
@@ -58,17 +58,19 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
 
     private CommonDialog mDelDocDialog;
     private String mMyAccountId;
+    private String mLessonId;
 
     public DocumentAdapter(Context context, PullToRefreshSwipeListView listView, List<LibDoc> data) {
         super(context, listView, data);
         init();
     }
 
-    public DocumentAdapter(Context context, PullToRefreshSwipeListView listView, String ownerId, String type) {
+    public DocumentAdapter(Context context, PullToRefreshSwipeListView listView, String lessonId, String ownerId, String type) {
         super(context, listView, true);
 
-        mType = type;
+        mLessonId = lessonId;
         mOwnerId = ownerId;
+        mType = type;
         init();
     }
 
@@ -231,7 +233,7 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
                     clsDoc = data.get(pos);
                     showProgress(false);
                     ShareResource shareResource = new ShareResource();
-                    shareResource.targetId = ((ClassroomActivity) mContext).getLessonId();
+                    shareResource.targetId = mLessonId;
                     shareResource.subtype = Collaboration.SubType.STANDA_LONE_LESSON;
                     shareResource.sharedType = Collaboration.ShareType.SHORTCUT;
                     CollaManager.shareDocument(mContext, clsDoc.id, shareResource, new APIServiceCallback<ShareDoc>() {

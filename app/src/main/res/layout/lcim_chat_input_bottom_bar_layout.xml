@@ -36,7 +36,7 @@
                     android:src="@drawable/ic_home_picture"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    />
+            />
             <Button
                     android:id="@+id/input_bar_btn_send_text"
                     style="@style/lcim_input_bar_button_style"

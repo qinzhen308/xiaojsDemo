@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import cn.xiaojs.xma.ui.widget.SpecialEditText;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *

@@ -29,8 +29,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
@@ -45,10 +45,10 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
-public class StudentVideoController extends VideoController {
+public class PlayVideoController extends VideoController {
     private CommonDialog mAgreeOpenCamera;
 
-    public StudentVideoController(Context context, View root, OnStreamStateChangeListener listener) {
+    public PlayVideoController(Context context, View root, OnStreamStateChangeListener listener) {
         super(context, root, listener);
         mUser = Constants.User.STUDENT;
         listenerSocket();
@@ -59,11 +59,7 @@ public class StudentVideoController extends VideoController {
         /**
          * 用于播放直播推流或个人推流
          */
-        mPlayView = (PlayerTextureView) root.findViewById(R.id.live_video);
-        /**
-         * 用于个人推流的, 一对一流（默认小窗口）.
-         */
-        mPublishView = (LiveRecordView) root.findViewById(R.id.publish_video);
+        mPlayView = (PlayerTextureView) root.findViewById(R.id.play_video);
     }
 
     @Override
@@ -76,7 +72,7 @@ public class StudentVideoController extends VideoController {
     @Override
     public void confirmPublishStream(boolean confirm) {
         //update param
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPublishView.getLayoutParams();
+        /*FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPublishView.getLayoutParams();
         if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
             params.width = mPeerStreamViewWidth;
             params.height = mPeerStreamViewHeight;
@@ -95,7 +91,7 @@ public class StudentVideoController extends VideoController {
             mPublishView.setVisibility(View.VISIBLE);
             mPublishView.setPath(mPublishStreamUrl);
             mPublishView.resume();
-        }
+        }*/
     }
 
     @Override
@@ -120,7 +116,7 @@ public class StudentVideoController extends VideoController {
      */
     @Override
     public void pausePublishStream(final int type) {
-        if (mPublishView != null) {
+        /*if (mPublishView != null) {
             if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                 mNeedStreamRePublishing = true;
                 if (mStreamListener != null) {
@@ -148,7 +144,7 @@ public class StudentVideoController extends VideoController {
             mStreamPublishing = false;
             mPublishView.pause();
             mPublishView.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     /**
@@ -175,9 +171,9 @@ public class StudentVideoController extends VideoController {
             if (callback != null) {
                 callback.onFrameCaptured(bmp);
             }
-        } else if (mPublishView.getVisibility() == View.VISIBLE) {
+        }/* else if (mPublishView.getVisibility() == View.VISIBLE) {
             mPublishView.captureOriginalFrame(callback);
-        } else {
+        } */else {
             if (callback != null) {
                 callback.onFrameCaptured(null);
             }
@@ -324,7 +320,7 @@ public class StudentVideoController extends VideoController {
 
     @Override
     public void muteOrUnmute() {
-        SharedPreferences sf = XjsUtils.getSharedPreferences();
+        /*SharedPreferences sf = XjsUtils.getSharedPreferences();
         boolean audioOpen = sf.getBoolean(Constants.KEY_MICROPHONE_OPEN, true);
         if (audioOpen) {
             if (mPublishView != null && mPublishView.isMute()) {
@@ -334,13 +330,13 @@ public class StudentVideoController extends VideoController {
             if (mPublishView != null && !mPublishView.isMute()) {
                 mPublishView.mute();
             }
-        }
+        }*/
     }
 
     @Override
     public void togglePublishResolution() {
-        if (mPublishView != null) {
+        /*if (mPublishView != null) {
             mPublishView.togglePublishResolution();
-        }
+        }*/
     }
 }

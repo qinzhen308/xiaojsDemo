@@ -448,6 +448,8 @@
     <string name="cls_not_connected">教室未连接上，请退出后重新进入</string>
     <string name="cls_pending_class_title">可以开始上课啦!</string>
     <string name="cls_pending_class_desc">点击上课按钮开始上课</string>
+    <string name="cls_pending_class_stu_title">即将上课!</string>
+    <string name="cls_pending_class_stu_desc">等待老师开始开上课</string>
     <string name="cls_live_show">%1$s&#x0020;正在直播秀&#x0020;%2$s</string>
     <string name="cls_distance_class">距离上课还有%1$s</string>
     <string name="cls_live_delay">已拖堂%1$s</string>
@@ -469,6 +471,10 @@
     <string name="cr_live_connect_fail_exit">退出教室</string>
     <string name="cr_live_connect_fail_continue">重新连接</string>
     <string name="cr_live_forbid_talk">上课时间不能和其他学生聊天</string>
+    <string name="cr_room_numbers_empty">班级成员名单</string>
+    <string name="cr_room_numbers">班级成员名单(<![CDATA[<font color="#ff9833">%1$d</font>]]>/%2$d)</string>
+    <string name="cr_manage_contact">管理成员</string>
+    <string name="cr_talk_discussion">教室交流</string>
 
     <!-- 社交-->
     <string name="contact">联系人</string>

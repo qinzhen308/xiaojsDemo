@@ -17,10 +17,9 @@ package cn.xiaojs.xma.ui.classroom.live;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
@@ -28,8 +27,11 @@ import com.qiniu.pili.droid.streaming.StreamingState;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
-import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
+import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
@@ -39,13 +41,17 @@ import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
-public class TeacherVideoController extends VideoController {
+public class PublishVideoController extends VideoController {
+    private CommonDialog mAgreeOpenCamera;
+
     private int loadingSize = 36;
     private int loadingDesc = 20;
 
-    public TeacherVideoController(Context context, View root, OnStreamStateChangeListener listener) {
+    public PublishVideoController(Context context, View root, OnStreamStateChangeListener listener) {
         super(context, root, listener);
         mUser = Constants.User.TEACHER;
         listenerSocket();
@@ -58,9 +64,9 @@ public class TeacherVideoController extends VideoController {
         /**
          * 用户播放个人推流，用于播放和学生的一对一视频（默认小窗口）
          */
-        mPlayView = (PlayerTextureView) root.findViewById(R.id.live_video);
+        mPlayView = (PlayerTextureView) root.findViewById(R.id.play_video);
         /**
-         * 用于推流视频（直播推流或个人推流）
+         * 用于推流视频（直播推流,个人推流,一对一推流）
          */
         mPublishView = (LiveRecordView) root.findViewById(R.id.publish_video);
     }
@@ -68,13 +74,18 @@ public class TeacherVideoController extends VideoController {
     @Override
     protected void listenerSocket() {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
     }
 
     @Override
     public void confirmPublishStream(boolean confirm) {
-        mPublishView.setVisibility(View.VISIBLE);
-        mPublishView.setPath(mPublishStreamUrl);
-        mPublishView.resume();
+        if (mPublishView != null) {
+            mPublishView.setVisibility(View.VISIBLE);
+            mPublishView.setPath(mPublishStreamUrl);
+            mPublishView.resume();
+        }
     }
 
     @Override
@@ -88,7 +99,7 @@ public class TeacherVideoController extends VideoController {
             params.topMargin = mPeerStreamViewTopMargin;
             params.leftMargin = mPeerStreamViewMargin;
             mContainer.bringChildToFront(mPlayView);
-        } else if (mPublishType == StreamType.TYPE_STREAM_PLAY_INDIVIDUAL) {
+        } else if (mPlayType == StreamType.TYPE_STREAM_PLAY_INDIVIDUAL) {
             params.width = FrameLayout.LayoutParams.MATCH_PARENT;
             params.height = FrameLayout.LayoutParams.MATCH_PARENT;
             params.gravity = Gravity.CENTER;
@@ -103,7 +114,7 @@ public class TeacherVideoController extends VideoController {
 
 
         if (mStreamListener != null) {
-            mStreamListener.onStreamStarted(mUser, mPublishType, mExtraData);
+            mStreamListener.onStreamStarted(mUser, mPlayType, mExtraData);
         }
 
         if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
@@ -134,9 +145,12 @@ public class TeacherVideoController extends VideoController {
                             @Override
                             public void call(Object... args) {
                                 if (args != null && args.length > 0) {
-                                    mNeedStreamRePublishing = true;
-                                    if (mStreamListener != null) {
-                                        mStreamListener.onStreamStopped(mUser, type, null);
+                                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                    if (response.result) {
+                                        mNeedStreamRePublishing = true;
+                                        if (mStreamListener != null) {
+                                            mStreamListener.onStreamStopped(mUser, type, null);
+                                        }
                                     }
                                 }
                             }
@@ -155,10 +169,12 @@ public class TeacherVideoController extends VideoController {
     public void pausePlayStream(int type) {
         mStreamPlaying = false;
         mNeedStreamRePlaying = true;
-        mPlayView.pause();
-        mPlayView.showLoading(false);
-        mPlayView.setVisibility(View.GONE);
 
+        if (mPlayView != null) {
+            mPlayView.pause();
+            mPlayView.showLoading(false);
+            mPlayView.setVisibility(View.GONE);
+        }
         if (mStreamListener != null) {
             mStreamListener.onStreamStopped(mUser, type, null);
         }
@@ -185,7 +201,15 @@ public class TeacherVideoController extends VideoController {
         switch (streamingState) {
             case STREAMING:
                 mNeedStreamRePublishing = false;
-                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STARTED), new SocketManager.AckListener() {
+                if (mStreamPublishing) {
+                    break;
+                }
+
+                int eventType = mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL || mPublishType == StreamType.TYPE_STREAM_PUBLISH ?
+                        Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;
+                FeedbackStatus fbStatus = new FeedbackStatus();
+                fbStatus.status = Live.MediaStatus.READY;
+                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), fbStatus, new SocketManager.AckListener() {
                     @Override
                     public void call(final Object... args) {
                         if (args != null && args.length > 0) {
@@ -197,14 +221,14 @@ public class TeacherVideoController extends VideoController {
                                 }
                                 mStreamPublishing = true;
                             } else {
-                                if (!mPausePublishByToggleResolution && !mStreamPublishing) {
+                                if (!mPausePublishByToggleResolution) {
                                     pausePublishStream(mPublishType);
                                 }
 
                                 mPausePublishByToggleResolution = false;
                             }
                         } else {
-                            if (!mPausePublishByToggleResolution && !mStreamPublishing) {
+                            if (!mPausePublishByToggleResolution) {
                                 pausePublishStream(mPublishType);
                             }
 
@@ -226,6 +250,49 @@ public class TeacherVideoController extends VideoController {
                     playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, response.playUrl);
                 }
             }
+        }
+    };
+
+    private SocketManager.EventListener mReceiveOpenMedia = new SocketManager.EventListener() {
+        @Override
+        public void call(final Object... args) {
+            if (mAgreeOpenCamera == null) {
+                mAgreeOpenCamera = new CommonDialog(mContext);
+                int width = DeviceUtil.getScreenWidth(mContext) / 2;
+                int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                mAgreeOpenCamera.setDialogLayout(width, height);
+                mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
+                mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
+
+                mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        mAgreeOpenCamera.dismiss();
+                        if (args != null && args.length > 0) {
+                            OpenMediaNotify openMediaNotify = ClassroomBusiness.parseSocketBean(args[0], OpenMediaNotify.class);
+                            if (openMediaNotify != null) {
+                                publishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, openMediaNotify.publishUrl);
+                            }
+                        }
+                    }
+                });
+            }
+
+            mAgreeOpenCamera.show();
+        }
+    };
+
+    private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+        }
+    };
+
+    private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
         }
     };
 

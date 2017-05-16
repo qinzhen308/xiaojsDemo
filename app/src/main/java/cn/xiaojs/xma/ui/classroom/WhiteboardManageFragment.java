@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardManager;

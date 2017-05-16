@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
-import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 

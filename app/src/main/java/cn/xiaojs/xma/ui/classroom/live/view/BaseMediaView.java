@@ -16,8 +16,6 @@ package cn.xiaojs.xma.ui.classroom.live.view;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -42,7 +40,8 @@ public abstract class BaseMediaView extends FrameLayout {
     protected TextView mLadingDesc;
     private GestureDetector mGesture;
     private String mPath;
-    private boolean touchable = true;
+    private boolean mTouchable = true;
+    private boolean mConsume = true;
     protected boolean mResume = false;
     protected Handler mHandler;
 
@@ -82,7 +81,7 @@ public abstract class BaseMediaView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (touchable) {
+        /*if (mTouchable) {
             if (!normal) {
                 scale();
                 return true;
@@ -90,9 +89,14 @@ public abstract class BaseMediaView extends FrameLayout {
             mGesture.onTouchEvent(event);
             return true;
         } else {
-            return super.onTouchEvent(event);
-        }
 
+        }*/
+
+        if (mConsume) {
+            return super.onTouchEvent(event);
+        } else {
+            return false;
+        }
     }
 
     private class CustomerOnGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -138,7 +142,11 @@ public abstract class BaseMediaView extends FrameLayout {
     }
 
     public void setTouchable(boolean touchable) {
-        this.touchable = touchable;
+        mTouchable = touchable;
+    }
+
+    public void setTouchConsume(boolean consume) {
+        mConsume = consume;
     }
 
     public void setPath(String path) {

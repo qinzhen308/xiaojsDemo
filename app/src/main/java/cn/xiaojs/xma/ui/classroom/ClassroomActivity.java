@@ -47,18 +47,14 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.CollectionPage;
-import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
-import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
@@ -68,12 +64,12 @@ import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.OnImageClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnTalkMsgListener;
-import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
-import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -148,7 +144,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
     View mLeftPanel;
     @BindView(R.id.title_bar)
     View mTitleBar;
-    @BindView(R.id.bottom_panel)
+    @BindView(R.id.fc_bottom_panel)
     View mBottomPanel;
     @BindView(R.id.live_progress_layout)
     View mLiveProgressLayout;
@@ -288,7 +284,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
     }
 
     @OnClick({R.id.back_btn, R.id.blackboard_switcher_btn, R.id.course_ware_btn, R.id.setting_btn,
-            R.id.play_pause_btn, R.id.notify_msg_btn, R.id.contact_btn, R.id.qa_btn, R.id.enter_talk_btn,
+            R.id.play_pause_btn, R.id.notify_msg_btn, R.id.fc_open_contact_btn, R.id.qa_btn, R.id.enter_talk_btn,
             R.id.open_docs_btn, R.id.finish_btn, R.id.publish_camera_switcher, R.id.publish_take_pic,
             R.id.title_bar, R.id.live_progress_layout})
     public void onPanelItemClick(View v) {
@@ -314,7 +310,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
             case R.id.notify_msg_btn:
                 openAllMessage();
                 break;
-            case R.id.contact_btn:
+            case R.id.fc_open_contact_btn:
                 openTalk(TalkPanel.MODE_CONTACT);
                 break;
             case R.id.qa_btn:
@@ -894,9 +890,9 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
      */
     private OnPanelItemClick mOnPanelItemClick = new OnPanelItemClick() {
         @Override
-        public void onItemClick(int action, String accountId) {
+        public void onItemClick(int action, Attendee attendee) {
             mTalkPanel.close(mDrawerLayout, mRightDrawer, false);
-            applyOpenStuVideo(accountId);
+            applyOpenStuVideo(attendee.accountId);
         }
     };
 
@@ -1983,6 +1979,11 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
             String s = getTxtString(user, type);
             Toast.makeText(this, "=====started=====" + s, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onStreamSizeChanged(int w, int h) {
+
     }
 
     private String getTxtString(Constants.User user, int type) {

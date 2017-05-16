@@ -27,8 +27,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 
-import org.w3c.dom.Text;
-
 import java.util.Date;
 
 import butterknife.BindView;
@@ -39,14 +37,12 @@ import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
-import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.util.CardIdCheckUtil;
 import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.TimeUtil;

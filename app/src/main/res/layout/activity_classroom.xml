@@ -18,7 +18,7 @@
 
             <!--直播视频view(全屏)-->
             <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
-                    android:id="@+id/live_video"
+                    android:id="@+id/play_video"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

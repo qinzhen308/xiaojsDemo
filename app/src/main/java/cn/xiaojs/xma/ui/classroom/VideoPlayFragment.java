@@ -23,6 +23,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /*  =======================================================================================

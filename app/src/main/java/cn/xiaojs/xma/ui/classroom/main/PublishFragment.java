@@ -1,0 +1,553 @@
+package cn.xiaojs.xma.ui.classroom.main;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.ClassResponse;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.live.StreamType;
+import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
+import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
+import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.widget.SheetFragment;
+import cn.xiaojs.xma.util.DeviceUtil;
+import okhttp3.ResponseBody;
+
+/*  =======================================================================================
+ *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
+ *
+ *  This computer program source code file is protected by copyright law and international
+ *  treaties. Unauthorized distribution of source code files, programs, or portion of the
+ *  package, may result in severe civil and criminal penalties, and will be prosecuted to
+ *  the maximum extent under the law.
+ *
+ *  ---------------------------------------------------------------------------------------
+ * Author:huangyong
+ * Date:2017/5/3
+ * Desc:
+ *
+ * ======================================================================================== */
+
+public class PublishFragment extends ClassroomLiveFragment {
+    //public final static int PUBLISH_LIVE = 1;
+    //public final static int PUBLISH_INDIVIDUAL = 2;
+    //public final static int PUBLISH_PEER_TO_PEER = 3;
+
+    public final static String KEY_PUBLISH_TYPE = "key_publish_type";
+    public final static String KEY_PLAY_URL = "key_play_url";
+    public final static String KEY_PUBLISH_URL = "key_publish_url";
+    public final static String KEY_BEFORE_LIVE_STATE = "key_before_live_state";
+
+    @BindView(R.id.tip_view)
+    View mTipView;
+
+    @BindView(R.id.publish_layout)
+    View mPublishLayout;
+    @BindView(R.id.publish_video)
+    LiveRecordView mPublishVideoView;
+    @BindView(R.id.play_video)
+    PlayerTextureView mPlayVideoView;
+    @BindView(R.id.discussion_list_view)
+    PullToRefreshListView mDiscussionListView;
+
+    //top panel
+    @BindView(R.id.top_panel)
+    View mTopPanel;
+    @BindView(R.id.back_btn)
+    ImageView mBackBtn;
+    @BindView(R.id.play_pause_btn)
+    ImageView mPlayPauseBtn;
+    @BindView(R.id.finish_btn)
+    ImageView mFinishBtn;
+    @BindView(R.id.setting_btn)
+    ImageView mSettingBtn;
+    @BindView(R.id.lesson_title)
+    TextView mLessonTitle;
+    @BindView(R.id.lesson_time_info)
+    TextView mLessonTimeInfo;
+
+    //time status bar
+    @BindView(R.id.time_status_bar)
+    View mTimeStatusBar;
+    @BindView(R.id.publish_camera_switcher)
+    ImageView mPublishCameraSwitcher;
+
+    //bottom panel
+    @BindView(R.id.fc_land_portrait_btn)
+    ImageView mLandPortraitBtn;
+    @BindView(R.id.fc_open_contact_btn)
+    ImageView mContactBtn;
+    @BindView(R.id.fc_screenshot_portrait_btn)
+    ImageView mScreenshotPortraitBtn;
+    @BindView(R.id.fc_hide_show_talk_btn)
+    ImageView mHideShowTalkBtn;
+    @BindView(R.id.fc_open_talk_btn)
+    ImageView mOpenTalkBtn;
+
+    //right panel
+    @BindView(R.id.fc_screenshot_land_btn)
+    ImageView mScreenshotLandBtn;
+
+    private TalkPresenter mFullScreenTalkPresenter;
+    private int mPublishType = StreamType.TYPE_STREAM_PUBLISH;
+    private String mPlayUrl = "";
+    private String mPublishUrl = "";
+    private boolean mExitCurrFragment = false;
+
+    private CommonDialog mFinishDialog;
+
+    @Override
+    protected View getContentView() {
+        return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_publish, null);
+    }
+
+    @Override
+    protected void initParams() {
+        super.initParams();
+        mTipsHelper = new TipsHelper(mContext, mTipView);
+        mTimeProgressHelper = new TimeProgressHelper(mContext, mLessonTimeInfo, mTimeStatusBar);
+    }
+
+    @OnClick({R.id.back_btn, R.id.play_pause_btn, R.id.setting_btn, R.id.fc_land_portrait_btn,
+            R.id.fc_screenshot_land_btn, R.id.fc_screenshot_portrait_btn, R.id.fc_open_contact_btn,
+            R.id.fc_hide_show_talk_btn, R.id.fc_open_talk_btn, R.id.play_video, R.id.publish_layout,
+            R.id.finish_btn, R.id.publish_camera_switcher})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back_btn:
+
+                break;
+            case R.id.play_pause_btn:
+                playOrPauseLesson();
+                break;
+            case R.id.setting_btn:
+                if (isPortrait()) {
+                    mClassroomController.openSetting(this, SheetFragment.SHEET_GRAVITY_BOTTOM, 0, this);
+                } else {
+                    mClassroomController.openSetting(this, SheetFragment.SHEET_GRAVITY_RIGHT, mSlideViewWidth, this);
+                }
+                break;
+            case R.id.fc_open_contact_btn:
+                if (isPortrait()) {
+                    mClassroomController.openContact(this, mCtlSession, SheetFragment.SHEET_GRAVITY_BOTTOM, mSlideViewHeight);
+                } else {
+                    mClassroomController.openContact(this, mCtlSession, SheetFragment.SHEET_GRAVITY_RIGHT, mSlideViewWidth);
+                }
+                break;
+            case R.id.fc_land_portrait_btn:
+                toggleLandPortrait();
+                break;
+            case R.id.fc_screenshot_land_btn:
+            case R.id.fc_screenshot_portrait_btn:
+                ClassroomController.getInstance().enterPhotoDoodleByBitmap(null);
+                break;
+            case R.id.fc_hide_show_talk_btn:
+                showHideTalk();
+                break;
+            case R.id.fc_open_talk_btn:
+                mClassroomController.openInputText(this, 0);
+                break;
+            case R.id.play_video:
+                break;
+            case R.id.publish_layout:
+                startAnim();
+                break;
+            case R.id.finish_btn:
+                showFinishDialog();
+                break;
+            case R.id.publish_camera_switcher:
+                mVideoController.switchCamera();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        boolean isPortrait = true;
+        if (ActivityInfo.SCREEN_ORIENTATION_USER == newConfig.orientation) {
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            isPortrait = displayMetrics.widthPixels < displayMetrics.heightPixels;
+        } else {
+            isPortrait = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT == newConfig.orientation;
+        }
+
+        if (isPortrait) {
+            updatePortraitViewStyle();
+        } else {
+            updateLandViewStyle();
+        }
+    }
+
+    @Override
+    protected void toggleLandPortrait() {
+        int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        mVideoController.togglePublishOrientation(targetOrientation);
+        super.toggleLandPortrait();
+    }
+
+    @Override
+    protected void initView() {
+        mPublishVideoView.setTouchable(false);
+        mPublishVideoView.setTouchConsume(false);
+
+        updatePortraitViewStyle();
+    }
+
+    @Override
+    protected void initData() {
+        Bundle data = getArguments();
+        if (data != null) {
+            mPublishType = data.getInt(PublishFragment.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
+            mPublishUrl = data.getString(PublishFragment.KEY_PUBLISH_URL, "");
+            mPlayUrl = data.getString(PublishFragment.KEY_PLAY_URL, "");
+            mBeforeClamSteamState = data.getString(PublishFragment.KEY_BEFORE_LIVE_STATE, "");
+        }
+
+        mVideoController = new PublishVideoController(mContext, mPublishLayout, this);
+        mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
+        if (mFullScreenTalkPresenter == null) {
+            mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null, mTicket);
+            mFullScreenTalkPresenter.switchFullMultiTalk();
+        }
+
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        switch (mPublishType) {
+            case StreamType.TYPE_STREAM_PUBLISH:
+                if (Live.LiveSessionState.LIVE.equals(liveState)) {
+                    mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH, mPublishUrl);
+                } else {
+                    playOrPauseLesson();
+                }
+                break;
+            case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
+                mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL, mPublishUrl);
+                break;
+            case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
+                mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, mPublishUrl);
+                mVideoController.playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, mPlayUrl);
+                break;
+        }
+
+        setControllerBtnStyle(liveState);
+    }
+
+    @Override
+    protected void startAnim() {
+        if (isAnimating()) {
+            return;
+        }
+
+        if (mTopPanel.getVisibility() == View.VISIBLE) {
+            hideAnim(mTopPanel);
+            hideAnim(mContactBtn);
+            hideAnim(mOpenTalkBtn);
+            hideAnim(mLandPortraitBtn);
+        } else if (mTopPanel.getVisibility() == View.INVISIBLE) {
+            showAnim(mTopPanel);
+            showAnim(mContactBtn);
+            showAnim(mOpenTalkBtn);
+            showAnim(mLandPortraitBtn);
+        }
+
+        if (isPortrait()) {
+            if (mScreenshotPortraitBtn.getVisibility() == View.VISIBLE) {
+                hideAnim(mScreenshotPortraitBtn);
+            } else {
+                showAnim(mScreenshotPortraitBtn);
+            }
+        } else {
+            if (mScreenshotLandBtn.getVisibility() == View.VISIBLE) {
+                hideAnim(mScreenshotLandBtn);
+            } else {
+                showAnim(mScreenshotLandBtn);
+            }
+        }
+    }
+
+    @Override
+    protected void showHideTalk() {
+        if (mDiscussionListView.getVisibility() == View.VISIBLE) {
+            mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_show_talk);
+            mDiscussionListView.setVisibility(View.GONE);
+        } else {
+            mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
+            mDiscussionListView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onIndividualPublishCallback(StreamingResponse response) {
+        mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
+        mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL, response.publishUrl);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            switch (requestCode) {
+                case ClassroomController.REQUEST_INPUT:
+                    String content = data.getStringExtra(Constants.KEY_MSG_INPUT_TXT);
+                    if (mFullScreenTalkPresenter != null && !TextUtils.isEmpty(content)) {
+                        mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
+                        mDiscussionListView.setVisibility(View.VISIBLE);
+                        mFullScreenTalkPresenter.sendMsg(Communications.ContentType.TEXT, content);
+                    }
+                    break;
+                case ClassroomController.REQUEST_CONTACT:
+                    //switch to peer_peer
+                    Attendee attendee = (Attendee) data.getSerializableExtra(Constants.KEY_OPEN_TALK_ATTEND);
+                    if (attendee == null) {
+                        break;
+                    }
+
+                    if (isPortrait()) {
+                        ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, mSlideViewHeight);
+                    } else {
+                        int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
+                        int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
+                        ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
+                    }
+                    break;
+            }
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ClassroomController.getInstance().enterPlayFragment(null);
+    }
+
+    @Override
+    public void onBackPressed() {
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        if (Live.LiveSessionState.LIVE.equals(liveState)) {
+            pauseClass(true);
+        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+            //pause and exit
+            pauseIndividual(true);
+        } else {
+            ClassroomController.getInstance().exitStackFragment();
+        }
+    }
+
+    @Override
+    public void onResolutionChanged(int quality) {
+
+    }
+
+    @Override
+    public void onSwitcherChanged(int switcher, boolean open) {
+
+    }
+
+    @Override
+    public void onStreamStarted(Constants.User user, int type, Object extra) {
+        mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
+        mTipsHelper.hideTips();
+    }
+
+    @Override
+    public void onStreamSizeChanged(int videoW, int videoH) {
+
+    }
+
+    @Override
+    public void onStreamStopped(Constants.User user, int type, Object extra) {
+        if (mExitCurrFragment) {
+            mExitCurrFragment = false;
+            ClassroomController.getInstance().exitStackFragment();
+        } else {
+            if (mPlayPauseBtn != null) {
+                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
+            }
+
+            String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+            mTipsHelper.setTipsByState(liveState);
+        }
+    }
+
+    private void updateLandViewStyle() {
+        mScreenshotLandBtn.setVisibility(View.VISIBLE);
+        mScreenshotPortraitBtn.setVisibility(View.GONE);
+    }
+
+    private void updatePortraitViewStyle() {
+        mScreenshotLandBtn.setVisibility(View.GONE);
+        mScreenshotPortraitBtn.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 开启或暂停课
+     *
+     * @see #mSyncStateListener
+     */
+    private void playOrPauseLesson() {
+        mTipsHelper.hideTips();
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        if (Live.LiveSessionState.LIVE.equals(liveState)) {
+            //pause
+            pauseClass(false);
+        } else if (Live.LiveSessionState.RESET.equals(liveState)) {
+            //resume
+            resumeClass();
+        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+            //pause and exit
+            pauseIndividual(false);
+        } else if (Live.LiveSessionState.FINISHED.equals(liveState)) {
+            individualPublishStream();
+        }
+    }
+
+    @Override
+    protected void setControllerBtnStyle(String liveState) {
+        if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
+                Live.LiveSessionState.FINISHED.equals(liveState)) {
+            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+            mPlayPauseBtn.setVisibility(View.VISIBLE);
+            mFinishBtn.setVisibility(View.INVISIBLE);
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
+                Live.LiveSessionState.RESET.equals(liveState)) {
+            if (mUser == Constants.User.TEACHER) {
+                mFinishBtn.setVisibility(View.VISIBLE);
+                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
+                mPlayPauseBtn.setVisibility(View.VISIBLE);
+            } else {
+                mPlayPauseBtn.setVisibility(View.INVISIBLE);
+            }
+        } else if (Live.LiveSessionState.LIVE.equals(liveState)
+                || Live.LiveSessionState.DELAY.equals(liveState)) {
+            if (mUser == Constants.User.TEACHER) {
+                mFinishBtn.setVisibility(View.VISIBLE);
+                mPlayPauseBtn.setVisibility(View.VISIBLE);
+                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
+            } else {
+                mPlayPauseBtn.setVisibility(View.INVISIBLE);
+            }
+        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+            mPlayPauseBtn.setVisibility(View.VISIBLE);
+            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
+        }
+    }
+
+    private void pauseClass(final boolean withExitFragment) {
+        showProgress(true);
+        LiveManager.pauseClass(mContext, mTicket, new APIServiceCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody object) {
+                cancelProgress();
+                LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.RESET);
+                setControllerBtnStyle(Live.LiveSessionState.RESET);
+                mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
+                mExitCurrFragment = withExitFragment;
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
+                mExitCurrFragment = withExitFragment;
+            }
+        });
+    }
+
+    private void resumeClass() {
+        showProgress(true);
+        LiveManager.resumeClass(mContext, mTicket, Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
+            @Override
+            public void onSuccess(ClassResponse object) {
+                cancelProgress();
+                LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
+                setControllerBtnStyle(Live.LiveSessionState.LIVE);
+                mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH, object != null ? object.publishUrl : null);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+            }
+        });
+    }
+
+    private void finishClass() {
+        showProgress(true);
+        LiveManager.finishClass(mContext, mTicket, new APIServiceCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody object) {
+                cancelProgress();
+                LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.FINISHED);
+                mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
+                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+                mFinishBtn.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+            }
+        });
+    }
+
+    private void showFinishDialog() {
+        if (mFinishDialog == null) {
+            mFinishDialog = new CommonDialog(mContext);
+            mFinishDialog.setTitle(R.string.finish_classroom);
+            mFinishDialog.setDesc(R.string.finish_classroom_tips);
+            if (!isPortrait()) {
+                int width = DeviceUtil.getScreenWidth(mContext) / 2;
+                int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                mFinishDialog.setDialogLayout(width, height);
+            }
+
+            mFinishDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mFinishDialog.dismiss();
+                }
+            });
+
+            mFinishDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mFinishDialog.dismiss();
+                    finishClass();
+                }
+            });
+        }
+
+        mFinishDialog.show();
+    }
+
+    private void pauseIndividual(boolean withExitFragment) {
+        LiveCtlSessionManager.getInstance().updateCtlSessionState(mBeforeClamSteamState);
+        mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
+        mExitCurrFragment = withExitFragment;
+    }
+}

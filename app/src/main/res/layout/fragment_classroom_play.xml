@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <!--play layout-->
+    <RelativeLayout
+            android:id="@+id/play_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black">
+        <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
+                android:id="@+id/play_video"
+                android:layout_width="@dimen/px480"
+                android:layout_height="@dimen/px848"
+                android:layout_centerInParent="true"
+                android:visibility="visible"/>
+
+        <!--视频推流顶部面板-->
+        <include
+                android:id="@+id/time_status_bar"
+                layout="@layout/layout_classroom_time_status_bar"/>
+
+        <include layout="@layout/layout_classroom_tips"/>
+
+        <include
+                android:id="@+id/top_panel"
+                layout="@layout/layout_classroom_panel_top_new"/>
+
+        <ImageView
+                android:id="@+id/enter_full_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:padding="@dimen/px20"
+                android:src="@drawable/ic_cr_full_screen"/>
+
+        <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView
+                android:id="@+id/discussion_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px260"
+                android:listSelector="@android:color/transparent"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="@dimen/px10"
+                android:scrollbars="none"
+                android:layout_above="@+id/fc_bottom_panel">
+
+        </cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView>
+
+        <!--full screen: talk bottom bar layout-->
+        <include
+                android:id="@+id/fc_bottom_panel"
+                layout="@layout/layout_classroom_panel_bottom_fc"
+                android:visibility="gone"/>
+
+        <ImageView
+                android:id="@+id/fc_screenshot_land_btn"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:src="@drawable/cr_publish_take_pic"/>
+    </RelativeLayout>
+
+    <!--talk: talk layout-->
+    <FrameLayout
+            android:id="@+id/talk_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/play_layout"
+            android:layout_above="@+id/talk_bottom_panel">
+    </FrameLayout>
+
+    <!--talk: talk bottom bar layout-->
+    <include
+            android:id="@+id/talk_bottom_panel"
+            layout="@layout/layout_classroom_panel_bottom_talk"/>
+
+    <!--full screen: talk layout-->
+    <FrameLayout
+            android:id="@+id/fc_slide_talk_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+    </FrameLayout>
+
+</RelativeLayout>

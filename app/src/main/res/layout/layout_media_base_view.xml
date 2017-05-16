@@ -33,6 +33,7 @@
                     android:textColor="@color/font_white"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/px5"
+                    android:focusable="false"
                     android:textSize="@dimen/font_26px"
                     android:text="@string/video_loading"/>
         </LinearLayout>

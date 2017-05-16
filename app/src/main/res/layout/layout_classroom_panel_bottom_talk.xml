@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/talk_bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+    <View
+            style="@style/DividerHorizontal"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+        <ImageView
+                android:id="@+id/open_docs_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:padding="@dimen/px20"
+                android:layout_weight="1"
+                android:src="@drawable/ic_cr_open_doc"/>
+
+        <cn.xiaojs.xma.ui.widget.MessageImageView
+                android:id="@+id/talk_open_contact_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:padding="@dimen/px20"
+                android:layout_weight="1"
+                android:src="@drawable/ic_cr_contact"/>
+
+        <ImageView
+                android:id="@+id/talk_send_txt_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:padding="@dimen/px20"
+                android:layout_weight="1"
+                android:src="@drawable/ic_cr_open_talk"/>
+
+        <ImageView
+                android:id="@+id/talk_send_other_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:padding="@dimen/px20"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:src="@drawable/ic_cr_send_add"/>
+
+        <ImageView
+                android:id="@+id/talk_share_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:padding="@dimen/px20"
+                android:layout_weight="1"
+                android:src="@drawable/ic_cr_send_add"/>
+    </LinearLayout>
+
+</LinearLayout>

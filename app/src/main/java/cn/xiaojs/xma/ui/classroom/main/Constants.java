@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.main;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -30,6 +30,15 @@ public interface Constants {
     public final static String KEY_LIB_DOC = "key_lib_doc";
     public final static String KEY_IMG_DISPLAY_MODE = "key_img_display_mode";
     public final static String KEY_IMG_LIST = "key_img_list";
+    public final static String KEY_DOODLE_RATIO = "key_doodle_ratio";
+    public final static String KEY_CTL_SESSION = "key_ctl_session";
+    public final static String KEY_MSG_INPUT_TXT = "key_msg_input_txt";
+    public final static String KEY_MSG_INPUT_FROM = "key_msg_input_from";
+    public final static String KEY_OPEN_TALK_ATTEND = "key_open_talk_attend";
+    public final static String KEY_OPEN_DOC_BEAN = "key_open_doc_bean";
+    public final static String KEY_SHEET_GRAVITY = "key_sheet_gravity";
+    public final static String KEY_PAGE_HEIGHT = "key_page_height";
+    public final static String KEY_EXIT_FROM_PUBLISH = "key_exit_from_publish";
 
     /**
      * if allow to live for mobile network
@@ -43,6 +52,7 @@ public interface Constants {
     /**
      * quality
      */
+    public final static String KEY_RESOLUTION_CHANGE = "key_resolution_change";
     public final static int QUALITY_HIGH = 0; // 高清
     public final static int QUALITY_STANDARD = 1; // 标准
     public final static int QUALITY_FLUENT = 2; // 流畅
@@ -50,11 +60,14 @@ public interface Constants {
     /**
      * switcher
      */
+    public final static String KEY_SWITCH_CHANGE = "key_switch_change";
     public final static int SWITCHER_MOBILE_NETWORK_LIVE = 1; //移动网络直播
     public final static int SWITCHER_CAMERA = 2; //摄像头是否打开
     public final static int SWITCHER_AUDIO = 3; //麦克风是否打开
 
     public final static int SHARE_IMG_SIZE = 800; //分享图片的大小不超过800
+
+    public final static float VIDEO_VIEW_RATIO = 4 / 3.0f;
 
     /**
      * 客户端用户
@@ -86,4 +99,5 @@ public interface Constants {
     public static final int TEACHING_MODE = 1;
     public static final int PARTICIPANT_MODE = 2;
     public static final int MEDIA_MODE = 3;
+    public static final int PREVIEW_MODE = 4;
 }

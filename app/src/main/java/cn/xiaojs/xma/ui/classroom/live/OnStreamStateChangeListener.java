@@ -14,7 +14,7 @@ package cn.xiaojs.xma.ui.classroom.live;
  *
  * ======================================================================================== */
 
-import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 
 public interface OnStreamStateChangeListener {
     /**
@@ -26,5 +26,10 @@ public interface OnStreamStateChangeListener {
      * 当前流已经暂停
      */
     public void onStreamStopped(Constants.User user, int type, Object extra);
+
+    /**
+     * 当流的尺寸发生变化
+     */
+    public void onStreamSizeChanged(int w, int h);
 
 }

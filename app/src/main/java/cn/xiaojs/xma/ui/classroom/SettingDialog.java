@@ -4,18 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.util.XjsUtils;
 
 /*  =======================================================================================
@@ -33,7 +29,7 @@ import cn.xiaojs.xma.util.XjsUtils;
  *
  * ======================================================================================== */
 
-public class SettingDialog extends Dialog implements CompoundButton.OnCheckedChangeListener, Constants{
+public class SettingDialog extends Dialog implements CompoundButton.OnCheckedChangeListener, Constants {
     private ToggleButton mCameraBtn;
     private ToggleButton mMicroPhoneBtn;
 

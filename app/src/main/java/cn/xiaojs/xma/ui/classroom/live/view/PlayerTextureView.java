@@ -23,6 +23,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.pili.pldroid.player.AVOptions;
@@ -64,6 +66,10 @@ public class PlayerTextureView extends BaseMediaView {
     public PlayerTextureView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(PLVideoTextureView.ASPECT_RATIO_16_9, attrs);
+    }
+
+    public void setPLMediaPlayerInfoListener(PLMediaPlayer.OnInfoListener infoListener) {
+        mOnInfoWrapperListener = infoListener;
     }
 
     @Override
@@ -210,9 +216,14 @@ public class PlayerTextureView extends BaseMediaView {
     private PLMediaPlayer.OnInfoListener mOnInfoListener = new PLMediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
-            if (what == PLMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START) {
-                mHandler.removeMessages(MESSAGE_MEDIA_INFO_RENDERING_START);
-                mHandler.sendEmptyMessage(MESSAGE_MEDIA_INFO_RENDERING_START);
+            switch (what) {
+                case PLMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+                    mHandler.removeMessages(MESSAGE_MEDIA_INFO_RENDERING_START);
+                    mHandler.sendEmptyMessage(MESSAGE_MEDIA_INFO_RENDERING_START);
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
+                    Log.i("aaa", "=========video rotation changed=================");
+                    break;
             }
 
             if (mOnInfoWrapperListener != null) {
@@ -350,7 +361,7 @@ public class PlayerTextureView extends BaseMediaView {
         return mIsMute;
     }
 
-    public PLVideoTextureView getPlayer(){
+    public PLVideoTextureView getPlayer() {
         return mPlayer;
     }
 
@@ -362,6 +373,15 @@ public class PlayerTextureView extends BaseMediaView {
     public void delayHideLoading() {
         mHandler.removeMessages(MESSAGE_MEDIA_INFO_RENDERING_START);
         mHandler.sendEmptyMessageDelayed(MESSAGE_MEDIA_INFO_RENDERING_START, 2000);
+    }
+
+    public void setPlayerParams(int w, int h) {
+        ViewGroup.LayoutParams params = mPlayer.getLayoutParams();
+        if (params != null) {
+            params.width = w;
+            params.height = h;
+            mPlayer.setLayoutParams(params);
+        }
     }
 
 }

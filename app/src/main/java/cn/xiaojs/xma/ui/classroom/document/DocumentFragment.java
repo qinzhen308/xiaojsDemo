@@ -1,8 +1,10 @@
 package cn.xiaojs.xma.ui.classroom.document;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.text.style.TtsSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,16 +19,15 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.pulltorefresh.stickylistheaders.AdapterWrapper;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.CollaManager;
+import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseFragment;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.Constants;
-import cn.xiaojs.xma.util.FastBlur;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.main.PlayFragment;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -124,19 +125,22 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private void exit() {
-        if (mContext instanceof ClassroomActivity) {
+        /*if (mContext instanceof ClassroomActivity) {
             ((ClassroomActivity) mContext).exitDocument();
-        }
+        }*/
     }
 
     private void initData() {
         mTempData = new ArrayList<LibDoc>();
-        if (getArguments() != null) {
+        Bundle data = null;
+        if ((data = getArguments()) != null) {
             mLessonId = getArguments().getString(Constants.KEY_LESSON_ID);
+            CtlSession session = (CtlSession) data.getSerializable(Constants.KEY_CTL_SESSION);
+            mLessonId = session != null && session.ctl != null ? session.ctl.id : "";
         }
         mMyAccountId = AccountDataManager.getAccountID(mContext);
 
-        mMyDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mMyAccountId, Collaboration.SubType.PERSON);
+        mMyDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mMyAccountId, Collaboration.SubType.PERSON);
         mCurrDocumentAdapter = mMyDocumentAdapter;
         mDocListView.setAdapter(mMyDocumentAdapter);
         mDocListView.setOnItemClickListener(this);
@@ -151,7 +155,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         mClassDocumentTv.setTextColor(getResources().getColor(R.color.font_blue));
 
         if (mMyDocumentAdapter == null) {
-            mMyDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mMyAccountId, Collaboration.SubType.PERSON);
+            mMyDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mMyAccountId, Collaboration.SubType.PERSON);
             mDocListView.setAdapter(mMyDocumentAdapter);
             mDocListView.setOnItemClickListener(this);
         } else {
@@ -167,7 +171,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         mClassDocumentTv.setTextColor(getResources().getColor(R.color.font_white));
 
         if (mClassDocumentAdapter == null) {
-            mClassDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, Collaboration.SubType.STANDA_LONE_LESSON);
+            mClassDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mLessonId, Collaboration.SubType.STANDA_LONE_LESSON);
             mDocListView.setAdapter(mClassDocumentAdapter);
             mDocListView.setOnItemClickListener(this);
         } else {
@@ -253,10 +257,13 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         //如果是图片，打开图片，进入图片进行涂鸦
         //如果是视频，在白板打开视频。
         Object adapter = parent.getAdapter();
+        Fragment target = getTargetFragment();
         if (adapter instanceof AdapterWrapper) {
             Object data = ((AdapterWrapper) adapter).getItem(position);
-            if (data instanceof LibDoc) {
-                ((ClassroomActivity) mContext).exitDocumentWithAction((LibDoc) data);
+            if (data instanceof LibDoc && target != null) {
+                Intent intent = new Intent();
+                intent.putExtra(Constants.KEY_OPEN_DOC_BEAN, (LibDoc) data);
+                target.onActivityResult(ClassroomController.REQUEST_DOC, Activity.RESULT_OK, intent);
             }
         }
     }

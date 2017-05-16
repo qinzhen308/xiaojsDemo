@@ -568,4 +568,11 @@ public abstract class AbsChatAdapter<B, H extends BaseHolder> extends BaseAdapte
     protected boolean leftSwipe() {
         return false;
     }
+
+    public void release() {
+        if (mBeanList != null) {
+            mBeanList.clear();
+        }
+    }
+
 }

@@ -17,10 +17,12 @@ package cn.xiaojs.xma.ui.classroom.talk;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,7 +52,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
-import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -126,42 +128,13 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
                 byte[] imgData = ClassroomBusiness.base64ToByteData(txt);
                 Glide.with(mContext)
                         .load(imgData)
-                        .into(new GlideDrawableImageViewTarget(holder.msgImg) {
-                            @Override
-                            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                                super.onResourceReady(resource, animation);
-                                if (resource instanceof GlideBitmapDrawable) {
-                                    Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
-                                    if (bmp != null) {
-                                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.msgImg.getLayoutParams();
-                                        int w = MAX_SIZE;
-                                        int h = MAX_SIZE;
-                                        if (bmp.getWidth() > bmp.getHeight()) {
-                                            w = MAX_SIZE;
-                                            h = (int) ((bmp.getHeight() / (float) bmp.getWidth()) * MAX_SIZE);
-                                        } else {
-                                            h = MAX_SIZE;
-                                            w = (int) ((bmp.getWidth() / (float) bmp.getHeight()) * MAX_SIZE);
-                                        }
-                                        params.width = w;
-                                        params.height = h;
-                                    }
-                                    holder.msgImg.setImageBitmap(bmp);
-                                }
-                            }
-
-                            @Override
-                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                super.onLoadFailed(e, errorDrawable);
-
-                            }
-                        });
+                        .into(getImgViewTarget(holder.msgImg));
             } else {
                 //load img from qiniu url
                 String imgUrl = ClassroomBusiness.getSnapshot(imgKey, MAX_SIZE);
                 Glide.with(mContext)
                         .load(imgUrl)
-                        .into(holder.msgImg);
+                        .into(getImgViewTarget(holder.msgImg));
             }
 
         }
@@ -183,7 +156,47 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
             return TYPE_MY_SPEAKER;
         }
 
-        return isMyself(item.from.accountId) ? TYPE_MY_SPEAKER : TYPE_OTHER_SPEAKER;
+        boolean isMyself = isMyself(item.from.accountId);
+        return isMyself ? TYPE_MY_SPEAKER : TYPE_OTHER_SPEAKER;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public View getView(int position, View view, ViewGroup viewGroup) {
+        if (mBeanList.size() > 0) {
+            Holder holder = null;
+            if (view == null) {
+                view = createItem(position);
+                holder = initHolder(view);
+                view.setTag(holder);
+            } else {
+                if ((getItemViewType(position) == TYPE_MY_SPEAKER && view.getId() != R.id.my_speaker)
+                        || (getItemViewType(position) == TYPE_OTHER_SPEAKER && view.getId() != R.id.other_speaker)) {
+                    view = createItem(position);
+                    holder = initHolder(view);
+                    view.setTag(holder);
+                } else {
+                    holder = (Holder) view.getTag();
+                }
+            }
+            if (holder == null) {//view可能会传成下方的占位view
+                view = createItem(position);
+                holder = initHolder(view);
+                view.setTag(holder);
+            }
+            setViewContent(holder, getItem(position), position);
+            return view;
+        } else {//解决加了header后，header高度超过1屏无法下拉
+            View v = new View(mContext);
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            v.setBackgroundResource(android.R.color.transparent);
+            v.setLayoutParams(lp);
+            return v;
+        }
     }
 
     @Override
@@ -285,7 +298,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         }
     }
 
-    class Holder extends BaseHolder {
+    static class Holder extends BaseHolder {
         RoundedImageView portrait;
         TextView name;
         TextView time;
@@ -298,23 +311,41 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         }
     }
 
+    private GlideDrawableImageViewTarget getImgViewTarget(final ImageView imgView) {
+        return new GlideDrawableImageViewTarget(imgView) {
+            @Override
+            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                super.onResourceReady(resource, animation);
+                if (resource instanceof GlideBitmapDrawable) {
+                    Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
+                    if (bmp != null) {
+                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imgView.getLayoutParams();
+                        int w = MAX_SIZE;
+                        int h = MAX_SIZE;
+                        if (bmp.getWidth() > bmp.getHeight()) {
+                            w = MAX_SIZE;
+                            h = (int) ((bmp.getHeight() / (float) bmp.getWidth()) * MAX_SIZE);
+                        } else {
+                            h = MAX_SIZE;
+                            w = (int) ((bmp.getWidth() / (float) bmp.getHeight()) * MAX_SIZE);
+                        }
+                        params.width = w;
+                        params.height = h;
+                    }
+                    imgView.setImageBitmap(bmp);
+                }
+            }
+
+            @Override
+            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                super.onLoadFailed(e, errorDrawable);
+
+            }
+        };
+    }
+
     private boolean isMyself(String currAccountId) {
         String accountId = AccountDataManager.getAccountID(mContext);
         return accountId != null && accountId.equals(currAccountId);
-    }
-
-    private class TalkComparator implements Comparator<TalkItem> {
-        @Override
-        public int compare(TalkItem o1, TalkItem o2) {
-            if (o1 == null || o2 == null) {
-                return 0;
-            }
-
-            if (o1.time == null || o2.time == null) {
-                return 0;
-            }
-
-            return o1.time.getTime() > o2.time.getTime() ? 1 : o1.time.getTime() == o2.time.getTime() ? 0 : -1;
-        }
     }
 }

@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.main;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -27,6 +27,8 @@ import org.json.JSONObject;
 
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.model.account.User;
+import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.util.Base64;
 import cn.xiaojs.xma.util.BitmapUtils;
 
@@ -52,6 +54,24 @@ public class ClassroomBusiness {
             user = Constants.User.AUDITOR;
         } else if ("AuditorSession".equals(session)) {
             user = Constants.User.ADMINISTRATOR;
+        }
+
+        return user;
+    }
+
+    public static Constants.User getUserByCtlSession(CtlSession session) {
+        if (session == null) {
+            return Constants.User.STUDENT;
+        }
+
+        Constants.User user = ClassroomBusiness.getUser(session.psType);
+        if (user == Constants.User.TEACHER
+                || user == Constants.User.ASSISTANT
+                || user == Constants.User.REMOTE_ASSISTANT) {
+            if (Constants.PARTICIPANT_MODE == session.mode
+                    || Constants.PREVIEW_MODE == session.mode) {
+                user = Constants.User.STUDENT;
+            }
         }
 
         return user;
