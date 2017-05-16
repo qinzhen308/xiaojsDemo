@@ -267,7 +267,7 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
             }
 
             TalkItem talkItem = new TalkItem();
-            talkItem.time = new Date(receiveBean.time);
+            talkItem.time = receiveBean.time;
             talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
             talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
             talkItem.body.text = receiveBean.body.text;
@@ -323,7 +323,7 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
         }
 
         long sendTime = System.currentTimeMillis();
-        talkItem.time = new Date(sendTime);
+        talkItem.time = sendTime;
 
         //update task message info
         updateTalkMsgData(talkCriteria, talkItem, true);
@@ -367,7 +367,7 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
         talkItem.to = mPeerTalkAccountId;
 
         long sendTime = System.currentTimeMillis();
-        talkItem.time = new Date(sendTime);
+        talkItem.time = sendTime;
 
         //update task message info
         updateTalkMsgData(mTalkCriteria, talkItem, true);

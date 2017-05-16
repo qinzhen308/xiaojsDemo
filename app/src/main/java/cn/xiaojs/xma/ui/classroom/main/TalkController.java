@@ -218,7 +218,7 @@ public class TalkController {
             }
 
             TalkItem talkItem = new TalkItem();
-            talkItem.time = new Date(receiveBean.time);
+            talkItem.time = receiveBean.time;
             talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
             talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
             talkItem.body.text = receiveBean.body.text;

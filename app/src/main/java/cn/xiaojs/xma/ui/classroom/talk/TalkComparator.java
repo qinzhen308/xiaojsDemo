@@ -25,10 +25,6 @@ public class TalkComparator implements Comparator<TalkItem> {
             return 0;
         }
 
-        if (o1.time == null || o2.time == null) {
-            return 0;
-        }
-
-        return o1.time.getTime() > o2.time.getTime() ? 1 : o1.time.getTime() == o2.time.getTime() ? 0 : -1;
+        return o1.time > o2.time ? 1 : o1.time == o2.time ? 0 : -1;
     }
 }
