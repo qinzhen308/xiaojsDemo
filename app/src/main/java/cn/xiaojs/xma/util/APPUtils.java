@@ -184,6 +184,7 @@ public class APPUtils {
         return false;
     }
 
+
     public static int parseBulidCode(Context context, String updateVersion) {
         if (TextUtils.isEmpty(updateVersion)) return -1;
         String[] codes = updateVersion.split("\\.");
@@ -199,6 +200,16 @@ public class APPUtils {
         return Integer.valueOf(updateCode);
 
     }
+
+    public static String getShowVersion(String versionandCode) {
+        if (TextUtils.isEmpty(versionandCode)) return "";
+
+        int pos = versionandCode.lastIndexOf(".");
+        if (pos < 0) return "";
+
+        return versionandCode.substring(0,pos);
+    }
+
 
     /**
      * return current APP client type
@@ -223,9 +234,6 @@ public class APPUtils {
 
     public static void exitAndLogin(Context context,@StringRes int exitTips) {
         LoginDataManager.requestLogoutByAPI(context, null);
-
-        //logout im
-        LeanCloudUtil.close();
 
         //stop jpush
         JpushUtil.stopPush(context);

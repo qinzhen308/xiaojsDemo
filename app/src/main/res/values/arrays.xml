@@ -74,6 +74,7 @@
         <item>约辅导</item>
         <item>提问</item>-->
         <item>开课</item>
+        <item>扫一扫</item>
     </string-array>
     <string-array name="course_block_tabs">
         <item>我学的课</item>
@@ -126,5 +127,9 @@
         <item>接收消息，并提醒我</item>
         <item>接收消息，但不提醒我</item>
         <!--<item>不接收任何消息</item>-->
+    </string-array>
+    <string-array name="add_menu">
+        <item>扫一扫</item>
+        <item>开课</item>
     </string-array>
 </resources>

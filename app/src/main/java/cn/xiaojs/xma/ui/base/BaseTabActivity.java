@@ -63,6 +63,7 @@ public abstract class BaseTabActivity extends BaseActivity {
 
     private int mButtonType;
     protected static final int BUTTON_TYPE_CENTER = 1;
+    protected static final int BUTTON_TYPE_NONE = 2;
 
     @Override
     protected void addViewContent() {
@@ -177,13 +178,13 @@ public abstract class BaseTabActivity extends BaseActivity {
         mCurrentIndex = position;
         onTabClick(position);
 
-        if (position == 2) {
-            hiddenMessageTips();
-            XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = true;
-            DataManager.setHasMessage(BaseTabActivity.this,false);
-        }else {
-            XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = false;
-        }
+//        if (position == 2) {
+//            hiddenMessageTips();
+//            XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = true;
+//            DataManager.setHasMessage(BaseTabActivity.this,false);
+//        }else {
+//            XiaojsConfig.CURRENT_PAGE_IN_MESSAGE = false;
+//        }
 
     }
 
@@ -205,6 +206,10 @@ public abstract class BaseTabActivity extends BaseActivity {
 
     public Fragment getCurrentFragment() {
         return mAdapter.getItem(mCurrentIndex);
+    }
+
+    public Fragment getFragment(int position) {
+        return mAdapter.getItem(position);
     }
 
     public Fragment getFragmentByPosition(int position) {

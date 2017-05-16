@@ -168,10 +168,13 @@ public class TeachLessonActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
+            case CourseConstant.CODE_CANCEL_LESSON:
+            case CourseConstant.CODE_EDIT_LESSON:
+            case CourseConstant.CODE_LESSON_AGAIN:
             case CourseConstant.CODE_CREATE_LESSON:
-                if (resultCode == Activity.RESULT_OK){
-                    if (mAdapter != null){
-                        mAdapter.refresh();
+                if (resultCode == Activity.RESULT_OK) {
+                    if (mAdapter != null) {
+                        mAdapter.doRefresh();
                     }
                 }
                 break;

@@ -10,35 +10,48 @@
     <include layout="@layout/layout_base_header"/>
 
     <LinearLayout
-            android:id="@+id/search_subject_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:visibility="gone">
-        <View style="@style/DividerHorizontal"/>
+        android:id="@+id/search_subject_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:orientation="vertical"
+        >
+        <View
+            style="@style/DividerHorizontal"/>
 
-        <cn.xiaojs.xma.ui.widget.EditTextDel
-                android:id="@+id/search_subject"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/px60"
-                android:paddingLeft="@dimen/px12"
-                android:paddingRight="@dimen/px12"
+
+        <RelativeLayout
+            android:id="@+id/search_subject"
+            android:layout_width="match_parent"
+            android:background="@drawable/common_search_bg"
+            android:layout_height="@dimen/px60"
+            android:clickable="true"
+            android:layout_marginLeft="@dimen/px28"
+            android:layout_marginRight="@dimen/px28"
+            android:layout_marginTop="@dimen/px16"
+            android:transitionName="search_bar"
+            android:layout_marginBottom="@dimen/px16"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:textSize="@dimen/font_26px"
                 android:textColor="@color/font_dark_gray"
                 android:textColorHint="@color/font_dark_gray"
                 android:hint="@string/search_subject_tips"
                 android:drawablePadding="@dimen/px12"
                 android:drawableLeft="@drawable/ic_search"
-                android:background="@drawable/common_search_bg"
-                android:layout_marginLeft="@dimen/px28"
-                android:layout_marginRight="@dimen/px28"
-                android:layout_marginTop="@dimen/px16"
-                android:layout_marginBottom="@dimen/px16"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
-        <View style="@style/DividerHorizontal"/>
+        </RelativeLayout>
+
     </LinearLayout>
+
+
+
 
     <View
             android:id="@+id/selected_subject_divider"

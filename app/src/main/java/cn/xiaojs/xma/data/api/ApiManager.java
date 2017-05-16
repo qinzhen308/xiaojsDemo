@@ -253,6 +253,18 @@ public class ApiManager {
 
     }
 
+    public static String getQrcodeScanUrl() {
+
+        String channel = XiaojsConfig.CHANNEL;
+
+        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
+            return new StringBuilder(XiaojsConfig.TEST_BASE_URL).append("/live/").toString();
+        }else {
+            return new StringBuilder(XiaojsConfig.SHARE_BASE_URL).append("/live/").toString();
+        }
+
+    }
+
     /**
      * 获取分享课的链接地址，内网测试地址不包含端口号
      * @param lessonId

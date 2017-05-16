@@ -18,6 +18,7 @@ import cn.xiaojs.xma.data.db.BaseDao;
 import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.Error;
+import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.util.APPUtils;
@@ -125,6 +126,22 @@ public class ServiceRequest<T> implements ContextLifecycle {
         return status;
 
     }
+
+    private ShareDoc readConflictDoc(String json) {
+
+        ShareDoc status = null;
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            status = mapper.readValue(json, ShareDoc.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return status;
+
+    }
+
 
     private void saveCookie(okhttp3.Headers headers) {
         String cookie = headers.get("set-cookie");
@@ -474,7 +491,6 @@ public class ServiceRequest<T> implements ContextLifecycle {
                     serviceCallback.onSuccess(object);
                 }
             } else {
-
                 Error error = getError(errorBody);
                 String errorCode = "-1";
 

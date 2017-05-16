@@ -157,5 +157,11 @@ public class APIType {
 
     public static final int DELETE_DOCUMENT = 89;
     public static final int SHARE_DOCUMENT = 90;
+    public static final int SHARE_DOCUMENTS = 91;
+
+    public static final int ADD_OPEN_SUBJECT = 92;
+    public static final int SEARCH_SUBJECTS = 93;
+
+    public static final int HIDE_LESSON = 94;
 
 }

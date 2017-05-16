@@ -87,6 +87,7 @@
     <string name="home_tab_message">消息</string>
     <string name="home_tab_mine">我的</string>
     <string name="qr_code">二维码</string>
+    <string name="home_tab_class">班课</string>
 
     <!--account-->
     <!--register-->
@@ -140,8 +141,9 @@
     <string name="my_course_mine_page">我的课</string>
     <string name="my_teaching">我授的课</string>
     <string name="my_enrollment">我报的班</string>
+    <string name="my_contact">通讯录</string>
     <string name="my_ask_questions">我的提问</string>
-    <string name="my_documents">资料库</string>
+    <string name="my_documents">我的资料库</string>
     <string name="my_collections">我的收藏</string>
     <string name="eval_management">评价管理</string>
     <string name="teach_ability">教学能力</string>
@@ -282,6 +284,8 @@
     <string name="lesson_creation_success">创建公开课成功</string>
     <string name="lesson_edit_success">修改成功</string>
     <string name="lesson_stu_exceed">该课的学生人数超过%1$d人，建议您选择公开课的形式</string>
+    <string name="subject_input_tip">只能输入字母，汉字，数字，及三者的组合</string>
+    <string name="subject_input_tip2">不能输入纯数字</string>
 
     <!--live lesson detail-->
     <string name="live_lesson_detail">详情</string>
@@ -506,9 +510,9 @@
     <string name="lesson_of_choiceness">精选课</string>
     <string name="brilliant_clazz">精彩小教室</string>
     <string name="whole">全部</string>
-    <string name="teacher_no_lesson_tip">你还没有授过课，你可以点击下面的按钮创建课</string>
+    <string name="teacher_no_lesson_tip">你还没有授的课，你可以点击下面的按钮创建课</string>
     <!--<string name="student_no_lesson_tip">你还没有报过班，你可以通过<![CDATA[<font color="#ff9833">搜课</font>]]>报名~</string>-->
-    <string name="student_no_lesson_tip">你还没有报的班，你可以通过手机号<![CDATA[<font color="#ff9833">搜课</font>]]>个人或机构进入到主页来进行报名~</string>
+    <string name="student_no_lesson_tip">你还没有报任何班课，你可以通过<![CDATA[<font color="#ff9833">搜索</font>]]>找到你感兴趣的班课哦~</string>
 
     <!-- home tab -->
     <string name="maybe_interest">你可能感兴趣的人</string>
@@ -755,9 +759,19 @@
     <string name="class_data_tips">来源：个人或机构从自己的资料库里分享至班级</string>
     <string name="delete_success">删除成功</string>
     <string name="share_material_to_class_failed">分享到班级失败</string>
+    <string name="share_material_to_class">分享到班级</string>
     <string name="shareok_and_to_class">分享成功，现在可以去班级中查看了</string>
     <string name="dont_go">暂时不去</string>
     <string name="go_class">去班级查看</string>
+    <string name="choice_all">全选</string>
+    <string name="cancel_choice_all">取消全选</string>
+    <string name="choose_material_tips">请选择要分享的资料</string>
+    <string name="shelves_ok">上架成功</string>
+    <string name="forbidden_enter_class_for_cancel">该课已被取消，不能正常使用教室</string>
+    <string name="patch_share_material">批量分享资料</string>
+    <string name="go_on_share_material">继续分享</string>
+    <string name="query_go_on_share_when_confilc">以下资料在该班级中已存在，是否继续分享？</string>
+    <string name="Invalid_calss_qrcode_tips">无效的教室二维码，请扫描正确的教室二维码</string>
 
 
 </resources>

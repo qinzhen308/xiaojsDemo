@@ -32,6 +32,7 @@ import cn.xiaojs.xma.model.Competency;
 public class SubjectSelectorAdapter extends BaseAdapter implements View.OnClickListener{
     private List<Competency> mData;
     private Context mContext;
+    private int flag;
 
     public SubjectSelectorAdapter(Context context) {
         mContext = context;
@@ -42,9 +43,10 @@ public class SubjectSelectorAdapter extends BaseAdapter implements View.OnClickL
         mData = data;
     }
 
-    public SubjectSelectorAdapter(Context context, List<Competency> data, Competency selectedCompetency) {
+    public SubjectSelectorAdapter(Context context, List<Competency> data, Competency selectedCompetency, int flag) {
         mContext = context;
         mData = data;
+        this.flag = flag;
         setSelectedCompetency(selectedCompetency);
     }
 
@@ -72,7 +74,9 @@ public class SubjectSelectorAdapter extends BaseAdapter implements View.OnClickL
         Holder holder = null;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.teaching_subject_list_item, null);
-            convertView.setOnClickListener(this);
+            if (flag !=1) {
+                convertView.setOnClickListener(this);
+            }
             holder = new Holder();
             holder.subjectTv = (TextView) convertView.findViewById(R.id.subject_name);
             holder.selectedStatus = (ImageView) convertView.findViewById(R.id.selected_status);

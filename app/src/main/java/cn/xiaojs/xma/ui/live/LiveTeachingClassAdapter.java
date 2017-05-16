@@ -121,7 +121,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
             return convertView;
         if (bean.state.equalsIgnoreCase(LessonState.DRAFT)) {
             String[] items = new String[]{mContext.getString(R.string.shelves),
-                    mContext.getString(R.string.edit),
+//                    mContext.getString(R.string.edit),
                     mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.pending_shelves);
             holder.state.setBackgroundResource(R.drawable.course_state_draft_bg);
@@ -135,20 +135,22 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 1://上架
                             shelves(bean);
                             break;
-                        case 2://编辑
-                            edit(bean);
-                            break;
-                        case 3://查看详情
+//                        case 2://编辑
+//                            edit(bean);
+//                            break;
+                        case 2://查看详情
                             detail(bean);
                             break;
+//                        case 3://删除
+//                            delete(bean);
+//                            break;
                     }
                 }
             });
         } else if (bean.state.equalsIgnoreCase(LessonState.REJECTED)) {
             holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.edit),
-                    mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+                    mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.examine_failure);
             holder.state.setBackgroundResource(R.drawable.course_state_failure_bg);
             holder.operation.enableMore(false);
@@ -164,15 +166,11 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 2://查看详情
                             detail(bean);
                             break;
-                        case 3://删除
-                            delete(bean);
-                            break;
                     }
                 }
             });
         } else if (bean.state.equalsIgnoreCase(LessonState.CANCELLED)) {
-            String[] items = new String[]{mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+            String[] items = new String[]{mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.course_state_cancel);
             holder.state.setBackgroundResource(R.drawable.course_state_cancel_bg);
             holder.operation.enableMore(false);
@@ -185,16 +183,12 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         case 1://查看详情
                             detail(bean);
                             break;
-                        case 2://删除
-                            delete(bean);
-                            break;
                     }
                 }
             });
         } else if (bean.state.equalsIgnoreCase(LessonState.STOPPED)) {
             String[] items = new String[]{mContext.getString(R.string.edit),
-                    mContext.getString(R.string.look_detail),
-                    mContext.getString(R.string.delete)};
+                    mContext.getString(R.string.look_detail)};
             holder.state.setText(R.string.force_stop);
             holder.state.setBackgroundResource(R.drawable.course_state_stop_bg);
             holder.operation.enableMore(false);
@@ -209,9 +203,6 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                             break;
                         case 2://查看详情
                             detail(bean);
-                            break;
-                        case 3://删除
-                            delete(bean);
                             break;
                     }
                 }
@@ -273,11 +264,11 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                 || bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
             holder.assistants.setVisibility(View.VISIBLE);
             String[] items = new String[]{mContext.getString(R.string.data_bank)};
-            if (bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
-                holder.operation.enableMore(false);
-            } else {
-                holder.operation.enableMore(!mIsEnrollLesson);
-            }
+//            if (bean.state.equalsIgnoreCase(LessonState.FINISHED)) {
+//                holder.operation.enableMore(false);
+//            } else {
+            holder.operation.enableMore(!mIsEnrollLesson);
+            //}
             //holder.operation.enableMore(true);
             holder.operation.enableEnter(true);
             holder.operation.setItems(items);
@@ -462,7 +453,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
     }
 
     //删除
-    private void delete(LiveItem bean) {
+    private void delete(final LiveItem bean) {
         final CommonDialog dialog = new CommonDialog(mContext);
         dialog.setTitle(R.string.delete);
         dialog.setDesc(R.string.delete_lesson_tip);
@@ -476,9 +467,28 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
             @Override
             public void onClick() {
 
+                //hideLesson(pos, bean);
             }
         });
         dialog.show();
+    }
+
+    private void hideLesson(final int pos, final LiveItem bean) {
+        showProgress(false);
+        LessonDataManager.hideLesson(mContext, bean.id, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                //removeItem(pos);
+                ToastUtil.showToast(mContext, R.string.delete_success);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //备课
@@ -489,6 +499,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
     //资料库
     private void databank(LiveItem bean) {
         Intent intent = new Intent(mContext, ClassMaterialActivity.class);
+        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE, true);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.id);
         intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.title);
         mContext.startActivity(intent);
@@ -549,14 +560,17 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
     private void more(final LiveItem bean) {
 
         boolean createMe = false;
-        if (bean.createdBy !=null
+        if (bean.createdBy != null
                 && !TextUtils.isEmpty(bean.createdBy.getId())
                 && bean.createdBy.getId().equals(AccountDataManager.getAccountID(mContext))) {
             createMe = true;
         }
 
+        //FIXME 因为此接口获取不到课是否为公开，所以先屏蔽此功能。
+        //int publishId = R.string.publish_to_home_page;
 
-        int publishId = R.string.publish_to_home_page;
+
+
         if (bean.state.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             if (createMe) {
@@ -593,7 +607,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         }
                     }
                 });
-            }else{
+            } else {
                 String[] items = new String[]{mContext.getString(R.string.share)};
                 dialog.setItems(items);
                 dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -614,9 +628,10 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             if (createMe) {
                 String[] items = new String[]{
+                        mContext.getString(R.string.registration),
                         mContext.getString(R.string.share),
                         mContext.getString(R.string.look_detail)
-                    /*mContext.getString(publishId)*/};
+                        /*mContext.getString(publishId)*/};
                 dialog.setItems(items);
                 dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
                     @Override
@@ -625,16 +640,19 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                             case 0://分享
                                 share(bean);
                                 break;
-                            case 1://查看详情
+                            case 1://分享
+                                share(bean);
+                                break;
+                            case 2://查看详情
                                 detail(bean);
                                 break;
-//                        case 2://发布到主页
-//                            publish(bean);
-//                            break;
+//                            case 3://发布到主页
+//                                publish(bean);
+//                                break;
                         }
                     }
                 });
-            }else{
+            } else {
                 String[] items = new String[]{mContext.getString(R.string.share)};
                 dialog.setItems(items);
                 dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -684,7 +702,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
                         }
                     }
                 });
-            }else {
+            } else {
                 String[] items = new String[]{mContext.getString(R.string.share)};
                 dialog.setItems(items);
                 dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {

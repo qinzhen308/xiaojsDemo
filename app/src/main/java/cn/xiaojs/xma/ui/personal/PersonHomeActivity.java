@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +46,10 @@ import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabFragment;
+import cn.xiaojs.xma.ui.mine.MySignatureDetailActivity;
 import cn.xiaojs.xma.ui.view.RelationshipView;
 import cn.xiaojs.xma.ui.widget.IconTextView;
+import cn.xiaojs.xma.ui.widget.MaxLineTextView;
 import cn.xiaojs.xma.ui.widget.PortraitView;
 import cn.xiaojs.xma.ui.widget.flow.ImageFlowLayout;
 import cn.xiaojs.xma.util.BitmapUtils;
@@ -60,6 +64,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     @BindView(R.id.person_home)
     View mPersonHomeBtn;
+    @BindView(R.id.message_entrance)
+    View mMessageEntrace;
     //profile info
     @BindView(R.id.blur_portrait)
     ImageView mBlurImgView;
@@ -84,7 +90,10 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     //profile
     @BindView(R.id.my_profile_txt)
-    TextView mProfileTv;
+    MaxLineTextView mProfileTv;
+
+    @BindView(R.id.btn_more)
+    TextView btnMore;
 
     @BindView(R.id.person_home_relationship)
     RelationshipView mRelationship;
@@ -98,8 +107,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     @BindView(R.id.person_home_message_more)
     View mFooterMultiple;
-    @BindView(R.id.person_home_message_only)
-    View mFooterSingle;
+//    @BindView(R.id.person_home_message_only)
+//    View mFooterSingle;
 
     @BindView(R.id.person_home_summary_wrapper)
     View mSummaryWrapper;
@@ -251,20 +260,21 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         mFollows.setText(getString(R.string.follow_num, followcount));
         mPersonName = home.profile.name;
         if (Account.TypeName.ORGANIZATION.equalsIgnoreCase(home.profile.typeName)) {
-            mFooterSingle.setVisibility(View.VISIBLE);
+            //mFooterSingle.setVisibility(View.VISIBLE);
         } else {
             if (!mIsMyself) {
                 if (home.isTeacher) {
                     mFooterMultiple.setVisibility(View.VISIBLE);
                 } else {
-                    mFooterSingle.setVisibility(View.VISIBLE);
+                    //mFooterSingle.setVisibility(View.VISIBLE);
                 }
             }
         }
 
         //set title
         if (home.profile != null && !TextUtils.isEmpty(home.profile.title)) {
-            mProfileTv.setText(home.profile.title);
+            mProfileTv.setText(home.profile.title.trim());
+//            mProfileTv.setText("啊高考刚拿11了奶咖了打开了大神快乐可按阿喀琉斯大神了大家爱神的箭阿克苏的煎熬死了肯德基啊快乐的骄傲看爱上加大了解答了速度将拉开觉得去了的骄傲快了速度将拉开");
         }
     }
 
@@ -294,6 +304,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         needHeader(false);
         mBackBtn.setImageResource(R.drawable.ic_white_back);
         mPersonHomeBtn.setVisibility(View.GONE);
+        mMessageEntrace.setVisibility(View.GONE);
         mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
         if (mIsMyself) {
             mPortraitView.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
@@ -341,6 +352,17 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         lists.add(BitmapUtils.getBitmap(this, R.drawable.ic_images_up));
         mFollowPeople.show(lists);
 
+        /*mProfileTv.setOnOverLineChangedListener(new MaxLineTextView.OnOverSizeChangedListener() {
+            @Override
+            public void onChanged(boolean isOverSize) {
+                if(isOverSize){
+                    btnMore.setVisibility(View.VISIBLE);
+                    mProfileTv.resetTextWithoutListener();
+                }else {
+                    btnMore.setVisibility(View.GONE);
+                }
+            }
+        });*/
     }
 
     @Override
@@ -348,19 +370,16 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.scroll_tab_left_image, R.id.person_home_message_only, R.id.person_home_message_btn,
-            R.id.person_home_query, R.id.scroll_tab_right_view})
+    @OnClick({R.id.scroll_tab_left_image,R.id.btn_more,
+            R.id.person_home_query, R.id.scroll_tab_right_view}) //R.id.person_home_message_only, R.id.person_home_message_btn
     public void onClick(View view) {
 
         switch (view.getId()) {
             case R.id.scroll_tab_left_image:
                 finish();
                 break;
-            case R.id.person_home_message_btn:
-            case R.id.person_home_message_only://发消息
-                sendMessage();
-                break;
-//            case R.id.person_home_message:
+//            case R.id.person_home_message_btn://发消息
+//            case R.id.person_home_message_only://发消息
 //                sendMessage();
 //                break;
             case R.id.person_home_query://提问
@@ -370,6 +389,9 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                 if (mBean !=null && !mBean.isFollowed){
                     BaseBusiness.showFollowDialog(this, this);
                 }
+                break;
+            case R.id.btn_more://查看签名
+                startActivity(new Intent(this, MySignatureDetailActivity.class).putExtra(MySignatureDetailActivity.KEY_CONTENT,mBean.profile.title));
                 break;
         }
     }

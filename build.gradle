@@ -41,4 +41,8 @@ ext {
     compileSdkVersion = 24
     buildToolsVersion = "25.0.0"
     targetSdkVersion = 24
+    bugly_appid = "d4347d7369"
+    bugly_appkey = "eb2669e5-ee27-444b-96d3-c3b3d0d251e7"
+    channel_dir = "./channel"
+    release_name_format = 'xiaojs_${buildType}_${channel}_v${versionName}_${versionCode}.apk'
 }

@@ -57,12 +57,15 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
 
     private String myAccountId;
 
-    public ClassMaterialAdapter(Context context, PullToRefreshSwipeListView listView, String owner) {
+    private boolean delable;
+
+    public ClassMaterialAdapter(Context context, PullToRefreshSwipeListView listView, String owner, boolean deleteAble) {
         super(context, listView);
         if (TextUtils.isEmpty(owner)) {
             mIsMine = true;
         }
         mOwner = owner;
+        delable = deleteAble;
 
         myAccountId = AccountDataManager.getAccountID(mContext);
 
@@ -119,7 +122,7 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
             holder.desc.append("");
         }
 
-        if (bean.owner.id.equals(myAccountId)) {
+        if (delable || bean.owner.id.equals(myAccountId)) {
             holder.opera3.setVisibility(View.VISIBLE);
             holder.expand.setVisibility(View.VISIBLE);
         }else{

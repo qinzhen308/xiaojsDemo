@@ -130,7 +130,7 @@ public class UpgradeActivity extends Activity {
         int action = upgrade.action;
 
         String verFormat = getResources().getString(R.string.u_version);
-        verView.setText(String.format(verFormat, upgrade.verStr));
+        verView.setText(String.format(verFormat, APPUtils.getShowVersion(upgrade.verStr)));
 
         String details = upgrade.remarks;
         if (!TextUtils.isEmpty(details)) {

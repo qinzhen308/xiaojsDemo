@@ -39,6 +39,17 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.HIDE_LESSON:
+                errorMessage = "删除失败";
+                break;
+            case APIType.SHARE_DOCUMENTS:
+                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+                    errorMessage = "您分享的资料,有的已在该班级中存在了";
+                }else {
+                    errorMessage = "分享到班级失败";
+                }
+
+                break;
             case APIType.SHARE_DOCUMENT:
                 if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
                     errorMessage = "您分享的资料已在该班级中存在了";
@@ -50,7 +61,11 @@ public class ErrorPrompts {
                 errorMessage = "删除失败";
                 break;
             case APIType.REQUEST_VERIFICATION:
-                errorMessage = "提交认证失败";
+                if (errorCode.equals(Errors.INVALID_OPERATION)) {
+                    errorMessage = "您要认证的号码已认证或者正在审核中";
+                }else{
+                    errorMessage = "提交认证失败";
+                }
                 break;
             case APIType.BEGIN_CLASS:
                 if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
@@ -199,7 +214,7 @@ public class ErrorPrompts {
                 } else if (errorCode.equals(Errors.NO_ENROLL)) {
                     errorMessage = "停止报名";
                 } else if (errorCode.equals(Errors.BAD_SUBTOTAL)) {
-                    errorMessage = "折扣或者促销已过期";
+                    errorMessage = "折扣或促销已过期";
                 } else {
                     errorMessage = "报名失败";
                 }
@@ -208,8 +223,10 @@ public class ErrorPrompts {
             case APIType.PUT_LESSON_ON_SHELVES:
 
                 if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
-                    errorMessage = "您不能上架该课程";
-                } else {
+                    errorMessage = "您不能上架该课";
+                } else if (errorCode.equals(Errors.OPERATION_TIMEOUT)) {
+                    errorMessage = "课已过期，不能上架";
+                }else {
                     errorMessage = "操作失败";
                 }
 

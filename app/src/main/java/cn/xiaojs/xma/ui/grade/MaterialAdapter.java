@@ -19,8 +19,10 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,11 +51,16 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
     private boolean mIsMine;
     private String mOwner;
 
-    public MaterialAdapter(Context context, PullToRefreshSwipeListView listView, String owner) {
-        super(context, listView);
+    private MaterialActivity materialActivity;
+
+    public MaterialAdapter(MaterialActivity activity, PullToRefreshSwipeListView listView, String owner) {
+        super(activity, listView);
         if (TextUtils.isEmpty(owner)) {
             mIsMine = true;
         }
+
+        materialActivity = activity;
+
         mOwner = owner;
 
         setDescNow("空空如也～");
@@ -62,6 +69,16 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
     @Override
     protected PullToRefreshBase.Mode getRefreshMode() {
         return PullToRefreshBase.Mode.PULL_FROM_START;
+    }
+
+    @Override
+    protected void onDataItemClick(int position, LibDoc bean) {
+
+        if (materialActivity.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE) {
+            return;
+        }
+
+        MaterialUtil.openMaterial(materialActivity, bean);
     }
 
     @Override
@@ -96,6 +113,19 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
         holder.desc.setText(sb);
 
+
+        if (materialActivity.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE) {
+
+            holder.expand.setVisibility(View.GONE);
+            holder.opera.setVisibility(View.GONE);
+            holder.checkedTextView.setVisibility(View.VISIBLE);
+
+        }else {
+            holder.expand.setVisibility(View.VISIBLE);
+            holder.opera.setVisibility(View.GONE);
+            holder.checkedTextView.setVisibility(View.GONE);
+        }
+
         holder.expand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +145,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             @Override
             public void onClick(View v) {
 
-                ((MaterialActivity)mContext).chooseShare(bean.id);
+                ((MaterialActivity)mContext).chooseShare(new String[]{bean.id});
 
             }
         });
@@ -129,12 +159,14 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             }
         });
 
-        holder.item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MaterialUtil.openMaterial((MaterialActivity)mContext, bean);
-            }
-        });
+//            holder.item.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    MaterialUtil.openMaterial((MaterialActivity)mContext, bean);
+//                }
+//            });
+
+
     }
 
     private void download(LibDoc bean) {
@@ -213,6 +245,9 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
         @BindView(R.id.material_item)
         View item;
+
+        @BindView(R.id.check_view)
+        CheckedTextView checkedTextView;
 
         public void showOpera(boolean b) {
             if (b) {

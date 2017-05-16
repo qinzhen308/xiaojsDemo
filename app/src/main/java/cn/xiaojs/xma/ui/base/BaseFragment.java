@@ -154,8 +154,8 @@ public abstract class BaseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SimpleDataChangeListener.ListenerType type = registerDataChangeListenerType();
-        if (type == null) {
+        int type = registerDataChangeListenerType();
+        if (type == 0) {
             return;
         }
 
@@ -170,8 +170,8 @@ public abstract class BaseFragment extends Fragment {
         DataChangeHelper.getInstance().registerDataChangeListener(mDataChangeListener);
     }
 
-    protected SimpleDataChangeListener.ListenerType registerDataChangeListenerType() {
-        return null;
+    protected int registerDataChangeListenerType() {
+        return 0;
     }
 
     /**

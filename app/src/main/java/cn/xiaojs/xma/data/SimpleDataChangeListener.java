@@ -16,19 +16,18 @@ package cn.xiaojs.xma.data;
  * ======================================================================================== */
 
 public abstract class SimpleDataChangeListener implements DataChangeListener {
-    private ListenerType mType;
+    private int mType;
 
-    public SimpleDataChangeListener(ListenerType type) {
+    public SimpleDataChangeListener(int type) {
         mType = type;
     }
 
-    public ListenerType getType() {
+    public int getType() {
         return mType;
     }
 
-    public static enum ListenerType{
-        LESSON_CREATION_CHANGED,
-        DYNAMIC_CHANGED
-    }
+    public final static int LESSON_CREATION_CHANGED = 1 << 1;
+    public final static int DYNAMIC_CHANGED = 1 << 2;
+    public final static int LESSON_ENROLL_CHANGED = 1 << 3;
 }
 

@@ -2,13 +2,19 @@ package cn.xiaojs.xma.data.api;
 
 import android.content.Context;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.List;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CSubject;
 
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.category.SubjectName;
 import retrofit2.Call;
 
 /**
@@ -35,6 +41,25 @@ public class CategoriesRequest extends ServiceRequest {
         Call<List<CSubject>> call = getService().getSubjects(parent,page, limit);
         enqueueRequest(APIType.GET_SUBJECTS,call);
 
+    }
+
+    public void addOpenSubject(String name) {
+
+        SubjectName subjectName = new SubjectName();
+        subjectName.name = name;
+
+        Call<CSubject> call = getService().addOpenSubject(subjectName);
+        enqueueRequest(APIType.ADD_OPEN_SUBJECT,call);
+    }
+
+    public void searchSubjects(String name, Pagination pagination) {
+
+        String paginationJsonstr = objectToJsonString(pagination);
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(paginationJsonstr);
+        }
+        Call<CollectionPage<CSubject>> call = getService().searchSubjects(name,paginationJsonstr);
+        enqueueRequest(APIType.SEARCH_SUBJECTS,call);
     }
 
 }

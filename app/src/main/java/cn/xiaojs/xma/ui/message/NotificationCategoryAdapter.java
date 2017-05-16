@@ -244,7 +244,8 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
-
+                    cancelProgress();
+                    Toast.makeText(mContext,errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
 

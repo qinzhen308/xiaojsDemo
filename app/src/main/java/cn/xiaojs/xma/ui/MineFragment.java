@@ -30,7 +30,9 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.ui.base.BaseFragment;
@@ -40,6 +42,8 @@ import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
 import cn.xiaojs.xma.ui.lesson.SubjectSelectorActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.message.ContactActivity;
+import cn.xiaojs.xma.ui.message.MessageCenterActivity;
 import cn.xiaojs.xma.ui.mine.MyOrderActivity;
 import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
@@ -48,6 +52,7 @@ import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.PortraitView;
+import cn.xiaojs.xma.ui.widget.RedTipTextView;
 import cn.xiaojs.xma.util.ExpandGlide;
 import cn.xiaojs.xma.util.FastBlur;
 
@@ -89,6 +94,9 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.name_auth)
     TextView cerTips;
 
+    @BindView(R.id.message_entrance)
+    RedTipTextView messageEntrace;
+
 
     private Drawable mBlurFloatUpBg;
 
@@ -109,7 +117,6 @@ public class MineFragment extends BaseFragment {
         loadData();
         showAbilities();
         showCer();
-
     }
 
     @Override
@@ -118,11 +125,40 @@ public class MineFragment extends BaseFragment {
 
         showAbilities();
         showCer();
+        showTips();
     }
 
-    @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,
+    private void showTips() {
+        showMessageTips(DataManager.hasMessage(getActivity()));
+    }
+
+    public void showMessageTips(boolean isShow) {
+        if(isShow!=messageEntrace.mTipEnable){
+            messageEntrace.setTipEnable(isShow);
+        }
+
+        if (isShow){
+            //显示Tab红点
+            ((MainActivity)getActivity()).showMessageTips();
+        }else{
+            //消除Tab红点
+            ((MainActivity)getActivity()).hiddenMessageTips();
+        }
+
+
+
+    }
+
+    private void enterMessage(){
+        showMessageTips(false);
+        DataManager.setHasMessage(getActivity(),false);
+        startActivity(new Intent(getActivity(), MessageCenterActivity.class));
+    }
+
+
+    @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,R.id.my_contact_layout,
              R.id.teach_ability_layout, R.id.name_auth_layout, R.id.person_home,R.id.portrait,
-            R.id.user_name,R.id.my_order_layout})
+            R.id.user_name,R.id.my_order_layout,R.id.message_entrance})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_teaching_layout:
@@ -136,6 +172,9 @@ public class MineFragment extends BaseFragment {
                 break;
 //            case R.id.my_favorites_layout:
 //                break;
+            case R.id.my_contact_layout:
+                startActivity(new Intent(mContext, ContactActivity.class));
+                break;
             case R.id.teach_ability_layout:
 
                 Intent intent = new Intent();
@@ -184,6 +223,9 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.my_order_layout:
                 startActivity(new Intent(mContext, MyOrderActivity.class));
+                break;
+            case R.id.message_entrance:
+                enterMessage();
                 break;
             default:
                 break;
@@ -291,8 +333,10 @@ public class MineFragment extends BaseFragment {
 
         if (AccountDataManager.isVerified(getContext())) {
             cerTips.setText("已认证");
+            mUserName.setIcon(R.drawable.ic_vip);
         }else {
             cerTips.setText("未认证");
+            mUserName.setIcon(0);
         }
     }
 

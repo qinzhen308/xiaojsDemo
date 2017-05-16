@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="cn.xiaojs.xma"
-          android:versionCode="31"
-          android:versionName="1.0.5">
+          android:versionCode="35"
+          android:versionName="1.0.7">
 
     <!-- Required -->
     <permission
@@ -124,7 +124,11 @@
         <activity
                 android:name=".ui.lesson.TeachingSubjectActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.lesson.TeachingSubjectSearchActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"/>
         <activity
                 android:name=".ui.lesson.SubjectSelectorActivity"
                 android:screenOrientation="portrait"/>
@@ -202,6 +206,7 @@
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.message.ShareScopeActivity">
         </activity>
+
         <activity
                 android:name=".ui.search.SearchListActivity"
                 android:screenOrientation="portrait"/>
@@ -234,6 +239,16 @@
                 android:name=".ui.personal.PersonalInfoActivity"
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.message.CloseFriendActivity"/>
+
+        <activity
+            android:name=".ui.message.MessageCenterActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="cn.xiaojs.xma.action_push_enter_msg_center"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <activity
                 android:name=".TestActivity"
                 android:screenOrientation="landscape"
@@ -255,6 +270,9 @@
                 android:name=".ui.mine.MyOrderActivity"
                 android:screenOrientation="portrait"/>
         <activity
+            android:name=".ui.mine.MySignatureDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
                 android:name=".ui.UpgradeActivity"
                 android:theme="@style/dlg_upgrade">
         </activity>
@@ -264,6 +282,10 @@
         <activity android:name=".ui.lesson.EnrolledStudentActivity">
         </activity>
         <activity android:name=".ui.GuideBrowseActivity"/>
+        <activity android:name=".ui.ScanQrcodeActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name="com.kaola.qrcodescanner.qrcode.QrCodeActivity"
+                  android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"
@@ -449,33 +471,6 @@
                 android:value="d19701b38830e88772d8325797c8073a"/>
 
         <service android:name="com.amap.api.location.APSService"/>
-
-
-        <!-- 实时通信模块、推送（均需要加入以下声明） START -->
-        <!-- 实时通信模块、推送都要使用 PushService -->
-        <service android:name="com.avos.avoscloud.PushService"/>
-        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
-        <!-- 实时通信模块、推送 END -->
-
-        <activity
-                android:name=".ui.message.im.chatkit.activity.LCIMConversationActivity"
-                android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="cn.xiaojs.xma.chatkit.conversation_item_click_action"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
-        <activity
-                android:name=".ui.message.im.chatkit.activity.LCIMImageActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/scan_image_activity"/>
 
     </application>
 

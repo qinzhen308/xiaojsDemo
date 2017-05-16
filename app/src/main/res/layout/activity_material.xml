@@ -4,16 +4,29 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            >
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/px90"
-                        android:background="@color/white"
-                        android:orientation="horizontal">
+        <Button
+                android:id="@+id/share_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px96"
+                android:text="@string/share_material_to_class"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_32px"
+                android:background="@drawable/orange_bg_selector"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"/>
+
+        <RelativeLayout
+                android:id="@+id/lay_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px90"
+                android:background="@color/white"
+                android:layout_alignParentTop="true"
+                >
 
             <ImageView
                     android:id="@+id/material_left_image"
@@ -28,6 +41,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
+            <Button
+                    android:id="@+id/choice_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/px32"
+                    android:paddingRight="@dimen/px32"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:text="@string/choice_all"
+                    android:textSize="@dimen/font_26px"
+                    android:background="@android:color/transparent"
+                    android:textColor="@drawable/orange_click_text_selector"
+                    android:visibility="gone"/>
+
             <TextView
                     android:id="@+id/material_middle_view"
                     android:layout_width="wrap_content"
@@ -36,6 +63,7 @@
                     android:textStyle="bold"
                     android:layout_centerInParent="true"
                     android:textColor="@color/def"/>
+
 
             <ImageView
                     android:id="@+id/material_right_image"
@@ -52,28 +80,45 @@
             <ImageView
                     android:id="@+id/material_right_image2"
                     android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/material_right_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+            <Button
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:text="@string/cancel"
+                    android:textSize="@dimen/font_26px"
+                    android:background="@android:color/transparent"
+                    android:textColor="@drawable/orange_click_text_selector"
+                    android:visibility="gone"/>
 
             <!--<ImageView-->
-                    <!--android:id="@+id/material_right_image2"-->
-                    <!--android:layout_toLeftOf="@id/material_right_image"-->
-                    <!--android:layout_centerInParent="true"-->
-                    <!--android:paddingLeft="@dimen/px30"-->
-                    <!--android:paddingRight="@dimen/px30"-->
-                    <!--android:paddingTop="@dimen/px16"-->
-                    <!--android:paddingBottom="@dimen/px16"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"/>-->
+            <!--android:id="@+id/material_right_image2"-->
+            <!--android:layout_toLeftOf="@id/material_right_image"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:paddingLeft="@dimen/px30"-->
+            <!--android:paddingRight="@dimen/px30"-->
+            <!--android:paddingTop="@dimen/px16"-->
+            <!--android:paddingBottom="@dimen/px16"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
         </RelativeLayout>
 
 
-        <View style="@style/DividerHorizontal"/>
+        <View
+                style="@style/DividerHorizontal"
+                android:id="@+id/lay_line"
+                android:layout_below="@id/lay_title"/>
 
         <LinearLayout
                 android:id="@+id/lay_tips"
@@ -82,7 +127,8 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/px28"
                 android:background="#ebf0f7"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:layout_below="@id/lay_line">
 
             <ImageView
                     android:layout_width="wrap_content"
@@ -102,6 +148,7 @@
                     android:text="@string/lesson_creation_tips"
                     android:textSize="@dimen/font_26px"
                     android:textColor="@color/font_dark_gray"/>
+
             <ImageView
                     android:id="@+id/lesson_creation_tips_close"
                     android:layout_width="wrap_content"
@@ -120,7 +167,8 @@
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:layout_below="@id/lay_tips">
 
             <cn.xiaojs.xma.ui.widget.EditTextDel
                     android:id="@+id/my_course_search"
@@ -144,7 +192,10 @@
                     android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <View style="@style/DividerHorizontal"/>
+        <View
+                style="@style/DividerHorizontal"
+                android:id="@+id/lay_line1"
+                android:layout_below="@id/course_search_wrapper"/>
 
         <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -155,8 +206,11 @@
                 android:divider="@android:color/transparent"
                 android:listSelector="@android:color/transparent"
                 android:dividerHeight="@dimen/px1"
-                android:orientation="vertical"/>
-    </LinearLayout>
+                android:orientation="vertical"
+                android:layout_below="@id/lay_line1"
+                android:layout_above="@id/share_btn"
+                />
+    </RelativeLayout>
 
     <RelativeLayout
             android:id="@+id/material_uploading_wrapper"

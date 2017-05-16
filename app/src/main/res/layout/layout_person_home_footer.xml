@@ -24,7 +24,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/big_submit_btn_selector">
+                    android:background="@drawable/big_submit_btn_selector"
+                    android:visibility="gone">
 
                 <TextView
                         android:id="@+id/person_home_message"

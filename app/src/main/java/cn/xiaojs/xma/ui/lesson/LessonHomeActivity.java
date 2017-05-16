@@ -29,8 +29,10 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Role;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -106,8 +108,8 @@ public class  LessonHomeActivity extends BaseActivity{
     View mLessonEnrollLayout;
     @BindView(R.id.apply_btn)
     Button applyBtn;
-    @BindView(R.id.consulting)
-    Button mConsultingBtn;
+//    @BindView(R.id.consulting)
+//    Button mConsultingBtn;
 
 
     @BindView(R.id.block_detail_bar)
@@ -135,7 +137,7 @@ public class  LessonHomeActivity extends BaseActivity{
         loadData();
     }
 
-    @OnClick({R.id.back_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.consulting, R.id.lay_teacher})
+    @OnClick({R.id.back_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.lay_teacher})//R.id.consulting
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.lay_teacher:
@@ -173,37 +175,37 @@ public class  LessonHomeActivity extends BaseActivity{
             case R.id.apply_btn:
                 appDeal();
                 break;
-            case R.id.consulting:
-
-                if (mLessonDetail == null) return;
-
-                final Teacher tea = mLessonDetail.getTeacher();
-                if (tea == null || tea.getBasic() == null) return;
-
-                String sex = "true";
-
-                boolean isFollowed = DataManager.existInContacts(this, tea._id);
-
-                BaseBusiness.advisory(this, isFollowed, tea._id, tea.getBasic().getName(), sex, new BaseBusiness.OnFollowListener() {
-                    @Override
-                    public void onFollow(long group) {
-                        if (group > 0) {
-                            SocialManager.followContact(LessonHomeActivity.this, tea._id,tea.getBasic().getName(), group, new APIServiceCallback<Relation>() {
-                                @Override
-                                public void onSuccess(Relation object) {
-                                    ToastUtil.showToast(getApplicationContext(), R.string.followed);
-
-                                }
-
-                                @Override
-                                public void onFailure(String errorCode, String errorMessage) {
-                                    ToastUtil.showToast(getApplicationContext(), errorMessage);
-                                }
-                            });
-                        }
-                    }
-                });
-                break;
+//            case R.id.consulting:
+//
+//                if (mLessonDetail == null) return;
+//
+//                final Teacher tea = mLessonDetail.getTeacher();
+//                if (tea == null || tea.getBasic() == null) return;
+//
+//                String sex = "true";
+//
+//                boolean isFollowed = DataManager.existInContacts(this, tea._id);
+//
+//                BaseBusiness.advisory(this, isFollowed, tea._id, tea.getBasic().getName(), sex, new BaseBusiness.OnFollowListener() {
+//                    @Override
+//                    public void onFollow(long group) {
+//                        if (group > 0) {
+//                            SocialManager.followContact(LessonHomeActivity.this, tea._id,tea.getBasic().getName(), group, new APIServiceCallback<Relation>() {
+//                                @Override
+//                                public void onSuccess(Relation object) {
+//                                    ToastUtil.showToast(getApplicationContext(), R.string.followed);
+//
+//                                }
+//
+//                                @Override
+//                                public void onFailure(String errorCode, String errorMessage) {
+//                                    ToastUtil.showToast(getApplicationContext(), errorMessage);
+//                                }
+//                            });
+//                        }
+//                    }
+//                });
+//                break;
 
         }
     }
@@ -393,17 +395,17 @@ public class  LessonHomeActivity extends BaseActivity{
                     || lessonState.equalsIgnoreCase(LessonState.LIVE)
                     || lessonState.equalsIgnoreCase(LessonState.FINISHED)) {
                 mLessonEnrollLayout.setVisibility(View.VISIBLE);
-                mConsultingBtn.setVisibility(View.GONE);
+                //mConsultingBtn.setVisibility(View.GONE);
                 applyBtn.setText("进入教室");
                 applyBtn.setEnabled(true);
             }else{
                 mLessonEnrollLayout.setVisibility(View.GONE);
-                mConsultingBtn.setVisibility(View.VISIBLE);
+                //mConsultingBtn.setVisibility(View.VISIBLE);
             }
 
         }else{
             mLessonEnrollLayout.setVisibility(View.VISIBLE);
-            mConsultingBtn.setVisibility(View.VISIBLE);
+            //mConsultingBtn.setVisibility(View.VISIBLE);
         }
 
     }
@@ -593,6 +595,7 @@ public class  LessonHomeActivity extends BaseActivity{
                     mLessonDetail.enrollState = Ctl.EnrollmentState.ENROLLED;
                     setLayBottom();
                     ToastUtil.showToast(getApplicationContext(),"报名成功!");
+                    DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_ENROLL_CHANGED);
                 }
 
                 @Override
@@ -642,6 +645,7 @@ public class  LessonHomeActivity extends BaseActivity{
 
                 Toast.makeText(LessonHomeActivity.this,
                         R.string.enroll_lesson_success, Toast.LENGTH_SHORT).show();
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_ENROLL_CHANGED);
 
             }
 

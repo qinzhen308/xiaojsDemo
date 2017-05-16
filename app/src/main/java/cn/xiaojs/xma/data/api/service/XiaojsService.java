@@ -38,11 +38,11 @@ import cn.xiaojs.xma.model.account.RegisterInfo;
 
 import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
+import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
-import cn.xiaojs.xma.model.ctl.StudentInfo;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
@@ -275,6 +275,9 @@ public interface XiaojsService {
                                          @Query("limit") int limit,
                                          @Query("state") String state);
 
+    //Hide Lesson
+    @PATCH("/v1/ctl/lessons/{lesson}/hidden")
+    Call<ResponseBody> hideLesson(@Path("lesson") String lesson);
 
 
 
@@ -294,6 +297,16 @@ public interface XiaojsService {
     Call<List<CSubject>>getSubjects(@Path("parent") String parent,
                                     @Query("page") int page,
                                     @Query("limit") int limit);
+
+    //Add Open Subject
+    @POST("/v1/categories/subjects")
+    Call<CSubject> addOpenSubject(@Body SubjectName name);
+
+    //Search Subjects
+    @GET("/v1/categories/subjects/{name}/search/{pagination}")
+    Call<CollectionPage<CSubject>> searchSubjects(@Path("name") String name,
+                                        @Path("pagination") String pagination);
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -550,6 +563,11 @@ public interface XiaojsService {
     //Share Document
     @PATCH("/v1/collaboration/documents/{document}/share")
     Call<ShareDoc> shareDocument(@Path("document") String document, @Body ShareResource resource);
+
+    //Share Documents
+    @POST("/v1/collaboration/library/{targetId}/share")
+    Call<ShareDoc> shareDocuments(@Path("targetId") String targetId, @Body ShareResource resource);
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

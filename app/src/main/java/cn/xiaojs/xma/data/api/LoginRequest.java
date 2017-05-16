@@ -14,7 +14,6 @@ import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 
 import cn.xiaojs.xma.util.JpushUtil;
-import cn.xiaojs.xma.util.LeanCloudUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -96,8 +95,6 @@ public class LoginRequest extends ServiceRequest {
             //jpush
             JpushUtil.resumePush(getContext());
 
-            //open lean cloud
-            LeanCloudUtil.open(info.getUser().getId());
         }
     }
 }

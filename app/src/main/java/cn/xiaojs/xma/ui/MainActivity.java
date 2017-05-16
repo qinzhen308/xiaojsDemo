@@ -1,13 +1,19 @@
 package cn.xiaojs.xma.ui;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
 import com.orhanobut.logger.Logger;
 
 
@@ -17,6 +23,7 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
@@ -33,9 +40,6 @@ import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
-import cn.xiaojs.xma.ui.message.im.chatkit.activity.LCIMConversationListFragment;
-import cn.xiaojs.xma.ui.message.im.chatkit.utils.LCIMConstants;
-import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -47,12 +51,14 @@ public class MainActivity extends BaseTabActivity {
 
     public static final String KEY_POSITION = "key_position";
 
+    public static final int PERMISSION_CODE = 0x11;
+
     private long time;
 
     private UpgradeReceiver upgradeReceiver;
     private boolean hasShow = false;
 
-    private LCIMConversationListFragment conversationListFragment;
+    //private MessageFragment conversationFragment;
 
 
     @Override
@@ -60,16 +66,17 @@ public class MainActivity extends BaseTabActivity {
         //setMiddleTitle(R.string.app_name);
         needHeader(false);
         List<Fragment> fs = new ArrayList<>();
-        fs.add(new HomeFragment());
         fs.add(new LiveFragment());
-        //fs.add(new MessageFragment());
-        conversationListFragment = new LCIMConversationListFragment();
-
-        fs.add(conversationListFragment);
+        fs.add(new HomeFragment());
         fs.add(new MineFragment());
-        setButtonType(BUTTON_TYPE_CENTER);
-        addViews(new int[]{R.string.home_tab_index, R.string.home_tab_live, R.string.home_tab_message, R.string.home_tab_mine},
-                new int[]{R.drawable.home_tab_selector, R.drawable.live_tab_selector, R.drawable.message_tab_selector, R.drawable.mine_tab_selector},
+
+//        conversationFragment = new MessageFragment();
+//        fs.add(conversationFragment);
+
+
+        setButtonType(BUTTON_TYPE_NONE);
+        addViews(new int[]{R.string.home_tab_class, R.string.home_tab_circle, R.string.home_tab_mine},
+                new int[]{R.drawable.home_tab_selector, R.drawable.live_tab_selector, R.drawable.mine_tab_selector},
                 fs);
 
         Intent intent = getIntent();
@@ -86,9 +93,10 @@ public class MainActivity extends BaseTabActivity {
 
         if (!hasShow) {
 
-            if (!DataManager.hasShowGuide(this)) {
-                showGuid();
-            }
+            //用户帮助引导
+//            if (!DataManager.hasShowGuide(this)) {
+//                showGuid();
+//            }
 
             requestPermission();
         }
@@ -126,40 +134,41 @@ public class MainActivity extends BaseTabActivity {
         String action = intent.getAction();
 
         //IM及时通讯
-        if (!TextUtils.isEmpty(action) && action.equals(LCIMConstants.CHAT_NOTIFICATION_ACTION)) {
-            setTabSelected(2);
-
-            Intent ifarIntent = new Intent();
-            ifarIntent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
-
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-
-                boolean group = false;
-                if (extras.containsKey(LCIMConstants.IS_GROUP)) {
-                    group = intent.getBooleanExtra(LCIMConstants.IS_GROUP, false);
-                }
-
-                if (group) {
-                    String cid = intent.getStringExtra(LCIMConstants.CONVERSATION_ID);
-                    ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, cid);
-
-                } else {
-                    String pid = intent.getStringExtra(LCIMConstants.PEER_ID);
-                    ifarIntent.putExtra(LCIMConstants.PEER_ID, pid);
-                }
-
-                ifarIntent.setPackage(getPackageName());
-                ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
-
-                startActivity(ifarIntent);
-                return true;
-            }
-        }
+//        if (!TextUtils.isEmpty(action) && action.equals(LCIMConstants.CHAT_NOTIFICATION_ACTION)) {
+//            setTabSelected(2);
+//
+//            Intent ifarIntent = new Intent();
+//            ifarIntent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION);
+//
+//            Bundle extras = intent.getExtras();
+//            if (extras != null) {
+//
+//                boolean group = false;
+//                if (extras.containsKey(LCIMConstants.IS_GROUP)) {
+//                    group = intent.getBooleanExtra(LCIMConstants.IS_GROUP, false);
+//                }
+//
+//                if (group) {
+//                    String cid = intent.getStringExtra(LCIMConstants.CONVERSATION_ID);
+//                    ifarIntent.putExtra(LCIMConstants.CONVERSATION_ID, cid);
+//
+//                } else {
+//                    String pid = intent.getStringExtra(LCIMConstants.PEER_ID);
+//                    ifarIntent.putExtra(LCIMConstants.PEER_ID, pid);
+//                }
+//
+//                ifarIntent.setPackage(getPackageName());
+//                ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
+//
+//                startActivity(ifarIntent);
+//                return true;
+//            }
+//        }
 
         //PUSH推送
         if (!TextUtils.isEmpty(action) && action.equals(MessageUitl.ACTION_PUSH_NOTIFY_OPEN)) {
             setTabSelected(2);
+            MessageUitl.lanuchMessageCenter(this);
             return true;
         }
 
@@ -169,7 +178,20 @@ public class MainActivity extends BaseTabActivity {
     @Override
     protected void onGooeyMenuClick(int position) {
         switch (position) {
-            case 1://开课
+            case 1:
+
+                //Toast.makeText(this,"暂未开放此功能",Toast.LENGTH_SHORT).show();
+//                if (PermissionUtil.isOverMarshmallow()
+//                        && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+//                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
+//
+//                }else {
+//                    startActivity(new Intent(this, ScanQrcodeActivity.class));
+//                }
+
+                break;
+            case 2://开课
+
                 if (AccountDataManager.isTeacher(this)) {
                     //老师可以开课
                     Intent intent = new Intent(this, LessonCreationActivity.class);
@@ -196,11 +218,11 @@ public class MainActivity extends BaseTabActivity {
                     dialog.show();
                 }
                 break;
-            case 2:
+            case 3:
                 //startActivity(new Intent(this,GradeHomeActivity.class));
                 startActivity(new Intent(this, ContactActivity.class));
                 break;
-            case 3:
+            case 4:
                 startActivityForResult(new Intent(this, PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
                 //if (JMessageClient.getMyInfo() != null){
                 //    Intent intent = new Intent(this, ChatActivity.class);
@@ -208,10 +230,10 @@ public class MainActivity extends BaseTabActivity {
                 //    startActivity(intent);
                 //}
                 break;
-            case 4:
+            case 5:
                 //startActivity(new Intent(this,PersonHomeActivity.class));
                 break;
-            case 5:
+            case 6:
                 //startActivityForResult(new Intent(this, PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
                 break;
         }
@@ -287,6 +309,26 @@ public class MainActivity extends BaseTabActivity {
         }
     }
 
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//
+//        switch (requestCode) {
+//            case PERMISSION_CODE: {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+//                    startActivity(new Intent(this, ScanQrcodeActivity.class));
+//
+//                } else {
+//
+//                    // permission denied, boo! Disable the
+//                    // functionality that depends on this permission.
+//                }
+//                return;
+//            }
+//        }
+//    }
 
     private class UpgradeReceiver extends BroadcastReceiver {
         @Override
@@ -322,11 +364,20 @@ public class MainActivity extends BaseTabActivity {
                     showMessageTips();
                 }
 
-                if (conversationListFragment != null && conversationListFragment.isAdded()) {
-                    conversationListFragment.getMessageOverview();
+                //FIXME MESSAGE
+//                if (conversationFragment != null && conversationFragment.isAdded()) {
+//                    conversationFragment.getMessageOverview();
+//                }
+                Fragment fg=getFragment(2);
+                //当前在个人中心才调，否则在切换到个人中心在onResume更新状态
+                if(fg instanceof MineFragment && fg.isAdded()){
+                    ((MineFragment)fg).showMessageTips(true);
                 }
 
             }
         }
     }
+
+
+
 }

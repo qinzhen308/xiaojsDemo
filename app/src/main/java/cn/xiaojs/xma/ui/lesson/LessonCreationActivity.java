@@ -232,6 +232,8 @@ public class LessonCreationActivity extends BaseActivity {
         if (mType == CourseConstant.TYPE_LESSON_CREATE && !close) {
             mPlaceHoldArea.setVisibility(View.GONE);
             mLessonCreateTipsView.setVisibility(View.VISIBLE);
+        } else if (mType == CourseConstant.TYPE_LESSON_EDIT) {
+            setMiddleTitle(R.string.edit);
         }
 
         loadData();
@@ -345,10 +347,12 @@ public class LessonCreationActivity extends BaseActivity {
         Schedule sch = lessonDetail.getSchedule();
         if (sch != null) {
             //重新创建课程，上课时间无效
-            //mLessonStartTime = sch.getStart().getTime();
-            //String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
-            //mLessonStartTimeTv.setText(dateStr);
-            //mLessonStartTimeTv.setTextColor(mContentFont);
+            if (mType == CourseConstant.TYPE_LESSON_EDIT) {
+                mLessonStartTime = sch.getStart().getTime();
+                String dateStr = TimeUtil.formatDate(mLessonStartTime, TimeUtil.TIME_YYYY_MM_DD_HH_MM);
+                mLessonStartTimeTv.setText(dateStr);
+                //mLessonStartTimeTv.setTextColor(mContentFont);
+            }
 
             mLessonDurationEdt.setText(String.valueOf(sch.getDuration()));
         }
@@ -827,7 +831,7 @@ public class LessonCreationActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
-                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED);
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_CREATION_CHANGED);
                 setResultOnFinish();
             }
 
@@ -846,7 +850,7 @@ public class LessonCreationActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_edit_success, Toast.LENGTH_SHORT).show();
-                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED);
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_CREATION_CHANGED);
                 setResultOnFinish();
             }
 

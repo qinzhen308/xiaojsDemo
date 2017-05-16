@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
@@ -39,16 +40,20 @@ public class SubjectSelectorActivity extends BaseActivity {
 
     @BindView(R.id.subject_list)
     ListView mSubjectListView;
+    @BindView(R.id.btn_add)
+    TextView btnAdd;
 
     private SubjectSelectorAdapter mSubjectAdapter;
     private Competency mSelectedCompetency;
+
+    private int flag = -1;
 
     @Override
     protected void addViewContent() {
 
 
-        int normal = getIntent().getIntExtra(EXTRA_NORMAL,-1);
-        if (normal == 1) {
+        flag = getIntent().getIntExtra(EXTRA_NORMAL,-1);
+        if (flag == 1) {
             setMiddleTitle(R.string.teach_ability);
             setRightText(-1);
         }else {
@@ -61,6 +66,9 @@ public class SubjectSelectorActivity extends BaseActivity {
         addView(R.layout.activity_select_subject);
         init();
         loadData();
+        if(flag==1){
+            btnAdd.setText(R.string.add);
+        }
     }
 
     private void init () {
@@ -98,7 +106,7 @@ public class SubjectSelectorActivity extends BaseActivity {
             public void onSuccess(ClaimCompetency object) {
                 cancelProgress();
                 if (object != null) {
-                    mSubjectAdapter = new SubjectSelectorAdapter(SubjectSelectorActivity.this, object.competencies, mSelectedCompetency);
+                    mSubjectAdapter = new SubjectSelectorAdapter(SubjectSelectorActivity.this, object.competencies, mSelectedCompetency, flag);
                     mSubjectListView.setAdapter(mSubjectAdapter);
                 }
             }

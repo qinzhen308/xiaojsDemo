@@ -15,19 +15,32 @@ package cn.xiaojs.xma.ui.live;
  *
  * ======================================================================================== */
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -39,36 +52,71 @@ import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.LiveItem;
+import cn.xiaojs.xma.ui.MainActivity;
+import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
+import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
+import cn.xiaojs.xma.ui.view.CommonPopupMenu;
+import cn.xiaojs.xma.ui.widget.AdapterListView;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.HorizontalAdaptScrollerView;
 import cn.xiaojs.xma.util.TimeUtil;
 
-public class LiveFragment extends BaseFragment implements View.OnClickListener {
-    HorizontalAdaptScrollerView mHorizontalListView;
-    CanInScrollviewListView mTeachingLessonList;
-    CanInScrollviewListView mEnrollLessonList;
+public class LiveFragment extends BaseFragment {
+    @BindView(R.id.swipe_ly)
+    SwipeRefreshLayout swipeRefreshLayout;
 
+    @BindView(R.id.home_live_brilliant)
+    HorizontalAdaptScrollerView mHorizontalListView;
+
+    @BindView(R.id.home_live_list)
+    AdapterListView mTeachingLessonList;
+    @BindView(R.id.home_live_list2)
+    AdapterListView mEnrollLessonList;
+
+    @BindView(R.id.teacher_wrapper)
     View mTeacherWrapper;
+    @BindView(R.id.student_wrapper)
     View mStudentWrapper;
 
+    @BindView(R.id.lesson_all_1)
     View mTeachLessonTitleView;
+    @BindView(R.id.lesson_all_2)
     View mEnrollLessonTitleView;
+    @BindView(R.id.enroll_lesson_hold_view)
     View mEnrollLessonHoldView;
 
+    @BindView(R.id.teach_lesson_empty)
     LinearLayout mTeachLessonEmpty;
+    @BindView(R.id.enroll_lesson_empty)
     TextView mEnrollLessonEmpty;
+    @BindView(R.id.teach_divider)
+    View teachDivView;
+    @BindView(R.id.enroll_divider)
+    View enrollDivView;
 
+
+
+    @BindView(R.id.teach_lesson_all)
     View mTeachLessonAllView;
+    @BindView(R.id.enroll_lesson_all)
     View mEnrollLessonAllView;
 
+    @BindView(R.id.open_lesson)
     ImageView mOpenLesson;
+
+    @BindView(R.id.live_root)
+    LinearLayout liveRootView;
+
+//    @BindView(R.id.btn_add)
+//    ImageButton addBtnView;
 
     private int mUserType;
     private Criteria mCriteria;
@@ -78,46 +126,12 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected View getContentView() {
         View v = mContext.getLayoutInflater().inflate(R.layout.fragment_live, null);
-        mHorizontalListView = (HorizontalAdaptScrollerView) v.findViewById(R.id.home_live_brilliant);
-
-        mTeachingLessonList = (CanInScrollviewListView) v.findViewById(R.id.home_live_list);
-        mEnrollLessonList = (CanInScrollviewListView) v.findViewById(R.id.home_live_list2);
-
-        mTeacherWrapper = v.findViewById(R.id.teacher_wrapper);
-        mStudentWrapper = v.findViewById(R.id.student_wrapper);
-
-        mTeachLessonEmpty = (LinearLayout) v.findViewById(R.id.teach_lesson_empty);
-        mEnrollLessonEmpty = (TextView) v.findViewById(R.id.enroll_lesson_empty);
-
-        mTeachLessonAllView = v.findViewById(R.id.teach_lesson_all);
-        mEnrollLessonAllView = v.findViewById(R.id.enroll_lesson_all);
-        mTeachLessonTitleView = v.findViewById(R.id.lesson_all_1);
-        mEnrollLessonTitleView = v.findViewById(R.id.lesson_all_2);
-        mEnrollLessonHoldView = v.findViewById(R.id.enroll_lesson_hold_view);
-        mOpenLesson = (ImageView) v.findViewById(R.id.open_lesson);
-
-        mTeachingLessonList.setNeedDivider(true);
-        mTeachingLessonList.setDividerHeight(mContext.getResources().getDimensionPixelSize(R.dimen.px30));
-        mTeachingLessonList.setDividerColor(R.color.main_bg);
-        mEnrollLessonList.setNeedDivider(true);
-        mEnrollLessonList.setDividerHeight(mContext.getResources().getDimensionPixelSize(R.dimen.px30));
-        mEnrollLessonList.setDividerColor(R.color.main_bg);
-        mTeachLessonTitleView.setOnClickListener(this);
-        mEnrollLessonTitleView.setOnClickListener(this);
-        View search = v.findViewById(R.id.my_course_search);
-        search.setOnClickListener(this);
-
-        RelativeLayout searchLay = (RelativeLayout) v.findViewById(R.id.s_root);
-        searchLay.setOnClickListener(this);
-
-        mOpenLesson.setOnClickListener(this);
-        //ButterKnife.bind(this,v);
         return v;
     }
 
     @Override
-    protected SimpleDataChangeListener.ListenerType registerDataChangeListenerType() {
-        return SimpleDataChangeListener.ListenerType.LESSON_CREATION_CHANGED;
+    protected int registerDataChangeListenerType() {
+        return SimpleDataChangeListener.LESSON_CREATION_CHANGED | SimpleDataChangeListener.LESSON_ENROLL_CHANGED;
     }
 
     @Override
@@ -127,6 +141,15 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     protected void init() {
+
+//        mTeachingLessonList.setNeedDivider(true);
+//        mTeachingLessonList.setDividerHeight(mContext.getResources().getDimensionPixelSize(R.dimen.px30));
+//        mTeachingLessonList.setDividerColor(R.color.main_bg);
+//        mEnrollLessonList.setNeedDivider(true);
+//        mEnrollLessonList.setDividerHeight(mContext.getResources().getDimensionPixelSize(R.dimen.px30));
+//        mEnrollLessonList.setDividerColor(R.color.main_bg);
+
+
         Bundle bundle = getArguments();
         if (bundle != null) {
             mUserType = bundle.getInt(LiveConstant.KEY_USER_TYPE, LiveConstant.USER_STUDENT);
@@ -152,8 +175,42 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         mPagination.setPage(1);
         mPagination.setMaxNumOfObjectsPerPage(3);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+            }
+        });
+
         initData();
     }
+
+    @OnClick({R.id.btn_add, R.id.lesson_all_1, R.id.lesson_all_2, R.id.s_root, R.id.my_course_search, R.id.open_lesson})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_add:
+                showMenu(view);
+                break;
+            case R.id.lesson_all_1:
+                Intent intent = new Intent(mContext, TeachLessonActivity.class);
+                mContext.startActivity(intent);
+                break;
+            case R.id.lesson_all_2:
+                Intent enroll = new Intent(mContext, EnrollLessonActivity.class);
+                mContext.startActivity(enroll);
+                break;
+            case R.id.s_root:
+            case R.id.my_course_search:
+                Intent search = new Intent(mContext, SearchActivity.class);
+                mContext.startActivity(search);
+                break;
+            case R.id.open_lesson:
+                Intent open = new Intent(mContext, LessonCreationActivity.class);
+                mContext.startActivity(open);
+                break;
+        }
+    }
+
 
     @Override
     protected void reloadOnFailed() {
@@ -166,14 +223,25 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         }
 
         mDataLoading = true;
-        showProgress(true);
+
+        if (!swipeRefreshLayout.isRefreshing()) {
+            showProgress(true);
+        }
+
         LessonDataManager.getLiveClasses(mContext, new APIServiceCallback<LiveClass>() {
             @Override
             public void onSuccess(LiveClass object) {
                 cancelProgress();
                 hideFailView();
+
+                liveRootView.setVisibility(View.VISIBLE);
+
                 fillData(object);
                 mDataLoading = false;
+
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
 
             @Override
@@ -181,7 +249,14 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 cancelProgress();
                 mDataLoading = false;
                 //Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+
+                liveRootView.setVisibility(View.GONE);
+
                 showFailView();
+
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
@@ -196,12 +271,21 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 LiveTeachingClassAdapter adapter = new LiveTeachingClassAdapter(mContext, liveClasses.taught, false);
                 mTeachingLessonList.setAdapter(adapter);
                 mEnrollLessonList.setVisibility(View.GONE);
-                mTeachingLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                mTeachingLessonList.setVisibility(View.VISIBLE);
+
+                mTeachingLessonList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(View view, int position) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         enterLessonHome(liveClasses.taught.get(position), true);
                     }
                 });
+
+//                mTeachingLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        enterLessonHome(liveClasses.taught.get(position), true);
+//                    }
+//                });
                 mStudentWrapper.setVisibility(View.GONE);
             } else if ((liveClasses.taught == null || liveClasses.taught.isEmpty())
                     && (liveClasses.enrolled != null && !liveClasses.enrolled.isEmpty())) {
@@ -210,12 +294,20 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 LiveEnrollLessonAdapter adapter = new LiveEnrollLessonAdapter(mContext, liveClasses.enrolled);
                 mEnrollLessonList.setAdapter(adapter);
                 mTeachingLessonList.setVisibility(View.GONE);
-                mEnrollLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                mTeachingLessonList.setVisibility(View.VISIBLE);
+
+                mEnrollLessonList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(View view, int position) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         enterLessonHome(liveClasses.enrolled.get(position), false);
                     }
                 });
+//                mEnrollLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        enterLessonHome(liveClasses.enrolled.get(position), false);
+//                    }
+//                });
                 mStudentWrapper.setVisibility(View.VISIBLE);
                 mEnrollLessonTitleView.setVisibility(View.VISIBLE);
                 mTeacherWrapper.setVisibility(View.GONE);
@@ -229,22 +321,37 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
                 mEnrollLessonAllView.setVisibility(View.VISIBLE);
                 mTeachLessonTitleView.setVisibility(View.VISIBLE);
                 mEnrollLessonTitleView.setVisibility(View.VISIBLE);
+                mTeachingLessonList.setVisibility(View.VISIBLE);
+                mEnrollLessonList.setVisibility(View.VISIBLE);
                 LiveTeachingClassAdapter teach = new LiveTeachingClassAdapter(mContext, liveClasses.taught, false);
                 mTeachingLessonList.setAdapter(teach);
                 LiveEnrollLessonAdapter enroll = new LiveEnrollLessonAdapter(mContext, liveClasses.enrolled);
                 mEnrollLessonList.setAdapter(enroll);
-                mTeachingLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+
+                mTeachingLessonList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(View view, int position) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         enterLessonHome(liveClasses.taught.get(position), true);
                     }
                 });
-                mEnrollLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+                mEnrollLessonList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(View view, int position) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         enterLessonHome(liveClasses.enrolled.get(position), false);
                     }
                 });
+//                mTeachingLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        enterLessonHome(liveClasses.taught.get(position), true);
+//                    }
+//                });
+//                mEnrollLessonList.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        enterLessonHome(liveClasses.enrolled.get(position), false);
+//                    }
+//                });
             } else if ((liveClasses.taught == null || liveClasses.taught.isEmpty())
                     && (liveClasses.enrolled == null || liveClasses.enrolled.isEmpty())) {
                 //没有教的课也没有学的课
@@ -303,27 +410,78 @@ public class LiveFragment extends BaseFragment implements View.OnClickListener {
         mContext.startActivity(i);
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.lesson_all_1:
-                Intent intent = new Intent(mContext, TeachLessonActivity.class);
-                mContext.startActivity(intent);
-                break;
-            case R.id.lesson_all_2:
-                Intent enroll = new Intent(mContext, EnrollLessonActivity.class);
-                mContext.startActivity(enroll);
-                break;
-            case R.id.s_root:
-            case R.id.my_course_search:
-                Intent search = new Intent(mContext, SearchActivity.class);
-                mContext.startActivity(search);
-                break;
-            case R.id.open_lesson:
-                Intent open = new Intent(mContext, LessonCreationActivity.class);
-                mContext.startActivity(open);
-                break;
-        }
+
+    private void showMenu(View targetView) {
+        CommonPopupMenu menu = new CommonPopupMenu(mContext);
+        String[] items = getResources().getStringArray(R.array.add_menu);
+        menu.addTextItems(items);
+        menu.addImgItems(new Integer[]{R.drawable.ic_scan, R.drawable.ic_menu_create_lesson});
+        menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                switch (i) {
+                    case 0:
+                        if (PermissionUtil.isOverMarshmallow()
+                                && ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
+
+                        } else {
+                            startActivity(new Intent(mContext, ScanQrcodeActivity.class));
+                        }
+                        break;
+                    case 1:
+                        if (AccountDataManager.isTeacher(mContext)) {
+                            //老师可以开课
+                            Intent intent = new Intent(mContext, LessonCreationActivity.class);
+                            startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
+                        } else {
+                            //提示申明教学能力
+                            final CommonDialog dialog = new CommonDialog(mContext);
+                            dialog.setTitle(R.string.declare_teaching_ability);
+                            dialog.setDesc(R.string.declare_teaching_ability_tip);
+                            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                                @Override
+                                public void onClick() {
+                                    dialog.dismiss();
+                                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                                @Override
+                                public void onClick() {
+                                    dialog.dismiss();
+                                }
+                            });
+                            dialog.show();
+                        }
+                        break;
+                }
+
+            }
+        });
+        int offset = getResources().getDimensionPixelSize(R.dimen.px68);
+        menu.show(targetView, offset);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MainActivity.PERMISSION_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    startActivity(new Intent(mContext, ScanQrcodeActivity.class));
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
+    }
 }

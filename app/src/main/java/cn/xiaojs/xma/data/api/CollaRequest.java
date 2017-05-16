@@ -70,4 +70,9 @@ public class CollaRequest extends ServiceRequest{
         Call<ShareDoc> call = getService().shareDocument(document, resource);
         enqueueRequest(APIType.SHARE_DOCUMENT, call);
     }
+
+    public void shareDocuments(String targetId, ShareResource resource) {
+        Call<ShareDoc> call = getService().shareDocuments(targetId, resource);
+        enqueueRequest(APIType.SHARE_DOCUMENTS, call);
+    }
 }

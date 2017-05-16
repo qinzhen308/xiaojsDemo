@@ -9,7 +9,7 @@
 编译环境
 ----
 
- - Android Studio 2.2.2
+ - Android Studio 2.3.1
  - gradle
  - jdk 1.8
 
@@ -35,10 +35,7 @@
 
 GIT工作流
 -------------
-
  - [Gitflow Workflow](http://nvie.com/posts/a-successful-git-branching-model/) [中文版参考](http://www.jianshu.com/p/104fa8b15d1e)
- 
- ![enter image description here](http://nvie.com/img/git-model@2x.png)
 
 
 ----------

@@ -507,8 +507,15 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
      * @param ctlSession   课程session
      */
     private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession) {
-        mLessonID = ctlSession.ctl != null ? ctlSession.ctl.id : "";
+
         mLiveSessionState = ctlSession.state;
+        if (Live.LiveSessionState.CANCELLED.equals(mLiveSessionState)) {
+            Toast.makeText(this, R.string.forbidden_enter_class_for_cancel,Toast.LENGTH_SHORT).show();
+            //finish();
+        }
+
+        mLessonID = ctlSession.ctl != null ? ctlSession.ctl.id : "";
+
         mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
         //二维码扫描进入教室，需要更新ticket.
         if (!TextUtils.isEmpty(ctlSession.ticket)) {
@@ -519,7 +526,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
         if (mUser == Constants.User.TEACHER
                 || mUser == Constants.User.ASSISTANT
                 || mUser == Constants.User.REMOTE_ASSISTANT) {
-            if (Constants.PARTICIPANT_MODE == ctlSession.mode) {
+            if (Constants.PARTICIPANT_MODE == ctlSession.mode || Constants.PREVIEW_MODE == ctlSession.mode) {
                 mUser = Constants.User.STUDENT;
                 //屏蔽聊天和视频截图按钮
                 mTakePicBtn.setVisibility(View.GONE);
@@ -645,7 +652,12 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
         if (Live.LiveSessionState.SCHEDULED.equals(liveSessionState)) {
             setTips(R.string.cls_not_on_class_title, R.string.cls_not_on_class_desc);
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)) {
-            setTips(R.string.cls_pending_class_title, R.string.cls_pending_class_desc);
+            if (mUser == Constants.User.STUDENT) {
+                setTips(R.string.cls_not_on_class_title, 0);
+            }else {
+                setTips(R.string.cls_pending_class_title, R.string.cls_pending_class_desc);
+            }
+
         } else if (Live.LiveSessionState.RESET.equals(liveSessionState)) {
             if (mUser == Constants.User.TEACHER
                     || mUser == Constants.User.ASSISTANT
@@ -1570,8 +1582,9 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
                     } else if (mUser == Constants.User.STUDENT) {
                         mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
                     }
-                } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(mLiveSessionState) ||
-                        Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)) {
+                } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(mLiveSessionState)
+                        || Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)
+                        || Live.LiveSessionState.FINISHED.equals(mLiveSessionState)) {
                     mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY_INDIVIDUAL, mPlayUrl, mIndividualStreamDuration);
                 }
             }
@@ -2068,7 +2081,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
     }
 
     private void setTips(int resTitleId, int resDescId) {
-        setTips(getString(resTitleId), getString(resDescId));
+        setTips(getString(resTitleId), resDescId <= 0 ? "" : getString(resDescId));
     }
 
     private void setTips(String title, String desc) {

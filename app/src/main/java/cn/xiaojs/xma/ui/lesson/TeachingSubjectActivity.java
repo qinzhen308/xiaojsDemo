@@ -1,8 +1,16 @@
 package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
+import android.transition.ChangeImageTransform;
+import android.transition.Explode;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.KeyEvent;
+import android.view.Window;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -38,6 +46,7 @@ public class TeachingSubjectActivity extends BaseActivity {
 
     private List<TeachingSubjectFragment> mFragments;
     private StringBuilder mSelectedSubjectTxt;
+
 
     @Override
     protected void addViewContent() {
@@ -121,11 +130,11 @@ public class TeachingSubjectActivity extends BaseActivity {
             if (mSelectedSubjectTxt.length() == 0) {
                 mSelectedSubjectTxt.append(name);
             } else {
-                mSelectedSubjectTxt.append("/");
+                mSelectedSubjectTxt.append(">");
                 mSelectedSubjectTxt.append(name);
             }
         } else {
-            int index = mSelectedSubjectTxt.lastIndexOf("/"+name);
+            int index = mSelectedSubjectTxt.lastIndexOf(">"+name);
             if (index > -1) {
                 mSelectedSubjectTxt.delete(index, mSelectedSubjectTxt.length());
             } else {
@@ -181,5 +190,14 @@ public class TeachingSubjectActivity extends BaseActivity {
 //        intent.putExtra(TeachingAbilityActivity.KEY_SUBJECT, subject);
 //        setResult(RESULT_OK, intent);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100&&resultCode==RESULT_OK){
+            setResult(RESULT_OK, data);
+            finish();
+        }
     }
 }

@@ -5,15 +5,15 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.RectF;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,25 +42,25 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.data.db.ContactDao;
-import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
-import cn.xiaojs.xma.util.JpushUtil;
-import cn.xiaojs.xma.util.LeanCloudUtil;
+import cn.xiaojs.xma.ui.widget.SwipeLayout;
 import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.common.xf_foundation.schemas.Social.ContactGroup.CLASSES;
@@ -128,15 +128,20 @@ public class ContactActivity extends BaseActivity {
                         Logger.d("-------chatid------:" + contact.chatId);
                     }
 
-                    LeanCloudUtil.lanchGroupChat(ContactActivity.this,name,contact.chatId);
-                    return false;
+                    //LeanCloudUtil.lanchGroupChat(ContactActivity.this,name,contact.chatId);
+                }else {
+
+                    String tid = contact.account;
+
+                    Intent intent = new Intent(ContactActivity.this, PersonHomeActivity.class);
+                    intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, tid);
+                    startActivity(intent);
+
+
+                    //进入聊天界面
+                    //LeanCloudUtil.lanchChatPage(ContactActivity.this,tid,name);
+                    //JpushUtil.launchChat(ContactActivity.this, tid,name);
                 }
-
-
-                String tid = contact.account;
-                //进入聊天界面
-                LeanCloudUtil.lanchChatPage(ContactActivity.this,tid,name);
-                //JpushUtil.launchChat(ContactActivity.this, tid,name);
 
                 return false;
             }
@@ -177,6 +182,7 @@ public class ContactActivity extends BaseActivity {
         }
 
     }
+
 
 
 //    private void expandALL() {
@@ -530,15 +536,34 @@ public class ContactActivity extends BaseActivity {
 
         }
 
-        //FIXME 因为没有实现群聊，屏蔽班级显示
-//        if (class_pos >=0 && class_pos < contactData.size()) {
-//            contactData.remove(class_pos);
-//        }
+        //因为没有实现群聊，屏蔽班级显示
+        if (class_pos >=0 && class_pos < contactData.size()) {
+            contactData.remove(class_pos);
+        }
 
         contactData.addAll(tempMap.values());
 
     }
 
+    RectF curSwipViewRect =new RectF();
+    SwipeLayout curSwipeLayout;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if(ev.getAction()== MotionEvent.ACTION_DOWN&&curSwipeLayout!=null){
+            float x=ev.getX();
+            float y=ev.getY();
+            int[] p=new int[2];
+            curSwipeLayout.getLocationInWindow(p);
+            curSwipViewRect.set(p[0],p[1],p[0]+curSwipeLayout.getWidth(),p[1]+curSwipeLayout.getHeight());
+            if(!curSwipViewRect.contains(x,y)){
+//                curSwipeLayout.close();
+                contactAdapter.closeAllExcept(null);
+                return true;
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 
     private class ContactAdapter extends BaseExpandableListAdapter {
 
@@ -552,6 +577,10 @@ public class ContactActivity extends BaseActivity {
 
         private CircleTransform circleTransform;
 
+        HashSet<SwipeLayout> mShownLayouts=new HashSet<>();
+        int openPosition[]=new int[2];
+
+
         public ContactAdapter(Context context, List<ContactGroup> groupData) {
 
             inflater = LayoutInflater.from(context);
@@ -562,7 +591,8 @@ public class ContactActivity extends BaseActivity {
             this.groupData.addAll(originData);
 
             circleTransform = new CircleTransform(context);
-
+            openPosition[0]=-1;
+            openPosition[1]=-1;
         }
 
         public List<ContactGroup> getGroupData() {
@@ -595,6 +625,15 @@ public class ContactActivity extends BaseActivity {
 
 
             notifyDataSetChanged();
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            closeAllExcept(null);
+            curSwipeLayout=null;
+            openPosition[0]=-1;
+            openPosition[1]=-1;
+            super.notifyDataSetChanged();
         }
 
         @Override
@@ -644,7 +683,6 @@ public class ContactActivity extends BaseActivity {
                 holder.nameView = (TextView) convertView.findViewById(R.id.group_name);
                 holder.countView = (TextView) convertView.findViewById(R.id.group_count);
                 convertView.setTag(holder);
-
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
@@ -659,6 +697,15 @@ public class ContactActivity extends BaseActivity {
         }
 
 
+
+        public void closeAllExcept(SwipeLayout layout) {
+            for (SwipeLayout s : mShownLayouts) {
+                if (s != layout)
+                    s.close();
+            }
+        }
+
+
         @Override
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
@@ -668,10 +715,11 @@ public class ContactActivity extends BaseActivity {
                 convertView = inflater.inflate(R.layout.layout_contact_group_child, parent, false);
 
                 holder = new ViewHolder();
-
+                holder.root = (SwipeLayout) convertView.findViewById(R.id.root);
+                mShownLayouts.add(holder.root);
                 holder.avatarView = (ImageView) convertView.findViewById(R.id.contact_avatar);
                 holder.nameView = (TextView) convertView.findViewById(R.id.contact_name);
-                //holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
+//                holder.moveBtn = (Button) convertView.findViewById(R.id.move_contact);
                 holder.delBtn = (Button) convertView.findViewById(R.id.del_contact);
                 holder.size = holder.avatarView.getMeasuredWidth();
 
@@ -682,6 +730,13 @@ public class ContactActivity extends BaseActivity {
             }
 
             final Contact c = getChild(groupPosition, childPosition);
+
+            ContactGroup contactGroup = contactAdapter.getGroup(groupPosition);
+            if (contactGroup.group == CLASSES) {//如果是班级分组里面的项，不能侧滑
+                holder.root.setSwipeEnabled(false);
+            }else {
+                holder.root.setSwipeEnabled(true);
+            }
 
             String avatar = "";
             String cover = c.cover;
@@ -709,20 +764,20 @@ public class ContactActivity extends BaseActivity {
             String name = isclass? c.title : c.alias;
             holder.nameView.setText(name);
 
-//            holder.moveBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    ContactGroup gc = getGroup(groupPosition);
-//
-//                    if (gc.group == CLASSES){
-//                        Toast.makeText(ContactActivity.this, R.string.cannt_move_class,Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        showMoveContactDlg(groupPosition,c);
-//                    }
-//
-//                }
-//            });
+            /*holder.moveBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    ContactGroup gc = getGroup(groupPosition);
+
+                    if (gc.group == CLASSES){
+                        Toast.makeText(ContactActivity.this, R.string.cannt_move_class,Toast.LENGTH_SHORT).show();
+                    }else{
+                        showMoveContactDlg(groupPosition,c);
+                    }
+
+                }
+            });*/
 
             holder.delBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -737,7 +792,39 @@ public class ContactActivity extends BaseActivity {
                     requestUnfollow(cg, c, groupPosition, childPosition);
                 }
             });
+            holder.root.addSwipeListener(new SwipeLayout.SwipeListener() {
+                @Override
+                public void onStartOpen(SwipeLayout layout) {
+                    curSwipeLayout=layout;
+                }
 
+                @Override
+                public void onOpen(SwipeLayout layout) {
+                    curSwipeLayout=layout;
+                    openPosition[0]=groupPosition;
+                    openPosition[1]=childPosition;
+                }
+
+                @Override
+                public void onStartClose(SwipeLayout layout) {
+                }
+
+                @Override
+                public void onClose(SwipeLayout layout) {
+                    curSwipeLayout=null;
+                    openPosition[0]=-1;
+                    openPosition[1]=-1;
+                }
+
+                @Override
+                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+
+                }
+
+                @Override
+                public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+                }
+            });
             return convertView;
         }
 
@@ -799,10 +886,11 @@ public class ContactActivity extends BaseActivity {
     }
 
     static class ViewHolder {
+        SwipeLayout root;
         TextView nameView;
         TextView countView;
         ImageView avatarView;
-        Button moveBtn;
+//        Button moveBtn;
         Button delBtn;
         int size;
     }
