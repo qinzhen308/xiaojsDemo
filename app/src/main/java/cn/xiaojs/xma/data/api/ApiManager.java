@@ -94,7 +94,7 @@ public class ApiManager {
                 .addNetworkInterceptor(logInterceptor)
                 .addInterceptor(new CommonHeaderInterceptor(appContext))
                 //.addInterceptor(new CacheInterceptor())
-                //.cache(createCache(appContext))
+                .cache(createCache(appContext))
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS);
