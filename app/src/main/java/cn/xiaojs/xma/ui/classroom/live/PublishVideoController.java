@@ -114,7 +114,7 @@ public class PublishVideoController extends VideoController {
 
 
         if (mStreamListener != null) {
-            mStreamListener.onStreamStarted(mUser, mPlayType, mExtraData);
+            mStreamListener.onStreamStarted(mPlayType, mExtraData);
         }
 
         if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
@@ -136,7 +136,7 @@ public class PublishVideoController extends VideoController {
             if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                 mNeedStreamRePublishing = true;
                 if (mStreamListener != null) {
-                    mStreamListener.onStreamStopped(mUser, type, null);
+                    mStreamListener.onStreamStopped(type, null);
                 }
             } else {
                 //send stopped stream
@@ -149,7 +149,7 @@ public class PublishVideoController extends VideoController {
                                     if (response.result) {
                                         mNeedStreamRePublishing = true;
                                         if (mStreamListener != null) {
-                                            mStreamListener.onStreamStopped(mUser, type, null);
+                                            mStreamListener.onStreamStopped(type, null);
                                         }
                                     }
                                 }
@@ -176,7 +176,7 @@ public class PublishVideoController extends VideoController {
             mPlayView.setVisibility(View.GONE);
         }
         if (mStreamListener != null) {
-            mStreamListener.onStreamStopped(mUser, type, null);
+            mStreamListener.onStreamStopped(type, null);
         }
     }
 
@@ -216,7 +216,7 @@ public class PublishVideoController extends VideoController {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
                                 if (mStreamListener != null) {
-                                    mStreamListener.onStreamStarted(mUser, mPublishType, null);
+                                    mStreamListener.onStreamStarted(mPublishType, null);
                                     muteOrUnmute();
                                 }
                                 mStreamPublishing = true;

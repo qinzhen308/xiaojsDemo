@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.account.User;
@@ -184,5 +185,44 @@ public class ClassroomBusiness {
     public static boolean isMyself(Context context, String accountId) {
         String mySelfAccountId = AccountDataManager.getAccountID(context);
         return mySelfAccountId != null && mySelfAccountId.equals(accountId);
+    }
+
+    public static long getCountDownTimeByCtlSession() {
+        long countDownTime = 0;
+        CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
+        if (Live.LiveSessionState.LIVE.equals(session.state)) {
+            countDownTime = session.finishOn;
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(session.state) ||
+                Live.LiveSessionState.SCHEDULED.equals(session.state) ||
+                Live.LiveSessionState.FINISHED.equals(session.state)) {
+            countDownTime = session.startOn;
+        } else if (Live.LiveSessionState.RESET.equals(session.state)) {
+            countDownTime = session.ctl.duration * 60 - session.hasTaken;
+        } else if (Live.LiveSessionState.CANCELLED.equals(session.state)) {
+            countDownTime = 0;
+        }
+
+        return countDownTime;
+    }
+
+    public static long getCountTimeByCtlSession() {
+        long countTime = 0;
+        CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
+        if (Live.LiveSessionState.LIVE.equals(session.state)) {
+            //autoCountTime = true;
+            countTime = session.ctl.duration * 60 - session.finishOn;
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(session.state) ||
+                Live.LiveSessionState.SCHEDULED.equals(session.state) ||
+                Live.LiveSessionState.FINISHED.equals(session.state)) {
+            countTime = 0;
+        } else if (Live.LiveSessionState.RESET.equals(session.state)) {
+            //autoCountTime = false;
+            countTime = session.hasTaken;
+        } else if (Live.LiveSessionState.CANCELLED.equals(session.state)) {
+            //autoCountTime = false;
+            countTime = 0;
+        }
+
+        return countTime;
     }
 }

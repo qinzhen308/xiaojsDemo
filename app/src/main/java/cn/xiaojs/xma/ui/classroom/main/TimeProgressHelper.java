@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.util.TimeUtil;
 
 public class TimeProgressHelper {
@@ -75,11 +77,14 @@ public class TimeProgressHelper {
     }
 
     public void setCountDownTimes(long time, String liveState) {
-        if (TextUtils.isEmpty(liveState) || mHandler == null) {
+        setCountDownTimes(time, getTypeByState(liveState));
+    }
+
+    public void setCountDownTimes(long time, int type) {
+        if (mHandler == null) {
             return;
         }
 
-        int type = getTypeByState(liveState);
         mHandler.removeMessages(MSG_COUNT_DOWN_TIME);
         mCountDownTime = time;
         Message msg = mHandler.obtainMessage(MSG_COUNT_DOWN_TIME);
@@ -158,6 +163,7 @@ public class TimeProgressHelper {
                     int type = msg.arg1;
                     mCountDownTimeTv.setVisibility(View.VISIBLE);
                     switch (type) {
+                        //上课或者待上课
                         case TYPE_LIVE_PENDING:
                         case TYPE_LIVE_SCHEDULED:
                             mCountDownTime--;
@@ -165,6 +171,7 @@ public class TimeProgressHelper {
                             mCountDownTimeTv.setText(mContext.getString(R.string.cls_distance_class, time));
                             mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
                             break;
+                        //正在上课
                         case TYPE_LIVE_PLAYING:
                             mCountDownTime--;
                             time = TimeUtil.formatSecondTime(mCountDownTime);
@@ -180,10 +187,12 @@ public class TimeProgressHelper {
                             mHandler.sendMessageDelayed(m, 1000);
                             break;
                         case TYPE_LIVE_RESET:
+                            //课件休息
                             mCountDownTimeTv.setText(mContext.getString(R.string.cls_break_time_desc, TimeUtil.formatSecondTime(mCountDownTime)));
                             mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
                             break;
                         case TYPE_LIVE_DELAY:
+                            //拖堂
                             mDelayTime++;
                             time = mContext.getString(R.string.cls_live_delay, TimeUtil.formatSecondTime(mDelayTime));
                             mCountDownTimeTv.setText(mContext.getString(R.string.cls_distance_class, time));
@@ -194,6 +203,7 @@ public class TimeProgressHelper {
                             mHandler.sendMessageDelayed(m, 1000);
                             break;
                         case TYPE_LIVE_FINISH:
+                            //完课
                             mCountDownTimeTv.setText(R.string.cls_live_finish);
                             mCountDownTimeTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
                             break;
@@ -201,13 +211,15 @@ public class TimeProgressHelper {
                     break;
 
                 case MSG_COUNT_TIME:
+                    String total = TimeUtil.formatSecondTime(mLessonDuration * 60);
+                    mCountTimeTv.setVisibility(View.VISIBLE);
                     if (msg.arg1 == 1) {
                         mCountTime++;
                         if (mCountTime > mLessonDuration * 60) {
                             mCountTime = mLessonDuration * 60;
                         }
                         String t = TimeUtil.formatSecondTime(mCountTime);
-                        mCountTimeTv.setText(t);
+                        mCountTimeTv.setText(t + "/" + total);
 
                         if (mCountDownTime < mLessonDuration * 60) {
                             m.arg1 = 1;
@@ -216,7 +228,7 @@ public class TimeProgressHelper {
                         }
                     } else if (msg.arg1 == 0) {
                         String t = TimeUtil.formatSecondTime(mCountTime);
-                        mCountTimeTv.setText(t);
+                        mCountTimeTv.setText(t + "/" + total);
                     }
                     break;
 

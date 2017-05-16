@@ -147,12 +147,10 @@ public abstract class SheetFragment extends DialogFragment implements ClosableSl
                     if (view instanceof ClosableAdapterSlidingLayout) {
                         setSlideConflictView((ClosableAdapterSlidingLayout) view);
                     }
-                    //view.setSlideConflictView(view.findViewById(R.id.contact_list_view));
                     break;
             }
 
             ((ClosableSlidingLayout) view).setSlideListener(this);
-            //view.setTarget(view.findViewById(R.id.contact_title));
             View targetView = getTargetView(view);
             if (targetView != null) {
                 ((ClosableSlidingLayout) view).setTarget(targetView);

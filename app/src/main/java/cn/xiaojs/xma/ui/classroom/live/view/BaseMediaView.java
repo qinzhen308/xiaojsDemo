@@ -18,6 +18,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,7 +35,6 @@ import cn.xiaojs.xma.util.DeviceUtil;
 
 public abstract class BaseMediaView extends FrameLayout {
 
-    private FrameLayout mContainer;
     protected FrameLayout mLoadingLayout;
     protected LoadingView mLoadingView;
     protected TextView mLadingDesc;
@@ -64,12 +64,13 @@ public abstract class BaseMediaView extends FrameLayout {
         initHandler();
         setKeepScreenOn(true);
         LayoutInflater.from(getContext()).inflate(R.layout.layout_media_base_view, this, true);
-        mContainer = (FrameLayout) findViewById(R.id.media_container);
         mLoadingLayout = (FrameLayout) findViewById(R.id.loading_layout);
         mLoadingView = (LoadingView) findViewById(R.id.loading_progress);
         mLadingDesc = (TextView) findViewById(R.id.loading_desc);
 
-        mContainer.addView(initMediaView());
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        params.gravity = Gravity.CENTER;
+        addView(initMediaView(), 0, params);
         mGesture = new GestureDetector(getContext(), new CustomerOnGestureListener());
     }
 

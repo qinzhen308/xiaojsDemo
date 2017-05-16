@@ -62,35 +62,14 @@ import io.socket.client.Socket;
 public class ClassroomActivity extends FragmentActivity {
     private final static int REQUEST_PERMISSION = 1000;
 
-    private final static int MSG_COUNT_TIME = 1 << 1;
-    private final static int MSG_COUNT_DOWN_TIME = 1 << 2;
-    private final static int MSG_LIVE_SHOW_COUNT_DOWN_TIME = 1 << 3;
-    private final static int MSG_SOCKET_TIME_OUT = 1 << 4;
+    private final static int MSG_SOCKET_TIME_OUT = 0;
 
     //socket time out
     private final static int SOCKET_TIME_OUT = 1500; //1.5s
 
-    private final static int TYPE_LIVE_SCHEDULED = 0;
-    private final static int TYPE_LIVE_PENDING = 1;
-    private final static int TYPE_LIVE_PLAYING = 2;
-    private final static int TYPE_LIVE_RESET = 3;
-    private final static int TYPE_LIVE_DELAY = 4;
-    private final static int TYPE_LIVE_FINISH = 5;
-
-    private final static int ANIM_SHOW = 1;
-    private final static int ANIM_HIDE = 2;
-
-    private Unbinder mBinder;
     private ProgressHUD mProgress;
-
-    private String mBeforeClamSteamState;
-
-    private ClassroomController mClassroomController;
     private NetworkChangedBReceiver mNetworkChangedBReceiver;
-    private Bundle mExtraData;
 
-    private CommonDialog mExitDialog;
-    private CommonDialog mFinishDialog;
     private CommonDialog mMobileNetworkDialog;
     private CommonDialog mKickOutDialog;
     private CommonDialog mContinueConnectDialog;
@@ -99,27 +78,13 @@ public class ClassroomActivity extends FragmentActivity {
     private Boolean mSktConnected = false;
 
     private String mTicket = "";
-    private String mLessonID;
     private CtlSession mCtlSession;
-    private SyncStateResponse mSyncState;
     private Constants.User mUser = Constants.User.STUDENT;
     private int mAppType = Platform.AppType.UNKNOWN;
 
     //socket retry count
     private int mSocketRetryCount = 0;
-    private String mLiveSessionState;
 
-    private long mLessonDuration;
-    private long mCountTime = 0;
-    private long mCountDownTime = 0;
-    private long mLiveShowCountDownTime = 0;
-    private long mDelayTime = 0;
-    private long mIndividualStreamDuration = 10 * 60; //s 10minute
-
-    private int mPageState = ClassroomController.PAGE_TOP;
-    private Bitmap mCaptureFrame;
-    private String mPlayUrl;
-    private String mPublishUrl;
     private int mNetworkState = ClassroomBusiness.NETWORK_NONE;
     //private boolean mNeedInitStream; //init stream after socket connected
 
@@ -177,9 +142,7 @@ public class ClassroomActivity extends FragmentActivity {
     }
 
     private void initParams() {
-        mBinder = ButterKnife.bind(this);
         mUser = Constants.User.STUDENT;
-
         mTicket = getIntent().getStringExtra(Constants.KEY_TICKET);
         //init controller;
         ClassroomController.init(this);
@@ -205,6 +168,7 @@ public class ClassroomActivity extends FragmentActivity {
                     if (XiaojsConfig.DEBUG) {
                         Log.i("aaa", "session: state=" + ctlSession.state + "   mode=" + ctlSession.mode + "   accessible="
                                 + ctlSession.accessible + "   psType=" + ctlSession.psType);
+                        Log.i("aaa", "session: entry=" + ctlSession.toString());
                     }
 
                     if (!ctlSession.accessible
@@ -235,9 +199,13 @@ public class ClassroomActivity extends FragmentActivity {
      * @param ctlSession   课程session
      */
     private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession) {
+        if (Live.LiveSessionState.CANCELLED.equals(ctlSession.state)) {
+            Toast.makeText(this, R.string.forbidden_enter_class_for_cancel, Toast.LENGTH_SHORT).show();
+            //TODO
+            //finish();
+        }
+
         mCtlSession = ctlSession;
-        mLessonID = ctlSession.ctl != null ? ctlSession.ctl.id : "";
-        mLiveSessionState = ctlSession.state;
         mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
         //二维码扫描进入教室，需要更新ticket.
         if (!TextUtils.isEmpty(ctlSession.ticket)) {
@@ -289,7 +257,6 @@ public class ClassroomActivity extends FragmentActivity {
         SocketManager.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION), mKickoutByUserListener);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
         SocketManager.connect();
     }
@@ -348,32 +315,6 @@ public class ClassroomActivity extends FragmentActivity {
             mSktConnected = false;
             if (XiaojsConfig.DEBUG) {
                 Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    private SocketManager.EventListener mSyncStateListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (args != null && args.length > 0) {
-                mSyncState = ClassroomBusiness.parseSocketBean(args[0], SyncStateResponse.class);
-                if (mSyncState != null) {
-                    if (Live.LiveSessionState.SCHEDULED.equals(mSyncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(mSyncState.to)) {
-                        mLiveSessionState = Live.LiveSessionState.PENDING_FOR_JOIN;
-                    } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))
-                            || (Live.LiveSessionState.RESET.equals(mSyncState.from) && Live.LiveSessionState.LIVE.equals(mSyncState.to))) {
-                        if (mClassroomController != null && mUser == Constants.User.STUDENT) {
-                            //mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
-                        }
-                        mLiveSessionState = Live.LiveSessionState.LIVE;
-                    } else if (Live.LiveSessionState.LIVE.equals(mSyncState.from) && Live.LiveSessionState.RESET.equals(mSyncState.to)) {
-                        mLiveSessionState = Live.LiveSessionState.RESET;
-                    } else if (Live.LiveSessionState.LIVE.equals(mSyncState.from) && Live.LiveSessionState.DELAY.equals(mSyncState.to)) {
-                        mLiveSessionState = Live.LiveSessionState.DELAY;
-                    } else if (Live.LiveSessionState.DELAY.equals(mSyncState.from) && Live.LiveSessionState.FINISHED.equals(mSyncState.to)) {
-                        mLiveSessionState = Live.LiveSessionState.FINISHED;
-                    }
-                }
             }
         }
     };

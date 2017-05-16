@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -27,6 +30,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -52,10 +56,6 @@ import okhttp3.ResponseBody;
  * ======================================================================================== */
 
 public class PublishFragment extends ClassroomLiveFragment {
-    //public final static int PUBLISH_LIVE = 1;
-    //public final static int PUBLISH_INDIVIDUAL = 2;
-    //public final static int PUBLISH_PEER_TO_PEER = 3;
-
     public final static String KEY_PUBLISH_TYPE = "key_publish_type";
     public final static String KEY_PLAY_URL = "key_play_url";
     public final static String KEY_PUBLISH_URL = "key_publish_url";
@@ -129,6 +129,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         super.initParams();
         mTipsHelper = new TipsHelper(mContext, mTipView);
         mTimeProgressHelper = new TimeProgressHelper(mContext, mLessonTimeInfo, mTimeStatusBar);
+        mVideoController = new PublishVideoController(mContext, mPublishLayout, this);
     }
 
     @OnClick({R.id.back_btn, R.id.play_pause_btn, R.id.setting_btn, R.id.fc_land_portrait_btn,
@@ -138,7 +139,7 @@ public class PublishFragment extends ClassroomLiveFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
-
+                handOnBackPressed();
                 break;
             case R.id.play_pause_btn:
                 playOrPauseLesson();
@@ -162,7 +163,8 @@ public class PublishFragment extends ClassroomLiveFragment {
                 break;
             case R.id.fc_screenshot_land_btn:
             case R.id.fc_screenshot_portrait_btn:
-                ClassroomController.getInstance().enterPhotoDoodleByBitmap(null);
+                //ClassroomController.getInstance().enterPhotoDoodleByBitmap(null);
+                mVideoController.takeVideoFrame(this);
                 break;
             case R.id.fc_hide_show_talk_btn:
                 showHideTalk();
@@ -229,7 +231,6 @@ public class PublishFragment extends ClassroomLiveFragment {
             mBeforeClamSteamState = data.getString(PublishFragment.KEY_BEFORE_LIVE_STATE, "");
         }
 
-        mVideoController = new PublishVideoController(mContext, mPublishLayout, this);
         mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
         if (mFullScreenTalkPresenter == null) {
             mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null, mTicket);
@@ -254,6 +255,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                 break;
         }
 
+        mTimeProgressHelper.setCountTime(ClassroomBusiness.getCountTimeByCtlSession(), false);
         setControllerBtnStyle(liveState);
     }
 
@@ -347,15 +349,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     public void onBackPressed() {
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
-        if (Live.LiveSessionState.LIVE.equals(liveState)) {
-            pauseClass(true);
-        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
-            //pause and exit
-            pauseIndividual(true);
-        } else {
-            ClassroomController.getInstance().exitStackFragment();
-        }
+        handOnBackPressed();
     }
 
     @Override
@@ -369,9 +363,30 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     @Override
-    public void onStreamStarted(Constants.User user, int type, Object extra) {
+    public void onStreamStarted(int type, Object extra) {
         mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
         mTipsHelper.hideTips();
+        switch (type) {
+            case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
+                //
+                break;
+            case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
+                long time = 0;
+                try {
+                    time = (long) extra;
+                } catch (Exception e) {
+                }
+                mTimeProgressHelper.setLiveShowCountDownTime(time);
+                break;
+            case StreamType.TYPE_STREAM_PUBLISH:
+                long countDownTime = mTimeProgressHelper.getCountDownTime();
+                if (countDownTime <= 0) {
+                    countDownTime = ClassroomBusiness.getCountDownTimeByCtlSession();
+                }
+                mTimeProgressHelper.setCountDownTimes(countDownTime, mCtlSession.state);
+                mTimeProgressHelper.setCountTime(mTimeProgressHelper.getCountTime(), true);
+                break;
+        }
     }
 
     @Override
@@ -380,7 +395,7 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     @Override
-    public void onStreamStopped(Constants.User user, int type, Object extra) {
+    public void onStreamStopped(int type, Object extra) {
         if (mExitCurrFragment) {
             mExitCurrFragment = false;
             ClassroomController.getInstance().exitStackFragment();
@@ -391,6 +406,43 @@ public class PublishFragment extends ClassroomLiveFragment {
 
             String liveState = LiveCtlSessionManager.getInstance().getLiveState();
             mTipsHelper.setTipsByState(liveState);
+
+            switch (type) {
+                case StreamType.TYPE_STREAM_PUBLISH:
+                    mTimeProgressHelper.setCountTime(mTimeProgressHelper.getCountTime(), false);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void onSyncStateChanged(SyncStateResponse syncState) {
+        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
+            LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.PENDING_FOR_JOIN);
+            setControllerBtnStyle(Live.LiveSessionState.PENDING_FOR_JOIN);
+        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.DELAY.equals(syncState.to)) {
+            LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.DELAY);
+        } else if (Live.LiveSessionState.DELAY.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
+            LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.FINISHED);
+            setControllerBtnStyle(Live.LiveSessionState.FINISHED);
+        }
+
+        //mTimeProgressHelper.setCountDownTimes(countDownTime, liveState);
+        //mTimeProgressHelper.setCountTime(countTime, autoCountTime);
+        if (mTipsHelper != null) {
+            mTipsHelper.hideTips();
+        }
+    }
+
+    private void handOnBackPressed() {
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        if (Live.LiveSessionState.LIVE.equals(liveState)) {
+            pauseClass(true);
+        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+            //pause and exit
+            pauseIndividual(true);
+        } else {
+            ClassroomController.getInstance().exitStackFragment();
         }
     }
 
@@ -550,4 +602,5 @@ public class PublishFragment extends ClassroomLiveFragment {
         mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         mExitCurrFragment = withExitFragment;
     }
+
 }

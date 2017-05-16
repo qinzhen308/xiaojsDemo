@@ -102,7 +102,7 @@ public class PlayVideoController extends VideoController {
         mPlayView.resume();
         mPlayView.showLoading(true);
         if (mStreamListener != null) {
-            mStreamListener.onStreamStarted(mUser, mPlayType, mExtraData);
+            mStreamListener.onStreamStarted(mPlayType, mExtraData);
         }
 
         if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
@@ -159,7 +159,7 @@ public class PlayVideoController extends VideoController {
             mPlayView.setVisibility(View.GONE);
 
             if (mStreamListener != null) {
-                mStreamListener.onStreamStopped(mUser, type, null);
+                mStreamListener.onStreamStopped(type, null);
             }
         }
     }
@@ -196,7 +196,7 @@ public class PlayVideoController extends VideoController {
                             if (response != null && response.result) {
                                 mStreamPublishing = true;
                                 if (mStreamListener != null) {
-                                    mStreamListener.onStreamStarted(mUser, mPublishType, null);
+                                    mStreamListener.onStreamStarted(mPublishType, null);
                                     muteOrUnmute();
                                 }
 

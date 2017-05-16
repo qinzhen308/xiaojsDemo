@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PlayVideoController;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
@@ -137,6 +139,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         super.initParams();
         mTipsHelper = new TipsHelper(mContext, mTipView);
         mTimeProgressHelper = new TimeProgressHelper(mContext, mLessonTimeInfo, mTimeStatusBar);
+        mVideoController = new PlayVideoController(mContext, mPlayLayout, this);
     }
 
     @Override
@@ -194,7 +197,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 break;
             case R.id.fc_screenshot_land_btn:
             case R.id.fc_screenshot_portrait_btn:
-                ClassroomController.getInstance().enterPhotoDoodleByBitmap(null);
+                //ClassroomController.getInstance().enterPhotoDoodleByBitmap(null);
+                mVideoController.takeVideoFrame(this);
                 break;
             case R.id.fc_hide_show_talk_btn:
                 showHideTalk();
@@ -235,8 +239,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     protected void initData() {
-        mVideoController = new PlayVideoController(mContext, mPlayLayout, this);
-
         mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
         initCtlLive();
 
@@ -342,9 +344,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mVideoHeight = (int) (dm.widthPixels / Constants.VIDEO_VIEW_RATIO);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mPlayLayout.getLayoutParams();
         if (params != null) {
-            params.height = mSlideViewHeight;
+            params.height = mVideoHeight;
         } else {
-            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, mSlideViewHeight);
+            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, mVideoHeight);
             mPlayLayout.setLayoutParams(params);
         }
     }
@@ -484,21 +486,22 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
-    public void onStreamStarted(Constants.User user, int type, Object extra) {
+    public void onStreamStarted(int type, Object extra) {
         //mPlayPauseBtn.setVisibility(View.GONE);
-        Toast.makeText(mContext, "start=" + getTxtString(user, type), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "start=" + getTxtString(type), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onStreamSizeChanged(int videoW, int videoH) {
         mTipsHelper.hideTips();
-        setVideoCenterInView(videoW, videoH, mVideoWidth, mVideoHeight, mPlayVideoView);
+
+        //int or = mPlayVideoView.getPlayer().getDisplayOrientation();
     }
 
     @Override
-    public void onStreamStopped(Constants.User user, int type, Object extra) {
+    public void onStreamStopped(int type, Object extra) {
         //updateViewStyleByLiveState();
-        Toast.makeText(mContext, "stop=" + getTxtString(user, type), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "stop=" + getTxtString(type), Toast.LENGTH_SHORT).show();
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         mTipsHelper.setTipsByState(liveState);
@@ -525,15 +528,43 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        ClassroomController.getInstance().registerBackPressListener(this);
-    }
+    protected void onSyncStateChanged(SyncStateResponse syncState) {
+        long countTime = 0;
+        boolean autoCountTime = false;
+        long countDownTime = mTimeProgressHelper.getCountDownTime();
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        ClassroomController.getInstance().unregisterBackPressListener(this);
+        String liveState = null;
+        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
+            liveState = Live.LiveSessionState.PENDING_FOR_JOIN;
+            setControllerBtnStyle(liveState);
+        } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))
+                || (Live.LiveSessionState.RESET.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))) {
+            //if (mUser == Constants.User.STUDENT) {
+            //    mVideoController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
+            //}
+            liveState = Live.LiveSessionState.LIVE;
+            autoCountTime = true;
+            countTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
+        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.RESET.equals(syncState.to)) {
+            liveState = Live.LiveSessionState.RESET;
+            autoCountTime = false;
+            countTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
+        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.DELAY.equals(syncState.to)) {
+            liveState = Live.LiveSessionState.DELAY;
+            autoCountTime = false;
+            countTime = LiveCtlSessionManager.getInstance().getCtlSession().ctl.duration * 60;
+        } else if (Live.LiveSessionState.DELAY.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
+            liveState = Live.LiveSessionState.FINISHED;
+            setControllerBtnStyle(liveState);
+        }
+
+        LiveCtlSessionManager.getInstance().updateCtlSessionState(liveState);
+        mTimeProgressHelper.setCountDownTimes(countDownTime, liveState);
+        mTimeProgressHelper.setCountTime(countTime, autoCountTime);
+
+        if (mTipsHelper != null) {
+            mTipsHelper.hideTips();
+        }
     }
 
     /**

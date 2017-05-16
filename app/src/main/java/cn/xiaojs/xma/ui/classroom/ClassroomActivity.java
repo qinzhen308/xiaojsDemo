@@ -1918,7 +1918,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
     }
 
     @Override
-    public void onStreamStopped(Constants.User user, int type, Object extra) {
+    public void onStreamStopped(int type, Object extra) {
         switch (type) {
             case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
             case StreamType.TYPE_STREAM_PLAY_INDIVIDUAL:
@@ -1951,18 +1951,18 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
         setControllerBtnStyle(mLiveSessionState);
         hideLiveShowCountDownTime();
         if (XiaojsConfig.DEBUG) {
-            String s = getTxtString(user, type);
+            String s = getTxtString(type);
             Toast.makeText(this, "=====stop=====" + s, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onStreamStarted(Constants.User user, int type, Object extra) {
+    public void onStreamStarted(int type, Object extra) {
         switch (type) {
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
-                if (user == Constants.User.TEACHER && !TextUtils.isEmpty(mTeaPeerPlayAccountId)) {
-                    mPeerPlaySteamMap.put(mTeaPeerPlayAccountId, true);
-                }
+                //if (user == Constants.User.TEACHER && !TextUtils.isEmpty(mTeaPeerPlayAccountId)) {
+                   // mPeerPlaySteamMap.put(mTeaPeerPlayAccountId, true);
+                //}
                 break;
             case StreamType.TYPE_STREAM_PLAY:
                 break;
@@ -1989,7 +1989,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
         }
 
         if (XiaojsConfig.DEBUG) {
-            String s = getTxtString(user, type);
+            String s = getTxtString(type);
             Toast.makeText(this, "=====started=====" + s, Toast.LENGTH_SHORT).show();
         }
     }
@@ -1999,7 +1999,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
 
     }
 
-    private String getTxtString(Constants.User user, int type) {
+    private String getTxtString(int type) {
         String txt = "";
         switch (type) {
             case StreamType.TYPE_STREAM_PUBLISH:
@@ -2022,7 +2022,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
                 break;
         }
 
-        return (user == Constants.User.TEACHER ? "老师" : "学生") + txt;
+        return txt;
     }
 
     /**

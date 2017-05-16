@@ -30,6 +30,7 @@ import com.orhanobut.logger.Logger;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
+import com.pili.pldroid.player.widget.PLVideoView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
@@ -50,7 +51,7 @@ public class PlayerTextureView extends BaseMediaView {
 
     public PlayerTextureView(Context context) {
         super(context);
-        init(PLVideoTextureView.ASPECT_RATIO_16_9, null);
+        init(PLVideoView.ASPECT_RATIO_FIT_PARENT, null);
     }
 
     public PlayerTextureView(Context context, int ratio) {
@@ -60,12 +61,12 @@ public class PlayerTextureView extends BaseMediaView {
 
     public PlayerTextureView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(PLVideoTextureView.ASPECT_RATIO_16_9, attrs);
+        init(PLVideoView.ASPECT_RATIO_FIT_PARENT, attrs);
     }
 
     public PlayerTextureView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(PLVideoTextureView.ASPECT_RATIO_16_9, attrs);
+        init(PLVideoView.ASPECT_RATIO_FIT_PARENT, attrs);
     }
 
     public void setPLMediaPlayerInfoListener(PLMediaPlayer.OnInfoListener infoListener) {
@@ -135,15 +136,12 @@ public class PlayerTextureView extends BaseMediaView {
         // You can mirror the display
         // mVideoView.setMirror(true);
 
-        // You can also use a custom `MediaController` widget
-//        mMediaController = new MediaController(this, false, isLiveStreaming==1);
-//        mVideoView.setMediaController(mMediaController);
-
         mPlayer.setOnCompletionListener(mOnCompletionListener);
         mPlayer.setOnErrorListener(mOnErrorListener);
         mPlayer.setOnPreparedListener(mPrepared);
         mPlayer.setDisplayAspectRatio(ratio);
         mPlayer.setOnInfoListener(mOnInfoListener);
+        mPlayer.setDisplayOrientation(0);
         //setBackgroundResource(R.drawable.common_white_bg_corner);
     }
 
@@ -158,6 +156,7 @@ public class PlayerTextureView extends BaseMediaView {
     protected View initMediaView() {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_texture_player_view, null);
         mPlayer = (PLVideoTextureView) v.findViewById(R.id.texture_player);
+        mPlayer.setDisplayOrientation(90);
         return v;
     }
 
@@ -375,13 +374,12 @@ public class PlayerTextureView extends BaseMediaView {
         mHandler.sendEmptyMessageDelayed(MESSAGE_MEDIA_INFO_RENDERING_START, 2000);
     }
 
-    public void setPlayerParams(int w, int h) {
-        ViewGroup.LayoutParams params = mPlayer.getLayoutParams();
-        if (params != null) {
-            params.width = w;
-            params.height = h;
-            mPlayer.setLayoutParams(params);
-        }
+    public void setDisplayOrientation(int orientation) {
+        mPlayer.setDisplayOrientation(orientation);
+    }
+
+    public void setDisplayOrientationBySize(int videoW, int viewH) {
+
     }
 
 }

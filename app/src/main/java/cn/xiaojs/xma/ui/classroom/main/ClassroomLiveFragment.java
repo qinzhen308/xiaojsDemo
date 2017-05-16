@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.classroom.main;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -23,7 +24,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +53,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
-        OnStreamStateChangeListener , BackPressListener {
+        OnStreamStateChangeListener , BackPressListener, FrameCapturedCallback {
     protected CtlSession mCtlSession;
     protected String mTicket;
     protected Constants.User mUser = Constants.User.STUDENT;
@@ -218,73 +222,14 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         public void call(Object... args) {
             if (args != null && args.length > 0) {
                 SyncStateResponse syncState = ClassroomBusiness.parseSocketBean(args[0], SyncStateResponse.class);
-
-                long countTime = 0;
-                boolean autoCountTime = false;
-                long countDownTime = mTimeProgressHelper.getCountDownTime();
-
-                String liveState = null;
                 if (syncState != null) {
-                    if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
-                        liveState = Live.LiveSessionState.PENDING_FOR_JOIN;
-                        setControllerBtnStyle(liveState);
-                    } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))
-                            || (Live.LiveSessionState.RESET.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))) {
-                        //if (mUser == Constants.User.STUDENT) {
-                        //    mVideoController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
-                        //}
-
-                        liveState = Live.LiveSessionState.LIVE;
-                        autoCountTime = true;
-                        countTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
-                    } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.RESET.equals(syncState.to)) {
-                        liveState = Live.LiveSessionState.RESET;
-                        autoCountTime = false;
-                        countTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
-                    } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.DELAY.equals(syncState.to)) {
-                        liveState = Live.LiveSessionState.DELAY;
-                        autoCountTime = false;
-                        countTime = LiveCtlSessionManager.getInstance().getCtlSession().ctl.duration * 60;
-                    } else if (Live.LiveSessionState.DELAY.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
-                        liveState = Live.LiveSessionState.FINISHED;
-                        setControllerBtnStyle(liveState);
-                    }
-
-                    LiveCtlSessionManager.getInstance().updateCtlSessionState(liveState);
-                    mTimeProgressHelper.setCountDownTimes(countDownTime, liveState);
-                    mTimeProgressHelper.setCountTime(countTime, autoCountTime);
-                    if (mTipsHelper != null) {
-                        mTipsHelper.hideTips();
-                    }
+                    onSyncStateChanged(syncState);
                 }
             }
         }
     };
 
-    protected void setVideoCenterInView(int videoW, int videoH, int videoContainW, int videoContainH, BaseMediaView videoPlayView) {
-        if (videoH == 0 || videoW == 0) {
-            return;
-        }
-
-        float ratio = videoW / (float) videoH;
-        int temp = (int) (ratio * videoContainH);
-        if (temp > videoContainW) {
-            // depend width
-            videoW = videoContainW;
-            videoH = (int) (videoContainW / ratio);
-        } else {
-            // depend height
-            videoH = videoContainH;
-            videoW = temp;
-        }
-
-        ViewGroup.LayoutParams layoutParams = videoPlayView.getLayoutParams();
-        layoutParams.width = videoW;
-        layoutParams.height = videoH;
-        videoPlayView.setLayoutParams(layoutParams);
-    }
-
-    protected String getTxtString(Constants.User user, int type) {
+    protected String getTxtString(int type) {
         String txt = "";
         switch (type) {
             case StreamType.TYPE_STREAM_PUBLISH:
@@ -307,13 +252,18 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
                 break;
         }
 
-        return (user == Constants.User.TEACHER ? "老师" : "学生") + txt;
+        return txt;
     }
 
     protected void setControllerBtnStyle(String liveState) {
 
     }
 
+
+    @Override
+    public void onFrameCaptured(Bitmap bitmap) {
+        ClassroomController.getInstance().enterPhotoDoodleByBitmap(bitmap);
+    }
 
     @Override
     public void onResume() {
@@ -393,6 +343,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected abstract void initView();
 
     protected abstract void initData();
+
+    protected abstract void onSyncStateChanged(SyncStateResponse syncState);
 
     public void playStream(String url) {
 
