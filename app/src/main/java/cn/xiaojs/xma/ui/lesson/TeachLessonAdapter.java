@@ -377,14 +377,25 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
                 //如果是已经实名认证的用户开的课，上架成功后，自动通过，不需要审核
                 if (AccountDataManager.isVerified(mContext)) {
-                    bean.setState(LessonState.PENDING_FOR_LIVE);
-                    ToastUtil.showToast(mContext, R.string.shelves_ok);
+
+                    if (TextUtils.isEmpty(bean.getTicket())) {
+                        //如果没有ticket，需要重新调用接口，刷新课的信息。
+                        request(mCriteria);
+                    }else {
+                        bean.setState(LessonState.PENDING_FOR_LIVE);
+                        ToastUtil.showToast(mContext, R.string.shelves_ok);
+
+                        notifyData(bean);
+                    }
+
                 }else {
                     bean.setState(LessonState.PENDING_FOR_APPROVAL);
                     ToastUtil.showToast(mContext, R.string.shelves_need_examine);
+
+                    notifyData(bean);
                 }
 
-                notifyData(bean);
+
 
             }
 
