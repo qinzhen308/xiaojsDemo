@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.classroom.main;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -161,17 +162,18 @@ public class TimeProgressHelper {
                                 if (mCountTime > mLessonDuration * 60) {
                                     mCountTime = mLessonDuration * 60;
                                 }
+                                Log.i("aaa", "=========live====mCountTime=" + mCountTime);
                                 simpleTime = TimeUtil.formatSecondTime(mCountTime);
                                 mTitleBarTimeInfoTv.setText(simpleTime + "/" + total);
-                                mFullScreenTimeInfoTv.setText(simpleTime + "/" + total);
-
+                                mFullScreenTimeInfoTv.setText(simpleTime);
+                                mFullScreenTimeInfoTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_start, 0, 0, 0);
                                 if (mCountTime < mLessonDuration * 60) {
                                     mHandler.sendMessageDelayed(m, 1000);
                                 }
                             } else if (msg.arg2 == 0) {
                                 simpleTime = TimeUtil.formatSecondTime(mCountTime);
                                 mTitleBarTimeInfoTv.setText(simpleTime + "/" + total);
-                                mFullScreenTimeInfoTv.setText(simpleTime + "/" + total);
+                                mFullScreenTimeInfoTv.setText(simpleTime);
                             }
                             break;
                         case TYPE_LIVE_RESET:
@@ -226,7 +228,7 @@ public class TimeProgressHelper {
         return mCountTime;
     }
 
-    public long getIndividualStreamDuration () {
+    public long getIndividualStreamDuration() {
         return mIndividualStreamDuration;
     }
 }

@@ -291,6 +291,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         if (mTimeProgressHelper != null) {
             mTimeProgressHelper.release();
         }
+
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE));
     }
 
     @Override

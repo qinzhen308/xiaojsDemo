@@ -79,6 +79,12 @@ public class SocketManager {
         }
     }
 
+    public static void off(String event) {
+        if (mSocket != null) {
+            mSocket.off(event);
+        }
+    }
+
     public static void close() {
         if (mSocket != null) {
             mSocket.close();

@@ -333,4 +333,13 @@ public class PlayVideoController extends VideoController {
             mPublishView.togglePublishResolution();
         }*/
     }
+
+    @Override
+    protected void offSocketListener() {
+        super.offSocketListener();
+
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA));
+    }
 }

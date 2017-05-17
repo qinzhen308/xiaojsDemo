@@ -597,7 +597,15 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
 
         mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
+        Bundle data = getArguments();
+        if (data != null) {
+            boolean fromPublish = data.getBoolean(PublishFragment.KEY_FROM_PUBLISH, false);
+            if (fromPublish) {
+                mCountTime = data.getLong(PublishFragment.KEY_RESET_TIME, mCountTime);
+            }
+        }
         mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
+
         if (TextUtils.isEmpty(mPlayUrl)) {
             mTipsHelper.setTipsByState(liveState);
         } else {
@@ -608,6 +616,10 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     protected void setControllerBtnStyle(String liveState) {
+        if (mPlayPauseBtn == null) {
+            return;
+        }
+
         if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
                 Live.LiveSessionState.FINISHED.equals(liveState)) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
@@ -664,8 +676,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     ClassResponse response = ApiManager.getClassResponse(object);
                     LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
                     startPublish(response != null ? response.publishUrl : null);
-                    //setControllerBtnStyle(Live.LiveSessionState.LIVE);
-                    //mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH, response != null ? response.publishUrl : null);
                 }
 
                 @Override

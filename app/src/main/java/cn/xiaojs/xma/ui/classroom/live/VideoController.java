@@ -183,6 +183,15 @@ public abstract class VideoController implements StreamConfirmCallback {
         if (mPublishView != null) {
             mPublishView.destroy();
         }
+
+        offSocketListener();
+    }
+
+    protected void offSocketListener() {
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLAIM_STREAMING));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION));
     }
 
     /**

@@ -56,6 +56,8 @@ public class PublishFragment extends ClassroomLiveFragment {
     public final static String KEY_BEFORE_LIVE_STATE = "key_before_live_state";
     public final static String KEY_INDIVIDUAL_DURATION = "key_individual_duration";
     public final static String KEY_INDIVIDUAL_NAME = "key_individual_name";
+    public final static String KEY_RESET_TIME = "key_reset_time";
+    public final static String KEY_FROM_PUBLISH = "key_from_publish";
 
     @BindView(R.id.tip_view)
     View mTipView;
@@ -238,20 +240,20 @@ public class PublishFragment extends ClassroomLiveFragment {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         switch (mPublishType) {
             case StreamType.TYPE_STREAM_PUBLISH:
+                mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
                 if (Live.LiveSessionState.LIVE.equals(liveState)) {
                     mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH, mPublishUrl);
                 } else {
                     playOrPauseLesson();
                 }
-                mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
                 mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL, mPublishUrl);
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
+                mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
                 mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, mPublishUrl);
                 mVideoController.playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, mPlayUrl);
-                mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
                 break;
         }
 
@@ -493,6 +495,10 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     protected void setControllerBtnStyle(String liveState) {
+        if (mPlayPauseBtn == null || mFinishBtn == null) {
+            return;
+        }
+
         if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
                 Live.LiveSessionState.FINISHED.equals(liveState)) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
@@ -625,9 +631,13 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     private void exitCurrentFragment() {
         Bundle data = new Bundle();
+        data.putBoolean(KEY_FROM_PUBLISH, true);
         switch (mPublishType) {
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
-                data.putString(PublishFragment.KEY_PLAY_URL, mPlayUrl);
+                data.putString(KEY_PLAY_URL, mPlayUrl);
+                break;
+            case StreamType.TYPE_STREAM_PUBLISH:
+                data.putLong(KEY_RESET_TIME, mCountTime);
                 break;
             default:
                 break;
