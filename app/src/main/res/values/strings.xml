@@ -766,6 +766,7 @@
     <string name="go_on_share_material">继续分享</string>
     <string name="query_go_on_share_when_confilc">以下资料在该班级中已存在，是否继续分享？</string>
     <string name="Invalid_calss_qrcode_tips">无效的教室二维码，请扫描正确的教室二维码</string>
+    <string name="create_class">开班</string>
 
 
 </resources>
