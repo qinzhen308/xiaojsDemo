@@ -1,14 +1,12 @@
 package cn.xiaojs.xma.ui.classroom.main;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -244,7 +242,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         updateViewStyleByLiveState(liveState);
-        mTipsHelper.setTipsByState(liveState);
     }
 
     private void updateViewStyleByLiveState(String liveState) {
@@ -411,6 +408,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         data.putInt(PublishFragment.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         data.putString(PublishFragment.KEY_PUBLISH_URL, response.publishUrl);
         data.putString(PublishFragment.KEY_BEFORE_LIVE_STATE, mBeforeClamSteamState);
+        data.putLong(PublishFragment.KEY_INDIVIDUAL_DURATION, response.finishOn);
+        data.putString(PublishFragment.KEY_INDIVIDUAL_NAME, "");
         ClassroomController.getInstance().enterPublishFragment(data, true);
     }
 
@@ -487,15 +486,29 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     public void onStreamStarted(int type, Object extra) {
-        //mPlayPauseBtn.setVisibility(View.GONE);
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        mCountTime = mTimeProgressHelper.getCountTime();
+        switch (type) {
+            case StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER:
+            case StreamType.TYPE_STREAM_PLAY:
+                mTimeProgressHelper.setTimeProgress(mCountTime, liveState);
+                break;
+            case StreamType.TYPE_STREAM_PLAY_INDIVIDUAL:
+                try {
+                    mIndividualStreamDuration = (long) extra;
+                } catch (Exception e) {
+                }
+                mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, true);
+                break;
+        }
+
+        mTipsHelper.hideTips();
         Toast.makeText(mContext, "start=" + getTxtString(type), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onStreamSizeChanged(int videoW, int videoH) {
-        mTipsHelper.hideTips();
 
-        //int or = mPlayVideoView.getPlayer().getDisplayOrientation();
     }
 
     @Override
@@ -504,6 +517,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         Toast.makeText(mContext, "stop=" + getTxtString(type), Toast.LENGTH_SHORT).show();
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        mCountTime = mTimeProgressHelper.getCountTime();
+        mTimeProgressHelper.setTimeProgress(mCountTime, 0, liveState, mIndividualName, false);
+
         mTipsHelper.setTipsByState(liveState);
     }
 
@@ -529,14 +545,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     protected void onSyncStateChanged(SyncStateResponse syncState) {
-        long countTime = 0;
+        long countTime = mTimeProgressHelper.getCountTime();
         boolean autoCountTime = false;
-        long countDownTime = mTimeProgressHelper.getCountDownTime();
 
         String liveState = null;
         if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
             liveState = Live.LiveSessionState.PENDING_FOR_JOIN;
-            setControllerBtnStyle(liveState);
+
         } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))
                 || (Live.LiveSessionState.RESET.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))) {
             //if (mUser == Constants.User.STUDENT) {
@@ -552,15 +567,14 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.DELAY.equals(syncState.to)) {
             liveState = Live.LiveSessionState.DELAY;
             autoCountTime = false;
-            countTime = LiveCtlSessionManager.getInstance().getCtlSession().ctl.duration * 60;
+            countTime = 0;
         } else if (Live.LiveSessionState.DELAY.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
             liveState = Live.LiveSessionState.FINISHED;
-            setControllerBtnStyle(liveState);
         }
 
+        setControllerBtnStyle(liveState);
         LiveCtlSessionManager.getInstance().updateCtlSessionState(liveState);
-        mTimeProgressHelper.setCountDownTimes(countDownTime, liveState);
-        mTimeProgressHelper.setCountTime(countTime, autoCountTime);
+        mTimeProgressHelper.setTimeProgress(countTime, liveState, autoCountTime);
 
         if (mTipsHelper != null) {
             mTipsHelper.hideTips();
@@ -572,26 +586,52 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
      */
     private void initCtlLive() {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        mPlayUrl = null;
         if (Live.LiveSessionState.LIVE.equals(liveState)) {
-            if (mUser == Constants.User.STUDENT) {
-                mPlayUrl = mCtlSession.playUrl;
-                playStream(mCtlSession.playUrl);
-            }
+            mPlayUrl = mCtlSession.playUrl;
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
                 Live.LiveSessionState.SCHEDULED.equals(liveState) ||
                 Live.LiveSessionState.FINISHED.equals(liveState)) {
             mPlayUrl = mCtlSession.playUrl;
+            mIndividualStreamDuration = mCtlSession.finishOn;
+        }
+
+        mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
+        mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
+        if (TextUtils.isEmpty(mPlayUrl)) {
+            mTipsHelper.setTipsByState(liveState);
+        } else {
             playStream(mCtlSession.playUrl);
-            if (Live.LiveSessionState.SCHEDULED.equals(liveState)
-                    || Live.LiveSessionState.FINISHED.equals(liveState)) {
-                mIndividualStreamDuration = mCtlSession.finishOn;
+        }
+    }
+
+
+    @Override
+    protected void setControllerBtnStyle(String liveState) {
+        if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
+                Live.LiveSessionState.FINISHED.equals(liveState)) {
+            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+            mPlayPauseBtn.setVisibility(View.VISIBLE);
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
+                Live.LiveSessionState.RESET.equals(liveState)) {
+            if (mUser == Constants.User.TEACHER) {
+                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
+                mPlayPauseBtn.setVisibility(View.VISIBLE);
+            } else {
+                mPlayPauseBtn.setVisibility(View.INVISIBLE);
             }
         } else if (Live.LiveSessionState.LIVE.equals(liveState)) {
-
-        } else if (Live.LiveSessionState.RESET.equals(liveState)) {
-
-        } else if (Live.LiveSessionState.CANCELLED.equals(liveState)) {
-
+            if (mUser == Constants.User.TEACHER) {
+                mPlayPauseBtn.setVisibility(View.VISIBLE);
+                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
+            } else {
+                mPlayPauseBtn.setVisibility(View.INVISIBLE);
+            }
+        } else if (Live.LiveSessionState.DELAY.equals(liveState)) {
+            mPlayPauseBtn.setVisibility(View.INVISIBLE);
+        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+            mPlayPauseBtn.setVisibility(View.VISIBLE);
+            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
         }
     }
 

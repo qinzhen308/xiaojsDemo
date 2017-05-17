@@ -6,14 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -22,8 +20,6 @@ import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
@@ -34,14 +30,12 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
-import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.DeviceUtil;
-import cn.xiaojs.xma.util.XjsUtils;
 import io.socket.client.Socket;
 
 /*  =======================================================================================
@@ -113,8 +107,11 @@ public class ClassroomActivity extends FragmentActivity {
 
         disConnectIO();
         unregisterNetworkReceiver();
-        ClassroomController.getInstance().destroy();
+
+        //release
+        ClassroomController.getInstance().release();
         LiveCtlSessionManager.getInstance().release();
+        ContactManager.getInstance().release();
     }
 
     @Override
@@ -221,8 +218,10 @@ public class ClassroomActivity extends FragmentActivity {
 
     private void initFragment(CtlSession ctlSession) {
         //Fragment fragment = null;
-        if (mUser == Constants.User.TEACHER && Live.LiveSessionState.LIVE.equals(ctlSession.state)) {
-            //teacher-->live
+        if (mUser == Constants.User.TEACHER &&
+                (Live.LiveSessionState.DELAY.equals(ctlSession.state) ||
+                        Live.LiveSessionState.LIVE.equals(ctlSession.state))) {
+            //teacher-->live, delay
             Bundle data = new Bundle();
             data.putSerializable(PublishFragment.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
             data.putString(PublishFragment.KEY_PUBLISH_URL, ctlSession.publishUrl);

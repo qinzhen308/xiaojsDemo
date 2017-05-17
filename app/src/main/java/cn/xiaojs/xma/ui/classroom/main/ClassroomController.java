@@ -40,8 +40,12 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
-import cn.xiaojs.xma.ui.classroom.*;
+import cn.xiaojs.xma.ui.classroom.OnPhotoDoodleShareListener;
+import cn.xiaojs.xma.ui.classroom.OnSettingChangedListener;
+import cn.xiaojs.xma.ui.classroom.PhotoDoodleFragment;
+import cn.xiaojs.xma.ui.classroom.VideoPlayFragment;
 import cn.xiaojs.xma.ui.classroom.document.DocumentFragment;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.MaterialUtil;
@@ -65,15 +69,11 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
     private List<BackPressListener> mBackPressListeners;
     private static ClassroomController mInstance;
 
-    private DocumentFragment mDocumentFragment;
-    private PhotoDoodleFragment mPhotoDoodleFragment;
-    private VideoPlayFragment mVideoPlayFragment;
     private CommonDialog mExitDialog;
 
     private Context mContext;
     private int mPlayFragmentMode = MODE_FRAGMENT_PLAY_TALK;
     private ClassroomLiveFragment mCurrStackFragment;
-
 
 
     private ClassroomController(Context context) {
@@ -85,7 +85,7 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
         mInstance = new ClassroomController(context);
     }
 
-    public void destroy() {
+    public void release() {
         mInstance = null;
         mBackPressListeners.clear();
         mBackPressListeners = null;
@@ -99,28 +99,16 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
      * 打开文档库
      */
     public void openDocument(Fragment target, CtlSession session) {
-        mDocumentFragment = new DocumentFragment();
-        mDocumentFragment.setTargetFragment(target, REQUEST_DOC);
+        Fragment documentFragment = new DocumentFragment();
+        documentFragment.setTargetFragment(target, REQUEST_DOC);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.KEY_CTL_SESSION, session);
-        mDocumentFragment.setArguments(bundle);
+        documentFragment.setArguments(bundle);
         ((ClassroomActivity) mContext).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.document_layout, mDocumentFragment)
+                .add(R.id.document_layout, documentFragment)
                 .addToBackStack("doc")
                 .commit();
-    }
-
-    /**
-     * 退出文档库
-     */
-    public void exitDocument() {
-        if (mDocumentFragment != null) {
-            ((ClassroomActivity) mContext).getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(mDocumentFragment)
-                    .commit();
-        }
     }
 
     /**
@@ -222,36 +210,47 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
      * 进入图片编辑，图片可以左右滑动
      */
     public void enterPhotoDoodle(ArrayList<String> imgUrlList) {
-        mPhotoDoodleFragment = new PhotoDoodleFragment();
+        PhotoDoodleFragment photoDoodleFragment = new PhotoDoodleFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.KEY_IMG_DISPLAY_MODE, PhotoDoodleFragment.MODE_MULTI_IMG);
         bundle.putStringArrayList(Constants.KEY_IMG_LIST, imgUrlList);
-        mPhotoDoodleFragment.setArguments(bundle);
-        mPhotoDoodleFragment.setPhotoDoodleShareListener(this);
-        commitPhotoDoodleFragment();
+        photoDoodleFragment.setArguments(bundle);
+        photoDoodleFragment.setPhotoDoodleShareListener(this);
+        commitPhotoDoodleFragment(photoDoodleFragment);
     }
 
     /**
      * 进入图片编辑
      */
     public void enterPhotoDoodleByBitmap(Bitmap bitmap) {
-        mPhotoDoodleFragment = new PhotoDoodleFragment();
+        PhotoDoodleFragment photoDoodleFragment = new PhotoDoodleFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.KEY_IMG_DISPLAY_MODE, PhotoDoodleFragment.MODE_SINGLE_IMG);
-        mPhotoDoodleFragment.setArguments(bundle);
-        mPhotoDoodleFragment.setBitmap(bitmap);
-        mPhotoDoodleFragment.setPhotoDoodleShareListener(this);
-        commitPhotoDoodleFragment();
+        float ratio = WhiteboardLayer.DOODLE_CANVAS_RATIO;
+        if (bitmap != null && bitmap.getWidth() > 0 && bitmap.getHeight() > 0) {
+            ratio = bitmap.getWidth() / (float)bitmap.getHeight();
+        } else {
+            if (isPortrait()) {
+                ratio = 1.0f / WhiteboardLayer.DOODLE_CANVAS_RATIO;
+            } else {
+                ratio = WhiteboardLayer.DOODLE_CANVAS_RATIO;
+            }
+        }
+        bundle.putFloat(Constants.KEY_DOODLE_RATIO, ratio);
+        photoDoodleFragment.setArguments(bundle);
+        photoDoodleFragment.setBitmap(bitmap);
+        photoDoodleFragment.setPhotoDoodleShareListener(this);
+        commitPhotoDoodleFragment(photoDoodleFragment);
     }
 
     /**
      * 提交图片编辑对应的fragment
      */
-    private void commitPhotoDoodleFragment() {
-        if (mPhotoDoodleFragment != null) {
+    private void commitPhotoDoodleFragment(Fragment fragment) {
+        if (fragment != null) {
             ((ClassroomActivity) mContext).getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.photo_doodle_layout, mPhotoDoodleFragment)
+                    .add(R.id.photo_doodle_layout, fragment)
                     .addToBackStack("photo_doodle")
                     .commit();
         }
@@ -303,11 +302,11 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
     public void enterVideoPlayer(LibDoc doc) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.KEY_LIB_DOC, doc);
-        mVideoPlayFragment = new VideoPlayFragment();
-        mVideoPlayFragment.setArguments(bundle);
+        VideoPlayFragment videoPlayFragment = new VideoPlayFragment();
+        videoPlayFragment.setArguments(bundle);
         ((ClassroomActivity) mContext).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.document_layout, mVideoPlayFragment)
+                .add(R.id.document_layout, videoPlayFragment)
                 .addToBackStack("video_player")
                 .commit();
     }
@@ -316,8 +315,6 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
      * 退出文档库并且打开多媒体
      */
     public void exitDocFragmentWhitOpenMime(LibDoc doc) {
-        exitDocument();
-
         if (doc == null) {
             return;
         }
@@ -408,6 +405,15 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
         if (requestOrientation) {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+    }
+
+    public boolean isPortrait() {
+        if (mContext instanceof ClassroomActivity) {
+            FragmentActivity activity = (FragmentActivity) mContext;
+            return activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        }
+
+        return false;
     }
 
     public int getPlayFragmentMode() {

@@ -1,11 +1,9 @@
 package cn.xiaojs.xma.ui.classroom.main;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -14,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -25,14 +20,13 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.LiveManager;
-import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
-import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
+import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -60,6 +54,8 @@ public class PublishFragment extends ClassroomLiveFragment {
     public final static String KEY_PLAY_URL = "key_play_url";
     public final static String KEY_PUBLISH_URL = "key_publish_url";
     public final static String KEY_BEFORE_LIVE_STATE = "key_before_live_state";
+    public final static String KEY_INDIVIDUAL_DURATION = "key_individual_duration";
+    public final static String KEY_INDIVIDUAL_NAME = "key_individual_name";
 
     @BindView(R.id.tip_view)
     View mTipView;
@@ -225,10 +221,12 @@ public class PublishFragment extends ClassroomLiveFragment {
     protected void initData() {
         Bundle data = getArguments();
         if (data != null) {
-            mPublishType = data.getInt(PublishFragment.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
-            mPublishUrl = data.getString(PublishFragment.KEY_PUBLISH_URL, "");
-            mPlayUrl = data.getString(PublishFragment.KEY_PLAY_URL, "");
-            mBeforeClamSteamState = data.getString(PublishFragment.KEY_BEFORE_LIVE_STATE, "");
+            mPublishType = data.getInt(KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
+            mPublishUrl = data.getString(KEY_PUBLISH_URL, "");
+            mPlayUrl = data.getString(KEY_PLAY_URL, "");
+            mBeforeClamSteamState = data.getString(KEY_BEFORE_LIVE_STATE, "");
+            mIndividualStreamDuration = data.getLong(KEY_INDIVIDUAL_DURATION, 0);
+            mIndividualName = data.getString(KEY_INDIVIDUAL_NAME, "");
         }
 
         mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
@@ -245,6 +243,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                 } else {
                     playOrPauseLesson();
                 }
+                mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
                 mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL, mPublishUrl);
@@ -252,10 +251,12 @@ public class PublishFragment extends ClassroomLiveFragment {
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
                 mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, mPublishUrl);
                 mVideoController.playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, mPlayUrl);
+                mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
                 break;
         }
 
-        mTimeProgressHelper.setCountTime(ClassroomBusiness.getCountTimeByCtlSession(), false);
+
+        mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
         setControllerBtnStyle(liveState);
     }
 
@@ -344,7 +345,6 @@ public class PublishFragment extends ClassroomLiveFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ClassroomController.getInstance().enterPlayFragment(null);
     }
 
     @Override
@@ -366,27 +366,21 @@ public class PublishFragment extends ClassroomLiveFragment {
     public void onStreamStarted(int type, Object extra) {
         mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
         mTipsHelper.hideTips();
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         switch (type) {
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
-                //
+            case StreamType.TYPE_STREAM_PUBLISH:
+                mTimeProgressHelper.setTimeProgress(mCountTime, liveState);
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
-                long time = 0;
                 try {
-                    time = (long) extra;
+                    mIndividualStreamDuration = (long) extra;
                 } catch (Exception e) {
                 }
-                mTimeProgressHelper.setLiveShowCountDownTime(time);
-                break;
-            case StreamType.TYPE_STREAM_PUBLISH:
-                long countDownTime = mTimeProgressHelper.getCountDownTime();
-                if (countDownTime <= 0) {
-                    countDownTime = ClassroomBusiness.getCountDownTimeByCtlSession();
-                }
-                mTimeProgressHelper.setCountDownTimes(countDownTime, mCtlSession.state);
-                mTimeProgressHelper.setCountTime(mTimeProgressHelper.getCountTime(), true);
+                mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, true);
                 break;
         }
+
     }
 
     @Override
@@ -398,7 +392,8 @@ public class PublishFragment extends ClassroomLiveFragment {
     public void onStreamStopped(int type, Object extra) {
         if (mExitCurrFragment) {
             mExitCurrFragment = false;
-            ClassroomController.getInstance().exitStackFragment();
+
+            exitCurrentFragment();
         } else {
             if (mPlayPauseBtn != null) {
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
@@ -409,7 +404,14 @@ public class PublishFragment extends ClassroomLiveFragment {
 
             switch (type) {
                 case StreamType.TYPE_STREAM_PUBLISH:
-                    mTimeProgressHelper.setCountTime(mTimeProgressHelper.getCountTime(), false);
+                case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
+                    mCountTime = mTimeProgressHelper.getCountTime();
+                    mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
+                    break;
+                case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
+                    //mIndividualStreamDuration = mTimeProgressHelper.getIndividualStreamDuration();
+                    //mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
+                    exitCurrentFragment();
                     break;
             }
         }
@@ -417,18 +419,24 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     protected void onSyncStateChanged(SyncStateResponse syncState) {
+        boolean autoCountTime = false;
         if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
             LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.PENDING_FOR_JOIN);
             setControllerBtnStyle(Live.LiveSessionState.PENDING_FOR_JOIN);
+            autoCountTime = true;
         } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.DELAY.equals(syncState.to)) {
             LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.DELAY);
+            setControllerBtnStyle(Live.LiveSessionState.DELAY);
+            autoCountTime = true;
+            mCountTime = 0;
         } else if (Live.LiveSessionState.DELAY.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
             LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.FINISHED);
             setControllerBtnStyle(Live.LiveSessionState.FINISHED);
+            autoCountTime = true;
         }
 
-        //mTimeProgressHelper.setCountDownTimes(countDownTime, liveState);
-        //mTimeProgressHelper.setCountTime(countTime, autoCountTime);
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        mTimeProgressHelper.setTimeProgress(mCountTime, liveState, autoCountTime);
         if (mTipsHelper != null) {
             mTipsHelper.hideTips();
         }
@@ -442,7 +450,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             //pause and exit
             pauseIndividual(true);
         } else {
-            ClassroomController.getInstance().exitStackFragment();
+            exitCurrentFragment();
         }
     }
 
@@ -465,14 +473,19 @@ public class PublishFragment extends ClassroomLiveFragment {
         mTipsHelper.hideTips();
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         if (Live.LiveSessionState.LIVE.equals(liveState)) {
-            //pause
-            pauseClass(false);
+            if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
+                //pause and exit
+
+            } else {
+                //pause
+                pauseClass(false);
+            }
         } else if (Live.LiveSessionState.RESET.equals(liveState)) {
             //resume
             resumeClass();
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
             //pause and exit
-            pauseIndividual(false);
+            pauseIndividual(mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         } else if (Live.LiveSessionState.FINISHED.equals(liveState)) {
             individualPublishStream();
         }
@@ -494,8 +507,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             } else {
                 mPlayPauseBtn.setVisibility(View.INVISIBLE);
             }
-        } else if (Live.LiveSessionState.LIVE.equals(liveState)
-                || Live.LiveSessionState.DELAY.equals(liveState)) {
+        } else if (Live.LiveSessionState.LIVE.equals(liveState)) {
             if (mUser == Constants.User.TEACHER) {
                 mFinishBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
@@ -503,6 +515,9 @@ public class PublishFragment extends ClassroomLiveFragment {
             } else {
                 mPlayPauseBtn.setVisibility(View.INVISIBLE);
             }
+        } else if (Live.LiveSessionState.DELAY.equals(liveState)) {
+            mPlayPauseBtn.setVisibility(View.INVISIBLE);
+            mFinishBtn.setVisibility(View.VISIBLE);
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
             mPlayPauseBtn.setVisibility(View.VISIBLE);
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
@@ -601,6 +616,24 @@ public class PublishFragment extends ClassroomLiveFragment {
         LiveCtlSessionManager.getInstance().updateCtlSessionState(mBeforeClamSteamState);
         mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         mExitCurrFragment = withExitFragment;
+    }
+
+    private void pausePeer2Peer(boolean withExitFragment) {
+        mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+        mExitCurrFragment = withExitFragment;
+    }
+
+    private void exitCurrentFragment() {
+        Bundle data = new Bundle();
+        switch (mPublishType) {
+            case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
+                data.putString(PublishFragment.KEY_PLAY_URL, mPlayUrl);
+                break;
+            default:
+                break;
+        }
+        ClassroomController.getInstance().exitStackFragment();
+        ClassroomController.getInstance().enterPlayFragment(data);
     }
 
 }

@@ -15,12 +15,9 @@ package cn.xiaojs.xma.ui.classroom.live;
  * ======================================================================================== */
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
@@ -28,22 +25,20 @@ import com.qiniu.pili.droid.streaming.StreamingState;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
-import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.DeviceUtil;
-import cn.xiaojs.xma.util.XjsUtils;
 
 public class PlayVideoController extends VideoController {
     private CommonDialog mAgreeOpenCamera;
@@ -173,7 +168,7 @@ public class PlayVideoController extends VideoController {
             }
         }/* else if (mPublishView.getVisibility() == View.VISIBLE) {
             mPublishView.captureOriginalFrame(callback);
-        } */else {
+        } */ else {
             if (callback != null) {
                 callback.onFrameCaptured(null);
             }
@@ -271,14 +266,13 @@ public class PlayVideoController extends VideoController {
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
                 int type = StreamType.TYPE_STREAM_PLAY;
-                if (mContext instanceof ClassroomActivity) {
-                    String state = ((ClassroomActivity) mContext).getLiveState();
-                    if (Live.LiveSessionState.LIVE.equals(state)) {
-                        type = StreamType.TYPE_STREAM_PLAY;
-                    } else if (Live.LiveSessionState.SCHEDULED.equals(state)
-                            || Live.LiveSessionState.FINISHED.equals(state)) {
-                        type = StreamType.TYPE_STREAM_PLAY_INDIVIDUAL;
-                    }
+                String state = LiveCtlSessionManager.getInstance().getLiveState();
+                if (Live.LiveSessionState.LIVE.equals(state)) {
+                    type = StreamType.TYPE_STREAM_PLAY;
+                } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)
+                        || Live.LiveSessionState.SCHEDULED.equals(state)
+                        || Live.LiveSessionState.FINISHED.equals(state)) {
+                    type = StreamType.TYPE_STREAM_PLAY_INDIVIDUAL;
                 }
                 playStream(type, startedNotify.RTMPPlayUrl, startedNotify.finishOn);
             }

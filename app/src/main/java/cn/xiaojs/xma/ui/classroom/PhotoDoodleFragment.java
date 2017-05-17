@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.io.NumberInput;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +66,7 @@ public class PhotoDoodleFragment extends BaseFragment {
     private OnPhotoDoodleShareListener mPhotoDoodleShareListener;
 
     private int mDisplayMode = MODE_SINGLE_IMG;
-    private float mDoodleRatio;
+    private float mDoodleRatio = WhiteboardLayer.DOODLE_CANVAS_RATIO;
     private List<String> mImgList;
 
     @Override
@@ -86,8 +88,9 @@ public class PhotoDoodleFragment extends BaseFragment {
             mImgList = data.getStringArrayList(Constants.KEY_IMG_LIST);
             mDoodleRatio = data.getFloat(Constants.KEY_DOODLE_RATIO, WhiteboardLayer.DOODLE_CANVAS_RATIO);
         }
+
         if (mDisplayMode == MODE_SINGLE_IMG) {
-            mBoardController.showWhiteboardLayout(mBitmap);
+            mBoardController.showWhiteboardLayout(mBitmap, mDoodleRatio);
         } else if (mDisplayMode == MODE_MULTI_IMG){
             WhiteboardAdapter adapter = new WhiteboardAdapter(mContext);
             WhiteboardCollection wbColl = new WhiteboardCollection();
@@ -101,7 +104,7 @@ public class PhotoDoodleFragment extends BaseFragment {
             }
             wbColl.setWhiteboardLayer(whiteboardLayers);
             adapter.setData(wbColl, 0);
-            mBoardController.setWhiteboardScrollerAdapter(adapter);
+            mBoardController.showWhiteboardLayout(adapter);
         }
     }
 

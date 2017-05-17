@@ -260,6 +260,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
             Object data = ((AdapterWrapper) adapter).getItem(position);
             if (data instanceof LibDoc && target != null) {
                 Intent intent = new Intent();
+                getFragmentManager().popBackStackImmediate();
                 intent.putExtra(Constants.KEY_OPEN_DOC_BEAN, (LibDoc) data);
                 target.onActivityResult(ClassroomController.REQUEST_DOC, Activity.RESULT_OK, intent);
             }

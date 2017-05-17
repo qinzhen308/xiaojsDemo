@@ -20,11 +20,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
@@ -34,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -47,8 +43,6 @@ import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
-import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
-import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 
@@ -65,8 +59,10 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected TipsHelper mTipsHelper;
     protected TimeProgressHelper mTimeProgressHelper;
 
+    protected long mCountTime;
     protected long mIndividualStreamDuration;
     protected String mBeforeClamSteamState;
+    protected String mIndividualName;
 
     private Map<String, FadeAnimListener> mFadeAnimListeners;
     private List<ViewPropertyAnimator> mViewPropertyAnimators;
@@ -194,9 +190,9 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                     if (response.result) {
                         mBeforeClamSteamState = oldLiveSate;
+                        mIndividualStreamDuration = response.finishOn;
                         LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.INDIVIDUAL);
                         setControllerBtnStyle(Live.LiveSessionState.INDIVIDUAL);
-                        mIndividualStreamDuration = response.finishOn;
                         if (XiaojsConfig.DEBUG) {
                             Toast.makeText(mContext, "claim streaming succ", Toast.LENGTH_SHORT).show();
                         }

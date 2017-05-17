@@ -30,8 +30,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
@@ -61,10 +61,6 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     private final static int REQUEST_PERMISSION_CODE = 1024;
-    /**
-     * 白板注册重试次数
-     */
-    private static final int RETRY_COUNT = 3;
 
     private WhiteboardScrollerView mWhiteboardSv;
     //whiteboard adapter
@@ -102,7 +98,6 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     private WhiteboardCollection mCurrWhiteboardColl;
     private WhiteboardCollection mOldWhiteboardColl;
-    private Whiteboard mSyncWhiteboard;
     private WhiteboardLayout mWhiteboardLayout;
     private Whiteboard mCurrWhiteboard;
     private WhiteboardLayer mWhiteboardLayer;
@@ -136,66 +131,9 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     }
 
     /**
-     * 初始白板数据
+     * 单张白板
      */
-    public void initWhiteboardData(Context context, WhiteboardCollection boardColl) {
-        mWhiteboardAdapter = new WhiteboardAdapter(context);
-        mWhiteboardSv.setOffscreenPageLimit(2);
-        mWhiteboardSv.setAdapter(mWhiteboardAdapter);
-        mWhiteboardAdapter.setOnWhiteboardListener(this);
-
-        mWhiteboardAdapter.setData(boardColl, 0);
-        //SocketManager.on(Event.BOARD, mOnBoard);
-    }
-
-    /**
-     * 注册白板(第一期暂时不用)
-     */
-    public void registerDefaultBoard(final WhiteboardManager.WhiteboardAddListener listener) {
-        WhiteboardManager.getInstance().addDefaultBoard(mContext, mUser, new WhiteboardManager.WhiteboardAddListener() {
-            @Override
-            public void onWhiteboardAdded(WhiteboardCollection boardCollection) {
-                if (boardCollection == null) {
-                    if (++mCount > RETRY_COUNT) {
-                        //failed
-                        if (listener != null) {
-                            listener.onWhiteboardAdded(null);
-                        }
-                        return;
-                    } else {
-                        //retry
-                        registerDefaultBoard(listener);
-                    }
-                } else {
-                    //success
-                    if (listener != null) {
-                        listener.onWhiteboardAdded(boardCollection);
-                    }
-
-                    onSwitchWhiteboardCollection(boardCollection);
-                    if (mUser == Constants.User.STUDENT) {
-                        if (mAppType == Platform.AppType.MOBILE_ANDROID ||
-                                mAppType == Platform.AppType.MOBILE_IOS ||
-                                mAppType == Platform.AppType.TABLET_ANDROID ||
-                                mAppType == Platform.AppType.TABLET_IOS) {
-                            //mobile, tablet
-                            boardCollection.setLive(true);
-                            mCurrWhiteboard.setNeedBitmapPool(false);
-                            mCurrWhiteboard.setLayer(boardCollection.getWhiteboardLayer().get(0));
-                        } else {
-                            mWhiteboardSv.setVisibility(View.GONE);
-                            mCurrWhiteboard.setVisibility(View.GONE);
-                            //onResumeVideo();
-
-                            boardCollection.setLive(true);
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    public void showWhiteboardLayout(Bitmap bmp) {
+    public void showWhiteboardLayout(Bitmap bmp, float boardRatio) {
         if (mWhiteboardSv != null) {
             mWhiteboardSv.setVisibility(View.GONE);
         }
@@ -206,6 +144,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             mWhiteboardLayer = new WhiteboardLayer();
             mCurrWhiteboard.setLayer(mWhiteboardLayer);
             mCurrWhiteboard.setDoodleBackground(bmp);
+            mCurrWhiteboard.setCanvasRatio(boardRatio);
             mCurrWhiteboard.setUndoRedoListener(this);
             mUndo.setEnabled(false);
             mRedo.setEnabled(false);
@@ -223,7 +162,10 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         }
     }
 
-    public void setWhiteboardScrollerAdapter(WhiteboardAdapter adapter) {
+    /**
+     * 可左右滑动的白板
+     */
+    public void showWhiteboardLayout(WhiteboardAdapter adapter) {
         if (mWhiteboardSv != null) {
             mWhiteboardSv.setVisibility(View.VISIBLE);
             mUndo.setEnabled(false);
@@ -371,7 +313,6 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     /**
      * 更新图形icon样式
-     * @param geometryId
      */
     private void updateGeometryStyle(int geometryId) {
         switch (geometryId) {

@@ -13,15 +13,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:drawableLeft="@drawable/cr_publish_video_stop"
             android:padding="@dimen/px10"
             android:textColor="@color/font_white"
-            android:textSize="@dimen/px28"
+            android:textSize="@dimen/font_26px"
             android:drawablePadding="@dimen/px10"
             android:background="@drawable/cr_corner_gray_bg"
             android:layout_marginLeft="@dimen/px20"
-            android:layout_marginTop="@dimen/px20"
-            android:text="00:00:00"/>
+            android:layout_marginTop="@dimen/px20"/>
 
     <!--xx直播秀-->
     <TextView
@@ -32,7 +30,7 @@
             android:layout_toRightOf="@+id/count_down_time"
             android:padding="@dimen/px10"
             android:textColor="@color/font_white"
-            android:textSize="@dimen/px28"
+            android:textSize="@dimen/font_26px"
             android:drawablePadding="@dimen/px10"
             android:background="@drawable/cr_corner_gray_bg"
             android:layout_marginLeft="@dimen/px15"

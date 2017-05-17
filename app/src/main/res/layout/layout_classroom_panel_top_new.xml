@@ -58,7 +58,6 @@
                 android:textColor="@color/white"
                 android:layout_marginTop="@dimen/px4"
                 android:textSize="@dimen/font_18px"
-                android:visibility="gone"
                 android:maxLines="1"
                 android:ellipsize="end"/>
     </LinearLayout>

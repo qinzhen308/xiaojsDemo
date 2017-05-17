@@ -43,7 +43,7 @@ import cn.xiaojs.xma.ui.widget.SheetFragment;
  *
  * ======================================================================================== */
 
-public class ContactFragment extends SheetFragment implements OnPanelItemClick {
+public class ContactFragment extends SheetFragment implements OnPanelItemClick, ContactManager.OnAttendsChangeListener {
     //contact
     @BindView(R.id.contact_view)
     View mContactView;
@@ -62,6 +62,8 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick {
     public void onAttach(Context context) {
         super.onAttach(context);
         initParams();
+
+        ContactManager.getInstance().registerAttendsChangeListener(this);
     }
 
     private void initParams() {
@@ -104,13 +106,10 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick {
             mContactBookAdapter.setData(mLiveCollection);
             setEmptyContactView();
         } else {
-            LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
+            ContactManager.getInstance().getAttendees(mContext, new ContactManager.OnGetAttendsCallback() {
                 @Override
-                public void onSuccess(LiveCollection<Attendee> liveCollection) {
+                public void onGetAttendeesSuccess(LiveCollection<Attendee> liveCollection) {
                     if (!isDetached()) {
-                        if (liveCollection != null && liveCollection.attendees != null) {
-                            Collections.sort(liveCollection.attendees, mAttendsComparator);
-                        }
                         mLiveCollection = liveCollection;
                         addMyself2Attendees(mLiveCollection);
                         mContactBookAdapter.setData(mLiveCollection);
@@ -119,7 +118,7 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick {
                 }
 
                 @Override
-                public void onFailure(String errorCode, String errorMessage) {
+                public void onGetAttendeesFailure(String errorCode, String errorMessage) {
                     if (!isDetached()) {
                         setEmptyContactView();
                     }
@@ -166,5 +165,17 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick {
                 ContactFragment.this.dismiss();
                 break;
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        ContactManager.getInstance().unregisterAttendsChangeListener(this);
+    }
+
+    @Override
+    public void onAttendsChanged(boolean join) {
+        //update list
+
     }
 }

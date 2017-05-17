@@ -17,7 +17,6 @@ package cn.xiaojs.xma.ui.classroom.main;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,13 +33,13 @@ import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.FullScreenTalkMsgAdapter;
 import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 
-public class TalkController {
+public class TalkManager {
     public final static int TYPE_MULTI_TALK = 1;
     public final static int TYPE_PEER_TALK = 2;
     public final static int TYPE_TEACHING_TALK = 3;
     public final static int TYPE_FULL_SCREEN_MUlTI_TAlk = 4;
 
-    private static TalkController mInstance;
+    private static TalkManager mInstance;
 
     //教室交流Adapter
     private TalkMsgAdapter mMultiTalkAdapter;
@@ -55,7 +54,7 @@ public class TalkController {
 
     private String mTicket;
 
-    private TalkController() {
+    private TalkManager() {
         mPeerTalkMsgAdapterMap = new HashMap<String, TalkMsgAdapter>();
         mOnTalkMsgReceiveListeners = new ArrayList<OnTalkMsgReceived>();
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
@@ -65,9 +64,9 @@ public class TalkController {
         mTicket = ticket;
     }
 
-    public synchronized TalkController getInstance() {
+    public synchronized TalkManager getInstance() {
         if (mInstance == null) {
-            mInstance = new TalkController();
+            mInstance = new TalkManager();
         }
 
         return mInstance;

@@ -26,7 +26,6 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.StringSignature;
 import com.orhanobut.logger.Logger;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

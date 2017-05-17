@@ -18,7 +18,6 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
-import cn.xiaojs.xma.ui.widget.ClosableSlidingLayout;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 
 /*  =======================================================================================
