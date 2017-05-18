@@ -133,4 +133,8 @@
         <item>开课</item>
         <item>开班</item>
     </string-array>
+    <string-array name="add_student">
+        <item>手动添加</item>
+        <item>从已有班级中添加</item>
+    </string-array>
 </resources>

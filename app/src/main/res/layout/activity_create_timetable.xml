@@ -9,12 +9,13 @@
             android:orientation="vertical">
         <!--课名称-->
         <LinearLayout
+                android:id="@+id/lay_class_name"
                 android:layout_marginTop="@dimen/px32"
                 style="@style/LiveLessonItem">
 
             <TextView
                     style="@style/LiveLessonCreateTitle"
-                    android:text="@string/live_class_name"/>
+                    android:text="@string/live_lesson_name"/>
 
             <TextView
                     android:id="@+id/lesson_name_text"
@@ -24,8 +25,9 @@
         </LinearLayout>
 
         <include layout="@layout/layout_horizontal_line"/>
-
+        <!--上课时间-->
         <LinearLayout
+                android:id="@+id/lay_begin_time"
                 style="@style/LiveLessonItem">
 
             <TextView
@@ -78,7 +80,7 @@
         <include layout="@layout/layout_horizontal_line"/>
 
 
-        <!--加入班级是否需要验证-->
+        <!--录像设置-->
         <LinearLayout
                 android:paddingLeft="@dimen/px28"
                 android:paddingRight="@dimen/px26"

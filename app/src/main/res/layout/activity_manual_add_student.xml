@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+        >
+
+    <include
+            layout="@layout/layout_create_tips"
+            android:id="@+id/lay_tips"
+            />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px100"
+            android:layout_marginTop="@dimen/px30"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+        <Button
+                android:id="@+id/add_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/add"
+                android:background="@android:color/transparent"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/subject_selected_blue"
+                android:visibility="gone"/>
+
+        <EditText
+                android:id="@+id/student_num"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="@string/phone_num"
+                android:singleLine="true"
+                android:gravity="center"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/font_black"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:phoneNumber="true"/>
+
+        <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/px1"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/px30"
+                android:layout_marginBottom="@dimen/px30"
+                android:background="@color/common_text"/>
+
+        <EditText
+                android:id="@+id/student_name"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="@string/student_name"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textSize="@dimen/font_30px"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:textColor="@color/font_black"/>
+
+    </LinearLayout>
+
+    <ListView
+            android:id="@+id/student_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px30"
+            />
+</LinearLayout>

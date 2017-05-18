@@ -782,5 +782,14 @@
     <string name="video_auto_repaly">自动录像回放</string>
     <string name="video_auto_repaly_tips">自动录像后的视频，会保存到您的个人资料库中，并可自动回放</string>
     <string name="no_need_video">无需录像</string>
-
+    <string name="add_student_type_tips"><![CDATA[初次添加完学生，点击\"我的>我的班课>班级管理\",可对学生进行添加、删除、编辑等操作]]></string>
+    <string name="manual_add_student">手动添加学生</string>
+    <string name="student_name">学生姓名</string>
+    <string name="add_student_tips">添加学生后，手机号将作为学生登陆小教室的唯一账号</string>
+    <string name="student_add_from_exist_class">从已有班级中添加</string>
+    <string name="input_lesson_name_hint">请输入课名称</string>
+    <string name="add_class_verification_msg">加班验证消息</string>
+    <string name="request_join_class">请求加入班级</string>
+    <string name="agree">同意</string>
+    <string name="refuse">拒绝</string>
 </resources>

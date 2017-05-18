@@ -288,6 +288,10 @@
         <activity android:name=".ui.lesson.xclass.CreateTimetableActivity"
                   android:windowSoftInputMode="stateAlwaysHidden"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.ManualAddStudentActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.AddLessonNameActivity"
+                  android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"

@@ -33,14 +33,21 @@ public class ListBottomDialog extends BottomSheet {
 
     public ListBottomDialog(Context context) {
         super(context);
+        init();
     }
 
     public ListBottomDialog(Context context, int themeResId) {
         super(context, themeResId);
+        init();
     }
 
     protected ListBottomDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
+        init();
+    }
+
+    private void init() {
+        setTitleVisibility(View.GONE);
     }
 
 
@@ -55,7 +62,6 @@ public class ListBottomDialog extends BottomSheet {
     @Override
     public void show() {
         if (mItems != null) {
-            setTitleVisibility(View.GONE);
             View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_base_bottom, null);
             mList = (ListView) v.findViewById(R.id.base_bottom_dialog_list);
             mCancel = (TextView) v.findViewById(R.id.base_bottom_dialog_cancel);
