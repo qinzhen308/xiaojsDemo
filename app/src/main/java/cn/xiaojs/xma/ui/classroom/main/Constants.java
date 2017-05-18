@@ -106,6 +106,27 @@ public interface Constants {
     }
 
     /**
+     * 客户端用户
+     */
+    public static enum UserMode {
+        PREVIEW("preview"),                         //预览
+        PARTICIPANT("participant"),                 //参与者
+        TEACHING("teaching"),                       //教学
+        MEDIA("media");                             //媒体
+
+        private final String text;
+
+        private UserMode(final String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
+    /**
      * classroom mode
      */
     public static final int TEACHING_MODE = 1;

@@ -52,7 +52,7 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
     @BindView(R.id.msg_send)
     TextView mSendBtn;
 
-    private Constants.User mUser;
+    private Constants.UserMode mUserMode;
     private String mTicket;
 
     private int mTalkCriteria = TalkPresenter.MULTI_TALK;
@@ -70,7 +70,7 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
         if (data != null) {
             CtlSession session = (CtlSession) data.getSerializable(Constants.KEY_CTL_SESSION);
             if (session != null) {
-                mUser = ClassroomBusiness.getUserByCtlSession(session);
+                mUserMode = ClassroomBusiness.getUserByCtlSession(session);
             }
             mAttendee = (Attendee) data.getSerializable(Constants.KEY_OPEN_TALK_ATTEND);
         }

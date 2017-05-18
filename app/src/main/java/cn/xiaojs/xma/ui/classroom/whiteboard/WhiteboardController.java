@@ -637,7 +637,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         //TODO
 
         /*if (mCurrWhiteboardColl != null) {
-            if (mCurrWhiteboardColl.isLive() && mUser == Constants.User.STUDENT) {
+            if (mCurrWhiteboardColl.isLive() && mUserMode == Constants.User.STUDENT) {
                 PermissionGen.needPermission(ClassroomActivity.this, REQUEST_GALLERY_PERMISSION, PERMISSIONS);
             } else {
 

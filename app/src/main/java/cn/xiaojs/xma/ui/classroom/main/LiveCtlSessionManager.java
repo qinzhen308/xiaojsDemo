@@ -21,6 +21,7 @@ import cn.xiaojs.xma.model.live.CtlSession;
 public class LiveCtlSessionManager {
     private CtlSession mCtlSession;
     private Constants.User mUser;
+    private Constants.UserMode mUserMode;
     private String mTicket;
 
     private static LiveCtlSessionManager mInstance;
@@ -35,7 +36,9 @@ public class LiveCtlSessionManager {
 
     public void init(CtlSession ctlSession, String ticket) {
         mCtlSession = ctlSession;
-        mUser = ClassroomBusiness.getUserByCtlSession(ctlSession);
+        mUser = ClassroomBusiness.getUser(ctlSession.psType);
+        mUserMode = ClassroomBusiness.getUserByCtlSession(ctlSession);
+        ;
         mTicket = ticket;
     }
 
@@ -48,7 +51,7 @@ public class LiveCtlSessionManager {
     public synchronized void updateCtlSessionMode(int mode) {
         if (mCtlSession != null) {
             mCtlSession.mode = mode;
-            mUser = ClassroomBusiness.getUserByCtlSession(mCtlSession);
+            mUserMode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
         }
     }
 
@@ -68,8 +71,12 @@ public class LiveCtlSessionManager {
         return mTicket;
     }
 
+    public Constants.UserMode getUserMode() {
+        return mUserMode != null ? mUserMode : ClassroomBusiness.getUserByCtlSession(mCtlSession);
+    }
+
     public Constants.User getUser() {
-        return mUser != null ? mUser : ClassroomBusiness.getUserByCtlSession(mCtlSession);
+        return mUser;
     }
 
     public void release() {

@@ -53,7 +53,6 @@ public class PublishVideoController extends VideoController {
 
     public PublishVideoController(Context context, View root, OnStreamStateChangeListener listener) {
         super(context, root, listener);
-        mUser = Constants.User.TEACHER;
         listenerSocket();
         loadingSize = context.getResources().getDimensionPixelSize(R.dimen.px36);
         loadingDesc = context.getResources().getDimensionPixelSize(R.dimen.font_20px);

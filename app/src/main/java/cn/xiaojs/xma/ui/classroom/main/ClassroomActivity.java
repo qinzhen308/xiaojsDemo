@@ -73,7 +73,6 @@ public class ClassroomActivity extends FragmentActivity {
 
     private String mTicket = "";
     private CtlSession mCtlSession;
-    private Constants.User mUser = Constants.User.STUDENT;
     private int mAppType = Platform.AppType.UNKNOWN;
 
     //socket retry count
@@ -139,7 +138,6 @@ public class ClassroomActivity extends FragmentActivity {
     }
 
     private void initParams() {
-        mUser = Constants.User.STUDENT;
         mTicket = getIntent().getStringExtra(Constants.KEY_TICKET);
         //init controller;
         ClassroomController.init(this);
@@ -168,9 +166,7 @@ public class ClassroomActivity extends FragmentActivity {
                         Log.i("aaa", "session: entry=" + ctlSession.toString());
                     }
 
-                    if (!ctlSession.accessible
-                            && Constants.PARTICIPANT_MODE != ctlSession.mode
-                            && Constants.PREVIEW_MODE != ctlSession.mode) {
+                    if (!ctlSession.accessible) {
                         checkForceKickOut(ctlSession);
                     } else {
                         onBootSessionSucc(false, ctlSession);
@@ -208,8 +204,6 @@ public class ClassroomActivity extends FragmentActivity {
         if (!TextUtils.isEmpty(ctlSession.ticket)) {
             mTicket = ctlSession.ticket;
         }
-        mUser = ClassroomBusiness.getUserByCtlSession(ctlSession);
-
         //init global data
         LiveCtlSessionManager.getInstance().init(ctlSession, mTicket);
         //init socket
@@ -218,7 +212,8 @@ public class ClassroomActivity extends FragmentActivity {
 
     private void initFragment(CtlSession ctlSession) {
         //Fragment fragment = null;
-        if (mUser == Constants.User.TEACHER &&
+        Constants.UserMode mode = ClassroomBusiness.getUserByCtlSession(ctlSession);
+        if (mode == Constants.UserMode.TEACHING &&
                 (Live.LiveSessionState.DELAY.equals(ctlSession.state) ||
                         Live.LiveSessionState.LIVE.equals(ctlSession.state))) {
             //teacher-->live, delay
@@ -276,9 +271,9 @@ public class ClassroomActivity extends FragmentActivity {
             /*if (mNeedInitStream) {
                 mNeedInitStream = false;
                 if (Live.LiveSessionState.LIVE.equals(mLiveSessionState)) {
-                    if (mUser == Constants.User.TEACHER) {
+                    if (mUserMode == Constants.User.TEACHER) {
                         //mClassroomController.publishStream(StreamType.TYPE_STREAM_PUBLISH, mPublishUrl);
-                    } else if (mUser == Constants.User.STUDENT) {
+                    } else if (mUserMode == Constants.User.STUDENT) {
                         //mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
                     }
                 } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(mLiveSessionState) ||

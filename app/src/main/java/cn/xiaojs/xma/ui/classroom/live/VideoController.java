@@ -65,7 +65,6 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected boolean mNeedStreamRePlaying = false;
     protected OnStreamStateChangeListener mStreamListener;
 
-    protected Constants.User mUser = Constants.User.TEACHER;
     protected int mPlayType;
     protected int mPublishType;
 

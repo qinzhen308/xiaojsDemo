@@ -46,6 +46,7 @@ public class TimeProgressHelper {
 
     private Context mContext;
     private Handler mHandler;
+    private String mOriginStreamState;
 
     public TimeProgressHelper(Context context, TextView timeInfoView, View timeStatusBar) {
         mContext = context;
@@ -71,14 +72,18 @@ public class TimeProgressHelper {
     }
 
     public void setTimeProgress(long countTime, String liveState) {
-        setTimeProgress(countTime, 0, liveState, null, true);
+        setTimeProgress(countTime, 0, liveState, null, null, true);
     }
 
     public void setTimeProgress(long countTime, String liveState, boolean play) {
-        setTimeProgress(countTime, 0, liveState, null, play);
+        setTimeProgress(countTime, 0, liveState, null, null, play);
     }
 
     public void setTimeProgress(long countTime, long individualDuration, String liveState, Object extra, boolean play) {
+        setTimeProgress(countTime, individualDuration, liveState, null, null, play);
+    }
+
+    public void setTimeProgress(long countTime, long individualDuration, String liveState, Object extra, String originState, boolean play) {
         if (mHandler == null) {
             return;
         }
@@ -87,6 +92,7 @@ public class TimeProgressHelper {
         mLiveShowTv.setVisibility(type == TYPE_LIVE_INDIVIDUAL ? View.VISIBLE : View.GONE);
         mHandler.removeCallbacksAndMessages(null);
 
+        mOriginStreamState = originState;
         mCountTime = countTime;
         mIndividualStreamDuration = individualDuration;
 
@@ -217,10 +223,10 @@ public class TimeProgressHelper {
                                 mFullScreenTimeInfoTv.setVisibility(View.VISIBLE);
                                 mLiveShowTv.setVisibility(View.GONE);
                             }
-                            String state = LiveCtlSessionManager.getInstance().getLiveState();
-                            if (Live.LiveSessionState.FINISHED.equals(state)) {
+                            if (Live.LiveSessionState.FINISHED.equals(mOriginStreamState)) {
                                 mTitleBarTimeInfoTv.setText(R.string.cls_live_finish);
                             } else {
+                                simpleTime = TimeUtil.formatSecondTime(0);
                                 mTitleBarTimeInfoTv.setText(simpleTime + "/" + total);
                             }
                             break;

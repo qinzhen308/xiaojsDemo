@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -247,11 +246,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     private void updateViewStyleByLiveState(String liveState) {
-        //String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         int mode = LiveCtlSessionManager.getInstance().getLiveMode();
-        if (Constants.PREVIEW_MODE == mode ||
-                Constants.PARTICIPANT_MODE == mode) {
-            //参与者模式和预览模式, 不能有任何操作
+        if (Constants.PREVIEW_MODE == mode) {
+            //预览模式, 不能有任何操作
             mPlayPauseBtn.setVisibility(View.INVISIBLE);
         } else {
             if (Live.LiveSessionState.SCHEDULED.equals(liveState)
@@ -260,7 +257,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             } else {
-                if (mUser == Constants.User.TEACHER) {
+                if (mUserMode == Constants.UserMode.TEACHING) {
                     mPlayPauseBtn.setVisibility(View.VISIBLE);
                 } else {
                     mPlayPauseBtn.setVisibility(View.INVISIBLE);
@@ -411,7 +408,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
         data.putString(Constants.KEY_PUBLISH_URL, response.publishUrl);
 
-        data.putString(Constants.KEY_BEFORE_LIVE_STATE, mBeforeClamSteamState);
+        data.putString(Constants.KEY_BEFORE_LIVE_STATE, mOriginSteamState);
         data.putLong(Constants.KEY_INDIVIDUAL_DURATION, response.finishOn);
         data.putString(Constants.KEY_INDIVIDUAL_NAME, "");
         ClassroomController.getInstance().enterPublishFragment(data, true);
@@ -627,14 +624,14 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             mPlayPauseBtn.setVisibility(View.VISIBLE);
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
                 Live.LiveSessionState.RESET.equals(liveState)) {
-            if (mUser == Constants.User.TEACHER) {
+            if (mUserMode == Constants.UserMode.TEACHING) {
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
             } else {
                 mPlayPauseBtn.setVisibility(View.INVISIBLE);
             }
         } else if (Live.LiveSessionState.LIVE.equals(liveState)) {
-            if (mUser == Constants.User.TEACHER) {
+            if (mUserMode == Constants.UserMode.TEACHING) {
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
             } else {
@@ -688,8 +685,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             });
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
             cancelProgress();
-            LiveCtlSessionManager.getInstance().updateCtlSessionState(mBeforeClamSteamState);
-            setControllerBtnStyle(mBeforeClamSteamState);
+            LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
+            setControllerBtnStyle(mOriginSteamState);
             mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         } else {
             cancelProgress();

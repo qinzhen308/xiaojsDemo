@@ -50,7 +50,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         OnStreamStateChangeListener , BackPressListener, FrameCapturedCallback {
     protected CtlSession mCtlSession;
     protected String mTicket;
-    protected Constants.User mUser = Constants.User.STUDENT;
+    protected Constants.UserMode mUserMode = Constants.UserMode.PARTICIPANT;
 
     protected ClassroomController mClassroomController;
     protected VideoController mVideoController;
@@ -61,7 +61,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
 
     protected long mCountTime;
     protected long mIndividualStreamDuration;
-    protected String mBeforeClamSteamState;
+    protected String mOriginSteamState;
     protected String mIndividualName;
 
     private Map<String, FadeAnimListener> mFadeAnimListeners;
@@ -85,7 +85,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         }
 
         mCtlSession = LiveCtlSessionManager.getInstance().getCtlSession();
-        mUser = ClassroomBusiness.getUserByCtlSession(mCtlSession);
+        mUserMode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
         mTicket = LiveCtlSessionManager.getInstance().getTicket();
 
         mClassroomController = ClassroomController.getInstance();
@@ -189,7 +189,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
                     String oldLiveSate = LiveCtlSessionManager.getInstance().getLiveState();
                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                     if (response.result) {
-                        mBeforeClamSteamState = oldLiveSate;
+                        mOriginSteamState = oldLiveSate;
                         mIndividualStreamDuration = response.finishOn;
                         LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.INDIVIDUAL);
                         setControllerBtnStyle(Live.LiveSessionState.INDIVIDUAL);

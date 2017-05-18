@@ -39,7 +39,7 @@ public class EmbedTalkFragment extends BaseFragment{
     PullToRefreshListView mTalkMsgLv;
 
     private CtlSession mCtlSession;
-    private Constants.User mUser;
+    private Constants.UserMode mUserMode;
     private String mTicket;
 
     private int mTalkCriteria = TalkPresenter.MULTI_TALK;
@@ -64,7 +64,7 @@ public class EmbedTalkFragment extends BaseFragment{
         if (data != null) {
             mCtlSession = (CtlSession) data.getSerializable(Constants.KEY_CTL_SESSION);
             if (mCtlSession != null) {
-                mUser = ClassroomBusiness.getUserByCtlSession(mCtlSession);
+                mUserMode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
             }
         }
 

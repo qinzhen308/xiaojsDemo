@@ -59,22 +59,28 @@ public class ClassroomBusiness {
         return user;
     }
 
-    public static Constants.User getUserByCtlSession(CtlSession session) {
+    public static Constants.UserMode getUserByCtlSession(CtlSession session) {
         if (session == null) {
-            return Constants.User.STUDENT;
+            return Constants.UserMode.PARTICIPANT;
         }
 
+        Constants.UserMode mode = Constants.UserMode.PARTICIPANT;
         Constants.User user = ClassroomBusiness.getUser(session.psType);
         if (user == Constants.User.TEACHER
                 || user == Constants.User.ASSISTANT
                 || user == Constants.User.REMOTE_ASSISTANT) {
-            if (Constants.PARTICIPANT_MODE == session.mode
-                    || Constants.PREVIEW_MODE == session.mode) {
-                user = Constants.User.STUDENT;
+            mode = Constants.UserMode.TEACHING;
+            if (Constants.PREVIEW_MODE == session.mode) {
+                mode = Constants.UserMode.PREVIEW;
+            } else if (Constants.PARTICIPANT_MODE == session.mode) {
+                mode = Constants.UserMode.PARTICIPANT;
             }
+        } else {
+            //all stu
+            mode = Constants.UserMode.PARTICIPANT;
         }
 
-        return user;
+        return mode;
     }
 
     public static <T> T parseSocketBean(Object obj, Class<T> valueType) {

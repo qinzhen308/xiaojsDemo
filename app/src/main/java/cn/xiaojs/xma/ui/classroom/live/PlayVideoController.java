@@ -45,7 +45,6 @@ public class PlayVideoController extends VideoController {
 
     public PlayVideoController(Context context, View root, OnStreamStateChangeListener listener) {
         super(context, root, listener);
-        mUser = Constants.User.STUDENT;
         listenerSocket();
     }
 
@@ -115,7 +114,7 @@ public class PlayVideoController extends VideoController {
             if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                 mNeedStreamRePublishing = true;
                 if (mStreamListener != null) {
-                    mStreamListener.onStreamStopped(mUser, type, null);
+                    mStreamListener.onStreamStopped(mUserMode, type, null);
                 }
             } else {
                 //send stopped stream
@@ -128,7 +127,7 @@ public class PlayVideoController extends VideoController {
                                     if (response.result) {
                                         mNeedStreamRePublishing = true;
                                         if (mStreamListener != null) {
-                                            mStreamListener.onStreamStopped(mUser, type, null);
+                                            mStreamListener.onStreamStopped(mUserMode, type, null);
                                         }
                                     }
                                 }
