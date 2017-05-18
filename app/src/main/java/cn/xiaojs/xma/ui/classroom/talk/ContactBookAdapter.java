@@ -15,6 +15,8 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
+import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 
@@ -45,13 +48,17 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private LiveCollection<Attendee> mLiveCollection;
     private ArrayList<Attendee> mAttendeeList;
     private int mOffset;
-    private Constants.User mUser;
+    private Constants.UserMode mUser;
+    private ColorMatrixColorFilter mGrayFilter;
+    private ColorMatrixColorFilter mNormalFilter;
 
-    public ContactBookAdapter(Context context, Constants.User user) {
+    public ContactBookAdapter(Context context) {
         mContext = context;
         mChoiceList = new ArrayList<String>();
         mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px5);
-        mUser = user;
+        mUser = LiveCtlSessionManager.getInstance().getUserMode();
+
+        initColorFilter();
     }
 
     public void setOnPortraitClickListener(OnPortraitClickListener listener) {
@@ -66,6 +73,16 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         mLiveCollection = liveCollection;
         mAttendeeList = liveCollection != null ? liveCollection.attendees : null;
         notifyDataSetChanged();
+    }
+
+    private void initColorFilter() {
+        ColorMatrix grayMatrix = new ColorMatrix();
+        grayMatrix.setSaturation(0);//0~1
+        mGrayFilter = new ColorMatrixColorFilter(grayMatrix);
+
+        ColorMatrix normalMatrix = new ColorMatrix();
+        normalMatrix.setSaturation(1);
+        mNormalFilter = new ColorMatrixColorFilter(normalMatrix);
     }
 
     public LiveCollection<Attendee> getLiveCollection() {
@@ -127,6 +144,8 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         Attendee attendee = mAttendeeList.get(position);
         int size = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
         String portraitUrl = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(attendee.accountId, size);
+        ColorMatrixColorFilter filter = attendee.xa == 0 ? mGrayFilter : mNormalFilter;
+        holder.portrait.setColorFilter(filter);
         Glide.with(mContext)
                 .load(portraitUrl)
                 .transform(new CircleTransform(mContext))
@@ -142,7 +161,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.checkbox.setSelected(mChoiceList.contains(String.valueOf(position)));
         } else {
             holder.checkbox.setVisibility(View.GONE);
-            if (mUser == Constants.User.TEACHER) {
+            if (mUser == Constants.UserMode.TEACHING) {
                 holder.video.setVisibility(View.VISIBLE);
             }
         }
@@ -162,7 +181,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
         if (ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
             holder.video.setVisibility(View.INVISIBLE);
-        } else if (mUser == Constants.User.TEACHER){
+        } else if (mUser == Constants.UserMode.TEACHING){
             holder.video.setVisibility(View.VISIBLE);
         }
     }

@@ -268,20 +268,7 @@ public class ClassroomActivity extends FragmentActivity {
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mSktConnected = true;
 
-            /*if (mNeedInitStream) {
-                mNeedInitStream = false;
-                if (Live.LiveSessionState.LIVE.equals(mLiveSessionState)) {
-                    if (mUserMode == Constants.User.TEACHER) {
-                        //mClassroomController.publishStream(StreamType.TYPE_STREAM_PUBLISH, mPublishUrl);
-                    } else if (mUserMode == Constants.User.STUDENT) {
-                        //mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
-                    }
-                } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(mLiveSessionState) ||
-                        Live.LiveSessionState.SCHEDULED.equals(mLiveSessionState)) {
-                    //mClassroomController.playStream(StreamType.TYPE_STREAM_PLAY_INDIVIDUAL, mPlayUrl, mIndividualStreamDuration);
-                }
-            }*/
-
+            ContactManager.getInstance().listenerSocket();
             initFragment(mCtlSession);
         }
     };

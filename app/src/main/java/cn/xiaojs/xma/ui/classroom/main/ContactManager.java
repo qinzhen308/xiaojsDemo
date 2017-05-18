@@ -48,13 +48,19 @@ public class ContactManager {
     private ContactManager() {
         mAttendsComparator = new AttendsComparator();
         mOnAttendsChangeListeners = new ArrayList<OnAttendsChangeListener>();
-        listenerSocket();
 
     }
 
     public void listenerSocket() {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
+    }
+
+    public void reListenerSocket() {
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE));
+
+        listenerSocket();
     }
 
     public void release() {
@@ -71,6 +77,8 @@ public class ContactManager {
             mOnAttendsChangeListeners.clear();
             mOnAttendsChangeListeners = null;
         }
+
+        listenerSocket();
     }
 
     public synchronized void getAttendees(Context context, final OnGetAttendsCallback callback) {
@@ -135,28 +143,18 @@ public class ContactManager {
                 mLiveCollection.attendees = new ArrayList<Attendee>();
             }
 
-            //refresh list
+            //refresh
             synchronized (LOCK) {
-                if (join) {
-                    if (mLiveCollection.attendees.contains(attendee)) {
-                       //update
-                    } else{
-                        //add
-                        mLiveCollection.attendees.add(attendee);
-                    }
+                int index = mLiveCollection.attendees.indexOf(attendee);
+                if (join && index < 0) {
+                    //add
+                    mLiveCollection.attendees.add(attendee);
                 } else {
-                    //update
+                    Attendee oldAttend = mLiveCollection.attendees.get(index);
+                    oldAttend.xa = join ? attendee.xa : 0;
                 }
 
-                notifyAttendChanged(join);
-
-                /*if (mTalkContactAdapter != null) {
-                    mTalkContactAdapter.setData(mLiveCollection);
-                }
-
-                if (mContactBookAdapter != null) {
-                    mContactBookAdapter.setData(mLiveCollection);
-                }*/
+                notifyAttendChanged(mLiveCollection.attendees, join);
             }
         }
     }
@@ -173,10 +171,10 @@ public class ContactManager {
         }
     }
 
-    public void notifyAttendChanged(boolean join) {
+    public void notifyAttendChanged(ArrayList<Attendee> attendees, boolean join) {
         if (mOnAttendsChangeListeners != null) {
             for (OnAttendsChangeListener listener : mOnAttendsChangeListeners) {
-                listener.onAttendsChanged(join);
+                listener.onAttendsChanged(attendees, join);
             }
         }
     }
@@ -188,9 +186,8 @@ public class ContactManager {
     }
 
     public static interface OnAttendsChangeListener {
-        public void onAttendsChanged(boolean join);
+        public void onAttendsChanged(ArrayList<Attendee> attendees, boolean join);
     }
-
 
 
 }

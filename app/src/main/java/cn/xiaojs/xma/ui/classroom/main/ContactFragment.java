@@ -54,7 +54,7 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick, 
 
     private LiveCollection<Attendee> mLiveCollection;
     private ContactBookAdapter mContactBookAdapter;
-    private Constants.User mUser;
+    private Constants.UserMode mUserMode;
     private String mTicket;
     private AttendsComparator mAttendsComparator;
 
@@ -67,7 +67,7 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick, 
     }
 
     private void initParams() {
-        mUser = LiveCtlSessionManager.getInstance().getUser();
+        mUserMode = LiveCtlSessionManager.getInstance().getUserMode();
         mTicket = LiveCtlSessionManager.getInstance().getTicket();
         mAttendsComparator = new AttendsComparator();
     }
@@ -97,7 +97,7 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick, 
      */
     private void getContactBookData() {
         if (mContactBookAdapter == null) {
-            mContactBookAdapter = new ContactBookAdapter(mContext, mUser);
+            mContactBookAdapter = new ContactBookAdapter(mContext);
             mContactBookAdapter.setOnPanelItemClick(this);
             mContactListView.setAdapter(mContactBookAdapter);
         }
@@ -174,8 +174,20 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick, 
     }
 
     @Override
-    public void onAttendsChanged(boolean join) {
+    public void onAttendsChanged(ArrayList<Attendee> attendees, boolean join) {
         //update list
-
+        int total = attendees != null ? attendees.size() : 0;
+        int current = 0;
+        if (attendees != null) {
+            for (Attendee attendee : attendees) {
+                if (attendee.xa > 0) {
+                    current++;
+                }
+            }
+        }
+        mContactTitleTv.setText(Html.fromHtml(mContext.getString(R.string.cr_room_numbers, current, total)));
+        if (mContactBookAdapter != null) {
+            mContactBookAdapter.notifyDataSetChanged();
+        }
     }
 }
