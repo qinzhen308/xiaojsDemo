@@ -12,14 +12,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.LiveManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
@@ -153,18 +150,29 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick, 
 
     @Override
     public void onItemClick(int action, Attendee attendee) {
+        Fragment target = getTargetFragment();
         switch (action) {
             case OnPanelItemClick.ACTION_OPEN_TALK:
-                Fragment target = getTargetFragment();
                 if (target != null) {
                     Intent intent = new Intent();
-                    intent.putExtra(Constants.KEY_OPEN_TALK_ATTEND, attendee);
+                    intent.putExtra(Constants.KEY_TALK_ATTEND, attendee);
+                    intent.putExtra(Constants.KEY_TALK_ACTION, OnPanelItemClick.ACTION_OPEN_TALK);
                     intent.putExtra(Constants.KEY_SHEET_GRAVITY, mSheetGravity);
                     target.onActivityResult(ClassroomController.REQUEST_CONTACT, Activity.RESULT_OK, intent);
                 }
-                ContactFragment.this.dismiss();
+                break;
+            case OnPanelItemClick.ACTION_OPEN_CAMERA:
+                if (target != null) {
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.KEY_TALK_ATTEND, attendee);
+                    intent.putExtra(Constants.KEY_TALK_ACTION, OnPanelItemClick.ACTION_OPEN_CAMERA);
+                    intent.putExtra(Constants.KEY_SHEET_GRAVITY, mSheetGravity);
+                    target.onActivityResult(ClassroomController.REQUEST_CONTACT, Activity.RESULT_OK, intent);
+                }
                 break;
         }
+
+        ContactFragment.this.dismiss();
     }
 
     @Override

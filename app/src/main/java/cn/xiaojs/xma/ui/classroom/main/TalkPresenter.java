@@ -36,6 +36,7 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.OnPhotoDoodleShareListener;
@@ -88,6 +89,8 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
         mPeerTalkMsgAdapterMap = new HashMap<String, TalkMsgAdapter>();
 
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
+
+        ContactManager.getInstance().getAttendees(mContext, null);
     }
 
     /**
@@ -274,12 +277,26 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
             talkItem.from.accountId = receiveBean.from;
             talkItem.from.name = getNameByAccountId(receiveBean.from);
 
-            int criteria = PEER_TALK;
+            boolean update = false;
             try {
-                criteria = Integer.parseInt(receiveBean.to);
+                int talkType = Integer.parseInt(receiveBean.to);
+                int criteria = PEER_TALK;
+                switch (talkType) {
+                    case Communications.TalkType.OPEN:
+                        criteria = MULTI_TALK;
+                        break;
+                    case Communications.TalkType.PEER:
+                        criteria = PEER_TALK;
+                        break;
+                    case Communications.TalkType.FACULTY:
+                        criteria = TEACHING_TALK;
+                        break;
+                }
+                update = mTalkCriteria == criteria || (mTalkCriteria == FULL_SCREEN_MULTI_TALK && criteria == MULTI_TALK);
             } catch (NumberFormatException e) {
+
             }
-            updateTalkMsgData(criteria, talkItem, mTalkCriteria == criteria);
+            updateTalkMsgData(mTalkCriteria, talkItem, update);
             if (mOnTalkMsgListener != null) {
                 mOnTalkMsgListener.onTalkMsgReceived(talkItem);
                 /*if (mDrawerOpened) {
@@ -449,15 +466,16 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
     }
 
     private String getNameByAccountId(String accountId) {
-        /*if (accountId != null && mLiveCollection != null && mLiveCollection.attendees != null) {
-            for (Attendee attendee : mLiveCollection.attendees) {
+        LiveCollection<Attendee> liveCollection = ContactManager.getInstance().getAttendees();
+        if (accountId != null && liveCollection != null && liveCollection.attendees != null) {
+            for (Attendee attendee : liveCollection.attendees) {
                 if (accountId != null && accountId.equals(attendee.accountId)) {
                     return attendee.name;
                 }
             }
-        }*/
+        }
 
-        return null;
+        return accountId;
     }
 
     @Override

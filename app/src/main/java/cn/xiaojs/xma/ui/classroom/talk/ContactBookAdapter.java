@@ -155,15 +155,21 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
         holder.name.setText(attendee.name);
 
+        //set checkbox
         if (mContactManagementMode) {
-            holder.video.setVisibility(View.INVISIBLE);
             holder.checkbox.setVisibility(View.VISIBLE);
             holder.checkbox.setSelected(mChoiceList.contains(String.valueOf(position)));
         } else {
-            holder.checkbox.setVisibility(View.GONE);
-            if (mUser == Constants.UserMode.TEACHING) {
-                holder.video.setVisibility(View.VISIBLE);
-            }
+            holder.checkbox.setVisibility(View.INVISIBLE);
+        }
+
+        //set video
+        if (!mContactManagementMode
+                && mUser == Constants.UserMode.TEACHING
+                && !ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+            holder.video.setVisibility(View.VISIBLE);
+        } else {
+            holder.video.setVisibility(View.INVISIBLE);
         }
 
         Constants.User user = ClassroomBusiness.getUser(attendee.psType);
@@ -177,12 +183,6 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             default:
                 holder.label.setText("");
                 break;
-        }
-
-        if (ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
-            holder.video.setVisibility(View.INVISIBLE);
-        } else if (mUser == Constants.UserMode.TEACHING){
-            holder.video.setVisibility(View.VISIBLE);
         }
     }
 

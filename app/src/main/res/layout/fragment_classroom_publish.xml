@@ -9,8 +9,8 @@
     <!--推流视频view(全屏)-->
     <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
             android:id="@+id/publish_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="visible"
             android:layout_centerInParent="true"/>
 
@@ -22,16 +22,9 @@
             android:layout_height="@dimen/px90"
             android:visibility="gone"
             android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/px10"
+            android:layout_marginBottom="@dimen/px10"
             android:layout_above="@+id/discussion_list_view"/>
-
-    <!--test-->
-    <!--<View
-            android:id="@+id/play_video"
-            android:layout_width="@dimen/px160"
-            android:layout_height="@dimen/px90"
-            android:visibility="gone"
-            android:layout_alignParentLeft="true"
-            android:layout_above="@+id/discussion_list_view"/>-->
 
     <!--视频推流顶部面板-->
     <include

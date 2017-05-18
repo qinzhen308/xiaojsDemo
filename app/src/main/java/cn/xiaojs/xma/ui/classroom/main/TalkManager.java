@@ -75,17 +75,18 @@ public class TalkManager {
     /**
      * 获取非一对一的聊天
      */
-    public AbsChatAdapter getChatAdapter(Context context, int type, String ticket, PullToRefreshListView listView) {
+    public AbsChatAdapter getChatAdapter(Context context, int type, PullToRefreshListView listView) {
         if (type == TYPE_PEER_TALK) {
             throw new IllegalArgumentException("illegal type passed!");
         }
 
-        return getChatAdapter(context, type, null, ticket, listView);
+        return getChatAdapter(context, type, null, listView);
     }
 
-    public AbsChatAdapter getChatAdapter(Context context, int type, String accountId, String ticket, PullToRefreshListView listView) {
+    public AbsChatAdapter getChatAdapter(Context context, int type, String accountId, PullToRefreshListView listView) {
         AbsChatAdapter adapter = getAdapter(type, accountId);
         LiveCriteria lveCriteria = new LiveCriteria();
+        String ticket = LiveCtlSessionManager.getInstance().getTicket();
         if (adapter == null) {
             lveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
             switch (type) {
@@ -111,7 +112,7 @@ public class TalkManager {
     /**
      * 得到一对一的聊天Adapter
      */
-    public AbsChatAdapter getPeekChatAdapter(Context context, String accountId, String ticket, PullToRefreshListView listView) {
+    private AbsChatAdapter getPeekChatAdapter(Context context, String accountId, String ticket, PullToRefreshListView listView) {
         if (mPeerTalkMsgAdapterMap.containsKey(accountId)) {
             return mPeerTalkMsgAdapterMap.get(accountId);
         }

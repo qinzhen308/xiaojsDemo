@@ -33,7 +33,8 @@ public interface Constants {
     public final static String KEY_CTL_SESSION = "key_ctl_session";
     public final static String KEY_MSG_INPUT_TXT = "key_msg_input_txt";
     public final static String KEY_MSG_INPUT_FROM = "key_msg_input_from";
-    public final static String KEY_OPEN_TALK_ATTEND = "key_open_talk_attend";
+    public final static String KEY_TALK_ATTEND = "key_talk_attend";
+    public final static String KEY_TALK_ACTION = "key_talk_action";
     public final static String KEY_OPEN_DOC_BEAN = "key_open_doc_bean";
     public final static String KEY_SHEET_GRAVITY = "key_sheet_gravity";
     public final static String KEY_PAGE_HEIGHT = "key_page_height";

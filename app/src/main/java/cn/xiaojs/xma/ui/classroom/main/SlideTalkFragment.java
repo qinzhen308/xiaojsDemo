@@ -134,7 +134,7 @@ public class SlideTalkFragment extends BaseFragment {
             if (mCtlSession != null) {
                 mUserMode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
             }
-            mAttendee = (Attendee) data.getSerializable(Constants.KEY_OPEN_TALK_ATTEND);
+            mAttendee = (Attendee) data.getSerializable(Constants.KEY_TALK_ATTEND);
             mFragmentHeight = data.getInt(Constants.KEY_PAGE_HEIGHT, mFragmentHeight);
         }
 

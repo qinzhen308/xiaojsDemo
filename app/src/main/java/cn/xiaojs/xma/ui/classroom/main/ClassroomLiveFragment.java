@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.Toast;
 
@@ -31,12 +32,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.base.BaseFragment;
-import cn.xiaojs.xma.ui.classroom.OnSettingChangedListener;
+import cn.xiaojs.xma.ui.classroom.*;
+import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
+import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingMode;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
@@ -45,9 +49,11 @@ import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.DeviceUtil;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
-        OnStreamStateChangeListener , BackPressListener, FrameCapturedCallback {
+        OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback {
     protected CtlSession mCtlSession;
     protected String mTicket;
     protected Constants.UserMode mUserMode = Constants.UserMode.PARTICIPANT;
@@ -66,6 +72,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
 
     private Map<String, FadeAnimListener> mFadeAnimListeners;
     private List<ViewPropertyAnimator> mViewPropertyAnimators;
+
+    private CommonDialog mAgreeOpenCamera;
 
     protected String mPlayUrl;
 
@@ -97,6 +105,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         mSlideViewHeight = displayMetrics.heightPixels - (int) (displayMetrics.widthPixels / Constants.VIDEO_VIEW_RATIO);
 
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
     }
 
     /**
@@ -225,6 +234,87 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         }
     };
 
+    /**
+     * 一对一
+     */
+    private SocketManager.EventListener mReceiveOpenMedia = new SocketManager.EventListener() {
+        @Override
+        public void call(final Object... args) {
+            if (mAgreeOpenCamera == null) {
+                mAgreeOpenCamera = new CommonDialog(mContext);
+                if (!isPortrait()) {
+                    int width = DeviceUtil.getScreenWidth(mContext) / 2;
+                    int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    mAgreeOpenCamera.setDialogLayout(width, height);
+                }
+                mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
+                mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
+
+                mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        mAgreeOpenCamera.dismiss();
+                        if (args != null && args.length > 0) {
+                            OpenMediaNotify openMediaNotify = ClassroomBusiness.parseSocketBean(args[0], OpenMediaNotify.class);
+                            if (openMediaNotify != null) {
+                                onPeerPublishCallback(openMediaNotify);
+                            }
+                        }
+                    }
+                });
+            }
+
+            mAgreeOpenCamera.show();
+        }
+    };
+
+
+    /**
+     * 申请打开学生视频
+     */
+    protected void applyOpenStuVideo(final String accountId) {
+        if (XiaojsConfig.DEBUG) {
+            Toast.makeText(mContext, "apply open student video: " + accountId, Toast.LENGTH_SHORT).show();
+        }
+
+        if (mUserMode != Constants.UserMode.TEACHING) {
+            return;
+        }
+
+        OpenMedia openMedia = new OpenMedia();
+        openMedia.to = accountId;
+        if (!ContactManager.getInstance().hasPeer2PeerStream(accountId)) {
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), openMedia, new SocketManager.AckListener() {
+                @Override
+                public void call(final Object... args) {
+                    if (args != null && args.length > 0) {
+                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                        if (response != null && response.result) {
+                            if (XiaojsConfig.DEBUG) {
+                                Toast.makeText(mContext, "open peer to peer video", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA), openMedia, new SocketManager.AckListener() {
+                @Override
+                public void call(final Object... args) {
+                    if (args != null && args.length > 0) {
+                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                        if (response != null && response.result) {
+                            ContactManager.getInstance().putPeer2PeerSteamToSet(accountId);
+                            if (XiaojsConfig.DEBUG) {
+                                Toast.makeText(mContext, "close peer to peer video", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     protected String getTxtString(int type) {
         String txt = "";
         switch (type) {
@@ -293,6 +383,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         }
 
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
     }
 
     @Override
@@ -353,6 +444,10 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     }
 
     protected void onIndividualPublishCallback(StreamingResponse response) {
+
+    }
+
+    protected void onPeerPublishCallback(OpenMediaNotify openMediaNotify) {
 
     }
 

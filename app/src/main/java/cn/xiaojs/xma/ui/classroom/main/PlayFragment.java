@@ -31,6 +31,8 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
+import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PlayVideoController;
@@ -415,6 +417,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
+    protected void onPeerPublishCallback(OpenMediaNotify openMediaNotify) {
+        startPublish(openMediaNotify.publishUrl, StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
             switch (requestCode) {
@@ -444,21 +451,30 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     break;
                 case ClassroomController.REQUEST_CONTACT:
                     //switch to peer_peer
-                    Attendee attendee = (Attendee) data.getSerializableExtra(Constants.KEY_OPEN_TALK_ATTEND);
+                    Attendee attendee = (Attendee) data.getSerializableExtra(Constants.KEY_TALK_ATTEND);
+                    int action = data.getIntExtra(Constants.KEY_TALK_ACTION, 0);
                     if (attendee == null) {
                         break;
                     }
 
-                    if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
-                        if (isPortrait()) {
-                            ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, mSlideViewHeight);
-                        } else {
-                            int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
-                            int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
-                            ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
-                        }
-                    } else {
-                        mEmbedTalkFragment.switchPeerTalk(attendee);
+                    switch (action) {
+                        case OnPanelItemClick.ACTION_OPEN_TALK:
+                            if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+                                if (isPortrait()) {
+                                    ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, mSlideViewHeight);
+                                } else {
+                                    int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
+                                    int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
+                                    ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
+                                }
+                            } else {
+                                mEmbedTalkFragment.switchPeerTalk(attendee);
+                            }
+                            break;
+                        case OnPanelItemClick.ACTION_OPEN_CAMERA:
+                            //open publish: peer to peer
+                            applyOpenStuVideo(attendee.accountId);
+                            break;
                     }
                     break;
                 case ClassroomController.REQUEST_DOC:
@@ -658,7 +674,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     cancelProgress();
                     CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
                     LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
-                    startPublish(response != null ? response.publishUrl : null);
+                    startPublish(response != null ? response.publishUrl : null, StreamType.TYPE_STREAM_PUBLISH);
                 }
 
                 @Override
@@ -675,7 +691,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     long countTime = ClassroomBusiness.getCountTimeByCtlSession();
                     ClassResponse response = ApiManager.getClassResponse(object);
                     LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
-                    startPublish(response != null ? response.publishUrl : null);
+                    startPublish(response != null ? response.publishUrl : null, StreamType.TYPE_STREAM_PUBLISH);
                 }
 
                 @Override
@@ -693,9 +709,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
     }
 
-    private void startPublish(String publishUrl) {
+    private void startPublish(String publishUrl, int streamType) {
         Bundle data = new Bundle();
-        data.putSerializable(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
+        data.putSerializable(Constants.KEY_PUBLISH_TYPE, streamType);
         data.putString(Constants.KEY_PUBLISH_URL, publishUrl);
         data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
         data.putLong(Constants.KEY_COUNT_TIME, mCountTime);

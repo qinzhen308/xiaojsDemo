@@ -18,7 +18,9 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.LiveManager;
@@ -33,8 +35,10 @@ public class ContactManager {
     private static ContactManager mInstance;
     private AttendsComparator mAttendsComparator;
 
-    public LiveCollection<Attendee> mLiveCollection;
-    public List<OnAttendsChangeListener> mOnAttendsChangeListeners;
+    private Set<String> mPeer2PeerSteamSet;
+    private LiveCollection<Attendee> mLiveCollection;
+
+    private List<OnAttendsChangeListener> mOnAttendsChangeListeners;
     private final Object LOCK = new Object();
 
     public static synchronized ContactManager getInstance() {
@@ -46,12 +50,11 @@ public class ContactManager {
     }
 
     private ContactManager() {
-        mAttendsComparator = new AttendsComparator();
         mOnAttendsChangeListeners = new ArrayList<OnAttendsChangeListener>();
-
+        mAttendsComparator = new AttendsComparator();
     }
 
-    public void listenerSocket() {
+    public void init() {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
     }
@@ -60,7 +63,7 @@ public class ContactManager {
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE));
 
-        listenerSocket();
+        init();
     }
 
     public void release() {
@@ -78,7 +81,12 @@ public class ContactManager {
             mOnAttendsChangeListeners = null;
         }
 
-        listenerSocket();
+        if (mPeer2PeerSteamSet != null) {
+            mPeer2PeerSteamSet.clear();
+            mPeer2PeerSteamSet = null;
+        }
+
+        init();
     }
 
     public synchronized void getAttendees(Context context, final OnGetAttendsCallback callback) {
@@ -105,8 +113,14 @@ public class ContactManager {
                 }
             });
         } else {
-            callback.onGetAttendeesSuccess(mLiveCollection);
+            if (callback != null) {
+                callback.onGetAttendeesSuccess(mLiveCollection);
+            }
         }
+    }
+
+    public synchronized LiveCollection<Attendee> getAttendees() {
+        return mLiveCollection;
     }
 
     /**
@@ -157,6 +171,11 @@ public class ContactManager {
                 notifyAttendChanged(mLiveCollection.attendees, join);
             }
         }
+
+        if (attendee != null && !join) {
+            //leave
+            removePeer2PeerSteamFromSet(attendee.accountId);
+        }
     }
 
     public void registerAttendsChangeListener(OnAttendsChangeListener listener) {
@@ -189,5 +208,32 @@ public class ContactManager {
         public void onAttendsChanged(ArrayList<Attendee> attendees, boolean join);
     }
 
+    public void putPeer2PeerSteamToSet(String accountId) {
+        if (mPeer2PeerSteamSet == null) {
+            mPeer2PeerSteamSet = new HashSet<String>();
+        }
+
+        if (!hasPeer2PeerStream(accountId)) {
+            mPeer2PeerSteamSet.add(accountId);
+        }
+    }
+
+    public void removePeer2PeerSteamFromSet(String accountId) {
+        if (mPeer2PeerSteamSet == null) {
+            mPeer2PeerSteamSet = new HashSet<String>();
+        }
+
+        if (hasPeer2PeerStream(accountId)) {
+            mPeer2PeerSteamSet.remove(accountId);
+        }
+    }
+
+    public boolean hasPeer2PeerStream(String accountId) {
+        if (mPeer2PeerSteamSet == null) {
+            mPeer2PeerSteamSet = new HashSet<String>();
+        }
+
+       return mPeer2PeerSteamSet.contains(accountId);
+    }
 
 }

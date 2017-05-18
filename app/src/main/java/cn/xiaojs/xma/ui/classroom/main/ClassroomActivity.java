@@ -268,7 +268,7 @@ public class ClassroomActivity extends FragmentActivity {
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mSktConnected = true;
 
-            ContactManager.getInstance().listenerSocket();
+            ContactManager.getInstance().init();
             initFragment(mCtlSession);
         }
     };

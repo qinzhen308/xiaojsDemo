@@ -17,10 +17,7 @@ package cn.xiaojs.xma.ui.classroom.live;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
@@ -29,9 +26,6 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
-import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
@@ -39,10 +33,11 @@ import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
-import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class PublishVideoController extends VideoController {
@@ -73,7 +68,6 @@ public class PublishVideoController extends VideoController {
     @Override
     protected void listenerSocket() {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
     }
@@ -90,22 +84,6 @@ public class PublishVideoController extends VideoController {
     @Override
     public void confirmPlayStream(boolean confirm) {
         mStreamPlaying = true;
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPlayView.getLayoutParams();
-        if (mPlayType == StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER) {
-            params.width = mPeerStreamViewWidth;
-            params.height = mPeerStreamViewHeight;
-            params.gravity = Gravity.LEFT | Gravity.TOP;
-            params.topMargin = mPeerStreamViewTopMargin;
-            params.leftMargin = mPeerStreamViewMargin;
-            mContainer.bringChildToFront(mPlayView);
-        } else if (mPlayType == StreamType.TYPE_STREAM_PLAY_INDIVIDUAL) {
-            params.width = FrameLayout.LayoutParams.MATCH_PARENT;
-            params.height = FrameLayout.LayoutParams.MATCH_PARENT;
-            params.gravity = Gravity.CENTER;
-            mContainer.bringChildToFront(mPublishView);
-            params.leftMargin = 0;
-            params.bottomMargin = 0;
-        }
         mPlayView.setVisibility(View.VISIBLE);
         mPlayView.setPath(mPlayStreamUrl);
         mPlayView.resume();
@@ -249,35 +227,6 @@ public class PublishVideoController extends VideoController {
                     playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, response.playUrl);
                 }
             }
-        }
-    };
-
-    private SocketManager.EventListener mReceiveOpenMedia = new SocketManager.EventListener() {
-        @Override
-        public void call(final Object... args) {
-            if (mAgreeOpenCamera == null) {
-                mAgreeOpenCamera = new CommonDialog(mContext);
-                int width = DeviceUtil.getScreenWidth(mContext) / 2;
-                int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                mAgreeOpenCamera.setDialogLayout(width, height);
-                mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
-                mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
-
-                mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        mAgreeOpenCamera.dismiss();
-                        if (args != null && args.length > 0) {
-                            OpenMediaNotify openMediaNotify = ClassroomBusiness.parseSocketBean(args[0], OpenMediaNotify.class);
-                            if (openMediaNotify != null) {
-                                publishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, openMediaNotify.publishUrl);
-                            }
-                        }
-                    }
-                });
-            }
-
-            mAgreeOpenCamera.show();
         }
     };
 

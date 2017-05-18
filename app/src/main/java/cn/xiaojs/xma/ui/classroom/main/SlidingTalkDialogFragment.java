@@ -72,7 +72,7 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
             if (session != null) {
                 mUserMode = ClassroomBusiness.getUserByCtlSession(session);
             }
-            mAttendee = (Attendee) data.getSerializable(Constants.KEY_OPEN_TALK_ATTEND);
+            mAttendee = (Attendee) data.getSerializable(Constants.KEY_TALK_ATTEND);
         }
 
         mTicket = LiveCtlSessionManager.getInstance().getTicket();

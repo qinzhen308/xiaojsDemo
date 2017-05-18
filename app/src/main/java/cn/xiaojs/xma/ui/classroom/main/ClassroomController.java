@@ -119,7 +119,7 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
         fragment.setTargetFragment(target, REQUEST_TALK);
         Bundle data = new Bundle();
         data.putSerializable(Constants.KEY_CTL_SESSION, session);
-        data.putSerializable(Constants.KEY_OPEN_TALK_ATTEND, attendee);
+        data.putSerializable(Constants.KEY_TALK_ATTEND, attendee);
         data.putInt(Constants.KEY_PAGE_HEIGHT, viewSize);
         fragment.setArguments(data);
         ((ClassroomActivity) mContext).getSupportFragmentManager()
@@ -145,7 +145,7 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
         } else {
             data.putInt(SheetFragment.KEY_FRAGMENT_H, viewSize);
         }
-        data.putSerializable(Constants.KEY_OPEN_TALK_ATTEND, attendee);
+        data.putSerializable(Constants.KEY_TALK_ATTEND, attendee);
         fragment.setArguments(data);
         fragment.show(((ClassroomActivity) mContext).getSupportFragmentManager(), "slide_dialog_talk");
     }

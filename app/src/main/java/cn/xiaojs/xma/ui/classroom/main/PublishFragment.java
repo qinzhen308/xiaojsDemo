@@ -23,6 +23,8 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
+import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
+import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
@@ -323,17 +325,26 @@ public class PublishFragment extends ClassroomLiveFragment {
                     break;
                 case ClassroomController.REQUEST_CONTACT:
                     //switch to peer_peer
-                    Attendee attendee = (Attendee) data.getSerializableExtra(Constants.KEY_OPEN_TALK_ATTEND);
+                    Attendee attendee = (Attendee) data.getSerializableExtra(Constants.KEY_TALK_ATTEND);
+                    int action = data.getIntExtra(Constants.KEY_TALK_ACTION, 0);
                     if (attendee == null) {
                         break;
                     }
 
-                    if (isPortrait()) {
-                        ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, mSlideViewHeight);
-                    } else {
-                        int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
-                        int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
-                        ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
+                    switch (action) {
+                        case OnPanelItemClick.ACTION_OPEN_TALK:
+                            if (isPortrait()) {
+                                ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, mSlideViewHeight);
+                            } else {
+                                int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
+                                int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
+                                ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
+                            }
+                            break;
+                        case OnPanelItemClick.ACTION_OPEN_CAMERA:
+                            //open publish: peer to peer
+                            applyOpenStuVideo(attendee.accountId);
+                            break;
                     }
                     break;
             }
@@ -444,7 +455,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     private void handOnBackPressed() {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
-        if (Live.LiveSessionState.LIVE.equals(liveState)) {
+        if (Live.LiveSessionState.LIVE.equals(liveState) && mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
             pauseClass(true);
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
             //pause and exit
