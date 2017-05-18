@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="2014-02-12 周三"
+        android:textSize="@dimen/font_28px"
+        android:textColor="@color/chocolate_light"
+        android:paddingLeft="@dimen/px32"
+        android:paddingTop="@dimen/px20"
+        android:paddingBottom="@dimen/px20"
+        android:layout_toLeftOf="@+id/tv_total_lessons"
+        />
+
+    <TextView
+        android:id="@+id/tv_total_lessons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="共好多节"
+        android:textSize="@dimen/font_24px"
+        android:textColor="@color/gray"
+        android:paddingRight="@dimen/px32"
+        android:paddingTop="@dimen/px20"
+        android:paddingBottom="@dimen/px20"
+        />
+
+
+</LinearLayout>

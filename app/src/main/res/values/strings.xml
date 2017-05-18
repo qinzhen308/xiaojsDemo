@@ -123,6 +123,8 @@
     <string name="verify_error">请输入正确的验证码</string>
     <string name="set_new_pwd_succ">密码设置成功，请重新登录</string>
     <string name="set_new_pwd_error">密码设置失败，请重新设置</string>
+    <string name="third_login_tip">社交账号直接登录</string>
+    <string name="bind_phone">绑定手机号</string>
     <!--home-->
     <string name="block_cls_time_mark">距上课还有%1$d分钟</string>
     <string name="block_cls_course_num">第&#160;%1$d&#160;课</string>

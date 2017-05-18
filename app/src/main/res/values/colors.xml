@@ -143,4 +143,9 @@
     <color name="blue">#0000FF</color>
     <color name="subject_selected_blue">#7598c1</color>
 
+    <color name="chocolate_light">#b49e89</color>
+    <color name="gray_line">#e7e8ea</color>
+    <color name="gray_item_bg">#f7f9fa</color>
+    <color name="orange_point">#ff4343</color>
+
 </resources>
