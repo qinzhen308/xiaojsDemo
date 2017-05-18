@@ -766,7 +766,21 @@
     <string name="go_on_share_material">继续分享</string>
     <string name="query_go_on_share_when_confilc">以下资料在该班级中已存在，是否继续分享？</string>
     <string name="Invalid_calss_qrcode_tips">无效的教室二维码，请扫描正确的教室二维码</string>
-    <string name="create_class">开班</string>
 
+    <!--班-->
+    <string name="create_class">开班</string>
+    <string name="class_create_tips">创建班级之后，你可以随时添加学生、任课老师、排课等，对班级进行实时管理</string>
+    <string name="live_class_name">班级名称</string>
+    <string name="head_teacher">班主任</string>
+    <string name="join_type">加入班级是否需要验证</string>
+    <string name="need_confirm">需要确认</string>
+    <string name="no_verification_required">无需验证</string>
+    <string name="time_table">课表</string>
+    <string name="arrange_class">请排课</string>
+    <string name="class_student">学生</string>
+    <string name="video_setting">录像设置</string>
+    <string name="video_auto_repaly">自动录像回放</string>
+    <string name="video_auto_repaly_tips">自动录像后的视频，会保存到您的个人资料库中，并可自动回放</string>
+    <string name="no_need_video">无需录像</string>
 
 </resources>

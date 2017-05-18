@@ -142,5 +142,6 @@
 
     <color name="blue">#0000FF</color>
     <color name="subject_selected_blue">#7598c1</color>
+    <color name="radio_tips">#b49e89</color>
 
 </resources>

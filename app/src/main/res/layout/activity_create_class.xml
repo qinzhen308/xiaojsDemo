@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include
+            layout="@layout/layout_create_tips"
+            android:id="@+id/lay_tips"
+            />
+
+    <Button
+            android:id="@+id/sub_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/finish"
+            style="@style/BigSubmitBtn"/>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/sub_btn"
+            android:layout_below="@id/lay_tips">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <!--课名称-->
+            <LinearLayout
+                    style="@style/LiveLessonItem">
+
+                <TextView
+                        style="@style/LiveLessonCreateTitle"
+                        android:text="@string/live_class_name"/>
+
+                <cn.xiaojs.xma.ui.widget.EditTextDel
+                        android:id="@+id/live_lesson_name"
+                        style="@style/LiveLessonCreateEdt"
+                        android:layout_marginLeft="@dimen/px40"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:maxLines="2"
+                        android:hint="@string/live_lesson_name_hint"/>
+            </LinearLayout>
+
+            <include layout="@layout/layout_horizontal_line"/>
+
+            <LinearLayout
+                    style="@style/LiveLessonItem">
+
+                <TextView
+                        style="@style/LiveLessonCreateTitle"
+                        android:text="@string/head_teacher"/>
+
+                <TextView
+                        android:id="@+id/lesson_subject"
+                        style="@style/LiveLessonRightEntrance"
+                        android:drawableRight="@null"
+                        />
+            </LinearLayout>
+
+            <include layout="@layout/layout_horizontal_line"/>
+
+
+            <!--加入班级是否需要验证-->
+            <LinearLayout
+                    android:paddingLeft="@dimen/px28"
+                    android:paddingRight="@dimen/px26"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/px25"
+                        android:paddingBottom="@dimen/px28"
+                        android:text="@string/join_type"
+                        android:background="@color/white"/>
+
+                <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/px22"
+                        android:paddingBottom="@dimen/px28"
+                        >
+
+                    <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/px22"
+                            android:paddingTop="@dimen/px16"
+                            android:paddingBottom="@dimen/px16"
+                            android:textSize="@dimen/font_28px"
+                            android:textColor="@color/font_dark_gray"
+                            android:text="@string/need_confirm"
+                            android:button="@drawable/single_check_selector"/>
+
+                    <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/px22"
+                            android:paddingTop="@dimen/px16"
+                            android:paddingBottom="@dimen/px16"
+                            android:textSize="@dimen/font_28px"
+                            android:textColor="@color/font_dark_gray"
+                            android:text="@string/no_verification_required"
+                            android:button="@drawable/single_check_selector"/>
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <!--课表-->
+            <LinearLayout
+                    android:id="@+id/lay_time_table"
+                    android:layout_marginTop="@dimen/px32"
+                    style="@style/LiveLessonItem">
+
+                <TextView
+                        style="@style/LiveLessonTitle"
+                        android:text="@string/time_table"/>
+
+                <TextView
+                        android:id="@+id/lesson_start_time"
+                        style="@style/LiveLessonRightEntrance"
+                        android:hint="@string/arrange_class"/>
+
+            </LinearLayout>
+
+            <include
+                    layout="@layout/layout_horizontal_line"/>
+
+            <!--学生-->
+            <LinearLayout
+                    android:id="@+id/lay_class_student"
+                    style="@style/LiveLessonItem">
+
+                <TextView
+                        style="@style/LiveLessonTitle"
+                        android:text="@string/class_student"/>
+
+                <TextView
+                        style="@style/LiveLessonRightEntrance"
+                        android:hint="@string/please_select"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

@@ -282,6 +282,12 @@
                   android:screenOrientation="portrait"/>
         <activity android:name="com.kaola.qrcodescanner.qrcode.QrCodeActivity"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.CreateClassActivity"
+                  android:windowSoftInputMode="stateAlwaysHidden"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.CreateTimetableActivity"
+                  android:windowSoftInputMode="stateAlwaysHidden"
+                  android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"
