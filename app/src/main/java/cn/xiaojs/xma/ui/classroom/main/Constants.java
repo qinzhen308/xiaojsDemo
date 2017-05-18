@@ -26,7 +26,6 @@ public interface Constants {
     public final static String KEY_QUALITY = "key_quality";
     public final static String KEY_TICKET = "key_ticket";
     public final static String KEY_LESSON_ID = "key_lesson_id";
-    public final static String KEY_URL = "key_url";
     public final static String KEY_LIB_DOC = "key_lib_doc";
     public final static String KEY_IMG_DISPLAY_MODE = "key_img_display_mode";
     public final static String KEY_IMG_LIST = "key_img_list";
@@ -38,7 +37,20 @@ public interface Constants {
     public final static String KEY_OPEN_DOC_BEAN = "key_open_doc_bean";
     public final static String KEY_SHEET_GRAVITY = "key_sheet_gravity";
     public final static String KEY_PAGE_HEIGHT = "key_page_height";
-    public final static String KEY_EXIT_FROM_PUBLISH = "key_exit_from_publish";
+
+
+    public final static String KEY_PUBLISH_TYPE = "key_publish_type";
+    public final static String KEY_PLAY_URL = "key_play_url";
+    public final static String KEY_PUBLISH_URL = "key_publish_url";
+    public final static String KEY_BEFORE_LIVE_STATE = "key_before_live_state";
+    public final static String KEY_INDIVIDUAL_DURATION = "key_individual_duration";
+    public final static String KEY_INDIVIDUAL_NAME = "key_individual_name";
+    public final static String KEY_COUNT_TIME = "key_count_time";
+    public final static String KEY_FROM = "key_from";
+
+    public final static int FROM_ACTIVITY = 0;
+    public final static int FROM_PLAY_FRAGMENT = 1;
+    public final static int FROM_PUBLISH_FRAGMENT = 2;
 
     /**
      * if allow to live for mobile network

@@ -149,6 +149,7 @@ public class TimeProgressHelper {
                             time = TimeUtil.formatSecondTime(mCountTime);
                             if (mCountTime > 0) {
                                 mFullScreenTimeInfoTv.setText(mContext.getString(R.string.cls_distance_class, time));
+                                mHandler.sendMessageDelayed(m, 1000);
                             } else {
                                 mFullScreenTimeInfoTv.setText(mContext.getString(R.string.cls_live_arrived));
                             }
@@ -216,7 +217,12 @@ public class TimeProgressHelper {
                                 mFullScreenTimeInfoTv.setVisibility(View.VISIBLE);
                                 mLiveShowTv.setVisibility(View.GONE);
                             }
-                            mTitleBarTimeInfoTv.setText(simpleTime + "/" + total);
+                            String state = LiveCtlSessionManager.getInstance().getLiveState();
+                            if (Live.LiveSessionState.FINISHED.equals(state)) {
+                                mTitleBarTimeInfoTv.setText(R.string.cls_live_finish);
+                            } else {
+                                mTitleBarTimeInfoTv.setText(simpleTime + "/" + total);
+                            }
                             break;
                     }
                     break;

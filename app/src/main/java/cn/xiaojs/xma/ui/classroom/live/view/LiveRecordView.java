@@ -237,7 +237,11 @@ public class LiveRecordView extends BaseMediaView implements
 
     @Override
     public boolean onRestartStreamingHandled(int i) {
-        return mMediaStreamingManager.startStreaming();
+        if (mMediaStreamingManager != null) {
+            return mMediaStreamingManager.startStreaming();
+        }
+
+        return false;
     }
 
     @Override

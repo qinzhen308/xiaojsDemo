@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
+import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
@@ -405,11 +407,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     protected void onIndividualPublishCallback(StreamingResponse response) {
         Bundle data = new Bundle();
-        data.putInt(PublishFragment.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
-        data.putString(PublishFragment.KEY_PUBLISH_URL, response.publishUrl);
-        data.putString(PublishFragment.KEY_BEFORE_LIVE_STATE, mBeforeClamSteamState);
-        data.putLong(PublishFragment.KEY_INDIVIDUAL_DURATION, response.finishOn);
-        data.putString(PublishFragment.KEY_INDIVIDUAL_NAME, "");
+        data.putInt(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
+        data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
+        data.putString(Constants.KEY_PUBLISH_URL, response.publishUrl);
+
+        data.putString(Constants.KEY_BEFORE_LIVE_STATE, mBeforeClamSteamState);
+        data.putLong(Constants.KEY_INDIVIDUAL_DURATION, response.finishOn);
+        data.putString(Constants.KEY_INDIVIDUAL_NAME, "");
         ClassroomController.getInstance().enterPublishFragment(data, true);
     }
 
@@ -545,7 +549,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     protected void onSyncStateChanged(SyncStateResponse syncState) {
-        long countTime = mTimeProgressHelper.getCountTime();
+        mCountTime = mTimeProgressHelper.getCountTime();
         boolean autoCountTime = false;
 
         String liveState = null;
@@ -554,27 +558,24 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
         } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))
                 || (Live.LiveSessionState.RESET.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))) {
-            //if (mUser == Constants.User.STUDENT) {
-            //    mVideoController.playStream(StreamType.TYPE_STREAM_PLAY, mPlayUrl);
-            //}
             liveState = Live.LiveSessionState.LIVE;
             autoCountTime = true;
-            countTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
+            mCountTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
         } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.RESET.equals(syncState.to)) {
             liveState = Live.LiveSessionState.RESET;
             autoCountTime = false;
-            countTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
+            mCountTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
         } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.DELAY.equals(syncState.to)) {
             liveState = Live.LiveSessionState.DELAY;
             autoCountTime = false;
-            countTime = 0;
+            mCountTime = 0;
         } else if (Live.LiveSessionState.DELAY.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
             liveState = Live.LiveSessionState.FINISHED;
         }
 
         setControllerBtnStyle(liveState);
         LiveCtlSessionManager.getInstance().updateCtlSessionState(liveState);
-        mTimeProgressHelper.setTimeProgress(countTime, liveState, autoCountTime);
+        mTimeProgressHelper.setTimeProgress(mCountTime, liveState, autoCountTime);
 
         if (mTipsHelper != null) {
             mTipsHelper.hideTips();
@@ -599,9 +600,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
         Bundle data = getArguments();
         if (data != null) {
-            boolean fromPublish = data.getBoolean(PublishFragment.KEY_FROM_PUBLISH, false);
-            if (fromPublish) {
-                mCountTime = data.getLong(PublishFragment.KEY_RESET_TIME, mCountTime);
+            int from = data.getInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
+            if (from == Constants.FROM_PUBLISH_FRAGMENT) {
+                mCountTime = data.getLong(Constants.KEY_COUNT_TIME, mCountTime);
             }
         }
         mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
@@ -658,6 +659,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 @Override
                 public void onSuccess(ClassResponse response) {
                     cancelProgress();
+                    CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
                     LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
                     startPublish(response != null ? response.publishUrl : null);
                 }
@@ -673,6 +675,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 @Override
                 public void onSuccess(ResponseBody object) {
                     cancelProgress();
+                    long countTime = ClassroomBusiness.getCountTimeByCtlSession();
                     ClassResponse response = ApiManager.getClassResponse(object);
                     LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
                     startPublish(response != null ? response.publishUrl : null);
@@ -695,8 +698,10 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     private void startPublish(String publishUrl) {
         Bundle data = new Bundle();
-        data.putSerializable(PublishFragment.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
-        data.putString(PublishFragment.KEY_PUBLISH_URL, publishUrl);
+        data.putSerializable(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
+        data.putString(Constants.KEY_PUBLISH_URL, publishUrl);
+        data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
+        data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
         ClassroomController.getInstance().enterPublishFragment(data, true);
     }
 

@@ -223,8 +223,9 @@ public class ClassroomActivity extends FragmentActivity {
                         Live.LiveSessionState.LIVE.equals(ctlSession.state))) {
             //teacher-->live, delay
             Bundle data = new Bundle();
-            data.putSerializable(PublishFragment.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
-            data.putString(PublishFragment.KEY_PUBLISH_URL, ctlSession.publishUrl);
+            data.putInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
+            data.putSerializable(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
+            data.putString(Constants.KEY_PUBLISH_URL, ctlSession.publishUrl);
             ClassroomController.getInstance().enterPublishFragment(data, false);
         } else {
             ClassroomController.getInstance().enterPlayFragment(null);

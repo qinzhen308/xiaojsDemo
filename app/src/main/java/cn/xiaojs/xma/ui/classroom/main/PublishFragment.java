@@ -50,15 +50,6 @@ import okhttp3.ResponseBody;
  * ======================================================================================== */
 
 public class PublishFragment extends ClassroomLiveFragment {
-    public final static String KEY_PUBLISH_TYPE = "key_publish_type";
-    public final static String KEY_PLAY_URL = "key_play_url";
-    public final static String KEY_PUBLISH_URL = "key_publish_url";
-    public final static String KEY_BEFORE_LIVE_STATE = "key_before_live_state";
-    public final static String KEY_INDIVIDUAL_DURATION = "key_individual_duration";
-    public final static String KEY_INDIVIDUAL_NAME = "key_individual_name";
-    public final static String KEY_RESET_TIME = "key_reset_time";
-    public final static String KEY_FROM_PUBLISH = "key_from_publish";
-
     @BindView(R.id.tip_view)
     View mTipView;
 
@@ -222,13 +213,22 @@ public class PublishFragment extends ClassroomLiveFragment {
     @Override
     protected void initData() {
         Bundle data = getArguments();
+        mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
         if (data != null) {
-            mPublishType = data.getInt(KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
-            mPublishUrl = data.getString(KEY_PUBLISH_URL, "");
-            mPlayUrl = data.getString(KEY_PLAY_URL, "");
-            mBeforeClamSteamState = data.getString(KEY_BEFORE_LIVE_STATE, "");
-            mIndividualStreamDuration = data.getLong(KEY_INDIVIDUAL_DURATION, 0);
-            mIndividualName = data.getString(KEY_INDIVIDUAL_NAME, "");
+            mPublishType = data.getInt(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
+            mPublishUrl = data.getString(Constants.KEY_PUBLISH_URL, "");
+            mPlayUrl = data.getString(Constants.KEY_PLAY_URL, "");
+
+            //get individual info
+            mBeforeClamSteamState = data.getString(Constants.KEY_BEFORE_LIVE_STATE, "");
+            mIndividualStreamDuration = data.getLong(Constants.KEY_INDIVIDUAL_DURATION, 0);
+            mIndividualName = data.getString(Constants.KEY_INDIVIDUAL_NAME, "");
+
+            //get count time
+            int from = data.getInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
+            if (from == Constants.FROM_PLAY_FRAGMENT) {
+                mCountTime = data.getLong(Constants.KEY_COUNT_TIME, mCountTime);
+            }
         }
 
         mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
@@ -240,7 +240,6 @@ public class PublishFragment extends ClassroomLiveFragment {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         switch (mPublishType) {
             case StreamType.TYPE_STREAM_PUBLISH:
-                mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
                 if (Live.LiveSessionState.LIVE.equals(liveState)) {
                     mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH, mPublishUrl);
                 } else {
@@ -251,12 +250,10 @@ public class PublishFragment extends ClassroomLiveFragment {
                 mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL, mPublishUrl);
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
-                mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
                 mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, mPublishUrl);
                 mVideoController.playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, mPlayUrl);
                 break;
         }
-
 
         mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
         setControllerBtnStyle(liveState);
@@ -426,6 +423,10 @@ public class PublishFragment extends ClassroomLiveFragment {
             LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.PENDING_FOR_JOIN);
             setControllerBtnStyle(Live.LiveSessionState.PENDING_FOR_JOIN);
             autoCountTime = true;
+        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.RESET.equals(syncState.to)) {
+            setControllerBtnStyle(Live.LiveSessionState.RESET);
+            autoCountTime = false;
+            mCountTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
         } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.DELAY.equals(syncState.to)) {
             LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.DELAY);
             setControllerBtnStyle(Live.LiveSessionState.DELAY);
@@ -631,13 +632,13 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     private void exitCurrentFragment() {
         Bundle data = new Bundle();
-        data.putBoolean(KEY_FROM_PUBLISH, true);
+        data.putInt(Constants.KEY_FROM, Constants.FROM_PUBLISH_FRAGMENT);
         switch (mPublishType) {
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
-                data.putString(KEY_PLAY_URL, mPlayUrl);
+                data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
                 break;
             case StreamType.TYPE_STREAM_PUBLISH:
-                data.putLong(KEY_RESET_TIME, mCountTime);
+                data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
                 break;
             default:
                 break;
