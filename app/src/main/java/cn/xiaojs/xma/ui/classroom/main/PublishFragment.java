@@ -240,9 +240,6 @@ public class PublishFragment extends ClassroomLiveFragment {
         mPublishVideoView.setTouchConsume(false);
 
         updatePortraitViewStyle();
-        //TODO
-        mPlayVideoView.setVisibility(View.VISIBLE);
-        mPlayVideoView.setBackgroundColor(Color.RED);
     }
 
     @Override
