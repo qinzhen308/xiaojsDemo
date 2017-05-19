@@ -61,13 +61,11 @@ public class FadeAnimListener implements Animator.AnimatorListener {
                 mV.setVisibility(View.INVISIBLE);
             }
         }
-        mV = null;
     }
 
     @Override
     public void onAnimationCancel(Animator animation) {
         mAnimating = false;
-        mV = null;
     }
 
     @Override
@@ -77,5 +75,9 @@ public class FadeAnimListener implements Animator.AnimatorListener {
 
     public boolean isAnimating() {
         return mAnimating;
+    }
+
+    public boolean isShow() {
+        return mV != null ? mV.getVisibility() == View.VISIBLE : null;
     }
 }

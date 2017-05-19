@@ -24,7 +24,6 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
-import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
@@ -195,6 +194,8 @@ public class PublishFragment extends ClassroomLiveFragment {
         } else {
             updateLandViewStyle();
         }
+
+        postHideAnim();
     }
 
     @Override
@@ -259,6 +260,8 @@ public class PublishFragment extends ClassroomLiveFragment {
 
         mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, mOriginSteamState, false);
         setControllerBtnStyle(liveState);
+
+        postHideAnim();
     }
 
     @Override
@@ -277,6 +280,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             showAnim(mContactBtn);
             showAnim(mOpenTalkBtn);
             showAnim(mLandPortraitBtn);
+            postHideAnim();
         }
 
         if (isPortrait()) {
@@ -284,12 +288,14 @@ public class PublishFragment extends ClassroomLiveFragment {
                 hideAnim(mScreenshotPortraitBtn);
             } else {
                 showAnim(mScreenshotPortraitBtn);
+                postHideAnim();
             }
         } else {
             if (mScreenshotLandBtn.getVisibility() == View.VISIBLE) {
                 hideAnim(mScreenshotLandBtn);
             } else {
                 showAnim(mScreenshotLandBtn);
+                postHideAnim();
             }
         }
     }

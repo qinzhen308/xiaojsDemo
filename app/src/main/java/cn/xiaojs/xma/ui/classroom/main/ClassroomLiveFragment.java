@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -54,6 +55,8 @@ import cn.xiaojs.xma.util.DeviceUtil;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
         OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback {
+    protected final static int ANIM_HIDE_TIMEOUT = 5 * 1000;
+
     protected CtlSession mCtlSession;
     protected String mTicket;
     protected Constants.UserMode mUserMode = Constants.UserMode.PARTICIPANT;
@@ -80,6 +83,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected int mSlideViewWidth;
     protected int mSlideViewHeight;
 
+    protected Handler mHandler;
+
     @Override
     protected void init() {
         initParams();
@@ -92,6 +97,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         if (data != null) {
         }
 
+        mHandler = new Handler();
         mCtlSession = LiveCtlSessionManager.getInstance().getCtlSession();
         mUserMode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
         mTicket = LiveCtlSessionManager.getInstance().getTicket();
@@ -147,6 +153,33 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
 
         return false;
     }
+
+    protected boolean isAnimViewShow() {
+        if (mFadeAnimListeners != null) {
+            for (Map.Entry<String, FadeAnimListener> entry : mFadeAnimListeners.entrySet()) {
+                FadeAnimListener listener = entry.getValue();
+                if (!listener.isShow()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    protected void postHideAnim() {
+        mHandler.removeCallbacks(mHideAnim);
+        mHandler.postDelayed(mHideAnim, ANIM_HIDE_TIMEOUT);
+    }
+
+    private Runnable mHideAnim = new Runnable() {
+        @Override
+        public void run() {
+            if (!isAnimating() && isAnimViewShow()) {
+                startAnim();
+            }
+        }
+    };
 
     protected void startAnimation(View view, int animMode, int animSets, AnimData data) {
         FadeAnimListener listener = getAnimListener(view.getClass());
@@ -344,7 +377,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected void setControllerBtnStyle(String liveState) {
 
     }
-
 
     @Override
     public void onFrameCaptured(Bitmap bitmap) {

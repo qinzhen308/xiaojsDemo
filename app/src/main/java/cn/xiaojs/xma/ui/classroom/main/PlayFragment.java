@@ -245,6 +245,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         updateViewStyleByLiveState(liveState);
+
+        postHideAnim();
     }
 
     private void updateViewStyleByLiveState(String liveState) {
@@ -284,6 +286,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         } else {
             updateFullScreenPlayViewStyle(isPortrait);
         }
+
+        postHideAnim();
     }
 
     private void enterFullScreen() {
@@ -366,6 +370,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 showAnim(mContactBtn);
                 showAnim(mOpenTalkBtn);
                 showAnim(mLandPortraitBtn);
+                postHideAnim();
             }
 
             if (isPortrait()) {
@@ -373,12 +378,14 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     hideAnim(mScreenshotPortraitBtn);
                 } else {
                     showAnim(mScreenshotPortraitBtn);
+                    postHideAnim();
                 }
             } else {
                 if (mScreenshotLandBtn.getVisibility() == View.VISIBLE) {
                     hideAnim(mScreenshotLandBtn);
                 } else {
                     showAnim(mScreenshotLandBtn);
+                    postHideAnim();
                 }
             }
         } else {
@@ -388,6 +395,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             } else if (mTopPanel.getVisibility() == View.INVISIBLE) {
                 showAnim(mTopPanel);
                 showAnim(mEnterLandBtn);
+                postHideAnim();
             }
         }
     }
