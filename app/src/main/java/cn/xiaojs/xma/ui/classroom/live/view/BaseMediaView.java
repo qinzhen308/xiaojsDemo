@@ -38,9 +38,7 @@ public abstract class BaseMediaView extends FrameLayout {
     protected FrameLayout mLoadingLayout;
     protected LoadingView mLoadingView;
     protected TextView mLadingDesc;
-    private GestureDetector mGesture;
     private String mPath;
-    private boolean mTouchable = true;
     private boolean mConsume = true;
     protected boolean mResume = false;
     protected Handler mHandler;
@@ -71,7 +69,6 @@ public abstract class BaseMediaView extends FrameLayout {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         params.gravity = Gravity.CENTER;
         addView(initMediaView(), 0, params);
-        mGesture = new GestureDetector(getContext(), new CustomerOnGestureListener());
     }
 
     protected void initHandler() {
@@ -82,68 +79,11 @@ public abstract class BaseMediaView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        /*if (mTouchable) {
-            if (!normal) {
-                scale();
-                return true;
-            }
-            mGesture.onTouchEvent(event);
-            return true;
-        } else {
-
-        }*/
-
         if (mConsume) {
             return super.onTouchEvent(event);
         } else {
             return false;
         }
-    }
-
-    private class CustomerOnGestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            final LiveMenu menu = new LiveMenu(getContext(), BaseMediaView.this instanceof PlayerTextureView, isMute());
-            menu.show(BaseMediaView.this);
-            menu.setOnItemClickListener(new LiveMenu.OnItemClickListener() {
-                @Override
-                public void onScale() {
-                    scale();
-                }
-
-                @Override
-                public void onAudio() {
-                    mute();
-                }
-
-                @Override
-                public void onVideoClose() {
-                    close();
-                }
-
-                @Override
-                public void onSwitchCamera() {
-                    switchCamera();
-                }
-            });
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(getContext(), "onLongPress", Toast.LENGTH_LONG).show();
-            }
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-    }
-
-    public void setTouchable(boolean touchable) {
-        mTouchable = touchable;
     }
 
     public void setTouchConsume(boolean consume) {
@@ -180,27 +120,6 @@ public abstract class BaseMediaView extends FrameLayout {
 
     protected void share() {
 
-    }
-
-    private boolean normal = true;
-
-    protected void scale() {
-        ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) getLayoutParams();
-        if (normal) {
-//            lp.width = getResources().getDimensionPixelSize(Config.SCALED_WIDTH);
-//            lp.height = getResources().getDimensionPixelSize(Config.SCALED_HEIGHT);
-            lp.width = DeviceUtil.getScreenWidth(getContext());
-            lp.height = DeviceUtil.getScreenHeight(getContext());
-            lp.leftMargin = 0;
-            lp.topMargin = 0;
-        } else {
-            lp.width = getResources().getDimensionPixelSize(Config.NORMAL_WIDTH);
-            lp.height = getResources().getDimensionPixelSize(Config.NORMAL_HEIGHT);
-            lp.rightMargin = getResources().getDimensionPixelSize(R.dimen.px10);
-            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.px110);
-        }
-        setLayoutParams(lp);
-        normal = !normal;
     }
 
     protected void switchCamera() {

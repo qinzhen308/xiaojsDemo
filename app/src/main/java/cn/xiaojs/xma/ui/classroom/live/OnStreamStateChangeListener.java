@@ -14,7 +14,7 @@ package cn.xiaojs.xma.ui.classroom.live;
  *
  * ======================================================================================== */
 
-import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 
 public interface OnStreamStateChangeListener {
     /**
@@ -30,6 +30,6 @@ public interface OnStreamStateChangeListener {
     /**
      * 当流的尺寸发生变化
      */
-    public void onStreamSizeChanged(int w, int h);
+    public void onStreamSizeChanged(BaseMediaView v, int w, int h);
 
 }

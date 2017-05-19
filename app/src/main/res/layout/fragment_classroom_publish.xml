@@ -26,6 +26,16 @@
             android:layout_marginBottom="@dimen/px10"
             android:layout_above="@+id/discussion_list_view"/>
 
+    <ImageView
+            android:id="@+id/close_play_full_screen"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/px20"
+            android:layout_marginTop="@dimen/px20"
+            android:src="@drawable/ic_delete"/>
+
     <!--视频推流顶部面板-->
     <include
             android:id="@+id/time_status_bar"

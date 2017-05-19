@@ -140,7 +140,7 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
         Bundle data = new Bundle();
         data.putSerializable(Constants.KEY_CTL_SESSION, session);
         data.putInt(SheetFragment.KEY_SHEET_GRAVITY, gravity);
-        if (SettingFragment.SHEET_GRAVITY_RIGHT == gravity) {
+        if (SheetFragment.SHEET_GRAVITY_RIGHT == gravity) {
             data.putInt(SheetFragment.KEY_FRAGMENT_W, viewSize);
         } else {
             data.putInt(SheetFragment.KEY_FRAGMENT_H, viewSize);
@@ -190,7 +190,7 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
         Bundle data = new Bundle();
         fragment.setArguments(data);
         data.putInt(SheetFragment.KEY_SHEET_GRAVITY, gravity);
-        if (SettingFragment.SHEET_GRAVITY_BOTTOM == gravity) {
+        if (SheetFragment.SHEET_GRAVITY_BOTTOM == gravity) {
             data.putInt(SheetFragment.KEY_FRAGMENT_H, viewSize);
         }
         fragment.setTargetFragment(target, REQUEST_SETTING);

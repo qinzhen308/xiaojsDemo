@@ -25,6 +25,8 @@ import android.widget.PopupWindow;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.ClassroomPopupWindowLayout;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 
 public class LiveMenu extends PopupWindow {
 
@@ -33,7 +35,6 @@ public class LiveMenu extends PopupWindow {
     private PopupWindow mPopupWindow;
     private View mRootView;
 
-    private ImageView mSwitchCamera;
     private ImageView mVideo;
     private ImageView mAudio;
     private ImageView mScale;
@@ -41,54 +42,30 @@ public class LiveMenu extends PopupWindow {
     private OnItemClickListener mListener;
 
     private ClassroomPopupWindowLayout mLayout;
-    private boolean mIsMute;
+    private int mGravity;
 
-    public LiveMenu(Context context, boolean isTeacher, boolean isMute) {
+    public LiveMenu(Context context, int gravity) {
         super(context);
-        mIsTeacher = isTeacher;
-        mIsMute = isMute;
-        init(context);
+        init(context, gravity);
     }
 
-    private void init(Context context) {
+    private void init(Context context, int gravity) {
         mContext = context;
+        mIsTeacher = LiveCtlSessionManager.getInstance().getUserMode() == Constants.UserMode.TEACHING;
         mRootView = LayoutInflater.from(mContext).inflate(R.layout.layout_live_menu, null);
-        mSwitchCamera = (ImageView) mRootView.findViewById(R.id.live_menu_switch);
         mScale = (ImageView) mRootView.findViewById(R.id.live_menu_scale);
         mAudio = (ImageView) mRootView.findViewById(R.id.live_menu_audio);
         mVideo = (ImageView) mRootView.findViewById(R.id.live_menu_video);
         mLayout = new ClassroomPopupWindowLayout(mContext);
-        if (mIsMute) {
-            mAudio.setImageResource(R.drawable.mic_on_selector);
-        }
-        int gravity = Gravity.TOP;
-        if (!mIsTeacher) {
-            gravity = Gravity.LEFT;
-            mVideo.setImageResource(R.drawable.ic_video_pressed);
-        }
 
-        if (mIsTeacher) {
-            mSwitchCamera.setVisibility(View.GONE);
-            mVideo.setVisibility(View.GONE);
-        } else {
-            mSwitchCamera.setVisibility(View.VISIBLE);
-            mVideo.setVisibility(View.VISIBLE);
-        }
+        mVideo.setVisibility(View.GONE);
+        mAudio.setVisibility(View.GONE);
 
+        mGravity = gravity;
         mLayout.addContent(mRootView, gravity, ClassroomPopupWindowLayout.DARK_GRAY);
         mPopupWindow = new PopupWindow(mLayout, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-
-        mSwitchCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onSwitchCamera();
-                }
-                dismiss();
-            }
-        });
 
         mScale.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,11 +100,11 @@ public class LiveMenu extends PopupWindow {
 
     public void show(View anchor) {
         mRootView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        if (mIsTeacher) {
+        if (mGravity == Gravity.BOTTOM) {
             int margin = mContext.getResources().getDimensionPixelSize(R.dimen.px30) - mRootView.getMeasuredWidth() / 2;
             mLayout.setIndicatorOffsetX(margin);
             showAsDropDown(anchor, 0, -mContext.getResources().getDimensionPixelSize(R.dimen.px180));
-        } else {
+        } else if (mGravity == Gravity.TOP){
             int leftOffset = mRootView.getMeasuredWidth() + mContext.getResources().getDimensionPixelSize(R.dimen.px20);
             int topOffset = mContext.getResources().getDimensionPixelSize(R.dimen.px10);
             int margin = (mRootView.getMeasuredHeight() - mContext.getResources().getDimensionPixelSize(R.dimen.px22)) / 2;
@@ -171,7 +148,5 @@ public class LiveMenu extends PopupWindow {
         void onAudio();
 
         void onVideoClose();
-
-        void onSwitchCamera();
     }
 }

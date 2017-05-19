@@ -40,6 +40,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.*;
+import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingMode;
@@ -55,7 +56,7 @@ import cn.xiaojs.xma.util.DeviceUtil;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
         OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback {
-    protected final static int ANIM_HIDE_TIMEOUT = 5 * 1000;
+    protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
 
     protected CtlSession mCtlSession;
     protected String mTicket;
@@ -112,6 +113,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
 
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
     }
 
     /**
@@ -170,6 +173,11 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected void postHideAnim() {
         mHandler.removeCallbacks(mHideAnim);
         mHandler.postDelayed(mHideAnim, ANIM_HIDE_TIMEOUT);
+    }
+
+    protected void starShowAnim() {
+        mHandler.removeCallbacks(mHideAnim);
+        startAnim();
     }
 
     private Runnable mHideAnim = new Runnable() {
@@ -295,12 +303,33 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
                         }
                     }
                 });
+
+                mAgreeOpenCamera.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+                    }
+                });
             }
 
             mAgreeOpenCamera.show();
         }
     };
 
+
+    private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, null);
+        }
+    };
+
+    private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, null);
+        }
+    };
 
     /**
      * 申请打开学生视频
@@ -402,10 +431,24 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     }
 
     @Override
+    public void onDestroyView() {
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mHideAnim);
+        }
+
+        super.onDestroyView();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
 
         cancelAllAnim();
+
+        if (mHandler != null) {
+            mHandler.removeCallbacks(null);
+            mHandler = null;
+        }
 
         if (mVideoController != null) {
             mVideoController.onDestroy();
@@ -416,6 +459,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
 
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA));
     }
 
     @Override

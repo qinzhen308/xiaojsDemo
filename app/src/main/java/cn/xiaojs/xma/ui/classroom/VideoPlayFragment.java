@@ -112,7 +112,6 @@ public class VideoPlayFragment extends BaseFragment {
         initHandler();
         initLiveProgress();
 
-        mVideoPlayerView.setTouchable(false);
         if (mDoc != null) {
             mUrl = ClassroomBusiness.getMediaUrl(mDoc.key);
             if (!TextUtils.isEmpty(mUrl)) {

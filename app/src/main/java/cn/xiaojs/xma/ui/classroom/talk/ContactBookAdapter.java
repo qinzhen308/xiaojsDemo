@@ -163,14 +163,19 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.checkbox.setVisibility(View.INVISIBLE);
         }
 
+        boolean isMyself = ClassroomBusiness.isMyself(mContext, attendee.accountId);
+        boolean isSupport = (attendee.avc != null && attendee.avc.video != null && attendee.avc.audio != null)
+                ? (attendee.avc.video.supported && attendee.avc.audio.supported) : true;
         //set video
         if (!mContactManagementMode
                 && mUser == Constants.UserMode.TEACHING
-                && !ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+                && !isMyself
+                && isSupport) {
             holder.video.setVisibility(View.VISIBLE);
         } else {
             holder.video.setVisibility(View.INVISIBLE);
         }
+        holder.talk.setVisibility(isMyself ? View.INVISIBLE : View.VISIBLE);
 
         Constants.User user = ClassroomBusiness.getUser(attendee.psType);
         switch (user) {

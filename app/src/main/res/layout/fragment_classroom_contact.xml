@@ -30,6 +30,7 @@
                 android:text="@string/cr_manage_contact"
                 android:paddingTop="@dimen/px20"
                 android:paddingBottom="@dimen/px20"
+                android:visibility="gone"
                 android:textColor="@color/font_blue"/>
 
         <View

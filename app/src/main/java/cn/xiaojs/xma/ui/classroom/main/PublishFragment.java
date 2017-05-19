@@ -1,22 +1,28 @@
 package cn.xiaojs.xma.ui.classroom.main;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.LiveManager;
@@ -28,8 +34,12 @@ import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
+import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
+import cn.xiaojs.xma.ui.classroom.live.view.LiveMenu;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.socketio.Event;
+import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -51,6 +61,8 @@ import okhttp3.ResponseBody;
  * ======================================================================================== */
 
 public class PublishFragment extends ClassroomLiveFragment {
+    private final static float PLAY_VIDEO_RATION = 16 / 9.0f;
+
     @BindView(R.id.tip_view)
     View mTipView;
 
@@ -101,6 +113,9 @@ public class PublishFragment extends ClassroomLiveFragment {
     @BindView(R.id.fc_screenshot_land_btn)
     ImageView mScreenshotLandBtn;
 
+    @BindView(R.id.close_play_full_screen)
+    ImageView mClosePlayFullScreenImg;
+
     private TalkPresenter mFullScreenTalkPresenter;
     private int mPublishType = StreamType.TYPE_STREAM_PUBLISH;
     private String mPlayUrl = "";
@@ -108,6 +123,9 @@ public class PublishFragment extends ClassroomLiveFragment {
     private boolean mExitCurrFragment = false;
 
     private CommonDialog mFinishDialog;
+    private boolean mScaled = false;
+    private int mNormalVideoWidth;
+    private int mNormalVideoHeight;
 
     @Override
     protected View getContentView() {
@@ -125,7 +143,7 @@ public class PublishFragment extends ClassroomLiveFragment {
     @OnClick({R.id.back_btn, R.id.play_pause_btn, R.id.setting_btn, R.id.fc_land_portrait_btn,
             R.id.fc_screenshot_land_btn, R.id.fc_screenshot_portrait_btn, R.id.fc_open_contact_btn,
             R.id.fc_hide_show_talk_btn, R.id.fc_open_talk_btn, R.id.play_video, R.id.publish_layout,
-            R.id.finish_btn, R.id.publish_camera_switcher})
+            R.id.finish_btn, R.id.publish_camera_switcher, R.id.close_play_full_screen})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -136,7 +154,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                 break;
             case R.id.setting_btn:
                 if (isPortrait()) {
-                    mClassroomController.openSetting(this, SheetFragment.SHEET_GRAVITY_BOTTOM, 0, this);
+                    mClassroomController.openSetting(this, SheetFragment.SHEET_GRAVITY_BOTTOM, mSlideViewHeight, this);
                 } else {
                     mClassroomController.openSetting(this, SheetFragment.SHEET_GRAVITY_RIGHT, mSlideViewWidth, this);
                 }
@@ -163,6 +181,12 @@ public class PublishFragment extends ClassroomLiveFragment {
                 mClassroomController.openInputText(this, 0);
                 break;
             case R.id.play_video:
+                if (!mScaled) {
+                    onPlayVideoViewClick();
+                } else {
+                    mScaled = !mScaled;
+                    setPlayVideoParams(mNormalVideoWidth, mNormalVideoHeight);
+                }
                 break;
             case R.id.publish_layout:
                 startAnim();
@@ -172,6 +196,12 @@ public class PublishFragment extends ClassroomLiveFragment {
                 break;
             case R.id.publish_camera_switcher:
                 mVideoController.switchCamera();
+                break;
+            case R.id.close_play_full_screen:
+                if (mScaled) {
+                    mScaled = !mScaled;
+                    setPlayVideoParams(mNormalVideoWidth, mNormalVideoHeight);
+                }
                 break;
             default:
                 break;
@@ -207,10 +237,12 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     protected void initView() {
-        mPublishVideoView.setTouchable(false);
         mPublishVideoView.setTouchConsume(false);
 
         updatePortraitViewStyle();
+        //TODO
+        mPlayVideoView.setVisibility(View.VISIBLE);
+        mPlayVideoView.setBackgroundColor(Color.RED);
     }
 
     @Override
@@ -266,7 +298,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     protected void startAnim() {
-        if (isAnimating()) {
+        if (isAnimating() || mContent == null) {
             return;
         }
 
@@ -280,7 +312,6 @@ public class PublishFragment extends ClassroomLiveFragment {
             showAnim(mContactBtn);
             showAnim(mOpenTalkBtn);
             showAnim(mLandPortraitBtn);
-            postHideAnim();
         }
 
         if (isPortrait()) {
@@ -288,14 +319,12 @@ public class PublishFragment extends ClassroomLiveFragment {
                 hideAnim(mScreenshotPortraitBtn);
             } else {
                 showAnim(mScreenshotPortraitBtn);
-                postHideAnim();
             }
         } else {
             if (mScreenshotLandBtn.getVisibility() == View.VISIBLE) {
                 hideAnim(mScreenshotLandBtn);
             } else {
                 showAnim(mScreenshotLandBtn);
-                postHideAnim();
             }
         }
     }
@@ -400,8 +429,10 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     @Override
-    public void onStreamSizeChanged(int videoW, int videoH) {
-
+    public void onStreamSizeChanged(BaseMediaView v, int videoW, int videoH) {
+        if (v != null && v.getId() == mPlayVideoView.getId() && videoW > 0 && videoH > 0) {
+            setPlayVideoParams(videoW, videoH);
+        }
     }
 
     @Override
@@ -420,6 +451,9 @@ public class PublishFragment extends ClassroomLiveFragment {
                 case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
                     mCountTime = mTimeProgressHelper.getCountTime();
                     mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
+                    if (type == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
+                        mPlayVideoView.setVisibility(View.GONE);
+                    }
                     break;
                 case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
                     //mIndividualStreamDuration = mTimeProgressHelper.getIndividualStreamDuration();
@@ -428,6 +462,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                     break;
             }
         }
+
     }
 
     @Override
@@ -659,6 +694,65 @@ public class PublishFragment extends ClassroomLiveFragment {
         }
         ClassroomController.getInstance().exitStackFragment();
         ClassroomController.getInstance().enterPlayFragment(data);
+    }
+
+    private void onPlayVideoViewClick() {
+        final LiveMenu menu = new LiveMenu(mContext, Gravity.BOTTOM);
+        menu.show(mPlayVideoView);
+        menu.setOnItemClickListener(new LiveMenu.OnItemClickListener() {
+            @Override
+            public void onScale() {
+                //scale();
+                mScaled = !mScaled;
+                setPlayVideoParams(mNormalVideoWidth, mNormalVideoHeight);
+                Toast.makeText(mContext, "onScale==", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAudio() {
+               // mute();
+            }
+
+            @Override
+            public void onVideoClose() {
+                //close();
+            }
+        });
+    }
+
+    @TargetApi(17)
+    private void setPlayVideoParams(int videoW, int videoH) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mPlayVideoView.getLayoutParams();
+        if (mScaled) {
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.leftMargin = 0;
+            params.bottomMargin = 0;
+            params.removeRule(RelativeLayout.ABOVE);
+            mPublishCameraSwitcher.setVisibility(View.GONE);
+            //mClosePlayFullScreenImg.setVisibility(View.VISIBLE);
+        } else {
+            mPublishCameraSwitcher.setVisibility(View.VISIBLE);
+            //mClosePlayFullScreenImg.setVisibility(View.GONE);
+            mNormalVideoWidth = videoW;
+            mNormalVideoHeight = videoH;
+            if (videoW > videoH) {
+                int w = mContext.getResources().getDimensionPixelOffset(R.dimen.px200);
+                params.width = w;
+                params.height = (int)(w / PLAY_VIDEO_RATION);
+            } else {
+                int h = mContext.getResources().getDimensionPixelOffset(R.dimen.px200);
+                params.height = h;
+                params.width = (int)(h / PLAY_VIDEO_RATION);
+            }
+
+            int margin = mContext.getResources().getDimensionPixelOffset(R.dimen.px10);
+            params.leftMargin = margin;
+            params.bottomMargin = margin;
+            params.addRule(RelativeLayout.ABOVE, R.id.discussion_list_view);
+        }
+
+
     }
 
 }

@@ -64,6 +64,7 @@ import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
+import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -1995,7 +1996,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
     }
 
     @Override
-    public void onStreamSizeChanged(int w, int h) {
+    public void onStreamSizeChanged(BaseMediaView v, int w, int h) {
 
     }
 

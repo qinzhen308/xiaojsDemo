@@ -68,8 +68,6 @@ public class PublishVideoController extends VideoController {
     @Override
     protected void listenerSocket() {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
     }
 
     @Override
@@ -99,9 +97,7 @@ public class PublishVideoController extends VideoController {
             mPlayView.delayHideLoading();
         }
 
-        if (mPlayType == StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER) {
-            mPlayView.showLoading(true, loadingSize, loadingDesc);
-        }
+        mPlayView.showLoading(true, loadingSize, loadingDesc);
     }
 
     /**
@@ -230,20 +226,6 @@ public class PublishVideoController extends VideoController {
         }
     };
 
-    private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
-        }
-    };
-
-    private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
-        }
-    };
-
     @Override
     protected void onStreamingStarted(Object... args) {
         if (args != null && args.length > 0) {
@@ -315,8 +297,5 @@ public class PublishVideoController extends VideoController {
         super.offSocketListener();
 
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA));
     }
 }

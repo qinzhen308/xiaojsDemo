@@ -17,31 +17,28 @@ package cn.xiaojs.xma.ui.classroom.live;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
-import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
-import cn.xiaojs.xma.ui.widget.CommonDialog;
-import cn.xiaojs.xma.util.DeviceUtil;
 
 public class PlayVideoController extends VideoController {
-    private CommonDialog mAgreeOpenCamera;
 
     public PlayVideoController(Context context, View root, OnStreamStateChangeListener listener) {
         super(context, root, listener);
@@ -58,34 +55,13 @@ public class PlayVideoController extends VideoController {
 
     @Override
     protected void listenerSocket() {
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
     }
 
     @Override
     public void confirmPublishStream(boolean confirm) {
-        //update param
-        /*FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPublishView.getLayoutParams();
-        if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
-            params.width = mPeerStreamViewWidth;
-            params.height = mPeerStreamViewHeight;
-            params.gravity = Gravity.LEFT | Gravity.TOP;
-            params.topMargin = mPeerStreamViewTopMargin;
-            params.leftMargin = mPeerStreamViewMargin;
-        } else if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL) {
-            params.width = FrameLayout.LayoutParams.MATCH_PARENT;
-            params.height = FrameLayout.LayoutParams.MATCH_PARENT;
-            params.gravity = Gravity.CENTER;
-            params.leftMargin = 0;
-            params.bottomMargin = 0;
-        }
-
-        if (mPublishView != null) {
-            mPublishView.setVisibility(View.VISIBLE);
-            mPublishView.setPath(mPublishStreamUrl);
-            mPublishView.resume();
-        }*/
+        //do nothing
     }
 
     @Override
@@ -110,11 +86,11 @@ public class PlayVideoController extends VideoController {
      */
     @Override
     public void pausePublishStream(final int type) {
-        /*if (mPublishView != null) {
+        if (type == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
             if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                 mNeedStreamRePublishing = true;
                 if (mStreamListener != null) {
-                    mStreamListener.onStreamStopped(mUserMode, type, null);
+                    mStreamListener.onStreamStopped(type, null);
                 }
             } else {
                 //send stopped stream
@@ -127,18 +103,14 @@ public class PlayVideoController extends VideoController {
                                     if (response.result) {
                                         mNeedStreamRePublishing = true;
                                         if (mStreamListener != null) {
-                                            mStreamListener.onStreamStopped(mUserMode, type, null);
+                                            mStreamListener.onStreamStopped(type, null);
                                         }
                                     }
                                 }
                             }
                         });
             }
-
-            mStreamPublishing = false;
-            mPublishView.pause();
-            mPublishView.setVisibility(View.GONE);
-        }*/
+        }
     }
 
     /**
@@ -165,9 +137,7 @@ public class PlayVideoController extends VideoController {
             if (callback != null) {
                 callback.onFrameCaptured(bmp);
             }
-        }/* else if (mPublishView.getVisibility() == View.VISIBLE) {
-            mPublishView.captureOriginalFrame(callback);
-        } */ else {
+        } else {
             if (callback != null) {
                 callback.onFrameCaptured(null);
             }
@@ -215,35 +185,6 @@ public class PlayVideoController extends VideoController {
                 break;
         }
     }
-
-    private SocketManager.EventListener mReceiveOpenMedia = new SocketManager.EventListener() {
-        @Override
-        public void call(final Object... args) {
-            if (mAgreeOpenCamera == null) {
-                mAgreeOpenCamera = new CommonDialog(mContext);
-                int width = DeviceUtil.getScreenWidth(mContext) / 2;
-                int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                mAgreeOpenCamera.setDialogLayout(width, height);
-                mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
-                mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
-
-                mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        mAgreeOpenCamera.dismiss();
-                        if (args != null && args.length > 0) {
-                            OpenMediaNotify openMediaNotify = ClassroomBusiness.parseSocketBean(args[0], OpenMediaNotify.class);
-                            if (openMediaNotify != null) {
-                                publishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, openMediaNotify.publishUrl);
-                            }
-                        }
-                    }
-                });
-            }
-
-            mAgreeOpenCamera.show();
-        }
-    };
 
     private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
         @Override
@@ -313,31 +254,17 @@ public class PlayVideoController extends VideoController {
 
     @Override
     public void muteOrUnmute() {
-        /*SharedPreferences sf = XjsUtils.getSharedPreferences();
-        boolean audioOpen = sf.getBoolean(Constants.KEY_MICROPHONE_OPEN, true);
-        if (audioOpen) {
-            if (mPublishView != null && mPublishView.isMute()) {
-                mPublishView.mute();
-            }
-        } else {
-            if (mPublishView != null && !mPublishView.isMute()) {
-                mPublishView.mute();
-            }
-        }*/
     }
 
     @Override
     public void togglePublishResolution() {
-        /*if (mPublishView != null) {
-            mPublishView.togglePublishResolution();
-        }*/
+
     }
 
     @Override
     protected void offSocketListener() {
         super.offSocketListener();
 
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA));
     }

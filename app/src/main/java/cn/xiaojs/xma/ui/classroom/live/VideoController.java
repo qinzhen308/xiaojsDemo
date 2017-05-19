@@ -118,7 +118,7 @@ public abstract class VideoController implements StreamConfirmCallback {
                 public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int i2, int i3) {
                     Log.i("aaa", "width==" + width + "   height=" + height + "  i2=" + i2 + "  i3=" + i3);
                     if (mStreamListener != null) {
-                        mStreamListener.onStreamSizeChanged(width, height);
+                        mStreamListener.onStreamSizeChanged(mPlayView, width, height);
                     }
                 }
             });
