@@ -40,7 +40,7 @@ import cn.xiaojs.xma.util.XjsUtils;
  *
  * ======================================================================================== */
 
-public class MsgInputFragment extends DialogFragment implements View.OnClickListener{
+public class MsgInputFragment extends DialogFragment implements View.OnClickListener {
     private View mMsgInputLayout;
     private SpecialEditText mMsgInputEdt;
     private TextView mMsgSendBtn;
@@ -75,7 +75,7 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = new Dialog(mContext, R.style.CommonDialog);
-        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCanceledOnTouchOutside(true);
 
         mMsgInputLayout = createView();
         Window dialogWindow = dialog.getWindow();
@@ -127,6 +127,18 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
             }
         });
 
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (mMsgInputLayout != null) {
+                    mMsgInputLayout.setVisibility(View.GONE);
+                    XjsUtils.hideIMM(mContext, mMsgInputEdt.getWindowToken());
+                } else {
+                    XjsUtils.hideIMM(mContext);
+                }
+            }
+        });
+
         return dialog;
     }
 
@@ -159,7 +171,7 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         Fragment target = getTargetFragment();
-        if (target != null)  {
+        if (target != null) {
             Intent intent = new Intent();
             intent.putExtra(Constants.KEY_MSG_INPUT_TXT, mMsgInputEdt.getText().toString());
             intent.putExtra(Constants.KEY_MSG_INPUT_FROM, mFrom);

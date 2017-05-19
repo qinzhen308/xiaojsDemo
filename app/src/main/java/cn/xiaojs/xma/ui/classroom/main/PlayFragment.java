@@ -426,6 +426,19 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
+    protected void onImgSendShare(Attendee attendee, String bitmap) {
+        //only send once
+        if (mEmbedTalkFragment != null) {
+            mEmbedTalkFragment.sendImg(attendee, bitmap);
+        }
+        //update
+        //TODO
+        if (mFullScreenTalkPresenter != null) {
+            //mFullScreenTalkPresenter.sendImg(attendee, mFullScreenTalkPresenter.getTalkCriteria(), bitmap);
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
             switch (requestCode) {
@@ -483,7 +496,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     break;
                 case ClassroomController.REQUEST_DOC:
                     LibDoc doc = (LibDoc) data.getSerializableExtra(Constants.KEY_OPEN_DOC_BEAN);
-                    ClassroomController.getInstance().exitDocFragmentWhitOpenMime(doc);
+                    ClassroomController.getInstance().exitDocFragmentWhitOpenMime(doc, this);
                     break;
             }
         }

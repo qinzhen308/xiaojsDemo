@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -50,7 +51,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.MaterialUtil;
 
-public class ClassroomController implements OnPhotoDoodleShareListener {
+public class ClassroomController {
     public final static int REQUEST_PIC_CODE = 1;
     public final static int REQUEST_INPUT = 2;
     public final static int REQUEST_CONTACT = 3;
@@ -209,26 +210,26 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
     /**
      * 进入图片编辑，图片可以左右滑动
      */
-    public void enterPhotoDoodle(ArrayList<String> imgUrlList) {
+    public void enterPhotoDoodle(ArrayList<String> imgUrlList, OnPhotoDoodleShareListener listener) {
         PhotoDoodleFragment photoDoodleFragment = new PhotoDoodleFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.KEY_IMG_DISPLAY_MODE, PhotoDoodleFragment.MODE_MULTI_IMG);
         bundle.putStringArrayList(Constants.KEY_IMG_LIST, imgUrlList);
         photoDoodleFragment.setArguments(bundle);
-        photoDoodleFragment.setPhotoDoodleShareListener(this);
+        photoDoodleFragment.setPhotoDoodleShareListener(listener);
         commitPhotoDoodleFragment(photoDoodleFragment);
     }
 
     /**
      * 进入图片编辑
      */
-    public void enterPhotoDoodleByBitmap(Bitmap bitmap) {
+    public void enterPhotoDoodleByBitmap(Bitmap bitmap, OnPhotoDoodleShareListener listener) {
         PhotoDoodleFragment photoDoodleFragment = new PhotoDoodleFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.KEY_IMG_DISPLAY_MODE, PhotoDoodleFragment.MODE_SINGLE_IMG);
         float ratio = WhiteboardLayer.DOODLE_CANVAS_RATIO;
         if (bitmap != null && bitmap.getWidth() > 0 && bitmap.getHeight() > 0) {
-            ratio = bitmap.getWidth() / (float)bitmap.getHeight();
+            ratio = bitmap.getWidth() / (float) bitmap.getHeight();
         } else {
             if (isPortrait()) {
                 ratio = 1.0f / WhiteboardLayer.DOODLE_CANVAS_RATIO;
@@ -239,7 +240,7 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
         bundle.putFloat(Constants.KEY_DOODLE_RATIO, ratio);
         photoDoodleFragment.setArguments(bundle);
         photoDoodleFragment.setBitmap(bitmap);
-        photoDoodleFragment.setPhotoDoodleShareListener(this);
+        photoDoodleFragment.setPhotoDoodleShareListener(listener);
         commitPhotoDoodleFragment(photoDoodleFragment);
     }
 
@@ -259,7 +260,7 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
     /**
      * 进入图片编辑
      */
-    public void enterPhotoDoodle(final String url) {
+    public void enterPhotoDoodle(final String url, final OnPhotoDoodleShareListener listener) {
         //load course img
         new AsyncTask<Void, Integer, Bitmap>() {
 
@@ -288,7 +289,7 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
             protected void onPostExecute(Bitmap bitmap) {
                 ((ClassroomActivity) mContext).cancelProgress();
                 if (bitmap != null) {
-                    enterPhotoDoodleByBitmap(bitmap);
+                    enterPhotoDoodleByBitmap(bitmap, listener);
                 } else {
                     Toast.makeText(mContext, R.string.cls_pic_load_fail, Toast.LENGTH_SHORT).show();
                 }
@@ -314,14 +315,14 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
     /**
      * 退出文档库并且打开多媒体
      */
-    public void exitDocFragmentWhitOpenMime(LibDoc doc) {
+    public void exitDocFragmentWhitOpenMime(LibDoc doc, OnPhotoDoodleShareListener listener) {
         if (doc == null) {
             return;
         }
         String mimeType = doc.mimeType != null ? doc.mimeType.toLowerCase() : "";
         String url = ClassroomBusiness.getMediaUrl(doc.key);
         if (mimeType.startsWith(Collaboration.PictureMimeTypes.ALL)) {
-            enterPhotoDoodle(url);
+            enterPhotoDoodle(url, listener);
         } else if (mimeType.startsWith(Collaboration.VideoMimeTypes.ALL)) {
             enterVideoPlayer(doc);
         } else if (mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
@@ -332,7 +333,7 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
                 for (LibDoc.ExportImg img : images) {
                     imgUrls.add(ClassroomBusiness.getMediaUrl(img.name));
                 }
-                enterPhotoDoodle(imgUrls);
+                enterPhotoDoodle(imgUrls, listener);
             } else {
                 Toast.makeText(mContext, R.string.cr_ppt_open_fail, Toast.LENGTH_SHORT).show();
             }
@@ -492,9 +493,4 @@ public class ClassroomController implements OnPhotoDoodleShareListener {
         return mCurrStackFragment;
     }
 
-
-    @Override
-    public void onVideoShared(Attendee attendee, Bitmap bmp) {
-
-    }
 }

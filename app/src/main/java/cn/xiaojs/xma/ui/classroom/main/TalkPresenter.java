@@ -134,6 +134,10 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
         getTalkMsgData(criteria, accountId);
     }
 
+    public int getTalkCriteria() {
+        return mTalkCriteria;
+    }
+
     /**
      * 获取talk消息数据
      */
@@ -520,14 +524,14 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
                 @Override
                 protected void onPostExecute(Bitmap bmp) {
                     //enter video edit fragment
-                    ClassroomController.getInstance().enterPhotoDoodleByBitmap(bmp);
+                    ClassroomController.getInstance().enterPhotoDoodleByBitmap(bmp, TalkPresenter.this);
                 }
             }.execute(key);
         }
     }
 
     @Override
-    public void onVideoShared(final Attendee attendee, final Bitmap bitmap) {
+    public void onPhotoShared(final Attendee attendee, final Bitmap bitmap) {
         //send msg
         showProgress(true);
         if (bitmap != null) {

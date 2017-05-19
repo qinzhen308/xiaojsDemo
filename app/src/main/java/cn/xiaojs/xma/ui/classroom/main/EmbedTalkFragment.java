@@ -42,7 +42,6 @@ public class EmbedTalkFragment extends BaseFragment{
     private Constants.UserMode mUserMode;
     private String mTicket;
 
-    private int mTalkCriteria = TalkPresenter.MULTI_TALK;
     private TalkPresenter mTalkPresenter;
 
     @Override
@@ -82,7 +81,7 @@ public class EmbedTalkFragment extends BaseFragment{
         mTalkNameTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mTalkCriteria == TalkPresenter.PEER_TALK) {
+                if (mTalkPresenter.getTalkCriteria() == TalkPresenter.PEER_TALK) {
                     mTalkNameTv.setText(R.string.cr_talk_discussion);
                     mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     mTalkPresenter.switchTalkTab(TalkPresenter.MULTI_TALK, null);
@@ -95,7 +94,6 @@ public class EmbedTalkFragment extends BaseFragment{
      * 切换到一对一聊天
      */
     public void switchPeerTalk(Attendee attendee) {
-        mTalkCriteria = TalkPresenter.PEER_TALK;
         mTalkNameTv.setText(attendee.name);
         mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_back_pressed, 0, 0, 0);
         mTalkPresenter.switchTalkTab(TalkPresenter.PEER_TALK, attendee.accountId);
@@ -109,7 +107,7 @@ public class EmbedTalkFragment extends BaseFragment{
     }
 
     public void sendImg(Attendee attendee, String content) {
-        mTalkPresenter.sendImg(attendee, mTalkCriteria, content);
+        mTalkPresenter.sendImg(attendee, mTalkPresenter.getTalkCriteria(), content);
     }
 
     public void sendMsg(int type, String content) {

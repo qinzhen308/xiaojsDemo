@@ -1107,7 +1107,7 @@ public class ClassroomActivity extends FragmentActivity implements OnStreamState
 
     private OnPhotoDoodleShareListener mOnPhotoDoodleShareListener = new OnPhotoDoodleShareListener() {
         @Override
-        public void onVideoShared(final Attendee attendee, final Bitmap bitmap) {
+        public void onPhotoShared(final Attendee attendee, final Bitmap bitmap) {
             //send msg
             if (mTalkPanel != null && bitmap != null) {
                 new AsyncTask<Integer, Integer, String>() {

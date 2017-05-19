@@ -155,9 +155,9 @@ public class PublishVideoController extends VideoController {
 
     @Override
     public void takeVideoFrame(FrameCapturedCallback callback) {
-        if (mPublishView.getVisibility() == View.VISIBLE) {
+        if (mPublishView.getVisibility() == View.VISIBLE && mStreamPublishing) {
             mPublishView.captureOriginalFrame(callback);
-        } else if (mPlayView.getVisibility() == View.VISIBLE) {
+        } else if (mPlayView.getVisibility() == View.VISIBLE && mStreamPlaying) {
             Bitmap bmp = mPlayView.getPlayer().getTextureView().getBitmap();
             if (callback != null) {
                 callback.onFrameCaptured(bmp);

@@ -17,9 +17,13 @@ package cn.xiaojs.xma.ui.classroom.main;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +41,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.*;
@@ -52,10 +57,11 @@ import cn.xiaojs.xma.ui.classroom.live.VideoController;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
-        OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback {
+        OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener  {
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
 
     protected CtlSession mCtlSession;
@@ -377,6 +383,44 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         }
     }
 
+
+    @Override
+    public void onPhotoShared(final Attendee attendee, final Bitmap bitmap) {
+        if (mContext instanceof FragmentActivity) {
+            //exit
+            Fragment fragment = ((FragmentActivity) mContext).getSupportFragmentManager().findFragmentById(R.id.photo_doodle_layout);
+            if (fragment instanceof PhotoDoodleFragment) {
+                ((ClassroomActivity) mContext).getSupportFragmentManager()
+                        .beginTransaction()
+                        .remove(fragment)
+                        .commit();
+            }
+
+
+            //send msg
+            if (bitmap != null) {
+                new AsyncTask<Integer, Integer, String>() {
+
+                    @Override
+                    protected String doInBackground(Integer... params) {
+                        //resize max length to 800
+                        Bitmap resizeBmp = BitmapUtils.resizeDownBySideLength(bitmap, Constants.SHARE_IMG_SIZE, false);
+                        return ClassroomBusiness.bitmapToBase64(resizeBmp);
+                    }
+
+                    @Override
+                    protected void onPostExecute(String result) {
+                        if (!TextUtils.isEmpty(result)) {
+                            onImgSendShare(attendee, result);
+                        } else {
+                            cancelProgress();
+                        }
+                    }
+                }.execute(0);
+            }
+        }
+    }
+
     protected String getTxtString(int type) {
         String txt = "";
         switch (type) {
@@ -409,7 +453,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
 
     @Override
     public void onFrameCaptured(Bitmap bitmap) {
-        ClassroomController.getInstance().enterPhotoDoodleByBitmap(bitmap);
+        ClassroomController.getInstance().enterPhotoDoodleByBitmap(bitmap, this);
     }
 
     @Override
@@ -511,6 +555,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected abstract void initData();
 
     protected abstract void onSyncStateChanged(SyncStateResponse syncState);
+
+    protected abstract void onImgSendShare(final Attendee attendee, final String bitmap);
 
     public void playStream(String url) {
 
