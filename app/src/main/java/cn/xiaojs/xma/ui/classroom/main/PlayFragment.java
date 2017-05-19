@@ -422,7 +422,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     protected void onPeerPublishCallback(OpenMediaNotify openMediaNotify) {
-        startPublish(openMediaNotify.publishUrl, mPlayUrl, StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+        startPublishFragment(openMediaNotify.publishUrl, mPlayUrl, StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
     }
 
     @Override
@@ -678,7 +678,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     cancelProgress();
                     CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
                     LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
-                    startPublish(response != null ? response.publishUrl : null, null, StreamType.TYPE_STREAM_PUBLISH);
+                    startPublishFragment(response != null ? response.publishUrl : null, null, StreamType.TYPE_STREAM_PUBLISH);
                 }
 
                 @Override
@@ -695,7 +695,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     long countTime = ClassroomBusiness.getCountTimeByCtlSession();
                     ClassResponse response = ApiManager.getClassResponse(object);
                     LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
-                    startPublish(response != null ? response.publishUrl : null, null, StreamType.TYPE_STREAM_PUBLISH);
+                    startPublishFragment(response != null ? response.publishUrl : null, null, StreamType.TYPE_STREAM_PUBLISH);
                 }
 
                 @Override
@@ -713,7 +713,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
     }
 
-    private void startPublish(String publishUrl, String playUrl, int streamType) {
+    private void startPublishFragment(String publishUrl, String playUrl, int streamType) {
         Bundle data = new Bundle();
         data.putSerializable(Constants.KEY_PUBLISH_TYPE, streamType);
         data.putString(Constants.KEY_PUBLISH_URL, publishUrl);

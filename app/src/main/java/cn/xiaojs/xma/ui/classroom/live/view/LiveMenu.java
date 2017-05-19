@@ -98,18 +98,18 @@ public class LiveMenu extends PopupWindow {
         });
     }
 
-    public void show(View anchor) {
+    public void show(View anchor, int width, int height) {
         mRootView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         if (mGravity == Gravity.BOTTOM) {
-            int margin = mContext.getResources().getDimensionPixelSize(R.dimen.px30) - mRootView.getMeasuredWidth() / 2;
-            mLayout.setIndicatorOffsetX(margin);
-            showAsDropDown(anchor, 0, -mContext.getResources().getDimensionPixelSize(R.dimen.px180));
+            int offset = mContext.getResources().getDimensionPixelSize(R.dimen.px30) - mRootView.getMeasuredWidth() / 2;
+            int topOffset = mContext.getResources().getDimensionPixelSize(R.dimen.px13);
+            mLayout.setIndicatorOffsetX(offset);
+            showAsDropDown(anchor, 0, -(height + mRootView.getMeasuredHeight() + topOffset));
         } else if (mGravity == Gravity.TOP){
-            int leftOffset = mRootView.getMeasuredWidth() + mContext.getResources().getDimensionPixelSize(R.dimen.px20);
-            int topOffset = mContext.getResources().getDimensionPixelSize(R.dimen.px10);
-            int margin = (mRootView.getMeasuredHeight() - mContext.getResources().getDimensionPixelSize(R.dimen.px22)) / 2;
-            mLayout.setIndicatorOffsetX(margin);
-            showAsDropDown(anchor, -leftOffset, topOffset);
+            int topOffset = mContext.getResources().getDimensionPixelSize(R.dimen.px13);
+            int offset = mContext.getResources().getDimensionPixelSize(R.dimen.px30) - mRootView.getMeasuredWidth() / 2;
+            mLayout.setIndicatorOffsetX(offset);
+            showAsDropDown(anchor, 0, topOffset);
         }
 
     }

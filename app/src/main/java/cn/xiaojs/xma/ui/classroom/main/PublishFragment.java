@@ -695,7 +695,8 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     private void onPlayVideoViewClick() {
         final LiveMenu menu = new LiveMenu(mContext, Gravity.BOTTOM);
-        menu.show(mPlayVideoView);
+        int size[] = getPlayVideoViewSize(mNormalVideoWidth, mNormalVideoHeight);
+        menu.show(mPlayVideoView, size[0], size[1]);
         menu.setOnItemClickListener(new LiveMenu.OnItemClickListener() {
             @Override
             public void onScale() {
@@ -707,7 +708,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
             @Override
             public void onAudio() {
-               // mute();
+                // mute();
             }
 
             @Override
@@ -719,7 +720,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @TargetApi(17)
     private void setPlayVideoParams(int videoW, int videoH) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mPlayVideoView.getLayoutParams();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mPlayVideoView.getLayoutParams();
         if (mScaled) {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -736,20 +737,36 @@ public class PublishFragment extends ClassroomLiveFragment {
             if (videoW > videoH) {
                 int w = mContext.getResources().getDimensionPixelOffset(R.dimen.px200);
                 params.width = w;
-                params.height = (int)(w / PLAY_VIDEO_RATION);
+                params.height = (int) (w / PLAY_VIDEO_RATION);
             } else {
                 int h = mContext.getResources().getDimensionPixelOffset(R.dimen.px200);
                 params.height = h;
-                params.width = (int)(h / PLAY_VIDEO_RATION);
+                params.width = (int) (h / PLAY_VIDEO_RATION);
             }
-
+            int size[] = getPlayVideoViewSize(videoW, videoH);
+            params.width = size[0];
+            params.height = size[1];
             int margin = mContext.getResources().getDimensionPixelOffset(R.dimen.px10);
             params.leftMargin = margin;
             params.bottomMargin = margin;
             params.addRule(RelativeLayout.ABOVE, R.id.discussion_list_view);
         }
-
-
     }
 
+    private int[] getPlayVideoViewSize(int videoW, int videoH) {
+        int w = 0;
+        int h = 0;
+        int size[] = new int[2];
+        if (videoW > videoH) {
+            w = mContext.getResources().getDimensionPixelOffset(R.dimen.px200);
+            h = (int) (w / PLAY_VIDEO_RATION);
+        } else {
+            h = mContext.getResources().getDimensionPixelOffset(R.dimen.px200);
+            w = (int) (h / PLAY_VIDEO_RATION);
+        }
+
+        size[0] = w;
+        size[1] = h;
+        return size;
+    }
 }
