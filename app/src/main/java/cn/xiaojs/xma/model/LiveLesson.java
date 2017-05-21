@@ -31,7 +31,7 @@ public class LiveLesson implements Serializable {
     //private Publish publish;
     private boolean autoOnShelves;
 
-    public boolean autoShare;
+    //public boolean autoShare;
 
 //    public Publish getPublish() {
 //        return publish;
