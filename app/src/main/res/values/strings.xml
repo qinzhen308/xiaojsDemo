@@ -778,7 +778,7 @@
     <string name="time_table">课表</string>
     <string name="arrange_class">请排课</string>
     <string name="class_student">学生</string>
-    <string name="video_setting">录像设置</string>
+    <string name="video_setting">直播回放</string>
     <string name="video_auto_repaly">自动录像回放</string>
     <string name="video_auto_repaly_tips">自动录像后的视频，会保存到您的个人资料库中，并可自动回放</string>
     <string name="no_need_video">无需录像</string>

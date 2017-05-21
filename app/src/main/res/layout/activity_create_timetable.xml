@@ -90,54 +90,67 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-            <TextView
+            <CheckBox
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/px25"
                     android:paddingBottom="@dimen/px28"
                     android:text="@string/video_setting"
-                    android:background="@color/white"/>
+                    android:textSize="@dimen/font_28px"
+                    android:background="@color/white"
+                    android:button="@null"
+                    android:drawableRight="@drawable/multi_check_selector"/>
 
-            <RadioGroup
+            <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/px22"
-                    android:paddingBottom="@dimen/px28"
-                    >
+                    android:textColor="@color/radio_tips"
+                    android:textSize="@dimen/font_26px"
+                    android:text="@string/video_auto_repaly_tips"/>
 
-                <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/px22"
-                        android:paddingTop="@dimen/px16"
-                        android:paddingBottom="@dimen/px16"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/font_dark_gray"
-                        android:text="@string/video_auto_repaly"
-                        android:button="@drawable/single_check_selector"/>
 
-                <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/px60"
-                        android:paddingBottom="@dimen/px16"
-                        android:textSize="@dimen/font_26px"
-                        android:textColor="@color/radio_tips"
-                        android:text="@string/video_auto_repaly_tips"
-                        android:button="@null"
-                        android:enabled="false"/>
 
-                <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/px22"
-                        android:paddingTop="@dimen/px16"
-                        android:paddingBottom="@dimen/px16"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/font_dark_gray"
-                        android:text="@string/no_need_video"
-                        android:button="@drawable/single_check_selector"/>
-            </RadioGroup>
+
+            <!--<RadioGroup-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:paddingLeft="@dimen/px22"-->
+                    <!--android:paddingBottom="@dimen/px28"-->
+                    <!--&gt;-->
+
+                <!--<RadioButton-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingLeft="@dimen/px22"-->
+                        <!--android:paddingTop="@dimen/px16"-->
+                        <!--android:paddingBottom="@dimen/px16"-->
+                        <!--android:textSize="@dimen/font_28px"-->
+                        <!--android:textColor="@color/font_dark_gray"-->
+                        <!--android:text="@string/video_auto_repaly"-->
+                        <!--android:button="@drawable/single_check_selector"/>-->
+
+                <!--<RadioButton-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingLeft="@dimen/px60"-->
+                        <!--android:paddingBottom="@dimen/px16"-->
+                        <!--android:textSize="@dimen/font_26px"-->
+                        <!--android:textColor="@color/radio_tips"-->
+                        <!--android:text="@string/video_auto_repaly_tips"-->
+                        <!--android:button="@null"-->
+                        <!--android:enabled="false"/>-->
+
+                <!--<RadioButton-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingLeft="@dimen/px22"-->
+                        <!--android:paddingTop="@dimen/px16"-->
+                        <!--android:paddingBottom="@dimen/px16"-->
+                        <!--android:textSize="@dimen/font_28px"-->
+                        <!--android:textColor="@color/font_dark_gray"-->
+                        <!--android:text="@string/no_need_video"-->
+                        <!--android:button="@drawable/single_check_selector"/>-->
+            <!--</RadioGroup>-->
 
         </LinearLayout>
 
