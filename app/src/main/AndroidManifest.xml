@@ -292,6 +292,12 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.xclass.AddLessonNameActivity"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.ShareQrcodeActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.ClassInfoActivity"
+                android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.StudentsListActivity"
+                android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"

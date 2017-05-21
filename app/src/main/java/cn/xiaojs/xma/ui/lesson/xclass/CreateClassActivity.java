@@ -9,6 +9,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
@@ -51,6 +52,7 @@ public class CreateClassActivity extends BaseActivity {
                 closeCourCreateTips();
                 break;
             case R.id.sub_btn://完成
+                startActivity(new Intent(this, ShareQrcodeActivity.class));
                 break;
             case R.id.lay_time_table://课表
                 startActivity(new Intent(this, CreateTimetableActivity.class));

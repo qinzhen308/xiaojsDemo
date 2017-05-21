@@ -792,4 +792,9 @@
     <string name="request_join_class">请求加入班级</string>
     <string name="agree">同意</string>
     <string name="refuse">拒绝</string>
+    <string name="save_picture">保存图片</string>
+    <string name="share_qrcode">分享二维码</string>
+    <string name="open_class_time">开班日期</string>
+    <string name="creator">创建者</string>
+    <string name="class_info">班级信息</string>
 </resources>

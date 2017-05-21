@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+        <!--班级名称-->
+        <LinearLayout
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonCreateTitle"
+                    android:text="@string/live_class_name"/>
+
+            <TextView
+                    android:id="@+id/name"
+                    style="@style/LiveLessonRightEntrance"
+                    android:drawableRight="@null"
+                    />
+        </LinearLayout>
+
+        <include layout="@layout/layout_horizontal_line"/>
+        <!--班主任-->
+        <LinearLayout
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonCreateTitle"
+                    android:text="@string/head_teacher"/>
+
+            <TextView
+                    android:id="@+id/teacher_name"
+                    style="@style/LiveLessonRightEntrance"
+                    android:drawableRight="@null"
+                    />
+        </LinearLayout>
+
+        <!--课表-->
+        <LinearLayout
+                android:id="@+id/lay_time_table"
+                android:layout_marginTop="@dimen/px32"
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonTitle"
+                    android:text="@string/time_table"/>
+
+            <TextView
+                    android:id="@+id/num_lesson"
+                    style="@style/LiveLessonRightEntrance"
+                    />
+
+        </LinearLayout>
+
+        <include
+                layout="@layout/layout_horizontal_line"/>
+
+        <!--资料库-->
+        <LinearLayout
+                android:id="@+id/lay_material"
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonTitle"
+                    android:text="@string/data_bank"/>
+
+            <TextView
+                    style="@style/LiveLessonRightEntrance"
+                    />
+
+        </LinearLayout>
+
+
+        <!--学生-->
+        <LinearLayout
+                android:id="@+id/lay_student"
+                android:layout_marginTop="@dimen/px32"
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonTitle"
+                    android:text="@string/class_student"/>
+
+            <TextView
+                    android:id="@+id/student_num"
+                    style="@style/LiveLessonRightEntrance"/>
+
+
+        </LinearLayout>
+
+
+        <!--二维码-->
+        <LinearLayout
+                android:id="@+id/lay_qrcode"
+                android:layout_marginTop="@dimen/px32"
+                style="@style/LiveLessonItem">
+
+
+            <TextView
+                    style="@style/LiveLessonRightEntrance"
+                    android:drawableRight="@null"
+                    android:text="@string/qr_code"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_28px"
+                    />
+
+            <TextView
+                    style="@style/LiveLessonTitle"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_28px"
+                    android:drawableRight="@drawable/ic_entrance"
+                    android:drawableLeft="@drawable/ic_qrcode"
+                    android:minWidth="@dimen/px100"
+                    />
+
+        </LinearLayout>
+
+        <!--开班日期-->
+        <LinearLayout
+                android:layout_marginTop="@dimen/px32"
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonCreateTitle"
+                    android:text="@string/open_class_time"/>
+
+            <TextView
+                    android:id="@+id/open_time"
+                    style="@style/LiveLessonRightEntrance"
+                    android:drawableRight="@null"
+                    />
+        </LinearLayout>
+
+        <include
+                layout="@layout/layout_horizontal_line"/>
+        <!--开班日期-->
+        <LinearLayout
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonCreateTitle"
+                    android:text="@string/creator"/>
+
+            <TextView
+                    android:id="@+id/creator"
+                    style="@style/LiveLessonRightEntrance"
+                    android:drawableRight="@null"
+                    />
+        </LinearLayout>
+
+        <include
+                layout="@layout/layout_horizontal_line"/>
+
+        <!--加入班级是否需要验证-->
+        <LinearLayout
+                style="@style/LiveLessonItem">
+
+            <TextView
+                    style="@style/LiveLessonCreateTitle"
+                    android:text="@string/join_type"/>
+
+            <TextView
+                    android:id="@+id/join_veri"
+                    style="@style/LiveLessonRightEntrance"
+                    android:drawableRight="@null"
+                    />
+        </LinearLayout>
+
+        <Button
+                android:id="@+id/enter_btn"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px86"
+                android:layout_marginBottom="@dimen/px80"
+                android:layout_marginLeft="@dimen/px56"
+                android:layout_marginRight="@dimen/px56"
+                android:text="@string/into_cls"
+                style="@style/BigSubmitBtn"/>
+
+
+
+
+    </LinearLayout>
+
+</ScrollView>

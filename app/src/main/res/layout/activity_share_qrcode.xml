@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/lay_qrcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/px45"
+            android:layout_marginRight="@dimen/px45"
+            android:layout_marginTop="@dimen/px102"
+            android:paddingBottom="@dimen/px70"
+            android:paddingTop="@dimen/px50"
+            android:background="@drawable/bg_white_rect">
+
+        <TextView
+                android:id="@+id/qrcode_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_34px"
+                android:textColor="@color/font_black"
+                android:singleLine="true"/>
+
+        <ImageView
+                android:id="@+id/qrcode_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px59"
+                android:layout_marginBottom="@dimen/px51"
+                />
+
+        <TextView
+                android:id="@+id/qrcode_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/font_dark_gray"
+                android:singleLine="true"
+                />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/px100">
+
+        <Button
+                android:id="@+id/save_btn"
+                android:layout_width="@dimen/px260"
+                android:layout_height="@dimen/px80"
+                android:text="@string/save_picture"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_28px"
+                android:background="@drawable/bg_agree_rect"/>
+
+        <Button
+                android:id="@+id/share_btn"
+                android:layout_width="@dimen/px260"
+                android:layout_height="@dimen/px80"
+                android:text="@string/share_qrcode"
+                android:textColor="@color/subject_selected_blue"
+                android:textSize="@dimen/font_28px"
+                android:background="@drawable/bg_refuse_rect"
+                android:layout_marginLeft="@dimen/px30"
+                />
+
+    </LinearLayout>
+
+</LinearLayout>

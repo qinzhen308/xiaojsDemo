@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.view.View;
+import android.widget.ListView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -17,6 +18,8 @@ public class AddLessonNameActivity extends BaseActivity {
 
     @BindView(R.id.search_input)
     EditTextDel editTextDel;
+    @BindView(R.id.complete_list)
+    ListView completeListView;
 
     @Override
     protected void addViewContent() {
@@ -35,4 +38,6 @@ public class AddLessonNameActivity extends BaseActivity {
                 break;
         }
     }
+
+    //TODO item view :R.layout.layout_complete_single_text_item
 }
