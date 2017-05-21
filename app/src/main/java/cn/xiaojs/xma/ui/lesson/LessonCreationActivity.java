@@ -196,6 +196,12 @@ public class LessonCreationActivity extends BaseActivity {
                 enterOptionalInfoPage();
                 break;
             case R.id.on_shelves:
+
+                if (mType == CourseConstant.TYPE_LESSON_EDIT) {
+                    Toast.makeText(mContext,"您不能编辑此项",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (mOnShelvesTv.isSelected()) {
                     mOnShelvesTv.setSelected(false);
                 }else {
@@ -369,7 +375,9 @@ public class LessonCreationActivity extends BaseActivity {
         if (publish != null) {
             mPublicTv.setSelected(publish.accessible);
         }
-        //mOnShelvesTv
+
+        boolean shelves = lessonDetail.autoOnShelves;
+        mOnShelvesTv.setSelected(shelves);
     }
 
     private void initOptionalInfo(LessonDetail lessonDetail) {
