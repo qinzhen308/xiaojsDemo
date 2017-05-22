@@ -34,7 +34,6 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
@@ -44,7 +43,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private boolean mContactManagementMode = false;
     private List<String> mChoiceList;
     private OnPortraitClickListener mListener;
-    private OnPanelItemClick mOnPanelItemClick;
+    private OnAttendItemClick mOnAttendItemClick;
     private LiveCollection<Attendee> mLiveCollection;
     private ArrayList<Attendee> mAttendeeList;
     private int mOffset;
@@ -65,8 +64,8 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         mListener = listener;
     }
 
-    public void setOnPanelItemClick(OnPanelItemClick panelItemClick) {
-        mOnPanelItemClick = panelItemClick;
+    public void setOnPanelItemClick(OnAttendItemClick panelItemClick) {
+        mOnAttendItemClick = panelItemClick;
     }
 
     public void setData(LiveCollection<Attendee> liveCollection) {
@@ -220,13 +219,13 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 switch (v.getId()) {
                     case R.id.talk:
                         //enter chat
-                        if (mOnPanelItemClick != null) {
-                            mOnPanelItemClick.onItemClick(OnPanelItemClick.ACTION_OPEN_TALK, mAttendeeList.get(pos));
+                        if (mOnAttendItemClick != null) {
+                            mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, mAttendeeList.get(pos));
                         }
                         break;
                     case R.id.video:
-                        if (mOnPanelItemClick != null) {
-                            mOnPanelItemClick.onItemClick(OnPanelItemClick.ACTION_OPEN_CAMERA, mAttendeeList.get(pos));
+                        if (mOnAttendItemClick != null) {
+                            mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, mAttendeeList.get(pos));
                         }
                         break;
                 }

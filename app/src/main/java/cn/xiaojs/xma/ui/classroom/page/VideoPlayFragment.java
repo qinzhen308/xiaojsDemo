@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.page;
 
 import android.animation.Animator;
 import android.os.Bundle;

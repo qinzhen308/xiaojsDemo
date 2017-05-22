@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.pendingdev;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.PopupWindow;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomPopupWindowLayout;
 import cn.xiaojs.xma.ui.widget.ClosableSlidingLayout;
 import cn.xiaojs.xma.ui.widget.HorizontalListView;
 import cn.xiaojs.xma.util.DeviceUtil;

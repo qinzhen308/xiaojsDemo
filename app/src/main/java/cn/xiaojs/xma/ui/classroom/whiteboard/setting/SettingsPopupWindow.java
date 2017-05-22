@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
-import cn.xiaojs.xma.ui.classroom.ClassroomPopupWindowLayout;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomPopupWindowLayout;
 
 public abstract class SettingsPopupWindow {
     protected final PopupWindow mPopupWindow;

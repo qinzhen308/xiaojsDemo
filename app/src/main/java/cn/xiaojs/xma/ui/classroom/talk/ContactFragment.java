@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.main;
+package cn.xiaojs.xma.ui.classroom.talk;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,9 +19,9 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
-import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
-import cn.xiaojs.xma.ui.classroom.talk.AttendsComparator;
-import cn.xiaojs.xma.ui.classroom.talk.ContactBookAdapter;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 
@@ -40,7 +40,7 @@ import cn.xiaojs.xma.ui.widget.SheetFragment;
  *
  * ======================================================================================== */
 
-public class ContactFragment extends SheetFragment implements OnPanelItemClick, ContactManager.OnAttendsChangeListener {
+public class ContactFragment extends SheetFragment implements OnAttendItemClick, ContactManager.OnAttendsChangeListener {
     //contact
     @BindView(R.id.contact_view)
     View mContactView;
@@ -152,20 +152,20 @@ public class ContactFragment extends SheetFragment implements OnPanelItemClick, 
     public void onItemClick(int action, Attendee attendee) {
         Fragment target = getTargetFragment();
         switch (action) {
-            case OnPanelItemClick.ACTION_OPEN_TALK:
+            case OnAttendItemClick.ACTION_OPEN_TALK:
                 if (target != null) {
                     Intent intent = new Intent();
                     intent.putExtra(Constants.KEY_TALK_ATTEND, attendee);
-                    intent.putExtra(Constants.KEY_TALK_ACTION, OnPanelItemClick.ACTION_OPEN_TALK);
+                    intent.putExtra(Constants.KEY_TALK_ACTION, OnAttendItemClick.ACTION_OPEN_TALK);
                     intent.putExtra(Constants.KEY_SHEET_GRAVITY, mSheetGravity);
                     target.onActivityResult(ClassroomController.REQUEST_CONTACT, Activity.RESULT_OK, intent);
                 }
                 break;
-            case OnPanelItemClick.ACTION_OPEN_CAMERA:
+            case OnAttendItemClick.ACTION_OPEN_CAMERA:
                 if (target != null) {
                     Intent intent = new Intent();
                     intent.putExtra(Constants.KEY_TALK_ATTEND, attendee);
-                    intent.putExtra(Constants.KEY_TALK_ACTION, OnPanelItemClick.ACTION_OPEN_CAMERA);
+                    intent.putExtra(Constants.KEY_TALK_ACTION, OnAttendItemClick.ACTION_OPEN_CAMERA);
                     intent.putExtra(Constants.KEY_SHEET_GRAVITY, mSheetGravity);
                     target.onActivityResult(ClassroomController.REQUEST_CONTACT, Activity.RESULT_OK, intent);
                 }

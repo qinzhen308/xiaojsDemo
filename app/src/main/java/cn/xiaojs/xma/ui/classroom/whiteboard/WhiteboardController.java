@@ -545,22 +545,6 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         }
     }
 
-    /**
-     * 设置白板为主屏
-     */
-    public void setWhiteboardMainScreen() {
-        ArrayList<WhiteboardCollection> collections = WhiteboardManager.getInstance().getWhiteboardCollectionList();
-        if (mUser == Constants.User.TEACHER && collections != null) {
-            if (!mCurrWhiteboardColl.isLive() && collections != null) {
-                for (WhiteboardCollection coll : collections) {
-                    coll.setLive(false);
-                }
-
-                mCurrWhiteboardColl.setLive(true);
-            }
-        }
-    }
-
     public Bitmap getWhiteboardBitmap() {
         return mCurrWhiteboard != null ? mCurrWhiteboard.getWhiteboardBitmap() : null;
     }

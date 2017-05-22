@@ -1,15 +1,13 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.pendingdev;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -26,17 +24,17 @@ import cn.xiaojs.xma.R;
  *
  * ======================================================================================== */
 
-public class CourseWareAdapter extends BaseAdapter {
+public class QuestionAnswerAdapter extends BaseAdapter {
     private Context mContext;
 
-    public CourseWareAdapter(Context context) {
+    public QuestionAnswerAdapter(Context context) {
         mContext = context;
     }
 
     @Override
     public int getCount() {
         //TODO test count
-        return 5;
+        return 20;
     }
 
     @Override
@@ -51,7 +49,7 @@ public class CourseWareAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-       Holder holder;
+        Holder holder;
         if (convertView == null) {
             convertView = createContentView();
         }
@@ -62,29 +60,20 @@ public class CourseWareAdapter extends BaseAdapter {
     }
 
     private View createContentView() {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_course_ware_item, null);
         Holder holder = new Holder();
-        holder.title = (TextView) v.findViewById(R.id.title);
-        holder.duration = (TextView) v.findViewById(R.id.duration);
-        holder.content = (TextView) v.findViewById(R.id.content);
-        holder.img1 = (ImageView) v.findViewById(R.id.img1);
-        holder.img2 = (ImageView) v.findViewById(R.id.img2);
-        holder.progress = (SeekBar) v.findViewById(R.id.progress);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_raise_hand_item, null);
+        holder.portrait = (RoundedImageView)v.findViewById(R.id.portrait);
+
         v.setTag(holder);
         return v;
     }
 
     private void bindData(Holder holder) {
-
+        holder.portrait.setImageResource(R.drawable.default_avatar_grey);
     }
 
 
     private class Holder {
-        TextView title;
-        TextView duration;
-        TextView content;
-        ImageView img1;
-        ImageView img2;
-        SeekBar progress;
+        RoundedImageView portrait;
     }
 }

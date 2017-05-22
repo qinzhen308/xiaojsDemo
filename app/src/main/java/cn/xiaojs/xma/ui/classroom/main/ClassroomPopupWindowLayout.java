@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.main;
 
 import android.annotation.TargetApi;
 import android.content.Context;

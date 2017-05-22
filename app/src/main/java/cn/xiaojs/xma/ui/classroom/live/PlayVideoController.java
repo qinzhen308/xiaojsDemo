@@ -17,16 +17,13 @@ package cn.xiaojs.xma.ui.classroom.live;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
-import android.widget.Toast;
 
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
@@ -86,7 +83,32 @@ public class PlayVideoController extends VideoController {
      */
     @Override
     public void pausePublishStream(final int type) {
-        //do nothing
+        if (type == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
+            if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
+                mNeedStreamRePublishing = true;
+                if (mStreamListener != null) {
+                    mStreamListener.onStreamStopped(type, null);
+                }
+            } else {
+                //send stopped stream
+                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                        new SocketManager.AckListener() {
+                            @Override
+                            public void call(Object... args) {
+                                if (args != null && args.length > 0) {
+                                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                    if (response.result) {
+                                        mNeedStreamRePublishing = true;
+                                        if (mStreamListener != null) {
+                                            mStreamListener.onStreamStopped(type, null);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+            }
+        }
+        mStreamPublishing = false;
     }
 
     /**

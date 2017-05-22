@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.main;
+package cn.xiaojs.xma.ui.classroom.page;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -21,6 +21,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.main.PlayFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.OnImeBackListener;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
 import cn.xiaojs.xma.util.XjsUtils;

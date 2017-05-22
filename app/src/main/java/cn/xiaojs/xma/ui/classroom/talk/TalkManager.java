@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.main;
+package cn.xiaojs.xma.ui.classroom.talk;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -34,10 +34,10 @@ import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.bean.TalkBean;
 import cn.xiaojs.xma.ui.classroom.bean.TalkResponse;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
-import cn.xiaojs.xma.ui.classroom.talk.FullScreenTalkMsgAdapter;
-import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
 
 public class TalkManager {
     public final static int TYPE_FULL_SCREEN_MUlTI_TAlk = 1 << 1; //全屏模式下的教室交流
