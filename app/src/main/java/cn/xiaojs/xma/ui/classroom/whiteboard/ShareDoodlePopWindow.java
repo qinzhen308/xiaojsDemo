@@ -104,6 +104,7 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
             public void onGetAttendeesSuccess(LiveCollection<Attendee> liveCollection) {
                 ArrayList<Attendee> attendees = liveCollection != null ? liveCollection.attendees : null;
                 //exclude myself
+                mAttendees.clear();
                 if (attendees != null) {
                     for (Attendee attendee : attendees) {
                         if (!ClassroomBusiness.isMyself(mContext, attendee.accountId)) {

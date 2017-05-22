@@ -31,7 +31,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.base.BaseFragment;
@@ -57,10 +56,7 @@ public class SlideTalkFragment extends BaseFragment {
     private ClosableSlidingLayout mClosableSlidingLayout;
 
     private CtlSession mCtlSession;
-    private Constants.UserMode mUserMode;
-    private String mTicket;
 
-    private int mTalkCriteria = TalkPresenter.MULTI_TALK;
     private TalkPresenter mTalkPresenter;
     private Attendee mAttendee;
     private int mFragmentHeight;
@@ -108,7 +104,7 @@ public class SlideTalkFragment extends BaseFragment {
         if (mAttendee != null) {
             mTalkPresenter.switchPeerTalk(mAttendee, false);
         } else {
-            mTalkPresenter.switchMultiTalk();
+            mTalkPresenter.switchMsgMultiTalk();
         }
     }
 
@@ -131,15 +127,11 @@ public class SlideTalkFragment extends BaseFragment {
         mFragmentHeight = mContext.getResources().getDimensionPixelSize(R.dimen.px400);
         if (data != null) {
             mCtlSession = (CtlSession) data.getSerializable(Constants.KEY_CTL_SESSION);
-            if (mCtlSession != null) {
-                mUserMode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
-            }
             mAttendee = (Attendee) data.getSerializable(Constants.KEY_TALK_ATTEND);
             mFragmentHeight = data.getInt(Constants.KEY_PAGE_HEIGHT, mFragmentHeight);
         }
 
-        mTicket = LiveCtlSessionManager.getInstance().getTicket();
-        mTalkPresenter = new TalkPresenter(mContext, mTalkMsgLv, mTalkNameTv, mTicket);
+        mTalkPresenter = new TalkPresenter(mContext, mTalkMsgLv, mTalkNameTv);
     }
 
     private void initView() {
@@ -170,22 +162,21 @@ public class SlideTalkFragment extends BaseFragment {
                 case ClassroomController.REQUEST_INPUT:
                     String content = data.getStringExtra(Constants.KEY_MSG_INPUT_TXT);
                     //send msg
-                    if (!TextUtils.isEmpty(content)) {
-                        sendMsg(content);
-                    }
+                    sendMsg(content);
                     break;
             }
         }
     }
 
-    /**
-     * 默认是发送文本
-     */
-    public void sendMsg(String content) {
-        sendMsg(Communications.ContentType.TEXT, content);
-    }
+    private void sendMsg (String content) {
+        if (TextUtils.isEmpty(content)) {
+            return;
+        }
 
-    public void sendMsg(int type, String content) {
-        mTalkPresenter.sendMsg(type, content);
+        if (mAttendee == null || TextUtils.isEmpty(mAttendee.accountId)) {
+            TalkManager.getInstance().sendText(content);
+        } else {
+            TalkManager.getInstance().sendText(mAttendee.accountId, content);
+        }
     }
 }

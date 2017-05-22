@@ -22,7 +22,6 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -293,7 +292,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     private void enterFullScreen() {
         ClassroomController.getInstance().enterLandFullScreen(isPortrait(), mContext);
         if (mFullScreenTalkPresenter == null) {
-            mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null, mTicket);
+            mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null);
             mDiscussionListView.setVisibility(View.VISIBLE);
             mFullScreenTalkPresenter.switchFullMultiTalk();
         }
@@ -425,18 +424,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         startPublishFragment(openMediaNotify.publishUrl, mPlayUrl, StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
     }
 
-    @Override
-    protected void onImgSendShare(Attendee attendee, String bitmap) {
-        //only send once
-        if (mEmbedTalkFragment != null) {
-            mEmbedTalkFragment.sendImg(attendee, bitmap);
-        }
-        //update
-        //TODO
-        if (mFullScreenTalkPresenter != null) {
-            //mFullScreenTalkPresenter.sendImg(attendee, mFullScreenTalkPresenter.getTalkCriteria(), bitmap);
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -452,18 +439,19 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     break;
                 case ClassroomController.REQUEST_INPUT:
                     String content = data.getStringExtra(Constants.KEY_MSG_INPUT_TXT);
+                    if (TextUtils.isEmpty(content)) {
+                        break;
+                    }
+
                     int from = data.getIntExtra(Constants.KEY_MSG_INPUT_FROM, MSG_MODE_INPUT);
                     if (from == MSG_MODE_INPUT) {
-                        //send msg
-                        if (mEmbedTalkFragment != null && !TextUtils.isEmpty(content)) {
-                            mEmbedTalkFragment.sendMsg(Communications.ContentType.TEXT, content);
+                        if (mPeerTalkAttendee == null || TextUtils.isEmpty(mPeerTalkAttendee.accountId)) {
+                            TalkManager.getInstance().sendText(content);
+                        } else {
+                            TalkManager.getInstance().sendText(mPeerTalkAttendee.accountId, content);
                         }
-                    } else {
-                        if (mFullScreenTalkPresenter != null) {
-                            mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
-                            mDiscussionListView.setVisibility(View.VISIBLE);
-                            mFullScreenTalkPresenter.sendMsg(Communications.ContentType.TEXT, content);
-                        }
+                    } else if (from == FULL_SCREEN_MODE_INPUT) {
+                        TalkManager.getInstance().sendText(content);
                     }
                     break;
                 case ClassroomController.REQUEST_CONTACT:
@@ -474,6 +462,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                         break;
                     }
 
+                    mPeerTalkAttendee = attendee;
                     switch (action) {
                         case OnPanelItemClick.ACTION_OPEN_TALK:
                             if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
