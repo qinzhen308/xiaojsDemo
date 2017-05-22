@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -61,6 +62,7 @@ public class PersonHomeOrgTeacherAdapter extends AbsSwipeAdapter<OrgTeacher, Per
         holder.tvName.setText(bean.name);
         holder.tvDescription.setText(TextUtils.isEmpty(bean.remarks)?"暂无简介":bean.remarks);
         holder.tvCount.setText(bean.stats.fans + " 课  |  " + bean.stats.followships +" 学生");
+        holder.tvCount.setVisibility(View.GONE);
         Glide.with(mContext)
                 .load(Account.getAvatar(bean.id, 300))
                 .bitmapTransform(circleTransform)
@@ -99,6 +101,37 @@ public class PersonHomeOrgTeacherAdapter extends AbsSwipeAdapter<OrgTeacher, Per
 
             }
         });
+    }
+
+    @Override
+    protected void setEmptyLayoutParams(View view, RelativeLayout.LayoutParams params) {
+        if (params != null) {
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px300);
+            view.setLayoutParams(params);
+
+            View click = view.findViewById(R.id.empty_click);
+            if (click != null) {
+                click.setVisibility(View.GONE);
+            }
+
+            View descImg = view.findViewById(R.id.empty_image);
+            if (descImg != null) {
+                descImg.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    protected void setFailedLayoutParams(View view, RelativeLayout.LayoutParams params) {
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.px60);
+        view.setLayoutParams(params);
+
+        View click = view.findViewById(R.id.empty_click);
+        if (click != null) {
+            click.setVisibility(View.GONE);
+        }
     }
 
 

@@ -15,6 +15,7 @@
             android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/label_summary"
                 android:textSize="@dimen/font_28px"
                 android:textColor="@color/common_text"
                 android:text="简介"

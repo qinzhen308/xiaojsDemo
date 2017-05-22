@@ -1,10 +1,12 @@
 package cn.xiaojs.xma.ui.mine;
 
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
@@ -27,5 +29,10 @@ public class MySignatureDetailActivity extends BaseActivity {
         tvSignature.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimensionPixelSize(R.dimen.font_28px));
         addView(tvSignature);
         setMiddleTitle("简介");
+    }
+
+    @OnClick(R.id.left_image)
+    public void backTo(){
+        finish();
     }
 }

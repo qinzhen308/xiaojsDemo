@@ -20,7 +20,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -62,6 +64,8 @@ import cn.xiaojs.xma.util.ToastUtil;
 public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBusiness.OnFollowListener{
     private Unbinder mBinder;
 
+    @BindView(R.id.personal_profile)
+    View headerLayout;
     @BindView(R.id.person_home)
     View mPersonHomeBtn;
     @BindView(R.id.message_entrance)
@@ -112,6 +116,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     @BindView(R.id.person_home_summary_wrapper)
     View mSummaryWrapper;
+    @BindView(R.id.label_summary)
+    TextView labelSummary;
     @BindView(R.id.person_home_summary)
     TextView mSummary;
     @BindView(R.id.person_home_relationship_wrapper)
@@ -227,10 +233,24 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
             }
             addContent(fragments, tabs);
         }else if(isOrganization){//机构页面
-
+            //改变头部整体高度
+            ViewGroup.LayoutParams lp=headerLayout.getLayoutParams();
+            lp.height=getResources().getDimensionPixelSize(R.dimen.px380);
+            headerLayout.setLayoutParams(lp);
             organization();
+            if(!TextUtils.isEmpty(home.profile.title)){
+                labelSummary.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(PersonHomeActivity.this, MySignatureDetailActivity.class).putExtra(MySignatureDetailActivity.KEY_CONTENT,mBean.profile.title));
+                    }
+                });
+                labelSummary.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_entrance,0);
+            }else {
+                labelSummary.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+            }
             mSummary.setText(TextUtils.isEmpty(home.profile.title)?"暂无简介":home.profile.title.trim());
-            mProfileTv.setVisibility(View.INVISIBLE);
+            mProfileTv.setVisibility(View.GONE);
             PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
 
             Bundle b1 = new Bundle();
@@ -392,7 +412,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.scroll_tab_left_image,R.id.person_home_summary_wrapper,
+    @OnClick({R.id.scroll_tab_left_image,
             R.id.person_home_query, R.id.scroll_tab_right_view}) //R.id.person_home_message_only, R.id.person_home_message_btn
     public void onClick(View view) {
 
