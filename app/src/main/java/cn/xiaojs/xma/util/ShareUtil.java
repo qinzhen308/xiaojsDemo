@@ -31,13 +31,54 @@ public class ShareUtil {
      * 显示分享框
      * @param
      */
-    public static void show(final Activity activity, final String title, final String message, final String url){
+    public static void show(final Activity activity, final String title, final String message, final String url) {
 
         if (XiaojsConfig.DEBUG) {
             Logger.d("the share url" + url);
         }
 
-        View view = LayoutInflater.from(activity).inflate(R.layout.layout_share_window,null);
+        shareDld(activity, new ShareBtnListener() {
+            @Override
+            public void onClickListener(View v) {
+                switch (v.getId()) {
+                    case R.id.tv_wechat:
+                        IWXAPI iwxapi = WechatUtil.registerToWechat(activity.getApplicationContext());
+                        WechatUtil.shareWebpage(activity, iwxapi, title, message, url, true);
+                        break;
+                    case R.id.tv_fcircle:
+                        IWXAPI iwxapiq = WechatUtil.registerToWechat(activity.getApplicationContext());
+                        boolean send = WechatUtil.shareWebpage(activity, iwxapiq, title, message, url, false);
+                        break;
+                    case R.id.tv_qq:
+                        //QQ
+                        Tencent tencent = QQUtil.getTencent(activity.getApplicationContext());
+                        QQUtil.share(activity, tencent, title, message, url, "", new IUiListener() {
+                            @Override
+                            public void onComplete(Object o) {
+
+                                //Toast.makeText(activity, "分享成功", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(UiError uiError) {
+                                //Toast.makeText(activity, "分享失败", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                //Toast.makeText(activity, "分享已取消", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        break;
+                }
+
+            }
+        });
+    }
+
+
+    public static void shareDld(final Context context, final ShareBtnListener btnListener) {
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_share_window,null);
         Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
         //TextView tvXjs = (TextView) view.findViewById(R.id.tv_xfirends);
         //TextView tvClasses = (TextView) view.findViewById(R.id.tv_xfirends);
@@ -45,59 +86,32 @@ public class ShareUtil {
         TextView tvWechat = (TextView) view.findViewById(R.id.tv_wechat);
         TextView tvFriends = (TextView) view.findViewById(R.id.tv_fcircle);
 
-        final BottomSheet bottomSheet = new BottomSheet(activity);
+        final BottomSheet bottomSheet = new BottomSheet(context);
         bottomSheet.setTitleVisibility(View.GONE);
         bottomSheet.setContent(view);
-
 
         tvQq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Tencent tencent = QQUtil.getTencent(activity.getApplicationContext());
-                QQUtil.share(activity, tencent, title, message, url,"", new IUiListener() {
-                    @Override
-                    public void onComplete(Object o) {
-
-                        //Toast.makeText(activity, "分享成功", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(UiError uiError) {
-                        //Toast.makeText(activity, "分享失败", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        //Toast.makeText(activity, "分享已取消", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+                btnListener.onClickListener(v);
                 bottomSheet.dismiss();
             }
         });
-
         tvWechat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IWXAPI iwxapi = WechatUtil.registerToWechat(activity.getApplicationContext());
-                WechatUtil.shareWebpage(activity, iwxapi,title,message,url,true);
-
+                btnListener.onClickListener(v);
                 bottomSheet.dismiss();
             }
         });
-
         tvFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IWXAPI iwxapi = WechatUtil.registerToWechat(activity.getApplicationContext());
-                boolean send = WechatUtil.shareWebpage(activity, iwxapi,title,message,url,false);
-//                String tip = send? "分享成功": "分享失败";
-//                Toast.makeText(activity, tip, Toast.LENGTH_SHORT).show();
+                btnListener.onClickListener(v);
                 bottomSheet.dismiss();
+
             }
         });
-
-
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,42 +125,8 @@ public class ShareUtil {
     }
 
 
-    public static void shareDld(final Context context, View.OnClickListener qqBtnListener, View.OnClickListener wechatBtnListener) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_share_window,null);
-        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
-        //TextView tvXjs = (TextView) view.findViewById(R.id.tv_xfirends);
-        //TextView tvClasses = (TextView) view.findViewById(R.id.tv_xfirends);
-        TextView tvQq = (TextView) view.findViewById(R.id.tv_qq);
-        TextView tvWechat = (TextView) view.findViewById(R.id.tv_wechat);
-        TextView tvFriends = (TextView) view.findViewById(R.id.tv_fcircle);
-
-        final BottomSheet bottomSheet = new BottomSheet(context);
-        bottomSheet.setTitleVisibility(View.GONE);
-        bottomSheet.setContent(view);
-
-
-        tvQq.setOnClickListener(qqBtnListener);
-
-        tvWechat.setOnClickListener(wechatBtnListener);
-
-        tvFriends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                bottomSheet.dismiss();
-            }
-        });
-
-        bottomSheet.show();
+    public interface ShareBtnListener{
+        void onClickListener(View v);
     }
 
 }
