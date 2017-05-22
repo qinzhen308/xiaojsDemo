@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -22,14 +21,11 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
-import cn.xiaojs.xma.common.xf_foundation.Su;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
-import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
@@ -38,8 +34,9 @@ import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveMenu;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
-import cn.xiaojs.xma.ui.classroom.socketio.Event;
-import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom.talk.OnAttendItemClick;
+import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
+import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -126,6 +123,8 @@ public class PublishFragment extends ClassroomLiveFragment {
     private boolean mScaled = false;
     private int mNormalVideoWidth;
     private int mNormalVideoHeight;
+
+    private boolean mHandKeyPressing = false;
 
     @Override
     protected View getContentView() {
@@ -369,7 +368,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
                     mPeerTalkAttendee = attendee;
                     switch (action) {
-                        case OnPanelItemClick.ACTION_OPEN_TALK:
+                        case OnAttendItemClick.ACTION_OPEN_TALK:
                             if (isPortrait()) {
                                 ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, mSlideViewHeight);
                             } else {
@@ -378,7 +377,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                                 ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
                             }
                             break;
-                        case OnPanelItemClick.ACTION_OPEN_CAMERA:
+                        case OnAttendItemClick.ACTION_OPEN_CAMERA:
                             //open publish: peer to peer
                             applyOpenStuVideo(attendee.accountId);
                             break;
@@ -446,7 +445,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         } else {
             String liveState = LiveCtlSessionManager.getInstance().getLiveState();
             setControllerBtnStyle(liveState);
-            mTipsHelper.setTipsByState(liveState);
+            mTipsHelper.setTipsByStateOnStrop(liveState);
 
             switch (type) {
                 case StreamType.TYPE_STREAM_PUBLISH:
@@ -460,6 +459,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                 case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
                     //mIndividualStreamDuration = mTimeProgressHelper.getIndividualStreamDuration();
                     //mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
+                    LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
                     exitCurrentFragment();
                     break;
             }
@@ -497,6 +497,11 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     private void handOnBackPressed() {
+        if (mHandKeyPressing) {
+            return;
+        }
+
+        mHandKeyPressing = true;
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         if (Live.LiveSessionState.LIVE.equals(liveState) && mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
             pauseClass(true);
@@ -514,6 +519,9 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     private void updatePortraitViewStyle() {
+        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        mSlideViewWidth = (int) (0.4F * dm.heightPixels);
+        mSlideViewHeight = dm.heightPixels - (int) (dm.widthPixels / Constants.VIDEO_VIEW_RATIO);
         mScreenshotLandBtn.setVisibility(View.GONE);
         mScreenshotPortraitBtn.setVisibility(View.VISIBLE);
     }
@@ -539,6 +547,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             resumeClass();
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
             //pause and exit
+            mHandKeyPressing = true;
             pauseIndividual(mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         } else if (Live.LiveSessionState.FINISHED.equals(liveState)) {
             individualPublishStream();
@@ -588,6 +597,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             @Override
             public void onSuccess(ResponseBody object) {
                 cancelProgress();
+                mHandKeyPressing = false;
                 LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.RESET);
                 setControllerBtnStyle(Live.LiveSessionState.RESET);
                 mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
@@ -597,6 +607,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
+                mHandKeyPressing = false;
                 mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
                 mExitCurrFragment = withExitFragment;
             }
@@ -674,11 +685,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
         mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         mExitCurrFragment = withExitFragment;
-    }
-
-    private void pausePeer2Peer(boolean withExitFragment) {
-        mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
-        mExitCurrFragment = withExitFragment;
+        mHandKeyPressing = false;
     }
 
     private void exitCurrentFragment() {

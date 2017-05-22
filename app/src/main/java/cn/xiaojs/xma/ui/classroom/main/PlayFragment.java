@@ -30,7 +30,6 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
-import cn.xiaojs.xma.ui.classroom.OnPanelItemClick;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
@@ -38,6 +37,11 @@ import cn.xiaojs.xma.ui.classroom.live.PlayVideoController;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.talk.EmbedTalkFragment;
+import cn.xiaojs.xma.ui.classroom.talk.OnGetTalkListener;
+import cn.xiaojs.xma.ui.classroom.talk.OnAttendItemClick;
+import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
+import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import okhttp3.ResponseBody;
@@ -341,6 +345,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mDiscussionListView.setVisibility(View.GONE);
 
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        mSlideViewWidth = (int) (0.4F * dm.heightPixels);
+        mSlideViewHeight = dm.heightPixels - (int) (dm.widthPixels / Constants.VIDEO_VIEW_RATIO);
+
         mVideoWidth = dm.widthPixels;
         mVideoHeight = (int) (dm.widthPixels / Constants.VIDEO_VIEW_RATIO);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mPlayLayout.getLayoutParams();
@@ -464,7 +471,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
                     mPeerTalkAttendee = attendee;
                     switch (action) {
-                        case OnPanelItemClick.ACTION_OPEN_TALK:
+                        case OnAttendItemClick.ACTION_OPEN_TALK:
                             if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
                                 if (isPortrait()) {
                                     ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, mSlideViewHeight);
@@ -477,7 +484,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                                 mEmbedTalkFragment.switchPeerTalk(attendee);
                             }
                             break;
-                        case OnPanelItemClick.ACTION_OPEN_CAMERA:
+                        case OnAttendItemClick.ACTION_OPEN_CAMERA:
                             //open publish: peer to peer
                             applyOpenStuVideo(attendee.accountId);
                             break;
@@ -526,7 +533,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
 
         mTipsHelper.hideTips();
-        Toast.makeText(mContext, "start=" + getTxtString(type), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -537,13 +543,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     public void onStreamStopped(int type, Object extra) {
         //updateViewStyleByLiveState();
-        Toast.makeText(mContext, "stop=" + getTxtString(type), Toast.LENGTH_SHORT).show();
-
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         mCountTime = mTimeProgressHelper.getCountTime();
         mTimeProgressHelper.setTimeProgress(mCountTime, 0, liveState, mIndividualName, false);
 
-        mTipsHelper.setTipsByState(liveState);
+        mTipsHelper.setTipsByStateOnStrop(liveState);
     }
 
     @Override

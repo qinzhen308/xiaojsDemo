@@ -5,9 +5,6 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.InteractiveLevel;
-
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -42,11 +39,8 @@ public class WhiteboardScrollerView extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (mContext instanceof ClassroomActivity) {
-            if (((ClassroomActivity)mContext).getInteractiveLevel() == InteractiveLevel.WHITE_BOARD) {
-                return false;
-            }
-        }
+        //TODO
+        //return false;
 
         return super.onInterceptTouchEvent(ev);
     }

@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.main;
+package cn.xiaojs.xma.ui.classroom.talk;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -34,11 +34,12 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.TalkItem;
-import cn.xiaojs.xma.ui.classroom.OnPhotoDoodleShareListener;
-import cn.xiaojs.xma.ui.classroom.PhotoDoodleFragment;
-import cn.xiaojs.xma.ui.classroom.talk.FullScreenTalkMsgAdapter;
-import cn.xiaojs.xma.ui.classroom.talk.OnImageClickListener;
-import cn.xiaojs.xma.ui.classroom.talk.TalkMsgAdapter;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
+import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.BitmapUtils;
 

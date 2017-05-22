@@ -44,8 +44,6 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.base.BaseFragment;
-import cn.xiaojs.xma.ui.classroom.*;
-import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingMode;
@@ -54,8 +52,14 @@ import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
+import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
+import cn.xiaojs.xma.ui.classroom.page.OnSettingChangedListener;
+import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
+import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
+import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
@@ -115,9 +119,9 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         mFadeAnimListeners = new HashMap<String, FadeAnimListener>();
         mViewPropertyAnimators = new ArrayList<ViewPropertyAnimator>();
 
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        mSlideViewWidth = (int) (0.4F * displayMetrics.heightPixels);
-        mSlideViewHeight = displayMetrics.heightPixels - (int) (displayMetrics.widthPixels / Constants.VIDEO_VIEW_RATIO);
+        //DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        //mSlideViewWidth = (int) (0.4F * displayMetrics.heightPixels);
+        //mSlideViewHeight = displayMetrics.heightPixels - (int) (displayMetrics.widthPixels / Constants.VIDEO_VIEW_RATIO);
 
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
@@ -237,12 +241,13 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
      * 个人推流
      */
     protected void individualPublishStream() {
+        showProgress(true);
         StreamingMode streamMode = new StreamingMode();
         streamMode.mode = Live.StreamMode.AV;
         SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), streamMode, new SocketManager.AckListener() {
             @Override
             public void call(final Object... args) {
-                //cancelProgress();
+                cancelProgress();
                 if (args != null && args.length > 0) {
                     String oldLiveSate = LiveCtlSessionManager.getInstance().getLiveState();
                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
@@ -256,13 +261,11 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
                         }
                         onIndividualPublishCallback(response);
                     } else {
-                        cancelProgress();
                         if (XiaojsConfig.DEBUG) {
                             Toast.makeText(mContext, "claim streaming fail:" + response.details, Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    cancelProgress();
                     if (XiaojsConfig.DEBUG) {
                         Toast.makeText(mContext, "claim streaming fail", Toast.LENGTH_SHORT).show();
                     }

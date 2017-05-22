@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.page;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,13 +9,15 @@ package cn.xiaojs.xma.ui.classroom;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/4/10
+ * Date:2017/3/15
  * Desc:
  *
  * ======================================================================================== */
 
-public interface OnSettingChangedListener {
-    public void onResolutionChanged(int quality);
+import android.graphics.Bitmap;
 
-    public void onSwitcherChanged(int switcher, boolean open);
+import cn.xiaojs.xma.model.live.Attendee;
+
+public interface OnPhotoDoodleShareListener {
+    public void onPhotoShared(Attendee attendee, Bitmap bmp);
 }

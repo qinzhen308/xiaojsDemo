@@ -1,4 +1,20 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.page;
+
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.widget.SheetFragment;
+import cn.xiaojs.xma.util.XjsUtils;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,85 +25,57 @@ package cn.xiaojs.xma.ui.classroom;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2016/11/28
+ * Date:2017/5/5
  * Desc:
  *
  * ======================================================================================== */
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+public class SettingFragment extends SheetFragment implements Constants, CompoundButton.OnCheckedChangeListener {
+    @BindView(R.id.fluent)
+    TextView mFluentTv;
+    @BindView(R.id.standard_definition)
+    TextView mStandardTv;
+    @BindView(R.id.high_definition)
+    TextView mHighTv;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.classroom.OnSettingChangedListener;
-import cn.xiaojs.xma.ui.classroom.Panel;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.util.XjsUtils;
-
-public class SettingPanel extends Panel implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, Constants {
-    private TextView mFluentTv;
-    private TextView mStandardTv;
-    private TextView mHighTv;
-
-    private ToggleButton mMicroPhoneSwitcher;
-    private ToggleButton mCameraSwitcher;
-    private ToggleButton mTalkSwitcher;
-    private ToggleButton mMobileNetworkLiveSwitcher;
+    @BindView(R.id.microphone_switcher)
+    ToggleButton mMicroPhoneSwitcher;
+    @BindView(R.id.camera_switcher)
+    ToggleButton mCameraSwitcher;
+    @BindView(R.id.mobile_network_watch_live)
+    ToggleButton mMobileNetworkLiveSwitcher;
 
     private OnSettingChangedListener mOnSettingChangedListener;
-
-    public SettingPanel(Context context) {
-        super(context);
-    }
 
     public void setOnSettingChangedListener(OnSettingChangedListener listener) {
         mOnSettingChangedListener = listener;
     }
 
     @Override
-    public View onCreateView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_setting, null);
+    protected View onCreateView() {
+        return LayoutInflater.from(mContext).inflate(R.layout.layout_classroom_sliding_setting, null);
     }
 
     @Override
-    public void initChildView(View root) {
-        mFluentTv = (TextView) root.findViewById(R.id.fluent);
-        mStandardTv = (TextView) root.findViewById(R.id.standard_definition);
-        mHighTv = (TextView) root.findViewById(R.id.high_definition);
-
-        mMobileNetworkLiveSwitcher = (ToggleButton) root.findViewById(R.id.mobile_network_watch_live);
-        mMicroPhoneSwitcher = (ToggleButton) root.findViewById(R.id.microphone_switcher);
-        mCameraSwitcher = (ToggleButton) root.findViewById(R.id.camera_switcher);
-        mTalkSwitcher = (ToggleButton) root.findViewById(R.id.class_room_talk);
-
-        mFluentTv.setOnClickListener(this);
-        mStandardTv.setOnClickListener(this);
-        mHighTv.setOnClickListener(this);
-
+    protected void onFragmentShow(DialogInterface dialogInterface) {
         setQuality();
 
         SharedPreferences sf = XjsUtils.getSharedPreferences();
         mMobileNetworkLiveSwitcher.setChecked(sf.getBoolean(KEY_MOBILE_NETWORK_LIVE, false));
         mMicroPhoneSwitcher.setChecked(sf.getBoolean(KEY_MICROPHONE_OPEN, true));
         mCameraSwitcher.setChecked(sf.getBoolean(KEY_CAMERA_OPEN, true));
-        mTalkSwitcher.setChecked(sf.getBoolean(KEY_MULTI_TALK_OPEN, true));
 
         mMobileNetworkLiveSwitcher.setOnCheckedChangeListener(this);
         mMicroPhoneSwitcher.setOnCheckedChangeListener(this);
         mCameraSwitcher.setOnCheckedChangeListener(this);
-        mTalkSwitcher.setOnCheckedChangeListener(this);
     }
 
     @Override
-    public void initData() {
-
+    protected View getTargetView(View root) {
+        return root.findViewById(R.id.setting_title);
     }
 
-    @Override
+    @OnClick({R.id.fluent, R.id.standard_definition, R.id.high_definition})
     public void onClick(View v) {
         reset();
         if (!v.isSelected()) {
@@ -95,6 +83,7 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
         }
         SharedPreferences.Editor editor = XjsUtils.getSharedPreferences().edit();
         int quality = QUALITY_STANDARD;
+
         switch (v.getId()) {
             case R.id.fluent:
                 quality = QUALITY_FLUENT;
@@ -108,12 +97,30 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
                 quality = QUALITY_HIGH;
                 editor.putInt(KEY_QUALITY, QUALITY_HIGH);
                 break;
+            default:
+                break;
         }
 
         editor.apply();
 
         if (mOnSettingChangedListener != null) {
             mOnSettingChangedListener.onResolutionChanged(quality);
+        }
+    }
+
+    private void setQuality() {
+        SharedPreferences spf = XjsUtils.getSharedPreferences();
+        int quality = spf.getInt(KEY_QUALITY, QUALITY_STANDARD);
+        switch (quality) {
+            case QUALITY_FLUENT:
+                mFluentTv.setSelected(true);
+                break;
+            case QUALITY_STANDARD:
+                mStandardTv.setSelected(true);
+                break;
+            case QUALITY_HIGH:
+                mHighTv.setSelected(true);
+                break;
         }
     }
 
@@ -150,21 +157,5 @@ public class SettingPanel extends Panel implements View.OnClickListener, Compoun
                 break;
         }
         editor.commit();
-    }
-
-    private void setQuality() {
-        SharedPreferences spf = XjsUtils.getSharedPreferences();
-        int quality = spf.getInt(KEY_QUALITY, QUALITY_STANDARD);
-        switch (quality) {
-            case QUALITY_FLUENT:
-                mFluentTv.setSelected(true);
-                break;
-            case QUALITY_STANDARD:
-                mStandardTv.setSelected(true);
-                break;
-            case QUALITY_HIGH:
-                mHighTv.setSelected(true);
-                break;
-        }
     }
 }

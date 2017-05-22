@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.page;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,16 +9,13 @@ package cn.xiaojs.xma.ui.classroom;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/2/24
+ * Date:2017/4/10
  * Desc:
  *
  * ======================================================================================== */
 
-import cn.xiaojs.xma.model.live.Attendee;
+public interface OnSettingChangedListener {
+    public void onResolutionChanged(int quality);
 
-public interface OnPanelItemClick {
-    public final static int ACTION_OPEN_CAMERA = 1;
-    public final static int ACTION_OPEN_TALK = 2;
-
-    public void onItemClick(int action, Attendee attendee);
+    public void onSwitcherChanged(int switcher, boolean open);
 }

@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.page;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -7,8 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
-
-import com.fasterxml.jackson.core.io.NumberInput;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,8 +59,6 @@ public class PhotoDoodleFragment extends BaseFragment {
     private Bitmap mBitmap;
     private ShareDoodlePopWindow mSharePopWindow;
     private Constants.User mUser = Constants.User.TEACHER;
-    private boolean mAnimating;
-    private String mTicket;
     private OnPhotoDoodleShareListener mPhotoDoodleShareListener;
 
     private int mDisplayMode = MODE_SINGLE_IMG;
@@ -76,10 +72,6 @@ public class PhotoDoodleFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        if (mContext instanceof ClassroomActivity) {
-            mTicket = ((ClassroomActivity)mContext).getTicket();
-        }
-
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
 
         Bundle data = getArguments();
@@ -150,7 +142,7 @@ public class PhotoDoodleFragment extends BaseFragment {
      */
     private void selectShareContact(View anchor) {
         if (mSharePopWindow == null) {
-            mSharePopWindow = new ShareDoodlePopWindow(mContext, mTicket, mBoardController, mPhotoDoodleShareListener);
+            mSharePopWindow = new ShareDoodlePopWindow(mContext, mBoardController, mPhotoDoodleShareListener);
         }
 
         int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);
@@ -186,7 +178,7 @@ public class PhotoDoodleFragment extends BaseFragment {
                     File file = new File(result);
                     CollaManager manager = new CollaManager();
                     //FIXME 如果没有ticket或者ticket不合法，接口会返回参数错误
-                    manager.addToLibrary(mContext, file.getPath(), file.getName(), mTicket, new QiniuService() {
+                    manager.addToLibrary(mContext, file.getPath(), file.getName(), new QiniuService() {
                         @Override
                         public void uploadSuccess(String key, UploadReponse reponse) {
                             cancelProgress();
@@ -212,9 +204,4 @@ public class PhotoDoodleFragment extends BaseFragment {
         }.execute(0);
     }
 
-    private void switchWhiteBoardToolbar() {
-        if (mAnimating) {
-            return;
-        }
-    }
 }

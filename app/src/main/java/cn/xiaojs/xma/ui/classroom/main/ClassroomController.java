@@ -23,7 +23,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -41,11 +40,16 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
-import cn.xiaojs.xma.ui.classroom.OnPhotoDoodleShareListener;
-import cn.xiaojs.xma.ui.classroom.OnSettingChangedListener;
-import cn.xiaojs.xma.ui.classroom.PhotoDoodleFragment;
-import cn.xiaojs.xma.ui.classroom.VideoPlayFragment;
 import cn.xiaojs.xma.ui.classroom.document.DocumentFragment;
+import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
+import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
+import cn.xiaojs.xma.ui.classroom.page.OnSettingChangedListener;
+import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
+import cn.xiaojs.xma.ui.classroom.page.SettingFragment;
+import cn.xiaojs.xma.ui.classroom.page.VideoPlayFragment;
+import cn.xiaojs.xma.ui.classroom.talk.ContactFragment;
+import cn.xiaojs.xma.ui.classroom.talk.SlideTalkFragment;
+import cn.xiaojs.xma.ui.classroom.talk.SlidingTalkDialogFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
@@ -82,7 +86,7 @@ public class ClassroomController {
         mBackPressListeners = new ArrayList<BackPressListener>();
     }
 
-    public static void init(Context context) {
+    public synchronized static void init(Context context) {
         mInstance = new ClassroomController(context);
     }
 

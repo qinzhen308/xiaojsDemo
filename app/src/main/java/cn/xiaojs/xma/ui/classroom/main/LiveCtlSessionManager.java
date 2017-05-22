@@ -38,7 +38,6 @@ public class LiveCtlSessionManager {
         mCtlSession = ctlSession;
         mUser = ClassroomBusiness.getUser(ctlSession.psType);
         mUserMode = ClassroomBusiness.getUserByCtlSession(ctlSession);
-        ;
         mTicket = ticket;
     }
 

@@ -20,9 +20,9 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
-import cn.xiaojs.xma.ui.classroom.OnPhotoDoodleShareListener;
+import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.main.ContactManager;
+import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
 import cn.xiaojs.xma.ui.classroom.talk.InviteFriendAdapter;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -52,15 +52,13 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     private ListView mListView;
     private ImageView mCheckToDiscussionBtn;
     private int mCheckMode = MODE_UN_CHECK_ALL;
-    private String mTicket;
     private ContactAdapter mContactAdapter;
     private WhiteboardController mBoardController;
     private OnPhotoDoodleShareListener mEditedVideoShareListener;
     private ArrayList<Attendee> mAttendees;
 
-    public ShareDoodlePopWindow(Context context, String ticket, WhiteboardController controller, OnPhotoDoodleShareListener listener) {
+    public ShareDoodlePopWindow(Context context, WhiteboardController controller, OnPhotoDoodleShareListener listener) {
         mContext = context;
-        mTicket = ticket;
         mEditedVideoShareListener = listener;
         mBoardController = controller;
         mAttendees = new ArrayList<Attendee>();
