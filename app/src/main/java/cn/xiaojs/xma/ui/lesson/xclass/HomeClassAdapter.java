@@ -28,7 +28,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder=new ClassLabelHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lesson_schedule_date,parent,false));
 
         }else if(viewType==4){
-            holder=new ClassHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_organization_teacher,parent,false));
+            holder=new ClassHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lesson_schedule_lesson,parent,false));
         }
         return holder;
     }
