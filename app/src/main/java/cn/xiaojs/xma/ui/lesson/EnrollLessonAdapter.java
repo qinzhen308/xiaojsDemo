@@ -398,7 +398,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
     @Override
     protected void onEmptyButtonClick() {
         Intent intent = new Intent(mContext, MainActivity.class);
-        intent.putExtra(MainActivity.KEY_POSITION, 1);
+        intent.putExtra(MainActivity.KEY_POSITION, 0);
         mContext.startActivity(intent);
     }
 
