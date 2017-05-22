@@ -42,6 +42,7 @@ import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
 import cn.xiaojs.xma.ui.lesson.SubjectSelectorActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.ShareQrcodeActivity;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.MessageCenterActivity;
 import cn.xiaojs.xma.ui.mine.MyOrderActivity;
@@ -96,6 +97,7 @@ public class MineFragment extends BaseFragment {
 
     @BindView(R.id.message_entrance)
     RedTipTextView messageEntrace;
+
 
 
     private Drawable mBlurFloatUpBg;
@@ -158,7 +160,7 @@ public class MineFragment extends BaseFragment {
 
     @OnClick({R.id.settings_layout, R.id.my_teaching_layout, R.id.my_enrollment_layout, R.id.my_document_layout,R.id.my_contact_layout,
              R.id.teach_ability_layout, R.id.name_auth_layout, R.id.person_home,R.id.portrait,
-            R.id.user_name,R.id.my_order_layout,R.id.message_entrance})
+            R.id.user_name,R.id.my_order_layout,R.id.message_entrance, R.id.qrcode_layout})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_teaching_layout:
@@ -226,6 +228,12 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.message_entrance:
                 enterMessage();
+                break;
+            case R.id.qrcode_layout:
+                Intent qrIntent = new Intent(mContext, ShareQrcodeActivity.class);
+                qrIntent.putExtra(ShareQrcodeActivity.EXTRA_QRCODE_TYPE,
+                        ShareQrcodeActivity.CLIENT_DOWNLOAD_QRCODE);
+                startActivity(qrIntent);
                 break;
             default:
                 break;

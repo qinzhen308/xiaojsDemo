@@ -88,40 +88,40 @@
                 style="@style/DividerHorizontal"/>
 
         <RelativeLayout
-            android:id="@+id/my_contact_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/MinePageItem">
-
-            <TextView
-                android:layout_alignParentLeft="true"
+                android:id="@+id/my_contact_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/font_black"
-                android:textSize="@dimen/font_26px"
-                android:drawableLeft="@drawable/ic_my_contact"
-                android:drawablePadding="@dimen/px20"
-                android:text="@string/my_contact"/>
+                style="@style/MinePageItem">
 
             <TextView
-                android:id="@+id/my_contact"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/enter_my_contact"
-                android:textColor="@color/font_black"
-                android:textSize="@dimen/font_26px"
-                android:layout_marginRight="@dimen/px20"/>
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_26px"
+                    android:drawableLeft="@drawable/ic_my_contact"
+                    android:drawablePadding="@dimen/px20"
+                    android:text="@string/my_contact"/>
+
+            <TextView
+                    android:id="@+id/my_contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/enter_my_contact"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_26px"
+                    android:layout_marginRight="@dimen/px20"/>
 
             <ImageView
-                android:id="@+id/enter_my_contact"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_entrance"/>
+                    android:id="@+id/enter_my_contact"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
         </RelativeLayout>
 
         <View
-            style="@style/DividerHorizontal"/>
+                style="@style/DividerHorizontal"/>
 
 
         <!--资料库-->
@@ -322,7 +322,7 @@
                 android:layout_height="wrap_content"
                 style="@style/MinePageItem"
                 android:layout_marginTop="@dimen/px20"
-                android:layout_marginBottom="@dimen/px185">
+                >
 
             <TextView
                     android:layout_alignParentLeft="true"
@@ -337,6 +337,38 @@
 
             <ImageView
                     android:id="@+id/enter_settings"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
+
+        </RelativeLayout>
+
+
+        <View
+                style="@style/DividerHorizontal"/>
+
+        <!--小教室下载二维码-->
+        <RelativeLayout
+                android:id="@+id/qrcode_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/MinePageItem"
+                android:layout_marginBottom="@dimen/px185">
+
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_26px"
+                    android:drawableLeft="@drawable/ic_setting"
+                    android:drawablePadding="@dimen/px20"
+                    android:text="@string/client_download_qrcode"/>
+
+
+            <ImageView
+                    android:id="@+id/enter_qrcode"
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
