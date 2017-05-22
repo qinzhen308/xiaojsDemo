@@ -110,8 +110,10 @@ public class XiaojsConfig {
     //第三方SDK相关
     //wechat
     public static final String WX_APP_ID = "wxecffc72c21a94f5a";
+    public static final String WX_APP_KEY = "";
     //QQ
     public static final String QQ_APP_ID = "1105994736";
+    public static final String QQ_APP_KEY = "TGIJEvzkjNRLT9Zb";
 
     //bugly
     //bugly------------生产环境使用----------

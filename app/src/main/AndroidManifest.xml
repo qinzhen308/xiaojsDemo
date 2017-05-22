@@ -296,11 +296,11 @@
                 android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-
+as
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="1105919395"/>
+                <data android:scheme="tencent1105919395"/>
             </intent-filter>
         </activity>
         <activity

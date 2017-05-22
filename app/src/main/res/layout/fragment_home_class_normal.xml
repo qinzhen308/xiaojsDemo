@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px88"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_scan2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_scan"
+            android:layout_marginLeft="@dimen/px25"/>
+
+
+        <RelativeLayout
+            android:id="@+id/s_root"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:background="@drawable/grey_conner_bg"
+            android:layout_gravity="center_vertical"
+            android:layout_height="@dimen/px60"
+            android:clickable="true"
+            android:layout_weight="1.0">
+
+            <TextView
+                android:id="@+id/my_course_search"
+                android:layout_width="wrap_content"
+                android:drawableLeft="@drawable/ic_search"
+                android:layout_centerInParent="true"
+                android:text="@string/home_search_hint"
+                android:textColor="@color/search_gray"
+                android:textSize="@dimen/font_28px"
+                android:drawablePadding="@dimen/px10"
+                android:gravity="center"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:src="@drawable/add_selector"
+            android:layout_marginRight="@dimen/px25"/>
+
+    </LinearLayout>
+
+    <View style="@style/DividerHorizontal"/>
+
+
+    <include layout="@layout/layout_schedule"/>
+
+
+</LinearLayout>

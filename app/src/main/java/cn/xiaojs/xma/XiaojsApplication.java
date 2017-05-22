@@ -15,6 +15,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.xiaojs.xma.data.DataManager;
 
 import cn.xiaojs.xma.util.APPUtils;
+import cn.xiaojs.xma.util.ThirdLoginUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
 /**
@@ -39,8 +40,7 @@ public class XiaojsApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-
+        ThirdLoginUtil.init();
         //日志，注意：所有日志都需要使用Logger，不得使用Log。
         Settings logSetting = Logger.init(XiaojsConfig.LOG_TAG)
                 .methodCount(1)

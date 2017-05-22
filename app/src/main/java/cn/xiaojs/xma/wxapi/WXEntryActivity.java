@@ -1,4 +1,4 @@
-package cn.xiaojs.xma;
+package cn.xiaojs.xma.wxapi;
 
 
 import com.umeng.weixin.callback.WXCallbackActivity;

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <ImageView
+        android:id="@+id/btn_scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/px10"
+        android:src="@drawable/ic_scan"
+        android:layout_margin="@dimen/px32"
+        />
+    
+    <LinearLayout
+        android:id="@+id/layout_wanna"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/px250"
+        >
+
+        <TextView
+            android:id="@+id/tab_wanna_lean"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/i_wanna_lean"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_50px"
+            android:gravity="center"
+            android:drawablePadding="@dimen/px15"
+            android:drawableBottom="@drawable/shape_line"
+            />
+
+
+        <TextView
+            android:id="@+id/tab_wanna_teach"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/px100"
+            android:text="@string/i_wanna_teach"
+            android:textColor="@color/font_light_gray"
+            android:textSize="@dimen/font_35px"
+            />
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/layout_creative_lesson"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_wanna"
+        android:layout_margin="@dimen/px70"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/iv_creative_lesson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_creative_lesson"
+            android:layout_marginRight="@dimen/px20"
+            />
+
+        <TextView
+            android:id="@+id/tv_creative_lesson"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/iv_creative_lesson"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/creative_lesson"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_32px"
+            android:layout_marginTop="@dimen/px10"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/iv_creative_lesson"
+            android:layout_height="wrap_content"
+            android:text="@string/creative_lesson_tip"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_28px"
+            android:layout_below="@+id/tv_creative_lesson"
+            android:layout_marginTop="@dimen/px10"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_creative_class"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_creative_lesson"
+        android:layout_margin="@dimen/px70"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/iv_creative_class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_creative_class"
+            android:layout_marginRight="@dimen/px20"
+            />
+
+        <TextView
+            android:id="@+id/tv_creative_class"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/iv_creative_class"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/creative_class"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_32px"
+            android:layout_marginTop="@dimen/px10"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/iv_creative_class"
+            android:layout_height="wrap_content"
+            android:text="@string/creative_class_tip"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_28px"
+            android:layout_below="@+id/tv_creative_class"
+            android:layout_marginTop="@dimen/px10"
+            />
+
+    </RelativeLayout>
+    
+    
+    <LinearLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/px70"
+        android:layout_marginRight="@dimen/px70"
+        android:layout_marginTop="@dimen/px100"
+        android:layout_below="@+id/layout_wanna"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/px32"
+            android:drawableLeft="@drawable/ic_search"
+            android:hint="@string/search_global_tip"
+            android:background="@drawable/white_corner_bg"
+            android:textSize="@dimen/px32"
+            android:drawablePadding="@dimen/px20"
+            android:textColorHint="@color/font_light_gray"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/px28"
+            android:layout_marginTop="@dimen/px32"
+            android:text="@string/search_tip1"
+            />
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

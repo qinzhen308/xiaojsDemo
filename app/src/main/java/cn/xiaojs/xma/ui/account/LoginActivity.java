@@ -22,6 +22,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -45,6 +48,7 @@ import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
+import cn.xiaojs.xma.util.QQUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
 
 /*  =======================================================================================
@@ -198,6 +202,23 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.login_qq:
                 thirdLogin(SHARE_MEDIA.QQ);
+//                QQUtil.getTencent(this).login(this, "get_simple_userinfo", new IUiListener() {
+//                    @Override
+//                    public void onComplete(Object o) {
+//                        Toast.makeText( getApplicationContext(), "qq onComplete", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onError(UiError uiError) {
+//                        Toast.makeText( getApplicationContext(), "qq "+uiError.toString(), Toast.LENGTH_SHORT).show();
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancel() {
+//                        Toast.makeText( getApplicationContext(), "qq cancel", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
                 break;
             default:
                 break;

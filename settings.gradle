@@ -1,1 +1,1 @@
-include ':app', ':3d_wheelpicker', ':qrcode'
+include ':app', ':3d_wheelpicker', ':qrcode', ':calendar'
