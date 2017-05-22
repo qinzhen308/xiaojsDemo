@@ -11,6 +11,7 @@ import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
+import cn.xiaojs.xma.model.account.OrgTeacher;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.Account;
@@ -170,6 +171,12 @@ public interface XiaojsService {
     //Acknowledge Invitation
     @PATCH("/v1/accounts/invitations/{invitation}/acknowledge")
     Call<ResponseBody> acknowledgeInvitation(@Path("invitation") String invitation, @Body DealAck dealAck);
+
+    //Get Org Teachers
+    @GET("/v1/accounts/public/{account}/teachers/{criteria}/{pagination}")
+    Call<CollectionPage<OrgTeacher>> getOrgTeachers(@Path("account") String account,
+                                                    @Path("criteria") String criteria,
+                                                    @Path("pagination") String pagination);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

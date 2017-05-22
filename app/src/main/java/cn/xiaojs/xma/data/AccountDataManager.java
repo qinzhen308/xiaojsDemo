@@ -15,6 +15,9 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.AliasTags;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
@@ -22,6 +25,7 @@ import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.account.Location;
+import cn.xiaojs.xma.model.account.OrgTeacher;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.User;
@@ -604,5 +608,26 @@ public class AccountDataManager {
         accountRequest.acknowledgeInvitation(orgId, ack);
     }
 
+    /**
+     * Returns teachers added by an organization.
+     * @param context
+     * @param account
+     * @param recommended
+     * @param pagination
+     * @param callback
+     */
+    public static void getOrgTeachers(Context context,
+                                      String account,
+                                      boolean recommended,
+                                      Pagination pagination,
+                                      APIServiceCallback<CollectionPage<OrgTeacher>> callback) {
+
+        Criteria criteria = new Criteria();
+        criteria.recommended = String.valueOf(recommended);
+
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.getOrgTeachers(account,criteria, pagination);
+
+    }
 
 }

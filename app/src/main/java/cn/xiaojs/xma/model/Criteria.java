@@ -17,6 +17,8 @@ public class Criteria {
 
     private Doc doc;
 
+    public String recommended;
+
     public Doc getDoc() {
         return doc;
     }

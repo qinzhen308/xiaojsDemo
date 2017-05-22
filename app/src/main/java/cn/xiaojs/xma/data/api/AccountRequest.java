@@ -3,11 +3,17 @@ package cn.xiaojs.xma.data.api;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.orhanobut.logger.Logger;
+
 import java.io.IOException;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
@@ -16,6 +22,7 @@ import cn.xiaojs.xma.model.CompetencyParams;
 
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
+import cn.xiaojs.xma.model.account.OrgTeacher;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.PwdParam;
@@ -151,6 +158,21 @@ public class AccountRequest extends ServiceRequest {
     public void acknowledgeInvitation(String orgId, DealAck ack) {
         Call<ResponseBody> call = getService().acknowledgeInvitation(orgId, ack);
         enqueueRequest(APIType.ACKNOWLEDGE_INVITATION,call);
+    }
+
+    public void getOrgTeachers(String account, Criteria criteria, Pagination pagination) {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+        Call<CollectionPage<OrgTeacher>> call = getService().getOrgTeachers(account,
+                criteriaJsonstr, paginationJsonstr);
+        enqueueRequest(APIType.GET_ORG_TEACHERS,call);
     }
 
 }

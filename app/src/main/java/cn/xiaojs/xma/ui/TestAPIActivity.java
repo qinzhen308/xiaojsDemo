@@ -27,6 +27,8 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.download.DConstants;
 import cn.xiaojs.xma.data.download.UpdateService;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.account.OrgTeacher;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
@@ -159,6 +161,22 @@ public class TestAPIActivity extends Activity {
 
 
     public void testCache() {
+
+        Pagination pagination = new Pagination();
+        pagination.setMaxNumOfObjectsPerPage(100);
+        pagination.setPage(1);
+
+        AccountDataManager.getOrgTeachers(this, "592258e34dd12305d0146cdb", false, pagination, new APIServiceCallback<CollectionPage<OrgTeacher>>() {
+            @Override
+            public void onSuccess(CollectionPage<OrgTeacher> object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
 
 //        Intent i = new Intent(this, UpgradeActivity.class);
 //        startActivity(i);
