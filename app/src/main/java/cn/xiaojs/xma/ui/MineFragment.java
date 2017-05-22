@@ -42,6 +42,7 @@ import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
 import cn.xiaojs.xma.ui.lesson.SubjectSelectorActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ShareQrcodeActivity;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.MessageCenterActivity;
@@ -164,7 +165,8 @@ public class MineFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_teaching_layout:
-                startActivity(new Intent(mContext, TeachLessonActivity.class));
+                startActivity(new Intent(mContext, ClassesListActivity.class));
+                //startActivity(new Intent(mContext, TeachLessonActivity.class));
                 break;
             case R.id.my_enrollment_layout:
                 startActivity(new Intent(mContext, EnrollLessonActivity.class));

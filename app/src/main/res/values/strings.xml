@@ -799,4 +799,5 @@
     <string name="class_info">班级信息</string>
     <string name="client_download_qrcode">小教室下载二维码</string>
     <string name="client_download_qrcode_tips">扫一扫二维码，即可下载小教室App</string>
+    <string name="gradle">班</string>
 </resources>
