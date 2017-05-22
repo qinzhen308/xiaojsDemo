@@ -54,7 +54,7 @@ public class ShareUtil {
             @Override
             public void onClick(View v) {
                 Tencent tencent = QQUtil.getTencent(activity.getApplicationContext());
-                QQUtil.share(activity, tencent, title, message, url, new IUiListener() {
+                QQUtil.share(activity, tencent, title, message, url,"", new IUiListener() {
                     @Override
                     public void onComplete(Object o) {
 
@@ -94,6 +94,45 @@ public class ShareUtil {
 //                String tip = send? "分享成功": "分享失败";
 //                Toast.makeText(activity, tip, Toast.LENGTH_SHORT).show();
                 bottomSheet.dismiss();
+            }
+        });
+
+
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                bottomSheet.dismiss();
+            }
+        });
+
+        bottomSheet.show();
+    }
+
+
+    public static void shareDld(final Context context, View.OnClickListener qqBtnListener, View.OnClickListener wechatBtnListener) {
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_share_window,null);
+        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
+        //TextView tvXjs = (TextView) view.findViewById(R.id.tv_xfirends);
+        //TextView tvClasses = (TextView) view.findViewById(R.id.tv_xfirends);
+        TextView tvQq = (TextView) view.findViewById(R.id.tv_qq);
+        TextView tvWechat = (TextView) view.findViewById(R.id.tv_wechat);
+        TextView tvFriends = (TextView) view.findViewById(R.id.tv_fcircle);
+
+        final BottomSheet bottomSheet = new BottomSheet(context);
+        bottomSheet.setTitleVisibility(View.GONE);
+        bottomSheet.setContent(view);
+
+
+        tvQq.setOnClickListener(qqBtnListener);
+
+        tvWechat.setOnClickListener(wechatBtnListener);
+
+        tvFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
