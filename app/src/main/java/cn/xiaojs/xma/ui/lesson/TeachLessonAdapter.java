@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
@@ -89,7 +90,8 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     }
 
     @Override
-    protected void setViewContent(Holder holder, final TeachLesson bean, int position) {
+    protected void setViewContent(Holder holder, final TeachLesson bean, final int pos) {
+
         holder.reset();
         holder.name.setText(bean.getTitle());
         holder.price.setVisibility(View.VISIBLE);
@@ -130,7 +132,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             edit(bean);
                             break;
                         case MORE:
-                            more(position,bean);
+                            more(pos,bean);
                             break;
                     }
                 }
@@ -156,7 +158,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             detail(bean);
                             break;
                         case MORE://删除
-                            more(position, bean);
+                            more(pos, bean);
                             break;
                     }
                 }
@@ -178,7 +180,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             detail(bean);
                             break;
                         case MORE:
-                            more(position, bean);
+                            more(pos, bean);
                             break;
 //                        case ENTER:
 //                            enterClass(bean);
@@ -203,7 +205,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                             detail(bean);
                             break;
                         case MORE:
-                            more(position, bean);
+                            more(pos, bean);
                             break;
                     }
                 }
@@ -222,10 +224,10 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
                 public void onClick(int position) {
                     switch (position) {
                         case 1://同意
-                            dealAck(position, bean, Ctl.ACKDecision.ACKNOWLEDGE);
+                            dealAck(pos, bean, Ctl.ACKDecision.ACKNOWLEDGE);
                             break;
                         case 2://拒绝
-                            dealAck(position, bean, Ctl.ACKDecision.REFUSED);
+                            dealAck(pos, bean, Ctl.ACKDecision.REFUSED);
                             break;
                     }
                 }
@@ -303,7 +305,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 //                            home(bean);
 //                            break;
                         case MORE:
-                            more(position,bean);
+                            more(pos,bean);
                             break;
                         case ENTER:
                             enterClass(bean);
