@@ -6,6 +6,7 @@
 
     <include layout="@layout/layout_personal_info"/>
 
+
     <LinearLayout
             android:id="@+id/person_home_summary_wrapper"
             android:visibility="gone"
@@ -19,7 +20,9 @@
                 android:text="简介"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_marginTop="@dimen/px30"
-                android:layout_width="wrap_content"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_width="match_parent"
+            android:drawableRight="@drawable/ic_entrance"
                 android:layout_height="wrap_content"/>
 
         <TextView
@@ -28,6 +31,7 @@
                 android:textSize="@dimen/font_30px"
                 android:layout_margin="@dimen/px30"
                 android:layout_width="wrap_content"
+                android:maxLines="5"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 
