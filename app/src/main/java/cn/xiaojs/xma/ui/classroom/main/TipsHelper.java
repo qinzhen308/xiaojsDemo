@@ -41,6 +41,17 @@ public class TipsHelper {
         setTips(resTitleId <= 0 ? "" : mContext.getString(resTitleId), resDescId <= 0 ? "" : mContext.getString(resDescId));
     }
 
+    public void setTipsByStateOnStrop(String liveSessionState) {
+        if (Live.LiveSessionState.LIVE.equals(liveSessionState)) {
+            Constants.User user = LiveCtlSessionManager.getInstance().getUser();
+            if (user == Constants.User.STUDENT) {
+                setTips(R.string.cls_pending_class_stu_title, R.string.cls_pending_class_stu_desc);
+            }
+        } else {
+            setTipsByState(liveSessionState);
+        }
+    }
+
     public void setTipsByState(String liveSessionState) {
         Constants.User user = LiveCtlSessionManager.getInstance().getUser();
         if (Live.LiveSessionState.SCHEDULED.equals(liveSessionState)) {

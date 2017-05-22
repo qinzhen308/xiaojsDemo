@@ -345,6 +345,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mDiscussionListView.setVisibility(View.GONE);
 
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        mSlideViewWidth = (int) (0.4F * dm.heightPixels);
+        mSlideViewHeight = dm.heightPixels - (int) (dm.widthPixels / Constants.VIDEO_VIEW_RATIO);
+
         mVideoWidth = dm.widthPixels;
         mVideoHeight = (int) (dm.widthPixels / Constants.VIDEO_VIEW_RATIO);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mPlayLayout.getLayoutParams();
@@ -530,7 +533,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
 
         mTipsHelper.hideTips();
-        Toast.makeText(mContext, "start=" + getTxtString(type), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -541,13 +543,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     public void onStreamStopped(int type, Object extra) {
         //updateViewStyleByLiveState();
-        Toast.makeText(mContext, "stop=" + getTxtString(type), Toast.LENGTH_SHORT).show();
-
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         mCountTime = mTimeProgressHelper.getCountTime();
         mTimeProgressHelper.setTimeProgress(mCountTime, 0, liveState, mIndividualName, false);
 
-        mTipsHelper.setTipsByState(liveState);
+        mTipsHelper.setTipsByStateOnStrop(liveState);
     }
 
     @Override

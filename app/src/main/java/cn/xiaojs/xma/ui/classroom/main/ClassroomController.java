@@ -86,7 +86,7 @@ public class ClassroomController {
         mBackPressListeners = new ArrayList<BackPressListener>();
     }
 
-    public static void init(Context context) {
+    public synchronized static void init(Context context) {
         mInstance = new ClassroomController(context);
     }
 

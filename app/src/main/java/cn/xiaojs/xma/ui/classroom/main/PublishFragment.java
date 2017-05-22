@@ -124,7 +124,7 @@ public class PublishFragment extends ClassroomLiveFragment {
     private int mNormalVideoWidth;
     private int mNormalVideoHeight;
 
-    private boolean mHandBackPressing = false;
+    private boolean mHandKeyPressing = false;
 
     @Override
     protected View getContentView() {
@@ -445,7 +445,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         } else {
             String liveState = LiveCtlSessionManager.getInstance().getLiveState();
             setControllerBtnStyle(liveState);
-            mTipsHelper.setTipsByState(liveState);
+            mTipsHelper.setTipsByStateOnStrop(liveState);
 
             switch (type) {
                 case StreamType.TYPE_STREAM_PUBLISH:
@@ -459,6 +459,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                 case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
                     //mIndividualStreamDuration = mTimeProgressHelper.getIndividualStreamDuration();
                     //mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
+                    LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
                     exitCurrentFragment();
                     break;
             }
@@ -496,11 +497,11 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     private void handOnBackPressed() {
-        if (mHandBackPressing) {
+        if (mHandKeyPressing) {
             return;
         }
 
-        mHandBackPressing = true;
+        mHandKeyPressing = true;
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         if (Live.LiveSessionState.LIVE.equals(liveState) && mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
             pauseClass(true);
@@ -518,6 +519,9 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     private void updatePortraitViewStyle() {
+        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        mSlideViewWidth = (int) (0.4F * dm.heightPixels);
+        mSlideViewHeight = dm.heightPixels - (int) (dm.widthPixels / Constants.VIDEO_VIEW_RATIO);
         mScreenshotLandBtn.setVisibility(View.GONE);
         mScreenshotPortraitBtn.setVisibility(View.VISIBLE);
     }
@@ -543,6 +547,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             resumeClass();
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
             //pause and exit
+            mHandKeyPressing = true;
             pauseIndividual(mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         } else if (Live.LiveSessionState.FINISHED.equals(liveState)) {
             individualPublishStream();
@@ -592,7 +597,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             @Override
             public void onSuccess(ResponseBody object) {
                 cancelProgress();
-                mHandBackPressing = false;
+                mHandKeyPressing = false;
                 LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.RESET);
                 setControllerBtnStyle(Live.LiveSessionState.RESET);
                 mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
@@ -602,7 +607,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                mHandBackPressing = false;
+                mHandKeyPressing = false;
                 mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
                 mExitCurrFragment = withExitFragment;
             }
@@ -680,12 +685,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
         mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         mExitCurrFragment = withExitFragment;
-        mHandBackPressing = false;
-    }
-
-    private void pausePeer2Peer(boolean withExitFragment) {
-        mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
-        mExitCurrFragment = withExitFragment;
+        mHandKeyPressing = false;
     }
 
     private void exitCurrentFragment() {

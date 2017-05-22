@@ -119,9 +119,9 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         mFadeAnimListeners = new HashMap<String, FadeAnimListener>();
         mViewPropertyAnimators = new ArrayList<ViewPropertyAnimator>();
 
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        mSlideViewWidth = (int) (0.4F * displayMetrics.heightPixels);
-        mSlideViewHeight = displayMetrics.heightPixels - (int) (displayMetrics.widthPixels / Constants.VIDEO_VIEW_RATIO);
+        //DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        //mSlideViewWidth = (int) (0.4F * displayMetrics.heightPixels);
+        //mSlideViewHeight = displayMetrics.heightPixels - (int) (displayMetrics.widthPixels / Constants.VIDEO_VIEW_RATIO);
 
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
@@ -241,12 +241,13 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
      * 个人推流
      */
     protected void individualPublishStream() {
+        showProgress(true);
         StreamingMode streamMode = new StreamingMode();
         streamMode.mode = Live.StreamMode.AV;
         SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), streamMode, new SocketManager.AckListener() {
             @Override
             public void call(final Object... args) {
-                //cancelProgress();
+                cancelProgress();
                 if (args != null && args.length > 0) {
                     String oldLiveSate = LiveCtlSessionManager.getInstance().getLiveState();
                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
@@ -260,13 +261,11 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
                         }
                         onIndividualPublishCallback(response);
                     } else {
-                        cancelProgress();
                         if (XiaojsConfig.DEBUG) {
                             Toast.makeText(mContext, "claim streaming fail:" + response.details, Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    cancelProgress();
                     if (XiaojsConfig.DEBUG) {
                         Toast.makeText(mContext, "claim streaming fail", Toast.LENGTH_SHORT).show();
                     }
