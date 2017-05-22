@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -64,10 +65,28 @@ public class ClassesListActivity extends FragmentActivity {
         adapter.setList(fragmentList);
         tabPager.setAdapter(adapter);
 
+        tabGroupLayout.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+
+                if (checkedId == R.id.tab_class) {
+                    tabPager.setCurrentItem(0);
+                }else if(checkedId == R.id.tab_lesson) {
+                    tabPager.setCurrentItem(1);
+                }
+
+            }
+        });
+
         tabPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+                if (position == 0) {
+                    tabGroupLayout.check(R.id.tab_class);
+                }else{
+                    tabGroupLayout.check(R.id.tab_lesson);
+                }
             }
 
             @Override
