@@ -82,6 +82,7 @@ public class ClassroomActivity extends FragmentActivity {
 
     private int mNetworkState = ClassroomBusiness.NETWORK_NONE;
     //private boolean mNeedInitStream; //init stream after socket connected
+    private boolean mNetworkDisconnected = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class ClassroomActivity extends FragmentActivity {
         //init params
         initParams();
         //init data
-        initData(true);
+        initData(true, false);
 
         //grant permission
         String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT,
@@ -149,7 +150,7 @@ public class ClassroomActivity extends FragmentActivity {
     /**
      * 初始化, 启动bootSession
      */
-    private void initData(boolean showProgress) {
+    private void initData(boolean showProgress, final boolean netWorkChanged) {
         if (ClassroomBusiness.getCurrentNetwork(this) == ClassroomBusiness.NETWORK_NONE) {
             //TODO, show tips view
             return;
@@ -170,9 +171,9 @@ public class ClassroomActivity extends FragmentActivity {
                     }
 
                     if (!ctlSession.accessible) {
-                        checkForceKickOut(ctlSession);
+                        checkForceKickOut(ctlSession, netWorkChanged);
                     } else {
-                        onBootSessionSucc(false, ctlSession);
+                        onBootSessionSucc(false, ctlSession, netWorkChanged);
                     }
                 }
             }
@@ -194,7 +195,7 @@ public class ClassroomActivity extends FragmentActivity {
      * @param forceConnect 是否强制链接
      * @param ctlSession   课程session
      */
-    private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession) {
+    private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession, boolean networkChanged) {
         if (Live.LiveSessionState.CANCELLED.equals(ctlSession.state)) {
             Toast.makeText(this, R.string.forbidden_enter_class_for_cancel, Toast.LENGTH_SHORT).show();
             //TODO
@@ -210,7 +211,16 @@ public class ClassroomActivity extends FragmentActivity {
         //init global data
         LiveCtlSessionManager.getInstance().init(ctlSession, mTicket);
         //init socket
-        initSocketIO(mTicket, ctlSession.secret, forceConnect);
+        if (!networkChanged) {
+            initSocketIO(mTicket, ctlSession.secret, forceConnect);
+        } else {
+            SocketManager.close(false);
+            SocketManager.init(ClassroomActivity.this, mTicket, ctlSession.secret, true, true, forceConnect);
+            mSocket = SocketManager.getSocket();
+            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
+            mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
+            SocketManager.reListener();
+        }
     }
 
     private void initFragment(CtlSession ctlSession) {
@@ -314,7 +324,7 @@ public class ClassroomActivity extends FragmentActivity {
                         //socket time out
                         if (!mSktConnected && mSocketRetryCount++ < 3) {
                             //reconnect
-                            initData(false);
+                            initData(false, false);
                         } else {
                             cancelProgress();
                             showContinueConnectClassroom();
@@ -386,7 +396,7 @@ public class ClassroomActivity extends FragmentActivity {
                 public void onClick() {
                     mContinueConnectDialog.dismiss();
                     mSocketRetryCount = 0;
-                    initData(true);
+                    initData(true, false);
                 }
             });
 
@@ -404,7 +414,7 @@ public class ClassroomActivity extends FragmentActivity {
     /**
      * 检测是否需要强制踢出
      */
-    private void checkForceKickOut(final CtlSession ctlSession) {
+    private void checkForceKickOut(final CtlSession ctlSession, final boolean netWorkChanged) {
         if (mKickOutDialog == null) {
             mKickOutDialog = new CommonDialog(this);
             int width = DeviceUtil.getScreenWidth(this) / 2;
@@ -418,7 +428,7 @@ public class ClassroomActivity extends FragmentActivity {
                 public void onClick() {
                     //强制登录
                     mKickOutDialog.dismiss();
-                    onBootSessionSucc(true, ctlSession);
+                    onBootSessionSucc(true, ctlSession, netWorkChanged);
                 }
             });
 
@@ -454,12 +464,24 @@ public class ClassroomActivity extends FragmentActivity {
                 // have no active network
                 mSktConnected = false;
                 mNetworkState = ClassroomBusiness.NETWORK_NONE;
+
+                //disconnect all socket
+                mNetworkDisconnected = true;
+                SocketManager.off();
             } else if (wifiNet) {
                 // wifi network
                 mNetworkState = ClassroomBusiness.NETWORK_WIFI;
+                if (mNetworkDisconnected) {
+                    mNetworkDisconnected = false;
+                    initData(true, true);
+                }
             } else if (mobileNet) {
                 // mobile network
                 mNetworkState = ClassroomBusiness.NETWORK_OTHER;
+                if (mNetworkDisconnected) {
+                    mNetworkDisconnected = false;
+                    initData(true, true);
+                }
             }
         }
     }

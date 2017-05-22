@@ -21,6 +21,8 @@ import android.os.Message;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
@@ -38,6 +40,7 @@ public class SocketManager {
 
     private static Socket mSocket;
     private static Handler mHandler;
+    private static Map<String, EventListener> mEventListeners;
 
     public synchronized static void init(Context context, String ticket, String secret, boolean videoSupported, boolean audioSupported, boolean force) {
         initHandler();
@@ -53,6 +56,8 @@ public class SocketManager {
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
+
+            mEventListeners = new HashMap<String, EventListener>();
         } else {
             throw new RuntimeException("Only one socket may be created!");
         }
@@ -83,9 +88,17 @@ public class SocketManager {
         if (mSocket != null) {
             mSocket.off(event);
         }
+
+        if (mEventListeners != null && mEventListeners.containsKey(event)) {
+            mEventListeners.remove(event);
+        }
     }
 
     public static void close() {
+        close(true);
+    }
+
+    public static void close(boolean clearListener) {
         if (mSocket != null) {
             mSocket.close();
             mSocket = null;
@@ -94,6 +107,23 @@ public class SocketManager {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
+        }
+
+        if (clearListener) {
+            if (mEventListeners != null) {
+                mEventListeners.clear();
+                mEventListeners = null;
+            }
+        }
+    }
+
+    public static void reListener() {
+        if (mEventListeners != null) {
+            for (Map.Entry<String, EventListener> entry : mEventListeners.entrySet()) {
+                String event = entry.getKey();
+                EventListener listener = entry.getValue();
+                on(event, listener, false);
+            }
         }
     }
 
@@ -143,6 +173,10 @@ public class SocketManager {
     }
 
     public static void on(String event, final EventListener listener) {
+        on(event, listener, true);
+    }
+
+    public static void on(String event, final EventListener listener, boolean needAdd) {
         if (mSocket != null) {
             mSocket.on(event, new Emitter.Listener() {
                 @Override
@@ -156,6 +190,10 @@ public class SocketManager {
                     mHandler.sendMessage(msg);
                 }
             });
+
+            if (needAdd) {
+                mEventListeners.put(event, listener);
+            }
         }
     }
 
