@@ -112,6 +112,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     @BindView(R.id.person_home_summary_wrapper)
     View mSummaryWrapper;
+    @BindView(R.id.person_home_summary)
+    TextView mSummary;
     @BindView(R.id.person_home_relationship_wrapper)
     View mRelationshipWrapper;
     @BindView(R.id.person_home_target_wrapper)
@@ -196,7 +198,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         }
 
         boolean isOrganization = home.profile != null ? Account.TypeName.ORGANIZATION.equals(home.profile.typeName) : false;
-        if (home.isTeacher || isOrganization) {//用户是老师
+        if (home.isTeacher ) {//用户是老师
             //一期暂时没有评价系统，暂时隐藏
             PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
             PersonHomeMomentFragment f2 = new PersonHomeMomentFragment();
@@ -224,7 +226,27 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                 tabs[0] = getString(R.string.my_lesson);
             }
             addContent(fragments, tabs);
-        } else {//用户不是老师
+        }else if(isOrganization){//机构页面
+
+            organization();
+            mSummary.setText(TextUtils.isEmpty(home.profile.title)?"暂无简介":home.profile.title.trim());
+            mProfileTv.setVisibility(View.INVISIBLE);
+            PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
+
+            Bundle b1 = new Bundle();
+            b1.putSerializable(PersonalBusiness.KEY_PERSONAL_ACCOUNT_ID, mAccount);
+            f1.setArguments(b1);
+            f1.setPagePosition(0);
+            PersonHomeTeacherFragment f2 = PersonHomeTeacherFragment.createInstance(mAccount);
+            f2.setPagePosition(1);
+            List<BaseScrollTabFragment> fragments = new ArrayList<>();
+            fragments.add(f1);
+            fragments.add(f2);
+            String[] tabs = new String[]{
+                    "全部课",
+                    "老师"};
+            addContent(fragments, tabs);
+        }else {//用户不是老师
             PersonHomeMomentFragment f1 = new PersonHomeMomentFragment();
             List<BaseScrollTabFragment> fragments = new ArrayList<>();
             fragments.add(f1);
@@ -370,7 +392,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         return mScrollTitleBar.getHeight();
     }
 
-    @OnClick({R.id.scroll_tab_left_image,R.id.btn_more,
+    @OnClick({R.id.scroll_tab_left_image,R.id.person_home_summary_wrapper,
             R.id.person_home_query, R.id.scroll_tab_right_view}) //R.id.person_home_message_only, R.id.person_home_message_btn
     public void onClick(View view) {
 
@@ -390,7 +412,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                     BaseBusiness.showFollowDialog(this, this);
                 }
                 break;
-            case R.id.btn_more://查看签名
+            case R.id.person_home_summary_wrapper://查看签名
                 startActivity(new Intent(this, MySignatureDetailActivity.class).putExtra(MySignatureDetailActivity.KEY_CONTENT,mBean.profile.title));
                 break;
         }

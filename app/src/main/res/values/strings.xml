@@ -545,6 +545,7 @@
     <string name="follow_and_send_message">关注%1$s，发消息</string>
     <string name="lesson_no_introduction">暂无简介</string>
     <string name="teacher_resetting">老师还没开课~</string>
+    <string name="no_teacher_tip">暂无老师~</string>
     <string name="dynamic_empty">什么都没有，下次再来看看~</string>
 
     <!-- empty tips -->

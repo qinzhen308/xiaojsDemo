@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_grey_selector"
+    android:descendantFocusability="blocksDescendants">
+
+    <ImageView
+        android:id="@+id/people_head"
+        android:layout_width="@dimen/px77"
+        android:layout_height="@dimen/px77"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/px26"
+        android:layout_marginLeft="@dimen/px29"
+        android:layout_marginTop="@dimen/px30"
+        android:scaleType="fitXY" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/px30"
+        android:layout_toRightOf="@+id/people_head"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:text="王小波"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_32px" />
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1132"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_28px" />
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px10"
+            android:maxLines="2"
+            android:text="1111"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_30px" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+
