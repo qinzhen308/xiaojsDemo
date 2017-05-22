@@ -12,6 +12,7 @@ import com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
 
 /**
  * Created by Paul Z on 2017/5/22.
@@ -31,6 +32,8 @@ public class HomeClassContentBuz {
     @BindView(R.id.over_layout)
     ScheduleRecyclerView overLayout;
 
+    HomeClassAdapter mAdapter;
+
 
     /**
      * @param context
@@ -42,14 +45,17 @@ public class HomeClassContentBuz {
         mRoot = root;
 //        R.layout.fragment_home_class_normal
         ButterKnife.bind(this, root);
+        initListView();
     }
 
     private void initListView(){
+        mAdapter=new HomeClassAdapter();
         overLayout.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
+        overLayout.setAdapter(mAdapter);
     }
 
 
-    private void test() {
+    private void test(){
 
     }
 
