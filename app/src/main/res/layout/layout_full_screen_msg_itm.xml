@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content">
+    <TextView
+            android:id="@+id/msg_txt"
+            android:textSize="@dimen/px24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#44000000"
+            android:paddingLeft="@dimen/px10"
+            android:paddingRight="@dimen/px10"
+            android:paddingTop="@dimen/px8"
+            android:paddingBottom="@dimen/px8"/>
+
+    <LinearLayout
+            android:id="@+id/msg_img_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:background="#44000000"
+            android:paddingLeft="@dimen/px10"
+            android:paddingRight="@dimen/px10"
+            android:paddingTop="@dimen/px8"
+            android:paddingBottom="@dimen/px8">
+
+        <TextView
+                android:id="@+id/msg_name"
+                android:textSize="@dimen/px24"
+                android:textColor="@color/classroom_talk_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <ImageView
+                android:id="@+id/msg_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</FrameLayout>

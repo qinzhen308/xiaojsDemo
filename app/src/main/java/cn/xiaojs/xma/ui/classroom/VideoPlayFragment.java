@@ -23,6 +23,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /*  =======================================================================================
@@ -110,7 +112,6 @@ public class VideoPlayFragment extends BaseFragment {
         initHandler();
         initLiveProgress();
 
-        mVideoPlayerView.setTouchable(false);
         if (mDoc != null) {
             mUrl = ClassroomBusiness.getMediaUrl(mDoc.key);
             if (!TextUtils.isEmpty(mUrl)) {
@@ -169,9 +170,7 @@ public class VideoPlayFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                if (mContext instanceof ClassroomActivity) {
-                    ((ClassroomActivity) mContext).exitVideoPlayer();
-                }
+                getFragmentManager().popBackStackImmediate();
                 break;
             case R.id.play_pause_btn:
                 if (mPlaying) {

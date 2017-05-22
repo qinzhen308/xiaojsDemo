@@ -3,6 +3,6 @@
     <item android:state_selected="true" android:drawable="@drawable/ic_video_pressed"/>
     <item android:state_pressed="true" android:drawable="@drawable/ic_video_pressed"/>
     <item android:state_focused="true" android:drawable="@drawable/ic_video_pressed"/>
-    <item android:drawable="@drawable/ic_video"/>
+    <item android:drawable="@drawable/ic_cr_video"/>
 
 </selector>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+            android:id="@+id/contact_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px20"
+            android:paddingRight="@dimen/px20"
+            android:background="#eeeeee">
+        <TextView
+                android:id="@+id/contact_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/font_black"
+                android:layout_toLeftOf="@+id/contact_manage"
+                android:text="@string/cr_room_numbers_empty"
+                android:maxLines="1"/>
+
+        <TextView
+                android:id="@+id/contact_manage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/cr_manage_contact"
+                android:paddingTop="@dimen/px20"
+                android:paddingBottom="@dimen/px20"
+                android:visibility="gone"
+                android:textColor="@color/font_blue"/>
+
+        <View
+                android:id="@+id/divide_line"
+                style="@style/DividerHorizontal"
+                android:layout_below="@+id/contact_title"/>
+
+        <ListView
+                android:id="@+id/contact_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/divide_line"
+                android:dividerHeight="@dimen/px1"
+                android:scrollbars="none"
+                android:divider="@color/hor_divide_line">
+
+        </ListView>
+
+    </RelativeLayout>
+</cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout>
+

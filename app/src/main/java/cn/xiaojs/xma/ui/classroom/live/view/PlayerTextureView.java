@@ -23,11 +23,14 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
+import com.pili.pldroid.player.widget.PLVideoView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
@@ -48,7 +51,7 @@ public class PlayerTextureView extends BaseMediaView {
 
     public PlayerTextureView(Context context) {
         super(context);
-        init(PLVideoTextureView.ASPECT_RATIO_16_9, null);
+        init(PLVideoView.ASPECT_RATIO_FIT_PARENT, null);
     }
 
     public PlayerTextureView(Context context, int ratio) {
@@ -58,12 +61,16 @@ public class PlayerTextureView extends BaseMediaView {
 
     public PlayerTextureView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(PLVideoTextureView.ASPECT_RATIO_16_9, attrs);
+        init(PLVideoView.ASPECT_RATIO_FIT_PARENT, attrs);
     }
 
     public PlayerTextureView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(PLVideoTextureView.ASPECT_RATIO_16_9, attrs);
+        init(PLVideoView.ASPECT_RATIO_FIT_PARENT, attrs);
+    }
+
+    public void setPLMediaPlayerInfoListener(PLMediaPlayer.OnInfoListener infoListener) {
+        mOnInfoWrapperListener = infoListener;
     }
 
     @Override
@@ -129,15 +136,12 @@ public class PlayerTextureView extends BaseMediaView {
         // You can mirror the display
         // mVideoView.setMirror(true);
 
-        // You can also use a custom `MediaController` widget
-//        mMediaController = new MediaController(this, false, isLiveStreaming==1);
-//        mVideoView.setMediaController(mMediaController);
-
         mPlayer.setOnCompletionListener(mOnCompletionListener);
         mPlayer.setOnErrorListener(mOnErrorListener);
         mPlayer.setOnPreparedListener(mPrepared);
         mPlayer.setDisplayAspectRatio(ratio);
         mPlayer.setOnInfoListener(mOnInfoListener);
+        mPlayer.setDisplayOrientation(0);
         //setBackgroundResource(R.drawable.common_white_bg_corner);
     }
 
@@ -152,6 +156,7 @@ public class PlayerTextureView extends BaseMediaView {
     protected View initMediaView() {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_texture_player_view, null);
         mPlayer = (PLVideoTextureView) v.findViewById(R.id.texture_player);
+        mPlayer.setDisplayOrientation(90);
         return v;
     }
 
@@ -210,9 +215,14 @@ public class PlayerTextureView extends BaseMediaView {
     private PLMediaPlayer.OnInfoListener mOnInfoListener = new PLMediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
-            if (what == PLMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START) {
-                mHandler.removeMessages(MESSAGE_MEDIA_INFO_RENDERING_START);
-                mHandler.sendEmptyMessage(MESSAGE_MEDIA_INFO_RENDERING_START);
+            switch (what) {
+                case PLMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+                    mHandler.removeMessages(MESSAGE_MEDIA_INFO_RENDERING_START);
+                    mHandler.sendEmptyMessage(MESSAGE_MEDIA_INFO_RENDERING_START);
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
+                    Log.i("aaa", "=========video rotation changed=================");
+                    break;
             }
 
             if (mOnInfoWrapperListener != null) {
@@ -350,7 +360,7 @@ public class PlayerTextureView extends BaseMediaView {
         return mIsMute;
     }
 
-    public PLVideoTextureView getPlayer(){
+    public PLVideoTextureView getPlayer() {
         return mPlayer;
     }
 
@@ -362,6 +372,14 @@ public class PlayerTextureView extends BaseMediaView {
     public void delayHideLoading() {
         mHandler.removeMessages(MESSAGE_MEDIA_INFO_RENDERING_START);
         mHandler.sendEmptyMessageDelayed(MESSAGE_MEDIA_INFO_RENDERING_START, 2000);
+    }
+
+    public void setDisplayOrientation(int orientation) {
+        mPlayer.setDisplayOrientation(orientation);
+    }
+
+    public void setDisplayOrientationBySize(int videoW, int viewH) {
+
     }
 
 }

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:clickable="true">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/setting_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/class_room_setting"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingTop="@dimen/px34"
+                    android:paddingBottom="@dimen/px34"/>
+
+            <View
+                    style="@style/DividerHorizontal"/>
+
+            <RelativeLayout
+                    android:id="@+id/mobile_network_set_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px30"
+                    android:paddingBottom="@dimen/px30"
+                    android:background="@color/white">
+
+                <TextView
+                        android:layout_alignParentLeft="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/px26"
+                        android:text="@string/mobile_network_watch_live"/>
+
+                <ToggleButton
+                        android:id="@+id/mobile_network_watch_live"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/toggle_btn_selector"
+                        android:textOff=""
+                        android:textOn=""/>
+            </RelativeLayout>
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px30"
+                    android:paddingBottom="@dimen/px30"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_cr_camera_setting"
+                        android:text="@string/camera"
+                        android:drawablePadding="@dimen/px20"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_28px"
+                        android:minWidth="@dimen/px260"/>
+
+                <ToggleButton
+                        android:id="@+id/camera_switcher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/toggle_btn_selector"
+                        android:textOff=""
+                        android:textOn=""/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px30"
+                    android:paddingBottom="@dimen/px30"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_cr_micro_setting"
+                        android:text="@string/microphone"
+                        android:drawablePadding="@dimen/px20"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_28px"
+                        android:minWidth="@dimen/px260"/>
+
+                <ToggleButton
+                        android:id="@+id/microphone_switcher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/toggle_btn_selector"
+                        android:textOff=""
+                        android:textOn=""/>
+            </LinearLayout>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_cr_resolution_setting"
+                    android:text="@string/video_resolution"
+                    android:drawablePadding="@dimen/px20"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:textColor="@color/font_gray"
+                    android:textSize="@dimen/font_30px"/>
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:layout_marginBottom="@dimen/px30"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/fluent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/single_check_selector"
+                        android:text="@string/fluent"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="@dimen/px16"
+                        android:paddingTop="@dimen/px20"
+                        android:paddingBottom="@dimen/px20"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_28px"/>
+
+                <TextView
+                        android:id="@+id/standard_definition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/single_check_selector"
+                        android:text="@string/standard_definition"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="@dimen/px16"
+                        android:paddingTop="@dimen/px20"
+                        android:paddingBottom="@dimen/px20"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_28px"
+                        android:layout_marginLeft="@dimen/px56"/>
+
+                <TextView
+                        android:id="@+id/high_definition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/single_check_selector"
+                        android:text="@string/high_definition"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="@dimen/px16"
+                        android:paddingTop="@dimen/px20"
+                        android:paddingBottom="@dimen/px20"
+                        android:textColor="@color/font_gray"
+                        android:textSize="@dimen/font_28px"
+                        android:layout_marginLeft="@dimen/px56"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout>
+
+

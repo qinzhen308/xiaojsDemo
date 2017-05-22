@@ -20,6 +20,7 @@ public class Attendee implements Serializable{
     public String avatar;
     public MediaSetting avc;
     public int unReadMsgCount;
+    public int sort;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)

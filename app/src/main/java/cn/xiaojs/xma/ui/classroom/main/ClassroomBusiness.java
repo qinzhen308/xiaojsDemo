@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom;
+package cn.xiaojs.xma.ui.classroom.main;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -25,8 +25,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.util.Base64;
 import cn.xiaojs.xma.util.BitmapUtils;
 
@@ -55,6 +57,30 @@ public class ClassroomBusiness {
         }
 
         return user;
+    }
+
+    public static Constants.UserMode getUserByCtlSession(CtlSession session) {
+        if (session == null) {
+            return Constants.UserMode.PARTICIPANT;
+        }
+
+        Constants.UserMode mode = Constants.UserMode.PARTICIPANT;
+        Constants.User user = ClassroomBusiness.getUser(session.psType);
+        if (user == Constants.User.TEACHER
+                || user == Constants.User.ASSISTANT
+                || user == Constants.User.REMOTE_ASSISTANT) {
+            mode = Constants.UserMode.TEACHING;
+            if (Constants.PREVIEW_MODE == session.mode) {
+                mode = Constants.UserMode.PREVIEW;
+            } else if (Constants.PARTICIPANT_MODE == session.mode) {
+                mode = Constants.UserMode.PARTICIPANT;
+            }
+        } else {
+            //all stu
+            mode = Constants.UserMode.PARTICIPANT;
+        }
+
+        return mode;
     }
 
     public static <T> T parseSocketBean(Object obj, Class<T> valueType) {
@@ -164,5 +190,29 @@ public class ClassroomBusiness {
     public static boolean isMyself(Context context, String accountId) {
         String mySelfAccountId = AccountDataManager.getAccountID(context);
         return mySelfAccountId != null && mySelfAccountId.equals(accountId);
+    }
+
+    public static long getCountTimeByCtlSession() {
+        long countTime = 0;
+        CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
+        if (Live.LiveSessionState.LIVE.equals(session.state)) {
+            //autoCountTime = true;
+            countTime = session.ctl.duration * 60 - session.finishOn;
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(session.state) ||
+                Live.LiveSessionState.SCHEDULED.equals(session.state)) {
+            countTime = session.startOn;
+        } else if (Live.LiveSessionState.RESET.equals(session.state)) {
+            //autoCountTime = false;
+            countTime = session.hasTaken;
+        } else if (Live.LiveSessionState.CANCELLED.equals(session.state)) {
+            //autoCountTime = false;
+            countTime = 0;
+        } else if (Live.LiveSessionState.FINISHED.equals(session.state)) {
+            countTime = 0;
+        } else if (Live.LiveSessionState.DELAY.equals(session.state)) {
+            countTime = Math.abs(session.finishOn);
+        }
+
+        return countTime;
     }
 }

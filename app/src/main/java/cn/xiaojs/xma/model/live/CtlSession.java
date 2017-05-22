@@ -3,6 +3,7 @@ package cn.xiaojs.xma.model.live;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CtlSession {
+public class CtlSession implements Serializable{
 
     public String secret;
     public String ticket;
@@ -31,7 +32,7 @@ public class CtlSession {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Ctl {
+    public static class Ctl implements Serializable{
         public String id;
         public String subtype;
         public String subject;
@@ -43,7 +44,29 @@ public class CtlSession {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class ConnectType {
+    public static class ConnectType implements Serializable{
         public int app;
+    }
+
+    @Override
+    public String toString() {
+        return "CtlSession{" +
+                "secret='" + secret + '\'' +
+                ", ticket='" + ticket + '\'' +
+                ", ctl=" + ctl +
+                ", accessible=" + accessible +
+                ", connected=" + connected +
+                ", psType='" + psType + '\'' +
+                ", state='" + state + '\'' +
+                ", startOn=" + startOn +
+                ", finishOn=" + finishOn +
+                ", hasTaken=" + hasTaken +
+                ", publishUrl='" + publishUrl + '\'' +
+                ", playUrl='" + playUrl + '\'' +
+                ", streamMode=" + streamMode +
+                ", claimedBy='" + claimedBy + '\'' +
+                ", titleOfPrimary='" + titleOfPrimary + '\'' +
+                ", mode=" + mode +
+                '}';
     }
 }

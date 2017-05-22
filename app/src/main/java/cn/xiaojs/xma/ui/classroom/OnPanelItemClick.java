@@ -14,8 +14,11 @@ package cn.xiaojs.xma.ui.classroom;
  *
  * ======================================================================================== */
 
+import cn.xiaojs.xma.model.live.Attendee;
+
 public interface OnPanelItemClick {
     public final static int ACTION_OPEN_CAMERA = 1;
+    public final static int ACTION_OPEN_TALK = 2;
 
-    public void onItemClick(int action, String accountId);
+    public void onItemClick(int action, Attendee attendee);
 }

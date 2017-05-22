@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.whiteboard;
+package cn.xiaojs.xma.ui.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
+
+import cn.xiaojs.xma.ui.classroom.whiteboard.OnImeBackListener;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -53,7 +55,7 @@ public class SpecialEditText extends EditText {
     }
 
 
-    public void setOnImeBackListener (OnImeBackListener listener) {
+    public void setOnImeBackListener(OnImeBackListener listener) {
         onImeBackListener = listener;
     }
 

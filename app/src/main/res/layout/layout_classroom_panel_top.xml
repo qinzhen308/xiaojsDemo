@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_toRightOf="@+id/finish_btn"
-                android:layout_toLeftOf="@+id/contact_btn"
+                android:layout_toLeftOf="@+id/fc_open_contact_btn"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -81,7 +81,7 @@
         </LinearLayout>
 
         <ImageView
-                android:id="@+id/contact_btn"
+                android:id="@+id/fc_open_contact_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

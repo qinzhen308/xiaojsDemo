@@ -18,10 +18,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;

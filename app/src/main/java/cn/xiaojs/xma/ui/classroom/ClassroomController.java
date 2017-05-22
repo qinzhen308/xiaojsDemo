@@ -33,11 +33,10 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.document.DocumentFragment;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
-import cn.xiaojs.xma.ui.classroom.live.StudentVideoController;
-import cn.xiaojs.xma.ui.classroom.live.TeacherVideoController;
+import cn.xiaojs.xma.ui.classroom.live.PlayVideoController;
+import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
-import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
-import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 
 public class ClassroomController {
 
@@ -61,9 +60,9 @@ public class ClassroomController {
         if (client == Constants.User.TEACHER
                 || client == Constants.User.ASSISTANT
                 || client == Constants.User.REMOTE_ASSISTANT) {
-            mVideoController = new TeacherVideoController(context, root, listener);
+            mVideoController = new PublishVideoController(context, root, listener);
         } else if (client == Constants.User.STUDENT) {
-            mVideoController = new StudentVideoController(context, root, listener);
+            mVideoController = new PlayVideoController(context, root, listener);
         }
     }
 

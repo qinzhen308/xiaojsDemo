@@ -164,6 +164,14 @@ public class XjsUtils {
                 InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
+    /**
+     * 隐藏输入法
+     */
+    public static void hideIMM(Context ctx) {
+        InputMethodManager imm = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     public static SharedPreferences getSharedPreferences() {
         return mAppContext.getSharedPreferences(XiaojsConfig.XIAOJS_PREFERENCE_NAME, Context.MODE_PRIVATE);
     }

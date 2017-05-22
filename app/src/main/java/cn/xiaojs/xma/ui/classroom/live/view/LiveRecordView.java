@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.live.view;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,7 +38,6 @@ import com.qiniu.pili.droid.streaming.CameraStreamingSetting;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.MediaStreamingManager;
 import com.qiniu.pili.droid.streaming.MicrophoneStreamingSetting;
-import com.qiniu.pili.droid.streaming.StreamingPreviewCallback;
 import com.qiniu.pili.droid.streaming.StreamingProfile;
 import com.qiniu.pili.droid.streaming.StreamingSessionListener;
 import com.qiniu.pili.droid.streaming.StreamingState;
@@ -53,10 +53,10 @@ import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.ui.classroom.Constants;
 import cn.xiaojs.xma.ui.classroom.live.core.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.live.gles.FBO;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
@@ -71,6 +71,8 @@ public class LiveRecordView extends BaseMediaView implements
     private static final int MSG_MUTE = 2;
     private static final int MSG_SHOW_LOADING = 6;
     private static final int MSG_HIDE_LOADING = 7;
+    private static final int MSG_SWITCH_ORIENTATION = 8;
+    private static final int MSG_SWITCH_RESOLUTION = 9;
 
     private AspectFrameLayout mAspect;
     private CameraPreviewFrameView mPreviewFrameView;
@@ -128,6 +130,18 @@ public class LiveRecordView extends BaseMediaView implements
                 break;
             case MSG_SHOW_LOADING:
                 showLoading(true);
+                break;
+            case MSG_SWITCH_ORIENTATION:
+                mMediaStreamingManager.stopStreaming();
+                mProfile.setEncodingOrientation(msg.arg1 == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                        ? StreamingProfile.ENCODING_ORIENTATION.PORT : StreamingProfile.ENCODING_ORIENTATION.LAND);
+                mMediaStreamingManager.setStreamingProfile(mProfile);
+                mMediaStreamingManager.notifyActivityOrientationChanged();
+                break;
+            case MSG_SWITCH_RESOLUTION:
+                mMediaStreamingManager.stopStreaming();
+                setStreamingProfile();
+                mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
                 break;
             default:
                 Log.e(TAG, "Invalid message");
@@ -223,7 +237,11 @@ public class LiveRecordView extends BaseMediaView implements
 
     @Override
     public boolean onRestartStreamingHandled(int i) {
-        return mMediaStreamingManager.startStreaming();
+        if (mMediaStreamingManager != null) {
+            return mMediaStreamingManager.startStreaming();
+        }
+
+        return false;
     }
 
     @Override
@@ -582,11 +600,9 @@ public class LiveRecordView extends BaseMediaView implements
             mHandler.removeCallbacksAndMessages(null);
         }
 
-        mMediaStreamingManager.stopStreaming();
-        setStreamingProfile();
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SWITCH_RESOLUTION), 50);
         }
     }
 
@@ -631,7 +647,21 @@ public class LiveRecordView extends BaseMediaView implements
                 .setDnsManager(getMyDnsManager())
                 //若注册了 mCameraStreamingManager.setStreamStatusCallback ，每隔 3 秒回调 StreamStatus 信息
                 .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
-                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.LAND)
+                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.PORT)
                 .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
+    }
+
+    private void stopStreaming() {
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_STOP_STREAMING), 50);
+    }
+
+    public void encodingOrientationSwitch(int targetOrientation) {
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            Message msg = mHandler.obtainMessage(MSG_SWITCH_ORIENTATION);
+            msg.arg1 = targetOrientation;
+            mHandler.sendMessageDelayed(msg, 50);
+        }
     }
 }

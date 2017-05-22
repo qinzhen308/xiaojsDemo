@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/msg_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/px20"
+        android:paddingRight="@dimen/px20"
+        android:paddingBottom="@dimen/px15"
+        android:paddingTop="@dimen/px15"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+    <cn.xiaojs.xma.ui.widget.SpecialEditText
+            android:id="@+id/msg_input"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px56"
+            android:layout_weight="1"
+            android:background="@drawable/cr_msg_input_bg"
+            android:paddingLeft="@dimen/px15"
+            android:paddingRight="@dimen/px15"
+            android:paddingTop="@dimen/px2"
+            android:paddingBottom="@dimen/px2"
+            android:textSize="@dimen/font_28px"
+            android:hint="@string/class_chat_input"
+            android:textColorHint="@color/font_gray"
+            android:layout_marginRight="@dimen/px20"
+            android:layout_gravity="left"/>
+
+    <TextView
+            android:id="@+id/msg_send"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/px56"
+            android:text="@string/send"
+            android:gravity="center"
+            android:textSize="@dimen/font_28px"
+            android:textColor="@color/white"
+            android:paddingLeft="@dimen/px20"
+            android:paddingRight="@dimen/px20"
+            android:paddingTop="@dimen/px5"
+            android:paddingBottom="@dimen/px5"
+            android:background="@drawable/cr_chat_send_bg"/>
+</LinearLayout>

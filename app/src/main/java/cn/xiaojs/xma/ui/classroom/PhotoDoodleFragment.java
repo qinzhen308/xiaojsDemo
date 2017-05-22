@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui.classroom;
 
-import android.animation.Animator;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,6 +7,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
+
+import com.fasterxml.jackson.core.io.NumberInput;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,14 +21,13 @@ import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.whiteboard.ShareDoodlePopWindow;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
-import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
-import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import cn.xiaojs.xma.util.CacheUtil;
 
 /*  =======================================================================================
@@ -62,11 +62,11 @@ public class PhotoDoodleFragment extends BaseFragment {
     private ShareDoodlePopWindow mSharePopWindow;
     private Constants.User mUser = Constants.User.TEACHER;
     private boolean mAnimating;
-    private PanelAnimListener mPanelAnimListener;
     private String mTicket;
     private OnPhotoDoodleShareListener mPhotoDoodleShareListener;
 
     private int mDisplayMode = MODE_SINGLE_IMG;
+    private float mDoodleRatio = WhiteboardLayer.DOODLE_CANVAS_RATIO;
     private List<String> mImgList;
 
     @Override
@@ -80,16 +80,17 @@ public class PhotoDoodleFragment extends BaseFragment {
             mTicket = ((ClassroomActivity)mContext).getTicket();
         }
 
-        mPanelAnimListener = new PanelAnimListener();
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
 
         Bundle data = getArguments();
         if (data != null) {
             mDisplayMode = data.getInt(Constants.KEY_IMG_DISPLAY_MODE, MODE_SINGLE_IMG);
             mImgList = data.getStringArrayList(Constants.KEY_IMG_LIST);
+            mDoodleRatio = data.getFloat(Constants.KEY_DOODLE_RATIO, WhiteboardLayer.DOODLE_CANVAS_RATIO);
         }
+
         if (mDisplayMode == MODE_SINGLE_IMG) {
-            mBoardController.showWhiteboardLayout(mBitmap);
+            mBoardController.showWhiteboardLayout(mBitmap, mDoodleRatio);
         } else if (mDisplayMode == MODE_MULTI_IMG){
             WhiteboardAdapter adapter = new WhiteboardAdapter(mContext);
             WhiteboardCollection wbColl = new WhiteboardCollection();
@@ -103,11 +104,11 @@ public class PhotoDoodleFragment extends BaseFragment {
             }
             wbColl.setWhiteboardLayer(whiteboardLayers);
             adapter.setData(wbColl, 0);
-            mBoardController.setWhiteboardScrollerAdapter(adapter);
+            mBoardController.showWhiteboardLayout(adapter);
         }
     }
 
-    @OnClick({R.id.open_docs_btn, R.id.back_in_doodle, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,
+    @OnClick({R.id.back_in_doodle, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,
             R.id.color_picker_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.undo, R.id.redo})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
@@ -122,18 +123,13 @@ public class PhotoDoodleFragment extends BaseFragment {
                 mBoardController.handlePanelItemClick(v);
                 break;
             case R.id.back_in_doodle:
-                if (mContext instanceof ClassroomActivity) {
-                    ((ClassroomActivity)mContext).exitPhotoDoodle();
-                }
+                getFragmentManager().popBackStackImmediate();
                 break;
             case R.id.share_doodle:
                 selectShareContact(v);
                 break;
             case R.id.save_doodle:
                 saveEditedBmpToLibrary(mBoardController.getWhiteboardBitmap());
-                break;
-            case R.id.open_docs_btn:
-                switchWhiteBoardToolbar();
                 break;
             default:
                 break;
@@ -166,89 +162,6 @@ public class PhotoDoodleFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mBoardController.hideWhiteboardLayout();
-    }
-
-
-    /**
-     * 隐藏白板操作面板
-     */
-    private void hideWhiteBoardPanel() {
-        if (mAnimating) {
-            return;
-        }
-        mWhiteBoardPanel.animate()
-                .alpha(0.0f)
-                .setListener(mPanelAnimListener.with(mWhiteBoardPanel).play(ANIM_HIDE))
-                .start();
-
-
-    }
-
-    /**
-     * 显示白板操作面板
-     */
-    private void showWhiteBoardPanel(boolean needAnim) {
-        if (mAnimating) {
-            return;
-        }
-
-        if (needAnim) {
-            mWhiteBoardPanel.animate()
-                    .alpha(1.0f)
-                    .setListener(mPanelAnimListener.with(mWhiteBoardPanel).play(ANIM_SHOW))
-                    .start();
-        } else {
-            mWhiteBoardPanel.setAlpha(1.0f);
-            mWhiteBoardPanel.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * 动画监听器
-     */
-    private class PanelAnimListener implements Animator.AnimatorListener {
-        private View mV;
-        private int mAnimType;
-
-        public PanelAnimListener with(View v) {
-            mV = v;
-            return this;
-        }
-
-        public PanelAnimListener play(int type) {
-            mAnimType = type;
-            return this;
-        }
-
-        @Override
-        public void onAnimationStart(Animator animation) {
-            mAnimating = true;
-            if (mAnimType == ANIM_SHOW && mV != null) {
-                mV.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            mAnimating = false;
-            if (mAnimType == ANIM_HIDE && mV != null) {
-                mV.setVisibility(View.GONE);
-            }
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-            mAnimating = false;
-            mV = null;
-            if (mAnimType == ANIM_SHOW && mV != null) {
-                mV.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
     }
 
     private void saveEditedBmpToLibrary(final Bitmap bitmap) {
@@ -302,14 +215,6 @@ public class PhotoDoodleFragment extends BaseFragment {
     private void switchWhiteBoardToolbar() {
         if (mAnimating) {
             return;
-        }
-
-        if (mWhiteBoardPanel.getVisibility() == View.VISIBLE) {
-            ((ClassroomActivity)mContext).setCurrentControllerLevel(InteractiveLevel.MAIN_PANEL);
-            hideWhiteBoardPanel();
-        } else {
-            ((ClassroomActivity)mContext).setCurrentControllerLevel(InteractiveLevel.WHITE_BOARD);
-            showWhiteBoardPanel(true);
         }
     }
 }

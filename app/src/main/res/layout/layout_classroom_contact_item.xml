@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:roundimg="http://schemas.android.com/apk/res-auto"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:paddingLeft="@dimen/px5"
-              android:paddingRight="@dimen/px5"
-              android:gravity="center_vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:roundimg="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px5"
+                android:paddingRight="@dimen/px5"
+                android:gravity="center_vertical">
 
     <ImageView
             android:id="@+id/checkbox"
+            android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/px10"
             android:layout_marginRight="@dimen/px5"
+            android:layout_centerVertical="true"
             android:src="@drawable/multi_check_selector"/>
 
     <cn.xiaojs.xma.ui.widget.MessageImageView
@@ -23,51 +25,49 @@
             roundimg:isCircle="true"
             roundimg:border_color="@color/white"
             android:padding="@dimen/px15"
-            roundimg:border_width="@dimen/px2"/>
+            roundimg:border_width="@dimen/px2"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/checkbox"/>
 
-    <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="@dimen/px2"
-            android:layout_marginRight="@dimen/px12"
+    <TextView
+            android:id="@+id/name"
+            android:textColor="@color/font_black"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:textSize="@dimen/font_24px"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/portrait"/>
 
-        <TextView
-                android:id="@+id/name"
-                android:textColor="@color/font_white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/font_24px"
-                android:lines="1"
-                android:ellipsize="end"/>
+    <TextView
+            android:id="@+id/label"
+            android:textColor="@color/font_orange"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="@dimen/font_20px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/px10"
+            android:layout_toRightOf="@+id/name"/>
 
-        <TextView
-                android:id="@+id/label"
-                android:textColor="@color/font_orange"
-                android:lines="1"
-                android:ellipsize="end"
-                android:textSize="@dimen/font_20px"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-    </LinearLayout>
-
+    <ImageView
+            android:id="@+id/talk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/px15"
+            android:src="@drawable/ic_cr_open_talk"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/video"/>
 
     <ImageView
             android:id="@+id/video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/px15"
-            android:visibility="gone"
-            android:src="@drawable/cr_video"/>
+            android:src="@drawable/cr_video"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
 
-    <ImageView
-            android:id="@+id/microphone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/px15"
-            android:visibility="gone"
-            android:src="@drawable/cr_microphone"/>
-
-</LinearLayout>
+</RelativeLayout>

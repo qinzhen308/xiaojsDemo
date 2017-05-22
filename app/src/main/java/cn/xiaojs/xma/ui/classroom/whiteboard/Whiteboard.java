@@ -49,8 +49,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.InteractiveLevel;
 import cn.xiaojs.xma.ui.classroom.bean.Commend;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Packer;
@@ -77,6 +75,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Oval;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
+import cn.xiaojs.xma.ui.widget.SpecialEditText;
 
 public class Whiteboard extends View implements ViewGestureListener.ViewRectChangedListener,
         Receiver<List<CommendLine>>, Sender<String> {
@@ -95,7 +94,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public final static int BG_SCALE_TYPE_FIT_XY = 1;
     public final static int BG_SCALE_TYPE_FIT_CENTER = 2;
 
-    private final float DOODLE_CANVAS_RATIO = WhiteboardLayer.DOODLE_CANVAS_RATIO; // w:h = 4:3
+    private float DOODLE_CANVAS_RATIO = WhiteboardLayer.DOODLE_CANVAS_RATIO;
 
     private final int BG_COLOR = Color.argb(255, 255, 255, 255);
 
@@ -175,8 +174,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private boolean mInitLayer = false;
     private boolean mNeedBitmapPool = true;
 
-    private GestureDetector mClassroomGestureDetector;
-
     private UndoRedoListener mUndoRedoListener;
     private OnColorChangeListener mColorChangeListener;
     private int mDoodleAction;
@@ -207,33 +204,14 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         initParams(context);
     }
 
-    public void setGestureDetector(GestureDetector gestureDetector) {
-        mClassroomGestureDetector = gestureDetector;
+    public void setCanvasRatio(float ratio) {
+        DOODLE_CANVAS_RATIO = ratio;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mClassroomGestureDetector != null) {
-            if (InteractiveLevel.WHITE_BOARD == getInteractiveLevel()) {
-                mClassroomGestureDetector.onTouchEvent(event);
-                mViewGestureListener.onTouchEvent(event);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            mViewGestureListener.onTouchEvent(event);
-            return true;
-        }
-    }
-
-    private int getInteractiveLevel() {
-        Context cxt = getContext();
-        if (cxt instanceof ClassroomActivity) {
-            return ((ClassroomActivity) cxt).getInteractiveLevel();
-        }
-
-        return InteractiveLevel.MAIN_PANEL;
+        mViewGestureListener.onTouchEvent(event);
+        return true;
     }
 
     @Override
@@ -1380,7 +1358,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mEditText = null;
         mInputMethodManager = null;
         mViewGestureListener = null;
-        mClassroomGestureDetector = null;
     }
 
     public void recycleBackgroundBmp() {

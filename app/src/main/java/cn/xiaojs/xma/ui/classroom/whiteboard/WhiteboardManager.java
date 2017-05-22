@@ -27,9 +27,8 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.SlidePage;
-import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
 import okhttp3.ResponseBody;
 

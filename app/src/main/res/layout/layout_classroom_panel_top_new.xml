@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/top_panel"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/px5"
+        android:paddingBottom="@dimen/px5"
+        android:clickable="true"
+        android:background="@color/classroom_main_gray">
+
+    <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:src="@drawable/ic_back_pressed"/>
+
+    <ImageView
+            android:id="@+id/play_pause_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:layout_toRightOf="@+id/back_btn"
+            android:src="@drawable/ic_cr_start"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@+id/finish_btn"
+            android:layout_toRightOf="@+id/play_pause_btn"
+            android:gravity="center"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/lesson_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:textSize="@dimen/font_26px"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+        <TextView
+                android:id="@+id/lesson_time_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/px4"
+                android:textSize="@dimen/font_18px"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+    </LinearLayout>
+
+    <ImageView
+            android:id="@+id/finish_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:visibility="invisible"
+            android:layout_toLeftOf="@+id/setting_btn"
+            android:src="@drawable/ic_cr_exit"/>
+
+    <ImageView
+            android:id="@+id/setting_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_cr_setting"/>
+
+</RelativeLayout>

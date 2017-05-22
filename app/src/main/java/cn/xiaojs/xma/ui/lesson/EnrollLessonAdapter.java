@@ -23,8 +23,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
-
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
@@ -39,10 +37,9 @@ import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.model.GELessonsResponse;
 import cn.xiaojs.xma.ui.MainActivity;
-import cn.xiaojs.xma.ui.classroom.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
-import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.view.LessonOperationView;
 import cn.xiaojs.xma.ui.view.LessonPersonView;
 import cn.xiaojs.xma.ui.view.LessonStatusView;

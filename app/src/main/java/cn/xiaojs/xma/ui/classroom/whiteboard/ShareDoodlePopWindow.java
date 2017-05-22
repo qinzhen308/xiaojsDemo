@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -19,12 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.data.LiveManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.OnPhotoDoodleShareListener;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.ContactManager;
 import cn.xiaojs.xma.ui.classroom.talk.InviteFriendAdapter;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -58,12 +56,14 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     private ContactAdapter mContactAdapter;
     private WhiteboardController mBoardController;
     private OnPhotoDoodleShareListener mEditedVideoShareListener;
+    private ArrayList<Attendee> mAttendees;
 
     public ShareDoodlePopWindow(Context context, String ticket, WhiteboardController controller, OnPhotoDoodleShareListener listener) {
         mContext = context;
         mTicket = ticket;
         mEditedVideoShareListener = listener;
         mBoardController = controller;
+        mAttendees = new ArrayList<Attendee>();
         init();
     }
 
@@ -99,21 +99,31 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     }
 
     public void initData() {
-        LiveManager.getAttendees(mContext, mTicket, new APIServiceCallback<LiveCollection<Attendee>>() {
+        ContactManager.getInstance().getAttendees(mContext, new ContactManager.OnGetAttendsCallback() {
             @Override
-            public void onSuccess(LiveCollection<Attendee> liveCollection) {
+            public void onGetAttendeesSuccess(LiveCollection<Attendee> liveCollection) {
                 ArrayList<Attendee> attendees = liveCollection != null ? liveCollection.attendees : null;
+                //exclude myself
+                if (attendees != null) {
+                    for (Attendee attendee : attendees) {
+                        if (!ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+                            mAttendees.add(attendee);
+                        }
+                    }
+                }
+
+                //set data
                 if (mContactAdapter == null) {
-                    mContactAdapter = new ContactAdapter(attendees);
+                    mContactAdapter = new ContactAdapter(mAttendees);
                 } else {
-                    mContactAdapter.setData(attendees);
+                    mContactAdapter.setData(mAttendees);
                 }
                 mListView.setAdapter(mContactAdapter);
-                mEmptyView.setVisibility(attendees == null || attendees.isEmpty() ? View.VISIBLE : View.GONE);
+                mEmptyView.setVisibility(mAttendees == null || mAttendees.isEmpty() ? View.VISIBLE : View.GONE);
             }
 
             @Override
-            public void onFailure(String errorCode, String errorMessage) {
+            public void onGetAttendeesFailure(String errorCode, String errorMessage) {
                 mEmptyView.setVisibility(View.VISIBLE);
             }
         });
@@ -136,12 +146,12 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
             case R.id.confirm_share:
                 if (mCheckToDiscussionBtn.isSelected()) {
                     if (mEditedVideoShareListener != null) {
-                        mEditedVideoShareListener.onVideoShared(null, mBoardController.getWhiteboardBitmap());
+                        mEditedVideoShareListener.onPhotoShared(null, mBoardController.getWhiteboardBitmap());
                     }
                     dismiss();
                 } else if (mContactAdapter != null && mContactAdapter.getCheckedAttendee() != null){
                     if (mEditedVideoShareListener != null) {
-                        mEditedVideoShareListener.onVideoShared(mContactAdapter.getCheckedAttendee(), mBoardController.getWhiteboardBitmap());
+                        mEditedVideoShareListener.onPhotoShared(mContactAdapter.getCheckedAttendee(), mBoardController.getWhiteboardBitmap());
                     }
                     dismiss();
                 }

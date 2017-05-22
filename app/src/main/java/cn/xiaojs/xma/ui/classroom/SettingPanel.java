@@ -23,9 +23,12 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.OnSettingChangedListener;
+import cn.xiaojs.xma.ui.classroom.Panel;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.util.XjsUtils;
 
-public class SettingPanel extends Panel implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, Constants{
+public class SettingPanel extends Panel implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, Constants {
     private TextView mFluentTv;
     private TextView mStandardTv;
     private TextView mHighTv;

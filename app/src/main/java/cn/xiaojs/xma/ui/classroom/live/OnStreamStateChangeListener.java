@@ -14,17 +14,22 @@ package cn.xiaojs.xma.ui.classroom.live;
  *
  * ======================================================================================== */
 
-import cn.xiaojs.xma.ui.classroom.Constants;
+import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 
 public interface OnStreamStateChangeListener {
     /**
      * 当流已经开始
      */
-    public void onStreamStarted(Constants.User user, int type, Object extra);
+    public void onStreamStarted(int type, Object extra);
 
     /**
      * 当前流已经暂停
      */
-    public void onStreamStopped(Constants.User user, int type, Object extra);
+    public void onStreamStopped(int type, Object extra);
+
+    /**
+     * 当流的尺寸发生变化
+     */
+    public void onStreamSizeChanged(BaseMediaView v, int w, int h);
 
 }

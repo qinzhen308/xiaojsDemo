@@ -8,15 +8,6 @@
               android:layout_height="wrap_content">
 
     <ImageView
-            android:id="@+id/live_menu_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/px20"
-            android:layout_gravity="center_vertical"
-            android:visibility="gone"
-            android:src="@drawable/switch_camera_selector"/>
-
-    <ImageView
             android:id="@+id/live_menu_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

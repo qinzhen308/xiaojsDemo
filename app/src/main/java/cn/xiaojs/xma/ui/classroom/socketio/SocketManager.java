@@ -22,10 +22,8 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.ApiManager;
-import cn.xiaojs.xma.data.api.service.LiveService;
-import cn.xiaojs.xma.ui.classroom.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -78,6 +76,12 @@ public class SocketManager {
     public static void off() {
         if (mSocket != null) {
             mSocket.off();
+        }
+    }
+
+    public static void off(String event) {
+        if (mSocket != null) {
+            mSocket.off(event);
         }
     }
 

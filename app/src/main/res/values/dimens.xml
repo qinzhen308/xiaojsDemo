@@ -609,4 +609,5 @@
     <dimen name="px560">280.0dp</dimen>
     <dimen name="px588">294.0dp</dimen>
     <dimen name="px640">320.0dp</dimen>
+    <dimen name="px848">424.0dp</dimen>
 </resources>
