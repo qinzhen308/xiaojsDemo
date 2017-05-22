@@ -8,6 +8,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.util.ShareUtil;
 
 /**
  * Created by maxiaobao on 2017/5/19.
@@ -49,8 +50,10 @@ public class ShareQrcodeActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.save_btn:
+                //保存到本地
                 break;
             case R.id.share_btn:
+                //ShareUtil.shareImage(this,);
                 break;
         }
 

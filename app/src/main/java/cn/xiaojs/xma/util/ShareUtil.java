@@ -2,6 +2,7 @@ package cn.xiaojs.xma.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,60 @@ import cn.xiaojs.xma.R;
  */
 
 public class ShareUtil {
+
+
+    /**
+     * 分享图片
+     * @param activity
+     * @param bitmap
+     * @param imgUrl
+     */
+    public static void shareImage(final Activity activity, final Bitmap bitmap, final String imgUrl) {
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the share url" + imgUrl);
+        }
+
+
+        shareDld(activity, new ShareBtnListener() {
+            @Override
+            public void onClickListener(View v) {
+                switch (v.getId()) {
+                    case R.id.tv_wechat:
+                        IWXAPI iwxapi = WechatUtil.registerToWechat(activity.getApplicationContext());
+                        WechatUtil.sharePicture(iwxapi,bitmap,true);
+                        break;
+                    case R.id.tv_fcircle:
+                        IWXAPI iwxapiq = WechatUtil.registerToWechat(activity.getApplicationContext());
+                        boolean send = WechatUtil.sharePicture(iwxapiq,bitmap,true);
+                        break;
+                    case R.id.tv_qq:
+                        //QQ
+                        Tencent tencent = QQUtil.getTencent(activity.getApplicationContext());
+                        QQUtil.share(activity, tencent, "", "", "", imgUrl, new IUiListener() {
+                            @Override
+                            public void onComplete(Object o) {
+
+                                //Toast.makeText(activity, "分享成功", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(UiError uiError) {
+                                //Toast.makeText(activity, "分享失败", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                //Toast.makeText(activity, "分享已取消", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        break;
+                }
+
+            }
+        });
+
+
+    }
 
     /**
      * 显示分享框
