@@ -111,6 +111,7 @@ public class ClassroomActivity extends FragmentActivity {
         ClassroomController.getInstance().release();
         LiveCtlSessionManager.getInstance().release();
         ContactManager.getInstance().release();
+        TalkManager.getInstance().release();
     }
 
     @Override
@@ -269,6 +270,7 @@ public class ClassroomActivity extends FragmentActivity {
             mSktConnected = true;
 
             ContactManager.getInstance().init();
+            TalkManager.getInstance().init(ClassroomActivity.this, mTicket);
             initFragment(mCtlSession);
         }
     };

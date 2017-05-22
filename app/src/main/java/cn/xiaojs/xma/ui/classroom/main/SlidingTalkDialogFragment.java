@@ -55,7 +55,6 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
     private Constants.UserMode mUserMode;
     private String mTicket;
 
-    private int mTalkCriteria = TalkPresenter.MULTI_TALK;
     private TalkPresenter mTalkPresenter;
     private Attendee mAttendee;
 
@@ -88,7 +87,7 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
         if (mAttendee != null) {
             mTalkPresenter.switchPeerTalk(mAttendee, false);
         } else {
-            mTalkPresenter.switchMultiTalk();
+            mTalkPresenter.switchMsgMultiTalk();
         }
     }
 
@@ -104,7 +103,7 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
 
     @Override
     protected void onViewCreated(View view) {
-        mTalkPresenter = new TalkPresenter(mContext, mTalkMsgLv, mTalkNameTv, mTicket);
+        mTalkPresenter = new TalkPresenter(mContext, mTalkMsgLv, mTalkNameTv);
 
         mTalkMsgLv.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
         mTalkMsgLv.getRefreshableView().setScrollBarStyle(AbsListView.SCROLLBARS_INSIDE_INSET);
@@ -125,11 +124,8 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
                 break;
             case R.id.msg_send:
                 String content = mMsgInputEdt.getText().toString();
-                if (!TextUtils.isEmpty(content)) {
-                    mTalkPresenter.sendMsg(content);
-                    mMsgInputEdt.setText("");
-                }
-
+                sendMsg(content);
+                mMsgInputEdt.setText("");
                 break;
         }
     }
@@ -141,11 +137,21 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
                 case ClassroomController.REQUEST_INPUT:
                     String content = data.getStringExtra(Constants.KEY_MSG_INPUT_TXT);
                     //send msg
-                    if (!TextUtils.isEmpty(content)) {
-                        mTalkPresenter.sendMsg(content);
-                    }
+                    sendMsg(content);
                     break;
             }
+        }
+    }
+
+    private void sendMsg (String content) {
+        if (TextUtils.isEmpty(content)) {
+            return;
+        }
+
+        if (mAttendee == null || TextUtils.isEmpty(mAttendee.accountId)) {
+            TalkManager.getInstance().sendText(content);
+        } else {
+            TalkManager.getInstance().sendText(mAttendee.accountId, content);
         }
     }
 }

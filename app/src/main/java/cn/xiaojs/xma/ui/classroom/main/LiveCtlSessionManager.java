@@ -83,5 +83,6 @@ public class LiveCtlSessionManager {
         mCtlSession = null;
         mUser = null;
         mTicket = null;
+        mInstance = null;
     }
 }

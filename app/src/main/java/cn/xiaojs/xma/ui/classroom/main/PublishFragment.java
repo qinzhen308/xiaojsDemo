@@ -265,7 +265,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
         mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
         if (mFullScreenTalkPresenter == null) {
-            mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null, mTicket);
+            mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null);
             mFullScreenTalkPresenter.switchFullMultiTalk();
         }
 
@@ -344,13 +344,6 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     @Override
-    protected void onImgSendShare(Attendee attendee, String bitmap) {
-        if (mFullScreenTalkPresenter != null) {
-            mFullScreenTalkPresenter.sendImg(attendee, mFullScreenTalkPresenter.getTalkCriteria(), bitmap);
-        }
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
             switch (requestCode) {
@@ -359,7 +352,11 @@ public class PublishFragment extends ClassroomLiveFragment {
                     if (mFullScreenTalkPresenter != null && !TextUtils.isEmpty(content)) {
                         mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
                         mDiscussionListView.setVisibility(View.VISIBLE);
-                        mFullScreenTalkPresenter.sendMsg(Communications.ContentType.TEXT, content);
+                        if (mPeerTalkAttendee == null || TextUtils.isEmpty(mPeerTalkAttendee.accountId)) {
+                            TalkManager.getInstance().sendText(content);
+                        } else {
+                            TalkManager.getInstance().sendText(mPeerTalkAttendee.accountId, content);
+                        }
                     }
                     break;
                 case ClassroomController.REQUEST_CONTACT:
@@ -370,6 +367,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                         break;
                     }
 
+                    mPeerTalkAttendee = attendee;
                     switch (action) {
                         case OnPanelItemClick.ACTION_OPEN_TALK:
                             if (isPortrait()) {

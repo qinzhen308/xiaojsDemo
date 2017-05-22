@@ -9,7 +9,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.base.BaseFragment;
@@ -55,7 +54,7 @@ public class EmbedTalkFragment extends BaseFragment{
         initView();
 
         //load discussion
-        mTalkPresenter.switchTalkTab(TalkPresenter.MULTI_TALK, null);
+        mTalkPresenter.switchTalkTab(TalkManager.TYPE_MSG_MUlTI_TAlk, null);
     }
 
     private void initParams() {
@@ -69,7 +68,7 @@ public class EmbedTalkFragment extends BaseFragment{
 
 
         mTicket = LiveCtlSessionManager.getInstance().getTicket();
-        mTalkPresenter = new TalkPresenter(mContext, mTalkMsgLv, mTalkNameTv, mTicket);
+        mTalkPresenter = new TalkPresenter(mContext, mTalkMsgLv, mTalkNameTv);
     }
 
     private void initView() {
@@ -81,10 +80,10 @@ public class EmbedTalkFragment extends BaseFragment{
         mTalkNameTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mTalkPresenter.getTalkCriteria() == TalkPresenter.PEER_TALK) {
+                if (mTalkPresenter.getTalkCriteria() == TalkManager.TYPE_PEER_TALK) {
                     mTalkNameTv.setText(R.string.cr_talk_discussion);
                     mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                    mTalkPresenter.switchTalkTab(TalkPresenter.MULTI_TALK, null);
+                    mTalkPresenter.switchMsgMultiTalk();
                 }
             }
         });
@@ -96,21 +95,6 @@ public class EmbedTalkFragment extends BaseFragment{
     public void switchPeerTalk(Attendee attendee) {
         mTalkNameTv.setText(attendee.name);
         mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_back_pressed, 0, 0, 0);
-        mTalkPresenter.switchTalkTab(TalkPresenter.PEER_TALK, attendee.accountId);
-    }
-
-    /**
-     * 默认是发送文本
-     */
-    public void sendMsg() {
-        sendMsg(Communications.ContentType.TEXT, null);
-    }
-
-    public void sendImg(Attendee attendee, String content) {
-        mTalkPresenter.sendImg(attendee, mTalkPresenter.getTalkCriteria(), content);
-    }
-
-    public void sendMsg(int type, String content) {
-        mTalkPresenter.sendMsg(type, content);
+        mTalkPresenter.switchTalkTab(TalkManager.TYPE_PEER_TALK, attendee.accountId);
     }
 }

@@ -86,7 +86,7 @@ public class ContactManager {
             mPeer2PeerSteamSet = null;
         }
 
-        init();
+        mInstance = null;
     }
 
     public synchronized void getAttendees(Context context, final OnGetAttendsCallback callback) {

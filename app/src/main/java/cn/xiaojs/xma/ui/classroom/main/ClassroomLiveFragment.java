@@ -61,7 +61,7 @@ import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.DeviceUtil;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
-        OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener  {
+        OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener {
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
 
     protected CtlSession mCtlSession;
@@ -89,6 +89,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
 
     protected int mSlideViewWidth;
     protected int mSlideViewHeight;
+
+    protected Attendee mPeerTalkAttendee;
 
     protected Handler mHandler;
 
@@ -421,6 +423,17 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         }
     }
 
+    protected void onImgSendShare(final Attendee attendee, final String bitmap) {
+        //only send once
+        if (attendee == null || TextUtils.isEmpty(attendee.accountId)) {
+            //send to multi talk
+            TalkManager.getInstance().sendImg(bitmap);
+        } else {
+            //send to peer talk
+            TalkManager.getInstance().sendImg(attendee.accountId, bitmap);
+        }
+    }
+
     protected String getTxtString(int type) {
         String txt = "";
         switch (type) {
@@ -555,8 +568,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected abstract void initData();
 
     protected abstract void onSyncStateChanged(SyncStateResponse syncState);
-
-    protected abstract void onImgSendShare(final Attendee attendee, final String bitmap);
 
     public void playStream(String url) {
 
