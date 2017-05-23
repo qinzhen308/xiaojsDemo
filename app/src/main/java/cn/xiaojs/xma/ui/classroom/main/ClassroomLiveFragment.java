@@ -144,14 +144,13 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
                 : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
-    protected FadeAnimListener getAnimListener(@NonNull Class<?> cls) {
-        String type = cls.getSimpleName();
-        if (mFadeAnimListeners.containsKey(type)) {
-            return mFadeAnimListeners.get(type);
+    protected FadeAnimListener getAnimListener(String name) {
+        if (mFadeAnimListeners.containsKey(name)) {
+            return mFadeAnimListeners.get(name);
         }
 
         FadeAnimListener animListener = new FadeAnimListener();
-        mFadeAnimListeners.put(type, animListener);
+        mFadeAnimListeners.put(name, animListener);
 
         return animListener;
     }
@@ -201,8 +200,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         }
     };
 
-    protected void startAnimation(View view, int animMode, int animSets, AnimData data) {
-        FadeAnimListener listener = getAnimListener(view.getClass());
+    protected void startAnimation(View view, String name, int animMode, int animSets, AnimData data) {
+        FadeAnimListener listener = getAnimListener(name);
         ViewPropertyAnimator viewPropertyAnimator = view.animate();
 
         //alpha anim
@@ -223,15 +222,17 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         viewPropertyAnimator.setListener(listener.with(view).play(animMode)).start();
     }
 
-    protected void hideAnim(View view) {
+    protected void hideAnim(View view, String key) {
         startAnimation(view,
+                key,
                 FadeAnimListener.MODE_ANIM_HIDE,
                 FadeAnimListener.ANIM_ALPHA,
                 new AnimData(0));
     }
 
-    protected void showAnim(View view) {
+    protected void showAnim(View view, String key) {
         startAnimation(view,
+                key,
                 FadeAnimListener.MODE_ANIM_SHOW,
                 FadeAnimListener.ANIM_ALPHA,
                 new AnimData(1));

@@ -62,6 +62,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:visibility="gone"
+                android:layout_marginRight="@dimen/px8"
                 android:src="@drawable/cr_publish_take_pic"/>
     </RelativeLayout>
 
