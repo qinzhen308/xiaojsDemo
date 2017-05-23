@@ -57,7 +57,7 @@
 
     <include
             android:id="@+id/top_panel"
-            layout="@layout/layout_classroom_panel_top_new"/>
+            layout="@layout/layout_classroom_panel_top"/>
 
     <include
             android:id="@+id/fc_bottom_panel"

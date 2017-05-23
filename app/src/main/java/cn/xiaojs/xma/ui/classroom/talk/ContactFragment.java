@@ -51,9 +51,6 @@ public class ContactFragment extends SheetFragment implements OnAttendItemClick,
 
     private LiveCollection<Attendee> mLiveCollection;
     private ContactBookAdapter mContactBookAdapter;
-    private Constants.UserMode mUserMode;
-    private String mTicket;
-    private AttendsComparator mAttendsComparator;
 
     @Override
     public void onAttach(Context context) {
@@ -64,9 +61,7 @@ public class ContactFragment extends SheetFragment implements OnAttendItemClick,
     }
 
     private void initParams() {
-        mUserMode = LiveCtlSessionManager.getInstance().getUserMode();
-        mTicket = LiveCtlSessionManager.getInstance().getTicket();
-        mAttendsComparator = new AttendsComparator();
+        //do nothing
     }
 
     @Override

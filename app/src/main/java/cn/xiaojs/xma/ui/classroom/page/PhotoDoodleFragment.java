@@ -67,7 +67,7 @@ public class PhotoDoodleFragment extends BaseFragment {
 
     @Override
     protected View getContentView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.fragment_video_editing, null);
+        return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_img_edit, null);
     }
 
     @Override

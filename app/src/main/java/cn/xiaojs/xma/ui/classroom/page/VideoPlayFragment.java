@@ -84,7 +84,7 @@ public class VideoPlayFragment extends BaseFragment {
 
     @Override
     protected View getContentView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.fragment_cls_video_player, null);
+        return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_video_player, null);
     }
 
     @Override

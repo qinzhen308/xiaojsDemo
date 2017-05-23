@@ -87,7 +87,7 @@ public class ClassroomActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_classroom_new);
+        setContentView(R.layout.activity_classroom);
 
         //init params
         initParams();

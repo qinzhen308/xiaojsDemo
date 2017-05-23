@@ -84,7 +84,7 @@ public class QuestionAnswer extends Dialog {
 
     public View createView() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        ClosableSlidingLayout mDialogView = (ClosableSlidingLayout) inflater.inflate(R.layout.fragment_question_answer, null);
+        ClosableSlidingLayout mDialogView = (ClosableSlidingLayout) inflater.inflate(R.layout.fragment_classroom_qa, null);
         mDialogView.setTarget(mDialogView.findViewById(R.id.slide_target));
         mListView = (HorizontalListView) mDialogView.findViewById(R.id.raise_hands_stu);
         mDialogView.setSlideListener(new ClosableSlidingLayout.SlideListener() {
