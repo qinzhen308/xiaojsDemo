@@ -146,5 +146,6 @@
 
     <color name="class_grey">#9b9b9b</color>
     <color name="class_orange">#f6972e</color>
+    <color name="class_bar_bg">#f6f8fa</color>
 
 </resources>

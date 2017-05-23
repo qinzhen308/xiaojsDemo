@@ -59,4 +59,98 @@
             android:layout_alignRight="@id/title_view"
             />
 
+    <cn.xiaojs.xma.ui.view.AnimationView
+            android:id="@+id/living_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_below="@id/pay_tips_view"
+            android:background="@drawable/live_animation"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_alignLeft="@id/pay_tips_view"
+            />
+
+    <TextView
+            android:id="@+id/time_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/class_grey"
+            android:text="2017-05-22 16:00"
+            android:layout_below="@id/pay_tips_view"
+            android:layout_toRightOf="@id/living_view"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_marginLeft="@dimen/px30"
+            />
+
+    <TextView
+            android:id="@+id/duration_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/class_grey"
+            android:text="60分钟"
+            android:layout_toRightOf="@id/time_view"
+            android:layout_alignBaseline="@id/time_view"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_marginLeft="@dimen/px18"
+            />
+
+    <TextView
+            android:id="@+id/teacher_name_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/class_grey"
+            android:text="主讲：汪洋"
+            android:layout_alignRight="@id/title_view"
+            android:layout_alignBaseline="@id/time_view"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_marginLeft="@dimen/px18"
+            />
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px99"
+            android:background="@color/class_bar_bg"
+            android:layout_below="@id/time_view"
+            android:layout_marginTop="@dimen/px44"
+            android:paddingLeft="@dimen/px22"
+            android:paddingRight="@dimen/px22"
+            android:paddingTop="@dimen/px15"
+            android:paddingBottom="@dimen/px15"
+            >
+
+        <ImageButton
+                android:id="@+id/op_data_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_class_database"
+                android:layout_marginRight="@dimen/px57"
+                />
+
+        <ImageButton
+                android:id="@+id/op_more_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_class_more"
+                android:layout_marginRight="@dimen/px57"
+                android:layout_toRightOf="@id/op_data_view"
+                />
+
+        <Button
+                android:id="@+id/op_room_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:text="@string/into_cls_flag"
+                android:textSize="@dimen/font_28px"
+                android:textColor="@color/subject_selected_blue"
+                android:layout_alignParentRight="true"
+
+                />
+    </RelativeLayout>
+
 </cn.xiaojs.xma.ui.lesson.xclass.view.ClassLessonView>
