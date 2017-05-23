@@ -144,4 +144,7 @@
     <color name="subject_selected_blue">#7598c1</color>
     <color name="radio_tips">#b49e89</color>
 
+    <color name="class_grey">#9b9b9b</color>
+    <color name="class_orange">#f6972e</color>
+
 </resources>

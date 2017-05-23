@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.xiaojs.xma.ui.lesson.xclass.view.ClassLessonView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+        android:background="@color/white"
+        >
+    <ImageView
+            android:id="@+id/flag_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_flag_teach"
+            />
+    <TextView
+            android:id="@+id/title_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_34px"
+            android:layout_below="@id/flag_view"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:text="我的标题"
+            />
+    <TextView
+            android:id="@+id/pay_tips_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_28px"
+            android:textColor="@color/font_red"
+            android:layout_marginTop="@dimen/px13"
+            android:layout_below="@id/title_view"
+            android:layout_alignLeft="@id/title_view"
+            android:text="@string/free"
+            />
+    <TextView
+            android:id="@+id/member_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_class_member"
+            android:layout_marginLeft="@dimen/px40"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/class_grey"
+            android:text="180人"
+            android:layout_alignBaseline="@id/pay_tips_view"
+            android:layout_toRightOf="@id/pay_tips_view"
+            />
+
+    <TextView
+            android:id="@+id/status_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/class_orange"
+            android:text="待上课"
+            android:layout_alignBaseline="@id/pay_tips_view"
+            android:layout_alignRight="@id/title_view"
+            />
+
+</cn.xiaojs.xma.ui.lesson.xclass.view.ClassLessonView>
