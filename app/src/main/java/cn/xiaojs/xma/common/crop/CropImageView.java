@@ -27,7 +27,7 @@ import cn.xiaojs.xma.util.XjsUtils;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:Administrator
+ * Author:huangyong
  * Date:2016/11/1
  * Desc:
  *

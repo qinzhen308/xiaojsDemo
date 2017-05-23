@@ -42,7 +42,7 @@ import cn.xiaojs.xma.R;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:Administrator
+ * Author:huangyong
  * Date:2016/11/1
  * Desc:
  *

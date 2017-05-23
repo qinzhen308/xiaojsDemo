@@ -26,7 +26,7 @@ import android.widget.ImageView;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:Administrator
+ * Author:huangyong
  * Date:2016/10/28
  * Desc:
  *

@@ -12,6 +12,9 @@ package cn.xiaojs.xma.ui.base;
  * Date:2016/10/11
  * Desc:
  *
+ * Modify:huangyong
+ *        add data change listener
+ *        
  * ======================================================================================== */
 
 import android.os.Bundle;
@@ -58,7 +61,6 @@ public abstract class BaseActivity extends FragmentActivity {
     private boolean mDataChanged = false;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,94 +100,94 @@ public abstract class BaseActivity extends FragmentActivity {
         DataChangeHelper.getInstance().registerDataChangeListener(mDataChangeListener);
     }
 
-    protected void needHeader(boolean need){
-        if (!need){
+    protected void needHeader(boolean need) {
+        if (!need) {
             mBaseHeader.setVisibility(View.GONE);
             mHeaderDivider.setVisibility(View.GONE);
-        }else {
+        } else {
             mBaseHeader.setVisibility(View.VISIBLE);
             mHeaderDivider.setVisibility(View.VISIBLE);
         }
     }
 
-    protected void needHeaderDivider(boolean need){
-        if (need){
+    protected void needHeaderDivider(boolean need) {
+        if (need) {
             mHeaderDivider.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mHeaderDivider.setVisibility(View.GONE);
         }
     }
 
     protected abstract void addViewContent();
 
-    protected View addView(int layoutId){
-        if (layoutId > 0){
+    protected View addView(int layoutId) {
+        if (layoutId > 0) {
             mContent.removeAllViews();
             View view = getLayoutInflater().inflate(layoutId, mContent);
-            if (!delayBindView()){
+            if (!delayBindView()) {
                 mBinder = ButterKnife.bind(this);
             }
             return view;
-        }else {
+        } else {
             try {
                 throw new Exception("layoutId error!");
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
     }
 
-    protected View addView(View view){
-        if (view != null){
+    protected View addView(View view) {
+        if (view != null) {
             mContent.removeAllViews();
             mContent.addView(view);
-            if (!delayBindView()){
+            if (!delayBindView()) {
                 mBinder = ButterKnife.bind(this);
             }
             return view;
-        }else {
+        } else {
             try {
                 throw new Exception("view is null!");
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
     }
 
-    protected final void setLeftText(int resId){
-        if (resId > 0 && !TextUtils.isEmpty(getResources().getText(resId))){
+    protected final void setLeftText(int resId) {
+        if (resId > 0 && !TextUtils.isEmpty(getResources().getText(resId))) {
             mLeftText.setVisibility(View.VISIBLE);
             mLeftText.setText(resId);
-        }else {
+        } else {
             mLeftText.setVisibility(View.GONE);
         }
     }
 
-    protected final void setMiddleTitle(int resId){
-        if (resId > 0 && !TextUtils.isEmpty(getResources().getText(resId))){
+    protected final void setMiddleTitle(int resId) {
+        if (resId > 0 && !TextUtils.isEmpty(getResources().getText(resId))) {
             mMiddleText.setVisibility(View.VISIBLE);
             mMiddleText.setText(resId);
-        }else {
+        } else {
             mMiddleText.setVisibility(View.GONE);
         }
     }
 
-    protected final void setMiddleTitle(String title){
-        if (!TextUtils.isEmpty(title)){
+    protected final void setMiddleTitle(String title) {
+        if (!TextUtils.isEmpty(title)) {
             mMiddleText.setVisibility(View.VISIBLE);
             mMiddleText.setText(title);
-        }else {
+        } else {
             mMiddleText.setVisibility(View.GONE);
         }
     }
 
-    protected final void setRightText(int resId){
-        if (resId > 0 && !TextUtils.isEmpty(getResources().getText(resId))){
+    protected final void setRightText(int resId) {
+        if (resId > 0 && !TextUtils.isEmpty(getResources().getText(resId))) {
             mRightText.setVisibility(View.VISIBLE);
             mRightText.setText(resId);
-        }else {
+        } else {
             mRightText.setVisibility(View.GONE);
         }
     }
@@ -194,56 +196,56 @@ public abstract class BaseActivity extends FragmentActivity {
         mRightText.setTextColor(color);
     }
 
-    protected final void setLeftImage(int resId){
-        if (resId > 0){
+    protected final void setLeftImage(int resId) {
+        if (resId > 0) {
             mLeftImage.setVisibility(View.VISIBLE);
             mLeftImage.setImageResource(resId);
-        }else {
+        } else {
             mLeftImage.setVisibility(View.GONE);
         }
     }
 
-    protected final void setRightImage(int resId){
-        if (resId > 0){
+    protected final void setRightImage(int resId) {
+        if (resId > 0) {
             mRightImage.setVisibility(View.VISIBLE);
             mRightImage.setImageResource(resId);
-        }else {
+        } else {
             mRightImage.setVisibility(View.GONE);
         }
     }
 
-    protected final void setRightImage2(int resId){
-        if (resId > 0){
+    protected final void setRightImage2(int resId) {
+        if (resId > 0) {
             mRightImage2.setVisibility(View.VISIBLE);
             mRightImage2.setImageResource(resId);
-        }else {
+        } else {
             mRightImage2.setVisibility(View.GONE);
         }
     }
 
-    public void showProgress(boolean cancellable){
+    public void showProgress(boolean cancellable) {
         mFailedView.setVisibility(View.GONE);
         mContent.setVisibility(View.VISIBLE);
-        if (progress == null){
+        if (progress == null) {
             progress = ProgressHUD.create(this);
         }
         progress.setCancellable(cancellable);
         progress.show();
     }
 
-    public void cancelProgress(){
-        if (progress != null && progress.isShowing()){
+    public void cancelProgress() {
+        if (progress != null && progress.isShowing()) {
             progress.dismiss();
         }
     }
 
-    public void showFailedView(View.OnClickListener listener){
+    public void showFailedView(View.OnClickListener listener) {
         mFailedView.setVisibility(View.VISIBLE);
         mContent.setVisibility(View.GONE);
         setOnFailedClick(listener);
     }
 
-    public void showFailedView(View.OnClickListener listener, boolean hiddenTrybtn){
+    public void showFailedView(View.OnClickListener listener, boolean hiddenTrybtn) {
         showFailedView(listener);
         if (hiddenTrybtn) {
             mReload.setVisibility(View.GONE);
@@ -260,15 +262,14 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
 
-    public void setOnFailedClick(View.OnClickListener listener){
+    public void setOnFailedClick(View.OnClickListener listener) {
         mReload.setOnClickListener(listener);
     }
 
     /**
      * 是否延迟调用bindview,如果延迟，则需在子类自行调用ButterKnife.bind对view进行注解
-     * @return
      */
-    protected boolean delayBindView(){
+    protected boolean delayBindView() {
         return false;
     }
 
@@ -284,10 +285,10 @@ public abstract class BaseActivity extends FragmentActivity {
 
     @Override
     protected void onDestroy() {
-        if (mBinder != null){
+        if (mBinder != null) {
             mBinder.unbind();
         }
-        if (progress != null && progress.isShowing()){
+        if (progress != null && progress.isShowing()) {
             progress.dismiss();
             progress = null;
         }

@@ -47,7 +47,7 @@ import static cn.xiaojs.xma.ui.lesson.CourseConstant.KEY_LESSON_ID;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:Administrator
+ * Author:huangyong
  * Date:2016/11/13
  * Desc:
  *

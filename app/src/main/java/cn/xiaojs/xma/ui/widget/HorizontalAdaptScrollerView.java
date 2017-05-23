@@ -11,19 +11,20 @@ import android.view.ViewGroup;
 
 import cn.xiaojs.xma.util.DeviceUtil;
 
-/**
- * Copyright (C) 2014 重庆秒银科技有限公司
- * 版权所有
- * <p>
- * 功能描述：水平自适应滑动View(类似于gallery)
- *          根据当前需要可显示item的个数和item的间距，动态确定item的显示宽度
- * 作者：黄勇
- * 创建时间：2016-8-8
- * <p>
- * 修改人：
- * 修改描述：
- * 修改日期
- */
+/*  =======================================================================================
+ *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
+ *
+ *  This computer program source code file is protected by copyright law and international
+ *  treaties. Unauthorized distribution of source code files, programs, or portion of the
+ *  package, may result in severe civil and criminal penalties, and will be prosecuted to
+ *  the maximum extent under the law.
+ *
+ *  ---------------------------------------------------------------------------------------
+ * Author:huangyong
+ * Date:2016/6/8
+ * Desc:
+ *
+ * ======================================================================================== */
 public class HorizontalAdaptScrollerView extends RecyclerView {
     /**
      * item可以显示个数
