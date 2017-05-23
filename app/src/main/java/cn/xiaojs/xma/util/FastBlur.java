@@ -17,7 +17,7 @@ import android.renderscript.ScriptIntrinsicBlur;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:hy
+ * Author:huangyong
  * Date:2016/11/4
  * Desc: 高斯模糊
  *

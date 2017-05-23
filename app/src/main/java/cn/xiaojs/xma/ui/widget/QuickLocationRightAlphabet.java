@@ -20,7 +20,7 @@ import java.util.ArrayList;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:Administrator
+ * Author:huangyong
  * Date:2016/10/28
  * Desc: quickly location by touch on the right side of the alphabet
  *

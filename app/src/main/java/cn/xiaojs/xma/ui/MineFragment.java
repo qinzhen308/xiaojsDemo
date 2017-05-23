@@ -9,7 +9,7 @@ package cn.xiaojs.xma.ui;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:hy
+ * Author:huangyong
  * Date:2016/11/13
  * Desc:
  *
