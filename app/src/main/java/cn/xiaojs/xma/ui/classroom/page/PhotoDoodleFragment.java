@@ -175,9 +175,9 @@ public class PhotoDoodleFragment extends BaseFragment {
             mSharePopWindow = new ShareDoodlePopWindow(mContext, mBoardController, mPhotoDoodleShareListener);
         }
 
-        //int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);
-        int offsetY = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
-        mSharePopWindow.showAsDropDown(anchor, 0, offsetY);
+        int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px246);
+        int offsetY = mContext.getResources().getDimensionPixelSize(R.dimen.px20);
+        mSharePopWindow.showAsDropDown(anchor, offsetX, offsetY);
     }
 
     @Override

@@ -253,6 +253,8 @@ public class ClassroomActivity extends FragmentActivity {
         } else {
             ClassroomController.getInstance().enterPlayFragment(null);
         }
+
+        ContactManager.getInstance().getAttendees(this, null);
     }
 
     private void initSocketIO(String ticket, String secret, boolean force) {

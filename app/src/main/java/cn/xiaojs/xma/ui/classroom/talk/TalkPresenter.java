@@ -59,7 +59,6 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
         mTalkNameTv = talkTargetNameTv;
 
         mMyAccountId = AccountDataManager.getAccountID(mContext);
-        ContactManager.getInstance().getAttendees(mContext, null);
         TalkManager.getInstance().registerMsgReceiveListener(this);
     }
 
