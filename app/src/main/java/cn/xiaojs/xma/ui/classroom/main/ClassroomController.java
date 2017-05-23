@@ -412,6 +412,10 @@ public class ClassroomController {
         }
     }
 
+    /**
+     * 是否是竖屏
+     * @return
+     */
     public boolean isPortrait() {
         if (mContext instanceof ClassroomActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
@@ -480,6 +484,9 @@ public class ClassroomController {
         }
     }
 
+    /**
+     * 退出栈中的fragment
+     */
     public void exitStackFragment() {
         if (mCurrStackFragment != null) {
             ((ClassroomActivity) mContext).getSupportFragmentManager()

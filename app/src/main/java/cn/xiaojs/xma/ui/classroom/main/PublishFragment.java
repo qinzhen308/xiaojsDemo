@@ -400,12 +400,20 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     public void onResolutionChanged(int quality) {
-
+        mVideoController.setPublishStreamByToggleResolution(true);
+        mVideoController.togglePublishResolution();
     }
 
     @Override
     public void onSwitcherChanged(int switcher, boolean open) {
-
+        switch (switcher) {
+            case Constants.SWITCHER_CAMERA:
+                mVideoController.openOrCloseCamera();
+                break;
+            case Constants.SWITCHER_AUDIO:
+                mVideoController.muteOrUnmute();
+                break;
+        }
     }
 
     @Override
