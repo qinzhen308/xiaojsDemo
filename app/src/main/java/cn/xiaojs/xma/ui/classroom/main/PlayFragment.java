@@ -473,13 +473,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     switch (action) {
                         case OnAttendItemClick.ACTION_OPEN_TALK:
                             if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
-                                if (isPortrait()) {
-                                    ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, mSlideViewHeight);
-                                } else {
-                                    int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
-                                    int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
-                                    ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
-                                }
+                                int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
+                                int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
+                                ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
                             } else {
                                 mEmbedTalkFragment.switchPeerTalk(attendee);
                             }

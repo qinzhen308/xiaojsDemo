@@ -20,11 +20,9 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
@@ -436,32 +434,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
             //send to peer talk
             TalkManager.getInstance().sendImg(attendee.accountId, bitmap);
         }
-    }
-
-    protected String getTxtString(int type) {
-        String txt = "";
-        switch (type) {
-            case StreamType.TYPE_STREAM_PUBLISH:
-                txt = "推送流";
-                break;
-            case StreamType.TYPE_STREAM_PLAY:
-                txt = "播放流";
-                break;
-            case StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER:
-                txt = "一对一播流";
-                break;
-            case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
-                txt = "一对一推流";
-                break;
-            case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
-                txt = "个人推送流";
-                break;
-            case StreamType.TYPE_STREAM_PLAY_INDIVIDUAL:
-                txt = "个人播放流";
-                break;
-        }
-
-        return txt;
     }
 
     protected void setControllerBtnStyle(String liveState) {
