@@ -136,7 +136,7 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
 
     @Override
     protected View createContentView(int position) {
-        return LayoutInflater.from(mContext).inflate(R.layout.layout_full_screen_msg_itm, null);
+        return LayoutInflater.from(mContext).inflate(R.layout.layout_full_screen_msg_item, null);
     }
 
     @Override

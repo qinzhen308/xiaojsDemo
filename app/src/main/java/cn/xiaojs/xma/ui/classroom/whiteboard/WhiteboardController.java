@@ -179,6 +179,12 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         }
     }
 
+    public void setWhiteboardScrollMode(int mode) {
+        if (mWhiteboardSv != null) {
+            mWhiteboardSv.setMode(mode);
+        }
+    }
+
     public void handlePanelItemClick(View v) {
         if (v.getId() == R.id.color_picker_btn) {
             enterColorPicker();
@@ -503,6 +509,34 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         }
     }
 
+    /**
+     * 是否有编辑
+     * @return
+     */
+    public boolean hasEdit() {
+        if (mCurrWhiteboard != null) {
+            return mCurrWhiteboard.isCanUndo() || mCurrWhiteboard.isCanRedo();
+        }
+
+        return false;
+    }
+
+    /**
+     * 保存编辑
+     */
+    public void saveEdit() {
+        if (mCurrWhiteboard != null) {
+            mCurrWhiteboard.saveWhiteboard();
+        }
+    }
+
+    /**
+     * 丢弃所有编辑的
+     */
+    public void abandonEdit() {
+        onClearDoodles();
+    }
+
     @Override
     public void onUndoRedoStackChanged() {
         setUndoRedoStyle();
@@ -605,28 +639,6 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     private boolean isWebApp(int app) {
         return app == Platform.AppType.WEB_CLASSROOM || app == Platform.AppType.MOBILE_WEB;
-    }
-
-
-    /**
-     * 保存白板
-     */
-    public void saveWhiteboard() {
-        if (mSavingWhiteboard) {
-            return;
-        }
-
-        mSavingWhiteboard = true;
-        //save to server
-        //TODO
-
-        /*if (mCurrWhiteboardColl != null) {
-            if (mCurrWhiteboardColl.isLive() && mUserMode == Constants.User.STUDENT) {
-                PermissionGen.needPermission(ClassroomActivity.this, REQUEST_GALLERY_PERMISSION, PERMISSIONS);
-            } else {
-
-            }
-        }*/
     }
 
     public void release() {
