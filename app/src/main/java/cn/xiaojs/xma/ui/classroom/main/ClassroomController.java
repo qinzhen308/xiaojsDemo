@@ -130,8 +130,6 @@ public class ClassroomController {
         ((ClassroomActivity) mContext).getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fc_slide_talk_layout, fragment)
-                .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.slide_out_to_bottom,
-                        R.anim.slide_in_from_bottom, R.anim.slide_out_to_bottom)
                 .addToBackStack("slide_talk")
                 .commit();
     }
