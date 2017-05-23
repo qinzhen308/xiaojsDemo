@@ -11,8 +11,7 @@
             style="@style/DividerHorizontal"/>
 
     <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/teach_lesson_list"
+            android:id="@+id/class_lesson_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"

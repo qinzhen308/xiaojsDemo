@@ -801,4 +801,7 @@
     <string name="client_download_qrcode_tips">扫一扫二维码，即可下载小教室App</string>
     <string name="gradle">班</string>
     <string name="hint_input_class_name">请输入班级名称</string>
+    <string name="hint_input_lesson_name">请输入公开课名称</string>
+    <string name="empty_class_tips">你还没开过班哦～</string>
+    <string name="want_to_create_class">我要开班</string>
 </resources>

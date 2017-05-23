@@ -70,9 +70,9 @@ public class ClassesListActivity extends FragmentActivity {
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
 
                 if (checkedId == R.id.tab_class) {
-                    tabPager.setCurrentItem(0);
-                }else if(checkedId == R.id.tab_lesson) {
                     tabPager.setCurrentItem(1);
+                }else if(checkedId == R.id.tab_lesson) {
+                    tabPager.setCurrentItem(2);
                 }
 
             }
