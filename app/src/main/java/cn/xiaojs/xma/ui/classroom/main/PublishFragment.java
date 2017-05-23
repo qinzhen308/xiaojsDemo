@@ -229,8 +229,17 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     protected void toggleLandPortrait() {
-        int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        mVideoController.togglePublishOrientation(targetOrientation);
+        if (mVideoController.hasStreamPublishing()) {
+            mVideoController.pausePublishStream(mPublishType);
+            int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            mVideoController.togglePublishOrientation(targetOrientation, new LiveRecordView.OnStreamOrientationListener() {
+                @Override
+                public void onStreamOrientationChanged(int orientation) {
+                    mVideoController.publishStream(mPublishType, mPublishUrl);
+                }
+            });
+        }
+
         super.toggleLandPortrait();
     }
 

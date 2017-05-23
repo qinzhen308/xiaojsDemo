@@ -137,6 +137,10 @@ public class LiveRecordView extends BaseMediaView implements
                         ? StreamingProfile.ENCODING_ORIENTATION.PORT : StreamingProfile.ENCODING_ORIENTATION.LAND);
                 mMediaStreamingManager.setStreamingProfile(mProfile);
                 mMediaStreamingManager.notifyActivityOrientationChanged();
+                Object obj = msg.obj;
+                if (obj instanceof OnStreamOrientationListener) {
+                    ((OnStreamOrientationListener)obj).onStreamOrientationChanged(msg.arg1);
+                }
                 break;
             case MSG_SWITCH_RESOLUTION:
                 mMediaStreamingManager.stopStreaming();
@@ -656,12 +660,17 @@ public class LiveRecordView extends BaseMediaView implements
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_STOP_STREAMING), 50);
     }
 
-    public void encodingOrientationSwitch(int targetOrientation) {
+    public void encodingOrientationSwitch(int targetOrientation, OnStreamOrientationListener listener) {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             Message msg = mHandler.obtainMessage(MSG_SWITCH_ORIENTATION);
             msg.arg1 = targetOrientation;
+            msg.obj = listener;
             mHandler.sendMessageDelayed(msg, 50);
         }
+    }
+
+    public interface OnStreamOrientationListener {
+        public void onStreamOrientationChanged(int orientation);
     }
 }

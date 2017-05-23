@@ -342,9 +342,9 @@ public abstract class VideoController implements StreamConfirmCallback {
      *
      * @param targetOrientation 待切换的摄像头方向
      */
-    public void togglePublishOrientation(int targetOrientation) {
+    public void togglePublishOrientation(int targetOrientation, LiveRecordView.OnStreamOrientationListener listener) {
         if (mPublishView != null) {
-            mPublishView.encodingOrientationSwitch(targetOrientation);
+            mPublishView.encodingOrientationSwitch(targetOrientation, listener);
         }
     }
 

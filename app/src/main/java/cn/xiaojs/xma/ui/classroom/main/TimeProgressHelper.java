@@ -17,7 +17,6 @@ package cn.xiaojs.xma.ui.classroom.main;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -169,7 +168,6 @@ public class TimeProgressHelper {
                                 if (mCountTime > mLessonDuration * 60) {
                                     mCountTime = mLessonDuration * 60;
                                 }
-                                Log.i("aaa", "=========live====mCountTime=" + mCountTime);
                                 simpleTime = TimeUtil.formatSecondTime(mCountTime);
                                 mTitleBarTimeInfoTv.setText(simpleTime + "/" + total);
                                 mFullScreenTimeInfoTv.setText(simpleTime);
