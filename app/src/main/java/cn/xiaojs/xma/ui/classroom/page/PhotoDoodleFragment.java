@@ -315,14 +315,6 @@ public class PhotoDoodleFragment extends BaseFragment {
             mSaveDoodleDialog.setDesc(R.string.cr_save_edit_desc);
             mSaveDoodleDialog.setLefBtnText(R.string.cancel);
             mSaveDoodleDialog.setRightBtnText(R.string.ok);
-            if (ClassroomController.getInstance().isPortrait()) {
-                width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            } else {
-                width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            }
-            mSaveDoodleDialog.setDialogLayout(width, height);
             mSaveDoodleDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {

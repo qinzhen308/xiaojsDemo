@@ -37,7 +37,6 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.DeviceUtil;
-import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public abstract class VideoController implements StreamConfirmCallback {
@@ -429,13 +428,10 @@ public abstract class VideoController implements StreamConfirmCallback {
             if (!open && !allowMobileLive) {
                 if (mMobileNetworkDialog == null) {
                     mMobileNetworkDialog = new CommonDialog(mContext);
-                    int width = DeviceUtil.getScreenWidth(mContext) / 2;
-                    int height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     mMobileNetworkDialog.setTitle(R.string.mobile_network_title);
                     mMobileNetworkDialog.setDesc(R.string.mobile_network_desc);
                     mMobileNetworkDialog.setLefBtnText(R.string.mobile_network_forbid);
                     mMobileNetworkDialog.setRightBtnText(R.string.mobile_network_allow);
-                    mMobileNetworkDialog.setDialogLayout(width, height);
                     mMobileNetworkDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                         @Override
                         public void onClick() {

@@ -39,7 +39,6 @@ import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
-import cn.xiaojs.xma.util.DeviceUtil;
 import okhttp3.ResponseBody;
 
 /*  =======================================================================================
@@ -660,12 +659,6 @@ public class PublishFragment extends ClassroomLiveFragment {
             mFinishDialog = new CommonDialog(mContext);
             mFinishDialog.setTitle(R.string.finish_classroom);
             mFinishDialog.setDesc(R.string.finish_classroom_tips);
-            if (!isPortrait()) {
-                int width = DeviceUtil.getScreenWidth(mContext) / 2;
-                int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                mFinishDialog.setDialogLayout(width, height);
-            }
-
             mFinishDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {

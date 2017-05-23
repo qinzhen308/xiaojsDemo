@@ -24,7 +24,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.Toast;
 
@@ -60,7 +59,6 @@ import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
-import cn.xiaojs.xma.util.DeviceUtil;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
         OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener {
@@ -293,11 +291,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         public void call(final Object... args) {
             if (mAgreeOpenCamera == null) {
                 mAgreeOpenCamera = new CommonDialog(mContext);
-                if (!isPortrait()) {
-                    int width = DeviceUtil.getScreenWidth(mContext) / 2;
-                    int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    mAgreeOpenCamera.setDialogLayout(width, height);
-                }
                 mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
                 mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
 
