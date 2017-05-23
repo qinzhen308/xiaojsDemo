@@ -299,28 +299,28 @@ public class PublishFragment extends ClassroomLiveFragment {
         }
 
         if (mTopPanel.getVisibility() == View.VISIBLE) {
-            hideAnim(mTopPanel);
-            hideAnim(mContactBtn);
-            hideAnim(mOpenTalkBtn);
-            hideAnim(mLandPortraitBtn);
+            hideAnim(mTopPanel ,"mTopPanel");
+            hideAnim(mContactBtn, "mContactBtn");
+            hideAnim(mOpenTalkBtn, "mOpenTalkBtn");
+            hideAnim(mLandPortraitBtn, "mLandPortraitBtn");
         } else if (mTopPanel.getVisibility() == View.INVISIBLE) {
-            showAnim(mTopPanel);
-            showAnim(mContactBtn);
-            showAnim(mOpenTalkBtn);
-            showAnim(mLandPortraitBtn);
+            showAnim(mTopPanel, "mTopPanel");
+            showAnim(mContactBtn, "mContactBtn");
+            showAnim(mOpenTalkBtn, "mOpenTalkBtn");
+            showAnim(mLandPortraitBtn, "mLandPortraitBtn");
         }
 
         if (isPortrait()) {
             if (mScreenshotPortraitBtn.getVisibility() == View.VISIBLE) {
-                hideAnim(mScreenshotPortraitBtn);
+                hideAnim(mScreenshotPortraitBtn, "mScreenshotPortraitBtn");
             } else {
-                showAnim(mScreenshotPortraitBtn);
+                showAnim(mScreenshotPortraitBtn, "mScreenshotPortraitBtn");
             }
         } else {
             if (mScreenshotLandBtn.getVisibility() == View.VISIBLE) {
-                hideAnim(mScreenshotLandBtn);
+                hideAnim(mScreenshotLandBtn, "mScreenshotLandBtn");
             } else {
-                showAnim(mScreenshotLandBtn);
+                showAnim(mScreenshotLandBtn, "mScreenshotLandBtn");
             }
         }
     }
