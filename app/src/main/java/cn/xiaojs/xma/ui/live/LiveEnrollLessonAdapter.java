@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.live;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.model.ctl.LiveItem;
@@ -40,7 +42,10 @@ import cn.xiaojs.xma.ui.view.LessonPersonView;
 import cn.xiaojs.xma.ui.view.LessonStatusView;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
+import cn.xiaojs.xma.util.ShareUtil;
+import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
@@ -111,8 +116,9 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.status.show(bean.state, bean.schedule);
             //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
             String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            holder.operation.enableMore(true);
             holder.operation.setItems(items);
-            holder.operation.enableMore(false);
+
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
@@ -121,8 +127,8 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
                             ////schedule(bean);
                             databank(bean);
                             break;
-                        case 2:
-                            //databank(bean);
+                        case MORE:
+                            more(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -138,14 +144,18 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.progress.showTimeBar(bean.classroom, bean.schedule.getDuration());
             String[] items = new String[]{mContext.getString(R.string.data_bank)};
             //String[] items = new String[]{" "};
+            holder.operation.enableMore(true);
             holder.operation.setItems(items);
-            holder.operation.enableMore(false);
+
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
                             databank(bean);
+                            break;
+                        case MORE:
+                            more(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -160,8 +170,9 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
             holder.status.show(bean.state, bean.schedule);
             String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
             //String[] items = new String[]{" "};
+            holder.operation.enableMore(true);
             holder.operation.setItems(items);
-            holder.operation.enableMore(false);
+
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
@@ -171,8 +182,8 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
 
                             databank(bean);
                             break;
-                        case 2:
-                            //databank(bean);
+                        case MORE:
+                            more(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -201,6 +212,52 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
 //            });
         }
         return convertView;
+    }
+
+    //更多
+    private void more(final LiveItem bean) {
+
+        if (bean.state.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
+                || bean.state.equalsIgnoreCase(LessonState.FINISHED)
+                || bean.state.equalsIgnoreCase(LessonState.LIVE)) {
+            String[] items = new String[]{
+                    mContext.getString(R.string.share)};
+            ListBottomDialog dialog = new ListBottomDialog(mContext);
+            dialog.setItems(items);
+            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    switch (position) {
+                        case 0:
+                            share(bean);
+                            break;
+//                        case 1:
+//                            dropClass(bean);
+//                            break;
+                    }
+                }
+            });
+            dialog.show();
+        }
+    }
+
+
+    //分享
+    private void share(LiveItem bean) {
+
+        if (bean == null) return;
+
+        String startTime = TimeUtil.format(bean.schedule.getStart().getTime(),
+                TimeUtil.TIME_YYYY_MM_DD_HH_MM);
+
+        String name = "";
+        if (bean.teacher != null && bean.teacher.getBasic() != null) {
+            name = bean.teacher.getBasic().getName();
+        }
+
+        String shareUrl = ApiManager.getShareLessonUrl(bean.id);
+
+        ShareUtil.show((Activity) mContext, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     //资料库

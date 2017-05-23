@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.lesson;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -31,11 +32,13 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.EnrolledLesson;
 import cn.xiaojs.xma.model.GELessonsResponse;
+import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
@@ -46,6 +49,7 @@ import cn.xiaojs.xma.ui.view.LessonStatusView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.LiveProgress;
+import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -122,8 +126,8 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.status.show(bean);
             //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
             String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            holder.operation.enableMore(true);
             holder.operation.setItems(items);
-            holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
@@ -134,6 +138,9 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
                             break;
                         case 2:
                             //databank(bean);
+                            break;
+                        case MORE:
+                            more(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -146,17 +153,21 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.operation.setEnterColor(R.color.font_orange);
             holder.status.setVisibility(View.GONE);
             holder.progressWrapper.setVisibility(View.VISIBLE);
-            holder.progress.showTimeBar(bean.getClassroom() ,bean.getSchedule().getDuration());
+            holder.progress.showTimeBar(bean.getClassroom(), bean.getSchedule().getDuration());
             //String[] items = new String[]{mContext.getString(R.string.data_bank)};
             String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            holder.operation.enableMore(true);
             holder.operation.setItems(items);
-            holder.operation.enableMore(false);
+
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
                     switch (position) {
                         case 1:
                             databank(bean);
+                            break;
+                        case MORE:
+                            more(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -171,8 +182,8 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
             holder.status.show(bean);
             //String[] items = new String[]{/*mContext.getString(R.string.schedule), */mContext.getString(R.string.data_bank)};
             String[] items = new String[]{mContext.getString(R.string.data_bank)};
+            holder.operation.enableMore(true);
             holder.operation.setItems(items);
-            holder.operation.enableMore(false);
             holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
                 @Override
                 public void onClick(int position) {
@@ -182,8 +193,8 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
 
                             databank(bean);
                             break;
-                        case 2:
-                            //databank(bean);
+                        case MORE:
+                            more(bean);
                             break;
                         case ENTER:
                             enterClass(bean);
@@ -212,7 +223,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
     }
 
     //删除
-    private void delete(final int pos,final EnrolledLesson bean) {
+    private void delete(final int pos, final EnrolledLesson bean) {
         final CommonDialog dialog = new CommonDialog(mContext);
         dialog.setTitle(R.string.delete);
         dialog.setDesc(R.string.delete_lesson_tip);
@@ -287,10 +298,11 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
     //更多
     private void more(final EnrolledLesson bean) {
 
-        if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
+        if (bean.getState().equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
+                || bean.getState().equalsIgnoreCase(LessonState.FINISHED)
+                || bean.getState().equalsIgnoreCase(LessonState.LIVE)) {
             String[] items = new String[]{
-                    mContext.getString(R.string.data_bank),
-                    mContext.getString(R.string.leave_lesson)};
+                    mContext.getString(R.string.share)};
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             dialog.setItems(items);
             dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
@@ -298,35 +310,35 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
                 public void onItemClick(int position) {
                     switch (position) {
                         case 0:
-                            databank(bean);
+                            share(bean);
                             break;
-                        case 1:
-                            dropClass(bean);
-                            break;
-                    }
-                }
-            });
-            dialog.show();
-        } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
-            String[] items = new String[]{mContext.getString(R.string.evaluate),
-                    mContext.getString(R.string.data_bank)};
-            ListBottomDialog dialog = new ListBottomDialog(mContext);
-            dialog.setItems(items);
-            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                @Override
-                public void onItemClick(int position) {
-                    switch (position) {
-                        case 0:
-                            evaluate(bean);
-                            break;
-                        case 1:
-                            databank(bean);
-                            break;
+//                        case 1:
+//                            dropClass(bean);
+//                            break;
                     }
                 }
             });
             dialog.show();
         }
+//        } else if (bean.getState().equalsIgnoreCase(LessonState.FINISHED)) {
+//            String[] items = new String[]{mContext.getString(R.string.share)};
+//            ListBottomDialog dialog = new ListBottomDialog(mContext);
+//            dialog.setItems(items);
+//            dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+//                @Override
+//                public void onItemClick(int position) {
+//                    switch (position) {
+//                        case 0://share
+//                            share(bean);
+//                            break;
+////                        case 1:
+////                            databank(bean);
+////                            break;
+//                    }
+//                }
+//            });
+//            dialog.show();
+//        }
     }
 
     @Override
@@ -344,7 +356,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
     protected void onDataItemClick(int position, EnrolledLesson bean) {
         String state = bean.getState();
         if (TextUtils.isEmpty(state)
-                ||state.equalsIgnoreCase(LessonState.ACKNOWLEDGED)
+                || state.equalsIgnoreCase(LessonState.ACKNOWLEDGED)
                 || state.equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
                 || state.equalsIgnoreCase(LessonState.DRAFT)
                 || state.equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
@@ -407,6 +419,24 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
         reset();
         notifyDataSetChanged();
         request();
+    }
+
+    //分享
+    private void share(EnrolledLesson bean) {
+
+        if (bean == null) return;
+
+        String startTime = TimeUtil.format(bean.getSchedule().getStart().getTime(),
+                TimeUtil.TIME_YYYY_MM_DD_HH_MM);
+
+        String name = "";
+        if (bean.getTeacher() != null && bean.getTeacher().getBasic() != null) {
+            name = bean.getTeacher().getBasic().getName();
+        }
+
+        String shareUrl = ApiManager.getShareLessonUrl(bean.getId());
+
+        ShareUtil.show((Activity) mContext, bean.getTitle(), new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     static class Holder extends BaseHolder {
